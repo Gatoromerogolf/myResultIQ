@@ -1,0 +1,70 @@
+
+body.pagina-index {
+  background-image: url('../images/FondomyResultIQ1.png');
+}
+
+body.pagina-usuarios {
+  background-image: url('../images/fondoUsuarios.png');
+}
+
+body.detalle-Usuario {
+  background-image: url('../images/back_financiero.jpg');
+}
+body {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  font-family: "Abel", sans-serif;
+  color: white;
+  height: 100%;
+  overflow: hidden;
+}
+
+.contenedor {
+  display: flex;
+  flex-direction: column; /* <--- uno debajo del otro */
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: "Abel", sans-serif;
+    color: white;
+    overflow: hidden;
+    /* evita scroll si todo está centrado */
+}
+
+.botonesIndex {
+    display: flex;
+    justify-content: center;
+    /* o space-between si querés separación */
+    gap: 70px;
+    margin-top: 400px;
+    font-size: 30px;
+}
+
+.btnIndex {
+    min-width: 180px;
+    text-align: center;
+    padding: 20px 20px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 30px;
+    /* tamaño de letra unificado */
+    text-decoration: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btnIndex.volver {
+    background-color: #444;
+}

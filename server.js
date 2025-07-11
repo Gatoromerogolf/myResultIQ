@@ -14,13 +14,6 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-// const pool = mysql.createPool({
-//   host: 'localhost',
-//   user: 'tu_usuario',
-//   password: 'tu_password',
-//   database: 'tu_base'
-// });
-
 app.post('/guardar', async (req, res) => {
   const data = req.body;
   await pool.query(
