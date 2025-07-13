@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyResultIQ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #2c5f6f;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        .main-title {
+            font-size: 4.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 50px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .botonesIndex {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btnIndex {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4a8a9e;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+        }
+
+        .btnIndex:hover {
+            background-color: #5aa3b8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .btnIndex.volver {
+            background-color: #3a7285;
+        }
+
+        .btnIndex.volver:hover {
+            background-color: #4a8a9e;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 40px;
+            }
+            
+            .botonesIndex {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .btnIndex {
+                width: 200px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="main-title">MyResultIQ</h1>
+    <p class="subtitle">La aplicación para gestión de indicadores</p>
+    
+    <div class="botonesIndex">
+        <a href="usuarios.html" class="btnIndex">Usuarios</a>
+        <a href="administracion.html" class="btnIndex volver">Administrador</a>
+    </div>
+</body>
+</html>
