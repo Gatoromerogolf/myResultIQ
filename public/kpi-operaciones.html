@@ -261,7 +261,7 @@
                         </li> -->
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
+                            <a href="kpi-operaciones.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle-fill"></i>
                                 <p>Unidades Funcionales</p>
                             </a>
@@ -275,7 +275,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="kpi-indicadores.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle-fill"></i>
                                 <p>Indicadores</p>
                             </a>
@@ -376,265 +376,184 @@
                         </div>
                     </div>
                     <!--end::Row-->
+
+
+                    <!--begin::Row-->
+                    <div class="row">
+                        <!-- Start col -->
+                        <div class="col-md-12">
+                            <!--begin::Latest Order Widget-->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Indicadores Asignados</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table m-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nivel 1</th>
+                                                    <th>Nivel 2</th>
+                                                    <th>Nivel 3</th>
+                                                    <th>Responsable</th>
+                                                    <th>✉</th>
+                                                    <th>Indicadores</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Dirección General</td>
+                                                    <td>Gerencia Operativa</td>
+                                                    <td>Depart. Suministros</td>
+                                                    <td>Raul Dieguez</td>
+                                                    <td>
+                                                        <div class="dropdown user-menu">
+
+                                                            <button type="button" class="btn-user-info"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#detalleUsuarioModal"
+                                                                aria-label="Ver información del usuario">
+                                                                <i class="bi bi-person-lines-fill"></i>
+                                                            </button>
+
+                                                        </div>
+                                                    </td>
+                                                    <td>#SUP010, #SAB200, #OTC256</td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>Jefatura Almacenes</td>
+                                                    <td>Diego Ramos</td>
+                                                    <td>
+                                                        <div class="dropdown user-menu">
+                                                            <button type="button" class="btn-user-info"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#detalleUsuarioModal"
+                                                                aria-label="Ver información del usuario">
+                                                                <i class="bi bi-person-lines-fill"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td>#PRO000, #SAB220, #OTC450</td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>Gerencia Administrativa</td>
+                                                    <td>Contaduría</td>
+                                                    <td>Ricardo Solari</td>
+                                                    <td>
+                                                        <div class="dropdown user-menu">
+                                                            <button type="button" class="btn-user-info"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#detalleUsuarioModal"
+                                                                aria-label="Ver información del usuario">
+                                                                <i class="bi bi-person-lines-fill"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td>#ADM000, #ADM298, #ADM232, #ADM456</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <!-- /.card-body -->
+
+                                <!-- /.card-footer -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!--end::Row-->
+                    <p>Cargar la estructura funcional con n niveles, con nombres y responsables</p>
+                    <p>Definicion de Roles y permisos</p>
+                    <p>Cargar los datos de los usuarios
+                            <ul>Apellido y Nombre</ul>
+                            <ul>Sector al que pertenece</ul>
+                            <ul>Cargo o función</ul>
+                            <ul>mail</ul>
+                            <ul>telefono</ul>
+                            <ul>Perfil de usuario (roles y permisos)</ul>
+                    </p>
+                    <p>Carga de Indicadores
+                        <ul>Código identificatorio: valor único</ul>
+                        <ul>Nombre: descripción</ul>
+                        <ul>Dimensión: financiera, cliente, procesos, capital humano</ul>
+                        <ul>Descripción: explicación detallada de qué mide el indicador</ul>
+                        <ul>Fórmula de cálculo: procedimiento de cálculo</ul>
+                        <ul>Fuente de datos: origen de los valores considerados</ul>
+                        <ul>Objetivo: propósito o meta que busca evaluar</ul>
+
+
+                        <ul>Unidad de medida: porcentaje, cantidad, tiempo, etc.</ul>
+                        <ul>Frecuencia de medición: diaria, semanal, mensual, trimestral, anual</ul>
+                        <ul>Periodicidad de reporte: diario, semanal, etc.</ul>
+                        <ul>Meta o Valor objetivo</ul>
+                        <ul>Umbral crítico: valor o porcentaje de desvio c/r a la meta</ul>
+
+                        <ul>Categoría: eficiencia, eficacia, calidad, productividad</ul>
+                        <ul>Criticidad: alta, media, baja</ul>
+                        <ul>Tendencia deseada: ascendente, descendente, estable</ul>
+                        <ul>Estado: activo, inactivo, en revisión</ul>
+                        <ul>Fecha de creación</ul>
+                        <ul>Usuario responsable</ul>
+
+                        <ul>Fecha de última actualización:  automático</ul>
+                        <ul>Versión: control de cambios</ul>
+                        <ul>Comentarios sobre los cambios</ul>
+
+                        <ul>Formato de presentación: tabla, grafico, dashboard</ul>
+                        <ul>Nivel de desagregación: region, producto, cliente</ul>
+                    </p>
                 </div>
                 <!--end::Container-->
             </div>
-            <!--end::App Content Header-->
-            <!-- Content Wrapper. Contains page content -->
+            <!--end::App Content-->
+        </main>
+        <!--end::App Main-->
 
-            <!--begin::App Main-->
-            <main class="app-main">
-                <!--begin::App Content Header-->
-                <div class="app-content-header">
-                    <!--begin::Container-->
-                    <div class="container-fluid">
-                    </div>
-                    <!--end::Container-->
-                </div>
+        <footer class="main-footer text-center">
+            <strong>© 2025 - MiResultIQ 1.0</strong>
+        </footer>
 
-                <div class="app-content">
-                    <!--begin::Container-->
-                    <div class="container-fluid">
-                        <!-- Info boxes -->
-
-                        <!-- /.row -->
-
-                        <!--begin::Row-->
-                        <div class="row">
-                            <!-- Start col -->
-                            <div class="col-md-12">
-                                <!--begin::Latest Order Widget-->
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Indicadores Asignados</h3>
-                                        <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                                                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                                                <i class="bi bi-x-lg"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body p-0">
-                                        <div class="table-responsive">
-                                            <table class="table m-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nivel 1</th>
-                                                        <th>Nivel 2</th>
-                                                        <th>Nivel 3</th>
-                                                        <th>Responsable</th>
-                                                        <th>✉</th>
-                                                        <th>Indicadores</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Dirección General</td>
-                                                        <td>Gerencia Operativa</td>
-                                                        <td>Depart. Suministros</td>
-                                                        <td>Raul Dieguez</td>
-                                                        <td>
-                                                            <div class="dropdown user-menu">
-
-                                                                <a href="#" class="nav-link dropdown-toggle sin-caret icono-sobre"
-                                                                    data-bs-toggle="dropdown">
-                                                                    ✉
-                                                                    <!-- <span class="d-none d-md-inline"></span> -->
-                                                                </a>
-                                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                                    <!--begin::User Image-->
-                                                                    <li class="user-header text-bg-primary text-center">
-                                                                        <img src="../images/user1-128x128.jpg"
-                                                                            class="rounded-circle shadow"
-                                                                            alt="User Image" />
-                                                                    </li>
-                                                                    <!--end::User Image-->
-                                                                    <!--begin::Menu Body-->
-
-                                                                    <li class="user-body">
-                                                                        <!--begin::Row-->
-                                                                        <a href="#"
-                                                                            class="btn btn-default btn-flat">Gerente
-                                                                            de
-                                                                            Administración</a>
-                                                                        <!--end::Row-->
-                                                                    </li>
-
-
-                                                                    <li class="user-body">
-                                                                        <!--begin::Row-->
-                                                                        <a href="#"
-                                                                            class="btn btn-default btn-flat">rsolari@company.com.ar</a>
-                                                                        <!--end::Row-->
-                                                                    </li>
-
-                                                                    <li class="user-body">
-                                                                        <!--begin::Row-->
-                                                                        <a href="#" class="btn btn-default btn-flat">+54
-                                                                            11 452 7898</a>
-                                                                        <!--end::Row-->
-                                                                    </li>
-                                                                    <!--end::Menu Body-->
-                                                                    <!--begin::Menu Footer-->
-                                                                    <!--end::Menu Footer-->
-                                                                </ul>
-
-                                                                <!--end::User Menu Dropdown-->
-                                                            </div>
-                                                        </td>
-                                                        <td>#SUP010, #SAB200, #OTC256</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>Jefatura Almacenes</td>
-                                                        <td>Diego Ramos</td>
-                                                        <td>
-                                                            <div class="dropdown user-menu">
-
-                                                                <a href="#" class="nav-link dropdown-toggle sin-caret icono-sobre"
-                                                                    data-bs-toggle="dropdown">
-                                                                    ✉
-                                                                    <!-- <span class="d-none d-md-inline"></span> -->
-                                                                </a>
-                                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                                    <!--begin::User Image-->
-                                                                    <li class="user-header text-bg-primary text-center">
-                                                                        <img src="../images/user1-128x128.jpg"
-                                                                            class="rounded-circle shadow"
-                                                                            alt="User Image" />
-                                                                    </li>
-                                                                    <!--end::User Image-->
-                                                                    <!--begin::Menu Body-->
-
-                                                                    <li class="user-body">
-                                                                        <!--begin::Row-->
-                                                                        <a href="#"
-                                                                            class="btn btn-default btn-flat">Gerente
-                                                                            de
-                                                                            Administración</a>
-                                                                        <!--end::Row-->
-                                                                    </li>
-
-
-                                                                    <li class="user-body">
-                                                                        <!--begin::Row-->
-                                                                        <a href="#"
-                                                                            class="btn btn-default btn-flat">rsolari@company.com.ar</a>
-                                                                        <!--end::Row-->
-                                                                    </li>
-
-                                                                    <li class="user-body">
-                                                                        <!--begin::Row-->
-                                                                        <a href="#" class="btn btn-default btn-flat">+54
-                                                                            11 452 7898</a>
-                                                                        <!--end::Row-->
-                                                                    </li>
-                                                                    <!--end::Menu Body-->
-                                                                    <!--begin::Menu Footer-->
-                                                                    <!--end::Menu Footer-->
-                                                                </ul>
-
-                                                                <!--end::User Menu Dropdown-->
-                                                            </div>
-                                                        </td>
-                                                        <td>#PRO000, #SAB220, #OTC450</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>Gerencia Administrativa</td>
-                                                        <td>Contaduría</td>
-                                                        <td>Ricardo Solari</td>
-                                                        <!-- <td>
-                                                            <a href="pages/examples/invoice.html"
-                                                                class="link-primary">✉</a>
-                                                        </td> -->
-                                                        <td>
-                                                            <div class="dropdown user-menu">
-
-                                                                <a href="#" class="nav-link dropdown-toggle sin-caret icono-sobre"
-                                                                    data-bs-toggle="dropdown">
-                                                                    ✉
-                                                                    <!-- <span class="d-none d-md-inline"></span> -->
-                                                                </a>
-                                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                                    <!--begin::User Image-->
-                                                                    <li class="user-header text-bg-primary text-center">
-                                                                        <img src="../images/user1-128x128.jpg"
-                                                                            class="rounded-circle shadow"
-                                                                            alt="User Image" />
-                                                                    </li>
-                                                                    <!--end::User Image-->
-                                                                    <!--begin::Menu Body-->
-
-                                                                    <li class="user-body">
-                                                                        <!--begin::Row-->
-                                                                        <a href="#"
-                                                                            class="btn btn-default btn-flat">Gerente
-                                                                            de
-                                                                            Administración</a>
-                                                                        <!--end::Row-->
-                                                                    </li>
-
-
-                                                                    <li class="user-body">
-                                                                        <!--begin::Row-->
-                                                                        <a href="#"
-                                                                            class="btn btn-default btn-flat">rsolari@company.com.ar</a>
-                                                                        <!--end::Row-->
-                                                                    </li>
-
-                                                                    <li class="user-body">
-                                                                        <!--begin::Row-->
-                                                                        <a href="#" class="btn btn-default btn-flat">+54
-                                                                            11 452 7898</a>
-                                                                        <!--end::Row-->
-                                                                    </li>
-                                                                    <!--end::Menu Body-->
-                                                                    <!--begin::Menu Footer-->
-                                                                    <!--end::Menu Footer-->
-                                                                </ul>
-
-                                                                <!--end::User Menu Dropdown-->
-                                                            </div>
-                                                        </td>
-                                                        <td>#ADM000, #ADM298, #ADM232, #ADM456</td>
-                                                    </tr>
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <!-- /.table-responsive -->
-                                    </div>
-                                    <!-- /.card-body -->
-
-                                    <!-- /.card-footer -->
-                                </div>
-                                <!-- /.card -->
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!--end::Row-->
-                    </div>
-                    <!--end::Container-->
-                </div>
-                <!--end::App Content-->
-            </main>
-            <!--end::App Main-->
-
-            <footer class="main-footer text-center">
-                <strong>© 2025 - MiResultIQ 1.0</strong>
-            </footer>
-
-            <!--end::Footer-->
+        <!--end::Footer-->
 
     </div>
     <!--end::App Wrapper-->
 
+    <!--begin::Modal del usuario-->
+    <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleUsuarioLabel">Info Responsable</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="../images/user1-128x128.jpg" class="rounded-circle shadow mb-3" alt="User Image" />
+                    <p class="mb-1">Gerente de Operaciones</p>
+                    <p class="mb-1">rdieguez@company.com.ar</p>
+                    <p>+54 11 452 7898</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal del usuario-->
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
