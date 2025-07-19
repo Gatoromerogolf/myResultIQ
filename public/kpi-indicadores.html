@@ -36,6 +36,66 @@
     <!-- jsvectormap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
         integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+
+    <style>
+        .app-main {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .app-content-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+            padding: 1rem 0;
+        }
+
+        .card-outline {
+            border: 1px solid #dee2e6;
+        }
+
+        .badge-dimension {
+            font-size: 0.75rem;
+        }
+
+        .table-responsive {
+            border-radius: 0.375rem;
+        }
+
+        .btn-link-custom {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .btn-link-custom:hover {
+            color: #0a58ca;
+            text-decoration: underline;
+        }
+
+        .criticidad-alta {
+            color: #dc3545;
+        }
+
+        .criticidad-media {
+            color: #fd7e14;
+        }
+
+        .criticidad-baja {
+            color: #198754;
+        }
+
+        .tendencia-ascendente {
+            color: #198754;
+        }
+
+        .tendencia-descendente {
+            color: #dc3545;
+        }
+
+        .tendencia-estable {
+            color: #6c757d;
+        }
+    </style>
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -228,7 +288,6 @@
         </nav>
         <!--end::Header-->
 
-
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light">
             <!--begin::Sidebar Brand-->
@@ -251,101 +310,27 @@
                     <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
                         data-accordion="false">
-                        <li class="nav-header">Menu Administrador</li>
-
-                        <!-- <li class="nav-item">
-                            <a href="./index.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
-                                <p>Level 1</p>
-                            </a>
-                        </li> -->
+                        <li class="nav-header"><h5>Menu Administrador</h5></li>
 
                         <li class="nav-item">
-                            <a href="kpi-operaciones.html" class="nav-link active">
+                            <a href="kpi-operaciones.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle-fill"></i>
-                                <p>Unidades Funcionales</p>
+                                <p>Indicadores Asignados</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="kpi-usuarios.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle-fill"></i>
                                 <p>Usuarios</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-indicadores.html" class="nav-link">
+                            <a href="kpi-indicadores.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle-fill"></i>
                                 <p>Indicadores</p>
                             </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
-                                <p>Tableros</p>
-                            </a>
-                        </li>
-
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
-                                <p>
-                                    Treeview
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="./index.html" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>
-                                            Level 2 (Badge)
-                                            <span class="nav-badge badge text-bg-secondary me-3">
-                                                6
-                                            </span>
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="./index.html" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Level 2</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./index.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
-                                <p>Level 1 Active</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item menu-open">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
-                                <p>
-                                    Treeview Menu Open
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="./index.html" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Level 2 Active</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="./index.html" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Level 2</p>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                     </ul>
                     <!--end::Sidebar Menu-->
@@ -355,532 +340,996 @@
         </aside>
         <!--end::Sidebar-->
 
-
-
         <!--begin::App Main-->
-<main class="app-main">
-        <!--begin::App Content Header-->
-        <div class="app-content-header">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Carga de Indicadores PKI</h3></div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item"><a href="#">Indicadores</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Carga de Indicadores</li>
-                </ol>
-              </div>
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <!--end::App Content Header-->
-        <!--begin::App Content-->
-        <div class="app-content">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row g-4">
-              <!--begin::Col-->
-              <div class="col-12">
-                <div class="callout callout-info">
-                  Complete todos los campos obligatorios marcados con (*) para crear un nuevo indicador PKI.
-                </div>
-              </div>
-              <!--end::Col-->
-              <!--begin::Col-->
-              <div class="col-12">
-                <!--begin::Form Carga Indicadores-->
-                <div class="card card-primary card-outline mb-4">
-                  <!--begin::Header-->
-                  <div class="card-header">
-                    <div class="card-title">Nuevo Indicador PKI</div>
-                  </div>
-                  <!--end::Header-->
-                  <!--begin::Form-->
-                  <form class="needs-validation" novalidate id="indicadorForm">
-                    <!--begin::Body-->
-                    <div class="card-body">
-                      <!--begin::Row-->
-                      <div class="row g-3">
-                        
-                        <!-- Sección: Identificación -->
-                        <div class="col-12">
-                          <h5 class="text-primary border-bottom pb-2 mb-3">Identificación</h5>
+        <main class="app-main">
+            <!--begin::App Content Header-->
+            <div class="app-content-header">
+                <!--begin::Container-->
+                <div class="container-fluid">
+                    <!--begin::Row-->
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="mb-0">Indicadores</h3>
                         </div>
-                        
-                        <!--begin::Código Identificatorio-->
-                        <div class="col-md-6">
-                          <label for="codigoIdentificatorio" class="form-label">Código Identificatorio *</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="codigoIdentificatorio"
-                            name="codigoIdentificatorio"
-                            placeholder="Ej: FIN001"
-                            required
-                          />
-                          <div class="invalid-feedback">El código identificatorio es obligatorio.</div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-end">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Lista de Indicadores</li>
+                            </ol>
                         </div>
-                        <!--end::Código Identificatorio-->
-                        
-                        <!--begin::Nombre-->
-                        <div class="col-md-6">
-                          <label for="nombre" class="form-label">Nombre *</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="nombre"
-                            name="nombre"
-                            placeholder="Nombre del indicador"
-                            required
-                          />
-                          <div class="invalid-feedback">El nombre es obligatorio.</div>
-                        </div>
-                        <!--end::Nombre-->
-                        
-                        <!--begin::Dimensión-->
-                        <div class="col-md-6">
-                          <label for="dimension" class="form-label">Dimensión *</label>
-                          <select class="form-select" id="dimension" name="dimension" required>
-                            <option selected disabled value="">Seleccione una dimensión...</option>
-                            <option value="financiera">Financiera</option>
-                            <option value="cliente">Cliente</option>
-                            <option value="procesos">Procesos</option>
-                            <option value="capital_humano">Capital Humano</option>
-                          </select>
-                          <div class="invalid-feedback">Debe seleccionar una dimensión.</div>
-                        </div>
-                        <!--end::Dimensión-->
-                        
-                        <!--begin::Responsable-->
-                        <div class="col-md-6">
-                          <label for="responsable" class="form-label">Responsable *</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="responsable"
-                            name="responsable"
-                            placeholder="Nombre del responsable"
-                            required
-                          />
-                          <div class="invalid-feedback">El responsable es obligatorio.</div>
-                        </div>
-                        <!--end::Responsable-->
-                        
-                        <!--begin::Descripción-->
-                        <div class="col-12">
-                          <label for="descripcion" class="form-label">Descripción *</label>
-                          <textarea
-                            class="form-control"
-                            id="descripcion"
-                            name="descripcion"
-                            rows="3"
-                            placeholder="Explicación detallada de qué mide el indicador"
-                            required
-                          ></textarea>
-                          <div class="invalid-feedback">La descripción es obligatoria.</div>
-                        </div>
-                        <!--end::Descripción-->
-                        
-                        <!--begin::Objetivo-->
-                        <div class="col-12">
-                          <label for="objetivo" class="form-label">Objetivo *</label>
-                          <textarea
-                            class="form-control"
-                            id="objetivo"
-                            name="objetivo"
-                            rows="2"
-                            placeholder="Propósito o meta que busca evaluar"
-                            required
-                          ></textarea>
-                          <div class="invalid-feedback">El objetivo es obligatorio.</div>
-                        </div>
-                        <!--end::Objetivo-->
-                        
-                        <!-- Sección: Especificaciones Técnicas -->
-                        <div class="col-12">
-                          <h5 class="text-success border-bottom pb-2 mb-3 mt-4">Especificaciones Técnicas</h5>
-                        </div>
-                        
-                        <!--begin::Fórmula de Cálculo-->
-                        <div class="col-12">
-                          <label for="formulaCalculo" class="form-label">Fórmula de Cálculo *</label>
-                          <textarea
-                            class="form-control"
-                            id="formulaCalculo"
-                            name="formulaCalculo"
-                            rows="2"
-                            placeholder="Procedimiento o fórmula para calcular el indicador"
-                            required
-                          ></textarea>
-                          <div class="invalid-feedback">La fórmula de cálculo es obligatoria.</div>
-                        </div>
-                        <!--end::Fórmula de Cálculo-->
-                        
-                        <!--begin::Fuente de Datos-->
-                        <div class="col-md-6">
-                          <label for="fuenteDatos" class="form-label">Fuente de Datos *</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="fuenteDatos"
-                            name="fuenteDatos"
-                            placeholder="Origen de los valores considerados"
-                            required
-                          />
-                          <div class="invalid-feedback">La fuente de datos es obligatoria.</div>
-                        </div>
-                        <!--end::Fuente de Datos-->
-                        
-                        <!--begin::Unidad de Medida-->
-                        <div class="col-md-6">
-                          <label for="unidadMedida" class="form-label">Unidad de Medida *</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="unidadMedida"
-                            name="unidadMedida"
-                            placeholder="Ej: porcentaje, cantidad, tiempo"
-                            required
-                          />
-                          <div class="invalid-feedback">La unidad de medida es obligatoria.</div>
-                        </div>
-                        <!--end::Unidad de Medida-->
-                        
-                        <!--begin::Frecuencia de Medición-->
-                        <div class="col-md-6">
-                          <label for="frecuenciaMedicion" class="form-label">Frecuencia de Medición *</label>
-                          <select class="form-select" id="frecuenciaMedicion" name="frecuenciaMedicion" required>
-                            <option selected disabled value="">Seleccione frecuencia...</option>
-                            <option value="diaria">Diaria</option>
-                            <option value="semanal">Semanal</option>
-                            <option value="mensual">Mensual</option>
-                            <option value="trimestral">Trimestral</option>
-                            <option value="trimestral">Cuatrimestral</option>
-                            <option value="trimestral">Semestral</option>
-                            <option value="anual">Anual</option>
-                          </select>
-                          <div class="invalid-feedback">Debe seleccionar la frecuencia de medición.</div>
-                        </div>
-                        <!--end::Frecuencia de Medición-->
-                        
-                        <!--begin::Periodicidad de Reporte-->
-                        <div class="col-md-6">
-                          <label for="periodicidadReporte" class="form-label">Periodicidad de Reporte *</label>
-                          <select class="form-select" id="periodicidadReporte" name="periodicidadReporte" required>
-                            <option selected disabled value="">Seleccione periodicidad...</option>
-                            <option value="diaria">Diaria</option>
-                            <option value="semanal">Semanal</option>
-                            <option value="mensual">Mensual</option>
-                            <option value="trimestral">Trimestral</option>
-                            <option value="trimestral">Cuatrimestral</option>
-                            <option value="trimestral">Semestral</option>
-                            <option value="anual">Anual</option>
-                          </select>
-                          <div class="invalid-feedback">Debe seleccionar la periodicidad de reporte.</div>
-                        </div>
-                        <!--end::Periodicidad de Reporte-->
-                        
-                        <!-- Sección: Parámetros de Evaluación -->
-                        <div class="col-12">
-                          <h5 class="text-warning border-bottom pb-2 mb-3 mt-4">Parámetros de Evaluación</h5>
-                        </div>
-                        
-                        <!--begin::Meta o Valor Objetivo-->
-                        <div class="col-md-6">
-                          <label for="metaObjetivo" class="form-label">Meta o Valor Objetivo</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="metaObjetivo"
-                            name="metaObjetivo"
-                            placeholder="Ej: 25%, 100 unidades"
-                          />
-                        </div>
-                        <!--end::Meta o Valor Objetivo-->
-                        
-                        <!--begin::Umbral Crítico-->
-                        <div class="col-md-6">
-                          <label for="umbralCritico" class="form-label">Umbral Crítico</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="umbralCritico"
-                            name="umbralCritico"
-                            placeholder="Valor porcentual de desvío c/r a la meta"
-                          />
-                        </div>
-                        <!--end::Umbral Crítico-->
-                        
-                        <!--begin::Tendencia Deseada-->
-                        <div class="col-md-4">
-                          <label for="tendenciaDeseada" class="form-label">Tendencia Deseada *</label>
-                          <select class="form-select" id="tendenciaDeseada" name="tendenciaDeseada" required>
-                            <option selected disabled value="">Seleccione tendencia...</option>
-                            <option value="ascendente">Ascendente</option>
-                            <option value="descendente">Descendente</option>
-                            <option value="estable">Estable</option>
-                          </select>
-                          <div class="invalid-feedback">Debe seleccionar la tendencia deseada.</div>
-                        </div>
-                        <!--end::Tendencia Deseada-->
-                        
-                        <!--begin::Categoría-->
-                        <div class="col-md-4">
-                          <label for="categoria" class="form-label">Categoría *</label>
-                          <select class="form-select" id="categoria" name="categoria" required>
-                            <option selected disabled value="">Seleccione categoría...</option>
-                            <option value="eficiencia">Eficiencia</option>
-                            <option value="eficacia">Eficacia</option>
-                            <option value="calidad">Calidad</option>
-                            <option value="productividad">Productividad</option>
-                          </select>
-                          <div class="invalid-feedback">Debe seleccionar una categoría.</div>
-                        </div>
-                        <!--end::Categoría-->
-                        
-                        <!--begin::Criticidad-->
-                        <div class="col-md-4">
-                          <label for="criticidad" class="form-label">Criticidad *</label>
-                          <select class="form-select" id="criticidad" name="criticidad" required>
-                            <option selected disabled value="">Seleccione criticidad...</option>
-                            <option value="alta">Alta</option>
-                            <option value="media">Media</option>
-                            <option value="baja">Baja</option>
-                          </select>
-                          <div class="invalid-feedback">Debe seleccionar la criticidad.</div>
-                        </div>
-                        <!--end::Criticidad-->
-                        
-                        <!-- Sección: Presentación -->
-                        <div class="col-12">
-                          <h5 class="text-info border-bottom pb-2 mb-3 mt-4">Presentación</h5>
-                        </div>
-                        
-                        <!--begin::Formato de Presentación-->
-                        <div class="col-md-6">
-                          <label class="form-label">Formato de Presentación *</label>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="tabla" id="formatoTabla" name="formatoPresentacion[]">
-                            <label class="form-check-label" for="formatoTabla">Tabla</label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="grafico" id="formatoGrafico" name="formatoPresentacion[]">
-                            <label class="form-check-label" for="formatoGrafico">Gráfico</label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="dashboard" id="formatoDashboard" name="formatoPresentacion[]">
-                            <label class="form-check-label" for="formatoDashboard">Dashboard</label>
-                          </div>
-                          <div class="invalid-feedback">Debe seleccionar al menos un formato de presentación.</div>
-                        </div>
-                        <!--end::Formato de Presentación-->
-                        
-                        <!--begin::Nivel de Desagregación-->
-                        <div class="col-md-6">
-                          <label class="form-label">Nivel de Desagregación</label>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="region" id="nivelRegion" name="nivelDesagregacion[]">
-                            <label class="form-check-label" for="nivelRegion">Región</label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="producto" id="nivelProducto" name="nivelDesagregacion[]">
-                            <label class="form-check-label" for="nivelProducto">Producto</label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="cliente" id="nivelCliente" name="nivelDesagregacion[]">
-                            <label class="form-check-label" for="nivelCliente">Cliente</label>
-                          </div>
-                        </div>
-                        <!--end::Nivel de Desagregación-->
-                        
-                        <!--begin::Comentarios-->
-                        <div class="col-12">
-                          <label for="comentarios" class="form-label">Comentarios</label>
-                          <textarea
-                            class="form-control"
-                            id="comentarios"
-                            name="comentarios"
-                            rows="3"
-                            placeholder="Comentarios adicionales sobre el indicador"
-                          ></textarea>
-                        </div>
-                        <!--end::Comentarios-->
-                        
-                      </div>
-                      <!--end::Row-->
                     </div>
-                    <!--end::Body-->
-                    <!--begin::Footer-->
-                    <div class="card-footer">
-                      <button class="btn btn-primary" type="submit">Guardar Indicador</button>
-                      <button class="btn btn-secondary ms-2" type="button" onclick="limpiarFormulario()">Limpiar</button>
-                      <button class="btn btn-outline-secondary float-end" type="button" onclick="window.history.back()">Cancelar</button>
-                    </div>
-                    <!--end::Footer-->
-                  </form>
-                  <!--end::Form-->
-                  
-                  <!--begin::JavaScript-->
-                  <script>
-                    // Validación personalizada de Bootstrap
-                    (() => {
-                      'use strict';
-
-                      const forms = document.querySelectorAll('.needs-validation');
-
-                      Array.from(forms).forEach((form) => {
-                        form.addEventListener('submit', (event) => {
-                          // Validar formato de presentación
-                          const formatoCheckboxes = document.querySelectorAll('input[name="formatoPresentacion[]"]');
-                          const formatoSelected = Array.from(formatoCheckboxes).some(checkbox => checkbox.checked);
-                          
-                          if (!formatoSelected) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            // Mostrar mensaje de error personalizado
-                            formatoCheckboxes[0].setCustomValidity('Debe seleccionar al menos un formato de presentación.');
-                          } else {
-                            formatoCheckboxes[0].setCustomValidity('');
-                          }
-
-                          if (!form.checkValidity()) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                          } else {
-                            // Aquí iría la lógica para enviar los datos
-                            event.preventDefault();
-                            procesarFormulario();
-                          }
-
-                          form.classList.add('was-validated');
-                        }, false);
-                      });
-                    })();
-
-                    // Función para procesar el formulario
-                    function procesarFormulario() {
-                      const formData = new FormData(document.getElementById('indicadorForm'));
-                      
-                      // Obtener valores de checkboxes
-                      const formatoPresentacion = Array.from(document.querySelectorAll('input[name="formatoPresentacion[]"]:checked')).map(cb => cb.value);
-                      const nivelDesagregacion = Array.from(document.querySelectorAll('input[name="nivelDesagregacion[]"]:checked')).map(cb => cb.value);
-                      
-                      // Crear objeto con los datos
-                      const indicadorData = {
-                        codigoIdentificatorio: formData.get('codigoIdentificatorio'),
-                        nombre: formData.get('nombre'),
-                        dimension: formData.get('dimension'),
-                        descripcion: formData.get('descripcion'),
-                        formulaCalculo: formData.get('formulaCalculo'),
-                        fuenteDatos: formData.get('fuenteDatos'),
-                        objetivo: formData.get('objetivo'),
-                        responsable: formData.get('responsable'),
-                        unidadMedida: formData.get('unidadMedida'),
-                        frecuenciaMedicion: formData.get('frecuenciaMedicion'),
-                        periodicidadReporte: formData.get('periodicidadReporte'),
-                        metaObjetivo: formData.get('metaObjetivo'),
-                        umbralCritico: formData.get('umbralCritico'),
-                        categoria: formData.get('categoria'),
-                        criticidad: formData.get('criticidad'),
-                        tendenciaDeseada: formData.get('tendenciaDeseada'),
-                        formatoPresentacion: formatoPresentacion.join(','),
-                        nivelDesagregacion: nivelDesagregacion.join(','),
-                        comentarios: formData.get('comentarios')
-                      };
-
-                      console.log('Datos del indicador:', indicadorData);
-                      
-                      // Aquí conectarías con tu backend
-                      // Por ejemplo: enviarABackend(indicadorData);
-                      
-                      alert('Indicador guardado exitosamente (simulación)');
-                    }
-
-                    // Función para limpiar el formulario
-                    function limpiarFormulario() {
-                      document.getElementById('indicadorForm').reset();
-                      document.getElementById('indicadorForm').classList.remove('was-validated');
-                    }
-                  </script>
-                  <!--end::JavaScript-->
+                    <!--end::Row-->
                 </div>
-                <!--end::Form Carga Indicadores-->
-              </div>
-              <!--end::Col-->
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <!--end::App Content-->
-      </main>
-        <!--end::App Main-->
+                <!--end::Container-->
+                <!-- </div> -->
+                <!--end::App Content Header-->
 
-        <footer class="main-footer text-center">
-            <strong>© 2025 - MiResultIQ 1.0</strong>
-        </footer>
+                <!--begin::App Content-->
+                <div class="app-main" id="appContent" style="display: block">
+                    <!--begin::Container-->
+                    <div class="container-fluid">
+                        <!--begin::Row-->
+                        <div class="row g-4">
+                            <!--begin::Col-->
+                            <div class="col-12">
+                                <!--begin::Lista Indicadores-->
+                                <div class="card card-primary card-outline mb-4">
+                                    <!--begin::Header-->
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <div class="card-title">
+                                            <i class="fas fa-chart-line me-2"></i>
+                                            Lista de Indicadores PKI
+                                        </div>
+                                        <div class="card-tools">
+                                            <span class="badge bg-primary" id="totalIndicadores">0 indicadores</span>
+                                        </div>
+                                    </div>
+                                    <!--end::Header-->
 
-        <!--end::Footer-->
+                                    <!--begin::Body-->
+                                    <div class="card-body p-0">
+                                        <!--begin::Table-->
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th scope="col">Código</th>
+                                                        <th scope="col">Nombre</th>
+                                                        <th scope="col">Dimensión</th>
+                                                        <th scope="col">U Funcional</th>
+                                                        <th scope="col">Responsable</th>
+                                                        <th scope="col">Categoría</th>
+                                                        <th scope="col">Criticidad</th>
+                                                        <th scope="col">Frecuencia</th>
+                                                        <th scope="col">Tendencia</th>
+                                                        <th scope="col">Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tablaIndicadores">
+                                                    <!-- Los datos se cargarán dinámicamente aquí -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!--end::Table-->
 
+                                        <!--begin::Empty State-->
+                                        <div class="text-center py-5" id="emptyState" style="display: none;">
+                                            <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-muted">No hay indicadores registrados</h5>
+                                            <p class="text-muted">Comience agregando su primer indicador PKI</p>
+                                        </div>
+                                        <!--end::Empty State-->
+                                    </div>
+                                    <!--end::Body-->
+
+                                    <!--begin::Footer-->
+                                    <div class="card-footer">
+                                        <button class="btn btn-primary" onclick="agregarIndicador()">
+                                            <i class="fas fa-plus me-2"></i>
+                                            Agregar Nuevo Indicador
+                                        </button>
+                                        <button class="btn btn-outline-secondary ms-2" onclick="exportarIndicadores()">
+                                            <i class="fas fa-download me-2"></i>
+                                            Exportar Lista
+                                        </button>
+                                    </div>
+                                    <!--end::Footer-->
+                                </div>
+                                <!--end::Lista Indicadores-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Row-->
+                    </div>
+                    <!--end::Container-->
+                </div>
+                <!--end::App Content-->
+
+                <div class="app-main" id="appMain" style="display: none">
+                    <!-- Header -->
+                    <div class="app-content-header">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h3 class="mb-0">Detalle del Indicador</h3>
+                                </div>
+                                <div class="col-sm-6">
+                                    <ol class="breadcrumb float-sm-end">
+                                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                        <li class="breadcrumb-item"><a href="#">Indicadores</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Detalle</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cuerpo -->
+                    <div class="app-content">
+                        <div class="container-fluid">
+                            <div class="card card-info card-outline">
+                                <div class="card-header">
+                                    <h5 class="card-title">Información completa del indicador</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-4">
+                                        <!-- Sección: Identificación -->
+                                        <div class="col-12">
+                                            <h5 class="text-primary border-bottom pb-2">Identificación</h5>
+                                        </div>
+
+                                        <div class="col-md-6"><strong>Código:</strong> <span id="codigo"></span></div>
+                                        <div class="col-md-6"><strong>Nombre:</strong> <span id="nombre"></span></div>
+                                        <div class="col-md-6"><strong>Dimensión:</strong> <span id="dimension"></span>
+                                        </div>
+                                        <div class="col-md-6"><strong>Responsable:</strong> <span
+                                                id="responsable"></span>
+                                        </div>
+                                        <div class="col-12"><strong>Descripción:</strong><br><span
+                                                id="descripcion"></span>
+                                        </div>
+                                        <div class="col-12"><strong>Objetivo:</strong><br><span id="objetivo"></span>
+                                        </div>
+
+                                        <!-- Sección: Técnicas -->
+                                        <div class="col-12 mt-4">
+                                            <h5 class="text-success border-bottom pb-2">Especificaciones Técnicas</h5>
+                                        </div>
+
+                                        <div class="col-12"><strong>Fórmula de cálculo:</strong><br><span
+                                                id="formulaCalculo"></span></div>
+                                        <div class="col-md-6"><strong>Fuente de datos:</strong> <span
+                                                id="fuenteDatos"></span></div>
+                                        <div class="col-md-6"><strong>Unidad de medida:</strong> <span
+                                                id="unidadMedida"></span></div>
+                                        <div class="col-md-6"><strong>Frecuencia de medición:</strong> <span
+                                                id="frecuenciaMedicion"></span>
+                                        </div>
+                                        <div class="col-md-6"><strong>Periodicidad de reporte:</strong> <span
+                                                id="periodicidadReporte"></span>
+                                        </div>
+
+                                        <!-- Sección: Evaluación -->
+                                        <div class="col-12 mt-4">
+                                            <h5 class="text-warning border-bottom pb-2">Parámetros de Evaluación</h5>
+                                        </div>
+
+                                        <div class="col-md-6"><strong>Meta objetivo:</strong> <span
+                                                id="metaObjetivo"></span></div>
+                                        <div class="col-md-6"><strong>Umbral crítico:</strong> <span
+                                                id="umbralCritico"></span></div>
+                                        <div class="col-md-4"><strong>Tendencia deseada:</strong> <span
+                                                id="tendenciaDeseada"></span></div>
+                                        <div class="col-md-4"><strong>Categoría:</strong> <span id="categoria"></span>
+                                        </div>
+                                        <div class="col-md-4"><strong>Criticidad:</strong> <span id="criticidad"></span>
+                                        </div>
+
+                                        <!-- Sección: Presentación -->
+                                        <div class="col-12 mt-4">
+                                            <h5 class="text-info border-bottom pb-2">Presentación</h5>
+                                        </div>
+
+                                        <div class="col-md-6"><strong>Formato de presentación:</strong> <span
+                                                id="formatoPresentacion"></span>
+                                        </div>
+                                        <div class="col-md-6"><strong>Nivel de desagregación:</strong> <span
+                                                id="nivelDesagregacion"></span>
+                                        </div>
+
+                                        <div class="col-12"><strong>Comentarios:</strong><br><span
+                                                id="comentarios"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-secondary"
+                                        onclick="window.location.href='kpi-indicadores.html'">Volver</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-main" id="appMainCarga" style="display: none">
+                    <!--begin::App Content Header-->
+                    <div class="app-content-header">
+                        <!--begin::Container-->
+                        <div class="container-fluid">
+                            <!--begin::Row-->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h3 class="mb-0">Creación de Indicador</h3>
+                                </div>
+                                <div class="col-sm-6">
+                                    <ol class="breadcrumb float-sm-end">
+                                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                        <li class="breadcrumb-item"><a href="#">Indicadores</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Carga de Indicadores</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <!--end::Row-->
+                        </div>
+                        <!--end::Container-->
+                    </div>
+                    <!--end::App Content Header-->
+                    <!--begin::App Content-->
+                    <div class="app-content">
+                        <!--begin::Container-->
+                        <div class="container-fluid">
+                            <!--begin::Row-->
+                            <div class="row g-4">
+                                <!--begin::Col-->
+                                <div class="col-12">
+                                    <div class="callout callout-info">
+                                        Complete todos los campos obligatorios marcados con (*) para crear un nuevo
+                                        indicador PKI.
+                                    </div>
+                                </div>
+                                <!--end::Col-->
+                                <!--begin::Col-->
+                                <div class="col-12">
+                                    <!--begin::Form Carga Indicadores-->
+                                    <div class="card card-primary card-outline mb-4">
+                                        <!--begin::Header-->
+                                        <div class="card-header">
+                                            <div class="card-title">Nuevo Indicador PKI</div>
+                                        </div>
+                                        <!--end::Header-->
+                                        <!--begin::Form-->
+                                        <form class="needs-validation" novalidate id="indicadorForm">
+                                            <!--begin::Body-->
+                                            <div class="card-body">
+                                                <!--begin::Row-->
+                                                <div class="row g-3">
+
+                                                    <!-- Sección: Identificación -->
+                                                    <div class="col-12">
+                                                        <h5 class="text-primary border-bottom pb-2 mb-3">Identificación
+                                                        </h5>
+                                                    </div>
+
+                                                    <!--begin::Código Identificatorio-->
+                                                    <div class="col-md-3">
+                                                        <label for="codigoIdentificatorio" class="form-label">Código
+                                                            Identificatorio *</label>
+                                                        <input type="text" class="form-control"
+                                                            id="codigoIdentificatorio" name="codigoIdentificatorio"
+                                                            placeholder="Ej: FIN001" required />
+                                                        <div class="invalid-feedback">El código identificatorio es
+                                                            obligatorio.</div>
+                                                    </div>
+                                                    <!--end::Código Identificatorio-->
+
+                                                    <!--begin::Nombre-->
+                                                    <div class="col-md-6">
+                                                        <label for="nombre" class="form-label">Nombre *</label>
+                                                        <input type="text" class="form-control" id="nombre"
+                                                            name="nombre" placeholder="Nombre del indicador" required />
+                                                        <div class="invalid-feedback">El nombre es obligatorio.</div>
+                                                    </div>
+                                                    <!--end::Nombre-->
+
+                                                    <!--begin::Dimensión-->
+                                                    <div class="col-md-3">
+                                                        <label for="dimension" class="form-label">Dimensión *</label>
+                                                        <select class="form-select" id="dimension" name="dimension"
+                                                            required>
+                                                            <option selected disabled value="">Seleccione una
+                                                                dimensión...</option>
+                                                            <option value="financiera">Financiera</option>
+                                                            <option value="cliente">Cliente</option>
+                                                            <option value="procesos">Procesos</option>
+                                                            <option value="capital_humano">Capital Humano</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe seleccionar una dimensión.
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Dimensión-->
+
+                                                    <!--begin::Responsable-->
+                                                    <div class="col-md-4">
+                                                        <label for="responsable" class="form-label">Responsable
+                                                            *</label>
+                                                        <input type="text" class="form-control" id="responsable"
+                                                            name="responsable" placeholder="Nombre del responsable"
+                                                            required />
+                                                        <div class="invalid-feedback">El responsable es obligatorio.
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Responsable-->
+
+                                                    <!--begin::Responsable-->
+                                                    <div class="col-md-5">
+                                                        <label for="responsable" class="form-label">Unidad funcional
+                                                            *</label>
+                                                        <input type="text" class="form-control" id="unidadFuncional"
+                                                            name="responsable" placeholder="Area de responsabilidad"
+                                                            required />
+                                                        <div class="invalid-feedback">La Unidad es obligatoria.</div>
+                                                    </div>
+                                                    <!--end::Responsable-->
+
+                                                    <!--begin::Descripción-->
+                                                    <div class="col-12">
+                                                        <label for="descripcion" class="form-label">Descripción
+                                                            *</label>
+                                                        <textarea class="form-control" id="descripcion"
+                                                            name="descripcion" rows="3"
+                                                            placeholder="Explicación detallada de qué mide el indicador"
+                                                            required></textarea>
+                                                        <div class="invalid-feedback">La descripción es obligatoria.
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Descripción-->
+
+                                                    <!--begin::Objetivo-->
+                                                    <div class="col-12">
+                                                        <label for="objetivo" class="form-label">Objetivo *</label>
+                                                        <textarea class="form-control" id="objetivo" name="objetivo"
+                                                            rows="2" placeholder="Propósito o meta que busca evaluar"
+                                                            required></textarea>
+                                                        <div class="invalid-feedback">El objetivo es obligatorio.</div>
+                                                    </div>
+                                                    <!--end::Objetivo-->
+
+                                                    <!-- Sección: Especificaciones Técnicas -->
+                                                    <div class="col-12">
+                                                        <h5 class="text-success border-bottom pb-2 mb-3 mt-4">
+                                                            Especificaciones Técnicas</h5>
+                                                    </div>
+
+                                                    <!--begin::Fórmula de Cálculo-->
+                                                    <div class="col-12">
+                                                        <label for="formulaCalculo" class="form-label">Fórmula de
+                                                            Cálculo *</label>
+                                                        <textarea class="form-control" id="formulaCalculo"
+                                                            name="formulaCalculo" rows="2"
+                                                            placeholder="Procedimiento o fórmula para calcular el indicador"
+                                                            required></textarea>
+                                                        <div class="invalid-feedback">La fórmula de cálculo es
+                                                            obligatoria.</div>
+                                                    </div>
+                                                    <!--end::Fórmula de Cálculo-->
+
+                                                    <!--begin::Fuente de Datos-->
+                                                    <div class="col-md-6">
+                                                        <label for="fuenteDatos" class="form-label">Fuente de Datos
+                                                            *</label>
+                                                        <input type="text" class="form-control" id="fuenteDatos"
+                                                            name="fuenteDatos"
+                                                            placeholder="Origen de los valores considerados" required />
+                                                        <div class="invalid-feedback">La fuente de datos es obligatoria.
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Fuente de Datos-->
+
+                                                    <!--begin::Unidad de Medida-->
+                                                    <div class="col-md-6">
+                                                        <label for="unidadMedida" class="form-label">Unidad de Medida
+                                                            *</label>
+                                                        <input type="text" class="form-control" id="unidadMedida"
+                                                            name="unidadMedida"
+                                                            placeholder="Ej: porcentaje, cantidad, tiempo" required />
+                                                        <div class="invalid-feedback">La unidad de medida es
+                                                            obligatoria.</div>
+                                                    </div>
+                                                    <!--end::Unidad de Medida-->
+
+                                                    <!--begin::Frecuencia de Medición-->
+                                                    <div class="col-md-6">
+                                                        <label for="frecuenciaMedicion" class="form-label">Frecuencia de
+                                                            Medición *</label>
+                                                        <select class="form-select" id="frecuenciaMedicion"
+                                                            name="frecuenciaMedicion" required>
+                                                            <option selected disabled value="">Seleccione frecuencia...
+                                                            </option>
+                                                            <option value="diaria">Diaria</option>
+                                                            <option value="semanal">Semanal</option>
+                                                            <option value="mensual">Mensual</option>
+                                                            <option value="trimestral">Trimestral</option>
+                                                            <option value="trimestral">Cuatrimestral</option>
+                                                            <option value="trimestral">Semestral</option>
+                                                            <option value="anual">Anual</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe seleccionar la frecuencia de
+                                                            medición.</div>
+                                                    </div>
+                                                    <!--end::Frecuencia de Medición-->
+
+                                                    <!--begin::Periodicidad de Reporte-->
+                                                    <div class="col-md-6">
+                                                        <label for="periodicidadReporte" class="form-label">Periodicidad
+                                                            de Reporte *</label>
+                                                        <select class="form-select" id="periodicidadReporte"
+                                                            name="periodicidadReporte" required>
+                                                            <option selected disabled value="">Seleccione
+                                                                periodicidad...</option>
+                                                            <option value="diaria">Diaria</option>
+                                                            <option value="semanal">Semanal</option>
+                                                            <option value="mensual">Mensual</option>
+                                                            <option value="trimestral">Trimestral</option>
+                                                            <option value="trimestral">Cuatrimestral</option>
+                                                            <option value="trimestral">Semestral</option>
+                                                            <option value="anual">Anual</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe seleccionar la periodicidad
+                                                            de reporte.</div>
+                                                    </div>
+                                                    <!--end::Periodicidad de Reporte-->
+
+                                                    <!-- Sección: Parámetros de Evaluación -->
+                                                    <div class="col-12">
+                                                        <h5 class="text-warning border-bottom pb-2 mb-3 mt-4">Parámetros
+                                                            de Evaluación</h5>
+                                                    </div>
+
+                                                    <!--begin::Meta o Valor Objetivo-->
+                                                    <div class="col-md-6">
+                                                        <label for="metaObjetivo" class="form-label">Meta o Valor
+                                                            Objetivo</label>
+                                                        <input type="text" class="form-control" id="metaObjetivo"
+                                                            name="metaObjetivo" placeholder="Ej: 25%, 100 unidades" />
+                                                    </div>
+                                                    <!--end::Meta o Valor Objetivo-->
+
+                                                    <!--begin::Umbral Crítico-->
+                                                    <div class="col-md-6">
+                                                        <label for="umbralCritico" class="form-label">Umbral
+                                                            Crítico</label>
+                                                        <input type="text" class="form-control" id="umbralCritico"
+                                                            name="umbralCritico"
+                                                            placeholder="Valor porcentual de desvío c/r a la meta" />
+                                                    </div>
+                                                    <!--end::Umbral Crítico-->
+
+                                                    <!--begin::Tendencia Deseada-->
+                                                    <div class="col-md-4">
+                                                        <label for="tendenciaDeseada" class="form-label">Tendencia
+                                                            Deseada *</label>
+                                                        <select class="form-select" id="tendenciaDeseada"
+                                                            name="tendenciaDeseada" required>
+                                                            <option selected disabled value="">Seleccione tendencia...
+                                                            </option>
+                                                            <option value="ascendente">Ascendente</option>
+                                                            <option value="descendente">Descendente</option>
+                                                            <option value="estable">Estable</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe seleccionar la tendencia
+                                                            deseada.</div>
+                                                    </div>
+                                                    <!--end::Tendencia Deseada-->
+
+                                                    <!--begin::Categoría-->
+                                                    <div class="col-md-4">
+                                                        <label for="categoria" class="form-label">Categoría *</label>
+                                                        <select class="form-select" id="categoria" name="categoria"
+                                                            required>
+                                                            <option selected disabled value="">Seleccione categoría...
+                                                            </option>
+                                                            <option value="eficiencia">Eficiencia</option>
+                                                            <option value="eficacia">Eficacia</option>
+                                                            <option value="calidad">Calidad</option>
+                                                            <option value="productividad">Productividad</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe seleccionar una categoría.
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Categoría-->
+
+                                                    <!--begin::Criticidad-->
+                                                    <div class="col-md-4">
+                                                        <label for="criticidad" class="form-label">Criticidad *</label>
+                                                        <select class="form-select" id="criticidad" name="criticidad"
+                                                            required>
+                                                            <option selected disabled value="">Seleccione criticidad...
+                                                            </option>
+                                                            <option value="alta">Alta</option>
+                                                            <option value="media">Media</option>
+                                                            <option value="baja">Baja</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe seleccionar la criticidad.
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Criticidad-->
+
+                                                    <!-- Sección: Presentación -->
+                                                    <div class="col-12">
+                                                        <h5 class="text-info border-bottom pb-2 mb-3 mt-4">Presentación
+                                                        </h5>
+                                                    </div>
+
+                                                    <!--begin::Formato de Presentación-->
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Formato de Presentación *</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="tabla" id="formatoTabla"
+                                                                name="formatoPresentacion[]">
+                                                            <label class="form-check-label"
+                                                                for="formatoTabla">Tabla</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="grafico" id="formatoGrafico"
+                                                                name="formatoPresentacion[]">
+                                                            <label class="form-check-label"
+                                                                for="formatoGrafico">Gráfico</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="dashboard" id="formatoDashboard"
+                                                                name="formatoPresentacion[]">
+                                                            <label class="form-check-label"
+                                                                for="formatoDashboard">Dashboard</label>
+                                                        </div>
+                                                        <div class="invalid-feedback">Debe seleccionar al menos un
+                                                            formato de presentación.</div>
+                                                    </div>
+                                                    <!--end::Formato de Presentación-->
+
+                                                    <!--begin::Nivel de Desagregación-->
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Nivel de Desagregación</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="region" id="nivelRegion"
+                                                                name="nivelDesagregacion[]">
+                                                            <label class="form-check-label"
+                                                                for="nivelRegion">Región</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="producto" id="nivelProducto"
+                                                                name="nivelDesagregacion[]">
+                                                            <label class="form-check-label"
+                                                                for="nivelProducto">Producto</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="cliente" id="nivelCliente"
+                                                                name="nivelDesagregacion[]">
+                                                            <label class="form-check-label"
+                                                                for="nivelCliente">Cliente</label>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Nivel de Desagregación-->
+
+                                                    
+                                                    <!--begin::Nivel de Agrupamiento-->
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Categoría agrupamiento</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="region" id="nivelRegion"
+                                                                name="nivelDesagregacion[]">
+                                                            <label class="form-check-label"
+                                                                for="nivelGrp1">Grupo 1</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="producto" id="nivelProducto"
+                                                                name="nivelDesagregacion[]">
+                                                            <label class="form-check-label"
+                                                                for="nivelGrp2">Grupo 2</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="cliente" id="nivelCliente"
+                                                                name="nivelDesagregacion[]">
+                                                            <label class="form-check-label"
+                                                                for="nivelGrp3">Grupo 3</label>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Nivel de Desagregación-->
+
+                                                    <!--begin::Comentarios-->
+                                                    <div class="col-12">
+                                                        <label for="comentarios" class="form-label">Comentarios</label>
+                                                        <textarea class="form-control" id="comentarios"
+                                                            name="comentarios" rows="3"
+                                                            placeholder="Comentarios adicionales sobre el indicador"></textarea>
+                                                    </div>
+                                                    <!--end::Comentarios-->
+
+                                                </div>
+                                                <!--end::Row-->
+                                            </div>
+                                            <!--end::Body-->
+                                            <!--begin::Footer-->
+                                            <div class="card-footer">
+                                                <button class="btn btn-primary" type="submit">Guardar Indicador</button>
+                                                <button class="btn btn-secondary ms-2" type="button"
+                                                    onclick="limpiarFormulario()">Limpiar</button>
+                                                <button class="btn btn-outline-secondary float-end" type="button"
+                                                    onclick="window.location.href = 'kpi-indicadores.html'">Cancelar</button>
+                                            </div>
+                                            <!--end::Footer-->
+                                        </form>
+                                        <!--end::Form-->
+
+                                        <!--begin::JavaScript-->
+                                        <script>
+                                            // Validación personalizada de Bootstrap
+                                            (() => {
+                                                'use strict';
+
+                                                const forms = document.querySelectorAll('.needs-validation');
+
+                                                Array.from(forms).forEach((form) => {
+                                                    form.addEventListener('submit', (event) => {
+                                                        // Validar formato de presentación
+                                                        const formatoCheckboxes = document.querySelectorAll('input[name="formatoPresentacion[]"]');
+                                                        const formatoSelected = Array.from(formatoCheckboxes).some(checkbox => checkbox.checked);
+
+                                                        if (!formatoSelected) {
+                                                            event.preventDefault();
+                                                            event.stopPropagation();
+                                                            // Mostrar mensaje de error personalizado
+                                                            formatoCheckboxes[0].setCustomValidity('Debe seleccionar al menos un formato de presentación.');
+                                                        } else {
+                                                            formatoCheckboxes[0].setCustomValidity('');
+                                                        }
+
+                                                        if (!form.checkValidity()) {
+                                                            event.preventDefault();
+                                                            event.stopPropagation();
+                                                        } else {
+                                                            // Aquí iría la lógica para enviar los datos
+                                                            event.preventDefault();
+                                                            procesarFormulario();
+                                                        }
+
+                                                        form.classList.add('was-validated');
+                                                    }, false);
+                                                });
+                                            })();
+
+                                            // Función para procesar el formulario
+                                            function procesarFormulario() {
+                                                const formData = new FormData(document.getElementById('indicadorForm'));
+
+                                                // Obtener valores de checkboxes
+                                                const formatoPresentacion = Array.from(document.querySelectorAll('input[name="formatoPresentacion[]"]:checked')).map(cb => cb.value);
+                                                const nivelDesagregacion = Array.from(document.querySelectorAll('input[name="nivelDesagregacion[]"]:checked')).map(cb => cb.value);
+
+                                                // Crear objeto con los datos
+                                                const indicadorData = {
+                                                    codigoIdentificatorio: formData.get('codigoIdentificatorio'),
+                                                    nombre: formData.get('nombre'),
+                                                    dimension: formData.get('dimension'),
+                                                    descripcion: formData.get('descripcion'),
+                                                    formulaCalculo: formData.get('formulaCalculo'),
+                                                    fuenteDatos: formData.get('fuenteDatos'),
+                                                    objetivo: formData.get('objetivo'),
+                                                    responsable: formData.get('responsable'),
+                                                    unidadMedida: formData.get('unidadMedida'),
+                                                    frecuenciaMedicion: formData.get('frecuenciaMedicion'),
+                                                    periodicidadReporte: formData.get('periodicidadReporte'),
+                                                    metaObjetivo: formData.get('metaObjetivo'),
+                                                    umbralCritico: formData.get('umbralCritico'),
+                                                    categoria: formData.get('categoria'),
+                                                    criticidad: formData.get('criticidad'),
+                                                    tendenciaDeseada: formData.get('tendenciaDeseada'),
+                                                    formatoPresentacion: formatoPresentacion.join(','),
+                                                    nivelDesagregacion: nivelDesagregacion.join(','),
+                                                    comentarios: formData.get('comentarios')
+                                                };
+
+                                                console.log('Datos del indicador:', indicadorData);
+
+                                                // Aquí conectarías con tu backend
+                                                // Por ejemplo: enviarABackend(indicadorData);
+
+                                                alert('Indicador guardado exitosamente (simulación)');
+                                            }
+
+                                            // Función para limpiar el formulario
+                                            function limpiarFormulario() {
+                                                document.getElementById('indicadorForm').reset();
+                                                document.getElementById('indicadorForm').classList.remove('was-validated');
+                                            }
+                                        </script>
+                                        <!--end::JavaScript-->
+                                    </div>
+                                    <!--end::Form Carga Indicadores-->
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Row-->
+                        </div>
+                        <!--end::Container-->
+                    </div>
+                    <!--end::App Content-->
+                </div>
+        </main>
     </div>
-    <!--end::App Wrapper-->
 
+    <!--end::App Main-->
 
-
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <!-- <script src="../../dist/js/adminlte.js"></script> -->
-    <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-        const Default = {
-            scrollbarTheme: 'os-theme-light',
-            scrollbarAutoHide: 'leave',
-            scrollbarClickScroll: true,
-        };
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-            if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
-                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                        theme: Default.scrollbarTheme,
-                        autoHide: Default.scrollbarAutoHide,
-                        clickScroll: Default.scrollbarClickScroll,
-                    },
-                });
+        // Datos de ejemplo para demostrar la funcionalidad
+        const indicadoresEjemplo = [
+            {
+                codigo: "FIN001",
+                nombre: "Margen de Ganancia Bruta",
+                dimension: "Financiera",
+                unidad: "Administración",
+                responsable: "Juan Pérez",
+                categoria: "Eficiencia",
+                criticidad: "Alta",
+                frecuencia: "Mensual",
+                tendencia: "Ascendente",
+                descripcion: "Mide el margen de ganancia bruta de la empresa"
+            },
+            {
+                codigo: "CLI002",
+                nombre: "Satisfacción del Cliente",
+                dimension: "Cliente",
+                unidad: "Ventas",
+                responsable: "María García",
+                categoria: "Calidad",
+                criticidad: "Alta",
+                frecuencia: "Trimestral",
+                tendencia: "Ascendente",
+                descripcion: "Mide el nivel de satisfacción de los clientes"
+            },
+            {
+                codigo: "PRO003",
+                nombre: "Tiempo de Procesamiento",
+                dimension: "Procesos",
+                unidad: "Adm Ventas",
+                responsable: "María García",
+                categoria: "Eficiencia",
+                criticidad: "Media",
+                frecuencia: "Semanal",
+                tendencia: "Descendente",
+                descripcion: "Tiempo promedio de procesamiento de pedidos"
+            },
+            {
+                codigo: "RRH004",
+                nombre: "Rotación de Personal",
+                dimension: "Capital Humano",
+                unidad: "RRHH",
+                responsable: "María García",
+                categoria: "Productividad",
+                criticidad: "Media",
+                frecuencia: "Mensual",
+                tendencia: "Descendente",
+                descripcion: "Porcentaje de rotación de personal mensual"
             }
+        ];
+
+        // Función para obtener el color de la dimensión
+        function getColorDimension(dimension) {
+            const colores = {
+                'Financiera': 'primary',
+                'Cliente': 'success',
+                'Procesos': 'warning',
+                'Capital Humano': 'info'
+            };
+            return colores[dimension] || 'secondary';
+        }
+
+        // Función para obtener el icono de tendencia
+        // function getIconoTendencia(tendencia) {
+        //     const iconos = {
+        //         'Ascendente': 'fas fa-arrow-up',
+        //         'Descendente': 'fas fa-arrow-down',
+        //         'Estable': 'fas fa-minus'
+        //     };
+        //     return iconos[tendencia] || 'fas fa-minus';
+        // }
+
+        function getIconoTendencia(tendencia) {
+            const iconos = {
+                'Ascendente': 'fas fa-arrow-up',
+                'Descendente': 'fas fa-arrow-down',
+                'Estable': 'fas fa-minus',
+                'Crítica': 'fas fa-exclamation-triangle text-danger',
+                'Urgente': 'fas fa-bolt text-warning'
+            };
+            return iconos[tendencia] || 'fas fa-minus';
+        }
+
+        // Función para cargar la tabla de indicadores
+        function cargarTablaIndicadores() {
+            const tbody = document.getElementById('tablaIndicadores');
+            const emptyState = document.getElementById('emptyState');
+            const totalIndicadores = document.getElementById('totalIndicadores');
+
+            // Limpiar tabla
+            tbody.innerHTML = '';
+
+            if (indicadoresEjemplo.length === 0) {
+                emptyState.style.display = 'block';
+                totalIndicadores.textContent = '0 indicadores';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            totalIndicadores.textContent = `${indicadoresEjemplo.length} indicadores`;
+
+            // onclick="window.location.href='kpi-indicadoresMuestra.html'"
+
+            indicadoresEjemplo.forEach(indicador => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <button class="btn btn-link btn-link-custom p-0" onclick="mostrarAppMain()">
+                            <strong>${indicador.codigo}</strong>
+                        </button>
+                    </td>
+                    <td>
+                        <div class="fw-medium">${indicador.nombre}</div>
+                        <small class="text-muted">${indicador.descripcion.substring(0, 50)}...</small>
+                    </td>
+
+                    <td>
+                        <span class="badge bg-${getColorDimension(indicador.dimension)} badge-dimension">
+                            ${indicador.dimension}
+                        </span>
+                    </td>
+
+                    <td>${indicador.unidad}</td>
+
+                    <td>${indicador.responsable}</td>
+
+                    <td>
+                        <span class="badge bg-light text-dark">${indicador.categoria}</span>
+                    </td>
+                    <td>
+                        <span class="fw-medium criticidad-${indicador.criticidad.toLowerCase()}">
+                            ${indicador.criticidad}
+                        </span>
+                    </td>
+                    <td>
+                        <small class="text-muted">${indicador.frecuencia}</small>
+                    </td>
+                    <td>
+                        <span class="tendencia-${indicador.tendencia.toLowerCase()}">
+                            <i class="${getIconoTendencia(indicador.tendencia)} me-1"></i>
+                            ${indicador.tendencia}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button class="btn btn-outline-primary" onclick="editarIndicador('${indicador.codigo}')" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-info" onclick="verIndicador('${indicador.codigo}')" title="Ver detalles">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" onclick="eliminarIndicador('${indicador.codigo}')" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Función para ver un indicador específico
+        function verIndicador(codigo) {
+            alert(`Función para ver el indicador: ${codigo}`);
+            window.location.href = 'kpi-indicadoresMuestra.html'
+            // Aquí iría la lógica para mostrar el detalle del indicador
+            console.log('Ver indicador:', codigo);
+        }
+
+        // Función para editar un indicador
+        function editarIndicador(codigo) {
+            alert(`Función para editar el indicador: ${codigo}`);
+            window.location.href = 'kpi-indicadoresCarga.html'
+            // Aquí iría la lógica para editar el indicador
+            console.log('Editar indicador:', codigo);
+        }
+
+        // Función para eliminar un indicador
+        function eliminarIndicador(codigo) {
+            if (confirm(`¿Está seguro que desea eliminar el indicador ${codigo}?`)) {
+                alert(`Indicador ${codigo} eliminado`);
+                // Aquí iría la lógica para eliminar el indicador
+                console.log('Eliminar indicador:', codigo);
+            }
+        }
+
+        // Función para agregar un nuevo indicador
+        function agregarIndicador() {
+            // alert('Redirigiendo al formulario de creación de indicador...');
+            const div = document.getElementById("appMainCarga");
+            div.style.display = "block"; // o usar "flex", según tu diseño
+
+            const div2 = document.getElementById("appContent");
+            div2.style.display = "none";
+
+            // window.location.href = 'kpi-indicadoresCarga.html'
+            // // Aquí iría la lógica para ir al formulario de creación
+            // console.log('Agregar nuevo indicador');
+        }
+
+        // Función para exportar la lista de indicadores
+        function exportarIndicadores() {
+            alert('Exportando lista de indicadores...');
+            // Aquí iría la lógica para exportar (CSV, Excel, etc.)
+            console.log('Exportar indicadores');
+        }
+
+        // Cargar la tabla al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarTablaIndicadores();
         });
     </script>
-    <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
 
+    <script>
+        function mostrarAppMain() {
+            const div = document.getElementById("appMain");
+            div.style.display = "block"; // o usar "flex", según tu diseño
 
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-    <!-- ChartJS -->
+            const div2 = document.getElementById("appContent");
+            div2.style.display = "none";
+        }
+    </script>
 
+    <script>
+        // Suponiendo que vas a pasar un objeto con los datos del indicador
+        const indicador = {
+            codigo: 'FIN001',
+            nombre: 'Rentabilidad Mensual',
+            dimension: 'Financiera',
+            responsable: 'Juan Pérez',
+            descripcion: 'Mide el margen de ganancia sobre ingresos totales mensuales.',
+            objetivo: 'Evaluar el desempeño financiero mensual.',
+            formulaCalculo: '(Ingresos - Costos) / Ingresos * 100',
+            fuenteDatos: 'ERP Financiero',
+            unidadMedida: '%',
+            frecuenciaMedicion: 'Mensual',
+            periodicidadReporte: 'Mensual',
+            metaObjetivo: '25%',
+            umbralCritico: '15%',
+            tendenciaDeseada: 'Ascendente',
+            categoria: 'Eficiencia',
+            criticidad: 'Alta',
+            formatoPresentacion: ['Gráfico', 'Dashboard'],
+            nivelDesagregacion: ['Región', 'Producto'],
+            comentarios: 'Este indicador se revisa cada mes para ajustes de estrategia.'
+        };
+
+        // Mostrar datos
+        for (const [key, value] of Object.entries(indicador)) {
+            const span = document.getElementById(key);
+            if (span) {
+                span.innerText = Array.isArray(value) ? value.join(', ') : value;
+            }
+        }
+    </script>
+
+    <script src="../js/adminlte.js"></script>
 
 </body>
-<!--end::Body-->
 
 </html>

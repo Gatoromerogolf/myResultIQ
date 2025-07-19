@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>myResultIQ | Dashboard</title>
+    <title>AdminLTE v4 | Dashboard</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE v4 | Dashboard" />
@@ -36,6 +36,25 @@
     <!-- jsvectormap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
         integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .tree-container ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .tree-container li {
+            margin: 4px 0;
+        }
+
+        .tree-actions {
+            margin-left: 8px;
+        }
+    </style>
+
+
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -250,17 +269,17 @@
                     <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
                         data-accordion="false">
-                        <li class="nav-header"><h5>Menu Administrador</h5></li>
+                        <li class="nav-header">Menu Administrador</li>
 
                         <li class="nav-item">
-                            <a href="kpi-operaciones.html" class="nav-link active">
+                            <a href="kpi-operaciones.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle-fill"></i>
-                                <p>Indicadores Asignados</p>
+                                <p>Unidades Funcionales</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon bi bi-circle-fill"></i>
                                 <p>Usuarios</p>
                             </a>
@@ -270,6 +289,20 @@
                             <a href="kpi-indicadores.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle-fill"></i>
                                 <p>Indicadores</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-indicadoresMuestra.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle-fill"></i>
+                                <p>Consulta indicador</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="unidadesFuncionales.html" class="nav-link  active">
+                                <i class="nav-icon bi bi-circle-fill"></i>
+                                <p>Unidades Funcionales</p>
                             </a>
                         </li>
                     </ul>
@@ -289,7 +322,7 @@
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Indicadores Asignados</h3>
+                            <h3 class="mb-0">Unidades Funcionales</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -300,150 +333,22 @@
                     </div>
                     <!--end::Row-->
 
+
                     <!--begin::Row-->
-                    <div class="row">
-                        <!-- Start col -->
-                        <div class="col-md-12">
-                            <!--begin::Latest Order Widget-->
-                            <div class="card card-primary card-outline">
-                                <div class="card-header">
-                                    <h3 class="card-title">Indicadores Asignados</h3>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                    <div class="table-responsive">
-                                        <table class="table m-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nivel 1</th>
-                                                    <th>Nivel 2</th>
-                                                    <th>Nivel 3</th>
-                                                    <th>Responsable</th>
-                                                    <th>✉</th>
-                                                    <th>Indicadores</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Dirección General</td>
-                                                    <td>Gerencia Operativa</td>
-                                                    <td>Depart. Suministros</td>
-                                                    <td>Raul Dieguez</td>
-                                                    <td>
-                                                        <div class="dropdown user-menu">
+                    <div class="container mt-4">
+                        <!-- Botón para mostrar/ocultar el modo edición -->
+                        <button class="btn btn-primary mb-3" onclick="toggleModoEdicion()">Editar estructura</button>
 
-                                                            <button type="button" class="btn-user-info"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#detalleUsuarioModal"
-                                                                aria-label="Ver información del usuario">
-                                                                <i class="bi bi-person-lines-fill"></i>
-                                                            </button>
+                        <!-- Contenedor del árbol -->
+                        <div id="arbolUnidades"></div>
 
-                                                        </div>
-                                                    </td>
-                                                    <td>#SUP010, #SAB200, #OTC256</td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>Jefatura Almacenes</td>
-                                                    <td>Diego Ramos</td>
-                                                    <td>
-                                                        <div class="dropdown user-menu">
-                                                            <button type="button" class="btn-user-info"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#detalleUsuarioModal"
-                                                                aria-label="Ver información del usuario">
-                                                                <i class="bi bi-person-lines-fill"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                    <td>#PRO000, #SAB220, #OTC450</td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td>Gerencia Administrativa</td>
-                                                    <td>Contaduría</td>
-                                                    <td>Ricardo Solari</td>
-                                                    <td>
-                                                        <div class="dropdown user-menu">
-                                                            <button type="button" class="btn-user-info"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#detalleUsuarioModal"
-                                                                aria-label="Ver información del usuario">
-                                                                <i class="bi bi-person-lines-fill"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                    <td>#ADM000, #ADM298, #ADM232, #ADM456</td>
-                                                </tr>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <!-- /.table-responsive -->
-                                </div>
-                                <!-- /.card-body -->
-
-                                <!-- /.card-footer -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col -->
+                        <!-- Botón para guardar los cambios -->
+                        <button id="btnGuardar" class="btn btn-success mt-3 d-none"
+                            onclick="guardarEstructura()">Guardar cambios</button>
                     </div>
+
                     <!--end::Row-->
 
-
-                    <!--begin::App Main-->
-                    <div class="app-main">
-                        <!--begin::App Content Header-->
-                        <div class="app-content-header">
-                            <!--begin::Container-->
-                            <div class="container-fluid">
-                                <!--begin::Row-->
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <h3 class="mb-0">Unidades Funcionales</h3>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <ol class="breadcrumb float-sm-end">
-                                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                                        </ol>
-                                    </div>
-                                </div>
-                                <!--end::Row-->
-
-                                <!--begin::Row-->
-                                <div class="container mt-4">
-                                    <!-- Botón para mostrar/ocultar el modo edición -->
-                                    <button class="btn btn-primary mb-3" onclick="toggleModoEdicion()">Editar
-                                        estructura</button>
-
-                                    <!-- Contenedor del árbol -->
-                                    <div id="arbolUnidades"></div>
-
-                                    <!-- Botón para guardar los cambios -->
-                                    <button id="btnGuardar" class="btn btn-success mt-3 d-none"
-                                        onclick="guardarEstructura()">Guardar cambios</button>
-                                </div>
-
-                                <!--end::Row-->
-                                <!--end::Container-->
-                            </div>
-                            <!--end::App Content-->
-                        </div>
-                        <!--end::App nain-->
-                    </div>
                     <!--end::Container-->
                 </div>
                 <!--end::App Content-->
@@ -458,28 +363,7 @@
 
     </div>
     <!--end::App Wrapper-->
-
-    <!--begin::Modal del usuario-->
-    <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detalleUsuarioLabel">Info Responsable</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <img src="../images/user1-128x128.jpg" class="rounded-circle shadow mb-3" alt="User Image" />
-                    <p class="mb-1">Gerente de Operaciones</p>
-                    <p class="mb-1">rdieguez@company.com.ar</p>
-                    <p>+54 11 452 7898</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--end::Modal del usuario-->
-
-    <script>
+<script>
     let modoEdicion = false;
 
     // Estructura de ejemplo inicial
@@ -613,56 +497,6 @@
     mostrarEstructura();
 
 </script>
-
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)-->
-    <!--begin::Required Plugin(Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <!-- <script src="../../dist/js/adminlte.js"></script> -->
-    <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-    <script>
-        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-        const Default = {
-            scrollbarTheme: 'os-theme-light',
-            scrollbarAutoHide: 'leave',
-            scrollbarClickScroll: true,
-        };
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-            if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
-                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                        theme: Default.scrollbarTheme,
-                        autoHide: Default.scrollbarAutoHide,
-                        clickScroll: Default.scrollbarClickScroll,
-                    },
-                });
-            }
-        });
-    </script>
-    <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
-
-
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-    <!-- ChartJS -->
-
-
 </body>
 <!--end::Body-->
 
