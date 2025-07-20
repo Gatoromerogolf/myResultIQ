@@ -1,9 +1,10 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <!--begin::Head-->
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>myResultIQ | Dashboard</title>
+    <meta charset="UTF-8">
+    <title>Cargar datos - Gestión de KPIs</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE v4 | Dashboard" />
@@ -24,6 +25,9 @@
     <!--begin::Third Party Plugin(Bootstrap Icons)-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
         integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../css/adminlte.css" />
@@ -38,14 +42,11 @@
 
     <!-- Font Awesome desde CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-
-
 </head>
 <!--end::Head-->
 
 <!--begin::Body-->
+
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
@@ -238,7 +239,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="detalleUsuario.html" class="nav-link active">
+                            <a href="detalleUsuario.html" class="nav-link">
                                 <i class="fas fa-tachometer-alt text-primary"></i>
                                 <p>Mis Indicadores</p>
                             </a>
@@ -252,7 +253,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="historico.html" class="nav-link">
+                            <a href="historico.html" class="nav-link active">
                                 <i class="nav-icon fas fa-history text-primary"></i>
                                 <p>Histórico</p>
                             </a>
@@ -289,7 +290,7 @@
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Mis indicadores</h3>
+                            <h3 class="mb-0">Histórico de cargas</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -299,234 +300,137 @@
                         </div>
                     </div>
 
-                    <div class="row">
-
-                        <!-- Filtro por período -->
-                        <div class="col-md-4">
-                            <label for="filtro-periodo">Período</label>
-                            <select id="filtro-periodo" class="form-control">
-                                <option value="todos">Todos</option>
-                                <option value="2025-07">Julio 2025</option>
-                                <option value="2025-06">Junio 2025</option>
-                                <!-- Más períodos -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="filtroCantidad" class="form-label">Mostrar</label>
+                            <select id="filtroCantidad" class="form-select w-auto d-inline-block">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
                             </select>
+                            <span>registros por página</span>
                         </div>
-
-                        <!-- Filtro por estado -->
-                        <div class="col-md-4">
-                            <label for="filtro-estado">Estado</label>
-                            <select id="filtro-estado" class="form-control">
-                                <option value="todos">Todos</option>
-                                <option value="cargado">Cargado</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="vencido">Vencido</option>
-                            </select>
+                        <div class="col-md-6 text-end">
+                            <label class="form-label">Ordenar por:</label>
+                            <button class="btn btn-outline-primary btn-sm ms-2" onclick="ordenarPor('fecha')">
+                                Fecha <i class="bi bi-sort-down"></i>
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="ordenarPor('codigo')">
+                                Código Indicador <i class="bi bi-sort-alpha-down"></i>
+                            </button>
                         </div>
-
-                        <!-- Botón para aplicar filtros -->
-                        <div class="col-md-4 d-flex align-items-end">
-                            <button id="btn-filtrar" class="btn btn-primary w-100">Aplicar filtros</button>
-                        </div>
-
                     </div>
 
-                    <!--end::Row-->
-                    <!-- Contenido principal -->
-                    <div class="content-wrapper">
-                        <div class="content-header">
-                            <div class="container-fluid">
-                                <p>Período actual: <strong>Julio 2025</strong></p>
-                            </div>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Fecha de Registro</th>
+                                    <th>Indicador</th>
+                                    <th>Descripción</th>
+                                    <th>Comentario</th>
+                                    <th>Valor</th>
+                                    <th>Unidad</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaHistorico">
+                                <!-- Los registros se insertan dinámicamente aquí -->
+                            </tbody>
+                        </table>
+                    </div>
 
-                        <div class="content">
-                            <div class="container-fluid">
-                                <div class="row">
-
-                                    <!-- Tarjeta KPI cargado -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="cargado" data-periodo="2025-07">
-                                        <div class="card border-success">
-                                            <div class="card-header bg-success text-white">
-                                                <h5 class="card-title">Margen de ganancia bruta</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> %</p>
-                                                <p><strong>Último valor:</strong> 3.5%</p>
-                                                <p><strong>Fecha carga:</strong> 10/07/2025</p>
-                                                <a href="#" class="btn btn-outline-primary btn-sm">Ver histórico</a>
-                                                <a href="#" class="btn btn-outline-secondary btn-sm">Editar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Tarjeta KPI pendiente -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="pendiente" data-periodo="2025-07">
-                                        <div class="card border-danger">
-                                            <div class="card-header bg-danger text-white">
-                                                <h5 class="card-title">Satisfacción del cliente</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> Días</p>
-                                                <p><strong>Último valor:</strong> N/D</p>
-                                                <p><strong>Fecha carga:</strong> -</p>
-                                                <a href="#" class="btn btn-danger btn-sm">Cargar ahora</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Tarjeta KPI con vencimiento próximo -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="vencido" data-periodo="2025-07">
-                                        <div class="card border-warning">
-                                            <div class="card-header bg-warning text-dark">
-                                                <h5 class="card-title">Tiempo de procesamiento</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> $</p>
-                                                <p><strong>Último valor:</strong> 250</p>
-                                                <p><strong>Fecha carga:</strong> 01/07/2025</p>
-                                                <a href="#" class="btn btn-warning btn-sm">Actualizar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3">
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="cargado" data-periodo="2025-07">
-                                        <div class="card border-success">
-                                            <div class="card-header bg-success text-white">
-                                                <h5 class="card-title">Tasa de rotación</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> %</p>
-                                                <p><strong>Último valor:</strong> 3.5%</p>
-                                                <p><strong>Fecha carga:</strong> 10/07/2025</p>
-                                                <a href="#" class="btn btn-outline-primary btn-sm">Ver histórico</a>
-                                                <a href="#" class="btn btn-outline-secondary btn-sm">Editar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Bloque de ayuda y fechas clave -->
-                                <div class="row mt-4">
-                                    <div class="col-md-6">
-                                        <div class="card card-info">
-                                            <div class="card-header">
-                                                <h5 class="card-title"><i class="fas fa-calendar-alt"></i> Fechas clave
-                                                </h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul>
-                                                    <li>Cierre de carga mensual: <strong>25 de julio</strong></li>
-                                                    <li>Recordatorio automático: 20 de julio</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="card card-light">
-                                            <div class="card-header">
-                                                <h5 class="card-title"><i class="fas fa-question-circle"></i> Ayuda</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p>¿Cómo se calcula cada KPI? Consultá el <a href="#">manual del
-                                                        usuario</a> o descargá las <a href="#">fichas técnicas</a>.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div> <!-- /.container-fluid -->
-                        </div> <!-- /.content -->
-                    </div> <!-- /.content-wrapper -->
-
-                </div> <!-- ./wrapper -->
-                <!-- <body class="p-4"> -->
-
-
-                <!--end::Container-->
+                    <nav>
+                        <ul class="pagination justify-content-center mt-3" id="paginacion">
+                            <!-- Botones de paginación se generan automáticamente -->
+                        </ul>
+                    </nav>
+                </div>
             </div>
-            <!--end::App Content-->
-
-            <footer class="main-footer text-center">
-                <strong>© 2025 - MiResultIQ 1.0</strong>
-            </footer>
-
         </main>
-        <!--end::App nain-->
-
     </div>
+    <!-- Scripts -->
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="dist/js/adminlte.min.js"></script>
 
     <script>
-        document.getElementById('btn-filtrar').addEventListener('click', function () {
-            const filtroPeriodo = document.getElementById('filtro-periodo').value;
-            const filtroEstado = document.getElementById('filtro-estado').value;
+        const registros = [
+            { fecha: '2025-07-01', codigo: 'FIN001', descripcion: 'Margen de Ganancia Bruta', comentario: 'Comentarios a considerar en la medición', valor: 18.5, unidad: '%' },
+            { fecha: '2025-06-01', codigo: 'FIN001', descripcion: 'Margen de Ganancia Bruta', comentario: 'Efecto de la pandemia', valor: 18.0, unidad: '%' },
+            { fecha: '2025-05-01', codigo: 'FIN001', descripcion: 'Margen de Ganancia Bruta', comentario: 'Aumento de los aranceles de importación', valor: 16.9, unidad: '%' },
+            { fecha: '2025-07-01', codigo: 'CLI002', descripcion: 'Satisfacción del cliente', comentario: 'Sin aspectos a destacar', valor: 68.5, unidad: '%' },
+            { fecha: '2025-06-01', codigo: 'CLI002', descripcion: 'Satisfacción del Cliente', comentario: 'Encuesta favorable', valor: 60.0, unidad: '%' },
+            { fecha: '2025-05-01', codigo: 'CLI002', descripcion: 'Satisfacción del Cliente', comentario: 'Relevamiento telefónico de demanda', valor: 61.0, unidad: '%' },
+            { fecha: '2025-07-01', codigo: 'PRO003', descripcion: 'Tiempo de Procesamiento', comentario: 'Incorporación de nuevos procesadores', valor: 12, unidad: 'Horas' },
+            { fecha: '2025-07-08', codigo: 'PRO003', descripcion: 'Tiempo de Procesamiento', comentario: 'Reemplazo herrmienta de medición. Es un ejemplo de extensión de texto.  Cambio a dos renglones.Salto de renglón', valor: 11.45, unidad: 'Horas' },
+            { fecha: '2025-06-30', codigo: 'PRO003', descripcion: 'Tiempo de Procesamiento', comentario: 'Cambio en el procedimiento', valor: 12, unidad: 'Horas' },
+            { fecha: '2025-05-23', codigo: 'PRO003', descripcion: 'Tiempo de Procesamiento', comentario: 'Sin comentarios', valor: 14, unidad: 'Horas' },
+            { fecha: '2025-06-16', codigo: 'PRO003', descripcion: 'Tiempo de Procesamiento', comentario: 'Cambio en la fórmula', valor: 16, unidad: 'Horas' },
+            { fecha: '2025-05-09', codigo: 'PRO003', descripcion: 'Tiempo de Procesamiento', comentario: 'Reoganización del proceso', valor: 15.5, unidad: 'Horas' },
+            // Agregá más registros simulados o reemplazá con datos reales del backend
+        ];
 
-            document.querySelectorAll('.kpi-tarjeta').forEach(function (card) {
-                const estado = card.getAttribute('data-estado');
-                const periodo = card.getAttribute('data-periodo');
+        let paginaActual = 1;
+        let cantidadPorPagina = 10;
+        let ordenActual = 'fecha';
 
-                const coincideEstado = (filtroEstado === 'todos' || filtroEstado === estado);
-                const coincidePeriodo = (filtroPeriodo === 'todos' || filtroPeriodo === periodo);
+        function mostrarTabla() {
+            const inicio = (paginaActual - 1) * cantidadPorPagina;
+            const fin = inicio + cantidadPorPagina;
+            const registrosPaginados = [...registros]
+                .sort((a, b) => {
+                    if (ordenActual === 'fecha') return new Date(b.fecha) - new Date(a.fecha);
+                    if (ordenActual === 'codigo') return a.codigo.localeCompare(b.codigo);
+                })
+                .slice(inicio, fin);
 
-                if (coincideEstado && coincidePeriodo) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    </script>
+            const tbody = document.getElementById('tablaHistorico');
+            tbody.innerHTML = registrosPaginados.map(r => `
+        <tr>
+          <td>${r.fecha}</td>
+          <td>${r.codigo}</td>
+          <td>${r.descripcion}</td>
+          <td>${r.comentario}</td>
+          <td>${r.valor}</td>
+          <td>${r.unidad}</td>
+        </tr>
+      `).join('');
 
-    <!--end::App Wrapper-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)
-    --><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)
---><!--begin::Required Plugin(Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <!-- <script src="../../dist/js/adminlte.js"></script> -->
-    <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-    <script>
-        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-        const Default = {
-            scrollbarTheme: 'os-theme-light',
-            scrollbarAutoHide: 'leave',
-            scrollbarClickScroll: true,
-        };
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-            if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
-                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                        theme: Default.scrollbarTheme,
-                        autoHide: Default.scrollbarAutoHide,
-                        clickScroll: Default.scrollbarClickScroll,
-                    },
-                });
+            generarPaginacion();
+        }
+
+        function generarPaginacion() {
+            const totalPaginas = Math.ceil(registros.length / cantidadPorPagina);
+            const paginacion = document.getElementById('paginacion');
+            paginacion.innerHTML = '';
+
+            for (let i = 1; i <= totalPaginas; i++) {
+                const activo = i === paginaActual ? 'active' : '';
+                paginacion.innerHTML += `
+          <li class="page-item ${activo}">
+            <button class="page-link" onclick="irAPagina(${i})">${i}</button>
+          </li>
+        `;
             }
+        }
+
+        function irAPagina(nro) {
+            paginaActual = nro;
+            mostrarTabla();
+        }
+
+        function ordenarPor(campo) {
+            ordenActual = campo;
+            mostrarTabla();
+        }
+
+        document.getElementById('filtroCantidad').addEventListener('change', e => {
+            cantidadPorPagina = parseInt(e.target.value);
+            paginaActual = 1;
+            mostrarTabla();
         });
+
+        mostrarTabla();
     </script>
-    <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
-
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-    <!-- ChartJS -->
-
 </body>
-<!--end::Body-->
-
 </html>

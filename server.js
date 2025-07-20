@@ -13,6 +13,7 @@ const cron = require("node-cron");
 const app = express();
 app.use(express.json());
 app.use(express.static('public'));
+app.use('/dist', express.static('public'));
 
 app.post('/guardar', async (req, res) => {
   const data = req.body;

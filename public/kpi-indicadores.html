@@ -310,7 +310,9 @@
                     <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
                         data-accordion="false">
-                        <li class="nav-header"><h5>Menu Administrador</h5></li>
+                        <li class="nav-header">
+                            <h5>Menu Administrador</h5>
+                        </li>
 
                         <li class="nav-item">
                             <a href="kpi-operaciones.html" class="nav-link">
@@ -361,8 +363,6 @@
                     <!--end::Row-->
                 </div>
                 <!--end::Container-->
-                <!-- </div> -->
-                <!--end::App Content Header-->
 
                 <!--begin::App Content-->
                 <div class="app-main" id="appContent" style="display: block">
@@ -445,13 +445,14 @@
                 </div>
                 <!--end::App Content-->
 
+                <!--begin::AppMain-->
                 <div class="app-main" id="appMain" style="display: none">
                     <!-- Header -->
                     <div class="app-content-header">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="mb-0">Detalle del Indicador</h3>
+                                    <h4 class="mb-0">Detalle del Indicador</h4>
                                 </div>
                                 <div class="col-sm-6">
                                     <ol class="breadcrumb float-sm-end">
@@ -465,93 +466,73 @@
                     </div>
 
                     <!-- Cuerpo -->
-                    <div class="app-content">
+                    <div class="app-content mt-2">
                         <div class="container-fluid">
                             <div class="card card-info card-outline">
-                                <div class="card-header">
+                                <!-- <div class="card-header">
                                     <h5 class="card-title">Información completa del indicador</h5>
-                                </div>
+                                </div> -->
                                 <div class="card-body">
-                                    <div class="row g-4">
+                                    <div class="row g-2">
                                         <!-- Sección: Identificación -->
                                         <div class="col-12">
-                                            <h5 class="text-primary border-bottom pb-2">Identificación</h5>
+                                            <h5 class="text-primary border-bottom mb-1">Identificación</h5>
                                         </div>
 
-                                        <div class="col-md-6"><strong>Código:</strong> <span id="codigo"></span></div>
-                                        <div class="col-md-6"><strong>Nombre:</strong> <span id="nombre"></span></div>
-                                        <div class="col-md-6"><strong>Dimensión:</strong> <span id="dimension"></span>
-                                        </div>
-                                        <div class="col-md-6"><strong>Responsable:</strong> <span
-                                                id="responsable"></span>
-                                        </div>
-                                        <div class="col-12"><strong>Descripción:</strong><br><span
-                                                id="descripcion"></span>
-                                        </div>
-                                        <div class="col-12"><strong>Objetivo:</strong><br><span id="objetivo"></span>
-                                        </div>
+                                        <div class="col-md-2"><strong>Código:</strong> <span id="codigo" class="ms-2"></span></div>
+                                        <div class="col-md-4"><strong>Nombre:</strong> <span id="nombre" class="ms-2"></span></div>
+                                        <div class="col-md-3"><strong>Dimensión:</strong> <span id="dimension" class="ms-2"></span></div>
+                                        <div class="col-md-3"><strong>Responsable:</strong> <span id="responsable" class="ms-2"></span></div>
+                                        <div class="col-12"><strong>Descripción:  </strong><span id="descripcion" class="ms-2"></span></div>
+                                        <div class="col-12"><strong>Objetivo:  </strong><span id="objetivo" class="ms-2"></span></div>
 
                                         <!-- Sección: Técnicas -->
                                         <div class="col-12 mt-4">
-                                            <h5 class="text-success border-bottom pb-2">Especificaciones Técnicas</h5>
+                                            <h5 class="text-success border-bottom pb-2 mt-3">Especificaciones Técnicas</h5>
                                         </div>
 
-                                        <div class="col-12"><strong>Fórmula de cálculo:</strong><br><span
-                                                id="formulaCalculo"></span></div>
-                                        <div class="col-md-6"><strong>Fuente de datos:</strong> <span
-                                                id="fuenteDatos"></span></div>
-                                        <div class="col-md-6"><strong>Unidad de medida:</strong> <span
-                                                id="unidadMedida"></span></div>
-                                        <div class="col-md-6"><strong>Frecuencia de medición:</strong> <span
-                                                id="frecuenciaMedicion"></span>
-                                        </div>
-                                        <div class="col-md-6"><strong>Periodicidad de reporte:</strong> <span
-                                                id="periodicidadReporte"></span>
-                                        </div>
+                                        <div class="col-md-6"><strong>Fórmula de cálculo:</strong><span id="formulaCalculo" class="ms-2"></span></div>
+                                        <div class="col-md-6"><strong>Fuente de datos:</strong> <span id="fuenteDatos" class="ms-2"></span></div>
+                                        <div class="col-md-3"><strong>Unidad de medida:</strong> <span id="unidadMedida" class="ms-2"></span></div>
+                                        <div class="col-md-3"><strong>Freq medición:</strong> <span id="frecuenciaMedicion" class="ms-2"></span></div>
+                                        <div class="col-md-3"><strong>Freq reporte:</strong> <span id="periodicidadReporte" class="ms-2"></span></div>
+                                        <div class="col-md-3"><strong>Inicio:</strong> <span id="periodoInicial" class="ms-2"></span></div>
 
                                         <!-- Sección: Evaluación -->
                                         <div class="col-12 mt-4">
                                             <h5 class="text-warning border-bottom pb-2">Parámetros de Evaluación</h5>
                                         </div>
 
-                                        <div class="col-md-6"><strong>Meta objetivo:</strong> <span
-                                                id="metaObjetivo"></span></div>
-                                        <div class="col-md-6"><strong>Umbral crítico:</strong> <span
-                                                id="umbralCritico"></span></div>
-                                        <div class="col-md-4"><strong>Tendencia deseada:</strong> <span
-                                                id="tendenciaDeseada"></span></div>
-                                        <div class="col-md-4"><strong>Categoría:</strong> <span id="categoria"></span>
-                                        </div>
-                                        <div class="col-md-4"><strong>Criticidad:</strong> <span id="criticidad"></span>
-                                        </div>
+                                        <div class="col-md-3"><strong>Meta objetivo:</strong> <span id="metaObjetivo" class="ms-2"></span></div>
+                                        <div class="col-md-3"><strong>Umbral positivo:</strong> <span id="umbralPositivo" class="ms-2"></span></div>
+                                        <div class="col-md-3"><strong>Umbral crítico:</strong> <span id="umbralCritico" class="ms-2"></span></div>
+                                        <div class="col-md-4"><strong>Tendencia deseada:</strong> <span id="tendenciaDeseada" class="ms-2"></span></div>
+                                        <div class="col-md-4"><strong>Categoría:</strong> <span id="categoria" class="ms-2"></span></div>
+                                        <div class="col-md-4"><strong>Criticidad:</strong> <span id="criticidad" class="ms-2"></span></div>
 
                                         <!-- Sección: Presentación -->
                                         <div class="col-12 mt-4">
                                             <h5 class="text-info border-bottom pb-2">Presentación</h5>
                                         </div>
 
-                                        <div class="col-md-6"><strong>Formato de presentación:</strong> <span
-                                                id="formatoPresentacion"></span>
-                                        </div>
-                                        <div class="col-md-6"><strong>Nivel de desagregación:</strong> <span
-                                                id="nivelDesagregacion"></span>
-                                        </div>
+                                        <div class="col-md-6"><strong>Formato de presentación:</strong> <span id="formatoPresentacion"></span></div>
+                                        <div class="col-md-6"><strong>Nivel de desagregación:</strong> <span id="nivelDesagregacion"></span></div>
 
-                                        <div class="col-12"><strong>Comentarios:</strong><br><span
-                                                id="comentarios"></span>
+                                        <div class="col-12"><strong>Comentarios:</strong><span id="comentarios" class="ms-2"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-footer">
                                     <button class="btn btn-secondary"
                                         onclick="window.location.href='kpi-indicadores.html'">Volver</button>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!--end::AppMain-->
 
+                <!--begin::App Main Carga-->
                 <div class="app-main" id="appMainCarga" style="display: none">
                     <!--begin::App Content Header-->
                     <div class="app-content-header">
@@ -560,7 +541,7 @@
                             <!--begin::Row-->
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="mb-0">Creación de Indicador</h3>
+                                    <h4 class="mb-0">Agregar nuevo indicador</h4>
                                 </div>
                                 <div class="col-sm-6">
                                     <ol class="breadcrumb float-sm-end">
@@ -575,11 +556,13 @@
                         <!--end::Container-->
                     </div>
                     <!--end::App Content Header-->
+
                     <!--begin::App Content-->
-                    <div class="app-content">
+                    <div class="app-content mt-2">
                         <!--begin::Container-->
                         <div class="container-fluid">
                             <!--begin::Row-->
+
                             <div class="row g-4">
                                 <!--begin::Col-->
                                 <div class="col-12">
@@ -589,15 +572,11 @@
                                     </div>
                                 </div>
                                 <!--end::Col-->
+
                                 <!--begin::Col-->
                                 <div class="col-12">
                                     <!--begin::Form Carga Indicadores-->
                                     <div class="card card-primary card-outline mb-4">
-                                        <!--begin::Header-->
-                                        <div class="card-header">
-                                            <div class="card-title">Nuevo Indicador PKI</div>
-                                        </div>
-                                        <!--end::Header-->
                                         <!--begin::Form-->
                                         <form class="needs-validation" novalidate id="indicadorForm">
                                             <!--begin::Body-->
@@ -607,7 +586,7 @@
 
                                                     <!-- Sección: Identificación -->
                                                     <div class="col-12">
-                                                        <h5 class="text-primary border-bottom pb-2 mb-3">Identificación
+                                                        <h5 class="text-primary border-bottom">Identificación
                                                         </h5>
                                                     </div>
 
@@ -697,7 +676,7 @@
 
                                                     <!-- Sección: Especificaciones Técnicas -->
                                                     <div class="col-12">
-                                                        <h5 class="text-success border-bottom pb-2 mb-3 mt-4">
+                                                        <h5 class="text-success border-bottom mt-4">
                                                             Especificaciones Técnicas</h5>
                                                     </div>
 
@@ -715,7 +694,7 @@
                                                     <!--end::Fórmula de Cálculo-->
 
                                                     <!--begin::Fuente de Datos-->
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <label for="fuenteDatos" class="form-label">Fuente de Datos
                                                             *</label>
                                                         <input type="text" class="form-control" id="fuenteDatos"
@@ -727,40 +706,25 @@
                                                     <!--end::Fuente de Datos-->
 
                                                     <!--begin::Unidad de Medida-->
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <label for="unidadMedida" class="form-label">Unidad de Medida
                                                             *</label>
-                                                        <input type="text" class="form-control" id="unidadMedida"
-                                                            name="unidadMedida"
-                                                            placeholder="Ej: porcentaje, cantidad, tiempo" required />
+                                                        <select class="form-select" id="frecuenciaMedicion"
+                                                            name="frecuenciaMedicion" required>
+                                                            <option selected disabled value="">Seleccione...
+                                                            </option>
+                                                            <option value="diaria">$ (Moneda)</option>
+                                                            <option value="semanal">% (Porcentaje)</option>
+                                                            <option value="mensual">T (Tiempo)</option>
+                                                            <option value="trimestral">Q (Cantidad)</option>
+                                                        </select>
                                                         <div class="invalid-feedback">La unidad de medida es
                                                             obligatoria.</div>
                                                     </div>
                                                     <!--end::Unidad de Medida-->
 
-                                                    <!--begin::Frecuencia de Medición-->
-                                                    <div class="col-md-6">
-                                                        <label for="frecuenciaMedicion" class="form-label">Frecuencia de
-                                                            Medición *</label>
-                                                        <select class="form-select" id="frecuenciaMedicion"
-                                                            name="frecuenciaMedicion" required>
-                                                            <option selected disabled value="">Seleccione frecuencia...
-                                                            </option>
-                                                            <option value="diaria">Diaria</option>
-                                                            <option value="semanal">Semanal</option>
-                                                            <option value="mensual">Mensual</option>
-                                                            <option value="trimestral">Trimestral</option>
-                                                            <option value="trimestral">Cuatrimestral</option>
-                                                            <option value="trimestral">Semestral</option>
-                                                            <option value="anual">Anual</option>
-                                                        </select>
-                                                        <div class="invalid-feedback">Debe seleccionar la frecuencia de
-                                                            medición.</div>
-                                                    </div>
-                                                    <!--end::Frecuencia de Medición-->
-
                                                     <!--begin::Periodicidad de Reporte-->
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <label for="periodicidadReporte" class="form-label">Periodicidad
                                                             de Reporte *</label>
                                                         <select class="form-select" id="periodicidadReporte"
@@ -780,14 +744,76 @@
                                                     </div>
                                                     <!--end::Periodicidad de Reporte-->
 
+                                                    <!--begin::Frecuencia de Medición-->
+                                                    <div class="col-md-3">
+                                                        <label for="frecuenciaMedicion" class="form-label">Frecuencia de
+                                                            Medición *</label>
+                                                        <select class="form-select" id="frecuenciaMedicion"
+                                                            name="frecuenciaMedicion" required>
+                                                            <option selected disabled value="">Seleccione frecuencia...
+                                                            </option>
+                                                            <option value="diaria">Diaria</option>
+                                                            <option value="semanal">Semanal</option>
+                                                            <option value="mensual">Mensual</option>
+                                                            <option value="trimestral">Trimestral</option>
+                                                            <option value="trimestral">Cuatrimestral</option>
+                                                            <option value="trimestral">Semestral</option>
+                                                            <option value="anual">Anual</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe seleccionar la frecuencia de
+                                                            medición.</div>
+                                                    </div>
+                                                    <!--end::Frecuencia de Medición-->
+
+                                                    <!--begin::Tolerancia de carga-->
+                                                    <div class="col-md-3">
+                                                        <label for="demoraMaximaQ" class="form-label">Demora máxima p/medición *</label>
+                                                        <input type="text" class="form-control" id="demoraMaximaQ"
+                                                            name="metaObjetivo" placeholder="Ej: 1, 2, 3 " />
+                                                        <div class="invalid-feedback">Debe seleccionar demora máxima.</div>
+                                                    </div>
+                                                    <!--end::Tolerancia de carga-->
+
+                                                    <!--begin::Unidad de demora-->
+                                                    <div class="col-md-3">
+                                                        <label for="frecuenciaMedicion" class="form-label">Unidad de demora *</label>
+                                                        <select class="form-select" id="frecuenciaMedicion"
+                                                            name="frecuenciaMedicion" required>
+                                                            <option selected disabled value="">Seleccione unidad...
+                                                            </option>
+                                                            <option value="diaria">Dia</option>
+                                                            <option value="semanal">Semana</option>
+                                                            <option value="mensual">Mes</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe seleccionar el máximo de demora admitido.</div>
+                                                    </div>
+                                                    <!--end::Tolerancia de carga-->
+
+                                                    <!--begin::Periodicidad de Reporte-->
+                                                    <div class="col-md-3">
+                                                        <label for="periodicidadReporte" class="form-label">Período
+                                                            Inicial *</label>
+                                                        <select class="form-select" id="periodicidadReporte"
+                                                            name="periodicidadReporte" required>
+                                                            <option selected disabled value="">Indique Fecha...</option>
+                                                            <option value="diaria">01/01/2001</option>
+                                                            <option value="semanal">01/06</option>
+
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe seleccionar la periodicidad
+                                                            de reporte.</div>
+                                                    </div>
+                                                    <!--end::Periodicidad de Reporte-->
+
+
                                                     <!-- Sección: Parámetros de Evaluación -->
                                                     <div class="col-12">
-                                                        <h5 class="text-warning border-bottom pb-2 mb-3 mt-4">Parámetros
+                                                        <h5 class="text-warning border-bottom mt-4">Parámetros
                                                             de Evaluación</h5>
                                                     </div>
 
                                                     <!--begin::Meta o Valor Objetivo-->
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <label for="metaObjetivo" class="form-label">Meta o Valor
                                                             Objetivo</label>
                                                         <input type="text" class="form-control" id="metaObjetivo"
@@ -795,8 +821,18 @@
                                                     </div>
                                                     <!--end::Meta o Valor Objetivo-->
 
+                                                    <!--begin::Umbral Positivo-->
+                                                    <div class="col-md-4">
+                                                        <label for="umbralPositivo" class="form-label">Umbral
+                                                            Positivo</label>
+                                                        <input type="text" class="form-control" id="umbralPostivo"
+                                                            name="umbralPositivo"
+                                                            placeholder="Valor porcentual de desvío c/r a la meta" />
+                                                    </div>
+                                                    <!--end::Umbral Positivo-->
+
                                                     <!--begin::Umbral Crítico-->
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <label for="umbralCritico" class="form-label">Umbral
                                                             Crítico</label>
                                                         <input type="text" class="form-control" id="umbralCritico"
@@ -857,7 +893,7 @@
 
                                                     <!-- Sección: Presentación -->
                                                     <div class="col-12">
-                                                        <h5 class="text-info border-bottom pb-2 mb-3 mt-4">Presentación
+                                                        <h5 class="text-info border-bottom mt-4">Presentación
                                                         </h5>
                                                     </div>
 
@@ -917,7 +953,6 @@
                                                     </div>
                                                     <!--end::Nivel de Desagregación-->
 
-                                                    
                                                     <!--begin::Nivel de Agrupamiento-->
                                                     <div class="col-md-4">
                                                         <label class="form-label">Categoría agrupamiento</label>
@@ -925,22 +960,22 @@
                                                             <input class="form-check-input" type="checkbox"
                                                                 value="region" id="nivelRegion"
                                                                 name="nivelDesagregacion[]">
-                                                            <label class="form-check-label"
-                                                                for="nivelGrp1">Grupo 1</label>
+                                                            <label class="form-check-label" for="nivelGrp1">Grupo
+                                                                1</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox"
                                                                 value="producto" id="nivelProducto"
                                                                 name="nivelDesagregacion[]">
-                                                            <label class="form-check-label"
-                                                                for="nivelGrp2">Grupo 2</label>
+                                                            <label class="form-check-label" for="nivelGrp2">Grupo
+                                                                2</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox"
                                                                 value="cliente" id="nivelCliente"
                                                                 name="nivelDesagregacion[]">
-                                                            <label class="form-check-label"
-                                                                for="nivelGrp3">Grupo 3</label>
+                                                            <label class="form-check-label" for="nivelGrp3">Grupo
+                                                                3</label>
                                                         </div>
                                                     </div>
                                                     <!--end::Nivel de Desagregación-->
@@ -1029,6 +1064,7 @@
                                                     frecuenciaMedicion: formData.get('frecuenciaMedicion'),
                                                     periodicidadReporte: formData.get('periodicidadReporte'),
                                                     metaObjetivo: formData.get('metaObjetivo'),
+                                                    umbralPositivo: formData.get('umbralPositivo'),
                                                     umbralCritico: formData.get('umbralCritico'),
                                                     categoria: formData.get('categoria'),
                                                     criticidad: formData.get('criticidad'),
@@ -1039,10 +1075,8 @@
                                                 };
 
                                                 console.log('Datos del indicador:', indicadorData);
-
                                                 // Aquí conectarías con tu backend
                                                 // Por ejemplo: enviarABackend(indicadorData);
-
                                                 alert('Indicador guardado exitosamente (simulación)');
                                             }
 
@@ -1057,6 +1091,7 @@
                                     <!--end::Form Carga Indicadores-->
                                 </div>
                                 <!--end::Col-->
+
                             </div>
                             <!--end::Row-->
                         </div>
@@ -1064,6 +1099,8 @@
                     </div>
                     <!--end::App Content-->
                 </div>
+                <!--end::AppMainCarga-->
+            <!--end::App Content Header-->
         </main>
     </div>
 
@@ -1261,11 +1298,14 @@
         // Función para agregar un nuevo indicador
         function agregarIndicador() {
             // alert('Redirigiendo al formulario de creación de indicador...');
-            const div = document.getElementById("appMainCarga");
-            div.style.display = "block"; // o usar "flex", según tu diseño
 
             const div2 = document.getElementById("appContent");
             div2.style.display = "none";
+
+            const div = document.getElementById("appMainCarga");
+            div.style.display = "block"; // o usar "flex", según tu diseño
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
 
             // window.location.href = 'kpi-indicadoresCarga.html'
             // // Aquí iría la lógica para ir al formulario de creación
@@ -1299,10 +1339,10 @@
         // Suponiendo que vas a pasar un objeto con los datos del indicador
         const indicador = {
             codigo: 'FIN001',
-            nombre: 'Rentabilidad Mensual',
+            nombre: 'Margen de Ganancia Bruta',
             dimension: 'Financiera',
             responsable: 'Juan Pérez',
-            descripcion: 'Mide el margen de ganancia sobre ingresos totales mensuales.',
+            descripcion: 'Mide el margen de ganancia bruta de la empresa sobre ingresos totales mensuales.',
             objetivo: 'Evaluar el desempeño financiero mensual.',
             formulaCalculo: '(Ingresos - Costos) / Ingresos * 100',
             fuenteDatos: 'ERP Financiero',
@@ -1310,6 +1350,7 @@
             frecuenciaMedicion: 'Mensual',
             periodicidadReporte: 'Mensual',
             metaObjetivo: '25%',
+            umbralPositivo: '5%',
             umbralCritico: '15%',
             tendenciaDeseada: 'Ascendente',
             categoria: 'Eficiencia',

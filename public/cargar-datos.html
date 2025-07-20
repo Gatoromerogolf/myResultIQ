@@ -1,9 +1,10 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <!--begin::Head-->
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>myResultIQ | Dashboard</title>
+    <meta charset="UTF-8">
+    <title>Cargar datos - Gestión de KPIs</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE v4 | Dashboard" />
@@ -24,6 +25,9 @@
     <!--begin::Third Party Plugin(Bootstrap Icons)-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
         integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../css/adminlte.css" />
@@ -38,10 +42,6 @@
 
     <!-- Font Awesome desde CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-
-
 </head>
 <!--end::Head-->
 
@@ -238,14 +238,14 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="detalleUsuario.html" class="nav-link active">
+                            <a href="detalleUsuario.html" class="nav-link">
                                 <i class="fas fa-tachometer-alt text-primary"></i>
                                 <p>Mis Indicadores</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="cargar-datos.html" class="nav-link">
+                            <a href="cargar-datos.html" class="nav-link active">
                                 <i class="nav-icon fas fa-upload fa-tachometer-alt text-primary"></i>
                                 <p>Cargar Datos</p>
                             </a>
@@ -287,9 +287,10 @@
                 <!--begin::Container-->
                 <div class="container-fluid mb-3">
                     <!--begin::Row-->
+                    <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Mis indicadores</h3>
+                            <h3 class="mb-0">Cargar Datos</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -298,235 +299,153 @@
                             </ol>
                         </div>
                     </div>
-
-                    <div class="row">
-
-                        <!-- Filtro por período -->
-                        <div class="col-md-4">
-                            <label for="filtro-periodo">Período</label>
-                            <select id="filtro-periodo" class="form-control">
-                                <option value="todos">Todos</option>
-                                <option value="2025-07">Julio 2025</option>
-                                <option value="2025-06">Junio 2025</option>
-                                <!-- Más períodos -->
-                            </select>
-                        </div>
-
-                        <!-- Filtro por estado -->
-                        <div class="col-md-4">
-                            <label for="filtro-estado">Estado</label>
-                            <select id="filtro-estado" class="form-control">
-                                <option value="todos">Todos</option>
-                                <option value="cargado">Cargado</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="vencido">Vencido</option>
-                            </select>
-                        </div>
-
-                        <!-- Botón para aplicar filtros -->
-                        <div class="col-md-4 d-flex align-items-end">
-                            <button id="btn-filtrar" class="btn btn-primary w-100">Aplicar filtros</button>
-                        </div>
-
-                    </div>
-
-                    <!--end::Row-->
-                    <!-- Contenido principal -->
-                    <div class="content-wrapper">
-                        <div class="content-header">
-                            <div class="container-fluid">
-                                <p>Período actual: <strong>Julio 2025</strong></p>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header border-0">
+                            <h3 class="card-title">Seleccionar Indicador</h3>
+                            <div class="card-tools">
+                                <!-- <a href="#" class="btn btn-tool btn-sm"> <i class="bi bi-download"></i> </a> -->
+                                <a href="#" class="btn btn-tool btn-sm" onclick="alert('Hiciste clic')">
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                <a href="#" class="btn btn-tool btn-sm"> <i class="bi bi-list"></i> </a>
                             </div>
                         </div>
 
-                        <div class="content">
-                            <div class="container-fluid">
-                                <div class="row">
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-striped align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nombre</th>
+                                        <th>Medición</th>
+                                        <th>Última carga</th>
+                                        <th>Unidad</th>
+                                        <th>Estado</th>
+                                        <th>Seleccionar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-indicadores">
+                                    <tr>
+                                        <td>FIN001</td>
+                                        <td>Margen de Ganancia Bruta</td>
+                                        <td>Mensual</td>
+                                        <td>30/06/25</td>
+                                        <td>%</td>
+                                        <td><span class="badge text-bg-success"> Cumplido </span></td>
+                                        <td>
+                                            <button class="btn btn-outline-primary btn-sm seleccionar-btn"
+                                                data-codigo="FIN001" data-nombre="Margen de Ganancia Bruta"
+                                                data-unidad="%">
+                                                <i class="fas fa-pen-to-square"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>CLI002</td>
+                                        <td>Satisfacción del cliente</td>
+                                        <td>Trimestral</td>
+                                        <td>01/06/25</td>
+                                        <td>%</td>
+                                        <td><span class="badge text-bg-danger"> Demorado </span></td>
+                                        <td>
+                                            <button class="btn btn-outline-primary btn-sm seleccionar-btn"
+                                                data-codigo="CLI002" data-nombre="Satisfacción del cliente"
+                                                data-unidad="%">
+                                                <i class="fas fa-pen-to-square"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>PRO003</td>
+                                        <td>Tiempo de Procesamiento</td>
+                                        <td>Semanal</td>
+                                        <td>14/07/25</td>
+                                        <td>Horas</td>
+                                        <td><span class="badge text-bg-warning"> Pendiente </span></td>
+                                        <td>
+                                            <button class="btn btn-outline-primary btn-sm seleccionar-btn"
+                                                data-codigo="PRO003" data-nombre="Tiempo de Procesamiento"
+                                                data-unidad="Horas">
+                                                <i class="fas fa-pen-to-square"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-                                    <!-- Tarjeta KPI cargado -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="cargado" data-periodo="2025-07">
-                                        <div class="card border-success">
-                                            <div class="card-header bg-success text-white">
-                                                <h5 class="card-title">Margen de ganancia bruta</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> %</p>
-                                                <p><strong>Último valor:</strong> 3.5%</p>
-                                                <p><strong>Fecha carga:</strong> 10/07/2025</p>
-                                                <a href="#" class="btn btn-outline-primary btn-sm">Ver histórico</a>
-                                                <a href="#" class="btn btn-outline-secondary btn-sm">Editar</a>
-                                            </div>
-                                        </div>
+                        <!-- Formulario oculto -->
+                        <div id="formulario-carga" class="p-3 mt-3 border rounded shadow-sm bg-light"
+                            style="display: none;">
+                            <h5 id="titulo-indicador"></h5>
+                            <form id="form-carga">
+                                <div class="row mb-2">
+                                    <div class="col-md-2">
+                                        <label>Fecha de medición</label>
+                                        <input type="date" class="form-control" id="fecha-carga" required>
                                     </div>
-
-                                    <!-- Tarjeta KPI pendiente -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="pendiente" data-periodo="2025-07">
-                                        <div class="card border-danger">
-                                            <div class="card-header bg-danger text-white">
-                                                <h5 class="card-title">Satisfacción del cliente</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> Días</p>
-                                                <p><strong>Último valor:</strong> N/D</p>
-                                                <p><strong>Fecha carga:</strong> -</p>
-                                                <a href="#" class="btn btn-danger btn-sm">Cargar ahora</a>
-                                            </div>
-                                        </div>
+                                    <div class="col-md-2">
+                                        <label>Valor/Cantidad</label>
+                                        <input type="number" class="form-control" id="valor-carga" required>
                                     </div>
-
-                                    <!-- Tarjeta KPI con vencimiento próximo -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="vencido" data-periodo="2025-07">
-                                        <div class="card border-warning">
-                                            <div class="card-header bg-warning text-dark">
-                                                <h5 class="card-title">Tiempo de procesamiento</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> $</p>
-                                                <p><strong>Último valor:</strong> 250</p>
-                                                <p><strong>Fecha carga:</strong> 01/07/2025</p>
-                                                <a href="#" class="btn btn-warning btn-sm">Actualizar</a>
-                                            </div>
-                                        </div>
+                                    <div class="col-md-1">
+                                        <label>Unidad</label>
+                                        <div class="form-control-plaintext" id="unidad-carga"></div>
                                     </div>
-                                </div>
-
-                                <div class="row mt-3">
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="cargado" data-periodo="2025-07">
-                                        <div class="card border-success">
-                                            <div class="card-header bg-success text-white">
-                                                <h5 class="card-title">Tasa de rotación</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> %</p>
-                                                <p><strong>Último valor:</strong> 3.5%</p>
-                                                <p><strong>Fecha carga:</strong> 10/07/2025</p>
-                                                <a href="#" class="btn btn-outline-primary btn-sm">Ver histórico</a>
-                                                <a href="#" class="btn btn-outline-secondary btn-sm">Editar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Bloque de ayuda y fechas clave -->
-                                <div class="row mt-4">
-                                    <div class="col-md-6">
-                                        <div class="card card-info">
-                                            <div class="card-header">
-                                                <h5 class="card-title"><i class="fas fa-calendar-alt"></i> Fechas clave
-                                                </h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul>
-                                                    <li>Cierre de carga mensual: <strong>25 de julio</strong></li>
-                                                    <li>Recordatorio automático: 20 de julio</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="card card-light">
-                                            <div class="card-header">
-                                                <h5 class="card-title"><i class="fas fa-question-circle"></i> Ayuda</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p>¿Cómo se calcula cada KPI? Consultá el <a href="#">manual del
-                                                        usuario</a> o descargá las <a href="#">fichas técnicas</a>.</p>
-                                            </div>
-                                        </div>
+                                    <div class="col-md-7">
+                                        <label>Comentario</label>
+                                        <input type="text" class="form-control" id="comentario-carga">
                                     </div>
                                 </div>
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                                <button type="button" class="btn btn-secondary" id="cancelar-carga">Cancelar</button>
+                            </form>
+                        </div>
 
-                            </div> <!-- /.container-fluid -->
-                        </div> <!-- /.content -->
-                    </div> <!-- /.content-wrapper -->
-
-                </div> <!-- ./wrapper -->
-                <!-- <body class="p-4"> -->
-
-
-                <!--end::Container-->
-            </div>
-            <!--end::App Content-->
-
-            <footer class="main-footer text-center">
-                <strong>© 2025 - MiResultIQ 1.0</strong>
-            </footer>
-
+                    </div>
+                </div>
         </main>
-        <!--end::App nain-->
-
     </div>
 
     <script>
-        document.getElementById('btn-filtrar').addEventListener('click', function () {
-            const filtroPeriodo = document.getElementById('filtro-periodo').value;
-            const filtroEstado = document.getElementById('filtro-estado').value;
+        const botonesSeleccionar = document.querySelectorAll('.seleccionar-btn');
+        const formulario = document.getElementById('formulario-carga');
+        const titulo = document.getElementById('titulo-indicador');
+        const cancelarBtn = document.getElementById('cancelar-carga');
 
-            document.querySelectorAll('.kpi-tarjeta').forEach(function (card) {
-                const estado = card.getAttribute('data-estado');
-                const periodo = card.getAttribute('data-periodo');
-
-                const coincideEstado = (filtroEstado === 'todos' || filtroEstado === estado);
-                const coincidePeriodo = (filtroPeriodo === 'todos' || filtroPeriodo === periodo);
-
-                if (coincideEstado && coincidePeriodo) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+        botonesSeleccionar.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const codigo = btn.getAttribute('data-codigo');
+                const nombre = btn.getAttribute('data-nombre');
+                const unidad = btn.getAttribute('data-unidad');
+                titulo.innerText = `Carga de indicador: ${codigo} - ${nombre}`;
+                formulario.style.display = 'block';
+                document.getElementById('fecha-carga').value = '';
+                document.getElementById('valor-carga').value = '';
+                document.getElementById('unidad-carga').innerText = unidad;
+                document.getElementById('comentario-carga').value = '';
             });
         });
-    </script>
 
-    <!--end::App Wrapper-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)
-    --><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)
---><!--begin::Required Plugin(Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <!-- <script src="../../dist/js/adminlte.js"></script> -->
-    <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-    <script>
-        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-        const Default = {
-            scrollbarTheme: 'os-theme-light',
-            scrollbarAutoHide: 'leave',
-            scrollbarClickScroll: true,
-        };
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-            if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
-                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                        theme: Default.scrollbarTheme,
-                        autoHide: Default.scrollbarAutoHide,
-                        clickScroll: Default.scrollbarClickScroll,
-                    },
-                });
-            }
+        cancelarBtn.addEventListener('click', () => {
+            formulario.style.display = 'none';
+        });
+
+        document.getElementById('form-carga').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Acá podés hacer un fetch() o AJAX para enviar los datos al servidor
+
+            // Ocultar el formulario luego de guardar
+            formulario.style.display = 'none';
+            alert('Carga realizada correctamente');
         });
     </script>
-    <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
 
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-    <!-- ChartJS -->
-
+    <!-- Scripts -->
+    <!-- <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script> -->
+    <script src="/dist/js/adminlte.min.js"></script>
 </body>
-<!--end::Body-->
 
 </html>

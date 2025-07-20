@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>myResultIQ | Dashboard</title>
@@ -44,8 +45,8 @@
 
 </head>
 <!--end::Head-->
-
 <!--begin::Body-->
+
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
@@ -238,7 +239,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="detalleUsuario.html" class="nav-link active">
+                            <a href="detalleUsuario.html" class="nav-link">
                                 <i class="fas fa-tachometer-alt text-primary"></i>
                                 <p>Mis Indicadores</p>
                             </a>
@@ -259,7 +260,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="miPerfil.html" class="nav-link">
+                            <a href="miPerfil.html" class="nav-link active">
                                 <i class="nav-icon fas fa-user-cog text-primary"></i>
                                 <p>Mi Perfil</p>
                             </a>
@@ -287,9 +288,10 @@
                 <!--begin::Container-->
                 <div class="container-fluid mb-3">
                     <!--begin::Row-->
+
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Mis indicadores</h3>
+                            <h3 class="mb-0">Mi Perfil</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -299,162 +301,107 @@
                         </div>
                     </div>
 
-                    <div class="row">
-
-                        <!-- Filtro por período -->
-                        <div class="col-md-4">
-                            <label for="filtro-periodo">Período</label>
-                            <select id="filtro-periodo" class="form-control">
-                                <option value="todos">Todos</option>
-                                <option value="2025-07">Julio 2025</option>
-                                <option value="2025-06">Junio 2025</option>
-                                <!-- Más períodos -->
-                            </select>
-                        </div>
-
-                        <!-- Filtro por estado -->
-                        <div class="col-md-4">
-                            <label for="filtro-estado">Estado</label>
-                            <select id="filtro-estado" class="form-control">
-                                <option value="todos">Todos</option>
-                                <option value="cargado">Cargado</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="vencido">Vencido</option>
-                            </select>
-                        </div>
-
-                        <!-- Botón para aplicar filtros -->
-                        <div class="col-md-4 d-flex align-items-end">
-                            <button id="btn-filtrar" class="btn btn-primary w-100">Aplicar filtros</button>
-                        </div>
-
-                    </div>
-
-                    <!--end::Row-->
-                    <!-- Contenido principal -->
-                    <div class="content-wrapper">
-                        <div class="content-header">
-                            <div class="container-fluid">
-                                <p>Período actual: <strong>Julio 2025</strong></p>
+                    <section class="content">
+                        <div class="container-fluid">
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">Datos del Usuario</h3>
+                                </div>
+                                <form>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="legajo">Legajo</label>
+                                                    <input type="text" class="form-control" id="legajo" value="12345"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="apellido">Apellidos</label>
+                                                    <input type="text" class="form-control" id="apellido" value="García"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="nombre">Nombres</label>
+                                                    <input type="text" class="form-control" id="nombre"
+                                                        value="Ruben Alberto" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="email">Correo electrónico</label>
+                                                    <input type="email" class="form-control" id="email"
+                                                        placeholder="Ingrese su correo">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="confirmEmail">Confirmar Correo electrónico</label>
+                                                    <input type="email" class="form-control" id="confirmEmail"
+                                                        placeholder="Confirme su correo">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group"></div>
+                                                <label for="telefono">Teléfono</label>
+                                                <input type="text" class="form-control" id="telefono"
+                                                    placeholder="Actualice su teléfono">
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group"></div>
+                                                <label for="password">Nueva contraseña</label>
+                                                <input type="password" class="form-control" id="password"
+                                                    placeholder="Ingrese nueva contraseña">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group"></div>
+                                                <label for="password">Confirmar contraseña</label>
+                                                <input type="password" class="form-control" id="confirmar"
+                                                    placeholder="Repita la nueva contraseña">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Fotografía</label>
+                                                <input type="file" name="foto" accept="image/*" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
+                            <div class="card-footer mt-3">
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                <button type="reset" class="btn btn-secondary">Cancelar</button>
+                            </div>
+                            </form>
                         </div>
-
-                        <div class="content">
-                            <div class="container-fluid">
-                                <div class="row">
-
-                                    <!-- Tarjeta KPI cargado -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="cargado" data-periodo="2025-07">
-                                        <div class="card border-success">
-                                            <div class="card-header bg-success text-white">
-                                                <h5 class="card-title">Margen de ganancia bruta</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> %</p>
-                                                <p><strong>Último valor:</strong> 3.5%</p>
-                                                <p><strong>Fecha carga:</strong> 10/07/2025</p>
-                                                <a href="#" class="btn btn-outline-primary btn-sm">Ver histórico</a>
-                                                <a href="#" class="btn btn-outline-secondary btn-sm">Editar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Tarjeta KPI pendiente -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="pendiente" data-periodo="2025-07">
-                                        <div class="card border-danger">
-                                            <div class="card-header bg-danger text-white">
-                                                <h5 class="card-title">Satisfacción del cliente</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> Días</p>
-                                                <p><strong>Último valor:</strong> N/D</p>
-                                                <p><strong>Fecha carga:</strong> -</p>
-                                                <a href="#" class="btn btn-danger btn-sm">Cargar ahora</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Tarjeta KPI con vencimiento próximo -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="vencido" data-periodo="2025-07">
-                                        <div class="card border-warning">
-                                            <div class="card-header bg-warning text-dark">
-                                                <h5 class="card-title">Tiempo de procesamiento</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> $</p>
-                                                <p><strong>Último valor:</strong> 250</p>
-                                                <p><strong>Fecha carga:</strong> 01/07/2025</p>
-                                                <a href="#" class="btn btn-warning btn-sm">Actualizar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3">
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="cargado" data-periodo="2025-07">
-                                        <div class="card border-success">
-                                            <div class="card-header bg-success text-white">
-                                                <h5 class="card-title">Tasa de rotación</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> %</p>
-                                                <p><strong>Último valor:</strong> 3.5%</p>
-                                                <p><strong>Fecha carga:</strong> 10/07/2025</p>
-                                                <a href="#" class="btn btn-outline-primary btn-sm">Ver histórico</a>
-                                                <a href="#" class="btn btn-outline-secondary btn-sm">Editar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Bloque de ayuda y fechas clave -->
-                                <div class="row mt-4">
-                                    <div class="col-md-6">
-                                        <div class="card card-info">
-                                            <div class="card-header">
-                                                <h5 class="card-title"><i class="fas fa-calendar-alt"></i> Fechas clave
-                                                </h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul>
-                                                    <li>Cierre de carga mensual: <strong>25 de julio</strong></li>
-                                                    <li>Recordatorio automático: 20 de julio</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="card card-light">
-                                            <div class="card-header">
-                                                <h5 class="card-title"><i class="fas fa-question-circle"></i> Ayuda</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p>¿Cómo se calcula cada KPI? Consultá el <a href="#">manual del
-                                                        usuario</a> o descargá las <a href="#">fichas técnicas</a>.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div> <!-- /.container-fluid -->
-                        </div> <!-- /.content -->
-                    </div> <!-- /.content-wrapper -->
-
-                </div> <!-- ./wrapper -->
-                <!-- <body class="p-4"> -->
-
-
-                <!--end::Container-->
+                </div>
+                </section>
             </div>
-            <!--end::App Content-->
+            <!--end::Row-->
+            <!-- Contenido principal -->
 
-            <footer class="main-footer text-center">
-                <strong>© 2025 - MiResultIQ 1.0</strong>
-            </footer>
 
-        </main>
-        <!--end::App nain-->
+    </div> <!-- ./wrapper -->
+    <!-- <body class="p-4"> -->
+
+
+    <!--end::Container-->
+    </div>
+    <!--end::App Content-->
+
+    <footer class="main-footer text-center">
+        <strong>© 2025 - MiResultIQ 1.0</strong>
+    </footer>
+
+    </main>
+    <!--end::App nain-->
 
     </div>
 
