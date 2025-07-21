@@ -256,28 +256,32 @@
 
                         <li class="nav-item">
                             <a href="kpi-operaciones.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores Asignados</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="kpi-usuarios.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="kpi-indicadores.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="gruposIndicadores.html" class="nav-link active">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+                            <a href="kpi-gruposInd.html" class="nav-link active">
+
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Grupos de Indicadores</p>
                             </a>
                         </li>
@@ -299,7 +303,9 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <h3 class="mb-0">Grupos de Indicadores.</h3>
-                            <p>Asignar el porcetaje de importancia relativa que cada indicador tiene dentro de su grupo de pertenencia.  La suma de los valores asignados entre todos los indices debe totalizar 100</p>
+                            <p>Asignar el porcentaje de importancia relativa que cada indicador tiene dentro de su grupo
+                                de pertenencia. La suma de los valores asignados entre todos los indices debe totalizar
+                                100.</p>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -330,9 +336,9 @@
                                             {
                                                 nombre: "Grupo: Gestión Internacional",
                                                 indicadores: [
-                                                    { codigo: "IND003", nombre: "Indicador B1", unidadFuncional: "Unidad 1", responsable: "Laura" },
-                                                    { codigo: "IND004", nombre: "Indicador B2", unidadFuncional: "Unidad 3", responsable: "Luis" },
-                                                    { codigo: "IND005", nombre: "Indicador B3", unidadFuncional: "Unidad 3", responsable: "Luis" },
+                                                    { codigo: "IND003", nombre: "Despachos extraordinarios", unidadFuncional: "COMEX", responsable: "Laura Gimenez" },
+                                                    { codigo: "IND004", nombre: "Gestion aduana", unidadFuncional: "COMEX", responsable: "Luis Espinosa" },
+                                                    { codigo: "IND005", nombre: "Gestión Arancelamiento", unidadFuncional: "COMEX", responsable: "Luis Espinosa" },
                                                 ]
                                             }
                                         ];
@@ -352,32 +358,39 @@
                                                 const tabla = document.createElement("table");
                                                 tabla.className = "table table-bordered";
                                                 tabla.innerHTML = `
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Nombre</th>
-              <th>Unidad Funcional</th>
-              <th>Responsable</th>
-              <th>Importancia (%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${grupo.indicadores.map((ind, indiceInd) => `
-              <tr>
-                <td>${ind.codigo}</td>
-                <td>${ind.nombre}</td>
-                <td>${ind.unidadFuncional}</td>
-                <td>${ind.responsable}</td>
-                <td>
-                  <input type="number" class="form-control porcentaje-input" 
-                         min="0" max="100" value="0" 
-                         onchange="validarPorcentajes(${indiceGrupo})"
-                         data-grupo="${indiceGrupo}">
-                </td>
-              </tr>
-            `).join('')}
-          </tbody>
-        `;
+                                                  <colgroup>
+                                                        <col style="width: 10%;">
+                                                        <col style="width: 35%;">
+                                                        <col style="width: 20%;">
+                                                        <col style="width: 20%;">
+                                                        <col style="width: 15%;">
+                                                    </colgroup>
+                                                            <thead>
+                                                                <tr>
+                                                                <th>Código</th>
+                                                                <th>Nombre</th>
+                                                                <th>Unidad Funcional</th>
+                                                                <th>Responsable</th>
+                                                                <th>Importancia (%)</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                ${grupo.indicadores.map((ind, indiceInd) => `
+                                                                <tr>
+                                                                    <td>${ind.codigo}</td>
+                                                                    <td>${ind.nombre}</td>
+                                                                    <td>${ind.unidadFuncional}</td>
+                                                                    <td>${ind.responsable}</td>
+                                                                    <td>
+                                                                    <input type="number" class="form-control porcentaje-input" 
+                                                                            min="0" max="100" value="0" 
+                                                                            onchange="validarPorcentajes(${indiceGrupo})"
+                                                                            data-grupo="${indiceGrupo}">
+                                                                    </td>
+                                                                </tr>
+                                                                `).join('')}
+                                                            </tbody>
+                                                            `;
                                                 grupoDiv.appendChild(tabla);
 
                                                 const totalP = document.createElement("p");

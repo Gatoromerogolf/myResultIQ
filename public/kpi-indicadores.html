@@ -316,28 +316,28 @@
 
                         <li class="nav-item">
                             <a href="kpi-operaciones.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores Asignados</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="kpi-usuarios.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="kpi-indicadores.html" class="nav-link active">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="gruposIndicadores.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+                            <a href="kpi-gruposInd.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Grupos de Indicadores</p>
                             </a>
                         </li>
@@ -543,8 +543,8 @@
 
                                         <div class="col-md-6"><strong>Formato de presentación:</strong> <span
                                                 id="formatoPresentacion"></span></div>
-                                        <div class="col-md-6"><strong>Grupos de Integracion:</strong> Gestión Ejecutiva, Mercado Nacional<span
-                                                id="grupoIntegracion"></span></div>
+                                        <div class="col-md-6"><strong>Grupos de Integracion:</strong> Gestión Ejecutiva,
+                                            Mercado Nacional<span id="grupoIntegracion"></span></div>
 
                                         <div class="col-12"><strong>Comentarios:</strong><span id="comentarios"
                                                 class="ms-2"></span>
@@ -1026,8 +1026,10 @@
                                                             <option value="grupo6">Zona Sur</option>
                                                             <option value="grupo7">Otro agrupamiento</option>
                                                         </select>
-                                                        <div class="form-text">Seleccionar a qué grupos se integra (Ctrl+click). Si
-                                                            no se selecciona ninguno, solo se considerará individualmente.</div>
+                                                        <div class="form-text">Seleccionar a qué grupos se integra
+                                                            (Ctrl+click). Si
+                                                            no se selecciona ninguno, solo se considerará
+                                                            individualmente.</div>
                                                     </div>
 
                                                     <!--begin::Comentarios-->
@@ -1323,7 +1325,7 @@
         // Función para ver un indicador específico
         function verIndicador(codigo) {
             alert(`Función para ver el indicador: ${codigo}`);
-            window.location.href = 'kpi-indicadoresMuestra.html'
+            window.location.href = 'kpi-indicadores.html'
             // Aquí iría la lógica para mostrar el detalle del indicador
             console.log('Ver indicador:', codigo);
         }
@@ -1331,7 +1333,7 @@
         // Función para editar un indicador
         function editarIndicador(codigo) {
             alert(`Función para editar el indicador: ${codigo}`);
-            window.location.href = 'kpi-indicadoresCarga.html'
+            window.location.href = 'kpi-indicadores.html'
             // Aquí iría la lógica para editar el indicador
             console.log('Editar indicador:', codigo);
         }

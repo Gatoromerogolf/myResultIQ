@@ -260,28 +260,28 @@
 
                         <li class="nav-item">
                             <a href="kpi-operaciones.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores Asignados</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="kpi-usuarios.html" class="nav-link active">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="kpi-indicadores.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="gruposIndicadores.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle-fill"></i>
+                            <a href="kpi-gruposInd.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Grupos de Indicadores</p>
                             </a>
                         </li>
@@ -314,17 +314,20 @@
                     <!--end::Row-->
 
                     <!-- <body class="p-4"> -->
-                    <section class="content">
+                    <section class="content" id="listaUsuarios" style="display: block">
                         <div class="container-fluid">
                             <div class="card card-primary card-outline">
-                                <div class="card-header">
+                                <div class="card-header" >
                                     <h3 class="card-title">Usuarios Registrados</h3>
                                     <div class="card-tools">
-                                        <a href="alta-usuario.html" class="btn btn-success btn-sm">
-                                            <i class="fas fa-user-plus"></i> Agregar Usuario
-                                        </a>
+                                        <div class="card-tools">
+                                            <button class="btn btn-success btn-sm" onclick="agregarUsuario()">
+                                                <i class="fas fa-user-plus"></i> Agregar Usuario
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div class="card-body table-responsive p-0">
                                     <table class="table table-hover text-nowrap">
                                         <thead>
@@ -348,7 +351,8 @@
                             </div>
                         </div>
                     </section>
-                    <section class="content">
+
+                    <section class="content" id="nuevoUsuario" style="display: none;">
                         <div class="container-fluid">
                             <form id="form-usuario" enctype="multipart/form-data" class="mt-4">
                                 <div class="card card-primary">
@@ -356,7 +360,6 @@
                                         <h3 class="card-title">Nuevo Usuario</h3>
                                     </div>
                                     <div class="card-body">
-
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <label>Legajo</label>
@@ -450,6 +453,7 @@
                             </form>
                         </div>
                     </section>
+                   
 
                     <script>
                         // Simulación de datos (remplazar con fetch a la BD real)
@@ -463,6 +467,16 @@
                                 email: "laura@example.com",
                                 estado: "Activo",
                                 perfil: "Operador"
+                            },
+                            {
+                                legajo: "1002",
+                                apellido: "Rodriguez",
+                                nombre: "Mario",
+                                cargo: "Jefe Sección",
+                                sector: "Finanzas",
+                                email: "rodrigueza@example.com",
+                                estado: "Activo",
+                                perfil: "Supervisor"
                             }
                         ];
 
@@ -500,6 +514,14 @@
 
     </div>
     <!--end::App Wrapper-->
+
+    <script>
+        function agregarUsuario(){
+            document.getElementById('listaUsuarios').style.display = 'none';
+            document.getElementById('nuevoUsuario').style.display = 'block';
+        }
+    </script>
+
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
