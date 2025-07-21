@@ -22,5 +22,6 @@ pool.getConnection((err, connection) => {
   connection.release();
 });
 
+
 // Exportar el pool para que pueda ser utilizado en otras partes de la aplicación
 module.exports = { pool };

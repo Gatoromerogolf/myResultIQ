@@ -40,3 +40,4 @@ app.get("/", (req, res) => {
 
 
 app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));
+console.log("Puerto usado:", PORT);
