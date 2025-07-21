@@ -255,7 +255,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-operaciones.html" class="nav-link active">
+                            <a href="kpi-operaciones.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle-fill"></i>
                                 <p>Indicadores Asignados</p>
                             </a>
@@ -276,7 +276,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="gruposIndicadores.html" class="nav-link">
+                            <a href="gruposIndicadores.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle-fill"></i>
                                 <p>Grupos de Indicadores</p>
                             </a>
@@ -298,7 +298,8 @@
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Indicadores Asignados</h3>
+                            <h3 class="mb-0">Grupos de Indicadores.</h3>
+                            <p>Asignar el porcetaje de importancia relativa que cada indicador tiene dentro de su grupo de pertenencia.  La suma de los valores asignados entre todos los indices debe totalizar 100</p>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -309,370 +310,108 @@
                     </div>
                     <!--end::Row-->
 
-                    <!--begin::Row-->
                     <div class="row">
                         <!-- Start col -->
                         <div class="col-md-12">
                             <!--begin::Latest Order Widget-->
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
-                                    <h3 class="card-title">Indicadores Asignados</h3>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                    <div class="table-responsive">
-                                        <table class="table m-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nivel 1</th>
-                                                    <th>Nivel 2</th>
-                                                    <th>Nivel 3</th>
-                                                    <th>Responsable</th>
-                                                    <th>✉</th>
-                                                    <th>Indicadores</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Dirección General</td>
-                                                    <td>Gerencia Operativa</td>
-                                                    <td>Depart. Suministros</td>
-                                                    <td>Raul Dieguez</td>
-                                                    <td>
-                                                        <div class="dropdown user-menu">
+                                    <div id="contenedorGrupos"></div>
+                                    <script>
+                                        // Simulación de datos que vendrían de la base de datos
+                                        const gruposData = [
+                                            {
+                                                nombre: "Grupo: Gestión Ejecutiva",
+                                                indicadores: [
+                                                    { codigo: "FIN001", nombre: "Margen de Ganancia Bruta", unidadFuncional: "Administración", responsable: "Juan Pérez" },
+                                                    { codigo: "FIN023", nombre: "Rotación de Inventario", unidadFuncional: "Depósito", responsable: "Carlos Diaz" },
+                                                ]
+                                            },
+                                            {
+                                                nombre: "Grupo: Gestión Internacional",
+                                                indicadores: [
+                                                    { codigo: "IND003", nombre: "Indicador B1", unidadFuncional: "Unidad 1", responsable: "Laura" },
+                                                    { codigo: "IND004", nombre: "Indicador B2", unidadFuncional: "Unidad 3", responsable: "Luis" },
+                                                    { codigo: "IND005", nombre: "Indicador B3", unidadFuncional: "Unidad 3", responsable: "Luis" },
+                                                ]
+                                            }
+                                        ];
 
-                                                            <button type="button" class="btn-user-info"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#detalleUsuarioModal"
-                                                                aria-label="Ver información del usuario">
-                                                                <i class="bi bi-person-lines-fill"></i>
-                                                            </button>
+                                        // Función para construir la tabla por grupo
+                                        function construirGrupos() {
+                                            const contenedor = document.getElementById("contenedorGrupos");
 
-                                                        </div>
-                                                    </td>
-                                                    <td>#SUP010, #SAB200, #OTC256</td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>Jefatura Almacenes</td>
-                                                    <td>Diego Ramos</td>
-                                                    <td>
-                                                        <div class="dropdown user-menu">
-                                                            <button type="button" class="btn-user-info"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#detalleUsuarioModal"
-                                                                aria-label="Ver información del usuario">
-                                                                <i class="bi bi-person-lines-fill"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                    <td>#PRO000, #SAB220, #OTC450</td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td>Gerencia Administrativa</td>
-                                                    <td>Contaduría</td>
-                                                    <td>Ricardo Solari</td>
-                                                    <td>
-                                                        <div class="dropdown user-menu">
-                                                            <button type="button" class="btn-user-info"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#detalleUsuarioModal"
-                                                                aria-label="Ver información del usuario">
-                                                                <i class="bi bi-person-lines-fill"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                    <td>#ADM000, #ADM298, #ADM232, #ADM456</td>
-                                                </tr>
+                                            gruposData.forEach((grupo, indiceGrupo) => {
+                                                const grupoDiv = document.createElement("div");
+                                                grupoDiv.className = "grupo-bloque";
 
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <!-- /.table-responsive -->
-                                </div>
-                                <!-- /.card-body -->
+                                                const titulo = document.createElement("h4");
+                                                titulo.textContent = grupo.nombre;
+                                                grupoDiv.appendChild(titulo);
 
-                                <!-- /.card-footer -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!--end::Row-->
+                                                const tabla = document.createElement("table");
+                                                tabla.className = "table table-bordered";
+                                                tabla.innerHTML = `
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Unidad Funcional</th>
+              <th>Responsable</th>
+              <th>Importancia (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${grupo.indicadores.map((ind, indiceInd) => `
+              <tr>
+                <td>${ind.codigo}</td>
+                <td>${ind.nombre}</td>
+                <td>${ind.unidadFuncional}</td>
+                <td>${ind.responsable}</td>
+                <td>
+                  <input type="number" class="form-control porcentaje-input" 
+                         min="0" max="100" value="0" 
+                         onchange="validarPorcentajes(${indiceGrupo})"
+                         data-grupo="${indiceGrupo}">
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        `;
+                                                grupoDiv.appendChild(tabla);
 
+                                                const totalP = document.createElement("p");
+                                                totalP.id = `totalGrupo${indiceGrupo}`;
+                                                totalP.className = "fw-bold text-danger";
+                                                grupoDiv.appendChild(totalP);
 
-                    <!--begin::App Main-->
-                    <div class="app-main">
-                        <!--begin::App Content Header-->
-                        <div class="app-content-header">
-                            <!--begin::Container-->
-                            <div class="container-fluid">
-                                <!--begin::Row-->
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <h3 class="mb-0">Unidades Funcionales</h3>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <ol class="breadcrumb float-sm-end">
-                                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                                        </ol>
-                                    </div>
-                                </div>
-                                <!--end::Row-->
+                                                contenedor.appendChild(grupoDiv);
+                                            });
+                                        }
 
-                                <!--begin::Row-->
-                                <div class="container mt-4">
-                                    <!-- Botón para mostrar/ocultar el modo edición -->
-                                    <button class="btn btn-primary mb-3" onclick="toggleModoEdicion()">Editar
-                                        estructura</button>
+                                        function validarPorcentajes(grupoIndex) {
+                                            const inputs = document.querySelectorAll(`input[data-grupo="${grupoIndex}"]`);
+                                            let suma = 0;
 
-                                    <!-- Contenedor del árbol -->
-                                    <div id="arbolUnidades"></div>
+                                            inputs.forEach(input => {
+                                                const val = parseFloat(input.value);
+                                                if (!isNaN(val)) suma += val;
+                                            });
 
-                                    <!-- Botón para guardar los cambios -->
-                                    <button id="btnGuardar" class="btn btn-success mt-3 d-none"
-                                        onclick="guardarEstructura()">Guardar cambios</button>
-                                </div>
+                                            const mensaje = document.getElementById(`totalGrupo${grupoIndex}`);
+                                            if (suma === 100) {
+                                                mensaje.textContent = "✅ La suma es 100%";
+                                                mensaje.classList.remove("text-danger");
+                                                mensaje.classList.add("text-success");
+                                            } else {
+                                                mensaje.textContent = `⚠ La suma actual es ${suma.toFixed(2)}% (debe ser 100%)`;
+                                                mensaje.classList.remove("text-success");
+                                                mensaje.classList.add("text-danger");
+                                            }
+                                        }
 
-                                <!--end::Row-->
-                                <!--end::Container-->
-                            </div>
-                            <!--end::App Content-->
-                        </div>
-                        <!--end::App nain-->
-                    </div>
-                    <!--end::Container-->
-                </div>
-                <!--end::App Content-->
-
-
-                <footer class="main-footer text-center">
-                    <strong>© 2025 - MiResultIQ 1.0</strong>
-                </footer>
-
-        </main>
-        <!--end::App nain-->
-
-    </div>
-    <!--end::App Wrapper-->
-
-    <!--begin::Modal del usuario-->
-    <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detalleUsuarioLabel">Info Responsable</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <img src="../images/user1-128x128.jpg" class="rounded-circle shadow mb-3" alt="User Image" />
-                    <p class="mb-1">Gerente de Operaciones</p>
-                    <p class="mb-1">rdieguez@company.com.ar</p>
-                    <p>+54 11 452 7898</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--end::Modal del usuario-->
-
-    <script>
-        let modoEdicion = false;
-
-        // Estructura de ejemplo inicial
-        let unidadesFuncionales = [
-            {
-                id: 1,
-                nombre: "Dirección General",
-                hijos: [
-                    {
-                        id: 2,
-                        nombre: "Recursos Humanos",
-                        hijos: []
-                    },
-                    {
-                        id: 3,
-                        nombre: "Finanzas",
-                        hijos: [
-                            {
-                                id: 4,
-                                nombre: "Contabilidad",
-                                hijos: []
-                            }
-                        ]
-                    }
-                ]
-            }
-        ];
-
-        // Renderizar árbol
-        function renderArbol(unidades, container, parentId = null) {
-            container.innerHTML = ''; // Limpiar
-
-            unidades.forEach(unidad => {
-                const li = document.createElement('li');
-                li.className = "list-group-item";
-
-                li.innerHTML = `
-    <span>${unidad.nombre}</span>
-    ${modoEdicion ? `
-    <button class="btn btn-sm btn-outline-success ms-2" onclick="agregarUnidad(${unidad.id})">➕</button>
-    <button class="btn btn-sm btn-outline-warning" onclick="editarUnidad(${unidad.id})">✏️</button>
-    <button class="btn btn-sm btn-outline-danger" onclick="eliminarUnidad(${unidad.id}, ${parentId})">🗑️</button>
-    ` : ''}
-    `;
-
-                container.appendChild(li);
-
-                if (unidad.hijos && unidad.hijos.length > 0) {
-                    const ul = document.createElement('ul');
-                    ul.className = "list-group ms-4 mt-2";
-                    li.appendChild(ul);
-                    renderArbol(unidad.hijos, ul, unidad.id);
-                }
-            });
-        }
-
-        function toggleModoEdicion() {
-            modoEdicion = !modoEdicion;
-            document.getElementById("btnGuardar").classList.toggle("d-none", !modoEdicion);
-            mostrarEstructura();
-        }
-
-        function mostrarEstructura() {
-            const contenedor = document.getElementById('arbolUnidades');
-            const ul = document.createElement('ul');
-            ul.className = "list-group";
-            renderArbol(unidadesFuncionales, ul);
-            contenedor.innerHTML = '';
-            contenedor.appendChild(ul);
-        }
-
-        function agregarUnidad(parentId) {
-            const nombre = prompt("Nombre de la nueva unidad:");
-            if (!nombre) return;
-
-            const nuevaUnidad = {
-                id: Date.now(),
-                nombre,
-                hijos: []
-            };
-
-            const agregarEn = buscarUnidad(unidadesFuncionales, parentId);
-            agregarEn.hijos.push(nuevaUnidad);
-            mostrarEstructura();
-        }
-
-        function editarUnidad(id) {
-            const unidad = buscarUnidad(unidadesFuncionales, id);
-            const nuevoNombre = prompt("Nuevo nombre:", unidad.nombre);
-            if (nuevoNombre) {
-                unidad.nombre = nuevoNombre;
-                mostrarEstructura();
-            }
-        }
-
-        function eliminarUnidad(id, parentId) {
-            if (!confirm("¿Eliminar esta unidad?")) return;
-
-            const padre = parentId ? buscarUnidad(unidadesFuncionales, parentId) : { hijos: unidadesFuncionales };
-            padre.hijos = padre.hijos.filter(u => u.id !== id);
-            mostrarEstructura();
-        }
-
-        function buscarUnidad(arbol, id) {
-            for (let unidad of arbol) {
-                if (unidad.id === id) return unidad;
-                const hijo = buscarUnidad(unidad.hijos, id);
-                if (hijo) return hijo;
-            }
-            return null;
-        }
-
-        function guardarEstructura() {
-            fetch('/guardar-estructura', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(unidadesFuncionales)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    alert("Estructura guardada correctamente.");
-                    toggleModoEdicion();
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert("Error al guardar.");
-                });
-        }
-
-        // Mostrar inicialmente
-        mostrarEstructura();
-
-    </script>
-
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)-->
-    <!--begin::Required Plugin(Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <!-- <script src="../../dist/js/adminlte.js"></script> -->
-    <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-    <script>
-        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-        const Default = {
-            scrollbarTheme: 'os-theme-light',
-            scrollbarAutoHide: 'leave',
-            scrollbarClickScroll: true,
-        };
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-            if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
-                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                        theme: Default.scrollbarTheme,
-                        autoHide: Default.scrollbarAutoHide,
-                        clickScroll: Default.scrollbarClickScroll,
-                    },
-                });
-            }
-        });
-    </script>
-    <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
-
-
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-    <!-- ChartJS -->
-
-
+                                        construirGrupos();
+                                    </script>
 </body>
-<!--end::Body-->
 
 </html>
