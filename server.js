@@ -7,7 +7,7 @@ const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const cron = require("node-cron");
 
-// require("dotenv").config(); //
+require("dotenv").config(); //
 
 
 const app = express();
@@ -30,8 +30,13 @@ app.get('/api/indicadores', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+// app.get("/", (req, res) => {
+//   res.send("Servidor funcionando en Railway. Ruta raíz activa.");
+// });
+
 app.get("/", (req, res) => {
-  res.send("Servidor funcionando en Railway. Ruta raíz activa.");
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
 
 app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));
