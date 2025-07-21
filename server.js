@@ -30,4 +30,8 @@ app.get('/api/indicadores', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+app.get("/", (req, res) => {
+  res.send("Servidor funcionando en Railway. Ruta raíz activa.");
+});
+
 app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));
