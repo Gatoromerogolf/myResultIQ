@@ -1,62 +1,210 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cargando...</title>
+    <title>myResultIQ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- AdminLTE & Bootstrap CSS -->
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
+
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #1a1a2e;
-            background-color: #2c5f6f;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
         }
 
-        .image-container {
+        .hero {
+            padding: 100px 20px;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .section {
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .testimonial {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        footer {
+            background-color: #343a40;
+            color: #ccc;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .lang-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .fade-in {
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            transform: translateY(-20px);
+            animation: fadeInMove 1.2s ease-out forwards;
         }
 
-        .image-container.show {
-            opacity: 1;
-        }
-
-        .image-container.hide {
-            opacity: 0;
-        }
-
-        .logo-image {
-            width: 75.6px; /* Aproximadamente 2 cm */
-            height: 75.6px; /* Aproximadamente 2 cm */
-            object-fit: contain; /* Mantiene la proporción de la imagen */
+        @keyframes fadeInMove {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="image-container" id="imageContainer">
-        <img src="images/leon.png" alt="Logo" class="logo-image">
+
+    <!-- Selector de idioma -->
+    <div class="lang-buttons">
+        <button class="btn btn-light btn-sm me-2" onclick="cambiarIdioma('es')">Español</button>
+        <button class="btn btn-light btn-sm" onclick="cambiarIdioma('en')">English</button>
     </div>
 
+    <!-- Hero -->
+    <section class="hero">
+        <img src="dist/images/leon.png" alt="León blanco símbolo de la aplicación" class="fade-in"
+            style="width: 70px; border-radius: 50%; margin-bottom: 20px;">
+
+        <h1><i class="fas fa-chart-line"></i> myResultIQ</h1>
+
+        <p data-lang-es="La aplicación para gestión de indicadores"
+            data-lang-en="The application for performance management">
+            La aplicación para gestión de indicadores
+        </p>
+
+        <a href="/login.html" class="btn btn-light btn-lg" data-lang-es="Ingresar a la aplicación"
+            data-lang-en="Enter the app">
+            Ingresar a la aplicación
+        </a>
+    </section>
+
+
+
+    <!-- ¿Para qué utilizarla? -->
+    <section class="section bg-white">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-lang-es="¿Para qué utilizar myResultIQ?" data-lang-en="Why use myResultIQ?">¿Para qué utilizar
+                    myResultIQ?</h2>
+                <p data-lang-es="Una solución diseñada para simplificar la gestión de desempeño organizacional."
+                    data-lang-en="A solution designed to simplify performance management.">
+                    Una solución diseñada para simplificar la gestión de desempeño organizacional.
+                </p>
+            </div>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <i class="fas fa-tachometer-alt fa-3x mb-3 text-primary"></i>
+                    <h5 data-lang-es="Monitoreo en Tiempo Real" data-lang-en="Real-Time Monitoring">Monitoreo en Tiempo
+                        Real</h5>
+                    <p data-lang-es="Visualizá el rendimiento de tus indicadores al instante."
+                        data-lang-en="View your indicators' performance instantly.">
+                        Visualizá el rendimiento de tus indicadores al instante.
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <i class="fas fa-project-diagram fa-3x mb-3 text-primary"></i>
+                    <h5 data-lang-es="Organización por Áreas" data-lang-en="Area-based Organization">Organización por
+                        Áreas</h5>
+                    <p data-lang-es="Segmentá y evaluá por áreas, unidades o procesos."
+                        data-lang-en="Segment and evaluate by areas, units or processes.">
+                        Segmentá y evaluá por áreas, unidades o procesos.
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <i class="fas fa-bullseye fa-3x mb-3 text-primary"></i>
+                    <h5 data-lang-es="Enfoque en Resultados" data-lang-en="Results-Oriented">Enfoque en Resultados</h5>
+                    <p data-lang-es="Identificá rápidamente desvíos y oportunidades de mejora."
+                        data-lang-en="Quickly identify deviations and opportunities.">
+                        Identificá rápidamente desvíos y oportunidades de mejora.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonios -->
+    <section class="section bg-light">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-lang-es="Testimonios" data-lang-en="Testimonials">Testimonios</h2>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="testimonial">
+                        <p data-lang-es="Nos ayudó a entender mejor el rendimiento de cada unidad y tomar decisiones más informadas."
+                            data-lang-en="It helped us better understand unit performance and make more informed decisions.">
+                            Nos ayudó a entender mejor el rendimiento de cada unidad y tomar decisiones más informadas.
+                        </p>
+                        <strong>— Juan P., Gerente de Calidad</strong>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial">
+                        <p data-lang-es="Muy fácil de usar y con excelente soporte técnico. Ideal para equipos que manejan muchos datos."
+                            data-lang-en="Very easy to use and great support. Ideal for teams handling large datasets.">
+                            Muy fácil de usar y con excelente soporte técnico. Ideal para equipos que manejan muchos
+                            datos.
+                        </p>
+                        <strong>— Juanpi, Jefe de Operaciones</strong>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial">
+                        <p data-lang-es="myResultIQ cambió nuestra manera de trabajar. Ahora tenemos claridad en los objetivos."
+                            data-lang-en="myResultIQ changed our workflow. Now we have clarity on goals.">
+                            myResultIQ cambió nuestra manera de trabajar. Ahora tenemos claridad en los objetivos.
+                        </p>
+                        <strong>— Alberto S., Director Ejecutivo</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 myResultIQ. <span data-lang-es="Todos los derechos reservados."
+                data-lang-en="All rights reserved.">Todos los derechos reservados.</span></p>
+    </footer>
+
+    <!-- JS -->
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="dist/js/adminlte.min.js"></script>
+
+    <!-- Script cambio de idioma -->
     <script>
-        // Mostrar la imagen después de 2 segundos
-        setTimeout(() => {
-            document.getElementById('imageContainer').classList.add('show');
-        }, 2000);
-
-        // Ocultar la imagen después de 4.5 segundos (2 + 2.5 segundos visible)
-        setTimeout(() => {
-            document.getElementById('imageContainer').classList.add('hide');
-        }, 4500);
-
-        // Redirigir a index2.html después de 5 segundos total (0.5 segundos para completar la animación de salida)
-        setTimeout(() => {
-            window.location.href = 'index0.html';
-        }, 6000);
+        function cambiarIdioma(idioma) {
+            const elementos = document.querySelectorAll('[data-lang-es]');
+            elementos.forEach(el => {
+                const texto = el.getAttribute(`data-lang-${idioma}`);
+                if (texto) el.textContent = texto;
+            });
+            document.documentElement.lang = idioma;
+        }
     </script>
+
 </body>
+
 </html>

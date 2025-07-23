@@ -2,6 +2,17 @@
 <html lang="en">
 <!--begin::Head-->
 
+<style>
+    .brand-image {
+        opacity: 1 !important;
+        width: 40px;
+        height: auto;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        object-fit: contain;
+    }
+</style>
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>myResultIQ | Dashboard</title>
@@ -63,17 +74,17 @@
                         </a>
                     </li>
                     <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
+                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
                 </ul>
                 <!--end::Start Navbar Links-->
                 <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
                     <!--begin::Navbar Search-->
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                             <i class="bi bi-search"></i>
                         </a>
-                    </li>
+                    </li> -->
                     <!--end::Navbar Search-->
 
                     <!--begin::Messages Dropdown Menu-->
@@ -87,7 +98,7 @@
                                 <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
-                                        <img src="../images/user1-128x128.jpg" alt="User Avatar"
+                                        <img src="dist/images/user1-128x128.jpg" alt="User Avatar"
                                             class="img-size-50 rounded-circle me-3" />
                                     </div>
                                     <div class="flex-grow-1">
@@ -109,7 +120,7 @@
                                 <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
-                                        <img src="../images/user8-128x128.jpg" alt="User Avatar"
+                                        <img src="dist/images/user8-128x128.jpg" alt="User Avatar"
                                             class="img-size-50 rounded-circle me-3" />
                                     </div>
                                     <div class="flex-grow-1">
@@ -132,7 +143,7 @@
                                 <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
-                                        <img src="../images/user3-128x128.jpg" alt="User Avatar"
+                                        <img src="dist/images/user3-128x128.jpg" alt="User Avatar"
                                             class="img-size-50 rounded-circle me-3" />
                                     </div>
                                     <div class="flex-grow-1">
@@ -198,12 +209,15 @@
 
                         <span class="nav-link dropdown-toggle">
                             <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Juan Pérez</strong></span>
-                            <img src="../images/user8-128x128.jpg" class="user-image rounded-circle shadow"
-                                alt="User Image" />
+                            <img src="/dist/images/user8-128x128.jpg" class="user-image rounded-circle shadow"
+                                style="width: 40px; height: 40px;" alt="User Image" />
                         </span>
                     </li>
                     <li>
-                        <a href="#" class="btn btn-default btn-flat float-end"> Cerrar sesión</a>
+                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Cerrar sesión</a> -->
+                        <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
+                        </a>
                     </li>
                     <!--end::User Menu Dropdown-->
                 </ul>
@@ -218,13 +232,14 @@
             <!--begin::Sidebar Brand-->
             <div class="sidebar-brand">
                 <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
-                    <!--begin::Brand Image-->
-                    <img src="../images/leon.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow" />
-                    <!--end::Brand Image-->
-                    <!--begin::Brand Text-->
-                    <span class="brand-text fw-light">myResultIQ 1</span>
-                    <!--end::Brand Text-->
+                <!-- <a href="./index.html" class="brand-link"> -->
+                <!--begin::Brand Image-->
+                <img src="dist/images/leon.png" alt="León blanco símbolo de la aplicación" class="fade-in"
+                    style="width: 40px; border-radius: 50%; margin-bottom: 0px;">
+                <!--end::Brand Image-->
+                <!--begin::Brand Text-->
+                <span class="brand-text fw-light fs-5">myResultIQ 1</span>
+                <!--end::Brand Text-->
                 </a>
                 <!--end::Brand Link-->
             </div>
@@ -249,14 +264,14 @@
                         <li class="nav-item">
                             <a href="cargar-datos.html" class="nav-link">
                                 <i class="nav-icon fas fa-upload fa-tachometer-alt text-primary"></i>
-                                <p>Cargar Datos</p>
+                                <p>Registro de Datos</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="historico.html" class="nav-link">
                                 <i class="nav-icon fas fa-history text-primary"></i>
-                                <p>Histórico</p>
+                                <p>Histórico de Registros</p>
                             </a>
                         </li>
 
@@ -267,12 +282,12 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="logout.html" class="nav-link">
                                 <i class="fas fa-sign-out-alt text-primary"></i>
                                 <p>Salir</p>
                             </a>
-                        </li>
+                        </li> -->
 
                     </ul>
                     <!--end::Sidebar Menu-->
@@ -587,8 +602,37 @@
         </main>
         <!--end::App nain-->
 
+        <!-- Modal de Confirmación de Logout -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="logoutModalLabel">¿Desea cerrar sesión?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        Esta acción cerrará tu sesión actual y volverás a la página de inicio.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmLogout">Cerrar sesión</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.getElementById('confirmLogout').addEventListener('click', function () {
+                // Limpiar lo necesario
+                sessionStorage.clear();
+                localStorage.clear(); // si usás localStorage
 
-<!-- quisiera armar una esquema de presentacion del dashboard con las siguients características
+                // Redirigir al inicio
+                window.location.href = 'index.html';
+            });
+        </script>
+
+
+        <!-- quisiera armar una esquema de presentacion del dashboard con las siguients características
 
 una tarjeta que represente un indice común o unificado que resuma las posiciones de los distintos índices que le corresponden al usuario.  El valor de ese índice se obtendrá mediante algun algoritmo que unifique los resultados de cada índice, considerando la proporción de cumplimiento de cada objetivo definido.
 Esto implica que al definir un indice, se deberá determinar su proporción de participacion en el resumen unificado.

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargando...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a2e;
+            background-color: #2c5f6f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .image-container {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .image-container.show {
+            opacity: 1;
+        }
+
+        .image-container.hide {
+            opacity: 0;
+        }
+
+        .logo-image {
+            width: 75.6px; /* Aproximadamente 2 cm */
+            height: 75.6px; /* Aproximadamente 2 cm */
+            object-fit: contain; /* Mantiene la proporción de la imagen */
+        }
+    </style>
+</head>
+<body>
+    <div class="image-container" id="imageContainer">
+        <img src="images/leon.png" alt="Logo" class="logo-image">
+    </div>
+
+    <script>
+        // Mostrar la imagen después de 2 segundos
+        setTimeout(() => {
+            document.getElementById('imageContainer').classList.add('show');
+        }, 2000);
+
+        // Ocultar la imagen después de 4.5 segundos (2 + 2.5 segundos visible)
+        setTimeout(() => {
+            document.getElementById('imageContainer').classList.add('hide');
+        }, 4500);
+
+        // Redirigir a index2.html después de 5 segundos total (0.5 segundos para completar la animación de salida)
+        setTimeout(() => {
+            window.location.href = 'index0.html';
+        }, 6000);
+    </script>
+</body>
+</html>
