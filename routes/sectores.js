@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Crear un nuevo sector
+// Crear un nuevo sector .....
 router.post('/', async (req, res) => {
   const { nombre, descripcion, sector_padre_id } = req.body;
 
