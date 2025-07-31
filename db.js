@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 // Config dotnev
 require("dotenv").config();
 
@@ -11,17 +11,16 @@ const pool = mysql.createPool({
 });
 
 // Verificar la conexión inicial
-pool.getConnection((err, connection) => {
-  if (err) {
+(async () => {
+  try {
+    const connection = await pool.getConnection();
+    console.log("Conectado a la BD a través del pool");
+    connection.release();
+  } catch (err) {
     console.error("Falló la conexión a la BD", err.code);
-    return;
   }
-  console.log("Conectado a la BD a través del pool");
-
-  // Liberar la conexión de vuelta al pool
-  connection.release();
-});
+})();
 
 
 // Exportar el pool para que pueda ser utilizado en otras partes de la aplicación
-module.exports = { pool };
+module.exports = pool;

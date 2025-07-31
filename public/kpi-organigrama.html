@@ -1,61 +1,104 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <!--begin::Head-->
 
-<style>
-    .brand-image {
-        opacity: 1 !important;
-        width: 40px;
-        height: auto;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        object-fit: contain;
-    }
-</style>
-
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>myResultIQ | Dashboard</title>
-    <!--begin::Primary Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="AdminLTE v4 | Dashboard" />
-    <meta name="author" content="ColorlibHQ" />
-    <meta name="description"
-        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-    <meta name="keywords"
-        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-    <!--end::Primary Meta Tags-->
+    <meta charset="UTF-8">
+    <title>Organigrama y Estructura Funcional</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../css/adminlte.css" />
+    <link rel="stylesheet" href="../css/estilos-custom.css">
+
     <!--begin::Fonts-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
         integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
     <!--end::Fonts-->
+
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
         integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
     <!--end::Third Party Plugin(OverlayScrollbars)-->
+
     <!--begin::Third Party Plugin(Bootstrap Icons)-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
         integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
-    <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../css/adminlte.css" />
-    <link rel="stylesheet" href="../css/estilos-custom.css">
-    <!--end::Required Plugin(AdminLTE)-->
-    <!-- apexcharts -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
-    <!-- jsvectormap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
-        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .brand-image {
+            opacity: 1 !important;
+            width: 40px;
+            height: auto;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+            border-radius: 6px;
+            object-fit: contain;
+        }
+
+        .app-main {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .app-content-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+            padding: 1rem 0;
+        }
+
+        .card-outline {
+            border: 1px solid #dee2e6;
+        }
+
+        .badge-dimension {
+            font-size: 0.75rem;
+        }
+
+        .table-responsive {
+            border-radius: 0.375rem;
+        }
+
+        .btn-link-custom {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .btn-link-custom:hover {
+            color: #0a58ca;
+            text-decoration: underline;
+        }
+
+        .criticidad-alta {
+            color: #dc3545;
+        }
+
+        .criticidad-media {
+            color: #fd7e14;
+        }
+
+        .criticidad-baja {
+            color: #198754;
+        }
+
+        .tendencia-ascendente {
+            color: #198754;
+        }
+
+        .tendencia-descendente {
+            color: #dc3545;
+        }
+
+        .tendencia-estable {
+            color: #6c757d;
+        }
+    </style>
 
 </head>
-<!--end::Head-->
-<!--begin::Body-->
+
+<!-- <body class="hold-transition sidebar-mini"> -->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body">
@@ -72,6 +115,7 @@
                     <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
                 </ul>
                 <!--end::Start Navbar Links-->
+
                 <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
                     <!--begin::Navbar Search-->
@@ -161,7 +205,6 @@
                         </div>
                     </li>
                     <!--end::Messages Dropdown Menu-->
-
                     <!--begin::Notifications Dropdown Menu-->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-bs-toggle="dropdown" href="#">
@@ -210,8 +253,6 @@
                                 style="width: 40px; height: 40px;" alt="User Image" />
                         </span>
                     </li>
-                    <!--end::User Menu Dropdown"-->
-
                     <li>
                         <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
                         <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
@@ -243,6 +284,7 @@
                 <!--end::Brand Link-->
             </div>
             <!--end::Sidebar Brand-->
+
             <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
@@ -255,7 +297,6 @@
 
                         <li class="nav-item">
                             <a href="kpi-operaciones.html" class="nav-link">
-
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores Asignados</p>
                             </a>
@@ -263,7 +304,6 @@
 
                         <li class="nav-item">
                             <a href="kpi-usuarios.html" class="nav-link">
-
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
                             </a>
@@ -271,22 +311,20 @@
 
                         <li class="nav-item">
                             <a href="kpi-indicadores.html" class="nav-link">
-
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-gruposInd.html" class="nav-link active">
-
+                            <a href="kpi-gruposInd.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Grupos de Indicadores</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-organigrama.html" class="nav-link">
+                            <a href="kpi-organigrama.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Organigrama</p>
                             </a>
@@ -296,149 +334,99 @@
                 </nav>
             </div>
             <!--end::Sidebar Wrapper-->
+
         </aside>
         <!--end::Sidebar-->
 
-        <!--begin::App Main-->
         <main class="app-main">
-            <!--begin::App Content Header-->
             <div class="app-content-header">
-                <!--begin::Container-->
                 <div class="container-fluid">
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Grupos de Indicadores.</h3>
-                            <p>Asignar el porcentaje de importancia relativa que cada indicador tiene dentro de su grupo
-                                de pertenencia. La suma de los valores asignados entre todos los indices debe totalizar
-                                100.</p>
+                            <h3 class="mb-0">Organigrama</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                                <li class="breadcrumb-item active" aria-current="page">Organigrama</li>
                             </ol>
                         </div>
                     </div>
                     <!--end::Row-->
 
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-image"></i> Gestión de Imagen de Organigrama
+                            </h3>
+                        </div>
+                        <!-- </div> -->
+
+                        <div class="form-group ps-2 pe-2 mt-3 mb-3 ml-3">
+                            <label for="orgImageInput" class="form-label">Selecciona una imagen del organigrama:</label>
+                            <input type="file" class="form-control" id="orgImageInput" accept="image/*">
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mb-3 ml-3">
+                            <button id="uploadButton" class="btn btn-primary">Subir imagen</button>
+                            <button id="showImageButton" class="btn btn-success d-none">Mostrar imagen</button>
+                            <button id="hideImageButton" class="btn btn-secondary d-none">Ocultar imagen</button>
+                            <button id="deleteImageButton" class="btn btn-danger d-none">Eliminar imagen</button>
+                        </div>
+
+                        <div id="imageContainer" class="text-center d-none">
+                            <img id="organigramaImagen" class="img-fluid rounded shadow" alt="Organigrama">
+                        </div>
+                    </div>
+
+                    <!-- Sección 2: Formulario + Árbol -->
                     <div class="row">
-                        <!-- Start col -->
-                        <div class="col-md-12">
-                            <!--begin::Latest Order Widget-->
-                            <div class="card card-primary card-outline">
+                        <!-- Formulario -->
+                        <div class="col-md-6">
+                            <div class="card card-info">
                                 <div class="card-header">
-                                    <div id="contenedorGrupos"></div>
-                                    <script>
-                                        // Simulación de datos que vendrían de la base de datos
-                                        const gruposData = [
-                                            {
-                                                nombre: "Grupo: Gestión Ejecutiva",
-                                                indicadores: [
-                                                    { codigo: "FIN001", nombre: "Margen de Ganancia Bruta", unidadFuncional: "Administración", responsable: "Juan Pérez" },
-                                                    { codigo: "FIN023", nombre: "Rotación de Inventario", unidadFuncional: "Depósito", responsable: "Carlos Diaz" },
-                                                ]
-                                            },
-                                            {
-                                                nombre: "Grupo: Gestión Internacional",
-                                                indicadores: [
-                                                    { codigo: "IND003", nombre: "Despachos extraordinarios", unidadFuncional: "COMEX", responsable: "Laura Gimenez" },
-                                                    { codigo: "IND004", nombre: "Gestion aduana", unidadFuncional: "COMEX", responsable: "Luis Espinosa" },
-                                                    { codigo: "IND005", nombre: "Gestión Arancelamiento", unidadFuncional: "COMEX", responsable: "Luis Espinosa" },
-                                                ]
-                                            }
-                                        ];
+                                    <h3 class="card-title"><i class="fas fa-plus-circle"></i> Agregar Sector</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form id="sectorForm">
+                                        <div class="form-group">
+                                            <label for="sectorName">Nombre del sector:</label>
+                                            <input type="text" class="form-control" id="sectorName" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sectorParent">Sector padre (opcional):</label>
+                                            <select class="form-control" id="sectorParent">
+                                                <option value="">-- Ninguno --</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sectorDescription">Descripción:</label>
+                                            <textarea class="form-control" id="sectorDescription" rows="3"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Agregar sector</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
 
-                                        // Función para construir la tabla por grupo
-                                        function construirGrupos() {
-                                            const contenedor = document.getElementById("contenedorGrupos");
-
-                                            gruposData.forEach((grupo, indiceGrupo) => {
-                                                const grupoDiv = document.createElement("div");
-                                                grupoDiv.className = "grupo-bloque";
-
-                                                const titulo = document.createElement("h4");
-                                                titulo.textContent = grupo.nombre;
-                                                grupoDiv.appendChild(titulo);
-
-                                                const tabla = document.createElement("table");
-                                                tabla.className = "table table-bordered";
-                                                tabla.innerHTML = `
-                                                  <colgroup>
-                                                        <col style="width: 10%;">
-                                                        <col style="width: 35%;">
-                                                        <col style="width: 20%;">
-                                                        <col style="width: 20%;">
-                                                        <col style="width: 15%;">
-                                                    </colgroup>
-                                                            <thead>
-                                                                <tr>
-                                                                <th>Código</th>
-                                                                <th>Nombre</th>
-                                                                <th>Unidad Funcional</th>
-                                                                <th>Responsable</th>
-                                                                <th>Importancia (%)</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                ${grupo.indicadores.map((ind, indiceInd) => `
-                                                                <tr>
-                                                                    <td>${ind.codigo}</td>
-                                                                    <td>${ind.nombre}</td>
-                                                                    <td>${ind.unidadFuncional}</td>
-                                                                    <td>${ind.responsable}</td>
-                                                                    <td>
-                                                                    <input type="number" class="form-control porcentaje-input" 
-                                                                            min="0" max="100" value="0" 
-                                                                            onchange="validarPorcentajes(${indiceGrupo})"
-                                                                            data-grupo="${indiceGrupo}">
-                                                                    </td>
-                                                                </tr>
-                                                                `).join('')}
-                                                            </tbody>
-                                                            `;
-                                                grupoDiv.appendChild(tabla);
-
-                                                const totalP = document.createElement("p");
-                                                totalP.id = `totalGrupo${indiceGrupo}`;
-                                                totalP.className = "fw-bold text-danger";
-                                                grupoDiv.appendChild(totalP);
-
-                                                contenedor.appendChild(grupoDiv);
-                                            });
-                                        }
-
-                                        function validarPorcentajes(grupoIndex) {
-                                            const inputs = document.querySelectorAll(`input[data-grupo="${grupoIndex}"]`);
-                                            let suma = 0;
-
-                                            inputs.forEach(input => {
-                                                const val = parseFloat(input.value);
-                                                if (!isNaN(val)) suma += val;
-                                            });
-
-                                            const mensaje = document.getElementById(`totalGrupo${grupoIndex}`);
-                                            if (suma === 100) {
-                                                mensaje.textContent = "✅ La suma es 100%";
-                                                mensaje.classList.remove("text-danger");
-                                                mensaje.classList.add("text-success");
-                                            } else {
-                                                mensaje.textContent = `⚠ La suma actual es ${suma.toFixed(2)}% (debe ser 100%)`;
-                                                mensaje.classList.remove("text-success");
-                                                mensaje.classList.add("text-danger");
-                                            }
-                                        }
-
-                                        construirGrupos();
-                                    </script>
+                        <!-- Árbol -->
+                        <div class="col-md-6">
+                            <div class="card card-success">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i class="fas fa-sitemap"></i> Estructura Funcional</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="treeView" class="tree"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </main>
     </div>
+
     <!-- Modal de Confirmación de Logout -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -467,23 +455,191 @@
             window.location.href = 'index.html';
         });
     </script>
-    <!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)-->
-    <!--begin::Required Plugin(Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <!-- <script src="../../dist/js/adminlte.js"></script> -->
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+    <script>
+        // === Configuración ===
+        const API_URL = '/api/sectores';
+        const IMG_URL = '/api/organigrama';
+
+        // === Esperar DOM ===
+        document.addEventListener("DOMContentLoaded", async () => {
+            inicializarBotonesImagen();
+            await verificarImagen();
+            cargarSectores();
+            manejarEnvioFormulario();
+        });
+
+        // === Gestión de Imagen ===
+        function inicializarBotonesImagen() {
+            const showBtn = document.getElementById("showImageButton");
+            const hideBtn = document.getElementById("hideImageButton");
+            const deleteBtn = document.getElementById("deleteImageButton");
+            const uploadBtn = document.getElementById("uploadButton");
+            const fileInput = document.getElementById("orgImageInput");
+            const imageContainer = document.getElementById("imageContainer");
+            const organigramaImg = document.getElementById("organigramaImagen");
+
+            showBtn.addEventListener("click", async () => {
+                const res = await fetch(`${IMG_URL}/imagen`);
+                const blob = await res.blob();
+                organigramaImg.src = URL.createObjectURL(blob);
+                imageContainer.classList.remove("d-none");
+                showBtn.classList.add("d-none");
+                hideBtn.classList.remove("d-none");
+            });
+
+            hideBtn.addEventListener("click", () => {
+                imageContainer.classList.add("d-none");
+                showBtn.classList.remove("d-none");
+                hideBtn.classList.add("d-none");
+            });
+
+            uploadBtn.addEventListener("click", async () => {
+                if (!fileInput.files.length) return alert("Selecciona una imagen primero.");
+                const formData = new FormData();
+                formData.append("imagen", fileInput.files[0]);
+
+                const res = await fetch(IMG_URL, { method: "POST", body: formData });
+                if (res.ok) {
+                    alert("Imagen subida correctamente.");
+                    fileInput.value = "";
+                    await verificarImagen();
+                    imageContainer.classList.add("d-none");
+                    hideBtn.classList.add("d-none");
+                } else {
+                    alert("Error al subir imagen.");
+                }
+            });
+
+            deleteBtn.addEventListener("click", async () => {
+                if (!confirm("¿Seguro que deseas eliminar la imagen?")) return;
+                const res = await fetch(IMG_URL, { method: "DELETE" });
+                if (res.ok) {
+                    alert("Imagen eliminada correctamente.");
+                    imageContainer.classList.add("d-none");
+                    showBtn.classList.add("d-none");
+                    hideBtn.classList.add("d-none");
+                    deleteBtn.classList.add("d-none");
+                } else {
+                    alert("Error al eliminar imagen.");
+                }
+            });
+        }
+
+        async function verificarImagen() {
+            const showBtn = document.getElementById("showImageButton");
+            const deleteBtn = document.getElementById("deleteImageButton");
+            try {
+                const res = await fetch(`${IMG_URL}/imagen`);
+                const visible = res.ok;
+                showBtn.classList.toggle("d-none", !visible);
+                deleteBtn.classList.toggle("d-none", !visible);
+            } catch (err) {
+                console.error("Error al verificar imagen:", err);
+            }
+        }
+
+        // === Gestión de Formulario ===
+        function manejarEnvioFormulario() {
+            $('#sectorForm').on('submit', async function (event) {
+                event.preventDefault();
+                const nombre = $('#sectorName').val();
+                const descripcion = $('#sectorDescription').val();
+                const sector_padre_id = $('#sectorParent').val() || null;
+
+                try {
+                    await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nombre, descripcion, sector_padre_id }),
+                    });
+                    await cargarSectores();
+                    this.reset();
+                } catch (err) {
+                    console.error('Error al agregar sector:', err);
+                }
+            });
+        }
+
+        // === Gestión de Sectores ===
+        async function cargarSectores() {
+            try {
+                const response = await fetch(API_URL);
+                const sectores = await response.json();
+                actualizarOpcionesPadre(sectores);
+                renderizarArbol(sectores);
+            } catch (err) {
+                console.error('Error al cargar sectores:', err);
+            }
+        }
+
+        function actualizarOpcionesPadre(sectores) {
+            const $select = $('#sectorParent');
+            $select.html('<option value="">-- Ninguno --</option>');
+            sectores.forEach(({ id, nombre }) => {
+                $select.append(`<option value="${id}">${nombre}</option>`);
+            });
+        }
+
+        function renderizarArbol(sectores) {
+            $('#treeView').html(construirArbol(sectores));
+        }
+
+        function construirArbol(sectores, padreId = null) {
+            const hijos = sectores.filter(s => padreId === null
+                ? s.sector_padre_id === null || s.sector_padre_id === 0
+                : s.sector_padre_id == padreId);
+
+            if (!hijos.length) return '';
+
+            const items = hijos.map(s => `
+                    <li>
+                    <strong>${s.nombre}</strong>
+                        <button class="btn btn-sm btn-outline-danger p-1" onclick="eliminarSector(${s.id})" title="Eliminar sector">
+                        <i class="fas fa-trash-alt" style="font-size: 12px;"></i>
+                        </button>
+
+                    <br><small>${s.descripcion || ''}</small>
+                    ${construirArbol(sectores, s.id)}
+                    </li>
+                `).join('');
+
+            return `<ul class="ml-3">${items}</ul>`;
+        }
+
+        async function eliminarSector(id) {
+            if (!confirm('¿Estás seguro de que querés eliminar este sector?')) return;
+            try {
+                const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error('Error en la eliminación');
+                await cargarSectores();
+            } catch (err) {
+                console.error('Error al eliminar sector:', err);
+                alert('No se pudo eliminar el sector.');
+            }
+        }
+
+
+    </script>
     <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)-->
+
+    <!-- jQuery (requerido por AdminLTE) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- AdminLTE JS -->
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+    <!-- OverlayScrollbars (opcional) -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"></script>
 </body>
 
 </html>

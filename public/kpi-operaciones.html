@@ -47,6 +47,9 @@
     <!-- jsvectormap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
         integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -209,9 +212,9 @@
                     <!--end::User Menu Dropdown-->
 
                     <li>
-                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Cerrar sesión</a> -->
+                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
                         <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
-                            <i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
+                            <i class="fas fa-sign-out-alt me-1"></i> Salir
                         </a>
                     </li>
                     <!--end::User Menu Dropdown-->
@@ -274,6 +277,13 @@
                             <a href="kpi-gruposInd.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Grupos de Indicadores</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-organigrama.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Organigrama</p>
                             </a>
                         </li>
                     </ul>
@@ -452,13 +462,25 @@
                 </div>
                 <!--end::App Content-->
 
+                <!-- begin::Comentarios-->
+                <comentarios class="app-sidebar bg-body-secondary shadow" data-bs-theme="light">
+                    <div>
+                        <p>Organigrama</p>
+                        <p>Habria que permitir cargar una imagen con el organigrama</p>
+                        <p>También se debe permitir crear una estructura organico/funcional</p>
+                        <p><input type="text" placeholder="Agregar comentario"></p>
+                        <p></p>
+                    </div>
+                    <!--end::Comentarios-->
 
-                <footer class="main-footer text-center">
-                    <strong>© 2025 - MiResultIQ 1.0</strong>
-                </footer>
+                    <footer class="main-footer text-center">
+                        <strong>© 2025 - myResultIQ 1.0</strong>
+                    </footer>
 
         </main>
         <!--end::App nain-->
+
+
 
     </div>
     <!--end::App Wrapper-->
@@ -488,7 +510,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="logoutModalLabel">¿Desea cerrar sesión?</h5>
+                    <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
@@ -496,7 +518,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmLogout">Cerrar sesión</button>
+                    <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
                 </div>
             </div>
         </div>

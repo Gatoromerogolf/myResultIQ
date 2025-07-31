@@ -2,10 +2,10 @@
   "name": "myresultiq",
   "version": "1.0.0",
   "main": "index.js",
-"scripts": {
-  "start": "node server.js",
-  "test": "echo \"Error: no test specified\" && exit 1"
-},
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "express": "^5.1.0",
     "express-mysql-session": "^3.0.3",
     "express-session": "^1.18.1",
+    "multer": "^2.0.2",
     "mysql2": "^3.14.1",
     "node-cron": "^4.2.1"
   },
