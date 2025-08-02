@@ -31,11 +31,30 @@ app.post('/guardar', async (req, res) => {
     res.json({ mensaje: 'Indicador guardado' });
 });
 
+
+
+// // 🚫🚫🚫GET para tomar los indicadores
+// app.get('/api/indicadores', async (req, res) => {
+//     const [rows] = await pool.query('SELECT nombre, resultado_actual, unidad_medida FROM indicadores');
+//     res.json(rows);
+// });
+
 app.get('/api/indicadores', async (req, res) => {
-    const [rows] = await pool.query('SELECT nombre, resultado_actual, unidad_medida FROM indicadores');
+    const [rows] = await pool.query(`
+        SELECT 
+            codigo_identificatorio,
+            nombre,
+            dimension,
+            unidad_funcional_id
+            responsable,
+            categoria,
+            criticidad,
+            frecuencia_medicion,
+            tendencia_deseada
+        FROM indicadores
+    `);
     res.json(rows);
 });
-
 
 // // 🚫🚫🚫POST para subir o reemplazar imagen
 app.post('/api/organigrama', upload.single('imagen'), async (req, res) => {
@@ -114,6 +133,20 @@ app.post('/api/indicadores', async (req, res) => {
         console.error('Error en backend:', err);
         res.status(500).json({ error: 'Error al guardar el indicador' });
     }
+});
+
+
+
+// // 🚫🚫🚫 Eliminar indicador
+app.delete('/api/indicadores/:codigo', async (req, res) => {
+  try {
+    const { codigo } = req.params;
+    await pool.query('DELETE FROM indicadores WHERE codigo_identificatorio = ?', [codigo]);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
 });
 
 // // 🚫🚫🚫 Crear usuario con imagen

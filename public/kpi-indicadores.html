@@ -81,27 +81,37 @@
         }
 
         .criticidad-alta {
-            color: #dc3545;
+            color: #dc3545 !important;
         }
 
         .criticidad-media {
-            color: #fd7e14;
+            color: #fd7e14 !important;
         }
 
         .criticidad-baja {
-            color: #198754;
+            color: #198754 !important;
         }
 
         .tendencia-ascendente {
-            color: #198754;
+            color: #198754 !important;
         }
 
         .tendencia-descendente {
-            color: #dc3545;
+            color: #dc3545 !important;
         }
 
         .tendencia-estable {
-            color: #6c757d;
+            color: #6c757d !important;
+        }
+
+        .tendencia-crítica {
+            color: #dc3545;
+            /* rojo */
+        }
+
+        .tendencia-urgente {
+            color: #fd7e14;
+            /* naranja */
         }
     </style>
 </head>
@@ -129,13 +139,7 @@
 
                 <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
-                    <!--begin::Navbar Search-->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                            <i class="bi bi-search"></i>
-                        </a>
-                    </li> -->
-                    <!--end::Navbar Search-->
+
 
                     <!--begin::Messages Dropdown Menu-->
                     <li class="nav-item dropdown">
@@ -646,10 +650,10 @@
                                                             required>
                                                             <option selected disabled value="">Seleccione una
                                                                 dimensión...</option>
-                                                            <option value="financiera">Financiera</option>
-                                                            <option value="cliente">Cliente</option>
-                                                            <option value="procesos">Procesos</option>
-                                                            <option value="capital_humano">Capital Humano</option>
+                                                            <option value="Financiera">Financiera</option>
+                                                            <option value="Cliente">Cliente</option>
+                                                            <option value="Procesos">Procesos</option>
+                                                            <option value="Capital Humano">Capital Humano</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar una dimensión.
                                                         </div>
@@ -816,9 +820,9 @@
                                                             name="unidadDemora" required>
                                                             <option selected disabled value="">Seleccione unidad...
                                                             </option>
-                                                            <option value="diaria">Dia</option>
-                                                            <option value="semanal">Semana</option>
-                                                            <option value="mensual">Mes</option>
+                                                            <option value="Diaria">Dia</option>
+                                                            <option value="Semanal">Semana</option>
+                                                            <option value="Mensual">Mes</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar el máximo de
                                                             demora admitido.</div>
@@ -878,9 +882,11 @@
                                                             name="tendenciaDeseada" required>
                                                             <option selected disabled value="">Seleccione tendencia...
                                                             </option>
-                                                            <option value="ascendente">Ascendente</option>
-                                                            <option value="descendente">Descendente</option>
-                                                            <option value="estable">Estable</option>
+                                                            <option value="Ascendente">Ascendente</option>
+                                                            <option value="Descendente">Descendente</option>
+                                                            <option value="Estable">Estable</option>
+                                                            <option value="Estable">Critica</option>
+                                                            <option value="Estable">Urgente</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar la tendencia
                                                             deseada.</div>
@@ -894,10 +900,10 @@
                                                             required>
                                                             <option selected disabled value="">Seleccione categoría...
                                                             </option>
-                                                            <option value="eficiencia">Eficiencia</option>
-                                                            <option value="eficacia">Eficacia</option>
-                                                            <option value="calidad">Calidad</option>
-                                                            <option value="productividad">Productividad</option>
+                                                            <option value="Eficiencia">Eficiencia</option>
+                                                            <option value="Eficacia">Eficacia</option>
+                                                            <option value="Calidad">Calidad</option>
+                                                            <option value=Pproductividad">Productividad</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar una categoría.
                                                         </div>
@@ -911,9 +917,9 @@
                                                             required>
                                                             <option selected disabled value="">Seleccione criticidad...
                                                             </option>
-                                                            <option value="alta">Alta</option>
-                                                            <option value="media">Media</option>
-                                                            <option value="baja">Baja</option>
+                                                            <option value="Alta">Alta</option>
+                                                            <option value="Media">Media</option>
+                                                            <option value="Baja">Baja</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar la criticidad.
                                                         </div>
@@ -1148,61 +1154,9 @@
             window.location.href = 'index.html';
         });
     </script>
+    <!-- Final del Modal de Confirmación de Logout -->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Datos de ejemplo para demostrar la funcionalidad
-        const indicadoresEjemplo = [
-            {
-                codigo: "FIN001",
-                nombre: "Margen de Ganancia Bruta",
-                dimension: "Financiera",
-                unidad: "Administración",
-                responsable: "Juan Pérez",
-                categoria: "Eficiencia",
-                criticidad: "Alta",
-                frecuencia: "Mensual",
-                tendencia: "Ascendente",
-                descripcion: "Mide el margen de ganancia bruta de la empresa"
-            },
-            {
-                codigo: "CLI002",
-                nombre: "Satisfacción del Cliente",
-                dimension: "Cliente",
-                unidad: "Ventas",
-                responsable: "María García",
-                categoria: "Calidad",
-                criticidad: "Alta",
-                frecuencia: "Trimestral",
-                tendencia: "Ascendente",
-                descripcion: "Mide el nivel de satisfacción de los clientes"
-            },
-            {
-                codigo: "PRO003",
-                nombre: "Tiempo de Procesamiento",
-                dimension: "Procesos",
-                unidad: "Adm Ventas",
-                responsable: "María García",
-                categoria: "Eficiencia",
-                criticidad: "Media",
-                frecuencia: "Semanal",
-                tendencia: "Descendente",
-                descripcion: "Tiempo promedio de procesamiento de pedidos"
-            },
-            {
-                codigo: "RRH004",
-                nombre: "Rotación de Personal",
-                dimension: "Capital Humano",
-                unidad: "RRHH",
-                responsable: "María García",
-                categoria: "Productividad",
-                criticidad: "Media",
-                frecuencia: "Mensual",
-                tendencia: "Descendente",
-                descripcion: "Porcentaje de rotación de personal mensual"
-            }
-        ];
-
         // Función para obtener el color de la dimensión
         function getColorDimension(dimension) {
             const colores = {
@@ -1225,83 +1179,6 @@
             return iconos[tendencia] || 'fas fa-minus';
         }
 
-        // Función para cargar la tabla de indicadores
-        function cargarTablaIndicadores() {
-            const tbody = document.getElementById('tablaIndicadores');
-            const emptyState = document.getElementById('emptyState');
-            const totalIndicadores = document.getElementById('totalIndicadores');
-
-            // Limpiar tabla
-            tbody.innerHTML = '';
-
-            if (indicadoresEjemplo.length === 0) {
-                emptyState.style.display = 'block';
-                totalIndicadores.textContent = '0 indicadores';
-                return;
-            }
-
-            emptyState.style.display = 'none';
-            totalIndicadores.textContent = `${indicadoresEjemplo.length} indicadores`;
-
-            // onclick="window.location.href='kpi-indicadoresMuestra.html'"
-
-            indicadoresEjemplo.forEach(indicador => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <button class="btn btn-link btn-link-custom p-0" onclick="mostrarAppMain()">
-                            <strong>${indicador.codigo}</strong>
-                        </button>
-                    </td>
-                    <td>
-                        <div class="fw-medium">${indicador.nombre}</div>
-                        <small class="text-muted">${indicador.descripcion.substring(0, 50)}...</small>
-                    </td>
-
-                    <td>
-                        <span class="badge bg-${getColorDimension(indicador.dimension)} badge-dimension">
-                            ${indicador.dimension}
-                        </span>
-                    </td>
-
-                    <td>${indicador.unidad}</td>
-
-                    <td>${indicador.responsable}</td>
-
-                    <td>
-                        <span class="badge bg-light text-dark">${indicador.categoria}</span>
-                    </td>
-                    <td>
-                        <span class="fw-medium criticidad-${indicador.criticidad.toLowerCase()}">
-                            ${indicador.criticidad}
-                        </span>
-                    </td>
-                    <td>
-                        <small class="text-muted">${indicador.frecuencia}</small>
-                    </td>
-                    <td>
-                        <span class="tendencia-${indicador.tendencia.toLowerCase()}">
-                            <i class="${getIconoTendencia(indicador.tendencia)} me-1"></i>
-                            ${indicador.tendencia}
-                        </span>
-                    </td>
-                    <td>
-                        <div class="btn-group btn-group-sm" role="group">
-                            <button class="btn btn-outline-primary" onclick="editarIndicador('${indicador.codigo}')" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-outline-info" onclick="verIndicador('${indicador.codigo}')" title="Ver detalles">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-outline-danger" onclick="eliminarIndicador('${indicador.codigo}')" title="Eliminar">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
 
         // Función para ver un indicador específico
         function verIndicador(codigo) {
@@ -1320,13 +1197,28 @@
         }
 
         // Función para eliminar un indicador
-        function eliminarIndicador(codigo) {
-            if (confirm(`¿Está seguro que desea eliminar el indicador ${codigo}?`)) {
-                alert(`Indicador ${codigo} eliminado`);
-                // Aquí iría la lógica para eliminar el indicador
-                console.log('Eliminar indicador:', codigo);
+        async function eliminarIndicador(codigo_identificatorio) {
+            const confirmado = confirm(`¿Estás seguro de que querés eliminar este indicador?: ${codigo_identificatorio}`);
+            if (!confirmado) return;
+
+            try {
+                const response = await fetch(`/api/indicadores/${codigo_identificatorio}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Indicador eliminado correctamente.');
+                    // Vuelve a cargar la tabla, si tenés una función para eso:
+                    cargarIndicadores();
+                } else {
+                    alert('No se pudo eliminar el indicador.');
+                }
+            } catch (error) {
+                console.error('Error al eliminar el indicador:', error);
+                alert('Ocurrió un error inesperado.');
             }
         }
+
 
         // Función para agregar un nuevo indicador
         function agregarIndicador() {
@@ -1352,59 +1244,9 @@
             console.log('Exportar indicadores');
         }
 
-        // Cargar la tabla al cargar la página
-        document.addEventListener('DOMContentLoaded', function () {
-            cargarTablaIndicadores();
-        });
     </script>
 
-    <script>
-        function mostrarAppMain() {
-            const div = document.getElementById("appMain");
-            div.style.display = "block"; // o usar "flex", según tu diseño
-
-            const div2 = document.getElementById("appContent");
-            div2.style.display = "none";
-        }
-    </script>
-
-    <script>
-        // Suponiendo que vas a pasar un objeto con los datos del indicador
-        const indicador = {
-            codigo: 'FIN001',
-            nombre: 'Margen de Ganancia Bruta',
-            dimension: 'Financiera',
-            responsable: 'Juan Pérez',
-            descripcion: 'Mide el margen de ganancia bruta de la empresa sobre ingresos totales mensuales.',
-            objetivo: 'Evaluar el desempeño financiero mensual.',
-            formulaCalculo: '(Ingresos - Costos) / Ingresos * 100',
-            fuenteDatos: 'ERP Financiero',
-            unidadMedida: '%',
-            frecuenciaMedicion: 'Mensual',
-            periodicidadReporte: 'Mensual',
-            metaObjetivo: '25%',
-            umbralPositivo: '5%',
-            umbralCritico: '15%',
-            tendenciaDeseada: 'Ascendente',
-            categoria: 'Eficiencia',
-            criticidad: 'Alta',
-            formatoPresentacion: ['Gráfico', 'Dashboard'],
-            gruposIntegracion: 'Gestion Ejecutiva, Mercado Nacional',
-            comentarios: 'Este indicador se revisa cada mes para ajustes de estrategia.'
-        };
-
-        // Mostrar datos
-        for (const [key, value] of Object.entries(indicador)) {
-            const span = document.getElementById(key);
-            if (span) {
-                span.innerText = Array.isArray(value) ? value.join(', ') : value;
-            }
-        }
-    </script>
-
-    <script src="../js/adminlte.js"></script>
-
-    <script>
+    <script>  //  llena sectores
         const API_SECTORES = '/api/sectores'; // Reemplazá con la ruta real
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -1439,6 +1281,100 @@
         }
     </script>
 
+    <script>
+        async function cargarIndicadores() {
+            try {
+                const response = await fetch('/api/indicadores'); // Ruta a tu backend
+                const indicadores = await response.json();
+
+                const tbody = document.getElementById('tablaIndicadores');
+                const emptyState = document.getElementById('emptyState');
+                const totalBadge = document.getElementById('totalIndicadores');
+
+                // Limpiar la tabla actual
+                tbody.innerHTML = '';
+
+                if (indicadores.length === 0) {
+                    emptyState.style.display = 'block';
+                    totalBadge.textContent = '0 indicadores';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+                totalBadge.textContent = `${indicadores.length} indicadores`;
+
+                indicadores.forEach(ind => {
+                    const fila = document.createElement('tr');
+
+                    let criticidad_minus = ind.criticidad.toLowerCase();
+                    let clase_criticidad = getClaseCriticidad(criticidad_minus)
+                    console.log(clase_criticidad)
+
+                    fila.innerHTML = `
+                    <td>${ind.codigo_identificatorio}</td>
+                    <td>${ind.nombre}</td>
+
+                    <td>
+                        <span class="badge bg-${getColorDimension(ind.dimension)} badge-dimension">
+                            ${ind.dimension}
+                        </span>
+                    </td>
+
+                    <td>${ind.unidad_funcional_id}</td>
+                    <td>${ind.responsable}</td>
+                    <td>${ind.categoria}</td>
+
+                    <td class="${clase_criticidad}">${ind.criticidad}</td>
+
+                    <td>${ind.frecuencia_medicion}</td>
+
+                    <td>
+                        <span class="tendencia-${ind.tendencia_deseada.toLowerCase()}">
+                            <i class="${getIconoTendencia(ind.tendencia_deseada)} me-1"></i>
+                            ${ind.tendencia_deseada}
+                        </span>
+                    </td>
+
+                    <td>
+                        <button class="btn btn-sm btn-warning me-1" onclick="editarIndicador('${ind.codigo_identificatorio}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminarIndicador('${ind.codigo_identificatorio}')">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                `;
+
+                    tbody.appendChild(fila);
+                });
+            } catch (error) {
+                console.error('Error cargando indicadores:', error);
+                alert('No se pudieron cargar los indicadores.');
+            }
+
+        }
+
+        function getClaseCriticidad(criticidad) {
+            switch (criticidad.toLowerCase()) {
+                case 'alta':
+                    return 'criticidad-alta';
+                case 'media':
+                    return 'criticidad-media';
+                case 'baja':
+                    return 'criticidad-baja';
+                default:
+                    return '';
+            }
+        }
+
+        // Llamar a la función cuando cargue la página
+        document.addEventListener('DOMContentLoaded', cargarIndicadores);
+
+    </script>
+
+    <script src="../js/adminlte.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
