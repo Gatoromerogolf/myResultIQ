@@ -32,7 +32,6 @@ app.post('/guardar', async (req, res) => {
 });
 
 
-
 // // 🚫🚫🚫GET para tomar los indicadores
 // app.get('/api/indicadores', async (req, res) => {
 //     const [rows] = await pool.query('SELECT nombre, resultado_actual, unidad_medida FROM indicadores');
@@ -55,6 +54,48 @@ app.get('/api/indicadores', async (req, res) => {
     `);
     res.json(rows);
 });
+
+
+// // 🚫🚫🚫GET para tomar un indicador
+app.get('/api/indicadores/:codigo', async (req, res) => {
+    const { codigo } = req.params;
+
+    try {
+        const [rows] = await pool.query(`
+            SELECT 
+                codigo_identificatorio,
+                nombre,
+                descripcion,
+                dimension,
+                unidad_funcional_id,
+                responsable,
+                dimension,
+                categoria,
+                criticidad,
+                frecuencia_medicion,
+                unidad_medida,
+                tendencia_deseada,
+                meta_objetivo,
+                periodo_inicial,
+                grupos_integracion, 
+                comentarios
+            FROM indicadores
+            WHERE codigo_identificatorio = ?
+        `, [codigo]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ mensaje: 'Indicador no encontrado' });
+        }
+
+        res.json(rows[0]);
+    } catch (err) {
+        console.error('Error al obtener indicador:', err);
+        res.status(500).json({ mensaje: 'Error interno' });
+    }
+});
+
+
+
 
 // // 🚫🚫🚫POST para subir o reemplazar imagen
 app.post('/api/organigrama', upload.single('imagen'), async (req, res) => {
