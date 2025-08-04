@@ -120,6 +120,239 @@
             color: #fd7e14;
             /* naranja */
         }
+
+        /* CSS personalizado para hacer la tabla más pequeña */
+        #tablaIndicadores {
+            font-size: 12px !important;
+        }
+
+        #tablaIndicadores thead th {
+            font-size: 14px !important;
+            padding: 6px 4px !important;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        #tablaIndicadores tbody td {
+            font-size: 14px !important;
+            padding: 4px 4px !important;
+            line-height: 1.3;
+            vertical-align: middle;
+        }
+
+        /* Espaciado y layout de controles de DataTables */
+        #tablaIndicadores_wrapper {
+            padding: 10px 10px;
+        }
+
+        /* Contenedor superior con los controles */
+        #tablaIndicadores_wrapper .dataTables_length,
+        #tablaIndicadores_wrapper .dataTables_filter {
+            margin-bottom: 15px !important;
+            padding: 5px 0 !important;
+        }
+
+        /* Show entries (izquierda) */
+        #tablaIndicadores_wrapper .dataTables_length {
+            float: left;
+            margin-right: 20px !important;
+        }
+
+        /* Reducir también los controles de DataTables */
+        #tablaIndicadores_wrapper .dataTables_length select,
+        #tablaIndicadores_wrapper .dataTables_length label,
+        #tablaIndicadores_wrapper .dataTables_filter input,
+        #tablaIndicadores_wrapper .dataTables_filter label {
+            font-size: 12px !important;
+        }
+
+        #tablaIndicadores_wrapper .dataTables_info,
+        #tablaIndicadores_wrapper .dataTables_paginate {
+            padding: 4px 8px !important;
+            font-size: 12px !important;
+        }
+
+        /* Botones de paginación más pequeños */
+        #tablaIndicadores_wrapper .paginate_button {
+            padding: 4px 8px !important;
+            font-size: 12px !important;
+        }
+
+        #tablaIndicadores_wrapper .paginate_button.current {
+            padding: 4px 8px !important;
+            font-size: 12px !important;
+        }
+
+        /* Si tienes badges o elementos dentro de las celdas */
+        #tablaIndicadores .badge {
+            font-size: 12px !important;
+            padding: 2px 6px !important;
+        }
+
+        /* Ajustar ancho de columnas para mejor uso del espacio */
+
+        /* Código */
+        #tablaIndicadores th:nth-child(1) {
+            width: 5%;
+        }
+
+        /* Nombre */
+        #tablaIndicadores th:nth-child(2) {
+            width: 15%;
+        }
+
+        /* Dimensión */
+        #tablaIndicadores th:nth-child(3) {
+            width: 8%;
+        }
+
+        /* U Funcional */
+        #tablaIndicadores th:nth-child(4) {
+            width: 10%;
+        }
+
+        /* Responsable */
+        #tablaIndicadores th:nth-child(5) {
+            width: 8%;
+        }
+
+        /* Categoría */
+        #tablaIndicadores th:nth-child(6) {
+            width: 7%;
+        }
+
+        /* Criticidad */
+        #tablaIndicadores th:nth-child(7) {
+            width: 5%;
+        }
+
+        /* Frecuencia */
+        #tablaIndicadores th:nth-child(8) {
+            width: 8%;
+        }
+
+        /* Tendencia */
+        #tablaIndicadores th:nth-child(9) {
+            width: 7%;
+        }
+
+        /* Acciones */
+        #tablaIndicadores th:nth-child(10) {
+            width: 8%;
+        }
+
+
+        /* OPCIÓN 1: Solo iconos sin fondo (más limpio) */
+        .icon-only-actions .btn {
+            background: none !important;
+            border: none !important;
+            padding: 1px 2px !important;
+            margin: 0 1px !important;
+            box-shadow: none !important;
+        }
+
+        .icon-only-actions .btn:hover {
+            background-color: rgba(0, 0, 0, 0.1) !important;
+            border-radius: 2px !important;
+        }
+
+        .icon-only-actions .btn-primary i {
+            color: #007bff !important;
+        }
+
+        .icon-only-actions .btn-warning i {
+            color: #ffc107 !important;
+        }
+
+        .icon-only-actions .btn-danger i {
+            color: #dc3545 !important;
+        }
+
+        /* Estilos personalizados para tooltips */
+        .info-icon {
+            color: #6c757d;
+            margin-left: 5px;
+            cursor: help;
+            font-size: 0.9em;
+        }
+
+        .info-icon:hover {
+            color: #495057;
+        }
+
+        .field-help {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-size: 0.75em;
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+        }
+
+        .field-help .tooltip-arrow {
+            border-top-color: #667eea !important;
+        }
+
+        /* Tooltip personalizado más grande */
+        .custom-tooltip {
+            font-size: 0.85em !important;
+        }
+
+        .custom-tooltip .tooltip-inner {
+            max-width: 350px !important;
+            text-align: left !important;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+            border-radius: 8px !important;
+            padding: 10px 15px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* Icono de ayuda flotante */
+        .help-floating {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1050;
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .help-floating:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Estilos para el modal de ayuda */
+        .help-modal .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .help-modal .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+        .help-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            border-radius: 5px;
+        }
+
+        .help-item strong {
+            color: #495057;
+        }
     </style>
 </head>
 <!--end::Head-->
@@ -408,7 +641,8 @@
                                         <!--begin::Table-->
                                         <div class="table-responsive">
                                             <!-- <table class="table table-striped table-hover mb-0"> -->
-                                            <table id="tablaIndicadores" class="table table-striped table-bordered">
+                                            <table id="tablaIndicadores"
+                                                class="table table-striped table-bordered table-sm mb-0">
                                                 <thead class="table-light">
                                                     <tr>
                                                         <th scope="col">Código</th>
@@ -627,13 +861,28 @@
                                                     <!-- Sección: Identificación -->
                                                     <div class="col-12">
                                                         <h5 class="text-primary border-bottom">Identificación
+                                                            <i class="fas fa-question-circle info-icon"
+                                                                data-bs-toggle="tooltip" data-bs-placement="right"
+                                                                data-bs-custom-class="field-help"
+                                                                title="Esta sección contiene la información básica que identifica a cada indicador en el sistema."></i>
                                                         </h5>
                                                     </div>
 
                                                     <!--begin::Código Identificatorio-->
                                                     <div class="col-md-3">
-                                                        <label for="codigoIdentificatorio" class="form-label">Código
-                                                            Identificatorio *</label>
+                                                        <!-- <label class="form-label">
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip"
+                                                                data-bs-custom-class="custom-tooltip"
+                                                                title="Código único alfanumérico que identifica el indicador. Ejemplo: IND-001, PKI-2024-01. No debe repetirse en el sistema."></i>
+                                                        </label> -->
+                                                        <label for="codigoIdentificatorio"
+                                                            class="form-label"><strong>Código
+                                                                Identificatorio *</strong>
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip"
+                                                                data-bs-custom-class="custom-tooltip"
+                                                                title="Código único alfanumérico que identifica el indicador. Ejemplo: IND-001, PKI-2024-01. No debe repetirse en el sistema."></i></label>
                                                         <input type="text" class="form-control"
                                                             id="codigoIdentificatorio" name="codigoIdentificatorio"
                                                             placeholder="Ej: FIN001" required />
@@ -644,7 +893,12 @@
 
                                                     <!--begin::Nombre-->
                                                     <div class="col-md-6">
-                                                        <label for="nombre" class="form-label">Nombre *</label>
+                                                        <label for="nombre" class="form-label">Nombre *
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip"
+                                                                data-bs-custom-class="custom-tooltip"
+                                                                title="Código único alfanumérico que identifica el indicador. Ejemplo: IND-001, PKI-2024-01. No debe repetirse en el sistema."></i></label>
+                                                        </label>
                                                         <input type="text" class="form-control" id="nombre"
                                                             name="nombre" placeholder="Nombre del indicador" required />
                                                         <div class="invalid-feedback">El nombre es obligatorio.</div>
@@ -1366,19 +1620,18 @@
                         </span>
                     </td>
 
-                    <td>
-                        <button class="btn btn-sm btn-info py-1 px-2 me-1" onclick="verDetalleIndicador('${ind.codigo_identificatorio}')">
-                            <i class="fas fa-eye fa-xs"></i>
+                    <td class="icon-only-actions">
+                        <button class="btn btn-primary" title="Ver" onclick="verDetalleIndicador('${ind.codigo_identificatorio}')">
+                            <i class="fas fa-eye"></i>
                         </button>
-                        <button class="btn btn-sm btn-warning py-1 px-2 me-1" onclick="editarIndicador('${ind.codigo_identificatorio}')">
-                            <i class="fas fa-edit fa-xs"></i>
+                        <button class="btn btn-warning" title="Editar" onclick="editarIndicador('${ind.codigo_identificatorio}')">
+                            <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger py-1 px-2" onclick="eliminarIndicador('${ind.codigo_identificatorio}')">
-                            <i class="fas fa-trash-alt fa-xs"></i>
+                        <button class="btn btn-danger" title="Eliminar" onclick="eliminarIndicador('${ind.codigo_identificatorio}')">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </td>
                 `;
-
                     tbody.appendChild(fila);
                 });
 
