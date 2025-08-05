@@ -326,7 +326,7 @@
                         <li class="nav-item">
                             <a href="kpi-organigrama.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Organigrama</p>
+                                <p>Destinos - Organigrama</p>
                             </a>
                         </li>
                     </ul>
@@ -344,26 +344,28 @@
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Organigrama</h3>
+                            <h3 class="mb-0">Destinos</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Organigrama</li>
+                                <li class="breadcrumb-item active" aria-current="page">Destino</li>
                             </ol>
                         </div>
                     </div>
+
+                    <div class="mt-2 mb-2">En esta sección se definen las entidades organizativas (área, proceso o unidad funcional) a las que se les asignarán indicadores,</div>
                     <!--end::Row-->
 
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-image"></i> Gestión de Imagen de Organigrama
+                            <h3 class="card-title"><i class="fas fa-image"></i> Imagen del Organigrama Institucional
                             </h3>
                         </div>
                         <!-- </div> -->
 
                         <div class="form-group ps-2 pe-2 mt-3 mb-3 ml-3">
-                            <label for="orgImageInput" class="form-label">Selecciona una imagen del organigrama:</label>
+                            <label for="orgImageInput" class="form-label">Seleccionar imagen del organigrama:</label>
                             <input type="file" class="form-control" id="orgImageInput" accept="image/*">
                         </div>
 
@@ -385,16 +387,16 @@
                         <div class="col-md-6">
                             <div class="card card-info">
                                 <div class="card-header">
-                                    <h3 class="card-title"><i class="fas fa-plus-circle"></i> Agregar Sector</h3>
+                                    <h3 class="card-title"><i class="fas fa-plus-circle"></i> Agregar Entidad (Area - Unidad Funcional - Proceso)</h3>
                                 </div>
                                 <div class="card-body">
                                     <form id="sectorForm">
                                         <div class="form-group">
-                                            <label for="sectorName">Nombre del sector:</label>
+                                            <label for="sectorName">Nombre: </label>
                                             <input type="text" class="form-control" id="sectorName" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="sectorParent">Sector padre (opcional):</label>
+                                            <label for="sectorParent">Dependiente de: (opcional):</label>
                                             <select class="form-control" id="sectorParent">
                                                 <option value="">-- Ninguno --</option>
                                             </select>
