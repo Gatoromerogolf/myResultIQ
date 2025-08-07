@@ -285,8 +285,11 @@
         .custom-tooltip .tooltip-inner {
             max-width: 350px !important;
             text-align: left !important;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+            /* background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important; */
+            background-color: lemonchiffon;
+            color: black !important;
             border-radius: 8px !important;
+            font-size: 16px !important;
             padding: 10px 15px !important;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
         }
@@ -355,14 +358,15 @@
         /* 🆕 NUEVO: Tooltip oscuro elegante - AGREGAR ESTO */
         /* 🔥 TOOLTIP OSCURO COMPLETO */
         .dark-tooltip .tooltip-inner {
-            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
+            /* background: linear-gradient(135deg, #8893a5 0%, #4a5568 100%) !important; */
+            background-color: rgb(182, 177, 177);
             color: white !important;
             padding: 12px 16px !important;
             border-radius: 8px !important;
-            font-size: 13px !important;
-            font-weight: 400 !important;
+            font-size: 16px !important;
+            font-weight: 300 !important;
             line-height: 1.4 !important;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+            box-shadow: 0 10px 25px rgba(88, 88, 88, 0.3) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             max-width: 300px !important;
             text-align: left !important;
@@ -742,8 +746,8 @@
 
                 <!--begin::AppMain-->
                 <!-- <div class="app-main" id="appMain" style="display: none"> -->
-                    <!-- Header -->
-                    <!-- <div class="app-content-header">
+                <!-- Header -->
+                <!-- <div class="app-content-header">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-sm-6">
@@ -760,17 +764,17 @@
                         </div>
                     </div> -->
 
-                    <!-- Cuerpo -->
-                    <!-- <div class="app-content mt-2">
+                <!-- Cuerpo -->
+                <!-- <div class="app-content mt-2">
                         <div class="container-fluid">
                             <div class="card card-info card-outline">
                                 <div class="card-header">
                                     <h5 class="card-title">Información completa del indicador</h5>
                                 </div> -->
-                                <!-- <div class="card-body">
+                <!-- <div class="card-body">
                                     <div class="row g-2"> -->
-                                        <!-- Sección: Identificación -->
-                                        <!-- <div class="col-12">
+                <!-- Sección: Identificación -->
+                <!-- <div class="col-12">
                                             <h5 class="text-primary border-bottom mb-1">Identificación</h5>
                                         </div>
 
@@ -787,13 +791,13 @@
                                         <div class="col-12"><strong>Objetivo: </strong><span id="objetivo"
                                                 class="ms-2"></span></div> -->
 
-                                        <!-- Sección: Técnicas -->
-                                        <!-- <div class="col-12 mt-4">
+                <!-- Sección: Técnicas -->
+                <!-- <div class="col-12 mt-4">
                                             <h5 class="text-success border-bottom pb-2 mt-3">Especificaciones Técnicas
                                             </h5>
                                         </div> -->
 
-                                        <!-- <div class="col-md-6"><strong>Fórmula de cálculo:</strong><span
+                <!-- <div class="col-md-6"><strong>Fórmula de cálculo:</strong><span
                                                 id="formulaCalculo" class="ms-2"></span></div>
                                         <div class="col-md-6"><strong>Fuente de datos:</strong> <span id="fuenteDatos"
                                                 class="ms-2"></span></div>
@@ -806,12 +810,12 @@
                                         <div class="col-md-3"><strong>Inicio:</strong> <span id="periodoInicial"
                                                 class="ms-2"></span></div> -->
 
-                                        <!-- Sección: Evaluación -->
-                                        <!-- <div class="col-12 mt-4">
+                <!-- Sección: Evaluación -->
+                <!-- <div class="col-12 mt-4">
                                             <h5 class="text-warning border-bottom pb-2">Parámetros de Evaluación</h5>
                                         </div> -->
 
-                                        <!-- <div class="col-md-3"><strong>Meta objetivo:</strong> <span id="metaObjetivo"
+                <!-- <div class="col-md-3"><strong>Meta objetivo:</strong> <span id="metaObjetivo"
                                                 class="ms-2"></span></div>
                                         <div class="col-md-3"><strong>Umbral positivo:</strong> <span
                                                 id="umbralPositivo" class="ms-2"></span></div>
@@ -824,12 +828,12 @@
                                         <div class="col-md-4"><strong>Criticidad:</strong> <span id="criticidad"
                                                 class="ms-2"></span></div> -->
 
-                                        <!-- Sección: Presentación -->
-                                        <!-- <div class="col-12 mt-4">
+                <!-- Sección: Presentación -->
+                <!-- <div class="col-12 mt-4">
                                             <h5 class="text-info border-bottom pb-2">Presentación</h5>
                                         </div> -->
 
-                                        <!-- <div class="col-md-6"><strong>Formato de presentación:</strong> <span
+                <!-- <div class="col-md-6"><strong>Formato de presentación:</strong> <span
                                                 id="formatoPresentacion"></span></div>
                                         <div class="col-md-6"><strong>Grupos de Integracion:</strong> Gestión Ejecutiva,
                                             Mercado Nacional<span id="grupoIntegracion"></span></div>
@@ -837,13 +841,13 @@
                                         <div class="col-12"><strong>Comentariooooooooos:</strong><span id="comentarios"
                                                 class="ms-2"></span>
                                         </div> -->
-                                    <!-- </div>
+                <!-- </div>
                                 </div> -->
-                                <!-- <div class="card-footer">
+                <!-- <div class="card-footer">
                                     <button class="btn btn-secondary"
                                         onclick="window.location.href='kpi-indicadores.html'">Volver</button>
                                 </div> -->
-                            <!-- </div>
+                <!-- </div>
                         </div>
                     </div>
                 </div> -->
@@ -1126,7 +1130,7 @@
                                                     <div class="row align-items-end">
 
                                                         <!-- Tipo de meta -->
-                                                        <div class="mt-3 col-md-3">
+                                                        <div class="mt-2 col-md-2">
                                                             <label for="tipoMeta" class="form-label"><strong>Tipo de
                                                                     meta:</strong></label>
                                                             <select id="tipoMeta" class="form-select"
@@ -1141,56 +1145,103 @@
                                                         <!-- Meta como valor único -->
                                                         <div id="metaValor" class="hidden col-md-9">
                                                             <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <label for="valorMeta" class="form-label"><strong>Valor
-                                                                        meta:</strong></label>
+                                                                <div class="col-md-2">
+                                                                    <label for="valorMeta"
+                                                                        class="form-label"><strong>Valor
+                                                                            meta:</strong></label>
                                                                     <input type="number" step="any" id="valorMeta"
                                                                         class="form-control" placeholder="Ej: 85">
                                                                 </div>
-                                                                <div class="col-md-5">
-                                                                    <label for="criterio" class="form-label"><strong>Criterio de
-                                                                        evaluación:</strong></label>
+
+                                                                <div class="col-md-2">
+                                                                    <label for="criterio"
+                                                                        class="form-label"><strong>Criterio de
+                                                                            evaluación:</strong></label>
                                                                     <select id="criterio" class="form-select">
-                                                                        <option value="mayor">Superar la meta
+                                                                        <option value="mayor">Superar meta
                                                                             (>)</option>
-                                                                        <option value="menor">No superar la meta (<)
-                                                                        </option>
-                                                                        <option value="igual">Igualar la
-                                                                            meta (=)</option>
+                                                                        <option value="menor">No superar meta (<)
+                                                                                </option>
+                                                                        <option value="igual">Igualar meta (=)</option>
                                                                     </select>
                                                                 </div>
+
+                                                                <!--begin::Row-->
+
+                                                                <!--begin::Umbral Positivo-->
+                                                                <div class="col-md-2">
+                                                                    <label for="umbralPositivo"
+                                                                        class="form-label"><strong>% Umbral
+                                                                            Aceptable *</strong>
+
+                                                                        <i class="fas fa-info-circle info-icon"
+                                                                            data-bs-toggle="tooltip" data-bs-html="true"
+                                                                            data-bs-custom-class="dark-tooltip"
+                                                                            title="Δ Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
+                                                                        </i>
+                                                                    </label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="umbralPostivo" name="umbralPositivo"
+                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                </div>
+                                                                <!--end::Umbral Aceptable-->
+
+                                                                <!--begin::Umbral en Riesgo-->
+                                                                <div class="col-md-2">
+                                                                    <label for=" umbralCritico" class="form-label">
+                                                                        <strong>% Umbral
+                                                                            en Riesgo *</strong></label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="umbralCritico" name="umbralCritico"
+                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                </div>
+                                                                <!--end::Umbral en Riesgo-->
+
+                                                                <!--begin::Umbral Crítico-->
+                                                                <div class="col-md-2">
+                                                                    <label for="umbralCritico"
+                                                                        class="form-label"><strong>% Umbral
+                                                                            crítico *</strong></label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="umbralCritico" name="umbralCritico"
+                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                </div>
+                                                                <!--end::Umbral Crítico-->
                                                             </div>
                                                         </div>
 
                                                         <!-- Meta como rango -->
-                                                        <div id="metaRango" class="hidden col-md-9">
-                                                            <label class="form-label"><strong>Rango deseado:</strong></label>
+                                                        <div id="metaRango" class="hidden col-md-8">
+                                                            <label class="form-label"><strong>Rango
+                                                                    deseado:</strong></label>
                                                             <div class="input-group">
                                                                 <span class="input-group-text">Desde</span>
                                                                 <input type="number" step="any" id="rangoDesde"
-                                                                    class="form-control" placeholder="Ej: 90">
+                                                                    class="form-control" placeholder="Ej: 60">
                                                                 <span class="input-group-text">Hasta</span>
                                                                 <input type="number" step="any" id="rangoHasta"
-                                                                    class="form-control" placeholder="Ej: 100">
+                                                                    class="form-control" placeholder="Ej: 75">
                                                             </div>
                                                         </div>
 
                                                         <!-- Meta como tendencia -->
                                                         <div id="metaTendencia" class="hidden col-md-9">
                                                             <div class="row">
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-2">
                                                                     <label for="tipoTendencia"
-                                                                        class="form-label">Tendencia deseada:</label>
+                                                                        class="form-label">Tendencia
+                                                                        deseada:</label>
                                                                     <select id="tipoTendencia" class="form-select">
                                                                         <option value="">-- Seleccionar --</option>
-                                                                        <option value="aumentar">Aumentar</option>
-                                                                        <option value="disminuir">Disminuir</option>
-                                                                        <option value="mantener">Mantener</option>
+                                                                        <option value="aumentar">Aumento</option>
+                                                                        <option value="disminuir">Disminución</option>
+                                                                        <option value="mantener">Mantenimiento</option>
                                                                     </select>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-2">
                                                                     <label for="valorReferencia"
-                                                                        class="form-label">Valor de referencia:</label>
+                                                                        class="form-label">Valor de
+                                                                        referencia:</label>
                                                                     <input type="number" step="any" id="valorReferencia"
                                                                         class="form-control" placeholder="Ej: 65">
                                                                 </div>
@@ -1203,6 +1254,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+
                                                         <script>
                                                             function mostrarCamposMeta() {
                                                                 const tipo = document.getElementById('tipoMeta').value;
@@ -1211,383 +1263,374 @@
                                                                 document.getElementById('metaTendencia').classList.toggle('hidden', tipo !== 'tendencia');
                                                             }
                                                         </script>
-
-                                                        <!--begin::Meta-->
-                                                        <!-- <div class="col-3">
-                                                        <label for="meta" class="form-label"><strong>Meta
-                                                                *</strong></label>
-                                                        <input type="text" class="form-control" id="meta" name="meta"
-                                                            placeholder="Propósito o meta que busca alcanzar"
-                                                            required />
-                                                        <div class="invalid-feedback">La meta es obligatoria.</div>
-                                                    </div> -->
-                                                        <!--end::Meta-->
-
-                                                        <!--begin::Direccion-->
-                                                        <!-- <div class="col-3">
-                                                        <label for="direccion" class="form-label"><strong>Dirección
-                                                                *</strong></label>
-                                                        <select class="form-select" id="direccion" name="direccion"
-                                                            required>
-                                                            <option selected disabled value="">Seleccione...
-                                                            </option>
-                                                            <option value="Menor">Menor</option>
-                                                            <option value="Igual">Igual</option>
-                                                            <option value="Mayor">Mayor</option>
-                                                        </select>
-                                                        <div class="invalid-feedback">La dirección es obligatoria.</div>
-                                                    </div> -->
-                                                        <!--end::Direccion-->
-
-                                                        <!-- Sección: Medición -->
-                                                        <div class="col-12">
-                                                            <h5 class="text-primary border-bottom mt-5">
-                                                                Medición</h5>
-                                                        </div>
-
-                                                        <!--begin::Fuente de Datos-->
-                                                        <div class="col-md-3">
-                                                            <label for="fuenteDatos" class="form-label"><strong>Fuente
-                                                                    de
-                                                                    Datos
-                                                                    *</strong></label>
-                                                            <input type="text" class="form-control" id="fuenteDatos"
-                                                                name="fuenteDatos" placeholder="Origen de los valores"
-                                                                required />
-                                                            <div class="invalid-feedback">La fuente
-                                                                de datos es
-                                                                obligatoria.
-                                                            </div>
-                                                        </div>
-                                                        <!--end::Fuente de Datos-->
-                                                        
-                                                        <!--begin::Fórmula de Cálculo-->
-                                                        <div class="col-md-4 mt-3">
-                                                            <label for="formulaCalculo"
-                                                                class="form-label"><strong>Fórmula
-                                                                    de
-                                                                    Cálculo *</strong>
-                                                                <i class="fas fa-info-circle info-icon"
-                                                                    data-bs-toggle="tooltip" data-bs-html="true"
-                                                                    data-bs-custom-class="dark-tooltip"
-                                                                    title="Procedimiento o fórmula para calcular el indicador. Debe ser clara y precisa."></i>
-                                                            </label>
-                                                            <textarea class="form-control" id="formulaCalculo"
-                                                                name="formulaCalculo"
-                                                                placeholder="Procedimiento o fórmula"
-                                                                rows="1"
-                                                                required></textarea>
-                                                            <div class="invalid-feedback">La fórmula
-                                                                de cálculo es
-                                                                obligatoria.</div>
-                                                        </div>
-                                                        <!--end::Fórmula de Cálculo-->
-
-                                                        <!--begin::Unidad de Medida-->
-                                                        <div class="col-md-2">
-                                                            <label for="unidadMedida" class="form-label"><strong>Unidad
-                                                                    de
-                                                                    Medida
-                                                                    *</strong></label>
-                                                            <select class="form-select" id="unidadMedida"
-                                                                name="unidadMedida" required>
-                                                                <option selected disabled value="">
-                                                                    Seleccione...
-                                                                </option>
-                                                                <option value="$">$ (Moneda)
-                                                                </option>
-                                                                <option value="%">% (Porcentaje)
-                                                                </option>
-                                                                <option value="T">T (Tiempo)
-                                                                </option>
-                                                                <option value="Q">Q (Cantidad)
-                                                                </option>
-                                                            </select>
-                                                            <div class="invalid-feedback">La unidad
-                                                                de medida es
-                                                                obligatoria.</div>
-                                                        </div>
-                                                        <!--end::Unidad de Medida-->
-
-
-                                                        <!--begin::Frecuencia de Medición-->
-                                                        <div class="col-md-3">
-                                                            <label for="frecuenciaMedicion"
-                                                                class="form-label"><strong>Frecuencia
-                                                                    de
-                                                                    Medición *</strong></label>
-                                                            <select class="form-select" id="frecuenciaMedicion"
-                                                                name="frecuenciaMedicion" required>
-                                                                <option selected disabled value="">
-                                                                    Seleccione...
-                                                                </option>
-                                                                <option value="Diaria">Diaria
-                                                                </option>
-                                                                <option value="Semanal">Semanal
-                                                                </option>
-                                                                <option value="Mensual">Mensual
-                                                                </option>
-                                                                <option value="Trimestral">
-                                                                    Trimestral</option>
-                                                                <option value="Cuatrimestral">
-                                                                    Cuatrimestral</option>
-                                                                <option value="Semestral">Semestral
-                                                                </option>
-                                                                <option value="Anual">Anual</option>
-                                                            </select>
-                                                            <div class="invalid-feedback">Debe
-                                                                seleccionar la frecuencia
-                                                                de
-                                                                medición.</div>
-                                                        </div>
-                                                        <!--end::Frecuencia de Medición-->
-
-
-                                                        <!--begin::Periodicidad de Reporte-->
-                                                        <div class="col-md-3">
-                                                            <label for="periodicidadReporte"
-                                                                class="form-label"><strong>Frecuencia
-                                                                    de Reporte *</strong></label>
-                                                            <select class="form-select" id="periodicidadReporte"
-                                                                name="periodicidadReporte" required>
-                                                                <option selected disabled value="">
-                                                                    Seleccione
-                                                                    periodicidad...</option>
-                                                                <option value="Diaria">Diaria
-                                                                </option>
-                                                                <option value="Semanal">Semanal
-                                                                </option>
-                                                                <option value="Mensual">Mensual
-                                                                </option>
-                                                                <option value="Trimestral">
-                                                                    Trimestral</option>
-                                                                <option value="Cuatrimestral">
-                                                                    Cuatrimestral</option>
-                                                                <option value="Semestral">Semestral
-                                                                </option>
-                                                                <option value="Anual">Anual</option>
-                                                            </select>
-                                                            <div class="invalid-feedback">Debe
-                                                                seleccionar la
-                                                                periodicidad
-                                                                de reporte.</div>
-                                                        </div>
-                                                        <!--end::Periodicidad de Reporte-->
-
-                                                        <!--begin::Tolerancia de carga-->
-                                                        <div class="col-md-2">
-                                                            <label for="demoraMaximaQ"
-                                                                class="form-label"><strong>Tolerancia
-                                                                    *</strong>
-                                                                <i class="fas fa-info-circle info-icon"
-                                                                    data-bs-toggle="tooltip" data-bs-html="true"
-                                                                    data-bs-custom-class="dark-tooltip"
-                                                                    title="Demora máxima para informar el valor del indicador, según la frecuencia establecida">
-                                                                </i>
-                                                            </label>
-                                                            <input type="text" class="form-control" id="demoraMaximaQ"
-                                                                name="demoraMaximaQ" placeholder="Ej: 1, 2, 3 " />
-                                                            <div class="invalid-feedback">Debe
-                                                                seleccionar demora
-                                                                máxima.
-                                                            </div>
-                                                        </div>
-                                                        <!--end::Tolerancia de carga-->
-
-                                                        <!--begin::Unidad de demora-->
-                                                        <div class="col-md-2">
-                                                            <label for="unidadDemora" class="form-label"><strong>Plazo
-                                                                    tolerancia *</strong>
-                                                                <i class="fas fa-info-circle info-icon"
-                                                                    data-bs-toggle="tooltip" data-bs-html="true"
-                                                                    data-bs-custom-class="dark-tooltip"
-                                                                    title="Demora máxima para informar el valor del indicador, según la frecuencia establecida">
-                                                                </i></label>
-                                                            <select class="form-select" id="unidadDemora"
-                                                                name="unidadDemora" required>
-                                                                <option selected disabled value="">
-                                                                    Seleccione unidad...
-                                                                </option>
-                                                                <option value="Diaria">Dia</option>
-                                                                <option value="Semanal">Semana
-                                                                </option>
-                                                                <option value="Mensual">Mes</option>
-                                                            </select>
-                                                            <div class="invalid-feedback">Debe
-                                                                seleccionar el máximo de
-                                                                demora admitido.</div>
-                                                        </div>
-                                                        <!--end::Tolerancia de carga-->
-
-                                                        <!--begin::Periodo inicial de Reporte-->
-                                                        <div class="col-md-3">
-                                                            <label for="periodicidadReporte"
-                                                                class="form-label"><strong>Fecha de
-                                                                    Reporte *</strong></label>
-                                                            <input type="date" class="form-control"
-                                                                id="periodicidadReporte" name="periodicidadReporte"
-                                                                required>
-                                                            <div class="invalid-feedback">La fecha
-                                                                es obligatoria.</div>
-                                                        </div>
-                                                        <!--end::Periodo inicial de Reporte-->
-
-                                                        <!-- Sección: Parámetros de Evaluación -->
-                                                        <div class="col-12">
-                                                            <h5 class="text-primary border-bottom mt-4">
-                                                                Parámetros
-                                                                de Evaluación</h5>
-                                                        </div>
-
-                                                        <!--begin::Meta o Valor Objetivo-->
-                                                        <div class="col-md-4">
-                                                            <label for="metaObjetivo" class="form-label"><strong>Meta o
-                                                                    Valor
-                                                                    Objetivo</strong></label>
-                                                            <input type="text" class="form-control" id="metaObjetivo"
-                                                                name="metaObjetivo"
-                                                                placeholder="Ej: 25%, 100 unidades" />
-                                                        </div>
-                                                        <!--end::Meta o Valor Objetivo-->
-
-                                                        <!--begin::Umbral Positivo-->
-                                                        <div class="col-md-4">
-                                                            <label for="umbralPositivo"
-                                                                class="form-label"><strong>Umbral
-                                                                    Positivo</strong></label>
-                                                            <input type="text" class="form-control" id="umbralPostivo"
-                                                                name="umbralPositivo"
-                                                                placeholder="Valor porcentual de desvío c/r a la meta" />
-                                                        </div>
-                                                        <!--end::Umbral Positivo-->
-
-                                                        <!--begin::Umbral Crítico-->
-                                                        <div class="col-md-4">
-                                                            <label for="umbralCritico" class="form-label"><strong>Umbral
-                                                                    Crítico</strong></label>
-                                                            <input type="text" class="form-control" id="umbralCritico"
-                                                                name="umbralCritico"
-                                                                placeholder="Valor porcentual de desvío c/r a la meta" />
-                                                        </div>
-                                                        <!--end::Umbral Crítico-->
-
-                                                        <!--begin::Tendencia Deseada-->
-                                                        <div class="col-md-4">
-                                                            <label for="tendenciaDeseada"
-                                                                class="form-label"><strong>Tendencia
-                                                                    Deseada *</strong></label>
-                                                            <select class="form-select" id="tendenciaDeseada"
-                                                                name="tendenciaDeseada" required>
-                                                                <option selected disabled value="">
-                                                                    Seleccione
-                                                                    tendencia...
-                                                                </option>
-                                                                <option value="Ascendente">
-                                                                    Ascendente</option>
-                                                                <option value="Descendente">
-                                                                    Descendente</option>
-                                                                <option value="Estable">Estable
-                                                                </option>
-
-                                                            </select>
-                                                            <div class="invalid-feedback">Debe
-                                                                seleccionar la tendencia
-                                                                deseada.</div>
-                                                        </div>
-                                                        <!--end::Tendencia Deseada-->
-
-
-
-                                                        <!-- Sección: Presentación -->
-                                                        <div class="col-12">
-                                                            <h5 class="text-primary border-bottom mt-4">
-                                                                Presentación
-                                                            </h5>
-                                                        </div>
-
-                                                        <!--begin::Formato de Presentación-->
-                                                        <div class="col-md-4">
-                                                            <label class="form-label">Formato de
-                                                                Presentación *</label>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox"
-                                                                    value="tabla" id="formatoTabla"
-                                                                    name="formatoPresentacion[]">
-                                                                <label class="form-check-label"
-                                                                    for="formatoTabla">Tabla</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox"
-                                                                    value="grafico" id="formatoGrafico"
-                                                                    name="formatoPresentacion[]">
-                                                                <label class="form-check-label"
-                                                                    for="formatoGrafico">Gráfico</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox"
-                                                                    value="dashboard" id="formatoDashboard"
-                                                                    name="formatoPresentacion[]">
-                                                                <label class="form-check-label"
-                                                                    for="formatoDashboard">Dashboard</label>
-                                                            </div>
-                                                            <div class="invalid-feedback">Debe
-                                                                seleccionar al menos un
-                                                                formato de presentación.</div>
-                                                        </div>
-                                                        <!--end::Formato de Presentación-->
-
-                                                        <div class="col-md-4">
-                                                            <label for="gruposAsignados" class="form-label">Grupos de
-                                                                integración</label>
-                                                            <select class="form-select" id="gruposAsignados"
-                                                                name="gruposAsignados[]" multiple>
-                                                                <option value="grupo1">Gestión
-                                                                    ejecutiva</option>
-                                                                <option value="grupo2">Gestión
-                                                                    Internacional</option>
-                                                                <option value="grupo3">Mercado
-                                                                    Nacional</option>
-                                                                <option value="grupo4">Zona Norte
-                                                                </option>
-                                                                <option value="grupo5">Zona Centro
-                                                                </option>
-                                                                <option value="grupo6">Zona Sur
-                                                                </option>
-                                                                <option value="grupo7">Otro
-                                                                    agrupamiento</option>
-                                                            </select>
-                                                            <div class="form-text">Seleccionar a qué
-                                                                grupos se integra
-                                                                (Ctrl+click). Si
-                                                                no se selecciona ninguno, solo se
-                                                                considerará
-                                                                individualmente.</div>
-                                                        </div>
-
-                                                        <!--begin::Comentarios-->
-                                                        <div class="col-12">
-                                                            <label for="comentarios"
-                                                                class="form-label">Comentarios</label>
-                                                            <textarea class="form-control" id="comentarios"
-                                                                name="comentarios" rows="3"
-                                                                placeholder="Comentarios adicionales sobre el indicador"></textarea>
-                                                        </div>
-                                                        <!--end::Comentarios-->
-
                                                     </div>
-                                                    <!--end::Row-->
+                                                    <!--end::Meta-->
+                                                    <!--begin::Row-->
+                                                    <!-- <div class="row g-3 mt-2"> -->
+                                                    <!--begin::Umbral Positivo-->
+                                                    <!-- <div class="col-md-4">
+                                                                <label for="umbralPositivo" class="form-label"><strong>%
+                                                                        Umbral
+                                                                        Aceptable *</strong>
+
+                                                                    <i class="fas fa-info-circle info-icon"
+                                                                        data-bs-toggle="tooltip" data-bs-html="true"
+                                                                        data-bs-custom-class="dark-tooltip"
+                                                                        title="Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
+                                                                    </i>
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                    id="umbralPostivo" name="umbralPositivo"
+                                                                    placeholder="Valor porcentual de desvío c/r a la meta" />
+                                                            </div> -->
+                                                    <!--end::Umbral Aceptable-->
+
+                                                    <!--begin::Umbral en Riesgo-->
+                                                    <!-- <div class="col-md-4">
+                                                                <label for="umbralCritico" class="form-label"><strong>%
+                                                                        Umbral
+                                                                        en Riesgo *</strong></label>
+                                                                <input type="text" class="form-control"
+                                                                    id="umbralCritico" name="umbralCritico"
+                                                                    placeholder="Valor porcentual de desvío c/r a la meta" />
+                                                            </div> -->
+                                                    <!--end::Umbral en Riesgo-->
+
+                                                    <!--begin::Umbral Crítico-->
+                                                    <!-- <div class="col-md-4">
+                                                                <label for="umbralCritico" class="form-label"><strong>%
+                                                                        Umbral
+                                                                        crítico *</strong></label>
+                                                                <input type="text" class="form-control"
+                                                                    id="umbralCritico" name="umbralCritico"
+                                                                    placeholder="Valor porcentual de desvío c/r a la meta" />
+                                                            </div> -->
+                                                    <!--end::Umbral Crítico-->
+
+                                                    <!-- Sección: Medición -->
+                                                    <div class="col-12">
+                                                        <h5 class="text-primary border-bottom mt-5">
+                                                            Medición</h5>
+                                                    </div>
+
+                                                    <!--begin::Fuente de Datos-->
+                                                    <div class="col-md-3">
+                                                        <label for="fuenteDatos" class="form-label"><strong>Fuente
+                                                                de
+                                                                Datos
+                                                                *</strong></label>
+                                                        <input type="text" class="form-control" id="fuenteDatos"
+                                                            name="fuenteDatos" placeholder="Origen de los valores"
+                                                            required />
+                                                        <div class="invalid-feedback">La fuente
+                                                            de datos es
+                                                            obligatoria.
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Fuente de Datos-->
+
+                                                    <!--begin::Fórmula de Cálculo-->
+                                                    <div class="col-md-4 mt-3">
+                                                        <label for="formulaCalculo" class="form-label"><strong>Fórmula
+                                                                de
+                                                                Cálculo *</strong>
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip" data-bs-html="true"
+                                                                data-bs-custom-class="dark-tooltip"
+                                                                title="Procedimiento o fórmula para calcular el indicador. Debe ser clara y precisa."></i>
+                                                        </label>
+                                                        <textarea class="form-control" id="formulaCalculo"
+                                                            name="formulaCalculo" placeholder="Procedimiento o fórmula"
+                                                            rows="1" required></textarea>
+                                                        <div class="invalid-feedback">La fórmula
+                                                            de cálculo es
+                                                            obligatoria.</div>
+                                                    </div>
+                                                    <!--end::Fórmula de Cálculo-->
+
+                                                    <!--begin::Unidad de Medida-->
+                                                    <div class="col-md-2">
+                                                        <label for="unidadMedida" class="form-label"><strong>Unidad
+                                                                de
+                                                                Medida
+                                                                *</strong></label>
+                                                        <select class="form-select" id="unidadMedida"
+                                                            name="unidadMedida" required>
+                                                            <option selected disabled value="">
+                                                                Seleccione...
+                                                            </option>
+                                                            <option value="$">$ (Moneda)
+                                                            </option>
+                                                            <option value="%">% (Porcentaje)
+                                                            </option>
+                                                            <option value="T">T (Tiempo)
+                                                            </option>
+                                                            <option value="Q">Q (Cantidad)
+                                                            </option>
+                                                        </select>
+                                                        <div class="invalid-feedback">La unidad
+                                                            de medida es
+                                                            obligatoria.</div>
+                                                    </div>
+                                                    <!--end::Unidad de Medida-->
+
+
+                                                    <!--begin::Frecuencia de Medición-->
+                                                    <div class="col-md-3">
+                                                        <label for="frecuenciaMedicion"
+                                                            class="form-label"><strong>Frecuencia
+                                                                de
+                                                                Medición *</strong></label>
+                                                        <select class="form-select" id="frecuenciaMedicion"
+                                                            name="frecuenciaMedicion" required>
+                                                            <option selected disabled value="">
+                                                                Seleccione...
+                                                            </option>
+                                                            <option value="Diaria">Diaria
+                                                            </option>
+                                                            <option value="Semanal">Semanal
+                                                            </option>
+                                                            <option value="Mensual">Mensual
+                                                            </option>
+                                                            <option value="Trimestral">
+                                                                Trimestral</option>
+                                                            <option value="Cuatrimestral">
+                                                                Cuatrimestral</option>
+                                                            <option value="Semestral">Semestral
+                                                            </option>
+                                                            <option value="Anual">Anual</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe
+                                                            seleccionar la frecuencia
+                                                            de
+                                                            medición.</div>
+                                                    </div>
+                                                    <!--end::Frecuencia de Medición-->
+
+
+                                                    <!--begin::Periodicidad de Reporte-->
+                                                    <div class="col-md-3">
+                                                        <label for="periodicidadReporte"
+                                                            class="form-label"><strong>Frecuencia
+                                                                de Reporte *</strong></label>
+                                                        <select class="form-select" id="periodicidadReporte"
+                                                            name="periodicidadReporte" required>
+                                                            <option selected disabled value="">
+                                                                Seleccione
+                                                                periodicidad...</option>
+                                                            <option value="Diaria">Diaria
+                                                            </option>
+                                                            <option value="Semanal">Semanal
+                                                            </option>
+                                                            <option value="Mensual">Mensual
+                                                            </option>
+                                                            <option value="Trimestral">
+                                                                Trimestral</option>
+                                                            <option value="Cuatrimestral">
+                                                                Cuatrimestral</option>
+                                                            <option value="Semestral">Semestral
+                                                            </option>
+                                                            <option value="Anual">Anual</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe
+                                                            seleccionar la
+                                                            periodicidad
+                                                            de reporte.</div>
+                                                    </div>
+                                                    <!--end::Periodicidad de Reporte-->
+
+                                                    <!--begin::Tolerancia de carga-->
+                                                    <div class="col-md-2">
+                                                        <label for="demoraMaximaQ" class="form-label"><strong>Tolerancia
+                                                                *</strong>
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip" data-bs-html="true"
+                                                                data-bs-custom-class="dark-tooltip"
+                                                                title="Demora máxima para informar el valor del indicador, según la frecuencia establecida">
+                                                            </i>
+                                                        </label>
+                                                        <input type="text" class="form-control" id="demoraMaximaQ"
+                                                            name="demoraMaximaQ" placeholder="Ej: 1, 2, 3 " />
+                                                        <div class="invalid-feedback">Debe
+                                                            seleccionar demora
+                                                            máxima.
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Tolerancia de carga-->
+
+                                                    <!--begin::Unidad de demora-->
+                                                    <div class="col-md-2">
+                                                        <label for="unidadDemora" class="form-label"><strong>Plazo
+                                                                tolerancia *</strong>
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip" data-bs-html="true"
+                                                                data-bs-custom-class="dark-tooltip"
+                                                                title="Demora máxima para informar el valor del indicador, según la frecuencia establecida">
+                                                            </i></label>
+                                                        <select class="form-select" id="unidadDemora"
+                                                            name="unidadDemora" required>
+                                                            <option selected disabled value="">
+                                                                Seleccione unidad...
+                                                            </option>
+                                                            <option value="Diaria">Dia</option>
+                                                            <option value="Semanal">Semana
+                                                            </option>
+                                                            <option value="Mensual">Mes</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe
+                                                            seleccionar el máximo de
+                                                            demora admitido.</div>
+                                                    </div>
+                                                    <!--end::Tolerancia de carga-->
+
+                                                    <!--begin::Periodo inicial de Reporte-->
+                                                    <div class="col-md-3">
+                                                        <label for="periodicidadReporte"
+                                                            class="form-label"><strong>Fecha de
+                                                                Reporte *</strong></label>
+                                                        <input type="date" class="form-control" id="periodicidadReporte"
+                                                            name="periodicidadReporte" required>
+                                                        <div class="invalid-feedback">La fecha
+                                                            es obligatoria.</div>
+                                                    </div>
+                                                    <!--end::Periodo inicial de Reporte-->
+
+                                                    <!-- Sección: Parámetros de Evaluación -->
+                                                    <div class="col-12">
+                                                        <h5 class="text-primary border-bottom mt-4">
+                                                            Parámetros
+                                                            de Evaluación</h5>
+                                                    </div>
+
+                                                    <!--begin::Meta o Valor Objetivo-->
+                                                    <div class="col-md-4">
+                                                        <label for="metaObjetivo" class="form-label"><strong>Meta o
+                                                                Valor
+                                                                Objetivo</strong></label>
+                                                        <input type="text" class="form-control" id="metaObjetivo"
+                                                            name="metaObjetivo" placeholder="Ej: 25%, 100 unidades" />
+                                                    </div>
+                                                    <!--end::Meta o Valor Objetivo-->
+
+
+
+                                                    <!--begin::Tendencia Deseada-->
+                                                    <div class="col-md-4">
+                                                        <label for="tendenciaDeseada"
+                                                            class="form-label"><strong>Tendencia
+                                                                Deseada *</strong></label>
+                                                        <select class="form-select" id="tendenciaDeseada"
+                                                            name="tendenciaDeseada" required>
+                                                            <option selected disabled value="">
+                                                                Seleccione
+                                                                tendencia...
+                                                            </option>
+                                                            <option value="Ascendente">
+                                                                Ascendente</option>
+                                                            <option value="Descendente">
+                                                                Descendente</option>
+                                                            <option value="Estable">Estable
+                                                            </option>
+
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe
+                                                            seleccionar la tendencia
+                                                            deseada.</div>
+                                                    </div>
+                                                    <!--end::Tendencia Deseada-->
+
+
+
+                                                    <!-- Sección: Presentación -->
+                                                    <div class="col-12">
+                                                        <h5 class="text-primary border-bottom mt-4">
+                                                            Presentación
+                                                        </h5>
+                                                    </div>
+
+                                                    <!--begin::Formato de Presentación-->
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Formato de
+                                                            Presentación *</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="tabla" id="formatoTabla"
+                                                                name="formatoPresentacion[]">
+                                                            <label class="form-check-label"
+                                                                for="formatoTabla">Tabla</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="grafico" id="formatoGrafico"
+                                                                name="formatoPresentacion[]">
+                                                            <label class="form-check-label"
+                                                                for="formatoGrafico">Gráfico</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="dashboard" id="formatoDashboard"
+                                                                name="formatoPresentacion[]">
+                                                            <label class="form-check-label"
+                                                                for="formatoDashboard">Dashboard</label>
+                                                        </div>
+                                                        <div class="invalid-feedback">Debe
+                                                            seleccionar al menos un
+                                                            formato de presentación.</div>
+                                                    </div>
+                                                    <!--end::Formato de Presentación-->
+
+                                                    <div class="col-md-4">
+                                                        <label for="gruposAsignados" class="form-label">Grupos
+                                                            de
+                                                            integración</label>
+                                                        <select class="form-select" id="gruposAsignados"
+                                                            name="gruposAsignados[]" multiple>
+                                                            <option value="grupo1">Gestión
+                                                                ejecutiva</option>
+                                                            <option value="grupo2">Gestión
+                                                                Internacional</option>
+                                                            <option value="grupo3">Mercado
+                                                                Nacional</option>
+                                                            <option value="grupo4">Zona Norte
+                                                            </option>
+                                                            <option value="grupo5">Zona Centro
+                                                            </option>
+                                                            <option value="grupo6">Zona Sur
+                                                            </option>
+                                                            <option value="grupo7">Otro
+                                                                agrupamiento</option>
+                                                        </select>
+                                                        <div class="form-text">Seleccionar a qué
+                                                            grupos se integra
+                                                            (Ctrl+click). Si
+                                                            no se selecciona ninguno, solo se
+                                                            considerará
+                                                            individualmente.</div>
+                                                    </div>
+
+                                                    <!--begin::Comentarios-->
+                                                    <div class="col-12">
+                                                        <label for="comentarios" class="form-label">Comentarios</label>
+                                                        <textarea class="form-control" id="comentarios"
+                                                            name="comentarios" rows="3"
+                                                            placeholder="Comentarios adicionales sobre el indicador"></textarea>
+                                                    </div>
+                                                    <!--end::Comentarios-->
+
                                                 </div>
-                                                <!--end::Body-->
-                                                <!--begin::Footer-->
-                                                <div class="card-footer">
-                                                    <button class="btn btn-primary" type="submit">Guardar
-                                                        Indicador</button>
-                                                    <button class="btn btn-secondary ms-2" type="button"
-                                                        onclick="limpiarFormulario()">Limpiar</button>
-                                                    <button class="btn btn-outline-secondary float-end" type="button"
-                                                        onclick="window.location.href = 'kpi-indicadores.html'">Cancelar</button>
-                                                </div>
-                                                <!--end::Footer-->
+                                                <!--end::Row-->
+                                            </div>
+                                            <!--end::Body-->
+                                            <!--begin::Footer-->
+                                            <div class="card-footer">
+                                                <button class="btn btn-primary" type="submit">Guardar
+                                                    Indicador</button>
+                                                <button class="btn btn-secondary ms-2" type="button"
+                                                    onclick="limpiarFormulario()">Limpiar</button>
+                                                <button class="btn btn-outline-secondary float-end" type="button"
+                                                    onclick="window.location.href = 'kpi-indicadores.html'">Cancelar</button>
+                                            </div>
+                                            <!--end::Footer-->
                                         </form>
                                         <!--end::Form-->
 
