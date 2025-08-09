@@ -744,114 +744,6 @@
                 </div>
                 <!--end::App Content-->
 
-                <!--begin::AppMain-->
-                <!-- <div class="app-main" id="appMain" style="display: none"> -->
-                <!-- Header -->
-                <!-- <div class="app-content-header">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h4 class="mb-0">Detalle del Indicador</h4>
-                                </div>
-                                <div class="col-sm-6">
-                                    <ol class="breadcrumb float-sm-end">
-                                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                        <li class="breadcrumb-item"><a href="#">Indicadores</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">Detalle</li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-
-                <!-- Cuerpo -->
-                <!-- <div class="app-content mt-2">
-                        <div class="container-fluid">
-                            <div class="card card-info card-outline">
-                                <div class="card-header">
-                                    <h5 class="card-title">Información completa del indicador</h5>
-                                </div> -->
-                <!-- <div class="card-body">
-                                    <div class="row g-2"> -->
-                <!-- Sección: Identificación -->
-                <!-- <div class="col-12">
-                                            <h5 class="text-primary border-bottom mb-1">Identificación</h5>
-                                        </div>
-
-                                        <div class="col-md-2"><strong>Código:</strong> <span id="codigo"
-                                                class="ms-2"></span></div>
-                                        <div class="col-md-4"><strong>Nombre:</strong> <span id="nombre"
-                                                class="ms-2"></span></div>
-                                        <div class="col-md-3"><strong>Dimensión:</strong> <span id="dimension"
-                                                class="ms-2"></span></div>
-                                        <div class="col-md-3"><strong>Responsable:</strong> <span id="responsable"
-                                                class="ms-2"></span></div>
-                                        <div class="col-12"><strong>Descripción: </strong><span id="descripcion"
-                                                class="ms-2"></span></div>
-                                        <div class="col-12"><strong>Objetivo: </strong><span id="objetivo"
-                                                class="ms-2"></span></div> -->
-
-                <!-- Sección: Técnicas -->
-                <!-- <div class="col-12 mt-4">
-                                            <h5 class="text-success border-bottom pb-2 mt-3">Especificaciones Técnicas
-                                            </h5>
-                                        </div> -->
-
-                <!-- <div class="col-md-6"><strong>Fórmula de cálculo:</strong><span
-                                                id="formulaCalculo" class="ms-2"></span></div>
-                                        <div class="col-md-6"><strong>Fuente de datos:</strong> <span id="fuenteDatos"
-                                                class="ms-2"></span></div>
-                                        <div class="col-md-3"><strong>Unidad de medida:</strong> <span id="unidadMedida"
-                                                class="ms-2"></span></div>
-                                        <div class="col-md-3"><strong>Freq medición:</strong> <span
-                                                id="frecuenciaMedicion" class="ms-2"></span></div>
-                                        <div class="col-md-3"><strong>Freq reporte:</strong> <span
-                                                id="periodicidadReporte" class="ms-2"></span></div>
-                                        <div class="col-md-3"><strong>Inicio:</strong> <span id="periodoInicial"
-                                                class="ms-2"></span></div> -->
-
-                <!-- Sección: Evaluación -->
-                <!-- <div class="col-12 mt-4">
-                                            <h5 class="text-warning border-bottom pb-2">Parámetros de Evaluación</h5>
-                                        </div> -->
-
-                <!-- <div class="col-md-3"><strong>Meta objetivo:</strong> <span id="metaObjetivo"
-                                                class="ms-2"></span></div>
-                                        <div class="col-md-3"><strong>Umbral positivo:</strong> <span
-                                                id="umbralPositivo" class="ms-2"></span></div>
-                                        <div class="col-md-3"><strong>Umbral crítico:</strong> <span id="umbralCritico"
-                                                class="ms-2"></span></div>
-                                        <div class="col-md-4"><strong>Tendencia deseada:</strong> <span
-                                                id="tendenciaDeseada" class="ms-2"></span></div>
-                                        <div class="col-md-4"><strong>Categoría:</strong> <span id="categoria"
-                                                class="ms-2"></span></div>
-                                        <div class="col-md-4"><strong>Criticidad:</strong> <span id="criticidad"
-                                                class="ms-2"></span></div> -->
-
-                <!-- Sección: Presentación -->
-                <!-- <div class="col-12 mt-4">
-                                            <h5 class="text-info border-bottom pb-2">Presentación</h5>
-                                        </div> -->
-
-                <!-- <div class="col-md-6"><strong>Formato de presentación:</strong> <span
-                                                id="formatoPresentacion"></span></div>
-                                        <div class="col-md-6"><strong>Grupos de Integracion:</strong> Gestión Ejecutiva,
-                                            Mercado Nacional<span id="grupoIntegracion"></span></div>
-
-                                        <div class="col-12"><strong>Comentariooooooooos:</strong><span id="comentarios"
-                                                class="ms-2"></span>
-                                        </div> -->
-                <!-- </div>
-                                </div> -->
-                <!-- <div class="card-footer">
-                                    <button class="btn btn-secondary"
-                                        onclick="window.location.href='kpi-indicadores.html'">Volver</button>
-                                </div> -->
-                <!-- </div>
-                        </div>
-                    </div>
-                </div> -->
-                <!--end::AppMain-->
 
                 <!--begin::App Main Carga-->
                 <div class="app-main" id="appMainCarga" style="display: none">
@@ -970,8 +862,16 @@
 
                                                     <!--begin::Tipo-->
                                                     <div class="col-md-3">
-                                                        <label for="tipo" class="form-label"><strong>Tipo
-                                                                *</strong></label>
+                                                        <label for="tipo" class="form-label"><strong>Tipo *</strong>
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip" data-bs-html="true"
+                                                                data-bs-custom-class="custom-tooltip"
+                                                                title="Tipo de indicador: <br><br>
+                                                                    • <b>Estratégico:</b> Aplicado a la medición global y de largo alcance del avance de la organización hacia sus grandes objetivos.<br>Ej: Rentabilidad anual, cuota de mercado, satisfaccion del cliente<br><br>
+                                                                    • <b>Táctico:</b> Medida del cumplimiento de las metas de cada área que soporta la estrategia<br>Ej: Tiempo promedio de entrega, Productividad de un área<br><br>
+                                                                    • <b>Operativo:</b> Medida de la eficiencia de las operaciones diarias<br>Ej: Reclamos atendidos, tiempo de respuesta, productos defectuosos por turno<br>">
+                                                            </i>
+                                                        </label>
                                                         <select class="form-select" id="criticidad" name="criticidad"
                                                             required>
                                                             <option selected disabled value="">Seleccione ...
@@ -991,8 +891,12 @@
                                                                 *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
-                                                                data-bs-custom-class="dark-tooltip"
-                                                                title="Perspectiva desde la cual se evalúa el desempeño del indicador.<br><br><b>Opciones:</b><br>• <b>Financiera:</b> Impacto económico<br>• <b>Clientes:</b> Satisfacción<br>• <b>Procesos:</b> Eficiencia interna<br>• <b>Capital humano:</b> Desarrollo del personal">
+                                                                data-bs-custom-class="custom-tooltip" title="Perspectiva desde la cual se evalúa el desempeño del indicador. Dónde impacta el PKI <br><br>
+                                                                <b>Opciones:</b><br>
+                                                                • <b>Financiera:</b> Impacto económico<br>
+                                                                • <b>Clientes:</b> Satisfacción<br>
+                                                                • <b>Procesos:</b> Eficiencia interna<br>
+                                                                • <b>Capital humano:</b> Desarrollo del personal">
                                                             </i>
                                                         </label>
                                                         <select class="form-select" id="dimension" name="dimension"
@@ -1019,19 +923,39 @@
 
                                                     <!--begin::Categoría-->
                                                     <div class="col-md-3">
-                                                        <label for="categoria" class="form-label"><strong>Categoría
-                                                                *</strong>
-                                                            <i class="fas fa-info-circle info-icon"
-                                                                data-bs-toggle="tooltip" data-bs-html="true"
-                                                                data-bs-custom-class="custom-tooltip"
-                                                                title="Tipo de objetivo al que apunta el indicador.<br><br>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <label for="categoria" class="form-label"><strong>Categoría
+                                                                    *</strong>
+
+                                                                <i class="fas fa-info-circle info-icon"
+                                                                    data-bs-toggle="tooltip" data-bs-html="true"
+                                                                    data-bs-custom-class="custom-tooltip"
+                                                                    title="Tipo de objetivo al que apunta el indicador o qué resultado mide.<br><br>
                                                                     <b>Opciones:</b><br>
                                                                     • <b>Eficiencia:</b> Uso óptimo de recursos<br>
                                                                     • <b>Eficacia:</b> Cumplimiento de los objetivos<br>
                                                                     • <b>Calidad:</b> Conformidad con estándares o satisfacción<br>
                                                                     • <b>Productividad:</b> Relación entre producción y recursos">
+                                                                </i>
+                                                            </label>
+                                                            <label for="dimension" class="form-label">
+                                                            <i class="fas fa-file-alt text-primary"
+                                                                data-bs-toggle="tooltip"
+                                                                data-bs-html="true"
+                                                                data-bs-custom-class="custom-tooltip"
+                                                                title="<b>🧩 Ejemplos combinados</b><br>
+                                                                    • PKI: <b>Tiempo de ciclo de compra</b><br>
+                                                                    Dimensión: Procesos - Categoría: Eficiencia <br>
+                                                                    • PKI:<b> Nivel de Satisfacción del cliente</b><br>
+                                                                    Dimensión: Cliente - Categoría: Calidad<br>
+                                                                    • PKI:<b> Tasa de rotación del personal</b><br>
+                                                                    Dimensión: Capital Humano  -  Eficiencia <br>
+                                                                    • PKI:<b> Rentabilidad operativa</b><br>
+                                                                    Dimensión: Financiera  -  Productividad">
                                                             </i>
-                                                        </label>
+                                                            </label>
+
+                                                        </div>
                                                         <select class="form-select" id="categoria" name="categoria"
                                                             required>
                                                             <option selected disabled value="">Seleccione...
@@ -1085,7 +1009,8 @@
                                                     <!--begin::Responsable-->
                                                     <div class="col-md-3">
                                                         <label for="responsable" class="form-label"><strong>Responsable
-                                                                *</strong></label>
+                                                                *</strong>
+                                                        </label>
                                                         <input type="text" class="form-control" id="responsable"
                                                             name="responsable" placeholder="Nombre del responsable"
                                                             required />
@@ -1097,7 +1022,8 @@
                                                     <!--begin::Unidad funcional-->
                                                     <div class="col-md-4">
                                                         <label for="unidadFuncional" class="form-label"><strong>Destino
-                                                                *</strong></label>
+                                                                *</strong>
+                                                        </label>
                                                         <select class="form-select" id="unidadFuncional"
                                                             name="unidadFuncional" required>
                                                             <option selected disabled value="">Seleccione destino...
@@ -1116,9 +1042,10 @@
                                                     </div>
 
                                                     <!--begin::Objetivo-->
-                                                    <div class="col-12">
+                                                    <div class="col-10">
                                                         <label for="objetivo" class="form-label"><strong>Objetivo
-                                                                *</strong></label>
+                                                                *</strong>
+                                                        </label>
                                                         <textarea class="form-control" id="objetivo" name="objetivo"
                                                             rows="2" placeholder="Propósito o meta que busca evaluar"
                                                             required></textarea>
@@ -1132,7 +1059,17 @@
                                                         <!-- Tipo de meta -->
                                                         <div class="mt-2 col-md-2">
                                                             <label for="tipoMeta" class="form-label"><strong>Tipo de
-                                                                    meta:</strong></label>
+                                                                    meta:</strong>
+                                                                <i class="fas fa-info-circle info-icon"
+                                                                    data-bs-toggle="tooltip" data-bs-html="true"
+                                                                    data-bs-custom-class="custom-tooltip"
+                                                                    title="Seleccione el tipo de meta que mejor represente el objetivo del indicador:<br><br>
+                                                                      <b>Opciones:</b><br>
+                                                                        • <b>Valor único:</b> 🎯 comparación directa con un valor meta específico.<br><br>
+                                                                        • <b>Rango de valores:</b> 📊 evaluación dentro de un intervalo tolerado.<br><br>
+                                                                        • <b>Tendencia esperada:</b> 📈📉 análisis de la dirección del cambio a lo largo del tiempo">
+                                                                </i>
+                                                            </label>
                                                             <select id="tipoMeta" class="form-select"
                                                                 onchange="mostrarCamposMeta()">
                                                                 <option value="">-- Seleccionar --</option>
@@ -1143,26 +1080,52 @@
                                                         </div>
 
                                                         <!-- Meta como valor único -->
-                                                        <div id="metaValor" class="hidden col-md-9">
-                                                            <div class="row">
+                                                        <div id="metaValor" class="hidden col-md-12">
+                                                            <div class="row mt-2">
                                                                 <div class="col-md-2">
                                                                     <label for="valorMeta"
-                                                                        class="form-label"><strong>Valor
-                                                                            meta:</strong></label>
+                                                                        class="form-label"><strong>Valor meta:</strong>
+                                                                        <i class="fas fa-info-circle info-icon"
+                                                                            data-bs-toggle="tooltip" data-bs-html="true"
+                                                                            data-bs-custom-class="dark-tooltip"
+                                                                            title="🎯 Valor objetivo">
+                                                                        </i>
+                                                                    </label>
                                                                     <input type="number" step="any" id="valorMeta"
                                                                         class="form-control" placeholder="Ej: 85">
                                                                 </div>
 
-                                                                <div class="col-md-2">
-                                                                    <label for="criterio"
-                                                                        class="form-label"><strong>Criterio de
-                                                                            evaluación:</strong></label>
-                                                                    <select id="criterio" class="form-select">
-                                                                        <option value="mayor">Superar meta
-                                                                            (>)</option>
-                                                                        <option value="menor">No superar meta (<)
-                                                                                </option>
-                                                                        <option value="igual">Igualar meta (=)</option>
+                                                                <div id="subtipoValorUnico" class="col-md-3">
+                                                                    <label for="evaluacionMeta"
+                                                                        class="form-label"><strong>Evaluación del valor
+                                                                            único:</strong>
+                                                                        <i class="fas fa-info-circle info-icon"
+                                                                            data-bs-toggle="tooltip" data-bs-html="true"
+                                                                            data-bs-custom-class="custom-tooltip"
+                                                                            title="Lógica de evaluación:<br><br>
+                                                                            <b>Opciones:</b><br>
+                                                                                • <b>Superable positiva:</b>
+                                                                                El objetivo es un mínimo deseado.  Superarlo es mejor.<br>Ej: Ganancias, ventas, producción.<br><br>
+                                                                                • <b>Límite máximo:</b> Superarlo es negativo.<br>Ej: Temperatura, Llamadas no atendidas.<br><br>
+                                                                                • <b>Tolerancia simétrica: </b> Desviaciones positivas o negativas se penalizan por igual<br>Ej: Calidad, precisión.<br><br>
+                                                                                • <b>Meta inversa: </b> El valor es el máximo tolerado,cuanto menos mejor, alejarse es positivo<br>Ej: Tiempo de respuesta.<br><br>
+                                                                                • <b>Meta puntual: </b> Valor exacto.  Cualquier desviación es negativa.<br> Ej: Control de calidad crítico, procesos normativos">
+                                                                        </i>
+                                                                    </label>
+                                                                    <select id="evaluacionMeta" name="evaluacionMeta"
+                                                                        class="form-select">
+                                                                        <option value="superable_positiva">Superable
+                                                                            positiva – Más es mejor</option>
+                                                                        <option value="umbral_maximo">Límite máximo
+                                                                            – No debe superarse</option>
+                                                                        <option value="tolerancia_simetrica">Valor
+                                                                            con tolerancia – Penaliza desviación
+                                                                        </option>
+                                                                        <option value="mejor_mientras_menos">Menor
+                                                                            es mejor – Distancia creciente es mejor
+                                                                        </option>
+                                                                        <option value="valor_exacto">Valor exacto –
+                                                                            Cero tolerancia</option>
                                                                     </select>
                                                                 </div>
 
@@ -1171,9 +1134,8 @@
                                                                 <!--begin::Umbral Positivo-->
                                                                 <div class="col-md-2">
                                                                     <label for="umbralPositivo"
-                                                                        class="form-label"><strong>% Umbral
-                                                                            Aceptable *</strong>
-
+                                                                        class="form-label"><strong>% Aceptable
+                                                                            *</strong>
                                                                         <i class="fas fa-info-circle info-icon"
                                                                             data-bs-toggle="tooltip" data-bs-html="true"
                                                                             data-bs-custom-class="dark-tooltip"
@@ -1189,8 +1151,8 @@
                                                                 <!--begin::Umbral en Riesgo-->
                                                                 <div class="col-md-2">
                                                                     <label for=" umbralCritico" class="form-label">
-                                                                        <strong>% Umbral
-                                                                            en Riesgo *</strong></label>
+                                                                        <strong>% Riesgo *</strong>
+                                                                    </label>
                                                                     <input type="text" class="form-control"
                                                                         id="umbralCritico" name="umbralCritico"
                                                                         placeholder="(Δ) %  c/r a la meta" />
@@ -1200,8 +1162,8 @@
                                                                 <!--begin::Umbral Crítico-->
                                                                 <div class="col-md-2">
                                                                     <label for="umbralCritico"
-                                                                        class="form-label"><strong>% Umbral
-                                                                            crítico *</strong></label>
+                                                                        class="form-label"><strong>% Crítico
+                                                                            *</strong></label>
                                                                     <input type="text" class="form-control"
                                                                         id="umbralCritico" name="umbralCritico"
                                                                         placeholder="(Δ) %  c/r a la meta" />
@@ -1234,8 +1196,10 @@
                                                                     <select id="tipoTendencia" class="form-select">
                                                                         <option value="">-- Seleccionar --</option>
                                                                         <option value="aumentar">Aumento</option>
-                                                                        <option value="disminuir">Disminución</option>
-                                                                        <option value="mantener">Mantenimiento</option>
+                                                                        <option value="disminuir">Disminución
+                                                                        </option>
+                                                                        <option value="mantener">Mantenimiento
+                                                                        </option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-md-2">
@@ -1265,47 +1229,6 @@
                                                         </script>
                                                     </div>
                                                     <!--end::Meta-->
-                                                    <!--begin::Row-->
-                                                    <!-- <div class="row g-3 mt-2"> -->
-                                                    <!--begin::Umbral Positivo-->
-                                                    <!-- <div class="col-md-4">
-                                                                <label for="umbralPositivo" class="form-label"><strong>%
-                                                                        Umbral
-                                                                        Aceptable *</strong>
-
-                                                                    <i class="fas fa-info-circle info-icon"
-                                                                        data-bs-toggle="tooltip" data-bs-html="true"
-                                                                        data-bs-custom-class="dark-tooltip"
-                                                                        title="Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
-                                                                    </i>
-                                                                </label>
-                                                                <input type="text" class="form-control"
-                                                                    id="umbralPostivo" name="umbralPositivo"
-                                                                    placeholder="Valor porcentual de desvío c/r a la meta" />
-                                                            </div> -->
-                                                    <!--end::Umbral Aceptable-->
-
-                                                    <!--begin::Umbral en Riesgo-->
-                                                    <!-- <div class="col-md-4">
-                                                                <label for="umbralCritico" class="form-label"><strong>%
-                                                                        Umbral
-                                                                        en Riesgo *</strong></label>
-                                                                <input type="text" class="form-control"
-                                                                    id="umbralCritico" name="umbralCritico"
-                                                                    placeholder="Valor porcentual de desvío c/r a la meta" />
-                                                            </div> -->
-                                                    <!--end::Umbral en Riesgo-->
-
-                                                    <!--begin::Umbral Crítico-->
-                                                    <!-- <div class="col-md-4">
-                                                                <label for="umbralCritico" class="form-label"><strong>%
-                                                                        Umbral
-                                                                        crítico *</strong></label>
-                                                                <input type="text" class="form-control"
-                                                                    id="umbralCritico" name="umbralCritico"
-                                                                    placeholder="Valor porcentual de desvío c/r a la meta" />
-                                                            </div> -->
-                                                    <!--end::Umbral Crítico-->
 
                                                     <!-- Sección: Medición -->
                                                     <div class="col-12">
@@ -1317,8 +1240,8 @@
                                                     <div class="col-md-3">
                                                         <label for="fuenteDatos" class="form-label"><strong>Fuente
                                                                 de
-                                                                Datos
-                                                                *</strong></label>
+                                                                Datos *</strong>
+                                                        </label>
                                                         <input type="text" class="form-control" id="fuenteDatos"
                                                             name="fuenteDatos" placeholder="Origen de los valores"
                                                             required />
@@ -1332,8 +1255,7 @@
                                                     <!--begin::Fórmula de Cálculo-->
                                                     <div class="col-md-4 mt-3">
                                                         <label for="formulaCalculo" class="form-label"><strong>Fórmula
-                                                                de
-                                                                Cálculo *</strong>
+                                                                de Cálculo *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="dark-tooltip"
@@ -1352,8 +1274,7 @@
                                                     <div class="col-md-2">
                                                         <label for="unidadMedida" class="form-label"><strong>Unidad
                                                                 de
-                                                                Medida
-                                                                *</strong></label>
+                                                                Medida *</strong></label>
                                                         <select class="form-select" id="unidadMedida"
                                                             name="unidadMedida" required>
                                                             <option selected disabled value="">
@@ -1368,8 +1289,7 @@
                                                             <option value="Q">Q (Cantidad)
                                                             </option>
                                                         </select>
-                                                        <div class="invalid-feedback">La unidad
-                                                            de medida es
+                                                        <div class="invalid-feedback">La unidad de medida es
                                                             obligatoria.</div>
                                                     </div>
                                                     <!--end::Unidad de Medida-->
@@ -1378,9 +1298,8 @@
                                                     <!--begin::Frecuencia de Medición-->
                                                     <div class="col-md-3">
                                                         <label for="frecuenciaMedicion"
-                                                            class="form-label"><strong>Frecuencia
-                                                                de
-                                                                Medición *</strong></label>
+                                                            class="form-label"><strong>Frecuencia de Medición
+                                                                *</strong></label>
                                                         <select class="form-select" id="frecuenciaMedicion"
                                                             name="frecuenciaMedicion" required>
                                                             <option selected disabled value="">
@@ -1411,13 +1330,13 @@
                                                     <!--begin::Periodicidad de Reporte-->
                                                     <div class="col-md-3">
                                                         <label for="periodicidadReporte"
-                                                            class="form-label"><strong>Frecuencia
-                                                                de Reporte *</strong></label>
+                                                            class="form-label"><strong>Frecuencia de Reporte
+                                                                *</strong>
+                                                        </label>
                                                         <select class="form-select" id="periodicidadReporte"
                                                             name="periodicidadReporte" required>
                                                             <option selected disabled value="">
-                                                                Seleccione
-                                                                periodicidad...</option>
+                                                                Seleccione periodicidad...</option>
                                                             <option value="Diaria">Diaria
                                                             </option>
                                                             <option value="Semanal">Semanal
@@ -1451,8 +1370,7 @@
                                                         </label>
                                                         <input type="text" class="form-control" id="demoraMaximaQ"
                                                             name="demoraMaximaQ" placeholder="Ej: 1, 2, 3 " />
-                                                        <div class="invalid-feedback">Debe
-                                                            seleccionar demora
+                                                        <div class="invalid-feedback">Debe seleccionar demora
                                                             máxima.
                                                         </div>
                                                     </div>
