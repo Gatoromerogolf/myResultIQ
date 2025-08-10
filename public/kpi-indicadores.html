@@ -605,6 +605,13 @@
                         </li>
 
                         <li class="nav-item">
+                            <a href="kpi-arbol.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Arbol</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a href="kpi-usuarios.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
@@ -695,9 +702,9 @@
                                                         <th scope="col">Código</th>
                                                         <th scope="col">Nombre</th>
                                                         <th scope="col">Dimensión</th>
+                                                        <th scope="col">Categoría</th>
                                                         <th scope="col">Destino</th>
                                                         <th scope="col">Responsable</th>
-                                                        <th scope="col">Categoría</th>
                                                         <th scope="col">Criticidad</th>
                                                         <th scope="col">Frecuencia</th>
                                                         <th scope="col">Tendencia</th>
@@ -1278,16 +1285,21 @@
                                                                 Medida *</strong></label>
                                                         <select class="form-select" id="unidadMedida"
                                                             name="unidadMedida" required>
-                                                            <option selected disabled value="">
-                                                                Seleccione...
+                                                            <option selected disabled value="">Seleccione...
                                                             </option>
-                                                            <option value="$">$ (Moneda)
+                                                            <option value="1">$ (Moneda)
                                                             </option>
-                                                            <option value="%">% (Porcentaje)
+                                                            <option value="2">% (Porcentaje)
                                                             </option>
-                                                            <option value="T">T (Tiempo)
+                                                            <option value="3">Q (Cantidad)
                                                             </option>
-                                                            <option value="Q">Q (Cantidad)
+                                                            <option value="4">T (Tiempo - Hora)
+                                                            </option>
+                                                            <option value="5">T (Tiempo - Dia)
+                                                            </option>
+                                                            <option value="6">T (Tiempo - Semana)
+                                                            </option>
+                                                            <option value="7">T (Tiempo - Mes)
                                                             </option>
                                                         </select>
                                                         <div class="invalid-feedback">La unidad de medida es
@@ -1326,38 +1338,6 @@
                                                             medición.</div>
                                                     </div>
                                                     <!--end::Frecuencia de Medición-->
-
-
-                                                    <!--begin::Periodicidad de Reporte-->
-                                                    <div class="col-md-3">
-                                                        <label for="periodicidadReporte"
-                                                            class="form-label"><strong>Frecuencia de Reporte
-                                                                *</strong>
-                                                        </label>
-                                                        <select class="form-select" id="periodicidadReporte"
-                                                            name="periodicidadReporte" required>
-                                                            <option selected disabled value="">
-                                                                Seleccione periodicidad...</option>
-                                                            <option value="Diaria">Diaria
-                                                            </option>
-                                                            <option value="Semanal">Semanal
-                                                            </option>
-                                                            <option value="Mensual">Mensual
-                                                            </option>
-                                                            <option value="Trimestral">
-                                                                Trimestral</option>
-                                                            <option value="Cuatrimestral">
-                                                                Cuatrimestral</option>
-                                                            <option value="Semestral">Semestral
-                                                            </option>
-                                                            <option value="Anual">Anual</option>
-                                                        </select>
-                                                        <div class="invalid-feedback">Debe
-                                                            seleccionar la
-                                                            periodicidad
-                                                            de reporte.</div>
-                                                    </div>
-                                                    <!--end::Periodicidad de Reporte-->
 
                                                     <!--begin::Tolerancia de carga-->
                                                     <div class="col-md-2">
@@ -1402,61 +1382,49 @@
                                                     </div>
                                                     <!--end::Tolerancia de carga-->
 
+                                                    
+                                                    <!--begin::Periodicidad de Reporte-->
+                                                    <div class="col-md-3">
+                                                        <label for="periodicidadReporte"
+                                                            class="form-label"><strong>Frecuencia de Reporte
+                                                                *</strong>
+                                                        </label>
+                                                        <select class="form-select" id="periodicidadReporte"
+                                                            name="periodicidadReporte" required>
+                                                            <option selected disabled value="">
+                                                                Seleccione periodicidad...</option>
+                                                            <option value="Diaria">Diaria
+                                                            </option>
+                                                            <option value="Semanal">Semanal
+                                                            </option>
+                                                            <option value="Mensual">Mensual
+                                                            </option>
+                                                            <option value="Trimestral">
+                                                                Trimestral</option>
+                                                            <option value="Cuatrimestral">
+                                                                Cuatrimestral</option>
+                                                            <option value="Semestral">Semestral
+                                                            </option>
+                                                            <option value="Anual">Anual</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe
+                                                            seleccionar la
+                                                            periodicidad
+                                                            de reporte.</div>
+                                                    </div>
+                                                    <!--end::Periodicidad de Reporte-->
+
                                                     <!--begin::Periodo inicial de Reporte-->
                                                     <div class="col-md-3">
                                                         <label for="periodicidadReporte"
                                                             class="form-label"><strong>Fecha de
-                                                                Reporte *</strong></label>
+                                                                inicio seg. *</strong></label>
                                                         <input type="date" class="form-control" id="periodicidadReporte"
                                                             name="periodicidadReporte" required>
                                                         <div class="invalid-feedback">La fecha
                                                             es obligatoria.</div>
                                                     </div>
                                                     <!--end::Periodo inicial de Reporte-->
-
-                                                    <!-- Sección: Parámetros de Evaluación -->
-                                                    <div class="col-12">
-                                                        <h5 class="text-primary border-bottom mt-4">
-                                                            Parámetros
-                                                            de Evaluación</h5>
-                                                    </div>
-
-                                                    <!--begin::Meta o Valor Objetivo-->
-                                                    <div class="col-md-4">
-                                                        <label for="metaObjetivo" class="form-label"><strong>Meta o
-                                                                Valor
-                                                                Objetivo</strong></label>
-                                                        <input type="text" class="form-control" id="metaObjetivo"
-                                                            name="metaObjetivo" placeholder="Ej: 25%, 100 unidades" />
-                                                    </div>
-                                                    <!--end::Meta o Valor Objetivo-->
-
-
-
-                                                    <!--begin::Tendencia Deseada-->
-                                                    <div class="col-md-4">
-                                                        <label for="tendenciaDeseada"
-                                                            class="form-label"><strong>Tendencia
-                                                                Deseada *</strong></label>
-                                                        <select class="form-select" id="tendenciaDeseada"
-                                                            name="tendenciaDeseada" required>
-                                                            <option selected disabled value="">
-                                                                Seleccione
-                                                                tendencia...
-                                                            </option>
-                                                            <option value="Ascendente">
-                                                                Ascendente</option>
-                                                            <option value="Descendente">
-                                                                Descendente</option>
-                                                            <option value="Estable">Estable
-                                                            </option>
-
-                                                        </select>
-                                                        <div class="invalid-feedback">Debe
-                                                            seleccionar la tendencia
-                                                            deseada.</div>
-                                                    </div>
-                                                    <!--end::Tendencia Deseada-->
 
 
 
@@ -1890,10 +1858,10 @@
                             ${ind.dimension}
                         </span>
                     </td>
+                    <td>${ind.categoria}</td>
 
                     <td>${ind.unidad_funcional_id}</td>
                     <td>${ind.responsable}</td>
-                    <td>${ind.categoria}</td>
 
                     <td class="${clase_criticidad}">${ind.criticidad}</td>
 
@@ -1966,6 +1934,7 @@
                     "Código": indicador.codigo_identificatorio,
                     "Nombre": indicador.nombre,
                     "Descripción": indicador.descripcion || '-',
+                    "objetivo": indicador.objetivo || '-',
                     "Destino": indicador.unidad_funcional_id || '-',
                     "Responsable": indicador.responsable || '-',
                     "Dimensión": indicador.dimension || '-',

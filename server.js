@@ -43,6 +43,8 @@ app.get('/api/indicadores', async (req, res) => {
         SELECT 
             codigo_identificatorio,
             nombre,
+            descripcion,
+            objetivo,  
             dimension,
             unidad_funcional_id
             responsable,
@@ -66,6 +68,7 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
                 codigo_identificatorio,
                 nombre,
                 descripcion,
+                objetivo, 
                 dimension,
                 unidad_funcional_id,
                 responsable,

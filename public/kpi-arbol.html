@@ -49,6 +49,16 @@
         integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+    <style>
+        #tree {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+
 
 </head>
 <!--end::Head-->
@@ -253,14 +263,14 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-operaciones.html" class="nav-link active">
+                            <a href="kpi-operaciones.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores Asignados</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-arbol.html" class="nav-link">
+                            <a href="kpi-arbol.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Arbol</p>
                             </a>
@@ -302,15 +312,16 @@
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
-        <main class="app-main">
+        <main class="app-main  p-4">
             <!--begin::App Content Header-->
             <div class="app-content-header">
                 <!--begin::Container-->
                 <div class="container-fluid">
                     <!--begin::Row-->
                     <div class="row">
-                        <div class="col-sm-6">
-                            <h3 class="mb-0">Indicadores Asignados</h3>
+                        <div class="container">
+                            <h3>📊 Indicadores por Estructura</h3>
+                            <div id="tree"></div>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -320,158 +331,13 @@
                         </div>
                     </div>
                     <!--end::Row-->
-
-                    <!--begin::Row-->
-                    <div class="row">
-                        <!-- Start col -->
-                        <div class="col-md-12">
-                            <!--begin::Latest Order Widget-->
-                            <div class="card card-primary card-outline">
-                                <div class="card-header">
-                                    <h3 class="card-title">Indicadores Asignados</h3>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                    <div class="table-responsive">
-                                        <table class="table m-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nivel 1</th>
-                                                    <th>Nivel 2</th>
-                                                    <th>Nivel 3</th>
-                                                    <th>Responsable</th>
-                                                    <th>✉</th>
-                                                    <th>Indicadores</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Dirección General</td>
-                                                    <td>Gerencia Operativa</td>
-                                                    <td>Depart. Suministros</td>
-                                                    <td>Raul Dieguez</td>
-                                                    <td>
-                                                        <div class="dropdown user-menu">
-
-                                                            <button type="button" class="btn-user-info"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#detalleUsuarioModal"
-                                                                aria-label="Ver información del usuario">
-                                                                <i class="bi bi-person-lines-fill"></i>
-                                                            </button>
-
-                                                        </div>
-                                                    </td>
-                                                    <td>#SUP010, #SAB200, #OTC256</td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>Jefatura Almacenes</td>
-                                                    <td>Diego Ramos</td>
-                                                    <td>
-                                                        <div class="dropdown user-menu">
-                                                            <button type="button" class="btn-user-info"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#detalleUsuarioModal"
-                                                                aria-label="Ver información del usuario">
-                                                                <i class="bi bi-person-lines-fill"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                    <td>#PRO000, #SAB220, #OTC450</td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td>Gerencia Administrativa</td>
-                                                    <td>Contaduría</td>
-                                                    <td>Ricardo Solari</td>
-                                                    <td>
-                                                        <div class="dropdown user-menu">
-                                                            <button type="button" class="btn-user-info"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#detalleUsuarioModal"
-                                                                aria-label="Ver información del usuario">
-                                                                <i class="bi bi-person-lines-fill"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                    <td>#ADM000, #ADM298, #ADM232, #ADM456</td>
-                                                </tr>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <!-- /.table-responsive -->
-                                </div>
-                                <!-- /.card-body -->
-
-                                <!-- /.card-footer -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!--end::Row-->
-
-
-                    <!--begin::App Main-->
-                    <div class="app-main">
-                        <!--begin::App Content Header-->
-                        <div class="app-content-header">
-                            <!--begin::Container-->
-                            <div class="container-fluid">
-                                <!--begin::Row-->
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <h3 class="mb-0">Unidades Funcionales</h3>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <ol class="breadcrumb float-sm-end">
-                                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                                        </ol>
-                                    </div>
-                                </div>
-                                <!--end::Row-->
-
-                                <!--begin::Row-->
-                                <div class="container mt-4">
-                                    <!-- Botón para mostrar/ocultar el modo edición -->
-                                    <button class="btn btn-primary mb-3" onclick="toggleModoEdicion()">Editar
-                                        estructura</button>
-
-                                    <!-- Contenedor del árbol -->
-                                    <div id="arbolUnidades"></div>
-
-                                    <!-- Botón para guardar los cambios -->
-                                    <button id="btnGuardar" class="btn btn-success mt-3 d-none"
-                                        onclick="guardarEstructura()">Guardar cambios</button>
-                                </div>
-
-                                <!--end::Row-->
-                                <!--end::Container-->
-                            </div>
-                            <!--end::App Content-->
-                        </div>
-                        <!--end::App nain-->
-                    </div>
-                    <!--end::Container-->
                 </div>
-                <!--end::App Content-->
+            </div>
 
-                <footer class="main-footer text-center">
-                    <strong>© 2025 - myResultIQ 1.0</strong>
-                </footer>
+
+            <footer class="main-footer text-center">
+                <strong>© 2025 - myResultIQ 1.0</strong>
+            </footer>
         </main>
         <!--end::App nain-->
 
@@ -527,142 +393,114 @@
         });
     </script>
 
-    <script>
-        let modoEdicion = false;
-
-        // Estructura de ejemplo inicial
-        let unidadesFuncionales = [
-            {
-                id: 1,
-                nombre: "Dirección General",
-                hijos: [
-                    {
-                        id: 2,
-                        nombre: "Recursos Humanos",
-                        hijos: []
-                    },
-                    {
-                        id: 3,
-                        nombre: "Finanzas",
-                        hijos: [
-                            {
-                                id: 4,
-                                nombre: "Contabilidad",
-                                hijos: []
-                            }
-                        ]
-                    }
-                ]
-            }
-        ];
-
-        // Renderizar árbol
-        function renderArbol(unidades, container, parentId = null) {
-            container.innerHTML = ''; // Limpiar
-
-            unidades.forEach(unidad => {
-                const li = document.createElement('li');
-                li.className = "list-group-item";
-
-                li.innerHTML = `
-    <span>${unidad.nombre}</span>
-    ${modoEdicion ? `
-    <button class="btn btn-sm btn-outline-success ms-2" onclick="agregarUnidad(${unidad.id})">➕</button>
-    <button class="btn btn-sm btn-outline-warning" onclick="editarUnidad(${unidad.id})">✏️</button>
-    <button class="btn btn-sm btn-outline-danger" onclick="eliminarUnidad(${unidad.id}, ${parentId})">🗑️</button>
-    ` : ''}
-    `;
-
-                container.appendChild(li);
-
-                if (unidad.hijos && unidad.hijos.length > 0) {
-                    const ul = document.createElement('ul');
-                    ul.className = "list-group ms-4 mt-2";
-                    li.appendChild(ul);
-                    renderArbol(unidad.hijos, ul, unidad.id);
-                }
-            });
-        }
-
-        function toggleModoEdicion() {
-            modoEdicion = !modoEdicion;
-            document.getElementById("btnGuardar").classList.toggle("d-none", !modoEdicion);
-            mostrarEstructura();
-        }
-
-        function mostrarEstructura() {
-            const contenedor = document.getElementById('arbolUnidades');
-            const ul = document.createElement('ul');
-            ul.className = "list-group";
-            renderArbol(unidadesFuncionales, ul);
-            contenedor.innerHTML = '';
-            contenedor.appendChild(ul);
-        }
-
-        function agregarUnidad(parentId) {
-            const nombre = prompt("Nombre de la nueva unidad:");
-            if (!nombre) return;
-
-            const nuevaUnidad = {
-                id: Date.now(),
-                nombre,
-                hijos: []
-            };
-
-            const agregarEn = buscarUnidad(unidadesFuncionales, parentId);
-            agregarEn.hijos.push(nuevaUnidad);
-            mostrarEstructura();
-        }
-
-        function editarUnidad(id) {
-            const unidad = buscarUnidad(unidadesFuncionales, id);
-            const nuevoNombre = prompt("Nuevo nombre:", unidad.nombre);
-            if (nuevoNombre) {
-                unidad.nombre = nuevoNombre;
-                mostrarEstructura();
-            }
-        }
-
-        function eliminarUnidad(id, parentId) {
-            if (!confirm("¿Eliminar esta unidad?")) return;
-
-            const padre = parentId ? buscarUnidad(unidadesFuncionales, parentId) : { hijos: unidadesFuncionales };
-            padre.hijos = padre.hijos.filter(u => u.id !== id);
-            mostrarEstructura();
-        }
-
-        function buscarUnidad(arbol, id) {
-            for (let unidad of arbol) {
-                if (unidad.id === id) return unidad;
-                const hijo = buscarUnidad(unidad.hijos, id);
-                if (hijo) return hijo;
-            }
-            return null;
-        }
-
-        function guardarEstructura() {
-            fetch('/guardar-estructura', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(unidadesFuncionales)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    alert("Estructura guardada correctamente.");
-                    toggleModoEdicion();
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert("Error al guardar.");
-                });
-        }
-
-        // Mostrar inicialmente
-        mostrarEstructura();
-
-    </script>
+    <!-- Modal -->
+    <div class="modal fade" id="indicadoresModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Indicadores</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaIndicadores"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--begin::Script-->
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+
+    <script>
+        // Datos de ejemplo
+        const indicadores = [
+            { id: 'ind1', nombre: 'Tiempo de ciclo de compra', responsable: 'Juan', nodo: 'u1' },
+            { id: 'ind2', nombre: 'Nivel de satisfacción del cliente', responsable: 'Ana', nodo: 'u1' },
+            { id: 'ind3', nombre: 'Tasa de rotación del personal', responsable: 'Luis', nodo: 'u2' },
+            { id: 'ind4', nombre: 'Rentabilidad operativa', responsable: 'María', nodo: 'u2' },
+            { id: 'ind5', nombre: 'Margen bruto', responsable: 'José', nodo: 'u3' },
+            { id: 'ind6', nombre: 'Productividad operativa', responsable: 'Laura', nodo: 'u3' },
+        ];
+
+        const estructura = [
+            { id: 'a1', parent: '#', text: 'Área Funcional A', type: 'area' },
+            { id: 'u1', parent: 'a1', text: 'Unidad 1', type: 'unidad' },
+            { id: 'u2', parent: 'a1', text: 'Unidad 2', type: 'unidad' },
+            { id: 'u3', parent: 'a1', text: 'Unidad 3', type: 'unidad' },
+        ];
+
+        // Devuelve el array con todos los indicadores de un nodo y sus descendientes
+        function contarIndicadores(nodoId) {
+            const arbol = $.jstree.reference('#tree'); // instancia jsTree
+            const nodo = arbol.get_node(nodoId);
+
+            if (!nodo) return [];
+
+            const hijos = nodo.children_d; // descendientes
+            const idsNodos = [nodoId, ...hijos];
+
+            // Filtrar indicadores que pertenezcan a este nodo o sus hijos
+            return indicadores.filter(ind => idsNodos.includes(ind.nodo));
+        }
+
+
+
+        // Agregar cantidades al texto de cada nodo
+        // Actualiza el texto del árbol con la cantidad de indicadores acumulados
+        function actualizarContadores() {
+            estructura.forEach(nodo => {
+                const listaIndicadores = contarIndicadores(nodo.id);
+                const total = listaIndicadores.length;
+                nodo.text = nodo.text.split(' (')[0] + ` (${total})`;
+            });
+
+            // Refrescar el árbol para mostrar los textos actualizados
+            const arbol = $('#tree').jstree(true);
+            if (arbol) {
+                arbol.settings.core.data = estructura; // reasignar datos actualizados
+                arbol.refresh();
+            }
+        }
+
+        // Inicializar jsTree
+        $('#tree')
+            .on('ready.jstree', function () {
+                actualizarContadores();
+            })
+            .jstree({
+                core: {
+                    data: estructura // o como se llame tu variable con los nodos
+                }
+            });
+
+        // Evento al hacer click en un nodo
+        $('#tree').on("select_node.jstree", function (e, data) {
+            const lista = contarIndicadores(data.node.id);
+            const tbody = document.getElementById("tablaIndicadores");
+            tbody.innerHTML = '';
+            lista.forEach(ind => {
+                tbody.innerHTML += `<tr>
+                <td>${ind.id}</td>
+                <td>${ind.nombre}</td>
+                <td>${ind.responsable}</td>
+            </tr>`;
+            });
+            new bootstrap.Modal(document.getElementById('indicadoresModal')).show();
+        });
+    </script>
+
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
