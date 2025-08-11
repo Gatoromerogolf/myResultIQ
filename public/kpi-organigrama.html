@@ -4,11 +4,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Organigrama y de Entidades</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="../css/adminlte.css" />
-    <link rel="stylesheet" href="../css/estilos-custom.css">
+    <title>myResultIQ | Entidades</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="title" content="AdminLTE v4 | Dashboard" />
+    <meta name="author" content="ColorlibHQ" />
+    <meta name="description"
+        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+    <meta name="keywords"
+        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+    <!--end::Primary Meta Tags-->
 
     <!--begin::Fonts-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
@@ -24,6 +28,30 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
         integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
+
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="../css/estilos-custom.css">
+    <!--end::Required Plugin(AdminLTE)-->
+
+    <!-- apexcharts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
+
+    <!-- jsvectormap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- AdminLTE se basa en Bootstrap, así que hay que incluirlo primero:-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--  Bootstrap Icons (Para que <i class="bi bi-..."> funcione) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!--  AdminLTE CSS (Estilos del template)-->
+    <link rel="stylesheet" href="../css/adminlte.css" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
 
     <style>
         .brand-image {
@@ -308,7 +336,7 @@
                                 <p>Arbol</p>
                             </a>
                         </li>
-                        
+
                         <li class="nav-item">
                             <a href="kpi-usuarios.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
@@ -333,7 +361,7 @@
                         <li class="nav-item">
                             <a href="kpi-organigrama.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Destinos - Organigrama</p>
+                                <p>Destinos - Entidades</p>
                             </a>
                         </li>
                     </ul>
@@ -377,8 +405,8 @@
                             <input type="file" class="form-control" id="orgImageInput" accept="image/*">
                         </div>
 
-                        <div class="d-flex flex-wrap gap-2 mb-3 ml-3">
-                            <button id="uploadButton" class="btn btn-primary">Subir imagen</button>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <button id="uploadButton" class="btn btn-primary ms-3">Subir imagen</button>
                             <button id="showImageButton" class="btn btn-success d-none">Mostrar imagen</button>
                             <button id="hideImageButton" class="btn btn-secondary d-none">Ocultar imagen</button>
                             <button id="deleteImageButton" class="btn btn-danger d-none">Eliminar imagen</button>
@@ -392,7 +420,7 @@
                     <!-- Sección 2: Formulario + Árbol -->
                     <div class="row">
                         <!-- Formulario -->
-                        <div class="col-md-6">
+                        <div class="col-md-6 mt-3">
                             <div class="card card-info">
                                 <div class="card-header">
                                     <h3 class="card-title"><i class="fas fa-plus-circle"></i> Agregar Entidad (Area -
@@ -421,7 +449,7 @@
                         </div>
 
                         <!-- Árbol -->
-                        <div class="col-md-6">
+                        <div class="col-md-6 mt-3">
                             <div class="card card-success">
                                 <div class="card-header">
                                     <h3 class="card-title"><i class="fas fa-sitemap"></i> Estructura de Entidades</h3>
@@ -634,19 +662,21 @@
                 alert('No se pudo eliminar el sector.');
             }
         }
-
-
     </script>
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+
+    <!-- Bootstrap (bundle con Popper incluido) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
-
-    <!-- jQuery (requerido por AdminLTE) -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- AdminLTE JS -->
-    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <!--end::Required Plugin(AdminLTE)-->
 
     <!-- OverlayScrollbars (opcional) -->
     <script

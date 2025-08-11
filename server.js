@@ -315,6 +315,281 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
     }
 });
 
+// 🚀 Nueva ruta para devolver el árbol de sectores + indicadores
+app.get('/api/arbol-indicadores', async (req, res) => {
+    try {
+        // 1. Obtener todos los sectores
+        const [sectores] = await pool.query(`
+            SELECT id, nombre, descripcion, sector_padre_id
+            FROM sectores
+        `);
+
+        // 2. Obtener todos los indicadores
+        const [indicadores] = await pool.query(`
+            SELECT 
+                id,
+                codigo_identificatorio,
+                nombre,
+                unidad_funcional_id
+            FROM indicadores
+        `);
+
+        // 3. Crear un mapa de sectores por ID
+        const mapaSectores = {};
+        sectores.forEach(sec => {
+            mapaSectores[sec.id] = {
+                id: `sector-${sec.id}`,
+                nombre: sec.nombre,
+                descripcion: sec.descripcion,
+                tipo: 'sector',
+                hijos: []
+            };
+        });
+
+        // 4. Insertar indicadores en el sector correspondiente
+        indicadores.forEach(ind => {
+            const sector = mapaSectores[ind.unidad_funcional_id];
+            if (sector) {
+                sector.hijos.push({
+                    id: `indicador-${ind.id}`,
+                    nombre: ind.nombre,
+                    codigo: ind.codigo_identificatorio,
+                    tipo: 'indicador'
+                });
+            }
+        });
+
+        // 5. Construir la jerarquía
+        const arbol = [];
+        sectores.forEach(sec => {
+            if (sec.sector_padre_id) {
+                // Si tiene padre, lo metemos como hijo de ese padre
+                if (mapaSectores[sec.sector_padre_id]) {
+                    mapaSectores[sec.sector_padre_id].hijos.push(mapaSectores[sec.id]);
+                }
+            } else {
+                // Si no tiene padre, es raíz
+                arbol.push(mapaSectores[sec.id]);
+            }
+        });
+
+        res.json(arbol);
+
+    } catch (err) {
+        console.error('Error al armar árbol:', err);
+        res.status(500).json({ error: 'Error al generar el árbol' });
+    }
+});
+
+
+// 🚀 Nueva ruta para jsTree
+app.get('/api/arbol-jstree', async (req, res) => {
+    try {
+        // 1. Traer sectores
+        const [sectores] = await pool.query(`
+            SELECT id, nombre, sector_padre_id
+            FROM sectores
+        `);
+
+        // 2. Traer indicadores
+        const [indicadores] = await pool.query(`
+            SELECT id, codigo_identificatorio, nombre, unidad_funcional_id
+            FROM indicadores
+        `);
+
+        const nodos = [];
+
+        // 3. Convertir sectores a nodos jsTree
+        sectores.forEach(sec => {
+            nodos.push({
+                id: `sector-${sec.id}`,
+                parent: sec.sector_padre_id ? `sector-${sec.sector_padre_id}` : "#",
+                text: sec.nombre,
+                icon: "fas fa-sitemap", // ícono de sector
+                type: "sector"
+            });
+        });
+
+        // 4. Convertir indicadores a nodos jsTree
+        indicadores.forEach(ind => {
+            nodos.push({
+                id: `indicador-${ind.id}`,
+                parent: `sector-${ind.unidad_funcional_id}`,
+                text: `${ind.nombre} (${ind.codigo_identificatorio})`,
+                icon: "fas fa-chart-line", // ícono de indicador
+                type: "indicador"
+            });
+        });
+
+        res.json(nodos);
+    } catch (err) {
+        console.error('Error al armar jsTree:', err);
+        res.status(500).json({ error: 'Error al generar árbol' });
+    }
+});
+
+// 🚀 Ruta para lazy loading de jsTree
+app.get('/api/arbol-jstree-lazy-anulada', async (req, res) => {
+    try {
+        const parent = req.query.parent; // "#" o "sector-X"
+
+        if (parent === "#") {
+            // NODOS RAÍZ: sectores sin padre
+            const [sectoresRaiz] = await pool.query(`
+                SELECT id, nombre 
+                FROM sectores 
+                WHERE sector_padre_id IS NULL
+            `);
+
+            const nodos = sectoresRaiz.map(sec => ({
+                id: `sector-${sec.id}`,
+                parent: "#",
+                text: sec.nombre,
+                icon: "fas fa-sitemap",
+                type: "sector",
+                children: true // indica que puede tener hijos
+            }));
+
+            return res.json(nodos);
+        }
+
+        // Si el parent es un sector: traer hijos e indicadores
+        if (parent.startsWith("sector-")) {
+            const sectorId = parent.replace("sector-", "");
+
+            // Sectores hijos
+            const [sectoresHijos] = await pool.query(`
+                SELECT id, nombre
+                FROM sectores
+                WHERE sector_padre_id = ?
+            `, [sectorId]);
+
+            // Indicadores del sector
+            const [indicadores] = await pool.query(`
+                SELECT id, codigo_identificatorio, nombre
+                FROM indicadores
+                WHERE unidad_funcional_id = ?
+            `, [sectorId]);
+
+            const nodos = [
+                ...sectoresHijos.map(sec => ({
+                    id: `sector-${sec.id}`,
+                    parent: `sector-${sectorId}`,
+                    text: sec.nombre,
+                    icon: "fas fa-sitemap",
+                    type: "sector",
+                    children: true
+                })),
+                ...indicadores.map(ind => ({
+                    id: `indicador-${ind.id}`,
+                    parent: `sector-${sectorId}`,
+                    text: `${ind.nombre} (${ind.codigo_identificatorio})`,
+                    icon: "fas fa-chart-line",
+                    type: "indicador",
+                    children: false
+                }))
+            ];
+
+            return res.json(nodos);
+        }
+
+        // Si es un indicador, no tiene hijos
+        return res.json([]);
+
+    } catch (err) {
+        console.error('Error al armar árbol lazy:', err);
+        res.status(500).json({ error: 'Error al generar árbol' });
+    }
+});
+
+
+
+// 🚀 Ruta jsTree con conteo acumulado
+app.get('/api/arbol-jstree-lazy', async (req, res) => {
+    try {
+        const parent = req.query.parent;
+
+        // Siempre cargamos toda la estructura en memoria para contar
+        const [sectores] = await pool.query(`SELECT id, nombre, sector_padre_id FROM sectores`);
+        const [indicadores] = await pool.query(`SELECT id, codigo_identificatorio, nombre, unidad_funcional_id FROM indicadores`);
+
+        // Contar indicadores directos
+        const conteoDirecto = {};
+        sectores.forEach(s => conteoDirecto[s.id] = 0);
+        indicadores.forEach(ind => {
+            if (!conteoDirecto[ind.unidad_funcional_id]) conteoDirecto[ind.unidad_funcional_id] = 0;
+            conteoDirecto[ind.unidad_funcional_id]++;
+        });
+
+        // Función para contar acumulado
+        function contarTotal(sectorId) {
+            let total = conteoDirecto[sectorId] || 0;
+            const hijos = sectores.filter(s => s.sector_padre_id === sectorId);
+            hijos.forEach(hijo => {
+                total += contarTotal(hijo.id);
+            });
+            return total;
+        }
+
+        // === Lazy loading respuesta ===
+        if (parent === "#") {
+            // Sectores raíz
+            const nodos = sectores
+                .filter(s => !s.sector_padre_id)
+                .map(s => ({
+                    id: `sector-${s.id}`,
+                    parent: "#",
+                    text: `${s.nombre} (${contarTotal(s.id)})`,
+                    icon: "fas fa-sitemap",
+                    type: "sector",
+                    children: true
+                }));
+            return res.json(nodos);
+        }
+
+        if (parent.startsWith("sector-")) {
+            const sectorId = parseInt(parent.replace("sector-", ""), 10);
+
+            // Sectores hijos
+            const hijos = sectores
+                .filter(s => s.sector_padre_id === sectorId)
+                .map(s => ({
+                    id: `sector-${s.id}`,
+                    parent: `sector-${sectorId}`,
+                    text: `${s.nombre} (${contarTotal(s.id)})`,
+                    icon: "fas fa-sitemap",
+                    type: "sector",
+                    children: true
+                }));
+
+            // Indicadores de este sector
+            const inds = indicadores
+                .filter(ind => ind.unidad_funcional_id === sectorId)
+                .map(ind => ({
+                    id: `indicador-${ind.id}`,
+                    parent: `sector-${sectorId}`,
+                    text: `${ind.nombre} (${ind.codigo_identificatorio})`,
+                    icon: "fas fa-chart-line",
+                    type: "indicador",
+                    children: false
+                }));
+
+            return res.json([...hijos, ...inds]);
+        }
+
+        return res.json([]);
+
+    } catch (err) {
+        console.error('Error al armar árbol lazy con conteo:', err);
+        res.status(500).json({ error: 'Error al generar árbol' });
+    }
+});
+
+
+
+
+
+
 
 const PORT = process.env.PORT || 3000;
 

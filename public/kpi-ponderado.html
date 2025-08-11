@@ -52,6 +52,7 @@
     <!-- jsvectormap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
         integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- AdminLTE se basa en Bootstrap, así que hay que incluirlo primero:-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -63,6 +64,13 @@
     <link rel="stylesheet" href="../css/adminlte.css" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+    <style>
+        .peso-input {
+            width: 80px;
+            text-align: right;
+        }
+    </style>
+
 
 </head>
 <!--end::Head-->
@@ -175,7 +183,6 @@
                         </div>
                     </li>
                     <!--end::Messages Dropdown Menu-->
-
                     <!--begin::Notifications Dropdown Menu-->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-bs-toggle="dropdown" href="#">
@@ -224,7 +231,7 @@
                                 style="width: 40px; height: 40px;" alt="User Image" />
                         </span>
                     </li>
-                    <!--end::User Menu Dropdown"-->
+                    <!--end::User Menu Dropdown-->
 
                     <li>
                         <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
@@ -269,7 +276,6 @@
 
                         <li class="nav-item">
                             <a href="kpi-operaciones.html" class="nav-link">
-
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores Asignados</p>
                             </a>
@@ -277,15 +283,13 @@
 
                         <li class="nav-item">
                             <a href="kpi-arbol.html" class="nav-link">
-
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Arbol</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link">
-
+                            <a href="kpi-usuarios.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
                             </a>
@@ -293,15 +297,13 @@
 
                         <li class="nav-item">
                             <a href="kpi-indicadores.html" class="nav-link">
-
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-gruposInd.html" class="nav-link active">
-
+                            <a href="kpi-gruposInd.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Grupos de Indicadores</p>
                             </a>
@@ -310,7 +312,7 @@
                         <li class="nav-item">
                             <a href="kpi-organigrama.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Destinos - Indicadores</p>
+                                <p>Destinos - Entidades</p>
                             </a>
                         </li>
                     </ul>
@@ -322,7 +324,7 @@
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
-        <main class="app-main">
+        <main class="app-main p-4">
             <!--begin::App Content Header-->
             <div class="app-content-header">
                 <!--begin::Container-->
@@ -330,10 +332,8 @@
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Grupos de Indicadores.</h3>
-                            <p>Asignar el porcentaje de importancia relativa que cada indicador tiene dentro de su grupo
-                                de pertenencia. La suma de los valores asignados entre todos los indices debe totalizar
-                                100.</p>
+                            <h3 class="mb-0">Peso ponderado</h3>
+                            <!-- <div id="tree"></div> -->
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -343,152 +343,104 @@
                         </div>
                     </div>
                     <!--end::Row-->
+                </div>
+            </div>
 
-                    <div class="row">
-                        <!-- Start col -->
-                        <div class="col-md-12">
-                            <!--begin::Latest Order Widget-->
-                            <div class="card card-primary card-outline">
-                                <div class="card-header">
-                                    <div id="contenedorGrupos"></div>
-                                    <script>
-                                        // Simulación de datos que vendrían de la base de datos
-                                        const gruposData = [
-                                            {
-                                                nombre: "Grupo: Gestión Ejecutiva",
-                                                indicadores: [
-                                                    { codigo: "FIN001", nombre: "Margen de Ganancia Bruta", unidadFuncional: "Administración", responsable: "Juan Pérez" },
-                                                    { codigo: "FIN023", nombre: "Rotación de Inventario", unidadFuncional: "Depósito", responsable: "Carlos Diaz" },
-                                                ]
-                                            },
-                                            {
-                                                nombre: "Grupo: Gestión Internacional",
-                                                indicadores: [
-                                                    { codigo: "IND003", nombre: "Despachos extraordinarios", unidadFuncional: "COMEX", responsable: "Laura Gimenez" },
-                                                    { codigo: "IND004", nombre: "Gestion aduana", unidadFuncional: "COMEX", responsable: "Luis Espinosa" },
-                                                    { codigo: "IND005", nombre: "Gestión Arancelamiento", unidadFuncional: "COMEX", responsable: "Luis Espinosa" },
-                                                ]
-                                            }
-                                        ];
+            <!-- <div id="contenedor-principal" style="display: flex; gap: 20px;"></div> -->
 
-                                        // Función para construir la tabla por grupo
-                                        function construirGrupos() {
-                                            const contenedor = document.getElementById("contenedorGrupos");
-
-                                            gruposData.forEach((grupo, indiceGrupo) => {
-                                                const grupoDiv = document.createElement("div");
-                                                grupoDiv.className = "grupo-bloque";
-
-                                                const titulo = document.createElement("h4");
-                                                titulo.textContent = grupo.nombre;
-                                                grupoDiv.appendChild(titulo);
-
-                                                const tabla = document.createElement("table");
-                                                tabla.className = "table table-bordered";
-                                                tabla.innerHTML = `
-                                                  <colgroup>
-                                                        <col style="width: 10%;">
-                                                        <col style="width: 35%;">
-                                                        <col style="width: 20%;">
-                                                        <col style="width: 20%;">
-                                                        <col style="width: 15%;">
-                                                    </colgroup>
-                                                            <thead>
-                                                                <tr>
-                                                                <th>Código</th>
-                                                                <th>Nombre</th>
-                                                                <th>Unidad Funcional</th>
-                                                                <th>Responsable</th>
-                                                                <th>Importancia (%)</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                ${grupo.indicadores.map((ind, indiceInd) => `
-                                                                <tr>
-                                                                    <td>${ind.codigo}</td>
-                                                                    <td>${ind.nombre}</td>
-                                                                    <td>${ind.unidadFuncional}</td>
-                                                                    <td>${ind.responsable}</td>
-                                                                    <td>
-                                                                    <input type="number" class="form-control porcentaje-input" 
-                                                                            min="0" max="100" value="0" 
-                                                                            onchange="validarPorcentajes(${indiceGrupo})"
-                                                                            data-grupo="${indiceGrupo}">
-                                                                    </td>
-                                                                </tr>
-                                                                `).join('')}
-                                                            </tbody>
-                                                            `;
-                                                grupoDiv.appendChild(tabla);
-
-                                                const totalP = document.createElement("p");
-                                                totalP.id = `totalGrupo${indiceGrupo}`;
-                                                totalP.className = "fw-bold text-danger";
-                                                grupoDiv.appendChild(totalP);
-
-                                                contenedor.appendChild(grupoDiv);
-                                            });
-                                        }
-
-                                        function validarPorcentajes(grupoIndex) {
-                                            const inputs = document.querySelectorAll(`input[data-grupo="${grupoIndex}"]`);
-                                            let suma = 0;
-
-                                            inputs.forEach(input => {
-                                                const val = parseFloat(input.value);
-                                                if (!isNaN(val)) suma += val;
-                                            });
-
-                                            const mensaje = document.getElementById(`totalGrupo${grupoIndex}`);
-                                            if (suma === 100) {
-                                                mensaje.textContent = "✅ La suma es 100%";
-                                                mensaje.classList.remove("text-danger");
-                                                mensaje.classList.add("text-success");
-                                            } else {
-                                                mensaje.textContent = `⚠ La suma actual es ${suma.toFixed(2)}% (debe ser 100%)`;
-                                                mensaje.classList.remove("text-success");
-                                                mensaje.classList.add("text-danger");
-                                            }
-                                        }
-
-                                        construirGrupos();
-                                    </script>
+            <section class="content" id="estructuraEntidades" style="display: block; margin-left: 10px;">
+                <div class="container-fluid">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">PKI - Dirección Comercial</h3>
+                            <div class="card-tools">
+                                <div class="card-tools">
                                 </div>
                             </div>
                         </div>
+
+                        <div id="contenedor-principal">
+                            <table class="table table-bordered align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Indicador</th>
+                                        <th>Valor (%)</th>
+                                        <th>Peso (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaPKI">
+                                    <tr>
+                                        <td>Ventas Mensuales</td>
+                                        <td><input type="number" class="form-control valor-input" value="80" min="0"
+                                                max="100"></td>
+                                        <td><input type="number" class="form-control peso-input" value="50" min="0"
+                                                max="100"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Satisfacción Cliente</td>
+                                        <td><input type="number" class="form-control valor-input" value="70" min="0"
+                                                max="100"></td>
+                                        <td><input type="number" class="form-control peso-input" value="50" min="0"
+                                                max="100"></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="table-secondary">
+                                        <th colspan="2" class="text-end">Suma Pesos:</th>
+                                        <th id="totalPesos">100</th>
+                                    </tr>
+                                    <tr class="table-info">
+                                        <th colspan="2" class="text-end">Valor Ponderado:</th>
+                                        <th id="valorPonderado">75</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </main>
-    </div>
-    <!-- Modal de Confirmación de Logout -->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    Esta acción cerrará tu sesión actual y volverás a la página de inicio.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        document.getElementById('confirmLogout').addEventListener('click', function () {
-            // Limpiar lo necesario
-            sessionStorage.clear();
-            localStorage.clear(); // si usás localStorage
+            </section>
 
-            // Redirigir al inicio
-            window.location.href = 'index.html';
-        });
-    </script>
+
+    <footer class="main-footer text-center">
+        <strong>© 2025 - myResultIQ 1.0</strong>
+    </footer>
+    </main>
+    <!--end::App nain-->
+    </div>
+    <!--end::App Wrapper-->
+
+<script>
+function recalcular() {
+    const filas = document.querySelectorAll("#tablaPKI tr");
+    let totalPeso = 0;
+    let sumaPonderada = 0;
+
+    filas.forEach(fila => {
+        const valor = parseFloat(fila.querySelector(".valor-input").value) || 0;
+        const peso = parseFloat(fila.querySelector(".peso-input").value) || 0;
+        totalPeso += peso;
+        sumaPonderada += valor * (peso / 100);
+    });
+
+    document.getElementById("totalPesos").textContent = totalPeso.toFixed(0);
+    document.getElementById("valorPonderado").textContent = sumaPonderada.toFixed(2);
+
+    // Validación si no suma 100
+    document.getElementById("totalPesos").style.color = (totalPeso === 100) ? "green" : "red";
+}
+
+document.querySelectorAll(".valor-input, .peso-input").forEach(input => {
+    input.addEventListener("input", recalcular);
+});
+
+// Calcular al iniciar
+recalcular();
+</script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
@@ -504,7 +456,33 @@
     <!--end::Required Plugin(AdminLTE)-->
 
 
+    <!--begin::OverlayScrollbars Configure-->
+    <script>
+        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+        const Default = {
+            scrollbarTheme: 'os-theme-light',
+            scrollbarAutoHide: 'leave',
+            scrollbarClickScroll: true,
+        };
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+            if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
+                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                    scrollbars: {
+                        theme: Default.scrollbarTheme,
+                        autoHide: Default.scrollbarAutoHide,
+                        clickScroll: Default.scrollbarClickScroll,
+                    },
+                });
+            }
+        });
+    </script>
 
+    <!-- apexcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+    <!-- ChartJS -->
 </body>
+<!--end::Body-->
 
 </html>
