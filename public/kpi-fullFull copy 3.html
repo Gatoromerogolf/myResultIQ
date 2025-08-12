@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ponderación de Entidades e Indicadores</title>
+  <style>
+    /* body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .node-container {
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-bottom: 12px;
+      background: #f9f9f9;
+    }
+
+    .node-container>h4 {
+      margin: 0 0 6px 0;
+    }
+
+    .weight-input {
+      width: 60px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      padding: 4px 6px;
+      margin-bottom: 6px;
+    }
+
+    .progress {
+      width: 100%;
+      background-color: #ddd;
+      height: 15px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #5378f3;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .children-container {
+      margin-left: 20px;
+    } */
+
+
+    .node-container {
+      margin-left: 20px;
+      padding: 5px;
+      border-left: 2px solid #ccc;
+    }
+
+    .node-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .weight-input {
+      width: 60px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      padding: 2px 4px;
+      text-align: right;
+    }
+
+    .progress {
+      height: 8px;
+      background: #eee;
+      margin-top: 4px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #4caf50;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 0.8em;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Ponderación de Entidades e Indicadores</h2>
+  <div id="treeContainer"></div>
+
+  <script>
+
+    async function fetchData() {
+      const response = await fetch('/api/arbol-jstree');
+      const flatNodes = await response.json();
+
+      const sectores = flatNodes.filter(n => n.type === 'sector');
+      const indicadores = flatNodes.filter(n => n.type === 'indicador');
+
+      const sectorMap = {};
+      sectores.forEach(s => {
+        sectorMap[s.id] = { ...s, children: [], weight: 100, value: 50 };
+      });
+
+      // Asignar sectores hijos
+      sectores.forEach(s => {
+        if (s.parent !== "#") {
+          if (sectorMap[s.parent]) {
+            sectorMap[s.parent].children.push(sectorMap[s.id]);
+            sectorMap[s.id].parentNode = sectorMap[s.parent];
+          }
+        }
+      });
+
+      // Asignar indicadores a sectores
+      indicadores.forEach(ind => {
+        const parentSector = sectorMap[ind.parent];
+        if (parentSector) {
+          const indNode = { ...ind, weight: 100, value: 50, children: [], parentNode: parentSector };
+          parentSector.children.push(indNode);
+        }
+      });
+
+      // Buscar raíces
+      const roots = sectores.filter(s => s.parent === "#").map(s => sectorMap[s.id]);
+
+      return {
+        id: 'root',
+        name: 'Organización',
+        weight: 100,
+        value: 50,
+        children: roots,
+        parentNode: null
+      };
+    }
+
+    // Normaliza pesos entre hermanos para que sumen 100%
+    // function normalizeWeights(siblings) {
+    //   if (!siblings || siblings.length === 0) return;
+    //   const total = siblings.reduce((acc, n) => acc + (n.weight || 0), 0);
+    //   if (total === 0) return; // evitar dividir por 0
+    //   siblings.forEach(n => {
+    //     n.weight = (n.weight / total) * 100;
+    //   });
+    // }
+
+    // Calcular valor cascada
+    // function calculateValues(node) {
+    //   if (!node.children || node.children.length === 0) {
+    //     // indicador: si no tiene valor definido, ponemos 50%
+    //     node.value = node.value !== undefined ? node.value : 50;
+    //     return node.value;
+    //   }
+    //   let val = 0;
+    //   node.children.forEach(child => {
+    //     val += (child.weight / 100) * calculateValues(child);
+    //   });
+    //   node.value = val;
+    //   return val;
+    // }
+
+    function calculateValues(node) {
+      if (node.children && node.children.length > 0) {
+        let total = 0;
+        node.children.forEach(child => {
+          calculateValues(child);
+          total += (child.value || 0) * (child.weight || 0) / 100;
+        });
+        node.value = total;
+      }
+    }
+
+    function checkWeights(parentNode) {
+      let sum = 0;
+      if (!parentNode.children) return true;
+      parentNode.children.forEach(c => {
+        sum += Number(c.weight) || 0;
+      });
+      return Math.abs(sum - 100) < 0.001;
+    }
+
+
+
+
+    function buildTree(node, parentNode = null) {
+      node.parentNode = parentNode;
+      const container = document.createElement('div');
+      container.className = 'node-container';
+
+      // Cabecera con input y nombre
+      const header = document.createElement('div');
+      header.className = 'node-header';
+
+      if (node.id !== 'root') {
+        const weightInput = document.createElement('input');
+        weightInput.type = 'number';
+        weightInput.min = 0;
+        weightInput.max = 100;
+        weightInput.value = node.weight.toFixed(2);
+        weightInput.className = 'weight-input';
+        weightInput.title = 'Peso relativo (%)';
+        header.appendChild(weightInput);
+
+        weightInput.addEventListener('change', () => {
+          let val = Number(weightInput.value);
+          if (isNaN(val) || val < 0) val = 0;
+          if (val > 100) val = 100;
+          node.weight = val;
+
+          calculateValues(getRootNode(node));
+
+          // Mostrar/ocultar mensaje de error
+          if (!checkWeights(node.parentNode)) {
+            node.parentNode._errorMsg.style.display = 'block';
+          } else {
+            node.parentNode._errorMsg.style.display = 'none';
+          }
+
+          refreshUI();
+        });
+
+        node._weightInput = weightInput;
+      }
+
+      const title = document.createElement('span');
+      title.textContent = node.name || node.text;
+      header.appendChild(title);
+
+      container.appendChild(header);
+
+      // Barra de progreso
+      const progress = document.createElement('div');
+      progress.className = 'progress';
+      const bar = document.createElement('div');
+      bar.className = 'progress-bar';
+      bar.style.width = `${node.value?.toFixed(1) || 0}%`;
+      progress.appendChild(bar);
+      container.appendChild(progress);
+
+      // Mensaje de error (solo para nodos con hijos)
+      if (node.children && node.children.length > 0) {
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'error-msg';
+        errorMsg.textContent = 'La suma de los pesos de este nivel debe ser 100%';
+        errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
+        container.appendChild(errorMsg);
+        node._errorMsg = errorMsg;
+      }
+
+      // Hijos recursivos
+      if (node.children && node.children.length > 0) {
+        const childrenContainer = document.createElement('div');
+        node.children.forEach(child => {
+          childrenContainer.appendChild(buildTree(child, node));
+        });
+        container.appendChild(childrenContainer);
+      }
+
+      node._progressBar = bar;
+      return container;
+    }
+
+    function refreshUI() {
+      function updateNode(node) {
+        if (node._progressBar) {
+          node._progressBar.style.width = `${node.value?.toFixed(1) || 0}%`;
+        }
+        if (node._weightInput) {
+          node._weightInput.value = node.weight.toFixed(2);
+        }
+        if (node.children && node.children.length > 0) {
+          node.children.forEach(updateNode);
+        }
+      }
+      updateNode(window.treeRoot);
+    }
+
+    function getRootNode(node) {
+      while (node.parentNode) {
+        node = node.parentNode;
+      }
+      return node;
+    }
+
+    // MAIN
+    (async () => {
+      window.treeRoot = await fetchData();
+      calculateValues(window.treeRoot);
+      const container = document.getElementById('treeContainer');
+      container.innerHTML = '';
+      container.appendChild(buildTree(window.treeRoot));
+    })();
+  </script>
+
+
+</body>
+
+</html>

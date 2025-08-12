@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Valoración Global con Validación Pesos PKI y Direcciones</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; max-width: 900px; margin: auto; }
+  .direccion, .pki { margin-bottom: 20px; border: 1px solid #ddd; border-radius: 6px; padding: 10px; }
+  .direccion { background: #f9f9f9; }
+  .titulo { font-weight: bold; font-size: 1.2em; margin-bottom: 10px; }
+  label { font-weight: normal; }
+  input[type=number] { width: 40px; margin-left: 10px; border-radius: 6px;  border: 1px solid #ccc;
+  padding: 4px 8px;}
+  .progress-bar-container { background: #eee; border-radius: 6px; height: 20px; margin-top: 6px; overflow: hidden; margin-bottom: 12px;}
+  .progress-bar { height: 100%; text-align: center; color: white; font-weight: bold; }
+  .progress-pki { background-color: #4caf50; }
+  .progress-dir { background-color: #2196F3; }
+  .error { color: red; margin-bottom: 15px; }
+  .error-pki { color: red; font-size: 0.9em; margin-top: 5px; }
+
+</style>
+</head>
+<body>
+
+      <h2>Ponderación de Entidades e Indicadores</h2>
+      <p class="muted-note">Asigná los % relativos por Entidad y dentro de cada Entidad a cada PKI. Las sumas deben ser 100% por nivel.</p>
+
+
+<div class="direccion" style="background:#ddd; padding:15px;">
+  <div class="titulo">Valor global de la organización:</div>
+  <div class="progress-bar-container">
+    <div id="globalBar" class="progress-bar progress-dir" style="width: 0%;">0%</div>
+  </div>
+</div>
+
+<div id="errorPesosDirecciones" class="error" style="display:none;">La suma de los pesos de las Direcciones debe ser 100%</div>
+
+<div id="contenedor"></div>
+
+<script>
+// Datos iniciales con pesos editables en Direcciones y PKIs
+const SAMPLE = {
+  id: 'root',
+  name: 'Organización',
+  children: [
+    {
+      id: 'dir-A',
+      name: 'Dirección A',
+      weight: 50,
+      children: [
+        { id: 'a-1', name: 'PKI A1 - Ventas', value: 80, weight: 60 },
+        { id: 'a-2', name: 'PKI A2 - Satisfacción', value: 70, weight: 40 }
+      ]
+    },
+    {
+      id: 'dir-B',
+      name: 'Dirección B',
+      weight: 50,
+      children: [
+        { id: 'b-1', name: 'PKI B1 - Productividad', value: 90, weight: 50 },
+        { id: 'b-2', name: 'PKI B2 - Rotación', value: 60, weight: 50 }
+      ]
+    }
+  ]
+};
+
+// Función para renderizar todo
+function render() {
+  const contenedor = document.getElementById('contenedor');
+  contenedor.innerHTML = '';
+
+  SAMPLE.children.forEach((direccion, i) => {
+    const divDir = document.createElement('div');
+    divDir.className = 'direccion';
+
+    // Nombre + peso editable
+    divDir.innerHTML = `
+      <div class="titulo">${direccion.name}
+        <label>
+
+          <input type="number" min="0" max="100" step="1" 
+            value="${direccion.weight}" data-dir-index="${i}" class="peso-direccion" />
+          (%) 
+        </label>
+      </div>
+      <div>Valoración: <strong id="valor-dir-${direccion.id}">0</strong></div>
+      <div class="progress-bar-container">
+        <div id="barra-dir-${direccion.id}" class="progress-bar progress-dir" style="width: 0%;">0%</div>
+      </div>
+      <div id="errorPesosPKI-${direccion.id}" class="error-pki" style="display:none;">
+        La suma de los pesos de los PKIs de esta Dirección debe ser 100%
+      </div>
+    `;
+
+    // PKIs
+    direccion.children.forEach(pki => {
+      const divPki = document.createElement('div');
+      divPki.className = 'pki';
+      divPki.style.marginLeft = '20px';
+
+      divPki.innerHTML = `
+        <div>${pki.name}
+          <label>
+ 
+            <input type="number" min="0" max="100" step="1" 
+              value="${pki.weight}" data-dir-index="${i}" data-pki-id="${pki.id}" class="peso-pki" />
+            (%) 
+          </label>
+        </div>
+        <div>Valor: <strong id="valor-pki-${pki.id}">${pki.value}</strong></div>
+        <div class="progress-bar-container">
+          <div id="barra-pki-${pki.id}" class="progress-bar progress-pki" style="width: 0%;">0%</div>
+        </div>
+      `;
+
+      divDir.appendChild(divPki);
+    });
+
+    contenedor.appendChild(divDir);
+  });
+
+  attachHandlers();
+  updateBars();
+}
+
+// Actualiza barras y cálculos
+function updateBars() {
+  // Validar suma de pesos Direcciones
+  const sumPesosDirecciones = SAMPLE.children.reduce((acc, dir) => acc + Number(dir.weight), 0);
+  const errorDivDir = document.getElementById('errorPesosDirecciones');
+  if (sumPesosDirecciones !== 100) {
+    errorDivDir.style.display = 'block';
+  } else {
+    errorDivDir.style.display = 'none';
+  }
+
+  let valorGlobal = 0;
+
+  SAMPLE.children.forEach(direccion => {
+    // Validar suma pesos PKIs en esta dirección
+    const sumaPesosPKI = direccion.children.reduce((acc, pki) => acc + Number(pki.weight), 0);
+    const errorDivPKI = document.getElementById(`errorPesosPKI-${direccion.id}`);
+
+    if (sumaPesosPKI !== 100) {
+      errorDivPKI.style.display = 'block';
+
+      // Ocultar barra y valor dirección para no confundir
+      document.getElementById(`valor-dir-${direccion.id}`).textContent = 'Error';
+      const barraDir = document.getElementById(`barra-dir-${direccion.id}`);
+      barraDir.style.width = '0%';
+      barraDir.textContent = '0%';
+
+      // No sumar esta dirección al valor global
+      return; 
+    } else {
+      errorDivPKI.style.display = 'none';
+    }
+
+    // Normalizar pesos PKI (aunque ya suman 100, es para evitar errores)
+    direccion.children.forEach(pki => {
+      pki.normWeight = pki.weight / 100;
+    });
+
+    // Valor Dirección = suma de valor*peso_normalizado PKI
+    const valorDireccion = direccion.children.reduce((acc, pki) => acc + pki.value * pki.normWeight, 0);
+    document.getElementById(`valor-dir-${direccion.id}`).textContent = valorDireccion.toFixed(2);
+
+    // Barra Dirección
+    const barraDir = document.getElementById(`barra-dir-${direccion.id}`);
+    barraDir.style.width = valorDireccion + '%';
+    barraDir.textContent = valorDireccion.toFixed(2) + '%';
+
+    // Acumular para global (valorDireccion * pesoDireccion/100)
+    valorGlobal += valorDireccion * (direccion.weight / 100);
+  });
+
+  // Barra global
+  const barraGlobal = document.getElementById('globalBar');
+  barraGlobal.style.width = valorGlobal + '%';
+  barraGlobal.textContent = valorGlobal.toFixed(2) + '%';
+}
+
+// Asocia eventos para inputs de pesos
+function attachHandlers() {
+  // Cambios en peso Dirección
+  document.querySelectorAll('.peso-direccion').forEach(input => {
+    input.addEventListener('input', e => {
+      const i = e.target.getAttribute('data-dir-index');
+      let val = Number(e.target.value);
+
+      if (val < 0) val = 0;
+      if (val > 100) val = 100;
+      e.target.value = val;
+
+      SAMPLE.children[i].weight = val;
+      updateBars();
+    });
+  });
+
+  // Cambios en peso PKI
+  document.querySelectorAll('.peso-pki').forEach(input => {
+    input.addEventListener('input', e => {
+      const i = e.target.getAttribute('data-dir-index');
+      const pkiId = e.target.getAttribute('data-pki-id');
+      let val = Number(e.target.value);
+
+      if (val < 0) val = 0;
+      if (val > 100) val = 100;
+      e.target.value = val;
+
+      const pki = SAMPLE.children[i].children.find(p => p.id === pkiId);
+      if (pki) {
+        pki.weight = val;
+        updateBars();
+      }
+    });
+  });
+}
+
+render();
+</script>
+
+</body>
+</html>

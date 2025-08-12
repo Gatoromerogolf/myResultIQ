@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pesos PKI — Etapa 1</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  body { padding: 18px; background:#f8f9fa; }
+  .group-card { margin-bottom: 12px; }
+  .small-input { width: 90px; }
+  .pgr { height: 14px; }
+  .weight-ok { color: green; font-weight: 600; }
+  .weight-bad { color: red; font-weight: 600; }
+  .muted-note { font-size: .85rem; color: #666; }
+</style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <h4>Ponderación de Entidades e Indicadores</h4>
+      <p class="muted-note">Asigná los % relativos por Nivel y dentro de cada Nivel a cada PKI. Las sumas deben ser 100% por nivel.</p>
+
+      <div id="groupsContainer"></div>
+
+      <div class="d-flex gap-2 mt-3">
+        <button id="btnSave" class="btn btn-primary">Guardar en localStorage</button>
+        <button id="btnReset" class="btn btn-outline-secondary">Resetear a ejemplo</button>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <h5>Resumen Global</h5>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between">
+          <strong>Valor Global</strong>
+          <span id="globalValueLabel">0</span>
+        </div>
+        <div class="progress">
+          <div id="globalProgress" class="progress-bar" role="progressbar" style="width:0%">0%</div>
+        </div>
+      </div>
+
+      <div id="summaryList"></div>
+    </div>
+  </div>
+</div>
+
+
+<div id="app"></div>
+
+<script>
+const SAMPLE = {
+  id: 'root',
+  name: 'Organización',
+  children: [
+    {
+      id: 'dir-A',
+      name: 'Dirección A',
+      weight: 50,
+      children: [
+        { id: 'a-1', name: 'PKI A1 - Ventas', value: 80, weight: 60 },
+        { id: 'a-2', name: 'PKI A2 - Satisfacción', value: 70, weight: 40 }
+      ]
+    },
+    {
+      id: 'dir-B',
+      name: 'Dirección B',
+      weight: 50,
+      children: [
+        { id: 'b-1', name: 'PKI B1 - Productividad', value: 90, weight: 50 },
+        { id: 'b-2', name: 'PKI B2 - Rotación', value: 60, weight: 50 }
+      ]
+    }
+  ]
+};
+
+// --- Función para calcular valor ponderado ---
+function calcularValorNodo(nodo) {
+  if (!nodo.children) {
+    return nodo.value;
+  }
+  let total = 0;
+  let totalPesos = nodo.children.reduce((suma, h) => suma + h.weight, 0) || 1;
+  nodo.children.forEach(hijo => {
+    total += (hijo.weight / totalPesos) * calcularValorNodo(hijo);
+  });
+  return total;
+}
+
+// --- Renderizado ---
+function render() {
+  const container = document.getElementById('app');
+  container.innerHTML = '';
+
+  const titulo = document.createElement('h3');
+  titulo.textContent = SAMPLE.name;
+  container.appendChild(titulo);
+
+  SAMPLE.children.forEach(dir => {
+    renderNodo(dir, container);
+  });
+
+  // Valor global
+  const valorGlobal = calcularValorNodo(SAMPLE);
+  const globalWrapper = document.createElement('div');
+  globalWrapper.innerHTML = `
+    <h4>Valor Global: ${valorGlobal.toFixed(2)}%</h4>
+    <div class="progress">
+      <div class="progress-bar bg-info" style="width:${valorGlobal}%;"></div>
+    </div>
+  `;
+  container.appendChild(globalWrapper);
+}
+
+function renderNodo(nodo, parent) {
+  const wrapper = document.createElement('div');
+  wrapper.classList.add('mb-3', 'p-2', 'border');
+
+  const valorNodo = calcularValorNodo(nodo).toFixed(2);
+
+  let headerHTML = `
+    <div class="d-flex justify-content-between align-items-center">
+      <strong>${nodo.name}</strong>
+      <span>${valorNodo}%</span>
+    </div>
+    <div class="progress mb-2">
+      <div class="progress-bar bg-success" style="width:${valorNodo}%;"></div>
+    </div>
+  `;
+
+  wrapper.innerHTML = headerHTML;
+  parent.appendChild(wrapper);
+
+  if (nodo.children) {
+    const totalPesos = nodo.children.reduce((suma, h) => suma + h.weight, 0);
+
+    nodo.children.forEach(hijo => {
+      const hijoWrapper = document.createElement('div');
+      hijoWrapper.classList.add('d-flex', 'align-items-center', 'mb-1');
+
+      // Input peso
+      const inputPeso = document.createElement('input');
+      inputPeso.type = 'number';
+      inputPeso.min = 0;
+      inputPeso.max = 100;
+      inputPeso.value = hijo.weight;
+      inputPeso.classList.add('form-control', 'me-2');
+      inputPeso.style.width = '70px';
+      inputPeso.addEventListener('input', (e) => {
+        hijo.weight = parseFloat(e.target.value) || 0;
+        render();
+      });
+
+      // Nombre
+      const nombreDiv = document.createElement('div');
+      nombreDiv.textContent = hijo.name;
+      nombreDiv.classList.add('flex-grow-1');
+
+      // Barra
+      const barraDiv = document.createElement('div');
+      barraDiv.classList.add('progress');
+      barraDiv.style.width = '200px';
+      const barra = document.createElement('div');
+      barra.classList.add('progress-bar', 'bg-primary');
+      barra.style.width = `${hijo.value}%`;
+      barra.textContent = `${hijo.value}%`;
+      barraDiv.appendChild(barra);
+
+      hijoWrapper.appendChild(inputPeso);
+      hijoWrapper.appendChild(nombreDiv);
+      hijoWrapper.appendChild(barraDiv);
+
+      wrapper.appendChild(hijoWrapper);
+    });
+
+    // Advertencia si no suma 100
+    if (totalPesos !== 100) {
+      const alerta = document.createElement('div');
+      alerta.classList.add('text-danger', 'mt-1');
+      alerta.textContent = `⚠ La suma de pesos es ${totalPesos}%, debe ser 100%`;
+      wrapper.appendChild(alerta);
+    }
+  }
+}
+
+render();
+</script>
+
+
+</body>
+</html>

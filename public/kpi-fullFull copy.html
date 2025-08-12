@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pesos PKI — Etapa 1</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  body { padding: 18px; background:#f8f9fa; }
+  .group-card { margin-bottom: 12px; }
+  .small-input { width: 90px; }
+  .pgr { height: 14px; }
+  .weight-ok { color: green; font-weight: 600; }
+  .weight-bad { color: red; font-weight: 600; }
+  .muted-note { font-size: .85rem; color: #666; }
+</style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <h4>Ponderación de Entidades e Indicadores</h4>
+      <p class="muted-note">Asigná los % relativos por Dirección y dentro de cada Dirección a cada PKI. Las sumas deben ser 100% por nivel.</p>
+
+      <div id="groupsContainer"></div>
+
+      <div class="d-flex gap-2 mt-3">
+        <button id="btnSave" class="btn btn-primary">Guardar en localStorage</button>
+        <button id="btnReset" class="btn btn-outline-secondary">Resetear a ejemplo</button>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <h5>Resumen Global</h5>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between">
+          <strong>Valor Global</strong>
+          <span id="globalValueLabel">0</span>
+        </div>
+        <div class="progress">
+          <div id="globalProgress" class="progress-bar" role="progressbar" style="width:0%">0%</div>
+        </div>
+      </div>
+
+      <div id="summaryList"></div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+/* ===========================
+   Datos iniciales de ejemplo
+   =========================== */
+const SAMPLE = {
+  id: 'root',
+  name: 'Organización',
+  children: [
+    {
+      id: 'dir-A',
+      name: 'Dirección A',
+      weight: 50,
+      children: [
+        { id: 'a-1', name: 'PKI A1 - Ventas', value: 80, weight: 60 },
+        { id: 'a-2', name: 'PKI A2 - Satisfacción', value: 70, weight: 40 }
+      ]
+    },
+    {
+      id: 'dir-B',
+      name: 'Dirección B',
+      weight: 50,
+      children: [
+        { id: 'b-1', name: 'PKI B1 - Productividad', value: 90, weight: 50 },
+        { id: 'b-2', name: 'PKI B2 - Rotación', value: 60, weight: 50 }
+      ]
+    }
+  ]
+};
+
+/* ===========================
+   Modelo en memoria (node tree)
+   =========================== */
+let model = null;
+
+/* Helper: normalizar array de pesos para sumar 100 con 2 decimales */
+function normalizeTo100(arr){
+  const n = arr.length;
+  if(n===0) return [];
+  const sum = arr.reduce((s,x)=>s+(Number(x)||0),0);
+  if(sum === 0){
+    // repartir uniformemente
+    const val = +(100 / n).toFixed(2);
+    const res = Array(n).fill(val);
+    // ajustar diferencia por redondeo
+    let diff = +(100 - res.reduce((s,x)=>s+x,0)).toFixed(2);
+    if(Math.abs(diff) >= 0.01) res[0] = +(res[0] + diff).toFixed(2);
+    return res;
+  } else {
+    let res = arr.map(x => +((Number(x)||0) / sum * 100).toFixed(2));
+    let roundedSum = +(res.reduce((s,x)=>s+x,0).toFixed(2));
+    let diff = +(100 - roundedSum).toFixed(2);
+    if(Math.abs(diff) >= 0.01) res[0] = +(res[0] + diff).toFixed(2);
+    return res;
+  }
+}
+
+/* Recorrer árbol y asegurarse que cada conjunto de hijos tiene weights que sumen 100 */
+function ensureWeights(node){
+  if(!node.children || node.children.length===0) return;
+  const weights = node.children.map(c => Number(c.weight) || 0);
+  const norm = normalizeTo100(weights);
+  node.children.forEach((c,i)=> c.weight = norm[i]);
+  node.children.forEach(c => ensureWeights(c));
+}
+
+/* Buscar nodo por id (DFS) */
+function findNodeById(node, id){
+  if(node.id === id) return node;
+  if(!node.children) return null;
+  for(let ch of node.children){
+    const res = findNodeById(ch, id);
+    if(res) return res;
+  }
+  return null;
+}
+
+/* Calcular valor de un nodo recursivamente (0-100) */
+function computeNodeValue(node){
+  if(!node.children || node.children.length===0) return Number(node.value) || 0;
+  let total = 0;
+  node.children.forEach(child => {
+    const v = computeNodeValue(child);
+    total += v * ((Number(child.weight)||0) / 100);
+  });
+  return +total.toFixed(2);
+}
+
+/* Normalizar pesos entre hermanos del padre del nodo */
+function normalizeSiblings(parent){
+  if(!parent || !parent.children) return;
+  const ws = parent.children.map(c => Number(c.weight)||0);
+  const norm = normalizeTo100(ws);
+  parent.children.forEach((c,i)=> c.weight = norm[i]);
+}
+
+/* UI rendering */
+function render(){
+  ensureWeights(model);
+  renderGroups();
+  renderSummary();
+}
+
+/* Render izquierdo: tarjetas por Dirección (solo 1 nivel profundo en esta etapa) */
+function renderGroups(){
+  const container = document.getElementById('groupsContainer');
+  container.innerHTML = '';
+  const groups = model.children || [];
+  groups.forEach(group => {
+    const groupCard = document.createElement('div');
+    groupCard.className = 'card group-card';
+    groupCard.innerHTML = `
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-2">
+          <div style="flex:1">
+            <h5 class="card-title mb-0">${escapeHtml(group.name)}</h5>
+            <div class="muted-note">Valor: <strong>${computeNodeValue(group)}</strong></div>
+          </div>
+          <div class="ms-3 text-end">
+            <label class="form-label mb-1">Peso (%)</label>
+            <input type="number" min="0" max="100" step="0.01" class="form-control form-control-sm small-input" data-group-weight="${group.id}" value="${Number(group.weight).toFixed(2)}">
+            <div class="mt-1">
+              <small id="sumCheck-${group.id}" class="muted-note"></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <div class="progress">
+            <div id="grpbar-${group.id}" class="progress-bar bg-info pgr" role="progressbar" style="width:0%">0%</div>
+          </div>
+        </div>
+
+        <div>
+          <table class="table table-sm">
+            <thead class="table-light">
+              <tr><th>PKI</th><th style="width:120px">Valor</th><th style="width:120px">Peso %</th><th style="width:60px"></th></tr>
+            </thead>
+            <tbody id="pkis-${group.id}">
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-secondary" data-action="equal" data-group="${group.id}">Distribuir igual</button>
+          <button class="btn btn-sm btn-outline-secondary" data-action="byvalue" data-group="${group.id}">Distribuir por valor</button>
+          <button class="btn btn-sm btn-outline-secondary" data-action="normalize" data-group="${group.id}">Normalizar 100%</button>
+          <button class="btn btn-sm btn-success ms-auto" data-action="addpki" data-group="${group.id}">+ PKI</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(groupCard);
+
+    // render PKIs rows
+    const tbody = groupCard.querySelector(`#pkis-${group.id}`);
+    tbody.innerHTML = '';
+    (group.children || []).forEach(pki => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(pki.name)}</td>
+        <td>
+          <input type="number" class="form-control form-control-sm pki-value" data-pki-value="${pki.id}" value="${Number(pki.value||0)}" min="0" max="100">
+          <div class="progress mt-1">
+            <div id="pbar-${pki.id}" class="progress-bar pgr" role="progressbar" style="width:${Number(pki.value||0)}%">${Number(pki.value||0)}%</div>
+          </div>
+        </td>
+        <td>
+          <input type="number" class="form-control form-control-sm pki-weight small-input" data-pki-weight="${pki.id}" value="${Number(pki.weight||0).toFixed(2)}" min="0" max="100" step="0.01">
+        </td>
+        <td>
+          <button class="btn btn-sm btn-outline-danger" data-action="delpki" data-group="${group.id}" data-pki="${pki.id}">×</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+
+  // attach handlers
+  attachHandlers();
+  updateBars();
+}
+
+/* Summary right column */
+function renderSummary(){
+  const list = document.getElementById('summaryList');
+  list.innerHTML = '';
+  const groups = model.children || [];
+  groups.forEach(g => {
+    const val = computeNodeValue(g);
+    const wrap = document.createElement('div');
+    wrap.className = 'mb-3';
+    wrap.innerHTML = `
+      <div class="d-flex justify-content-between">
+        <div>${escapeHtml(g.name)} <small class="text-muted">(${Number(g.weight).toFixed(2)}%)</small></div>
+        <div><strong>${val}</strong></div>
+      </div>
+      <div class="progress"><div class="progress-bar" style="width:${val}%">${val}%</div></div>
+    `;
+    list.appendChild(wrap);
+  });
+  // global
+  const gv = computeNodeValue(model);
+  const gLabel = document.getElementById('globalValueLabel');
+  gLabel.textContent = gv;
+  const gbar = document.getElementById('globalProgress');
+  gbar.style.width = `${gv}%`;
+  gbar.textContent = `${gv}%`;
+}
+
+/* Update progress bars after changes */
+function updateBars(){
+  // groups
+  (model.children || []).forEach(g => {
+    const gval = computeNodeValue(g);
+    const bar = document.getElementById(`grpbar-${g.id}`);
+    if(bar){
+      bar.style.width = `${gval}%`;
+      bar.textContent = `${gval}%`;
+    }
+    // pkis
+    (g.children||[]).forEach(p => {
+      const pval = Number(p.value||0);
+      const pbar = document.getElementById(`pbar-${p.id}`);
+      if(pbar){
+        pbar.style.width = `${pval}%`;
+        pbar.textContent = `${pval}%`;
+      }
+    });
+  });
+
+  // check weights of each group's PKIs sum
+  (model.children||[]).forEach(g => {
+    const sum = (g.children||[]).reduce((s,x)=>s+(Number(x.weight)||0),0);
+    const el = document.getElementById(`sumCheck-${g.id}`);
+    if(el){
+      el.textContent = `Suma pesos PKIs: ${sum.toFixed(2)}%`;
+      el.className = sum===100 ? 'weight-ok' : 'weight-bad';
+    }
+  });
+}
+
+/* Attach event handlers to dynamic elements */
+function attachHandlers(){
+  // group weight changes (top-level)
+  document.querySelectorAll('input[data-group-weight]').forEach(inp=>{
+    inp.oninput = (ev)=>{
+      const groupId = inp.getAttribute('data-group-weight');
+      const node = findNodeById(model, groupId);
+      if(!node) return;
+      node.weight = Number(inp.value) || 0;
+      // normalize among top-level siblings
+      normalizeSiblings(model);
+      render(); // re-render to show normalized values
+    };
+  });
+
+  // pki value change
+  document.querySelectorAll('.pki-value').forEach(inp=>{
+    inp.oninput = (ev)=>{
+      const pkiId = inp.getAttribute('data-pki-value');
+      const node = findNodeById(model, pkiId);
+      if(!node) return;
+      node.value = Number(inp.value) || 0;
+      updateBars();
+      renderSummary();
+    };
+  });
+
+  // pki weight change
+  document.querySelectorAll('.pki-weight').forEach(inp=>{
+    inp.oninput = (ev)=>{
+      const pkiId = inp.getAttribute('data-pki-weight');
+      const node = findNodeById(model, pkiId);
+      if(!node) return;
+      node.weight = Number(inp.value) || 0;
+      // normalize siblings (parent)
+      const parent = nodeParent(node.id);
+      normalizeSiblings(parent);
+      render(); // re-render since normalization happened
+    };
+  });
+
+  // buttons inside group (distribute, normalize, add)
+  document.querySelectorAll('[data-action]').forEach(btn=>{
+    btn.onclick = (ev)=>{
+      const action = btn.getAttribute('data-action');
+      const groupId = btn.getAttribute('data-group');
+      if(action === 'equal'){
+        distributeEqual(groupId);
+      } else if(action === 'byvalue'){
+        distributeByValue(groupId);
+      } else if(action === 'normalize'){
+        const group = findNodeById(model, groupId);
+        normalizeSiblings(group);
+        render();
+      } else if(action === 'addpki'){
+        promptAddPKI(groupId);
+      } else if(action === 'delpki'){
+        const pkiId = btn.getAttribute('data-pki');
+        removePKI(groupId, pkiId);
+      }
+    };
+  });
+}
+
+/* Find parent node (by searching tree) */
+function nodeParent(childId, node = model, parent = null){
+  if(node.id === childId) return parent;
+  if(node.children) {
+    for(let ch of node.children){
+      const res = nodeParent(childId, ch, node);
+      if(res) return res;
+    }
+  }
+  return null;
+}
+
+/* Distribuir pesos iguales entre PKIs de un grupo */
+function distributeEqual(groupId){
+  const group = findNodeById(model, groupId);
+  if(!group || !group.children || group.children.length===0) return;
+  const n = group.children.length;
+  const per = +(100 / n).toFixed(2);
+  group.children.forEach((c,i)=> c.weight = per);
+  // fix rounding leftover
+  const s = group.children.reduce((a,c)=>a+(c.weight||0),0);
+  const diff = +(100 - s).toFixed(2);
+  if(Math.abs(diff) >= 0.01) group.children[0].weight = +(group.children[0].weight + diff).toFixed(2);
+  render();
+}
+
+/* Distribuir pesos proporcionales al valor actual */
+function distributeByValue(groupId){
+  const group = findNodeById(model, groupId);
+  if(!group || !group.children || group.children.length===0) return;
+  const vals = group.children.map(c => Number(c.value)||0);
+  const sum = vals.reduce((a,b)=>a+b,0);
+  if(sum === 0){
+    distributeEqual(groupId);
+    return;
+  }
+  group.children.forEach((c,i)=>{
+    c.weight = +((Number(c.value)||0) / sum * 100).toFixed(2);
+  });
+  // fix rounding diff
+  const s = group.children.reduce((a,c)=>a+(c.weight||0),0);
+  const diff = +(100 - s).toFixed(2);
+  if(Math.abs(diff) >= 0.01) group.children[0].weight = +(group.children[0].weight + diff).toFixed(2);
+  render();
+}
+
+/* Prompt simple para add PKI */
+function promptAddPKI(groupId){
+  const name = prompt('Nombre del nuevo PKI:');
+  if(!name) return;
+  const valStr = prompt('Valor actual del PKI (0-100). Podés editarlo luego:', '0');
+  let val = Number(valStr);
+  if(isNaN(val) || val < 0) val = 0;
+  const group = findNodeById(model, groupId);
+  if(!group) return;
+  // create simple unique id
+  const newId = groupId + '-pki-' + Date.now();
+  group.children.push({ id: newId, name: name, value: val, weight: 0 });
+  // opcional: normalizar para distribuir a 100
+  normalizeSiblings(group);
+  render();
+}
+
+/* Remove PKI */
+function removePKI(groupId, pkiId){
+  const group = findNodeById(model, groupId);
+  if(!group) return;
+  group.children = (group.children||[]).filter(c => c.id !== pkiId);
+  // normalizar para que sumen 100
+  normalizeSiblings(group);
+  render();
+}
+
+/* Save/Load localStorage */
+function saveToLocal(){
+  localStorage.setItem('pki-weights-model', JSON.stringify(model));
+  alert('Guardado en localStorage.');
+}
+
+function loadFromLocal(){
+  const s = localStorage.getItem('pki-weights-model');
+  if(!s) return false;
+  try{
+    model = JSON.parse(s);
+    ensureWeights(model);
+    return true;
+  }catch(e){ return false; }
+}
+
+/* Reset model from sample */
+function resetModel(){
+  model = JSON.parse(JSON.stringify(SAMPLE));
+  ensureWeights(model);
+  render();
+}
+
+/* Escapar texto */
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+}
+
+/* Inicialización */
+(function init(){
+  if(!loadFromLocal()){
+    resetModel();
+  } else {
+    render();
+  }
+  document.getElementById('btnSave').onclick = saveToLocal;
+  document.getElementById('btnReset').onclick = ()=>{
+    if(confirm('Resetear a los datos de ejemplo (se perderán los cambios no guardados)?')){
+      localStorage.removeItem('pki-weights-model');
+      resetModel();
+    }
+  };
+})();
+
+</script>
+
+</body>
+</html>
