@@ -53,86 +53,6 @@
     <link rel="stylesheet" href="../css/adminlte.css" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
-
-    <style>
-        /* Contenedor de cada nodo */
-        .node-container {
-            border-left: 1px solid #dee2e6;
-            padding: 0.5rem 0.5rem;
-            margin-bottom: 0.5rem;
-            /* border-radius: 10px; */
-            /* border-radius: 0.25rem; */
-            /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); */
-        }
-
-        .node-container.list-group-item {
-            border: none;
-            /* Quita el borde */
-            background: none;
-            /* Opcional: quita el fondo */
-            box-shadow: none;
-            /* Opcional: quita sombra si la hubiera */
-        }
-
-
-        /* Cabecera con ícono y título */
-        .node-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        /* Ícono de nodo */
-        .node-header i {
-            width: 16px;
-            text-align: center;
-        }
-
-        /* Input de peso */
-        .weight-input {
-            width: 75px;
-            text-align: right;
-        }
-
-        /* Barra de progreso */
-        .progress {
-            height: 6px;
-            background-color: #e9ecef;
-            border-radius: 3px;
-            margin-top: 4px;
-        }
-
-        .progress-bar {
-            height: 100%;
-            transition: width 0.3s ease;
-        }
-
-        /* Mensaje de error */
-        .error-msg {
-            font-size: 0.8rem;
-            color: var(--bs-danger);
-            margin-top: 4px;
-        }
-
-        /* Colores diferenciados */
-        .node-sector .node-header {
-            background-color: #d7f6f7;
-            /* celeste suave */
-            font-weight: 600;
-        }
-
-        .node-indicador .node-header {
-            background-color: #fff;
-        }
-
-        /* Sangría según nivel */
-        .children-container {
-            margin-left: 40px;
-            margin-top: 0.5rem;
-        }
-    </style>
-
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -391,7 +311,7 @@
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Ponderación de Entidades e Indicadores</h3>
+                            <h3 class="mb-0">Nombre de la ficha</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -409,7 +329,7 @@
                             <!--begin::Latest Order Widget-->
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
-                                    <h3 class="card-title">Asigne el valor relativo a cada entidad/indicador</h3>
+                                    <h3 class="card-title">Nombre dentro de la ficha</h3>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                                             <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -423,7 +343,37 @@
                                 <!-- /.card-header -->
                                 <div class="card-body p-0">
                                     <div class="table-responsive">
-                                        <div id="treeContainer" class="list-group"></div>
+                                        <table class="table m-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nivel 1</th>
+                                                    <th>Nivel 2</th>
+                                                    <th>Nivel 3</th>
+                                                    <th>Responsable</th>
+                                                    <th>✉</th>
+                                                    <th>Indicadores</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Dirección General</td>
+                                                    <td>Gerencia Operativa</td>
+                                                    <td>Depart. Suministros</td>
+                                                    <td>Raul Dieguez</td>
+                                                    <td>
+                                                        <div class="dropdown user-menu">
+                                                            <button type="button" class="btn-user-info"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#detalleUsuarioModal"
+                                                                aria-label="Ver información del usuario">
+                                                                <i class="bi bi-person-lines-fill"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td>#SUP010, #SAB200, #OTC256</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                     <!-- /.table-responsive -->
                                 </div>
@@ -438,7 +388,7 @@
                 <!--end::Container-->
             </div>
             <!--end::App Content-->
-
+            
             <footer class="main-footer text-center">
                 <strong>© 2025 - myResultIQ 1.0</strong>
             </footer>
@@ -486,8 +436,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Proceso de Logout -->
     <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
@@ -498,255 +446,6 @@
             window.location.href = 'index.html';
         });
     </script>
-
-    <script>
-
-        // 🎲🎲🎲 Arma el árbol
-        async function fetchData() {
-            const response = await fetch('/api/arbol-jstree');
-            const flatNodes = await response.json();
-
-            const sectores = flatNodes.filter(n => n.type === 'sector');
-            const indicadores = flatNodes.filter(n => n.type === 'indicador');
-
-            const sectorMap = {};
-            sectores.forEach(s => {
-                sectorMap[s.id] = {
-                    ...s,
-                    children: [],
-                    weight: Number(s.weight) || 0,  // usar porcentaje real de la BD
-                    value: 0
-                };
-            });
-
-            // Asignar sectores hijos
-            sectores.forEach(s => {
-                if (s.parent !== "#") {
-                    if (sectorMap[s.parent]) {
-                        sectorMap[s.parent].children.push(sectorMap[s.id]);
-                        sectorMap[s.id].parentNode = sectorMap[s.parent];
-                    }
-                }
-            });
-
-            // Asignar indicadores a sectores
-            indicadores.forEach(ind => {
-                const parentSector = sectorMap[ind.parent];
-                if (parentSector) {
-                    const indNode = {
-                        ...ind,
-                        weight: Number(ind.weight) || 0, // usar porcentaje real de la BD
-                        value: 0,
-                        children: [],
-                        parentNode: parentSector
-                    };
-                    parentSector.children.push(indNode);
-                }
-            });
-
-            // Buscar raíces
-            const roots = sectores
-                .filter(s => s.parent === "#")
-                .map(s => sectorMap[s.id]);
-
-            return {
-                id: 'root',
-                name: 'Organización',
-                weight: 100,
-                value: 0,
-                children: roots,
-                parentNode: null
-            };
-        }
-
-        // 🎲🎲🎲 Guarda % en base de datos
-        async function updateWeightInDB(nodeId, type, newWeight) {
-            try {
-                let url;
-                let body;
-
-                if (type === 'sector') {
-                    url = `/api/sectores/${nodeId}`;
-                    body = { sector_porcentual: newWeight };
-                } else if (type === 'indicador') {
-                    url = `/api/indicadores/${nodeId}`;
-                    body = { peso_porcentual: newWeight };
-                } else {
-                    console.warn("Tipo de nodo desconocido:", type);
-                    return;
-                }
-
-                const response = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error al actualizar en la BD: ${response.statusText}`);
-                }
-
-                console.log(`✅ Peso actualizado para ${type} ${nodeId}: ${newWeight}%`);
-            } catch (err) {
-                console.error("❌ No se pudo actualizar en la BD:", err);
-            }
-        }
-
-
-        // 🎲🎲🎲 Calcula valores y verifica pesos
-        function calculateValues(node) {
-            if (node.children && node.children.length > 0) {
-                let total = 0;
-                node.children.forEach(child => {
-                    calculateValues(child);
-                    total += (child.value || 0) * (child.weight || 0) / 100;
-                });
-                node.value = total;
-            }
-        }
-
-
-        function checkWeights(parentNode) {
-            let sum = 0;
-            if (!parentNode.children) return true;
-            parentNode.children.forEach(c => {
-                sum += Number(c.weight) || 0;
-            });
-            return Math.abs(sum - 100) < 0.001;
-        }
-
-
-        function buildTree(node, parentNode = null) {
-            node.parentNode = parentNode;
-            const container = document.createElement('div');
-            container.className = 'list-group-item node-container node-' + node.type; // usa estilo AdminLTE/list-group
-
-            // Cabecera con input y nombre
-            const header = document.createElement('div');
-            header.className = 'node-header';
-
-            // Ícono por tipo
-            const icon = document.createElement('i');
-            icon.className = node.type === 'sector' ? 'fas fa-sitemap' : 'fas fa-chart-line';
-            header.appendChild(icon);
-
-            if (node.id !== 'root') {
-                const weightInput = document.createElement('input');
-                weightInput.type = 'number';
-                weightInput.min = 0;
-                weightInput.max = 100;
-                weightInput.step = 0.01; // Permite decimales
-                weightInput.value = node.weight.toFixed(2);
-                weightInput.className = 'form-control form-control-sm weight-input';
-                weightInput.title = 'Peso relativo (%)';
-                header.appendChild(weightInput);
-
-                weightInput.addEventListener('change', async () => {
-                    let val = Number(weightInput.value);
-                    if (isNaN(val) || val < 0) val = 0;
-                    if (val > 100) val = 100;
-                    node.weight = val;
-
-                    // Recalcular valores
-                    calculateValues(getRootNode(node));
-
-                    // Control de 100%
-                    if (!checkWeights(node.parentNode)) {
-                        node.parentNode._errorMsg.style.display = 'block';
-                    } else {
-                        node.parentNode._errorMsg.style.display = 'none';
-                    }
-
-                    // Guardar en BD
-                    try {
-                        await fetch(`/api/update-weight`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                id: node.id,
-                                type: node.type, // 'sector' o 'indicador'
-                                weight: val
-                            })
-                        });
-                    } catch (err) {
-                        console.error('Error guardando en BD', err);
-                    }
-
-                    refreshUI();
-                });
-
-                node._weightInput = weightInput;
-            }
-
-            const title = document.createElement('span');
-            title.textContent = node.name || node.text;
-            header.appendChild(title);
-
-            container.appendChild(header);
-
-            // Barra de progreso
-            const progress = document.createElement('div');
-            progress.className = 'progress';
-            const bar = document.createElement('div');
-            bar.className = 'progress-bar';
-            bar.style.width = `${node.value?.toFixed(1) || 0}%`;
-            // progress.appendChild(bar);
-            // container.appendChild(progress);
-
-            // Mensaje de error (solo para nodos con hijos)
-            if (node.children && node.children.length > 0) {
-                const errorMsg = document.createElement('div');
-                errorMsg.className = 'error-msg';
-                errorMsg.textContent = 'La suma de los pesos de este nivel debe ser 100%';
-                errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
-                container.appendChild(errorMsg);
-                node._errorMsg = errorMsg;
-            }
-
-            // Hijos recursivos
-            if (node.children && node.children.length > 0) {
-                const childrenContainer = document.createElement('div');
-                childrenContainer.className = 'children-container'; // <-- aquí
-                node.children.forEach(child => {
-                    childrenContainer.appendChild(buildTree(child, node));
-                });
-                container.appendChild(childrenContainer);
-            }
-
-            node._progressBar = bar;
-            return container;
-        }
-
-        function refreshUI() {
-            function updateNode(node) {
-                if (node._progressBar) { node._progressBar.style.width = `${node.value?.toFixed(1) || 0}%`; }
-                if (node._weightInput) { node._weightInput.value = node.weight.toFixed(2); }
-                if (node._errorMsg) node._errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
-                if (node.children && node.children.length > 0) { node.children.forEach(updateNode); }
-            }
-            updateNode(window.treeRoot);
-        }
-
-        function getRootNode(node) {
-            while (node.parentNode) {
-                node = node.parentNode;
-            }
-            return node;
-        }
-
-        // MAIN
-        (async () => {
-            window.treeRoot = await fetchData();
-            calculateValues(window.treeRoot);
-            const container = document.getElementById('treeContainer');
-            container.innerHTML = '';
-            container.appendChild(buildTree(window.treeRoot));
-        })();
-    </script>
-
-
 
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->

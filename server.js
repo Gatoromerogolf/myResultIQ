@@ -183,14 +183,14 @@ app.post('/api/indicadores', async (req, res) => {
 
 // // 🚫🚫🚫 Eliminar indicador
 app.delete('/api/indicadores/:codigo', async (req, res) => {
-  try {
-    const { codigo } = req.params;
-    await pool.query('DELETE FROM indicadores WHERE codigo_identificatorio = ?', [codigo]);
-    res.sendStatus(200);
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
+    try {
+        const { codigo } = req.params;
+        await pool.query('DELETE FROM indicadores WHERE codigo_identificatorio = ?', [codigo]);
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
 });
 
 // // 🚫🚫🚫 Crear usuario con imagen
@@ -272,14 +272,14 @@ app.get('/usuarios/foto/:legajo', async (req, res) => {
 
 // // 🚫🚫🚫 Eliminar usuario
 app.delete('/usuarios/:legajo', async (req, res) => {
-  try {
-    const { legajo } = req.params;
-    await pool.query('DELETE FROM usuarios WHERE legajo = ?', [legajo]);
-    res.sendStatus(200);
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
+    try {
+        const { legajo } = req.params;
+        await pool.query('DELETE FROM usuarios WHERE legajo = ?', [legajo]);
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
 });
 
 // // 🚫🚫🚫 Modificar usuario
@@ -387,13 +387,13 @@ app.get('/api/arbol-jstree', async (req, res) => {
     try {
         // 1. Traer sectores
         const [sectores] = await pool.query(`
-            SELECT id, nombre, sector_padre_id
+            SELECT id, nombre, sector_padre_id, sector_porcentual
             FROM sectores
         `);
 
         // 2. Traer indicadores
         const [indicadores] = await pool.query(`
-            SELECT id, codigo_identificatorio, nombre, unidad_funcional_id
+            SELECT id, codigo_identificatorio, nombre, unidad_funcional_id, peso_porcentual
             FROM indicadores
         `);
 
@@ -405,6 +405,7 @@ app.get('/api/arbol-jstree', async (req, res) => {
                 id: `sector-${sec.id}`,
                 parent: sec.sector_padre_id ? `sector-${sec.sector_padre_id}` : "#",
                 text: sec.nombre,
+                weight: sec.sector_porcentual ?? 0, // usar valor guardado
                 icon: "fas fa-sitemap", // ícono de sector
                 type: "sector"
             });
@@ -416,6 +417,7 @@ app.get('/api/arbol-jstree', async (req, res) => {
                 id: `indicador-${ind.id}`,
                 parent: `sector-${ind.unidad_funcional_id}`,
                 text: `${ind.nombre} (${ind.codigo_identificatorio})`,
+                weight: ind.peso_porcentual ?? 0, // usar valor guardado
                 icon: "fas fa-chart-line", // ícono de indicador
                 type: "indicador"
             });
@@ -586,6 +588,43 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
 });
 
 
+// 🚀 Actualiza porcentajes de sector e indicador
+app.post('/api/update-weight', async (req, res) => {
+    const { id, weight } = req.body;
+
+    if (!id || typeof weight !== 'number') {
+        return res.status(400).json({ error: 'Datos inválidos' });
+    }
+
+    // id viene como "sector-29" o "indicador-15"
+    const [type, rawId] = id.split('-');
+    const numericId = parseInt(rawId, 10);
+
+    if (!numericId) {
+        return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    try {
+        if (type === 'sector') {
+            await pool.query(
+                'UPDATE sectores SET sector_porcentual = ? WHERE id = ?',
+                [weight, numericId]
+            );
+        } else if (type === 'indicador') {
+            await pool.query(
+                'UPDATE indicadores SET peso_porcentual = ? WHERE id = ?',
+                [weight, numericId]
+            );
+        } else {
+            return res.status(400).json({ error: 'Tipo inválido' });
+        }
+
+        res.sendStatus(200);
+    } catch (err) {
+        console.error('Error actualizando peso:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
 
 
 

@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>myResultIQ | Ind Asig</title>
+    <title>myResultIQ | Dashboard</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE v4 | Dashboard" />
@@ -55,84 +55,71 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
 
     <style>
-        /* Contenedor de cada nodo */
-        .node-container {
-            border-left: 1px solid #dee2e6;
-            padding: 0.5rem 0.5rem;
-            margin-bottom: 0.5rem;
-            /* border-radius: 10px; */
-            /* border-radius: 0.25rem; */
-            /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); */
+        #tree {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
         }
 
-        .node-container.list-group-item {
-            border: none;
-            /* Quita el borde */
-            background: none;
-            /* Opcional: quita el fondo */
-            box-shadow: none;
-            /* Opcional: quita sombra si la hubiera */
+        #detalle {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
         }
 
-
-        /* Cabecera con ícono y título */
-        .node-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
+        .detalle-titulo {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
 
-        /* Ícono de nodo */
-        .node-header i {
-            width: 16px;
-            text-align: center;
+        .detalle-label {
+            font-weight: bold;
         }
 
-        /* Input de peso */
-        .weight-input {
-            width: 75px;
-            text-align: right;
+        #arbol {
+            /* max-height: 90vh;
+            overflow-y: auto; */
+            max-height: none !important;
+            height: auto !important;
+            overflow: visible !important;
+            font-size: 18px;
         }
 
-        /* Barra de progreso */
-        .progress {
-            height: 6px;
-            background-color: #e9ecef;
-            border-radius: 3px;
-            margin-top: 4px;
+        /* Color permanente para indicadores y sectores (texto + ícono) */
+        #arbol .jstree-anchor:has(.fa-chart-line) {
+            color: #28a745 !important;
+            /* verde */
         }
 
-        .progress-bar {
-            height: 100%;
-            transition: width 0.3s ease;
+        #arbol .jstree-anchor:has(.fa-sitemap) {
+            color: #444546 !important;
+            /* azul */
         }
 
-        /* Mensaje de error */
-        .error-msg {
-            font-size: 0.8rem;
-            color: var(--bs-danger);
-            margin-top: 4px;
+        /* Fondo solo cuando está seleccionado */
+        #arbol .jstree-clicked:has(.fa-chart-line) {
+            background-color: #e6f4ea !important;
+            border-radius: 4px;
+            padding: 2px 4px;
         }
 
-        /* Colores diferenciados */
-        .node-sector .node-header {
-            background-color: #d7f6f7;
-            /* celeste suave */
-            font-weight: 600;
+        #arbol .jstree-clicked:has(.fa-sitemap) {
+            background-color: #d9eaf7 !important;
+            border-radius: 4px;
+            padding: 2px 4px;
         }
 
-        .node-indicador .node-header {
-            background-color: #fff;
+        /* Íconos siempre mantienen color */
+        #arbol .jstree-anchor i.fa-chart-line {
+            color: #28a745 !important;
         }
 
-        /* Sangría según nivel */
-        .children-container {
-            margin-left: 40px;
-            margin-top: 0.5rem;
+        #arbol .jstree-anchor i.fa-sitemap {
+            color: #007bff !important;
+            margin-right: 8px;
+            margin-bottom: 4px;
         }
     </style>
-
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -157,13 +144,6 @@
                 <!--end::Start Navbar Links-->
                 <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
-                    <!--begin::Navbar Search-->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                            <i class="bi bi-search"></i>
-                        </a>
-                    </li> -->
-                    <!--end::Navbar Search-->
 
                     <!--begin::Messages Dropdown Menu-->
                     <li class="nav-item dropdown">
@@ -312,17 +292,19 @@
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light">
             <!--begin::Sidebar Brand-->
             <div class="sidebar-brand">
+                <!--begin::Brand Link-->
+                <!-- <a href="./index.html" class="brand-link"> -->
                 <!--begin::Brand Image-->
                 <img src="dist/images/leon.png" alt="León blanco símbolo de la aplicación" class="fade-in"
                     style="width: 40px; border-radius: 50%; margin-bottom: 0px;">
                 <!--end::Brand Image-->
-
                 <!--begin::Brand Text-->
                 <span class="brand-text fw-light fs-5">myResultIQ 1</span>
                 <!--end::Brand Text-->
+                </a>
+                <!--end::Brand Link-->
             </div>
             <!--end::Sidebar Brand-->
-
             <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
@@ -334,7 +316,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-operaciones.html" class="nav-link active">
+                            <a href="kpi-operaciones.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores Asignados</p>
                             </a>
@@ -348,7 +330,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link">
+                            <a href="kpi-usuarios.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
                             </a>
@@ -374,6 +356,41 @@
                                 <p>Destinos - Entidades</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-ponderado.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Ponderado</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-fullFull.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Full Full</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-fullFull copy 3.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Full copy 3</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-fullFull 4.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Full Full 4</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-fullFull copy.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Full copy</p>
+                            </a>
+                        </li>
                     </ul>
                     <!--end::Sidebar Menu-->
                 </nav>
@@ -391,7 +408,8 @@
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Ponderación de Entidades e Indicadores</h3>
+                            <h3 class="mb-0">Indicadores por Destino</h3>
+                            <!-- <div id="tree"></div> -->
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -401,50 +419,54 @@
                         </div>
                     </div>
                     <!--end::Row-->
-
-                    <!--begin::Row-->
-                    <div class="row">
-                        <!-- Start col -->
-                        <div class="col-md-12">
-                            <!--begin::Latest Order Widget-->
-                            <div class="card card-primary card-outline">
-                                <div class="card-header">
-                                    <h3 class="card-title">Asigne el valor relativo a cada entidad/indicador</h3>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                    <div class="table-responsive">
-                                        <div id="treeContainer" class="list-group"></div>
-                                    </div>
-                                    <!-- /.table-responsive -->
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!--end::Row-->
                 </div>
-                <!--end::Container-->
             </div>
-            <!--end::App Content-->
 
-            <footer class="main-footer text-center">
-                <strong>© 2025 - myResultIQ 1.0</strong>
-            </footer>
-        </main>
-        <!--end::App nain-->
+            <!-- <div id="contenedor-principal" style="display: flex; gap: 20px;"></div> -->
 
+            <section class="content" id="estructuraEntidades" style="display: block; margin-left: 10px;">
+                <div class="container-fluid">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Estructura de Entidades</h3>
+                            <div class="card-tools">
+                                <div class="card-tools">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="contenedor-principal">
+                            <div id="arbol" style="flex: 1; min-width: 300px; max-width: 700px;  padding: 10px;">
+                                <!-- jsTree se renderiza aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="content mt-3" id="InfoIndicador" style="display: block; margin-left: 10px;">
+                <div class="container-fluid">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Información del indicador</h3>
+                            <div class="card-tools">
+                                <div class="card-tools">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="detalle" style="flex: 2;  padding: 10px; margin-left: 20px;">
+                            <p>Seleccione un indicador para ver el detalle aquí.</p>
+                        </div>
+                    </div>
+                </div>
+    </div>
+    <!-- </div> -->
+    </section>
+
+    <footer class="main-footer text-center">
+        <strong>© 2025 - myResultIQ 1.0</strong>
+    </footer>
+    </main>
+    <!--end::App nain-->
     </div>
     <!--end::App Wrapper-->
 
@@ -467,7 +489,7 @@
         </div>
     </div>
     <!--end::Modal del usuario-->
-
+    </div>
     <!-- Modal de Confirmación de Logout -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -486,8 +508,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Proceso de Logout -->
     <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
@@ -499,256 +519,199 @@
         });
     </script>
 
+    <!-- Modal -->
+    <div class="modal fade" id="indicadoresModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Indicadores</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaIndicadores"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--begin::Script-->
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+
     <script>
+        // Datos de ejemplo
+        // const indicadores = [
+        //     { id: 'ind1', nombre: 'Tiempo de ciclo de compra', responsable: 'Juan', nodo: 'u1' },
+        //     { id: 'ind2', nombre: 'Nivel de satisfacción del cliente', responsable: 'Ana', nodo: 'u1' },
+        //     { id: 'ind3', nombre: 'Tasa de rotación del personal', responsable: 'Luis', nodo: 'u2' },
+        //     { id: 'ind4', nombre: 'Rentabilidad operativa', responsable: 'María', nodo: 'u2' },
+        //     { id: 'ind5', nombre: 'Margen bruto', responsable: 'José', nodo: 'u3' },
+        //     { id: 'ind6', nombre: 'Productividad operativa', responsable: 'Laura', nodo: 'u3' },
+        // ];
 
-        // 🎲🎲🎲 Arma el árbol
-        async function fetchData() {
-            const response = await fetch('/api/arbol-jstree');
-            const flatNodes = await response.json();
+        // const estructura = [
+        //     { id: 'a1', parent: '#', text: 'Área Funcional A', type: 'area' },
+        //     { id: 'u1', parent: 'a1', text: 'Unidad 1', type: 'unidad' },
+        //     { id: 'u2', parent: 'a1', text: 'Unidad 2', type: 'unidad' },
+        //     { id: 'u3', parent: 'a1', text: 'Unidad 3', type: 'unidad' },
+        // ];
 
-            const sectores = flatNodes.filter(n => n.type === 'sector');
-            const indicadores = flatNodes.filter(n => n.type === 'indicador');
+        // Devuelve el array con todos los indicadores de un nodo y sus descendientes
+        function contarIndicadores(nodoId) {
+            const arbol = $.jstree.reference('#tree'); // instancia jsTree
+            const nodo = arbol.get_node(nodoId);
 
-            const sectorMap = {};
-            sectores.forEach(s => {
-                sectorMap[s.id] = {
-                    ...s,
-                    children: [],
-                    weight: Number(s.weight) || 0,  // usar porcentaje real de la BD
-                    value: 0
-                };
+            if (!nodo) return [];
+
+            const hijos = nodo.children_d; // descendientes
+            const idsNodos = [nodoId, ...hijos];
+
+            // Filtrar indicadores que pertenezcan a este nodo o sus hijos
+            return indicadores.filter(ind => idsNodos.includes(ind.nodo));
+        }
+
+
+
+        // Agregar cantidades al texto de cada nodo
+        // Actualiza el texto del árbol con la cantidad de indicadores acumulados
+        function actualizarContadores() {
+            estructura.forEach(nodo => {
+                const listaIndicadores = contarIndicadores(nodo.id);
+                const total = listaIndicadores.length;
+                nodo.text = nodo.text.split(' (')[0] + ` (${total})`;
             });
 
-            // Asignar sectores hijos
-            sectores.forEach(s => {
-                if (s.parent !== "#") {
-                    if (sectorMap[s.parent]) {
-                        sectorMap[s.parent].children.push(sectorMap[s.id]);
-                        sectorMap[s.id].parentNode = sectorMap[s.parent];
-                    }
-                }
+            // Refrescar el árbol para mostrar los textos actualizados
+            const arbol = $('#tree').jstree(true);
+            if (arbol) {
+                arbol.settings.core.data = estructura; // reasignar datos actualizados
+                arbol.refresh();
+            }
+        }
+
+        // Inicializar jsTree
+        // $('#tree')
+        //     .on('ready.jstree', function () {
+        //         actualizarContadores();
+        //     })
+        //     .jstree({
+        //         core: {
+        //             data: estructura // o como se llame tu variable con los nodos
+        //         }
+        //     });
+
+        // Evento al hacer click en un nodo
+        $('#tree').on("select_node.jstree", function (e, data) {
+            const lista = contarIndicadores(data.node.id);
+            const tbody = document.getElementById("tablaIndicadores");
+            tbody.innerHTML = '';
+            lista.forEach(ind => {
+                tbody.innerHTML += `<tr>
+                <td>${ind.id}</td>
+                <td>${ind.nombre}</td>
+                <td>${ind.responsable}</td>
+            </tr>`;
             });
-
-            // Asignar indicadores a sectores
-            indicadores.forEach(ind => {
-                const parentSector = sectorMap[ind.parent];
-                if (parentSector) {
-                    const indNode = {
-                        ...ind,
-                        weight: Number(ind.weight) || 0, // usar porcentaje real de la BD
-                        value: 0,
-                        children: [],
-                        parentNode: parentSector
-                    };
-                    parentSector.children.push(indNode);
-                }
-            });
-
-            // Buscar raíces
-            const roots = sectores
-                .filter(s => s.parent === "#")
-                .map(s => sectorMap[s.id]);
-
-            return {
-                id: 'root',
-                name: 'Organización',
-                weight: 100,
-                value: 0,
-                children: roots,
-                parentNode: null
-            };
-        }
-
-        // 🎲🎲🎲 Guarda % en base de datos
-        async function updateWeightInDB(nodeId, type, newWeight) {
-            try {
-                let url;
-                let body;
-
-                if (type === 'sector') {
-                    url = `/api/sectores/${nodeId}`;
-                    body = { sector_porcentual: newWeight };
-                } else if (type === 'indicador') {
-                    url = `/api/indicadores/${nodeId}`;
-                    body = { peso_porcentual: newWeight };
-                } else {
-                    console.warn("Tipo de nodo desconocido:", type);
-                    return;
-                }
-
-                const response = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error al actualizar en la BD: ${response.statusText}`);
-                }
-
-                console.log(`✅ Peso actualizado para ${type} ${nodeId}: ${newWeight}%`);
-            } catch (err) {
-                console.error("❌ No se pudo actualizar en la BD:", err);
-            }
-        }
-
-
-        // 🎲🎲🎲 Calcula valores y verifica pesos
-        function calculateValues(node) {
-            if (node.children && node.children.length > 0) {
-                let total = 0;
-                node.children.forEach(child => {
-                    calculateValues(child);
-                    total += (child.value || 0) * (child.weight || 0) / 100;
-                });
-                node.value = total;
-            }
-        }
-
-
-        function checkWeights(parentNode) {
-            let sum = 0;
-            if (!parentNode.children) return true;
-            parentNode.children.forEach(c => {
-                sum += Number(c.weight) || 0;
-            });
-            return Math.abs(sum - 100) < 0.001;
-        }
-
-
-        function buildTree(node, parentNode = null) {
-            node.parentNode = parentNode;
-            const container = document.createElement('div');
-            container.className = 'list-group-item node-container node-' + node.type; // usa estilo AdminLTE/list-group
-
-            // Cabecera con input y nombre
-            const header = document.createElement('div');
-            header.className = 'node-header';
-
-            // Ícono por tipo
-            const icon = document.createElement('i');
-            icon.className = node.type === 'sector' ? 'fas fa-sitemap' : 'fas fa-chart-line';
-            header.appendChild(icon);
-
-            if (node.id !== 'root') {
-                const weightInput = document.createElement('input');
-                weightInput.type = 'number';
-                weightInput.min = 0;
-                weightInput.max = 100;
-                weightInput.step = 0.01; // Permite decimales
-                weightInput.value = node.weight.toFixed(2);
-                weightInput.className = 'form-control form-control-sm weight-input';
-                weightInput.title = 'Peso relativo (%)';
-                header.appendChild(weightInput);
-
-                weightInput.addEventListener('change', async () => {
-                    let val = Number(weightInput.value);
-                    if (isNaN(val) || val < 0) val = 0;
-                    if (val > 100) val = 100;
-                    node.weight = val;
-
-                    // Recalcular valores
-                    calculateValues(getRootNode(node));
-
-                    // Control de 100%
-                    if (!checkWeights(node.parentNode)) {
-                        node.parentNode._errorMsg.style.display = 'block';
-                    } else {
-                        node.parentNode._errorMsg.style.display = 'none';
-                    }
-
-                    // Guardar en BD
-                    try {
-                        await fetch(`/api/update-weight`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                id: node.id,
-                                type: node.type, // 'sector' o 'indicador'
-                                weight: val
-                            })
-                        });
-                    } catch (err) {
-                        console.error('Error guardando en BD', err);
-                    }
-
-                    refreshUI();
-                });
-
-                node._weightInput = weightInput;
-            }
-
-            const title = document.createElement('span');
-            title.textContent = node.name || node.text;
-            header.appendChild(title);
-
-            container.appendChild(header);
-
-            // Barra de progreso
-            const progress = document.createElement('div');
-            progress.className = 'progress';
-            const bar = document.createElement('div');
-            bar.className = 'progress-bar';
-            bar.style.width = `${node.value?.toFixed(1) || 0}%`;
-            // progress.appendChild(bar);
-            // container.appendChild(progress);
-
-            // Mensaje de error (solo para nodos con hijos)
-            if (node.children && node.children.length > 0) {
-                const errorMsg = document.createElement('div');
-                errorMsg.className = 'error-msg';
-                errorMsg.textContent = 'La suma de los pesos de este nivel debe ser 100%';
-                errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
-                container.appendChild(errorMsg);
-                node._errorMsg = errorMsg;
-            }
-
-            // Hijos recursivos
-            if (node.children && node.children.length > 0) {
-                const childrenContainer = document.createElement('div');
-                childrenContainer.className = 'children-container'; // <-- aquí
-                node.children.forEach(child => {
-                    childrenContainer.appendChild(buildTree(child, node));
-                });
-                container.appendChild(childrenContainer);
-            }
-
-            node._progressBar = bar;
-            return container;
-        }
-
-        function refreshUI() {
-            function updateNode(node) {
-                if (node._progressBar) { node._progressBar.style.width = `${node.value?.toFixed(1) || 0}%`; }
-                if (node._weightInput) { node._weightInput.value = node.weight.toFixed(2); }
-                if (node._errorMsg) node._errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
-                if (node.children && node.children.length > 0) { node.children.forEach(updateNode); }
-            }
-            updateNode(window.treeRoot);
-        }
-
-        function getRootNode(node) {
-            while (node.parentNode) {
-                node = node.parentNode;
-            }
-            return node;
-        }
-
-        // MAIN
-        (async () => {
-            window.treeRoot = await fetchData();
-            calculateValues(window.treeRoot);
-            const container = document.getElementById('treeContainer');
-            container.innerHTML = '';
-            container.appendChild(buildTree(window.treeRoot));
-        })();
+            new bootstrap.Modal(document.getElementById('indicadoresModal')).show();
+        });
     </script>
 
 
+    <script>
+        $(function () {
+            // Inicializar jsTree con carga lazy
+            $('#arbol').jstree({
+                core: {
+                    data: function (node, cb) {
+                        $.getJSON('/api/arbol-jstree-lazy', { parent: node.id })
+                            .done(function (data) {
+                                cb(data);
+                            });
+                    }
+                },
+                plugins: ["types", "search", "wholerow"],
+                types: {
+                    sector: { icon: "fas fa-sitemap text-primary" },
+                    indicador: { icon: "fas fa-chart-line text-success" }
+                }
+            });
 
-    <!--begin::Script-->
+            // Evento cuando se selecciona un nodo
+            $('#arbol').on("select_node.jstree", function (e, data) {
+                if (data.node.type === "indicador") {
+                    const texto = data.node.text;
+                    const match = /\(([^)]+)\)$/.exec(texto);
+                    if (match) {
+                        const codigo = match[1];
+                        cargarDetalleIndicador(codigo);
+                    }
+                } else {
+                    $('#detalle').html("<p>Seleccione un indicador para ver el detalle aquí.</p>");
+                }
+            });
+        });
+
+        // Función para traer el detalle del indicador
+        function cargarDetalleIndicador(codigo) {
+            $.getJSON(`/api/indicadores/${codigo}`, function (ind) {
+                $('#detalle').html(`
+            <div class="detalle-titulo">${ind.nombre}</div>
+            <p><span class="detalle-label">Código:</span> ${ind.codigo_identificatorio}</p>
+            <p><span class="detalle-label">Descripción:</span> ${ind.descripcion}</p>
+            <p><span class="detalle-label">Objetivo:</span> ${ind.objetivo || ''}</p>
+            <p><span class="detalle-label">Dimensión:</span> ${ind.dimension || ''}</p>
+            <p><span class="detalle-label">Categoría:</span> ${ind.categoria || ''}</p>
+            <p><span class="detalle-label">Responsable:</span> ${ind.responsable || ''}</p>
+            <p><span class="detalle-label">Frecuencia de medición:</span> ${ind.frecuencia_medicion || ''}</p>
+            <p><span class="detalle-label">Unidad de medida:</span> ${ind.unidad_medida || ''}</p>
+            <p><span class="detalle-label">Meta objetivo:</span> ${ind.meta_objetivo || ''}</p>
+            <p><span class="detalle-label">Comentarios:</span> ${ind.comentarios || ''}</p>
+        `);
+            }).fail(function () {
+                $('#detalle').html(`<p style="color:red;">Error al cargar el detalle del indicador.</p>`);
+            });
+        }
+
+    </script>
+
+    <!--begin::OverlayScrollbars Configure-->
+    <script>
+        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+        const Default = {
+            scrollbarTheme: 'os-theme-light',
+            scrollbarAutoHide: 'leave',
+            scrollbarClickScroll: true,
+        };
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+            if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
+                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                    scrollbars: {
+                        theme: Default.scrollbarTheme,
+                        autoHide: Default.scrollbarAutoHide,
+                        clickScroll: Default.scrollbarClickScroll,
+                    },
+                });
+            }
+        });
+    </script>
+
+    <!-- apexcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+    <!-- ChartJS -->
+
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
@@ -762,15 +725,6 @@
     <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)-->
-
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
-
-
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-    <!-- ChartJS -->
 
 
 </body>
