@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>myResultIQ | Ind Asig</title>
+    <title>myResultIQ | Dashboard</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE v4 | Dashboard" />
@@ -53,76 +53,76 @@
     <link rel="stylesheet" href="../css/adminlte.css" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+
+    <style>
+        #tree {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #detalle {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .detalle-titulo {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .detalle-label {
+            font-weight: bold;
+        }
+
+        #arbol {
+            /* max-height: 90vh;
+            overflow-y: auto; */
+            max-height: none !important;
+            height: auto !important;
+            overflow: visible !important;
+            font-size: 18px;
+        }
+
+        /* Color permanente para indicadores y sectores (texto + ícono) */
+        #arbol .jstree-anchor:has(.fa-chart-line) {
+            color: #28a745 !important;
+            /* verde */
+        }
+
+        #arbol .jstree-anchor:has(.fa-sitemap) {
+            color: #444546 !important;
+            /* azul */
+        }
+
+        /* Fondo solo cuando está seleccionado */
+        #arbol .jstree-clicked:has(.fa-chart-line) {
+            background-color: #e6f4ea !important;
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+
+        #arbol .jstree-clicked:has(.fa-sitemap) {
+            background-color: #d9eaf7 !important;
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+
+        /* Íconos siempre mantienen color */
+        #arbol .jstree-anchor i.fa-chart-line {
+            color: #28a745 !important;
+        }
+
+        #arbol .jstree-anchor i.fa-sitemap {
+            color: #007bff !important;
+            margin-right: 8px;
+            margin-bottom: 4px;
+        }
+    </style>
 </head>
 <!--end::Head-->
 <!--begin::Body-->
-
-<style>
-    #tree {
-        border: 1px solid #ddd;
-        padding: 10px;
-        border-radius: 5px;
-    }
-
-    #detalle {
-        flex: 1;
-        padding: 20px;
-        overflow-y: auto;
-    }
-
-    .detalle-titulo {
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-    }
-
-    .detalle-label {
-        font-weight: bold;
-    }
-
-    #arbol {
-        /* max-height: 90vh;
-            overflow-y: auto; */
-        max-height: none !important;
-        height: auto !important;
-        overflow: visible !important;
-        font-size: 18px;
-    }
-
-    /* Color permanente para indicadores y sectores (texto + ícono) */
-    #arbol .jstree-anchor:has(.fa-chart-line) {
-        color: #28a745 !important;
-        /* verde */
-    }
-
-    #arbol .jstree-anchor:has(.fa-sitemap) {
-        color: #444546 !important;
-        /* azul */
-    }
-
-    /* Fondo solo cuando está seleccionado */
-    #arbol .jstree-clicked:has(.fa-chart-line) {
-        background-color: #e6f4ea !important;
-        border-radius: 4px;
-        padding: 2px 4px;
-    }
-
-    #arbol .jstree-clicked:has(.fa-sitemap) {
-        background-color: #d9eaf7 !important;
-        border-radius: 4px;
-        padding: 2px 4px;
-    }
-
-    /* Íconos siempre mantienen color */
-    #arbol .jstree-anchor i.fa-chart-line {
-        color: #28a745 !important;
-    }
-
-    #arbol .jstree-anchor i.fa-sitemap {
-        color: #007bff !important;
-        margin-right: 8px;
-        margin-bottom: 4px;
-    }
-</style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -144,13 +144,6 @@
                 <!--end::Start Navbar Links-->
                 <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
-                    <!--begin::Navbar Search-->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                            <i class="bi bi-search"></i>
-                        </a>
-                    </li> -->
-                    <!--end::Navbar Search-->
 
                     <!--begin::Messages Dropdown Menu-->
                     <li class="nav-item dropdown">
@@ -299,17 +292,19 @@
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light">
             <!--begin::Sidebar Brand-->
             <div class="sidebar-brand">
+                <!--begin::Brand Link-->
+                <!-- <a href="./index.html" class="brand-link"> -->
                 <!--begin::Brand Image-->
                 <img src="dist/images/leon.png" alt="León blanco símbolo de la aplicación" class="fade-in"
                     style="width: 40px; border-radius: 50%; margin-bottom: 0px;">
                 <!--end::Brand Image-->
-
                 <!--begin::Brand Text-->
                 <span class="brand-text fw-light fs-5">myResultIQ 1</span>
                 <!--end::Brand Text-->
+                </a>
+                <!--end::Brand Link-->
             </div>
             <!--end::Sidebar Brand-->
-
             <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
@@ -321,16 +316,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-operaciones.html" class="nav-link active">
+                            <a href="kpi-operaciones.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores Asignados</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="kpi-ponderado.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Ponderado</p>
                             </a>
                         </li>
 
@@ -342,9 +330,23 @@
                         </li>
 
                         <li class="nav-item">
+                            <a href="kpi-usuarios.html" class="nav-link active">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Usuarios</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a href="kpi-indicadores.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-gruposInd.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Grupos de Indicadores</p>
                             </a>
                         </li>
 
@@ -356,28 +358,39 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link">
+                            <a href="kpi-ponderado.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Usuarios</p>
-                            </a>
-                        </li>
-
-
-
-                        <li class="nav-item">
-                            <a href="" class="nav-link">
-                                <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>----------------------</p>
+                                <p>Ponderado</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-gruposInd.html" class="nav-link">
+                            <a href="kpi-fullFull.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Grupos de Indicadores</p>
+                                <p>Full Full</p>
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="kpi-fullFull copy 3.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Full copy 3</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-fullFull 4.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Full Full 4</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-fullFull copy.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Full copy</p>
+                            </a>
+                        </li>
                     </ul>
                     <!--end::Sidebar Menu-->
                 </nav>
@@ -407,83 +420,53 @@
                     </div>
                     <!--end::Row-->
                 </div>
-
-                <!--begin::Container-->
-                <div class="container-fluid">
-                    <!--begin::Row-->
-                    <div class="row">
-                        <!-- Start col -->
-                        <div class="col-md-12">
-                            <!--begin::Latest Order Widget-->
-                            <div class="card card-primary card-outline">
-                                <div class="card-header">
-                                    <h3 class="card-title">Estructura de Entidades</h3>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- /.card-header -->
-
-                                <div id="contenedor-principal">
-                                    <div id="arbol"
-                                        style="flex: 1; min-width: 300px; max-width: 700px;  padding: 10px;">
-                                        <!-- jsTree se renderiza aquí -->
-                                    </div>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!--end::Row-->
-
-                    <!--begin::Row-->
-                    <div class="row">
-                        <!-- Start col -->
-                        <div class="col-md-12 mt-3">
-                            <!--begin::Latest Order Widget-->
-                            <div class="card card-primary card-outline">
-                                <div class="card-header">
-                                    <h3 class="card-title">Información del indicador</h3>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- /.card-header -->
-                                <div id="detalle" style="flex: 2;  padding: 10px; margin-left: 20px;">
-                                    <p>Seleccione un indicador para ver el detalle aquí.</p>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!--end::Row-->
-
-                </div>
-                <!--end::Container-->
             </div>
-            <!--end::App Content-->
 
-            <footer class="main-footer text-center">
-                <strong>© 2025 - myResultIQ 1.0</strong>
-            </footer>
-        </main>
-        <!--end::App nain-->
+            <!-- <div id="contenedor-principal" style="display: flex; gap: 20px;"></div> -->
+
+            <section class="content" id="estructuraEntidades" style="display: block; margin-left: 10px;">
+                <div class="container-fluid">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Estructura de Entidades</h3>
+                            <div class="card-tools">
+                                <div class="card-tools">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="contenedor-principal">
+                            <div id="arbol" style="flex: 1; min-width: 300px; max-width: 700px;  padding: 10px;">
+                                <!-- jsTree se renderiza aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="content mt-3" id="InfoIndicador" style="display: block; margin-left: 10px;">
+                <div class="container-fluid">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Información del indicador</h3>
+                            <div class="card-tools">
+                                <div class="card-tools">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="detalle" style="flex: 2;  padding: 10px; margin-left: 20px;">
+                            <p>Seleccione un indicador para ver el detalle aquí.</p>
+                        </div>
+                    </div>
+                </div>
+    </div>
+    <!-- </div> -->
+    </section>
+
+    <footer class="main-footer text-center">
+        <strong>© 2025 - myResultIQ 1.0</strong>
+    </footer>
+    </main>
+    <!--end::App nain-->
     </div>
     <!--end::App Wrapper-->
 
@@ -506,7 +489,7 @@
         </div>
     </div>
     <!--end::Modal del usuario-->
-
+    </div>
     <!-- Modal de Confirmación de Logout -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -525,10 +508,6 @@
             </div>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
-
     <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
@@ -538,10 +517,42 @@
             // Redirigir al inicio
             window.location.href = 'index.html';
         });
+    </script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="indicadoresModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Indicadores</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaIndicadores"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--begin::Script-->
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+
+    <script>
 
 
-        <!--begin::Script-->
-
+        // Devuelve el array con todos los indicadores de un nodo y sus descendientes
         function contarIndicadores(nodoId) {
             const arbol = $.jstree.reference('#tree'); // instancia jsTree
             const nodo = arbol.get_node(nodoId);
@@ -555,12 +566,14 @@
             return indicadores.filter(ind => idsNodos.includes(ind.nodo));
         }
 
+
         // Actualiza el texto del árbol con la cantidad de indicadores acumulados
         function actualizarContadores() {
             estructura.forEach(nodo => {
                 const listaIndicadores = contarIndicadores(nodo.id);
-                const total = listaIndicadores.length;
-                nodo.text = nodo.text.split(' (')[0] + ` (${total})`;
+                // const total = listaIndicadores.length;
+                // nodo.text = nodo.text.split(' (')[0] + ` (${total})`;
+
             });
 
             // Refrescar el árbol para mostrar los textos actualizados
@@ -581,12 +594,14 @@
                 <td>${ind.id}</td>
                 <td>${ind.nombre}</td>
                 <td>${ind.responsable}</td>
-                </tr>`;
+            </tr>`;
             });
             new bootstrap.Modal(document.getElementById('indicadoresModal')).show();
         });
+    </script>
 
 
+    <script>
         $(function () {
             // Inicializar jsTree con carga lazy
             $('#arbol').jstree({
@@ -635,12 +650,17 @@
             <p><span class="detalle-label">Unidad de medida:</span> ${ind.unidad_medida || ''}</p>
             <p><span class="detalle-label">Meta objetivo:</span> ${ind.meta_objetivo || ''}</p>
             <p><span class="detalle-label">Comentarios:</span> ${ind.comentarios || ''}</p>
+            <p><span class="detalle-label">Peso porcentual:</span> ${ind.peso_porcentual || ''}</p>
         `);
             }).fail(function () {
                 $('#detalle').html(`<p style="color:red;">Error al cargar el detalle del indicador.</p>`);
             });
         }
 
+    </script>
+
+    <!--begin::OverlayScrollbars Configure-->
+    <script>
         const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
         const Default = {
             scrollbarTheme: 'os-theme-light',
@@ -661,6 +681,11 @@
         });
     </script>
 
+    <!-- apexcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+    <!-- ChartJS -->
+
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
@@ -675,16 +700,8 @@
     <script src="../js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)-->
 
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
-
-
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-    <!-- ChartJS -->
 
 </body>
 <!--end::Body-->
 
-</h
+</html>

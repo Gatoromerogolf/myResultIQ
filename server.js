@@ -512,8 +512,8 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
         const parent = req.query.parent;
 
         // Siempre cargamos toda la estructura en memoria para contar
-        const [sectores] = await pool.query(`SELECT id, nombre, sector_padre_id FROM sectores`);
-        const [indicadores] = await pool.query(`SELECT id, codigo_identificatorio, nombre, unidad_funcional_id FROM indicadores`);
+        const [sectores] = await pool.query(`SELECT id, nombre, sector_padre_id, sector_porcentual  FROM sectores`);
+        const [indicadores] = await pool.query(`SELECT id, codigo_identificatorio, nombre, unidad_funcional_id, peso_porcentual FROM indicadores`);
 
         // Contar indicadores directos
         const conteoDirecto = {};
@@ -534,20 +534,60 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
         }
 
         // === Lazy loading respuesta ===
+        // if (parent === "#") {
+        //     // Sectores raíz
+        //     const nodos = sectores
+        //         .filter(s => !s.sector_padre_id)
+        //         .map(s => {
+        //             return {
+        //                 id: `sector-${s.id}`,
+        //                 parent: "#",
+        //                 text: `(${s.sector_porcentual ?? ''}%) ${s.nombre} (${contarTotal(s.id)}) `,
+        //                 icon: "fas fa-sitemap",
+        //                 type: "sector",
+        //                 children: true,
+        //                 sector_porcentual: s.sector_porcentual
+        //             };
+        //         });
+        //     return res.json(nodos);
+        // }
+
         if (parent === "#") {
-            // Sectores raíz
-            const nodos = sectores
-                .filter(s => !s.sector_padre_id)
-                .map(s => ({
+            const sectoresRaiz = sectores.filter(s => !s.sector_padre_id);
+
+            let nodos = [];
+
+            sectoresRaiz.forEach((s, idx) => {
+                // Nodo del sector raíz
+                nodos.push({
                     id: `sector-${s.id}`,
                     parent: "#",
-                    text: `${s.nombre} (${contarTotal(s.id)})`,
+                    text: `(${s.sector_porcentual ?? ''}%) ${s.nombre} (${contarTotal(s.id)})`,
                     icon: "fas fa-sitemap",
                     type: "sector",
-                    children: true
-                }));
+                    children: true,
+                    sector_porcentual: s.sector_porcentual
+                });
+
+                // Insertar separador si no es el último
+                if (idx < sectoresRaiz.length - 1) {
+                    nodos.push({
+                        id: `separator-${idx}`,
+                        parent: "#",
+                        text: " ", // Espacio para que jsTree lo renderice
+                        icon: false,
+                        type: "separator",
+                        state: { disabled: true, opened: true }
+                    });
+                }
+            });
+
             return res.json(nodos);
         }
+
+
+
+
 
         if (parent.startsWith("sector-")) {
             const sectorId = parseInt(parent.replace("sector-", ""), 10);
@@ -558,10 +598,11 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
                 .map(s => ({
                     id: `sector-${s.id}`,
                     parent: `sector-${sectorId}`,
-                    text: `${s.nombre} (${contarTotal(s.id)})`,
+                    text: `(${s.sector_porcentual ?? ''}%) ${s.nombre} (${contarTotal(s.id)}) `,
                     icon: "fas fa-sitemap",
                     type: "sector",
-                    children: true
+                    children: true,
+                    sector_porcentual: s.sector_porcentual
                 }));
 
             // Indicadores de este sector
@@ -570,10 +611,11 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
                 .map(ind => ({
                     id: `indicador-${ind.id}`,
                     parent: `sector-${sectorId}`,
-                    text: `${ind.nombre} (${ind.codigo_identificatorio})`,
+                    text: `${ind.nombre} (${ind.codigo_identificatorio}) (${ind.peso_porcentual ?? ''}%)`,
                     icon: "fas fa-chart-line",
                     type: "indicador",
-                    children: false
+                    children: false,
+                    peso_porcentual: ind.peso_porcentual
                 }));
 
             return res.json([...hijos, ...inds]);
