@@ -43,15 +43,30 @@ app.get('/api/indicadores', async (req, res) => {
         SELECT 
             codigo_identificatorio,
             nombre,
+            dimension,
             descripcion,
             objetivo,  
-            dimension,
-            unidad_funcional_id
-            responsable,
+            formula_calculo,
+            fuente_datos,
+            responsable, 
+            unidad_funcional_id,
+            unidad_medida,
+            frecuencia_medicion,
+            periodicidad_reporte,
+            demora_maxima_valor,
+            demora_maxima_unidad,
+            periodo_inicial,
+            meta_objetivo,
+            umbral_positivo,
+            umbral_critico,
+            tendencia_deseada,
             categoria,
             criticidad,
-            frecuencia_medicion,
-            tendencia_deseada
+            formato_presentacion, 
+            grupos_integracion,
+            comentarios,
+            creado_en,
+            peso_porcentual
         FROM indicadores
     `);
     res.json(rows);
@@ -81,7 +96,8 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
                 meta_objetivo,
                 periodo_inicial,
                 grupos_integracion, 
-                comentarios
+                comentarios, 
+                peso_porcentual
             FROM indicadores
             WHERE codigo_identificatorio = ?
         `, [codigo]);
@@ -241,6 +257,7 @@ app.get('/usuarios', async (req, res) => {
 // // 🚫🚫🚫 Obtener un usuario por legajo (para edición)
 app.get('/usuarios/:legajo', async (req, res) => {
     const legajo = req.params.legajo;
+    console.log (`legajo en back: ${legajo}`)
     try {
         const [rows] = await pool.query('SELECT * FROM usuarios WHERE legajo = ?', [legajo]);
         if (rows.length > 0) {
@@ -314,6 +331,45 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
         res.sendStatus(500);
     }
 });
+
+
+
+// // // 🚫🚫🚫 Leer sectores
+// app.get('/sectores', async (req, res) => {
+//     try {
+//         const [rows] = await pool.execute('SELECT nombre, descripcion, sector_padre_id, sector_porcentual FROM sectores');
+//         res.json(rows);
+//     } catch (error) {
+//         console.error('Error al obtener sectores:', error);
+//         res.status(500).json({ error: 'Error al obtener sectores' });
+//     }
+// });
+
+// // 🚫🚫🚫 Obtener un sector por unidad)
+app.get('/sectores/:unidad', async (req, res) => {
+    const unidad = req.params.unidad;
+    try {
+        const [rows] = await pool.query('SELECT * FROM sectores WHERE id = ?', [unidad]);
+        if (rows.length > 0) {
+            res.json(rows[0]);
+        } else {
+            res.status(404).json({ error: 'Sector no encontrado' });
+        }
+    } catch (err) {
+        console.error('Error al obtener sector:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+
+
+
+
+
+
+
+
+
 
 // 🚀 Nueva ruta para devolver el árbol de sectores + indicadores
 app.get('/api/arbol-indicadores', async (req, res) => {
@@ -586,9 +642,6 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
         }
 
 
-
-
-
         if (parent.startsWith("sector-")) {
             const sectorId = parseInt(parent.replace("sector-", ""), 10);
 
@@ -611,7 +664,7 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
                 .map(ind => ({
                     id: `indicador-${ind.id}`,
                     parent: `sector-${sectorId}`,
-                    text: `${ind.nombre} (${ind.codigo_identificatorio}) (${ind.peso_porcentual ?? ''}%)`,
+                    text: ` (${ind.peso_porcentual ?? ''}%) ${ind.nombre} (${ind.codigo_identificatorio})`,
                     icon: "fas fa-chart-line",
                     type: "indicador",
                     children: false,

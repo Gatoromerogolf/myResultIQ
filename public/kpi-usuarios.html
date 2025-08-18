@@ -266,23 +266,24 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-operaciones.html" class="nav-link">
+                            <a href="kpi-panel-admin.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Indicadores Asignados</p>
+                                <p>Panel Administrador</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="kpi-arbol.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Arbol</p>
+                                <p><i class="fas fa-sitemap text-primary"></i> Entidades-Indicadores</p>
                             </a>
                         </li>
 
+
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link active">
+                            <a href="kpi-ponderado.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Usuarios</p>
+                                <p>Valoración %</p>
                             </a>
                         </li>
 
@@ -294,9 +295,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-gruposInd.html" class="nav-link">
+                            <a href="kpi-usuarios.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Grupos de Indicadores</p>
+                                <p>Usuarios</p>
                             </a>
                         </li>
 
@@ -304,6 +305,13 @@
                             <a href="kpi-organigrama.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Destinos - Entidades</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>----------------------</p>
                             </a>
                         </li>
                     </ul>
@@ -384,6 +392,26 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
+                                            <div class="col-md-6 d-flex align-items-center gap-3">
+                                                <!-- Imagen de perfil -->
+                                                <img id="fotoEmpleado" src="/dist/images/default_user.jpg"
+                                                    alt="Foto empleado" class="img-thumbnail" style="max-width: 120px;">
+
+                                                <!-- Input oculto para seleccionar imagen -->
+                                                <input type="file" id="inputImagen" accept="image/*"
+                                                    style="display: none;">
+
+                                                <!-- Botones en la misma fila -->
+                                                <div class="d-flex gap-2">
+                                                    <button type="button" class="btn btn-sm btn-primary"
+                                                        onclick="cambiarImagen()">Cambiar imagen</button>
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                        onclick="eliminarImagen()">Eliminar imagen</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
                                             <div class="col-md-2">
                                                 <label>Legajo</label>
                                                 <input type="text" name="legajo" class="form-control" required>
@@ -406,13 +434,6 @@
                                             <div class="col-md-4">
                                                 <label>Teléfono</label>
                                                 <input type="text" name="telefono" class="form-control">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>Fotografía</label>
-                                                <input type="file" name="foto" accept="image/*" class="form-control">
-                                                <img id="foto-preview" src="" alt="Foto actual"
-                                                    class="mt-2 rounded shadow-sm" width="64" height="64"
-                                                    style="display: none;">
                                             </div>
                                         </div>
 
@@ -594,6 +615,35 @@
     </script>
 
     <script>
+
+        function cambiarImagen() {
+            // Dispara el input file oculto
+            document.getElementById('inputImagen').click();
+        }
+
+        // Cuando el usuario selecciona un archivo
+        document.getElementById('inputImagen').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('fotoEmpleado').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function eliminarImagen() {
+            // Restablece a la imagen por defecto
+            document.getElementById('fotoEmpleado').src = '/dist/images/default_user.jpg';
+
+            // Limpia el input file
+            document.getElementById('inputImagen').value = '';
+        }
+
+
+
+
         async function cargarUsuarios() {
             try {
                 const response = await fetch('/usuarios'); // Debe estar definida en el backend
@@ -604,8 +654,9 @@
 
                 usuarios.forEach(usuario => {
                     const fotoURL = usuario.tiene_foto
-                        ? `/usuarios/foto/${usuario.legajo}`
+                        ? `/usuarios/foto/${usuario.legajo}?t=${Date.now()}`
                         : '../dist/images/default-user.jpg';
+
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `

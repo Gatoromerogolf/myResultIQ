@@ -316,23 +316,24 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-operaciones.html" class="nav-link">
+                            <a href="kpi-panel-admin.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Indicadores Asignados</p>
+                                <p>Panel Administrador</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="kpi-arbol.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Arbol</p>
+                                <p><i class="fas fa-sitemap text-primary"></i> Entidades-Indicadores</p>
                             </a>
                         </li>
 
+
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link active">
+                            <a href="kpi-ponderado.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Usuarios</p>
+                                <p>Valoración %</p>
                             </a>
                         </li>
 
@@ -344,9 +345,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-gruposInd.html" class="nav-link">
+                            <a href="kpi-usuarios.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Grupos de Indicadores</p>
+                                <p>Usuarios</p>
                             </a>
                         </li>
 
@@ -358,9 +359,16 @@
                         </li>
 
                         <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>----------------------</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a href="kpi-ponderado.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Ponderado</p>
+                                <p>Valoración %</p>
                             </a>
                         </li>
 
@@ -389,6 +397,14 @@
                             <a href="kpi-fullFull copy.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Full copy</p>
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a href="kpi-gruposInd.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>Grupos de Indicadores</p>
                             </a>
                         </li>
                     </ul>
@@ -650,7 +666,7 @@
             <p><span class="detalle-label">Unidad de medida:</span> ${ind.unidad_medida || ''}</p>
             <p><span class="detalle-label">Meta objetivo:</span> ${ind.meta_objetivo || ''}</p>
             <p><span class="detalle-label">Comentarios:</span> ${ind.comentarios || ''}</p>
-            <p><span class="detalle-label">Peso porcentual:</span> ${ind.peso_porcentual || ''}</p>
+            <p><span class="detalle-label">Valoración relativa:</span> ${ind.peso_porcentual || ''} %</p>
         `);
             }).fail(function () {
                 $('#detalle').html(`<p style="color:red;">Error al cargar el detalle del indicador.</p>`);

@@ -53,8 +53,8 @@
     <link rel="stylesheet" href="../css/adminlte.css" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
-   
-   <style>
+
+    <style>
         .app-main {
             background-color: #f8f9fa;
             min-height: 100vh;
@@ -126,6 +126,18 @@
         /* CSS personalizado para hacer la tabla más pequeña */
         #tablaIndicadores {
             font-size: 12px !important;
+        }
+
+        #tablaIndicadores {
+            border: 2px solid #0d6efd !important;
+            border-collapse: collapse;
+            /* 👈 asegura que los bordes se unan */
+        }
+
+        #tablaIndicadores th,
+        #tablaIndicadores td {
+            border: 2px solid #0d6efd !important;
+            /* bordes internos también */
         }
 
         #tablaIndicadores thead th {
@@ -599,37 +611,38 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-operaciones.html" class="nav-link">
+                            <a href="kpi-panel-admin.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Indicadores Asignados</p>
+                                <p>Panel Administrador</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="kpi-arbol.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Arbol</p>
+                                <p><i class="fas fa-sitemap text-primary"></i> Entidades-Indicadores</p>
                             </a>
                         </li>
 
+
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link">
+                            <a href="kpi-ponderado.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Usuarios</p>
+                                <p>Valoración %</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-indicadores.html" class="nav-link active">
+                            <a href="kpi-indicadores.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-gruposInd.html" class="nav-link">
+                            <a href="kpi-usuarios.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Grupos de Indicadores</p>
+                                <p>Usuarios</p>
                             </a>
                         </li>
 
@@ -641,9 +654,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-ponderado.htmlnk" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Ponderado</p>
+                                <p>----------------------</p>
                             </a>
                         </li>
                     </ul>
@@ -704,7 +717,8 @@
                                         <div class="table-responsive">
                                             <!-- <table class="table table-striped table-hover mb-0"> -->
                                             <table id="tablaIndicadores"
-                                                class="table table-striped table-bordered table-sm mb-0">
+                                                class="table table-striped table-bordered table-sm mb-0"
+                                                style="border: 2px solid #0d6efd;">
                                                 <thead class="table-light">
                                                     <tr>
                                                         <th scope="col">Código</th>
@@ -955,11 +969,9 @@
                                                                 </i>
                                                             </label>
                                                             <label for="dimension" class="form-label">
-                                                            <i class="fas fa-file-alt text-primary"
-                                                                data-bs-toggle="tooltip"
-                                                                data-bs-html="true"
-                                                                data-bs-custom-class="custom-tooltip"
-                                                                title="<b>🧩 Ejemplos combinados</b><br>
+                                                                <i class="fas fa-file-alt text-primary"
+                                                                    data-bs-toggle="tooltip" data-bs-html="true"
+                                                                    data-bs-custom-class="custom-tooltip" title="<b>🧩 Ejemplos combinados</b><br>
                                                                     • PKI: <b>Tiempo de ciclo de compra</b><br>
                                                                     Dimensión: Procesos - Categoría: Eficiencia <br>
                                                                     • PKI:<b> Nivel de Satisfacción del cliente</b><br>
@@ -968,7 +980,7 @@
                                                                     Dimensión: Capital Humano  -  Eficiencia <br>
                                                                     • PKI:<b> Rentabilidad operativa</b><br>
                                                                     Dimensión: Financiera  -  Productividad">
-                                                            </i>
+                                                                </i>
                                                             </label>
 
                                                         </div>
@@ -1390,7 +1402,7 @@
                                                     </div>
                                                     <!--end::Tolerancia de carga-->
 
-                                                    
+
                                                     <!--begin::Periodicidad de Reporte-->
                                                     <div class="col-md-3">
                                                         <label for="periodicidadReporte"
@@ -1701,6 +1713,15 @@
     </div>
 
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
     <script>
         // Función para obtener el color de la dimensión
         function getColorDimension(dimension) {
@@ -1850,12 +1871,18 @@
                 emptyState.style.display = 'none';
                 totalBadge.textContent = `${indicadores.length} indicadores`;
 
-                indicadores.forEach(ind => {
+                // indicadores.forEach(ind => {
+                for (const ind of indicadores) {
+
                     const fila = document.createElement('tr');
 
                     let criticidad_minus = ind.criticidad.toLowerCase();
                     let clase_criticidad = getClaseCriticidad(criticidad_minus)
-                    console.log(clase_criticidad)
+
+                    const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
+
+                    console.log(`sector a leer ${ind.unidad_funcional_id}`)
+                    const sectores = await obtenerSectoresPorUnidad(ind.unidad_funcional_id);
 
                     fila.innerHTML = `
                     <td>${ind.codigo_identificatorio}</td>
@@ -1868,8 +1895,8 @@
                     </td>
                     <td>${ind.categoria}</td>
 
-                    <td>${ind.unidad_funcional_id}</td>
-                    <td>${ind.responsable}</td>
+                    <td>${sectores.nombre}</td>
+                    <td>${usuario.nombres} ${usuario.apellido}</td>
 
                     <td class="${clase_criticidad}">${ind.criticidad}</td>
 
@@ -1895,7 +1922,7 @@
                     </td>
                 `;
                     tbody.appendChild(fila);
-                });
+                };
 
                 // Inicializar DataTable luego de cargar filas
                 $('#tablaIndicadores').DataTable({
@@ -1928,6 +1955,55 @@
         document.addEventListener('DOMContentLoaded', cargarIndicadores);
     </script>
 
+    <script>
+        async function obtenerUsuarioPorLegajo(responsable) {
+            try {
+                const response = await fetch(`/usuarios/${responsable}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn('Usuario no encontrado');
+                        return null;
+                    }
+                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
+                }
+                const usuario = await response.json();
+                return usuario;
+            } catch (err) {
+                console.error('Error en fetch:', err);
+                return null;
+            }
+        }
+
+
+        async function obtenerSectoresPorUnidad(unidad) {
+            try {
+                const response = await fetch(`/sectores/${unidad}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn('Sector no encontrado');
+                        return null;
+                    }
+                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
+                }
+                const sector = await response.json();
+                return sector;
+            } catch (err) {
+                console.error('Error en fetch:', err);
+                return null;
+            }
+        }
+        // // Ejemplo de uso
+        // obtenerUsuarioPorLegajo(responsable).then(usuario => {
+        //     if (usuario) {
+        //         // acá podés actualizar tu UI con los datos
+        //         document.getElementById('nombreUsuario').textContent = usuario.nombre;
+        //         document.getElementById('emailUsuario').textContent = usuario.email;
+        //     }
+        // });
+
+    </script>
     <script>
         async function verDetalleIndicador(codigo) {
             try {
@@ -1986,7 +2062,7 @@
     <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)-->
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
