@@ -398,7 +398,7 @@
                                                     alt="Foto empleado" class="img-thumbnail" style="max-width: 120px;">
 
                                                 <!-- Input oculto para seleccionar imagen -->
-                                                <input type="file" id="inputImagen" accept="image/*"
+                                                <input type="file" id="inputImagen" name="foto" accept="image/*"
                                                     style="display: none;">
 
                                                 <!-- Botones en la misma fila -->
@@ -469,24 +469,22 @@
 
                                         <div class="row mt-3">
                                             <div class="col-md-3">
-                                                <label>Estado</label>
-                                                <select name="estado" class="form-control">
+                                                <label for="estado" class="form-label">Estado</label>
+                                                <select name="estado" class="form-select">
                                                     <option value="activo">Activo</option>
                                                     <option value="inactivo">Inactivo</option>
                                                     <option value="suspendido">Suspendido</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
-                                                <label>Perfil</label>
-                                                <select name="perfil" class="form-control">
-                                                    <option value="admin">Administrador</option>
-                                                    <option value="operador">Operador</option>
+                                                <label for="perfil" class="form-label">Perfil</label>
+                                                <select id="perfil" name="perfil" class="form-select">
+                                                    <option value="1">Operador</option>
+                                                    <option value="2">Responsable</option>
+                                                    <option value="3">Analista</option>
+                                                    <option value="4">Superior</option>
+                                                    <option value="5">Administrador</option>
                                                 </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label>Indicadores asignados</label>
-                                                <textarea name="indicadores" class="form-control" rows="3"
-                                                    placeholder="Ej: Indicador 1, Indicador 2"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -504,7 +502,7 @@
                         </div>
                     </section>
 
-                    <script>
+                    <!-- <script>
                         // Simulación de datos(remplazar con fetch a la BD real)
                         const usuarios = [
                             {
@@ -548,7 +546,7 @@
                                 </tr>
                             `;
                         });
-                    </script>
+                    </script> -->
 
                     <!--end::Container-->
                 </div>
@@ -612,9 +610,6 @@
             }
         });
 
-    </script>
-
-    <script>
 
         function cambiarImagen() {
             // Dispara el input file oculto
@@ -642,8 +637,6 @@
         }
 
 
-
-
         async function cargarUsuarios() {
             try {
                 const response = await fetch('/usuarios'); // Debe estar definida en el backend
@@ -655,7 +648,7 @@
                 usuarios.forEach(usuario => {
                     const fotoURL = usuario.tiene_foto
                         ? `/usuarios/foto/${usuario.legajo}?t=${Date.now()}`
-                        : '../dist/images/default-user.jpg';
+                        : '../dist/images/default_user.jpg';
 
 
                     const tr = document.createElement('tr');
@@ -689,9 +682,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', cargarUsuarios);
-    </script>
 
-    <script>
         async function eliminarUsuario(legajo) {
             if (confirm("¿Estás seguro de que querés eliminar este usuario?")) {
                 try {
@@ -708,9 +699,7 @@
                 }
             }
         }
-    </script>
 
-    <script>
         async function editarUsuario(legajo) {
             try {
                 const response = await fetch(`/usuarios/${legajo}`);

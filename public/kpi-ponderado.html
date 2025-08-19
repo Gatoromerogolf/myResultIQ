@@ -58,8 +58,8 @@
         /* Contenedor de cada nodo */
         .node-container {
             border-left: 10px solid #dee2e6;
-            padding: 0.5rem 0.5rem;
-            margin-bottom: 0.1rem;
+            padding: 0.20rem 0.20rem;
+            margin-bottom: 0.05rem;
             /* border-radius: 10px; */
             /* border-radius: 0.25rem; */
             /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); */
@@ -80,6 +80,7 @@
             align-items: center;
             gap: 0.1rem;
             flex-wrap: wrap;
+            line-height: 1; /* reduce la altura de línea */
         }
 
         /* Ícono de nodo */
@@ -96,14 +97,14 @@
 
         /* Barra de progreso */
         .progress {
-            height: 6px;
+            height: 2px;
             background-color: #000407;
             border-radius: 3px;
             margin-top: 2px;
         }
 
         .progress-bar {
-            height: 60%;
+            height: 30%;
             transition: width 0.3s ease;
         }
 
@@ -128,7 +129,7 @@
         /* Sangría según nivel */
         .children-container {
             margin-left: 60px;
-            margin-top: 0.1rem;
+            margin-top: 0.05rem;
         }
     </style>
 
@@ -348,7 +349,7 @@
 
 
                         <li class="nav-item">
-                            <a href="kpi-ponderado.html" class="nav-link">
+                            <a href="kpi-ponderado.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Valoración %</p>
                             </a>
@@ -362,7 +363,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link active">
+                            <a href="kpi-usuarios.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
                             </a>

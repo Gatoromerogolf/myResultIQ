@@ -2,16 +2,7 @@
 <html lang="en">
 <!--begin::Head-->
 
-<style>
-    .brand-image {
-        opacity: 1 !important;
-        width: 40px;
-        height: auto;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        object-fit: contain;
-    }
-</style>
+
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -64,8 +55,24 @@
     <link rel="stylesheet" href="../css/adminlte.css" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+
+    <style>
+        .brand-image {
+            opacity: 1 !important;
+            width: 40px;
+            height: auto;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+            border-radius: 6px;
+            object-fit: contain;
+        }
+
+        .card-title {
+            text-align: center !important;
+        }
+    </style>
 </head>
 <!--end::Head-->
+
 <!--begin::Body-->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -267,7 +274,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-panel-admin.html" class="nav-link">
+                            <a href="kpi-panel-admin.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Panel Administrador</p>
                             </a>
@@ -296,7 +303,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link active">
+                            <a href="kpi-usuarios.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
                             </a>
@@ -362,6 +369,7 @@
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
+                                <!-- card-body-->
                                 <div class="card-body p-0">
                                     <div class="table-responsive">
                                         <table class="table m-0">
@@ -399,34 +407,59 @@
                                     <!-- /.table-responsive -->
                                 </div>
                                 <!-- /.card-body -->
-
-                                <!-- /.card-footer -->
                             </div>
                             <!-- /.card -->
                         </div>
                         <!-- /.col -->
 
-                        <div class="card border-warning mb-3 col-md-3">
-                            <div class="row g-0 align-items-center">
-                                <!-- Columna izquierda con imagen/ícono -->
-                                <div class="col-auto p-4">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/463/463612.png" alt="Alerta"
-                                        style="width: 50px; height: 50px;">
+                        <!-- <div class="card border-warning mb-3 col-md-3">
+                            <div class="row g-0 align-items-center"> -->
+                        <!-- Columna izquierda con imagen/ícono -->
+                        <!-- <div class="col-auto p-4 d-flex flex-column align-items-center"> -->
+                        <!-- Imagen -->
+                        <!-- <div><img src="https://cdn-icons-png.flaticon.com/512/463/463612.png" alt="Alerta"
+                                            style="width: 40px; height: 40px;" class="mb-2"></div> -->
+                        <!-- Texto -->
+                        <!-- <div class="card-body p-0 w-100"> -->
+                        <!-- <h5 class="card-title text-warning text-center m-0">⚠ Atención ⚠</h5> -->
+                        <!-- <br> -->
+                        <!-- <p class="card-text mb-0 text-center">
+                                            <a href="kpi-ponderado.html" class="nav-link">
+                                                Revisar <strong>Valoración %</strong>
+                                                por entidad y/o indicador.</a> -->
+                        <!-- Ícono de información -->
+                        <!-- <i class="bi bi-info-circle-fill text-primary ms-2" role="button"
+                                                data-bs-toggle="modal" data-bs-target="#infoModal"></i>
+                                        </p>
+                                    </div>
                                 </div>
+                            </div>
+                        </div> -->
 
-                                <!-- Columna derecha con texto -->
-                                <div class="col">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-warning">⚠ Atención ⚠ </h5>
-                                        <br>
-                                        <p class="card-text mb-0">
-                                            Revisar la <strong>asignación de porcentuales</strong>
-                                            por entidad y/o indicador.
+                        <!-- Agregar id y ocultar inicialmente -->
+                        <div id="alertaCondicional" class="card border-warning mb-3 col-md-3" style="display: none;">
+                            <div class="row g-0 align-items-center">
+                                <!-- Tu contenido existente sin cambios -->
+                                <div class="col-auto p-4 d-flex flex-column align-items-center">
+                                    <div><img src="https://cdn-icons-png.flaticon.com/512/463/463612.png" alt="Alerta"
+                                            style="width: 40px; height: 40px;" class="mb-2"></div>
+                                    <div class="card-body p-0 w-100">
+                                        <p class="card-text mb-0 text-center">
+                                            <a href="kpi-ponderado.html" class="nav-link">
+                                                Revisar <strong>Valoración %</strong>
+                                                por entidad y/o indicador.</a>
+                                            <i class="bi bi-info-circle-fill text-primary ms-2" role="button"
+                                                data-bs-toggle="modal" data-bs-target="#infoModal"></i>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
+
+
+
                     </div>
                     <!--end::Row-->
 
@@ -482,12 +515,11 @@
                     </div>
                     <!--end::App Content-->
 
-
-
-
                     <footer class="main-footer text-center">
                         <strong>© 2025 - myResultIQ 1.0</strong>
                     </footer>
+                </div>
+            </div>
         </main>
         <!--end::App nain-->
 
@@ -532,6 +564,35 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de Información para revisar Valoración % -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">¿Por qué aparece esta advertencia?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    Esta advertencia aparece porque alguna modificación en los destinos/entidades o indicadores, ha
+                    provocado que la valoración porcentual no totalice el 100% por nivel.<br>
+                    Podés consultar los indicadores afectados en el detalle.
+                </div>
+                <div class="modal-footer">
+                    <!-- Botón a la izquierda con link -->
+                    <a href="kpi-ponderado.html" class="btn btn-primary">
+                        Ir a Valoración %
+                    </a>
+
+                    <!-- Botón de cerrar a la derecha -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
@@ -541,8 +602,67 @@
             // Redirigir al inicio
             window.location.href = 'index.html';
         });
-    </script>
 
+        // Configuración
+
+        // Opción 1: Solo necesitas el valor (más eficiente)
+        document.addEventListener('DOMContentLoaded', function () {
+            const API_URL = 'http://localhost:3000/api/alertas/1/valor';
+
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.valor == 1) {
+                        document.getElementById('alertaCondicional').style.display = 'block';
+                    } else {
+                        document.getElementById('alertaCondicional').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('alertaCondicional').style.display = 'none';
+                });
+        });
+        // Función para verificar si debe mostrar la alerta
+        // async function verificarAlerta() {
+        //     try {
+        //         const response = await fetch(`${API_BASE_URL}/alertas/${CODIGO_ALERTA}`);
+
+        //         if (response.ok) {
+        //             const data = await response.json();
+
+        //             // Obtener el elemento de la alerta
+        //             const alertaDiv = document.getElementById('alertaCondicional');
+
+        //             // Mostrar alerta solo si el valor es 1
+        //             if (data.valor == 1) {
+        //                 alertaDiv.style.display = 'block';
+        //                 console.log('Alerta activada - Valor:', data.valor);
+        //             } else {
+        //                 alertaDiv.style.display = 'none';
+        //                 console.log('Alerta desactivada - Valor:', data.valor);
+        //             }
+        //         } else {
+        //             console.error('Error al obtener datos de la alerta:', response.status);
+        //             // En caso de error, ocultar la alerta
+        //             document.getElementById('alertaCondicional').style.display = 'none';
+        //         }
+
+        //     } catch (error) {
+        //         console.error('Error de conexión:', error);
+        //         // En caso de error de conexión, ocultar alerta
+        //         document.getElementById('alertaCondicional').style.display = 'none';
+        //     }
+        // }
+
+        // // Ejecutar cuando se carga la página
+        // document.addEventListener('DOMContentLoaded', verificarAlerta);
+
+
+        // // Opcional: Verificar periódicamente el estado (descomentar si lo necesitas)
+        // setInterval(verificarAlerta, 1800000); // Cada 180 segundos
+
+    </script>
 
 
     <!--begin::Script-->

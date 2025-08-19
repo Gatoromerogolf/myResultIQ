@@ -353,14 +353,14 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link active">
+                            <a href="kpi-usuarios.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-organigrama.html" class="nav-link">
+                            <a href="kpi-organigrama.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Destinos - Entidades</p>
                             </a>
@@ -398,7 +398,10 @@
                     </div>
 
                     <div class="mt-2 mb-2">En esta sección se definen las entidades organizativas (área, proceso o
-                        unidad funcional) a las que se les asignarán indicadores,</div>
+                        unidad funcional) a las que se les asignarán indicadores.
+                        <i class="bi bi-info-circle-fill text-primary ms-2" role="button" data-bs-toggle="modal"
+                            data-bs-target="#infoModal"></i>
+                    </div>
                     <!--end::Row-->
 
                     <div class="card card-primary">
@@ -415,9 +418,9 @@
 
                         <div class="d-flex flex-wrap gap-2 mb-3">
                             <button id="uploadButton" class="btn btn-primary ms-3">Subir imagen</button>
-                            <button id="showImageButton" class="btn btn-success d-none">Mostrar imagen</button>
-                            <button id="hideImageButton" class="btn btn-secondary d-none">Ocultar imagen</button>
-                            <button id="deleteImageButton" class="btn btn-danger d-none">Eliminar imagen</button>
+                            <button id="showImageButton" class="btn btn-success d-none">Mostrar</button>
+                            <button id="hideImageButton" class="btn btn-secondary d-none">Ocultar</button>
+                            <button id="deleteImageButton" class="btn btn-danger d-none">Eliminar</button>
                         </div>
 
                         <div id="imageContainer" class="text-center d-none">
@@ -435,23 +438,30 @@
                                         Unidad Funcional - Proceso)</h3>
                                 </div>
                                 <div class="card-body">
+
                                     <form id="sectorForm">
                                         <div class="form-group">
                                             <label for="sectorName">Nombre: </label>
                                             <input type="text" class="form-control" id="sectorName" required>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group mt-2">
                                             <label for="sectorParent">Dependiente de: (opcional):</label>
                                             <select class="form-control" id="sectorParent">
                                                 <option value="">-- Ninguno --</option>
                                             </select>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="sectorDescription">Descripción:</label>
-                                            <textarea class="form-control" id="sectorDescription" rows="3"></textarea>
+
+                                        <div class="col-md-3 mt-2 mb-3">
+                                            <label for="sectorDescription" class="form-label">Tipo</label>
+                                            <select id="sectorDescription" name="tipo" class="form-select">
+                                                <option value="area">Area</option>
+                                                <option value="unidad">Unidad Funcional</option>
+                                                <option value="proceso">Proceso</option>
+                                            </select>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Agregar sector</button>
                                     </form>
+
                                 </div>
                             </div>
                         </div>
@@ -492,6 +502,37 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de Información para revisar Valoración % -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">¿Por qué definir los Destinos  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                        La aplicación permite definir áreas, unidades funcionales y procesos en una estructura jerárquica o de dependencia, donde cada nivel puede tener uno o varios indicadores asignados.<br><br>
+                        Cada indicador mide un aspecto específico y genera un resultado de cumplimiento respecto a su meta, pudiendo tener distinto nivel de relevancia según su participación en el objetivo del nivel al que pertenece.<br><br>
+
+                        El resultado de cada nivel se calcula combinando los resultados de sus indicadores, y, asimismo,los subniveles se ponderan para obtener un valor global de desempeño en los niveles superiores.<br><br>
+
+                        Al combinar los distintos niveles hacia los niveles superiores, se logra que, al llegar al nivel máximo definido, se obtenga un resultado general que refleje el estado global del área, unidad funcional o proceso correspondiente..<br>
+                </div>
+                <div class="modal-footer">
+                    <!-- Botón a la izquierda con link -->
+                    <a href="kpi-ponderado.html" class="btn btn-primary">
+                        Ir a Valoración %
+                    </a>
+
+                    <!-- Botón de cerrar a la derecha -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
@@ -596,14 +637,14 @@
             $('#sectorForm').on('submit', async function (event) {
                 event.preventDefault();
                 const nombre = $('#sectorName').val();
-                const descripcion = $('#sectorDescription').val();
+                const tipo = $('#sectorDescription').val();
                 const sector_padre_id = $('#sectorParent').val() || null;
 
                 try {
                     await fetch(API_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ nombre, descripcion, sector_padre_id }),
+                        body: JSON.stringify({ nombre, tipo, sector_padre_id }),
                     });
                     await cargarSectores();
                     this.reset();
@@ -646,12 +687,11 @@
 
             const items = hijos.map(s => `
                     <li>
+                    <small>${s.tipo || ''}</small>
                     <strong>${s.nombre}</strong>
                         <button class="btn btn-sm btn-outline-danger p-1" onclick="eliminarSector(${s.id})" title="Eliminar sector">
                         <i class="fas fa-trash-alt" style="font-size: 12px;"></i>
                         </button>
-
-                    <br><small>${s.descripcion || ''}</small>
                     ${construirArbol(sectores, s.id)}
                     </li>
                 `).join('');

@@ -114,8 +114,6 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
 });
 
 
-
-
 // // 🚫🚫🚫POST para subir o reemplazar imagen
 app.post('/api/organigrama', upload.single('imagen'), async (req, res) => {
     const imagen = req.file?.buffer;
@@ -196,7 +194,6 @@ app.post('/api/indicadores', async (req, res) => {
 });
 
 
-
 // // 🚫🚫🚫 Eliminar indicador
 app.delete('/api/indicadores/:codigo', async (req, res) => {
     try {
@@ -215,7 +212,7 @@ app.post('/usuarios', upload.single('foto'), async (req, res) => {
         const {
             legajo, apellido, nombres, email, telefono,
             cargo, sector, dependencia, jefe, legajo_jefe,
-            ubicacion, estado, perfil, indicadores
+            ubicacion, estado, perfil
         } = req.body;
 
         const fotoBuffer = req.file ? req.file.buffer : null;
@@ -333,18 +330,6 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
 });
 
 
-
-// // // 🚫🚫🚫 Leer sectores
-// app.get('/sectores', async (req, res) => {
-//     try {
-//         const [rows] = await pool.execute('SELECT nombre, descripcion, sector_padre_id, sector_porcentual FROM sectores');
-//         res.json(rows);
-//     } catch (error) {
-//         console.error('Error al obtener sectores:', error);
-//         res.status(500).json({ error: 'Error al obtener sectores' });
-//     }
-// });
-
 // // 🚫🚫🚫 Obtener un sector por unidad)
 app.get('/sectores/:unidad', async (req, res) => {
     const unidad = req.params.unidad;
@@ -360,15 +345,6 @@ app.get('/sectores/:unidad', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
-
-
-
-
-
-
-
-
-
 
 
 // 🚀 Nueva ruta para devolver el árbol de sectores + indicadores
@@ -561,7 +537,6 @@ app.get('/api/arbol-jstree-lazy-anulada', async (req, res) => {
 });
 
 
-
 // 🚀 Ruta jsTree con conteo acumulado
 app.get('/api/arbol-jstree-lazy', async (req, res) => {
     try {
@@ -588,25 +563,6 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
             });
             return total;
         }
-
-        // === Lazy loading respuesta ===
-        // if (parent === "#") {
-        //     // Sectores raíz
-        //     const nodos = sectores
-        //         .filter(s => !s.sector_padre_id)
-        //         .map(s => {
-        //             return {
-        //                 id: `sector-${s.id}`,
-        //                 parent: "#",
-        //                 text: `(${s.sector_porcentual ?? ''}%) ${s.nombre} (${contarTotal(s.id)}) `,
-        //                 icon: "fas fa-sitemap",
-        //                 type: "sector",
-        //                 children: true,
-        //                 sector_porcentual: s.sector_porcentual
-        //             };
-        //         });
-        //     return res.json(nodos);
-        // }
 
         if (parent === "#") {
             const sectoresRaiz = sectores.filter(s => !s.sector_padre_id);
@@ -722,6 +678,36 @@ app.post('/api/update-weight', async (req, res) => {
 });
 
 
+//  🚀 AObtener solo el VALOR de una alerta específica
+app.get('/api/alertas/:codigo/valor', async (req, res) => {
+  try {
+    const { codigo } = req.params;
+    
+    const [rows] = await pool.execute(
+      'SELECT valor FROM alertas WHERE codigo = ?',
+      [codigo]
+    );
+    
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Alerta no encontrada'
+      });
+    }
+    
+    res.json({
+      success: true,
+      valor: rows[0].valor
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener valor de alerta:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error interno del servidor'
+    });
+  }
+});
 
 
 
