@@ -710,6 +710,35 @@ app.get('/api/alertas/:codigo/valor', async (req, res) => {
 });
 
 
+// 🚀 Actualizar el VALOR de una alerta (0 o 1)
+app.post('/api/alertas/:codigo/valor', async (req, res) => {
+
+  try {
+    const { codigo } = req.params;
+    const { valor } = req.body; // se espera 0 o 1
+
+    console.log(`entro en actualizar ${valor}`)
+
+    if (![0, 1].includes(valor)) {
+      return res.status(400).json({ success: false, error: 'Valor inválido, debe ser 0 o 1' });
+    }
+
+    const [result] = await pool.execute(
+      'UPDATE alertas SET valor = ? WHERE codigo = ?',
+      [valor, codigo]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, error: 'Alerta no encontrada' });
+    }
+
+    res.json({ success: true, codigo, valor });
+  } catch (error) {
+    console.error('Error al actualizar valor de alerta:', error);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+});
+
 
 const PORT = process.env.PORT || 3000;
 

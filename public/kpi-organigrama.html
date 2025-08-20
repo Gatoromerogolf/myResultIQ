@@ -651,8 +651,25 @@
                 } catch (err) {
                     console.error('Error al agregar sector:', err);
                 }
+                actualizarAlerta(1)
             });
         }
+
+                // 🎲🎲🎲 Actualizar alertas
+        function actualizarAlerta(tieneError) {
+            (async () => {
+                try {
+                    await fetch(`/api/alertas/1/valor`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ valor: tieneError })
+                    });
+                } catch (err) {
+                    console.error('Error actualizando alertas.valor', err);
+                }
+            })();
+        }
+
 
         // === Gestión de Sectores ===
         async function cargarSectores() {
@@ -709,6 +726,7 @@
                 console.error('Error al eliminar sector:', err);
                 alert('No se pudo eliminar el sector.');
             }
+            actualizarAlerta(1);
         }
     </script>
 

@@ -623,44 +623,7 @@
                     document.getElementById('alertaCondicional').style.display = 'none';
                 });
         });
-        // Función para verificar si debe mostrar la alerta
-        // async function verificarAlerta() {
-        //     try {
-        //         const response = await fetch(`${API_BASE_URL}/alertas/${CODIGO_ALERTA}`);
 
-        //         if (response.ok) {
-        //             const data = await response.json();
-
-        //             // Obtener el elemento de la alerta
-        //             const alertaDiv = document.getElementById('alertaCondicional');
-
-        //             // Mostrar alerta solo si el valor es 1
-        //             if (data.valor == 1) {
-        //                 alertaDiv.style.display = 'block';
-        //                 console.log('Alerta activada - Valor:', data.valor);
-        //             } else {
-        //                 alertaDiv.style.display = 'none';
-        //                 console.log('Alerta desactivada - Valor:', data.valor);
-        //             }
-        //         } else {
-        //             console.error('Error al obtener datos de la alerta:', response.status);
-        //             // En caso de error, ocultar la alerta
-        //             document.getElementById('alertaCondicional').style.display = 'none';
-        //         }
-
-        //     } catch (error) {
-        //         console.error('Error de conexión:', error);
-        //         // En caso de error de conexión, ocultar alerta
-        //         document.getElementById('alertaCondicional').style.display = 'none';
-        //     }
-        // }
-
-        // // Ejecutar cuando se carga la página
-        // document.addEventListener('DOMContentLoaded', verificarAlerta);
-
-
-        // // Opcional: Verificar periódicamente el estado (descomentar si lo necesitas)
-        // setInterval(verificarAlerta, 1800000); // Cada 180 segundos
 
     </script>
 

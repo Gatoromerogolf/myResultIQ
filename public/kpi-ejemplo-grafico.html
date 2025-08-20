@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI Dashboard - Administrador</title>
+
+</head>
+
+<div class="container mt-4">
+  <h4>Cumplimiento por sector</h4>
+  <div id="chartCumplimiento"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+  var options = {
+    chart: {
+      type: 'bar',
+      height: 350
+    },
+    title: {
+      text: 'Indicadores de cumplimiento (%)',
+      align: 'center'
+    },
+    series: [{
+      name: 'Cumplimiento',
+      data: [95, 82, 60, 74, 88] // valores de cumplimiento en %
+    }],
+    xaxis: {
+      categories: ['Compras', 'Ventas', 'RRHH', 'Logística', 'IT'] // sectores
+    },
+    yaxis: {
+      max: 100,
+      labels: {
+        formatter: val => val + "%"
+      }
+    },
+    colors: ['#4e73df'], // color de las barras
+    dataLabels: {
+      enabled: true,
+      formatter: val => val + "%"
+    }
+  };
+
+  var chart = new ApexCharts(document.querySelector("#chartCumplimiento"), options);
+  chart.render();
+</script>
+
+
+<!--
+👉 Con esto podés transformar los datos de tu BD en un gráfico visual.
+Si tus indicadores ya están en Express (por ejemplo en una consulta SQL), se puede armar un endpoint que devuelva JSON con los valores y cargar el gráfico dinámicamente con fetch().
+
+¿Querés que te prepare la versión que se conecta al backend (Express → consulta SQL → JSON → ApexCharts)?
+
+🔹 1. Backend en Express
+
+Supongamos que en tu BD tenés una tabla sectores y otra indicadores, y ya calculás el % de cumplimiento por sector.
+Creamos un endpoint que devuelva esos datos en JSON:
+
+// Ejemplo en Express con MySQL
+app.get('/api/cumplimiento-sectores', async (req, res) => {
+  try {
+    // Esta consulta es ilustrativa. Adaptala a tu modelo real.
+    const [rows] = await pool.query(`
+      SELECT s.nombre AS sector, 
+             ROUND(AVG(i.cumplimiento), 0) AS porcentaje
+      FROM sectores s
+      JOIN indicadores i ON i.sector_id = s.id
+      GROUP BY s.id
+      ORDER BY s.nombre
+    `);
+
+    res.json(rows); // [{ sector: "Compras", porcentaje: 95 }, ...]
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener datos" });
+  }
+});
+
+
+👉 Esto devuelve algo así en /api/cumplimiento-sectores:
+
+[
+  { "sector": "Compras", "porcentaje": 95 },
+  { "sector": "Ventas", "porcentaje": 82 },
+  { "sector": "RRHH", "porcentaje": 60 },
+  { "sector": "Logística", "porcentaje": 74 },
+  { "sector": "IT", "porcentaje": 88 }
+]
+
+🔹 2. Frontend con ApexCharts
+
+En tu HTML usás fetch() para consumir ese endpoint y armar el gráfico:
+
+<div class="container mt-4">
+  <h4>Cumplimiento por sector</h4>
+  <div id="chartCumplimiento"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+  async function cargarGrafico() {
+    try {
+      const res = await fetch('/api/cumplimiento-sectores');
+      const data = await res.json();
+
+      const sectores = data.map(d => d.sector);
+      const valores = data.map(d => d.porcentaje);
+
+      var options = {
+        chart: {
+          type: 'bar',
+          height: 350
+        },
+        title: {
+          text: 'Indicadores de cumplimiento (%)',
+          align: 'center'
+        },
+        series: [{
+          name: 'Cumplimiento',
+          data: valores
+        }],
+        xaxis: {
+          categories: sectores
+        },
+        yaxis: {
+          max: 100,
+          labels: {
+            formatter: val => val + "%"
+          }
+        },
+        colors: ['#28a745'], // verde
+        dataLabels: {
+          enabled: true,
+          formatter: val => val + "%"
+        }
+      };
+
+      var chart = new ApexCharts(document.querySelector("#chartCumplimiento"), options);
+      chart.render();
+
+    } catch (err) {
+      console.error("Error cargando gráfico:", err);
+    }
+  }
+
+  cargarGrafico();
+</script>
+
+🔹 3. Flujo final
+
+El frontend pide datos a /api/cumplimiento-sectores.
+
+El backend consulta la BD y devuelve JSON.
+
+ApexCharts renderiza el gráfico dinámicamente.
+
+👉 ¿Querés que te prepare también el SQL exacto para crear esa columna de “cumplimiento” en tu tabla de indicadores (para que después sea más fácil calcular los promedios por sector)?
+
+
+
+Perfecto 👍.
+Te muestro cómo podrías tener la estructura en SQL para manejar un campo de cumplimiento (%) en tus indicadores y después calcular fácilmente los promedios por sector.
+
+🔹 1. Tabla sectores
+CREATE TABLE sectores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+🔹 2. Tabla indicadores
+
+Le agregamos un campo cumplimiento en porcentaje (0 a 100).
+
+CREATE TABLE indicadores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sector_id INT NOT NULL,
+    nombre VARCHAR(150) NOT NULL,
+    cumplimiento DECIMAL(5,2) DEFAULT 0, -- % de cumplimiento
+    FOREIGN KEY (sector_id) REFERENCES sectores(id)
+);
+
+
+👉 El campo cumplimiento lo podés cargar cada vez que se actualiza el indicador.
+Ejemplo: si un indicador está al 75% de su meta → cumplimiento = 75.00.
+
+🔹 3. Insertar datos de prueba
+INSERT INTO sectores (nombre) VALUES
+('Compras'), ('Ventas'), ('RRHH'), ('Logística'), ('IT');
+
+INSERT INTO indicadores (sector_id, nombre, cumplimiento) VALUES
+(1, 'Tiempo de ciclo de compra', 95),
+(1, 'Cumplimiento proveedores', 90),
+(2, 'Objetivos de ventas', 80),
+(2, 'Retención de clientes', 84),
+(3, 'Capacitación anual', 60),
+(4, 'Entregas a tiempo', 70),
+(4, 'Stock disponible', 78),
+(5, 'Disponibilidad sistemas', 88);
+
+🔹 4. Consulta de % de cumplimiento por sector
+
+La query que después usa tu backend sería:
+
+SELECT s.nombre AS sector,
+       ROUND(AVG(i.cumplimiento), 0) AS porcentaje
+FROM sectores s
+JOIN indicadores i ON i.sector_id = s.id
+GROUP BY s.id
+ORDER BY s.nombre;
+
+
+📌 Resultado esperado con los datos de ejemplo:
+
+sector	porcentaje
+Compras	93
+IT	88
+Logística	74
+RRHH	60
+Ventas	82
+
+De esa forma tenés todo listo para que el endpoint /api/cumplimiento-sectores en Express te devuelva exactamente el JSON que alimenta ApexCharts.
+
+👉 ¿Querés que además te prepare la migración SQL para agregar el campo cumplimiento si ya tenés la tabla indicadores creada (sin tener que borrarla)?
+
+-->

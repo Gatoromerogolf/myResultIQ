@@ -80,7 +80,8 @@
             align-items: center;
             gap: 0.1rem;
             flex-wrap: wrap;
-            line-height: 1; /* reduce la altura de línea */
+            line-height: 1;
+            /* reduce la altura de línea */
         }
 
         /* Ícono de nodo */
@@ -417,7 +418,9 @@
                             <!--begin::Latest Order Widget-->
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
-                                    <h3 class="card-title">Asigne el valor relativo a cada entidad/indicador, considerando su impacto en los objetivos estratégicos.  El total por nivel debe ser 100.</h3>
+                                    <h3 class="card-title">Asigne el valor relativo a cada entidad/indicador,
+                                        considerando su impacto en los objetivos estratégicos. El total por nivel debe
+                                        ser 100.</h3>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                                             <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -457,7 +460,7 @@
     <!--end::App Wrapper-->
 
     <!--begin::Modal del usuario-->
-    <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
+    <!-- <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -473,7 +476,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!--end::Modal del usuario-->
 
     <!-- Modal de Confirmación de Logout -->
@@ -505,9 +508,6 @@
             // Redirigir al inicio
             window.location.href = 'index.html';
         });
-    </script>
-
-    <script>
 
         // 🎲🎲🎲 Arma el árbol
         async function fetchData() {
@@ -602,7 +602,6 @@
             }
         }
 
-
         // 🎲🎲🎲 Calcula valores y verifica pesos
         function calculateValues(node) {
             if (node.children && node.children.length > 0) {
@@ -615,25 +614,31 @@
             }
         }
 
-
+        // 🎲🎲🎲 Chequea pesos
         function checkWeights(parentNode) {
-            if (!parentNode || !parentNode.children) return true;
+            if (!parentNode) return true;
 
-            // 👇 si es la raíz o un nodo que no depende de otro
+            // Si es la raíz, no aplica el control
             if (!parentNode.parentNode) {
-                return true; // no aplica el control
+                return true;
             }
 
+            // Si no tiene hijos o tiene array vacío, es válido (nodo hoja)
+            if (!parentNode.children || parentNode.children.length === 0) {
+                return true;
+            }
+
+            // Solo validar suma si realmente tiene hijos
             let sum = 0;
-            if (!parentNode.children) return true;
             parentNode.children.forEach(c => {
                 sum += Number(c.weight) || 0;
             });
+
             return Math.abs(sum - 100) < 0.001;
         }
 
-
-        function buildTree(node, parentNode = null) {
+        // 🎲🎲🎲 Construye el árbol
+        function buildTree(node, parentNode = null, level = 0) {
             node.parentNode = parentNode;
             const container = document.createElement('div');
             container.className = 'list-group-item node-container node-' + node.type; // usa estilo AdminLTE/list-group
@@ -647,6 +652,18 @@
             icon.className = node.type === 'sector' ? 'fas fa-sitemap' : 'fas fa-chart-line';
             header.appendChild(icon);
 
+            // === Color según nivel ===
+            const title = document.createElement('span');
+            title.textContent = node.name || node.text;
+
+            // Clases de color por nivel (0 = raíz, 1 = hijos de raíz, etc.)
+            const colores = ["text-dark", "text-primary", "text-success", "text-dark", "text-danger"];
+            const colorClase = colores[level % colores.length]; // rota si hay más niveles
+            title.classList.add(colorClase);
+
+            header.appendChild(title);
+            container.appendChild(header);
+
             if (node.id !== 'root') {
                 const weightInput = document.createElement('input');
                 weightInput.type = 'number';
@@ -658,51 +675,58 @@
                 weightInput.title = 'Peso relativo (%)';
                 header.appendChild(weightInput);
 
-                    // 👇 si es nodo raíz (no tiene parentNode, o su parent es 'root')
-    if (!parentNode || parentNode.id === 'root') {
-        node.weight = 100;
-        weightInput.value = 100;
-        weightInput.disabled = true; // no editable
-    } else {
-                weightInput.addEventListener('change', async () => {
-                    let val = Number(weightInput.value);
-                    if (isNaN(val) || val < 0) val = 0;
-                    if (val > 100) val = 100;
-                    node.weight = val;
+                // 👇 si es nodo raíz (no tiene parentNode, o su parent es 'root')
+                if (!parentNode || parentNode.id === 'root') {
+                    node.weight = 100;
+                    weightInput.value = 100;
+                    weightInput.disabled = true; // no editable
+                } else {
+                    weightInput.addEventListener('change', async () => {
+                        let val = Number(weightInput.value);
+                        if (isNaN(val) || val < 0) val = 0;
+                        if (val > 100) val = 100;
+                        node.weight = val;
 
-                    // Recalcular valores
-                    calculateValues(getRootNode(node));
+                        // Recalcular valores
+                        calculateValues(getRootNode(node));
 
-                    // Control de 100%
-                    if (!checkWeights(node.parentNode)) {
-                        node.parentNode._errorMsg.style.display = 'block';
-                    } else {
-                        node.parentNode._errorMsg.style.display = 'none';
-                    }
+                        // Control de 100%
+                        if (!checkWeights(node.parentNode)) {
+                            node.parentNode._errorMsg.style.display = 'block';
+                        } else {
+                            node.parentNode._errorMsg.style.display = 'none';
+                        }
+                        // 👇 AQUÍ: verificar TODO el árbol después del cambio
+                        const hasErrors = !checkAllWeights(window.treeRoot);
+                        if (hasErrors) {
+                            console.warn('⚠️ Se encontraron errores de pesos en el árbol');
+                            actualizarAlerta(1);
+                        } else {
+                            actualizarAlerta(0);
+                        }
 
-                    // Guardar en BD
-                    try {
-                        await fetch(`/api/update-weight`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                id: node.id,
-                                type: node.type, // 'sector' o 'indicador'
-                                weight: val
-                            })
-                        });
-                    } catch (err) {
-                        console.error('Error guardando en BD', err);
-                    }
-
-                    refreshUI();
-                });
-            }
+                        // Guardar peso del nodo en BD
+                        try {
+                            await fetch(`/api/update-weight`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    id: node.id,
+                                    type: node.type, // 'sector' o 'indicador'
+                                    weight: val
+                                })
+                            });
+                        } catch (err) {
+                            console.error('Error guardando en BD', err);
+                        }
+                        refreshUI();
+                    });
+                }
                 node._weightInput = weightInput;
             }
 
-            const title = document.createElement('span');
-            title.textContent = node.name || node.text;
+            const title2 = document.createElement('span');
+            title2.textContent = node.name || node.text;
             header.appendChild(title);
 
             container.appendChild(header);
@@ -724,6 +748,21 @@
                 errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
                 container.appendChild(errorMsg);
                 node._errorMsg = errorMsg;
+                const tieneError = !checkWeights(node)
+                if (tieneError) { console.log(`tiene error: ${tieneError}`) };
+
+                // 🔹 Actualizar alertas.valor en la BD
+                // (async () => {
+                //     try {
+                //         await fetch(`/api/alertas/1/valor`, {
+                //             method: 'POST',
+                //             headers: { 'Content-Type': 'application/json' },
+                //             body: JSON.stringify({ valor: tieneError ? 1 : 0 })
+                //         });
+                //     } catch (err) {
+                //         console.error('Error actualizando alertas.valor', err);
+                //     }
+                // })();
             }
 
             // Hijos recursivos
@@ -731,7 +770,7 @@
                 const childrenContainer = document.createElement('div');
                 childrenContainer.className = 'children-container'; // <-- aquí
                 node.children.forEach(child => {
-                    childrenContainer.appendChild(buildTree(child, node));
+                    childrenContainer.appendChild(buildTree(child, node, level + 1));
                 });
                 container.appendChild(childrenContainer);
             }
@@ -740,6 +779,7 @@
             return container;
         }
 
+        // 🎲🎲🎲 Refresca interfase
         function refreshUI() {
             function updateNode(node) {
                 if (node._progressBar) { node._progressBar.style.width = `${node.value?.toFixed(1) || 0}%`; }
@@ -750,6 +790,7 @@
             updateNode(window.treeRoot);
         }
 
+        // 🎲🎲🎲 Get Root Node
         function getRootNode(node) {
             while (node.parentNode) {
                 node = node.parentNode;
@@ -757,16 +798,54 @@
             return node;
         }
 
-        // MAIN
+        // 🎲🎲🎲 Actualizar alertas
+        function actualizarAlerta(tieneError) {
+            (async () => {
+                try {
+                    await fetch(`/api/alertas/1/valor`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ valor: tieneError })
+                    });
+                } catch (err) {
+                    console.error('Error actualizando alertas.valor', err);
+                }
+            })();
+        }
+
+        // 🎲🎲🎲 Controla balance de todos los nodos
+        function checkAllWeights(node) {
+            if (!node) return true;
+            // Verificar este nodo
+            const thisNodeValid = checkWeights(node);
+
+            // Si tiene hijos, verificar recursivamente cada hijo
+            if (node.children && node.children.length > 0) {
+                const childrenValid = node.children.every(child => checkAllWeights(child));
+                return thisNodeValid && childrenValid;
+            }
+            return thisNodeValid;
+        }
+
+        // 🎲🎲🎲 MAIN 🎲🎲🎲
         (async () => {
             window.treeRoot = await fetchData();
             calculateValues(window.treeRoot);
+
+            // 👇 Verificar errores antes de renderizar
+            const hasErrors = !checkAllWeights(window.treeRoot);
+            if (hasErrors) {
+                console.warn('⚠️ Se encontraron errores de % al cargar el árbol');
+                actualizarAlerta(1);
+            } else {
+                actualizarAlerta(0);  // Todo OK
+            }
+
             const container = document.getElementById('treeContainer');
             container.innerHTML = '';
             container.appendChild(buildTree(window.treeRoot));
         })();
     </script>
-
 
 
     <!--begin::Script-->
@@ -783,10 +862,6 @@
     <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)-->
-
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
-
 
     <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
