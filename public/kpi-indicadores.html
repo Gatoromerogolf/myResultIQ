@@ -414,6 +414,16 @@
         .hidden {
             display: none;
         }
+
+        /* Quitar spinners y darle aspecto de textfield */
+        input[type=number] {
+            -moz-appearance: textfield;
+            /* Firefox */
+            -webkit-appearance: textfield;
+            /* Chrome, Safari, Edge */
+            appearance: textfield;
+            /* Estándar */
+        }
     </style>
 </head>
 <!--end::Head-->
@@ -877,7 +887,6 @@
                                                     </div>
                                                     <!--end::Descripción-->
 
-
                                                     <!-- Sección: Alineación estratégica -->
                                                     <div class="col-12">
                                                         <h5 class="text-primary mt-4 border-bottom">Alineación
@@ -950,7 +959,6 @@
                                                     </div>
                                                     <!--end::Dimensión-->
 
-
                                                     <!--begin::Categoría-->
                                                     <div class="col-md-3">
                                                         <div class="d-flex justify-content-between align-items-center">
@@ -971,7 +979,8 @@
                                                             <label for="dimension" class="form-label">
                                                                 <i class="fas fa-file-alt text-primary"
                                                                     data-bs-toggle="tooltip" data-bs-html="true"
-                                                                    data-bs-custom-class="custom-tooltip" title="<b>🧩 Ejemplos combinados</b><br>
+                                                                    data-bs-custom-class="custom-tooltip"
+                                                                    title="<b>🧩 Ejemplos combinados</b><br>
                                                                     • PKI: <b>Tiempo de ciclo de compra</b><br>
                                                                     Tipo: Táctico;<br> Dimensión: Procesos;<br> Categoría: Eficiencia <br>
                                                                     • PKI:<b> Nivel de Satisfacción del cliente</b><br>
@@ -1083,7 +1092,6 @@
 
                                                     <!--begin::Meta-->
                                                     <div class="row align-items-end">
-
                                                         <!-- Tipo de meta -->
                                                         <div class="mt-2 col-md-2">
                                                             <label for="tipoMeta" class="form-label"><strong>Tipo de
@@ -1103,7 +1111,7 @@
                                                                 <option value="">-- Seleccionar --</option>
                                                                 <option value="valor">Valor único</option>
                                                                 <option value="rango">Rango de valores</option>
-                                                                <option value="tendencia">Tendencia esperada</option>
+                                                                <option value="tendencia">Tendencia</option>
                                                             </select>
                                                         </div>
 
@@ -1123,7 +1131,7 @@
                                                                         class="form-control" placeholder="Ej: 85">
                                                                 </div>
 
-                                                                <div id="subtipoValorUnico" class="col-md-3">
+                                                                <div id="subtipoValorUnico" class="col-md-4">
                                                                     <label for="evaluacionMeta"
                                                                         class="form-label"><strong>Evaluación del valor
                                                                             único:</strong>
@@ -1156,8 +1164,6 @@
                                                                             Cero tolerancia</option>
                                                                     </select>
                                                                 </div>
-
-                                                                <!--begin::Row-->
 
                                                                 <!--begin::Umbral Positivo-->
                                                                 <div class="col-md-2">
@@ -1201,61 +1207,140 @@
                                                         </div>
 
                                                         <!-- Meta como rango -->
-                                                        <div id="metaRango" class="hidden col-md-8">
-                                                            <label class="form-label"><strong>Rango
-                                                                    deseado:</strong></label>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text">Desde</span>
-                                                                <input type="number" step="any" id="rangoDesde"
-                                                                    class="form-control" placeholder="Ej: 60">
-                                                                <span class="input-group-text">Hasta</span>
-                                                                <input type="number" step="any" id="rangoHasta"
-                                                                    class="form-control" placeholder="Ej: 75">
+                                                        <div id="metaRango" class="hidden col-md-9">
+                                                            <div class="row mt-2">
+                                                                <div class="col-md-5">
+                                                                    <label class="form-label"><strong>Rango
+                                                                            deseado:</strong></label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text">Desde</span>
+                                                                        <input type="number" step="any" id="rangoDesde"
+                                                                            class="form-control" placeholder="Ej: 60">
+                                                                        <span class="input-group-text">Hasta</span>
+                                                                        <input type="number" step="any" id="rangoHasta"
+                                                                            class="form-control" placeholder="Ej: 75">
+                                                                    </div>
+                                                                </div>
+                                                                <!--begin::Umbral Positivo-->
+                                                                <div class="col-md-2">
+                                                                    <label for="umbralPositivo"
+                                                                        class="form-label"><strong>%
+                                                                            Aceptable
+                                                                            *</strong>
+                                                                        <i class="fas fa-info-circle info-icon"
+                                                                            data-bs-toggle="tooltip" data-bs-html="true"
+                                                                            data-bs-custom-class="dark-tooltip"
+                                                                            title="Δ Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
+                                                                        </i>
+                                                                    </label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="umbralPostivo" name="umbralPositivo"
+                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                </div>
+                                                                <!--end::Umbral Aceptable-->
+
+                                                                <!--begin::Umbral en Riesgo-->
+                                                                <div class="col-md-2">
+                                                                    <label for=" umbralCritico" class="form-label">
+                                                                        <strong>% Riesgo *</strong>
+                                                                    </label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="umbralCritico" name="umbralCritico"
+                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                </div>
+                                                                <!--end::Umbral en Riesgo-->
+
+                                                                <!--begin::Umbral Crítico-->
+                                                                <div class="col-md-2">
+                                                                    <label for="umbralCritico"
+                                                                        class="form-label"><strong>%
+                                                                            Crítico
+                                                                            *</strong></label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="umbralCritico" name="umbralCritico"
+                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                </div>
+                                                                <!--end::Umbral Crítico-->
                                                             </div>
                                                         </div>
 
                                                         <!-- Meta como tendencia -->
                                                         <div id="metaTendencia" class="hidden col-md-9">
-                                                            <div class="row">
-                                                                <div class="col-md-2">
-                                                                    <label for="tipoTendencia"
-                                                                        class="form-label">Tendencia
-                                                                        deseada:</label>
+                                                            <div class="row mt-2 align-items-end">
+                                                                <!-- Columna 1: Tipo de tendencia -->
+                                                                <div class="col-md-3">
+                                                                    <label for="tipoTendencia" class="form-label">
+                                                                        <strong>Tipo de Tendencia:</strong>
+                                                                    </label>
                                                                     <select id="tipoTendencia" class="form-select">
                                                                         <option value="">-- Seleccionar --</option>
                                                                         <option value="aumentar">Aumento</option>
-                                                                        <option value="disminuir">Disminución
-                                                                        </option>
-                                                                        <option value="mantener">Mantenimiento
-                                                                        </option>
+                                                                        <option value="disminuir">Disminución</option>
+                                                                        <option value="mantener">Estable</option>
                                                                     </select>
                                                                 </div>
-                                                                <div class="col-md-2">
-                                                                    <label for="valorReferencia"
-                                                                        class="form-label">Valor de
-                                                                        referencia:</label>
+
+                                                                <!-- Columna 2: Valor de referencia -->
+                                                                <div class="col-md-3">
+                                                                    <label for="valorReferencia" class="form-label">
+                                                                        <strong>Valor de referencia:</strong>
+                                                                    </label>
                                                                     <input type="number" step="any" id="valorReferencia"
                                                                         class="form-control" placeholder="Ej: 65">
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <label for="periodoComparacion"
-                                                                        class="form-label">Periodo:</label>
-                                                                    <input type="text" id="periodoComparacion"
-                                                                        class="form-control"
-                                                                        placeholder="Ej: Últimos 6 meses">
+
+                                                                <!--begin::Umbral Positivo-->
+                                                                <div class="col-md-2">
+                                                                    <label for="umbralPositivo"
+                                                                        class="form-label"><strong>%
+                                                                            Aceptable
+                                                                            *</strong>
+                                                                        <i class="fas fa-info-circle info-icon"
+                                                                            data-bs-toggle="tooltip" data-bs-html="true"
+                                                                            data-bs-custom-class="dark-tooltip"
+                                                                            title="Δ Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
+                                                                        </i>
+                                                                    </label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="umbralPostivo" name="umbralPositivo"
+                                                                        placeholder="(Δ) %  c/r a la meta" />
                                                                 </div>
+                                                                <!--end::Umbral Aceptable-->
+
+                                                                <!--begin::Umbral en Riesgo-->
+                                                                <div class="col-md-2">
+                                                                    <label for=" umbralCritico" class="form-label">
+                                                                        <strong>% Riesgo *</strong>
+                                                                    </label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="umbralCritico" name="umbralCritico"
+                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                </div>
+                                                                <!--end::Umbral en Riesgo-->
+
+                                                                <!--begin::Umbral Crítico-->
+                                                                <div class="col-md-2">
+                                                                    <label for="umbralCritico"
+                                                                        class="form-label"><strong>%
+                                                                            Crítico
+                                                                            *</strong></label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="umbralCritico" name="umbralCritico"
+                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                </div>
+                                                                <!--end::Umbral Crítico-->
                                                             </div>
                                                         </div>
-
-                                                        <script>
-                                                            function mostrarCamposMeta() {
-                                                                const tipo = document.getElementById('tipoMeta').value;
-                                                                document.getElementById('metaValor').classList.toggle('hidden', tipo !== 'valor');
-                                                                document.getElementById('metaRango').classList.toggle('hidden', tipo !== 'rango');
-                                                                document.getElementById('metaTendencia').classList.toggle('hidden', tipo !== 'tendencia');
-                                                            }
-                                                        </script>
                                                     </div>
+
+                                                    <script>
+                                                        function mostrarCamposMeta() {
+                                                            const tipo = document.getElementById('tipoMeta').value;
+                                                            document.getElementById('metaValor').classList.toggle('hidden', tipo !== 'valor');
+                                                            document.getElementById('metaRango').classList.toggle('hidden', tipo !== 'rango');
+                                                            document.getElementById('metaTendencia').classList.toggle('hidden', tipo !== 'tendencia');
+                                                        }
+                                                    </script>
                                                     <!--end::Meta-->
 
                                                     <!-- Sección: Medición -->

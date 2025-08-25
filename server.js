@@ -301,16 +301,16 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
     try {
         const {
             apellido, nombres, email, telefono, cargo, sector,
-            dependencia, jefe_nombre, legajo_jefe, ubicacion, estado, perfil, indicadores
+            dependencia, jefe_nombre, legajo_jefe, ubicacion, estado, perfil
         } = req.body;
 
         const campos = [
             'apellido = ?', 'nombres = ?', 'email = ?', 'telefono = ?',
             'cargo = ?', 'sector = ?', 'dependencia = ?', 'jefe_nombre = ?',
-            'legajo_jefe = ?', 'ubicacion = ?', 'estado = ?', 'perfil = ?', 'indicadores = ?'
+            'legajo_jefe = ?', 'ubicacion = ?', 'estado = ?', 'perfil = ?'
         ];
         const valores = [apellido, nombres, email, telefono, cargo, sector, dependencia, jefe_nombre,
-            legajo_jefe, ubicacion, estado, perfil, indicadores];
+            legajo_jefe, ubicacion, estado, perfil];
 
         if (req.file) {
             campos.push('foto = ?');

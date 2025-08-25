@@ -439,12 +439,18 @@
 
                                         <div class="row mt-3">
                                             <div class="col-md-4">
-                                                <label>Cargo</label>
+                                                <label>Cargo/Función</label>
                                                 <input type="text" name="cargo" class="form-control">
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Sector</label>
-                                                <input type="text" name="sector" class="form-control">
+                                                <select class="form-select" id="unidadFuncional" name="unidadFuncional"
+                                                    required>
+                                                    <option selected disabled value="">Seleccione sector...
+                                                    </option>
+                                                    <!-- Las opciones se agregarán dinámicamente -->
+                                                </select>
+                                                <!-- <input type="text" name="sector" class="form-control"> -->
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Dependencia directa</label>
@@ -582,6 +588,39 @@
     </script>
 
     <script>
+
+        const API_SECTORES = '/api/sectores'; // Reemplazá con la ruta real
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch(API_SECTORES);
+                const sectores = await response.json();
+                llenarSelectUnidades(sectores);
+            } catch (error) {
+                console.error('Error al cargar sectores:', error);
+            }
+        });
+
+        function llenarSelectUnidades(sectores) {
+            const select = document.getElementById('unidadFuncional');
+            sectores.forEach(sector => {
+                const opcion = document.createElement('option');
+                opcion.value = sector.id;
+                opcion.textContent = obtenerNombreJerarquico(sector, sectores);
+                select.appendChild(opcion);
+            });
+        }
+        // (opcional) Mostrar estructura jerárquica si los sectores tienen padres
+        function obtenerNombreJerarquico(sector, todos) {
+            const cadena = [sector.nombre];
+            let actual = sector;
+            while (actual.sector_padre_id) {
+                actual = todos.find(s => s.id === actual.sector_padre_id);
+                if (actual) cadena.unshift(actual.nombre);
+            }
+            return cadena.join(' > ');
+        }
+
         document.getElementById('form-usuario').addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -649,7 +688,6 @@
                     const fotoURL = usuario.tiene_foto
                         ? `/usuarios/foto/${usuario.legajo}?t=${Date.now()}`
                         : '../dist/images/default_user.jpg';
-
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -723,7 +761,7 @@
                 }
 
                 // Mostrar la foto previa si tiene
-                const fotoPreview = document.getElementById('foto-preview');
+                const fotoPreview = document.getElementById('fotoEmpleado');
                 fotoPreview.src = `/usuarios/foto/${legajo}`;
                 fotoPreview.style.display = 'block';
             }
@@ -734,7 +772,6 @@
         }
 
     </script>
-
 
     <!-- Modal de foto del usuario -->
     <div class="modal fade" id="modalFoto" tabindex="-1" aria-hidden="true">
