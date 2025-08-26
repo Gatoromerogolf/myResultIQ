@@ -910,14 +910,21 @@
                                                                     • <b>Operativo:</b> Medida de la eficiencia de las operaciones diarias<br>Ej: Reclamos atendidos, tiempo de respuesta, productos defectuosos por turno<br>">
                                                             </i>
                                                         </label>
-                                                        <select class="form-select" id="criticidad" name="criticidad"
+
+                                                        <select id="tipo" name="tipo_id" class="form-select" required>
+                                                            <option value="" disabled selected>Seleccione tipo...
+                                                            </option>
+                                                            <!-- Opciones se llenan desde la tabla tipo_indicador -->
+                                                        </select>
+
+                                                        <!-- <select class="form-select" id="criticidad" name="criticidad"
                                                             required>
                                                             <option selected disabled value="">Seleccione ...
                                                             </option>
                                                             <option value="Estratégico">Estratégico</option>
                                                             <option value="Táctico">Táctico</option>
                                                             <option value="Operativo">Operativo</option>
-                                                        </select>
+                                                        </select> -->
                                                         <div class="invalid-feedback">Debe seleccionar la criticidad.
                                                         </div>
                                                     </div>
@@ -1966,7 +1973,6 @@
 
                     const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
 
-                    console.log(`sector a leer ${ind.unidad_funcional_id}`)
                     const sectores = await obtenerSectoresPorUnidad(ind.unidad_funcional_id);
 
                     fila.innerHTML = `

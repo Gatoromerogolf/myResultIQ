@@ -211,8 +211,8 @@ app.post('/usuarios', upload.single('foto'), async (req, res) => {
     try {
         const {
             legajo, apellido, nombres, email, telefono,
-            cargo, sector, dependencia, jefe, legajo_jefe,
-            ubicacion, estado, perfil
+            cargo, sector, legajo_jefe,
+            estado, perfil
         } = req.body;
 
         const fotoBuffer = req.file ? req.file.buffer : null;
@@ -220,15 +220,15 @@ app.post('/usuarios', upload.single('foto'), async (req, res) => {
         const sql = `
             INSERT INTO usuarios (
                 legajo, apellido, nombres, email, telefono, foto,
-                cargo, sector, dependencia, jefe_nombre, legajo_jefe,
-                ubicacion, estado, perfil
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                cargo, sector, legajo_jefe,
+                estado, perfil
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
             legajo, apellido, nombres, email, telefono, fotoBuffer,
-            cargo, sector, dependencia, jefe, legajo_jefe,
-            ubicacion, estado, perfil
+            cargo, sector, legajo_jefe,
+            estado, perfil
         ];
 
         const [result] = await pool.execute(sql, values);
@@ -243,7 +243,7 @@ app.post('/usuarios', upload.single('foto'), async (req, res) => {
 // // 🚫🚫🚫 Leer usuarios con imagen
 app.get('/usuarios', async (req, res) => {
     try {
-        const [rows] = await pool.execute('SELECT legajo, apellido, nombres, cargo, sector, email, estado, perfil, foto IS NOT NULL AS tiene_foto FROM usuarios');
+        const [rows] = await pool.execute('SELECT legajo, apellido, nombres, cargo, sector,  legajo_jefe, email, estado, perfil, foto IS NOT NULL AS tiene_foto FROM usuarios');
         res.json(rows);
     } catch (error) {
         console.error('Error al obtener usuarios:', error);
@@ -256,7 +256,8 @@ app.get('/usuarios/:legajo', async (req, res) => {
     const legajo = req.params.legajo;
     console.log (`legajo en back: ${legajo}`)
     try {
-        const [rows] = await pool.query('SELECT * FROM usuarios WHERE legajo = ?', [legajo]);
+        const [rows] = await pool.query('SELECT legajo, apellido, nombres, email, telefono, cargo, sector, legajo_jefe, estado, perfil FROM usuarios WHERE legajo = ?',
+            [legajo]);
         if (rows.length > 0) {
             res.json(rows[0]);
         } else {
@@ -301,16 +302,16 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
     try {
         const {
             apellido, nombres, email, telefono, cargo, sector,
-            dependencia, jefe_nombre, legajo_jefe, ubicacion, estado, perfil
+            legajo_jefe, estado, perfil
         } = req.body;
 
         const campos = [
             'apellido = ?', 'nombres = ?', 'email = ?', 'telefono = ?',
-            'cargo = ?', 'sector = ?', 'dependencia = ?', 'jefe_nombre = ?',
-            'legajo_jefe = ?', 'ubicacion = ?', 'estado = ?', 'perfil = ?'
+            'cargo = ?', 'sector = ?',
+            'legajo_jefe = ?', 'estado = ?', 'perfil = ?'
         ];
-        const valores = [apellido, nombres, email, telefono, cargo, sector, dependencia, jefe_nombre,
-            legajo_jefe, ubicacion, estado, perfil];
+        const valores = [apellido, nombres, email, telefono, cargo, sector,
+            legajo_jefe, estado, perfil];
 
         if (req.file) {
             campos.push('foto = ?');
@@ -326,6 +327,17 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
+    }
+});
+
+// // 🚫🚫🚫 Obtener todos los sectores
+app.get('/sectores', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM sectores');
+        res.json(rows); // devuelve array de sectores {id, nombre, sector_padre_id}
+    } catch (err) {
+        console.error('Error al obtener sectores:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 

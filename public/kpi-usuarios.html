@@ -15,7 +15,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>myResultIQ | Ususarios</title>
+    <title>myResultIQ | Usuarios</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE v4 | Dashboard" />
@@ -366,7 +366,6 @@
                                                 <th>Nombre</th>
                                                 <th>Cargo</th>
                                                 <th>Sector</th>
-                                                <th>Email</th>
                                                 <th>Estado</th>
                                                 <th>Perfil</th>
                                                 <th>Foto</th>
@@ -442,34 +441,24 @@
                                                 <label>Cargo/Función</label>
                                                 <input type="text" name="cargo" class="form-control">
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <label>Sector</label>
-                                                <select class="form-select" id="unidadFuncional" name="unidadFuncional"
-                                                    required>
+                                                <select class="form-select" id="unidadFuncional" name="sector" required>
                                                     <option selected disabled value="">Seleccione sector...
                                                     </option>
                                                     <!-- Las opciones se agregarán dinámicamente -->
                                                 </select>
-                                                <!-- <input type="text" name="sector" class="form-control"> -->
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>Dependencia directa</label>
-                                                <input type="text" name="dependencia" class="form-control">
                                             </div>
                                         </div>
 
                                         <div class="row mt-3">
                                             <div class="col-md-4">
-                                                <label>Jefe directo</label>
-                                                <input type="text" name="jefe" class="form-control">
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label>Legajo Jefe</label>
-                                                <input type="text" name="legajo_jefe" class="form-control">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>Ubicación/Sede</label>
-                                                <input type="text" name="ubicacion" class="form-control">
+                                                <label>Reporta a:</label>
+                                                <select class="form-select" id="jefe" name="legajo_jefe" required>
+                                                    <option selected disabled value="">Seleccione superior ...
+                                                    </option>
+                                                    <!-- Las opciones se agregarán dinámicamente -->
+                                                </select>
                                             </div>
                                         </div>
 
@@ -507,54 +496,6 @@
                             </form>
                         </div>
                     </section>
-
-                    <!-- <script>
-                        // Simulación de datos(remplazar con fetch a la BD real)
-                        const usuarios = [
-                            {
-                                legajo: "1001",
-                                apellido: "Pérez",
-                                nombre: "Laura",
-                                cargo: "Analista",
-                                sector: "Finanzas",
-                                email: "laura@example.com",
-                                estado: "Activo",
-                                perfil: "Operador"
-                            },
-                            {
-                                legajo: "1002",
-                                apellido: "Rodriguez",
-                                nombre: "Mario",
-                                cargo: "Jefe Sección",
-                                sector: "Finanzas",
-                                email: "rodrigueza@example.com",
-                                estado: "Activo",
-                                perfil: "Supervisor"
-                            }
-                        ];
-
-                        const cuerpoTabla = document.getElementById("tabla-usuarios");
-                        usuarios.forEach(u => {
-                            cuerpoTabla.innerHTML += `
-                                <tr>
-                                <td>${u.legajo}</td>
-                                <td>${u.apellido}</td>
-                                <td>${u.nombre}</td>
-                                <td>${u.cargo}</td>
-                                <td>${u.sector}</td>
-                                <td>${u.email}</td>
-                                <td>${u.estado}</td>
-                                <td>${u.perfil}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning">Editar</button>
-                                    <button class="btn btn-sm btn-danger">Eliminar</button>
-                                </td>
-                                </tr>
-                            `;
-                        });
-                    </script> -->
-
-                    <!--end::Container-->
                 </div>
                 <!--end::App Content-->
 
@@ -573,9 +514,7 @@
             document.getElementById('listaUsuarios').style.display = 'none';
             document.getElementById('nuevoUsuario').style.display = 'block';
         }
-    </script>
 
-    <script>
         function cancelarEdicion() {
             document.getElementById('form-usuario').reset();
             document.getElementById('form-usuario').removeAttribute('data-modo');
@@ -585,9 +524,6 @@
             document.getElementById('nuevoUsuario').style.display = 'none';
             document.getElementById('listaUsuarios').style.display = 'block';
         }
-    </script>
-
-    <script>
 
         const API_SECTORES = '/api/sectores'; // Reemplazá con la ruta real
 
@@ -596,20 +532,66 @@
                 const response = await fetch(API_SECTORES);
                 const sectores = await response.json();
                 llenarSelectUnidades(sectores);
+
+                const leoUsuarios = await fetch('/usuarios');
+                const usuarios = await leoUsuarios.json();
+                llenarUsuarios(usuarios);
             } catch (error) {
                 console.error('Error al cargar sectores:', error);
             }
         });
 
-        function llenarSelectUnidades(sectores) {
+        function llenarSelectUnidades(sectores, sectorEmpleadoId = null) {
             const select = document.getElementById('unidadFuncional');
+            select.innerHTML = ""; // limpiar por si ya tenía opciones
+
+            // opción inicial
+            const placeholder = document.createElement('option');
+            placeholder.value = "";
+            placeholder.textContent = "Seleccione sector...";
+            placeholder.disabled = true;
+            placeholder.selected = true;
+            select.appendChild(placeholder);
+
             sectores.forEach(sector => {
                 const opcion = document.createElement('option');
                 opcion.value = sector.id;
                 opcion.textContent = obtenerNombreJerarquico(sector, sectores);
+
+                // 👇 Marcar seleccionado si coincide con el empleado
+                if (sectorEmpleadoId && sector.id === sectorEmpleadoId) {
+                    opcion.selected = true;
+                }
                 select.appendChild(opcion);
             });
         }
+
+        function llenarUsuarios(usuarios, jefeEmpleadoId = null) {
+            const select = document.getElementById('jefe');
+            select.innerHTML = ""; // limpiar por si ya tenía opciones
+
+            // opción inicial
+            const placeholder = document.createElement('option');
+            placeholder.value = "";
+            placeholder.textContent = "Seleccione Supervisor...";
+            placeholder.disabled = true;
+            placeholder.selected = true;
+            select.appendChild(placeholder);
+
+            usuarios.forEach(usuario => {
+                const opcion = document.createElement('option');
+                opcion.value = usuario.legajo_jefe;  // identificador real en DB
+                opcion.textContent = `${usuario.apellido}, ${usuario.nombres}`; // lo que se ve
+
+                // ✅ marcar jefe actual, usando trim() para evitar espacios
+                if (jefeEmpleadoId && usuario.legajo_jefe === jefeEmpleadoId) {
+                    opcion.selected = true;
+                }
+                select.appendChild(opcion);
+            });
+        }
+
+
         // (opcional) Mostrar estructura jerárquica si los sectores tienen padres
         function obtenerNombreJerarquico(sector, todos) {
             const cadena = [sector.nombre];
@@ -649,7 +631,6 @@
             }
         });
 
-
         function cambiarImagen() {
             // Dispara el input file oculto
             document.getElementById('inputImagen').click();
@@ -675,11 +656,21 @@
             document.getElementById('inputImagen').value = '';
         }
 
-
         async function cargarUsuarios() {
             try {
+                // 1. Traer todos los usuarios
                 const response = await fetch('/usuarios'); // Debe estar definida en el backend
                 const usuarios = await response.json();
+
+                // 2. Traer todos los sectores
+                const responseSectores = await fetch('/sectores');
+                const sectores = await responseSectores.json();
+
+                // Crear un mapa id -> nombre (con jerarquía si querés)
+                const mapSectores = {};
+                sectores.forEach(s => {
+                    mapSectores[s.id] = obtenerNombreJerarquico(s, sectores);
+                });
 
                 const tbody = document.getElementById('tabla-usuarios');
                 tbody.innerHTML = '';
@@ -689,14 +680,15 @@
                         ? `/usuarios/foto/${usuario.legajo}?t=${Date.now()}`
                         : '../dist/images/default_user.jpg';
 
+                    const nombreSector = mapSectores[usuario.sector] || 'No asignado';
+
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                 <td>${usuario.legajo}</td>
                 <td>${usuario.apellido}</td>
                 <td>${usuario.nombres}</td>
                 <td>${usuario.cargo}</td>
-                <td>${usuario.sector}</td>
-                <td>${usuario.email}</td>
+                <td>${nombreSector}</td>
                 <td>${usuario.estado}</td>
                 <td>${usuario.perfil}</td>
                 <td>
@@ -719,29 +711,49 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', cargarUsuarios);
+        async function editarUsuarioXXX(legajo) {
+            try {
+                // 1. Traer datos del usuario
+                const resEmpleado = await fetch(`/usuarios/${legajo}`);
+                const empleado = await resEmpleado.json();
 
-        async function eliminarUsuario(legajo) {
-            if (confirm("¿Estás seguro de que querés eliminar este usuario?")) {
-                try {
-                    const res = await fetch(`/usuarios/${legajo}`, { method: 'DELETE' });
-                    if (res.ok) {
-                        alert("Usuario eliminado correctamente.");
-                        location.reload();
-                    } else {
-                        alert("No se pudo eliminar el usuario.");
-                    }
-                } catch (error) {
-                    console.error(error);
-                    alert("Error al eliminar el usuario.");
-                }
+                // 2. Traer lista de sectores
+                const resSectores = await fetch('/sectores');
+                const sectores = await resSectores.json();
+
+                // 3. Llenar el select de sectores con el sector actual marcado
+                llenarSelectUnidades(sectores, empleado.sector_id);
+
+                // 4. Llenar campos del formulario
+                document.getElementById('legajo').value = empleado.legajo;
+                document.getElementById('apellido').value = empleado.apellido;
+                document.getElementById('nombres').value = empleado.nombres;
+                document.getElementById('cargo').value = empleado.cargo;
+                document.getElementById('email').value = empleado.email;
+                document.getElementById('telefono').value = empleado.telefono || '';
+                document.getElementById('estado').value = empleado.estado;
+                document.getElementById('perfil').value = empleado.perfil;
+
+                // 5. Mostrar modal
+                const modal = new bootstrap.Modal(document.getElementById('detalleUsuarioModal'));
+                modal.show();
+
+            } catch (err) {
+                console.error('Error al cargar usuario:', err);
             }
         }
 
-        async function editarUsuario(legajo) {
+        async function editarUsuarioZZZ(legajo) {
             try {
                 const response = await fetch(`/usuarios/${legajo}`);
                 const usuario = await response.json();
+
+                // Traer la lista completa de usuarios para el select de jefes
+                const resUsuarios = await fetch('/usuarios');
+                const usuarios = await resUsuarios.json();
+
+                // Llenar el select y marcar el jefe actual
+                llenarUsuarios(usuarios, usuario.legajo_jefe);
 
                 // Mostrar el formulario y ocultar la lista
                 document.getElementById('nuevoUsuario').style.display = 'block';
@@ -770,6 +782,71 @@
                 alert('No se pudo cargar el usuario.');
             }
         }
+
+        async function editarUsuario(legajo) {
+            try {
+                // 1️⃣ Traer datos del usuario
+                const response = await fetch(`/usuarios/${legajo}`);
+                const usuario = await response.json();
+
+                // 2️⃣ Traer lista de todos los usuarios para el select de jefes
+                const resUsuarios = await fetch('/usuarios');
+                const usuarios = await resUsuarios.json();
+                llenarUsuarios(usuarios, usuario.legajo_jefe); // marcar jefe actual
+
+                // 3️⃣ Traer lista de sectores y marcar el sector actual
+                const resSectores = await fetch('/sectores');
+                const sectores = await resSectores.json();
+                llenarSelectUnidades(sectores, usuario.sector_id); // marcar sector actual
+
+                // 4️⃣ Mostrar el formulario y ocultar la lista de usuarios
+                document.getElementById('nuevoUsuario').style.display = 'block';
+                document.getElementById('listaUsuarios').style.display = 'none';
+
+                // 5️⃣ Llenar el formulario con los datos del usuario
+                const form = document.getElementById('form-usuario');
+                form.reset();
+                form.setAttribute('data-modo', 'editar');
+                form.setAttribute('data-legajo', legajo); // clave para update
+
+                for (const [key, value] of Object.entries(usuario)) {
+                    if (form.elements[key] && form.elements[key].type !== 'file') {
+                        form.elements[key].value = value;
+                    }
+                }
+
+                // 6️⃣ Mostrar la foto previa si tiene
+                const fotoPreview = document.getElementById('fotoEmpleado');
+                fotoPreview.src = `/usuarios/foto/${legajo}?t=${Date.now()}`; // evitar cache
+                fotoPreview.style.display = 'block';
+
+            } catch (error) {
+                console.error('Error al cargar usuario:', error);
+                alert('No se pudo cargar el usuario.');
+            }
+        }
+
+
+
+
+        async function eliminarUsuario(legajo) {
+            if (confirm("¿Estás seguro de que querés eliminar este usuario?")) {
+                try {
+                    const res = await fetch(`/usuarios/${legajo}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        alert("Usuario eliminado correctamente.");
+                        location.reload();
+                    } else {
+                        alert("No se pudo eliminar el usuario.");
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert("Error al eliminar el usuario.");
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', cargarUsuarios);
 
     </script>
 
