@@ -830,6 +830,7 @@
                                     <!--begin::Form Carga Indicadores-->
                                     <div class="card card-primary card-outline mb-4">
                                         <!--begin::Form-->
+
                                         <form class="needs-validation" novalidate id="indicadorForm">
                                             <!--begin::Body-->
                                             <div class="card-body">
@@ -838,7 +839,8 @@
 
                                                     <!-- Sección: Identificación -->
                                                     <div class="col-12">
-                                                        <h5 class="text-primary border-bottom">Identificación
+                                                        <h5 class="text-primary border-bottom">
+                                                            Identificación
                                                             <i class="fas fa-question-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-placement="right"
                                                                 data-bs-custom-class="field-help"
@@ -848,29 +850,29 @@
 
                                                     <!--begin::Código Identificatorio-->
                                                     <div class="col-md-2">
-                                                        <label for="codigoIdentificatorio"
-                                                            class="form-label"><strong>Código *</strong>
+                                                        <label for="codigo_id" class="form-label"><strong>Código
+                                                                *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="dark-tooltip"
                                                                 title="Código único alfanumérico que identifica el indicador.<br><br> Ejemplo: 1, IND-001, PKI-2024-01.<br><br> No debe repetirse en el sistema.">
                                                             </i>
                                                         </label>
-                                                        <input type="text" class="form-control"
-                                                            id="codigoIdentificatorio" name="codigoIdentificatorio"
-                                                            placeholder="Ej: FIN001" required />
-                                                        <div class="invalid-feedback">El código identificatorio es
-                                                            obligatorio.</div>
+                                                        <input type="text" class="form-control" id="codigo_id"
+                                                            name="codigo_id" placeholder="Ej: FIN001" required />
+                                                        <div class="invalid-feedback">El código
+                                                            identificatorio es obligatorio.</div>
                                                     </div>
                                                     <!--end::Código Identificatorio-->
 
                                                     <!--begin::Nombre-->
                                                     <div class="col-md-5">
-                                                        <label for="nombre" class="form-label"><strong>Nombre *</strong>
-                                                        </label>
+                                                        <label for="nombre" class="form-label"><strong>Nombre
+                                                                *</strong></label>
                                                         <input type="text" class="form-control" id="nombre"
                                                             name="nombre" placeholder="Nombre del indicador" required />
-                                                        <div class="invalid-feedback">El nombre es obligatorio.</div>
+                                                        <div class="invalid-feedback">El nombre es
+                                                            obligatorio.</div>
                                                     </div>
                                                     <!--end::Nombre-->
 
@@ -882,15 +884,15 @@
                                                             name="descripcion" rows="3"
                                                             placeholder="Explicación detallada de qué mide el indicador"
                                                             required></textarea>
-                                                        <div class="invalid-feedback">La descripción es obligatoria.
-                                                        </div>
+                                                        <div class="invalid-feedback">La descripción es
+                                                            obligatoria.</div>
                                                     </div>
                                                     <!--end::Descripción-->
 
                                                     <!-- Sección: Alineación estratégica -->
                                                     <div class="col-12">
-                                                        <h5 class="text-primary mt-4 border-bottom">Alineación
-                                                            estratégica
+                                                        <h5 class="text-primary mt-4 border-bottom">
+                                                            Alineación estratégica
                                                             <i class="fas fa-question-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-placement="right"
                                                                 data-bs-custom-class="field-help"
@@ -900,7 +902,8 @@
 
                                                     <!--begin::Tipo-->
                                                     <div class="col-md-3">
-                                                        <label for="tipo" class="form-label"><strong>Tipo *</strong>
+                                                        <label for="tipo_id" class="form-label"><strong>Tipo
+                                                                *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="custom-tooltip"
@@ -908,31 +911,21 @@
                                                                     • <b>Estratégico:</b> Aplicado a la medición global y de largo alcance del avance de la organización hacia sus grandes objetivos.<br>Ej: Rentabilidad anual, cuota de mercado, satisfaccion del cliente<br><br>
                                                                     • <b>Táctico:</b> Medida del cumplimiento de las metas de cada área que soporta la estrategia<br>Ej: Tiempo promedio de entrega, Productividad de un área<br><br>
                                                                     • <b>Operativo:</b> Medida de la eficiencia de las operaciones diarias<br>Ej: Reclamos atendidos, tiempo de respuesta, productos defectuosos por turno<br>">
-                                                            </i>
-                                                        </label>
-
-                                                        <select id="tipo" name="tipo_id" class="form-select" required>
-                                                            <option value="" disabled selected>Seleccione tipo...
-                                                            </option>
-                                                            <!-- Opciones se llenan desde la tabla tipo_indicador -->
-                                                        </select>
-
-                                                        <!-- <select class="form-select" id="criticidad" name="criticidad"
+                                                            </i></label>
+                                                        <select id="tipo_id" name="tipo_id" class="form-select"
                                                             required>
-                                                            <option selected disabled value="">Seleccione ...
-                                                            </option>
-                                                            <option value="Estratégico">Estratégico</option>
-                                                            <option value="Táctico">Táctico</option>
-                                                            <option value="Operativo">Operativo</option>
-                                                        </select> -->
-                                                        <div class="invalid-feedback">Debe seleccionar la criticidad.
-                                                        </div>
+                                                            <option value="" disabled selected>Seleccione
+                                                                tipo...</option>
+                                                            <!-- Opciones desde tipo_indicador -->
+                                                        </select>
+                                                        <div class="invalid-feedback">Debe seleccionar el
+                                                            tipo.</div>
                                                     </div>
                                                     <!--end::Tipo-->
 
                                                     <!--begin::Dimensión-->
                                                     <div class="col-md-3">
-                                                        <label for="dimension" class="form-label"><strong>Dimensión
+                                                        <label for="dimension_id" class="form-label"><strong>Dimensión
                                                                 *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
@@ -943,104 +936,96 @@
                                                                 • <b>Clientes:</b> Evaluar la percepción y satisfacción del cliente, así como la capacidad de la organización para atraer y retener clientes.<br>
                                                                 • <b>Procesos:</b> Medir la eficiencia y calidad de los procesos clave internos<br>
                                                                 • <b>Capital humano:</b> Evaluar la capacidad de la organización para desarrollarse, aprender y adaptarse a cambios">
-                                                            </i>
-                                                        </label>
-                                                        <select class="form-select" id="dimension" name="dimension"
-                                                            required>
-                                                            <option selected disabled value="">Seleccione...</option>
-                                                            <option value="financiera"
-                                                                title="Impacto económico como ingresos, costos, rentabilidad, etc.">
-                                                                Financiera</option>
-                                                            <option value="clientes"
-                                                                title="Satisfacción y percepción de los clientes o usuarios.">
-                                                                Clientes</option>
-                                                            <option value="procesos"
-                                                                title="Eficiencia y desempeño de los procesos internos.">
-                                                                Procesos</option>
-                                                            <option value="capital_humano"
-                                                                title="Indicadores relacionados al personal y su desarrollo.">
-                                                                Capital Humano</option>
+                                                            </i></label>
+                                                        <select class="form-select" id="dimension_id"
+                                                            name="dimension_id" required>
+                                                            <option selected disabled value="">Seleccione...
+                                                            </option>
+                                                            <!-- Opciones desde dimension_indicador -->
                                                         </select>
-                                                        <div class="invalid-feedback">Debe seleccionar una dimensión.
-                                                        </div>
+
+                                                        <!-- <select class="form-select" id="dimension"
+                                                                        name="dimension" required>
+                                                                        <option selected disabled value="">Seleccione...
+                                                                        </option>
+                                                                        <option value="financiera"
+                                                                            title="Impacto económico como ingresos, costos, rentabilidad, etc.">
+                                                                            Financiera</option>
+                                                                        <option value="clientes"
+                                                                            title="Satisfacción y percepción de los clientes o usuarios.">
+                                                                            Clientes</option>
+                                                                        <option value="procesos"
+                                                                            title="Eficiencia y desempeño de los procesos internos.">
+                                                                            Procesos</option>
+                                                                        <option value="capital_humano"
+                                                                            title="Indicadores relacionados al personal y su desarrollo.">
+                                                                            Capital Humano</option>
+                                                                    </select> -->
+
+                                                        <div class="invalid-feedback">Debe seleccionar una
+                                                            dimensión.</div>
                                                     </div>
                                                     <!--end::Dimensión-->
 
                                                     <!--begin::Categoría-->
                                                     <div class="col-md-3">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="categoria" class="form-label"><strong>Categoría
-                                                                    *</strong>
-
-                                                                <i class="fas fa-info-circle info-icon"
-                                                                    data-bs-toggle="tooltip" data-bs-html="true"
-                                                                    data-bs-custom-class="custom-tooltip"
-                                                                    title="Tipo de objetivo al que apunta el indicador o qué resultado mide.<br><br>
+                                                        <label for="categoria_id" class="form-label"><strong>Categoría
+                                                                *</strong>
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip" data-bs-html="true"
+                                                                data-bs-custom-class="custom-tooltip"
+                                                                title="Tipo de objetivo al que apunta el indicador o qué resultado mide.<br><br>
                                                                     <b>Opciones:</b><br>
                                                                     • <b>Eficiencia:</b> Uso óptimo de recursos<br>
                                                                     • <b>Eficacia:</b> Cumplimiento de los objetivos<br>
                                                                     • <b>Calidad:</b> Conformidad con estándares o satisfacción<br>
                                                                     • <b>Productividad:</b> Relación entre producción y recursos">
-                                                                </i>
-                                                            </label>
-                                                            <label for="dimension" class="form-label">
-                                                                <i class="fas fa-file-alt text-primary"
-                                                                    data-bs-toggle="tooltip" data-bs-html="true"
-                                                                    data-bs-custom-class="custom-tooltip"
-                                                                    title="<b>🧩 Ejemplos combinados</b><br>
-                                                                    • PKI: <b>Tiempo de ciclo de compra</b><br>
-                                                                    Tipo: Táctico;<br> Dimensión: Procesos;<br> Categoría: Eficiencia <br>
-                                                                    • PKI:<b> Nivel de Satisfacción del cliente</b><br>
-                                                                    Tipo: Estratégico;<br> Dimensión: Cliente;<br> Categoría: Calidad<br>
-                                                                    • PKI:<b> Tasa de rotación del personal</b><br>
-                                                                    Tipo: Táctico;<br> Dimensión: Capital Humano;<br> Categoría: Eficacia <br>
-                                                                    • PKI:<b> Rentabilidad operativa</b><br>
-                                                                    Tipo: Estratégico;<br> Dimensión: Financiera;<br> Categoría: Eficacia">
-                                                                </i>
-                                                            </label>
-
-                                                        </div>
-                                                        <select class="form-select" id="categoria" name="categoria"
-                                                            required>
+                                                            </i></label>
+                                                        <select class="form-select" id="categoria_id"
+                                                            name="categoria_id" required>
                                                             <option selected disabled value="">Seleccione...
                                                             </option>
-                                                            <option value="eficiencia"
-                                                                title="Evalúa el uso óptimo de recursos para lograr resultados, minimizando costos y tiempos.">
-                                                                Eficiencia
-                                                            </option>
-                                                            <option value="eficacia"
-                                                                title="Mide el grado de cumplimiento de los objetivos propuestos.">
-                                                                Eficacia
-                                                            </option>
-                                                            <option value="calidad"
-                                                                title="Evalúa la conformidad con estándares, ausencia de errores o nivel de satisfacción.">
-                                                                Calidad
-                                                            </option>
-                                                            <option value="productividad"
-                                                                title="Relaciona la cantidad de productos o servicios generados con los recursos utilizados.">
-                                                                Productividad
-                                                            </option>
+                                                            <!-- Opciones desde categoria_indicador -->
                                                         </select>
+
+                                                        <!-- <select class="form-select" id="categoria" name="categoria"
+                                                                        required>
+                                                                        <option selected disabled value="">Seleccione...
+                                                                        </option>
+                                                                        <option value="eficiencia"
+                                                                            title="Evalúa el uso óptimo de recursos para lograr resultados, minimizando costos y tiempos.">
+                                                                            Eficiencia
+                                                                        </option>
+                                                                        <option value="eficacia"
+                                                                            title="Mide el grado de cumplimiento de los objetivos propuestos.">
+                                                                            Eficacia
+                                                                        </option>
+                                                                        <option value="calidad"
+                                                                            title="Evalúa la conformidad con estándares, ausencia de errores o nivel de satisfacción.">
+                                                                            Calidad
+                                                                        </option>
+                                                                        <option value="productividad"
+                                                                            title="Relaciona la cantidad de productos o servicios generados con los recursos utilizados.">
+                                                                            Productividad
+                                                                        </option>
+                                                                    </select> -->
                                                         <div class="invalid-feedback">Debe seleccionar una categoría.
                                                         </div>
                                                     </div>
                                                     <!--end::Categoría-->
 
-
                                                     <!--begin::Criticidad-->
                                                     <div class="col-md-3">
-                                                        <label for="criticidad" class="form-label"><strong>Criticidad
+                                                        <label for="criticidad_id" class="form-label"><strong>Criticidad
                                                                 *</strong></label>
-                                                        <select class="form-select" id="criticidad" name="criticidad"
-                                                            required>
+                                                        <select class="form-select" id="criticidad_id"
+                                                            name="criticidad_id" required>
                                                             <option selected disabled value="">Seleccione...
                                                             </option>
-                                                            <option value="Alta">Alta</option>
-                                                            <option value="Media">Media</option>
-                                                            <option value="Baja">Baja</option>
+                                                            <!-- Opciones desde criticidad_indicador -->
                                                         </select>
-                                                        <div class="invalid-feedback">Debe seleccionar la criticidad.
-                                                        </div>
+                                                        <div class="invalid-feedback">Debe seleccionar la
+                                                            criticidad.</div>
                                                     </div>
                                                     <!--end::Criticidad-->
 
@@ -1053,55 +1038,52 @@
                                                     <!--begin::Responsable-->
                                                     <div class="col-md-3">
                                                         <label for="responsable" class="form-label"><strong>Responsable
-                                                                *</strong>
-                                                        </label>
+                                                                *</strong></label>
                                                         <input type="text" class="form-control" id="responsable"
-                                                            name="responsable" placeholder="Nombre del responsable"
+                                                            name="responsable" placeholder="Legajo del responsable"
                                                             required />
-                                                        <div class="invalid-feedback">El responsable es obligatorio.
-                                                        </div>
+                                                        <div class="invalid-feedback">El responsable es
+                                                            obligatorio.</div>
                                                     </div>
                                                     <!--end::Responsable-->
 
                                                     <!--begin::Unidad funcional-->
                                                     <div class="col-md-4">
-                                                        <label for="unidadFuncional" class="form-label"><strong>Destino
-                                                                *</strong>
-                                                        </label>
-                                                        <select class="form-select" id="unidadFuncional"
-                                                            name="unidadFuncional" required>
-                                                            <option selected disabled value="">Seleccione destino...
-                                                            </option>
-                                                            <!-- Las opciones se agregarán dinámicamente -->
+                                                        <label for="destino" class="form-label"><strong>Destino
+                                                                *</strong></label>
+                                                        <select class="form-select" id="destino" name="destino"
+                                                            required>
+                                                            <option selected disabled value="">Seleccione
+                                                                destino...</option>
+                                                            <!-- Opciones desde sectores -->
                                                         </select>
-                                                        <div class="invalid-feedback">La Unidad funcional es
-                                                            obligatoria.</div>
+                                                        <div class="invalid-feedback">El destino es
+                                                            obligatorio.</div>
                                                     </div>
                                                     <!--end::Unidad funcional-->
 
-                                                    <!-- Sección: Objetivo y Meta -->
+
+                                                    <!-- Sección: Objetivo -->
                                                     <div class="col-12">
-                                                        <h5 class="text-primary border-bottom mt-4">
-                                                            Objetivo</h5>
+                                                        <h5 class="text-primary border-bottom mt-4">Objetivo</h5>
                                                     </div>
 
-                                                    <!--begin::Objetivo-->
+                                                    <!-- Objetivo -->
                                                     <div class="col-10">
                                                         <label for="objetivo" class="form-label"><strong>Objetivo
-                                                                *</strong>
-                                                        </label>
+                                                                *</strong></label>
                                                         <textarea class="form-control" id="objetivo" name="objetivo"
                                                             rows="2" placeholder="Propósito o meta que busca evaluar"
                                                             required></textarea>
-                                                        <div class="invalid-feedback">El objetivo es obligatorio.</div>
+                                                        <div class="invalid-feedback">El objetivo es obligatorio.
+                                                        </div>
                                                     </div>
-                                                    <!--end::Objetivo-->
 
-                                                    <!--begin::Meta-->
+                                                    <!-- Tipo de meta -->
                                                     <div class="row align-items-end">
-                                                        <!-- Tipo de meta -->
                                                         <div class="mt-2 col-md-2">
-                                                            <label for="tipoMeta" class="form-label"><strong>Tipo de
+                                                            <label for="tipo_meta" class="form-label"><strong>Tipo
+                                                                    de
                                                                     meta:</strong>
                                                                 <i class="fas fa-info-circle info-icon"
                                                                     data-bs-toggle="tooltip" data-bs-html="true"
@@ -1110,10 +1092,9 @@
                                                                       <b>Opciones:</b><br>
                                                                         • <b>Valor único:</b> 🎯 comparación directa con un valor meta específico.<br><br>
                                                                         • <b>Rango de valores:</b> 📊 evaluación dentro de un intervalo tolerado.<br><br>
-                                                                        • <b>Tendencia esperada:</b> 📈📉 análisis de la dirección del cambio a lo largo del tiempo">
-                                                                </i>
-                                                            </label>
-                                                            <select id="tipoMeta" class="form-select"
+                                                                        • <b>Tendencia:</b> 📈📉 análisis de la dirección del cambio a lo largo del tiempo">
+                                                                </i></label>
+                                                            <select id="tipo_meta" name="tipo_meta" class="form-select"
                                                                 onchange="mostrarCamposMeta()">
                                                                 <option value="">-- Seleccionar --</option>
                                                                 <option value="valor">Valor único</option>
@@ -1126,22 +1107,22 @@
                                                         <div id="metaValor" class="hidden col-md-12">
                                                             <div class="row mt-2">
                                                                 <div class="col-md-2">
-                                                                    <label for="valorMeta"
-                                                                        class="form-label"><strong>Valor meta:</strong>
+                                                                    <label for="valor_meta"
+                                                                        class="form-label"><strong>Valor
+                                                                            meta:</strong>
                                                                         <i class="fas fa-info-circle info-icon"
                                                                             data-bs-toggle="tooltip" data-bs-html="true"
                                                                             data-bs-custom-class="dark-tooltip"
                                                                             title="🎯 Valor objetivo">
-                                                                        </i>
-                                                                    </label>
-                                                                    <input type="number" step="any" id="valorMeta"
-                                                                        class="form-control" placeholder="Ej: 85">
+                                                                        </i></label>
+                                                                    <input type="number" step="any" id="valor_meta"
+                                                                        name="valor_meta" class="form-control"
+                                                                        placeholder="Ej: 85">
                                                                 </div>
 
                                                                 <div id="subtipoValorUnico" class="col-md-4">
-                                                                    <label for="evaluacionMeta"
-                                                                        class="form-label"><strong>Evaluación del valor
-                                                                            único:</strong>
+                                                                    <label for="evaluacion_meta"
+                                                                        class="form-label"><strong>Evaluación:</strong>
                                                                         <i class="fas fa-info-circle info-icon"
                                                                             data-bs-toggle="tooltip" data-bs-html="true"
                                                                             data-bs-custom-class="custom-tooltip"
@@ -1153,63 +1134,61 @@
                                                                                 • <b>Tolerancia simétrica: </b> Desviaciones positivas o negativas se penalizan por igual<br>Ej: Calidad, precisión.<br><br>
                                                                                 • <b>Meta inversa: </b> El valor es el máximo tolerado,cuanto menos mejor, alejarse es positivo<br>Ej: Tiempo de respuesta.<br><br>
                                                                                 • <b>Meta puntual: </b> Valor exacto.  Cualquier desviación es negativa.<br> Ej: Control de calidad crítico, procesos normativos">
-                                                                        </i>
-                                                                    </label>
-                                                                    <select id="evaluacionMeta" name="evaluacionMeta"
+                                                                        </i></label>
+                                                                    <select id="evaluacion_meta" name="evaluacion_meta"
                                                                         class="form-select">
                                                                         <option value="superable_positiva">Superable
                                                                             positiva – Más es mejor</option>
                                                                         <option value="umbral_maximo">Límite máximo
-                                                                            – No debe superarse</option>
-                                                                        <option value="tolerancia_simetrica">Valor
-                                                                            con tolerancia – Penaliza desviación
+                                                                            – No debe superarse
+                                                                        </option>
+                                                                        <option value="tolerancia_simetrica">
+                                                                            Tolerancia
+                                                                            simétrica – Penaliza desviaciones
                                                                         </option>
                                                                         <option value="mejor_mientras_menos">Menor
-                                                                            es mejor – Distancia creciente es mejor
-                                                                        </option>
+                                                                            es
+                                                                            mejor – Más es negativo – Distancia
+                                                                            creciente
+                                                                            es mejor</option>
                                                                         <option value="valor_exacto">Valor exacto –
-                                                                            Cero tolerancia</option>
+                                                                            Cero tolerancia
+                                                                        </option>
                                                                     </select>
                                                                 </div>
 
-                                                                <!--begin::Umbral Positivo-->
+                                                                <!-- Umbrales -->
                                                                 <div class="col-md-2">
-                                                                    <label for="umbralPositivo"
+                                                                    <label for="umbral_aceptable"
                                                                         class="form-label"><strong>% Aceptable
                                                                             *</strong>
                                                                         <i class="fas fa-info-circle info-icon"
                                                                             data-bs-toggle="tooltip" data-bs-html="true"
                                                                             data-bs-custom-class="dark-tooltip"
                                                                             title="Δ Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
-                                                                        </i>
-                                                                    </label>
+                                                                        </i></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbralPostivo" name="umbralPositivo"
-                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                        id="umbral_aceptable" name="umbral_aceptable"
+                                                                        placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
-                                                                <!--end::Umbral Aceptable-->
 
-                                                                <!--begin::Umbral en Riesgo-->
                                                                 <div class="col-md-2">
-                                                                    <label for=" umbralCritico" class="form-label">
-                                                                        <strong>% Riesgo *</strong>
-                                                                    </label>
+                                                                    <label for="umbral_riesgo"
+                                                                        class="form-label"><strong>% Riesgo
+                                                                            *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbralCritico" name="umbralCritico"
-                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                        id="umbral_riesgo" name="umbral_riesgo"
+                                                                        placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
-                                                                <!--end::Umbral en Riesgo-->
 
-                                                                <!--begin::Umbral Crítico-->
                                                                 <div class="col-md-2">
-                                                                    <label for="umbralCritico"
+                                                                    <label for="umbral_critico"
                                                                         class="form-label"><strong>% Crítico
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbralCritico" name="umbralCritico"
-                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                        id="umbral_critico" name="umbral_critico"
+                                                                        placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
-                                                                <!--end::Umbral Crítico-->
                                                             </div>
                                                         </div>
 
@@ -1221,391 +1200,330 @@
                                                                             deseado:</strong></label>
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">Desde</span>
-                                                                        <input type="number" step="any" id="rangoDesde"
-                                                                            class="form-control" placeholder="Ej: 60">
+                                                                        <input type="number" step="any" id="rango_min"
+                                                                            name="rango_min" class="form-control"
+                                                                            placeholder="Ej: 60">
                                                                         <span class="input-group-text">Hasta</span>
-                                                                        <input type="number" step="any" id="rangoHasta"
-                                                                            class="form-control" placeholder="Ej: 75">
+                                                                        <input type="number" step="any" id="rango_max"
+                                                                            name="rango_max" class="form-control"
+                                                                            placeholder="Ej: 75">
                                                                     </div>
                                                                 </div>
+
                                                                 <!--begin::Umbral Positivo-->
                                                                 <div class="col-md-2">
-                                                                    <label for="umbralPositivo"
-                                                                        class="form-label"><strong>%
-                                                                            Aceptable
-                                                                            *</strong>
-                                                                        <i class="fas fa-info-circle info-icon"
-                                                                            data-bs-toggle="tooltip" data-bs-html="true"
-                                                                            data-bs-custom-class="dark-tooltip"
-                                                                            title="Δ Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
-                                                                        </i>
-                                                                    </label>
+                                                                    <label for="umbral_aceptable"
+                                                                        class="form-label"><strong>% Aceptable
+                                                                            *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbralPostivo" name="umbralPositivo"
-                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                        id="umbral_aceptable" name="umbral_aceptable"
+                                                                        placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
-                                                                <!--end::Umbral Aceptable-->
 
                                                                 <!--begin::Umbral en Riesgo-->
                                                                 <div class="col-md-2">
-                                                                    <label for=" umbralCritico" class="form-label">
-                                                                        <strong>% Riesgo *</strong>
-                                                                    </label>
+                                                                    <label for="umbral_riesgo"
+                                                                        class="form-label"><strong>% Riesgo
+                                                                            *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbralCritico" name="umbralCritico"
-                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                        id="umbral_riesgo" name="umbral_riesgo"
+                                                                        placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
-                                                                <!--end::Umbral en Riesgo-->
 
                                                                 <!--begin::Umbral Crítico-->
                                                                 <div class="col-md-2">
-                                                                    <label for="umbralCritico"
-                                                                        class="form-label"><strong>%
-                                                                            Crítico
+                                                                    <label for="umbral_critico"
+                                                                        class="form-label"><strong>% Crítico
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbralCritico" name="umbralCritico"
-                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                        id="umbral_critico" name="umbral_critico"
+                                                                        placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
-                                                                <!--end::Umbral Crítico-->
                                                             </div>
                                                         </div>
 
                                                         <!-- Meta como tendencia -->
                                                         <div id="metaTendencia" class="hidden col-md-9">
                                                             <div class="row mt-2 align-items-end">
-                                                                <!-- Columna 1: Tipo de tendencia -->
                                                                 <div class="col-md-3">
-                                                                    <label for="tipoTendencia" class="form-label">
-                                                                        <strong>Tipo de Tendencia:</strong>
-                                                                    </label>
-                                                                    <select id="tipoTendencia" class="form-select">
+                                                                    <label for="tipo_tendencia"
+                                                                        class="form-label"><strong>Tipo de
+                                                                            Tendencia:</strong></label>
+                                                                    <select id="tipo_tendencia" name="tipo_tendencia"
+                                                                        class="form-select">
                                                                         <option value="">-- Seleccionar --</option>
                                                                         <option value="aumentar">Aumento</option>
-                                                                        <option value="disminuir">Disminución</option>
+                                                                        <option value="disminuir">Disminución
+                                                                        </option>
                                                                         <option value="mantener">Estable</option>
                                                                     </select>
                                                                 </div>
 
-                                                                <!-- Columna 2: Valor de referencia -->
                                                                 <div class="col-md-3">
-                                                                    <label for="valorReferencia" class="form-label">
-                                                                        <strong>Valor de referencia:</strong>
-                                                                    </label>
-                                                                    <input type="number" step="any" id="valorReferencia"
+                                                                    <label for="valor_referencia"
+                                                                        class="form-label"><strong>Valor de
+                                                                            referencia:</strong></label>
+                                                                    <input type="number" step="any"
+                                                                        id="valor_referencia" name="valor_referencia"
                                                                         class="form-control" placeholder="Ej: 65">
                                                                 </div>
 
-                                                                <!--begin::Umbral Positivo-->
+                                                                <!-- Umbrales -->
                                                                 <div class="col-md-2">
-                                                                    <label for="umbralPositivo"
-                                                                        class="form-label"><strong>%
-                                                                            Aceptable
+                                                                    <label for="umbral_aceptable"
+                                                                        class="form-label"><strong>% Aceptable
                                                                             *</strong>
                                                                         <i class="fas fa-info-circle info-icon"
                                                                             data-bs-toggle="tooltip" data-bs-html="true"
                                                                             data-bs-custom-class="dark-tooltip"
                                                                             title="Δ Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
-                                                                        </i>
-                                                                    </label>
+                                                                        </i></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbralPostivo" name="umbralPositivo"
-                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                        id="umbral_aceptable" name="umbral_aceptable"
+                                                                        placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
-                                                                <!--end::Umbral Aceptable-->
-
-                                                                <!--begin::Umbral en Riesgo-->
                                                                 <div class="col-md-2">
-                                                                    <label for=" umbralCritico" class="form-label">
-                                                                        <strong>% Riesgo *</strong>
-                                                                    </label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="umbralCritico" name="umbralCritico"
-                                                                        placeholder="(Δ) %  c/r a la meta" />
-                                                                </div>
-                                                                <!--end::Umbral en Riesgo-->
-
-                                                                <!--begin::Umbral Crítico-->
-                                                                <div class="col-md-2">
-                                                                    <label for="umbralCritico"
-                                                                        class="form-label"><strong>%
-                                                                            Crítico
+                                                                    <label for="umbral_riesgo"
+                                                                        class="form-label"><strong>% Riesgo
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbralCritico" name="umbralCritico"
-                                                                        placeholder="(Δ) %  c/r a la meta" />
+                                                                        id="umbral_riesgo" name="umbral_riesgo"
+                                                                        placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
-                                                                <!--end::Umbral Crítico-->
+                                                                <div class="col-md-2">
+                                                                    <label for="umbral_critico"
+                                                                        class="form-label"><strong>% Crítico
+                                                                            *</strong></label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="umbral_critico" name="umbral_critico"
+                                                                        placeholder="(Δ) % c/r a la meta" />
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <script>
                                                         function mostrarCamposMeta() {
-                                                            const tipo = document.getElementById('tipoMeta').value;
+                                                            const tipo = document.getElementById('tipo_meta').value;
                                                             document.getElementById('metaValor').classList.toggle('hidden', tipo !== 'valor');
                                                             document.getElementById('metaRango').classList.toggle('hidden', tipo !== 'rango');
                                                             document.getElementById('metaTendencia').classList.toggle('hidden', tipo !== 'tendencia');
                                                         }
                                                     </script>
-                                                    <!--end::Meta-->
+
+
 
                                                     <!-- Sección: Medición -->
                                                     <div class="col-12">
-                                                        <h5 class="text-primary border-bottom mt-5">
-                                                            Medición</h5>
+                                                        <h5 class="text-primary border-bottom mt-4">Medición</h5>
                                                     </div>
 
                                                     <!--begin::Fuente de Datos-->
                                                     <div class="col-md-3">
-                                                        <label for="fuenteDatos" class="form-label"><strong>Fuente
-                                                                de
-                                                                Datos *</strong>
-                                                        </label>
-                                                        <input type="text" class="form-control" id="fuenteDatos"
-                                                            name="fuenteDatos" placeholder="Origen de los valores"
+                                                        <label for="fuente_datos" class="form-label"><strong>Fuente
+                                                                de Datos
+                                                                *</strong></label>
+                                                        <input type="text" class="form-control" id="fuente_datos"
+                                                            name="fuente_datos" placeholder="Origen de los valores"
                                                             required />
-                                                        <div class="invalid-feedback">La fuente
-                                                            de datos es
-                                                            obligatoria.
-                                                        </div>
+                                                        <div class="invalid-feedback">La fuente de datos es
+                                                            obligatoria.</div>
                                                     </div>
                                                     <!--end::Fuente de Datos-->
 
                                                     <!--begin::Fórmula de Cálculo-->
                                                     <div class="col-md-4 mt-3">
-                                                        <label for="formulaCalculo" class="form-label"><strong>Fórmula
-                                                                de Cálculo *</strong>
+                                                        <label for="formula_calculo" class="form-label"><strong>Fórmula
+                                                                de Cálculo
+                                                                *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="dark-tooltip"
                                                                 title="Procedimiento o fórmula para calcular el indicador. Debe ser clara y precisa."></i>
                                                         </label>
-                                                        <textarea class="form-control" id="formulaCalculo"
-                                                            name="formulaCalculo" placeholder="Procedimiento o fórmula"
+                                                        <textarea class="form-control" id="formula_calculo"
+                                                            name="formula_calculo" placeholder="Procedimiento o fórmula"
                                                             rows="1" required></textarea>
-                                                        <div class="invalid-feedback">La fórmula
-                                                            de cálculo es
+                                                        <div class="invalid-feedback">La fórmula de cálculo es
                                                             obligatoria.</div>
                                                     </div>
                                                     <!--end::Fórmula de Cálculo-->
 
                                                     <!--begin::Unidad de Medida-->
                                                     <div class="col-md-2">
-                                                        <label for="unidadMedida" class="form-label"><strong>Unidad
-                                                                de
-                                                                Medida *</strong></label>
-                                                        <select class="form-select" id="unidadMedida"
-                                                            name="unidadMedida" required>
+                                                        <label for="unidad_medida" class="form-label"><strong>Unidad
+                                                                de Medida
+                                                                *</strong></label>
+                                                        <select class="form-select" id="unidad_medida"
+                                                            name="unidad_medida" required>
                                                             <option selected disabled value="">Seleccione...
                                                             </option>
-                                                            <option value="1">$ (Moneda)
-                                                            </option>
-                                                            <option value="2">% (Porcentaje)
-                                                            </option>
-                                                            <option value="3">Q (Cantidad)
-                                                            </option>
-                                                            <option value="4">T (Tiempo - Hora)
-                                                            </option>
-                                                            <option value="5">T (Tiempo - Dia)
-                                                            </option>
-                                                            <option value="6">T (Tiempo - Semana)
-                                                            </option>
-                                                            <option value="7">T (Tiempo - Mes)
-                                                            </option>
+                                                            <option value="1">$ (Moneda)</option>
+                                                            <option value="2">% (Porcentaje)</option>
+                                                            <option value="3">Q (Cantidad)</option>
+                                                            <option value="4">T (Tiempo - Hora)</option>
+                                                            <option value="5">T (Tiempo - Día)</option>
+                                                            <option value="6">T (Tiempo - Semana)</option>
+                                                            <option value="7">T (Tiempo - Mes)</option>
                                                         </select>
                                                         <div class="invalid-feedback">La unidad de medida es
                                                             obligatoria.</div>
                                                     </div>
                                                     <!--end::Unidad de Medida-->
 
-
                                                     <!--begin::Frecuencia de Medición-->
                                                     <div class="col-md-3">
-                                                        <label for="frecuenciaMedicion"
-                                                            class="form-label"><strong>Frecuencia de Medición
-                                                                *</strong></label>
-                                                        <select class="form-select" id="frecuenciaMedicion"
-                                                            name="frecuenciaMedicion" required>
-                                                            <option selected disabled value="">
-                                                                Seleccione...
+                                                        <label for="frecuencia_medicion"
+                                                            class="form-label"><strong>Frecuencia de
+                                                                Medición *</strong></label>
+                                                        <select class="form-select" id="frecuencia_medicion"
+                                                            name="frecuencia_medicion" required>
+                                                            <option selected disabled value="">Seleccione...
                                                             </option>
-                                                            <option value="Diaria">Diaria
-                                                            </option>
-                                                            <option value="Semanal">Semanal
-                                                            </option>
-                                                            <option value="Mensual">Mensual
-                                                            </option>
-                                                            <option value="Trimestral">
-                                                                Trimestral</option>
-                                                            <option value="Cuatrimestral">
-                                                                Cuatrimestral</option>
-                                                            <option value="Semestral">Semestral
-                                                            </option>
+                                                            <option value="Diaria">Diaria</option>
+                                                            <option value="Semanal">Semanal</option>
+                                                            <option value="Mensual">Mensual</option>
+                                                            <option value="Trimestral">Trimestral</option>
+                                                            <option value="Cuatrimestral">Cuatrimestral</option>
+                                                            <option value="Semestral">Semestral</option>
                                                             <option value="Anual">Anual</option>
                                                         </select>
-                                                        <div class="invalid-feedback">Debe
-                                                            seleccionar la frecuencia
-                                                            de
-                                                            medición.</div>
+                                                        <div class="invalid-feedback">Debe seleccionar la frecuencia
+                                                            de medición.
+                                                        </div>
                                                     </div>
                                                     <!--end::Frecuencia de Medición-->
 
                                                     <!--begin::Tolerancia de carga-->
                                                     <div class="col-md-2">
-                                                        <label for="demoraMaximaQ" class="form-label"><strong>Tolerancia
+                                                        <label for="tolerancia_q" class="form-label"><strong>Tolerancia
                                                                 *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="dark-tooltip"
-                                                                title="Demora máxima para informar el valor del indicador, según la frecuencia establecida">
-                                                            </i>
+                                                                title="Demora máxima para informar el valor del indicador, según la frecuencia establecida"></i>
                                                         </label>
-                                                        <input type="text" class="form-control" id="demoraMaximaQ"
-                                                            name="demoraMaximaQ" placeholder="Ej: 1, 2, 3 " />
+                                                        <input type="text" class="form-control" id="tolerancia_q"
+                                                            name="tolerancia_q" placeholder="Ej: 1, 2, 3 " />
                                                         <div class="invalid-feedback">Debe seleccionar demora
-                                                            máxima.
-                                                        </div>
+                                                            máxima.</div>
                                                     </div>
                                                     <!--end::Tolerancia de carga-->
 
                                                     <!--begin::Unidad de demora-->
                                                     <div class="col-md-2">
-                                                        <label for="unidadDemora" class="form-label"><strong>Plazo
-                                                                tolerancia *</strong>
+                                                        <label for="tolerancia_plazo" class="form-label"><strong>Plazo
+                                                                tolerancia
+                                                                *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="dark-tooltip"
-                                                                title="Demora máxima para informar el valor del indicador, según la frecuencia establecida">
-                                                            </i></label>
-                                                        <select class="form-select" id="unidadDemora"
-                                                            name="unidadDemora" required>
-                                                            <option selected disabled value="">
-                                                                Seleccione unidad...
+                                                                title="Demora máxima para informar el valor del indicador, según la frecuencia establecida"></i>
+                                                        </label>
+                                                        <select class="form-select" id="tolerancia_plazo"
+                                                            name="tolerancia_plazo" required>
+                                                            <option selected disabled value="">Seleccione unidad...
                                                             </option>
-                                                            <option value="Diaria">Dia</option>
-                                                            <option value="Semanal">Semana
-                                                            </option>
-                                                            <option value="Mensual">Mes</option>
+                                                            <option value="Días">Día</option>
+                                                            <option value="Semanas">Semana</option>
+                                                            <option value="Meses">Mes</option>
                                                         </select>
-                                                        <div class="invalid-feedback">Debe
-                                                            seleccionar el máximo de
-                                                            demora admitido.</div>
+                                                        <div class="invalid-feedback">Debe seleccionar el máximo de
+                                                            demora admitido.
+                                                        </div>
                                                     </div>
-                                                    <!--end::Tolerancia de carga-->
-
+                                                    <!--end::Unidad de demora-->
 
                                                     <!--begin::Periodicidad de Reporte-->
                                                     <div class="col-md-3">
-                                                        <label for="periodicidadReporte"
-                                                            class="form-label"><strong>Frecuencia de Reporte
-                                                                *</strong>
-                                                        </label>
-                                                        <select class="form-select" id="periodicidadReporte"
-                                                            name="periodicidadReporte" required>
-                                                            <option selected disabled value="">
-                                                                Seleccione periodicidad...</option>
-                                                            <option value="Diaria">Diaria
-                                                            </option>
-                                                            <option value="Semanal">Semanal
-                                                            </option>
-                                                            <option value="Mensual">Mensual
-                                                            </option>
-                                                            <option value="Trimestral">
-                                                                Trimestral</option>
-                                                            <option value="Cuatrimestral">
-                                                                Cuatrimestral</option>
-                                                            <option value="Semestral">Semestral
-                                                            </option>
+                                                        <label for="frecuencia_reporte"
+                                                            class="form-label"><strong>Frecuencia de
+                                                                Reporte *</strong></label>
+                                                        <select class="form-select" id="frecuencia_reporte"
+                                                            name="frecuencia_reporte" required>
+                                                            <option selected disabled value="">Seleccione
+                                                                periodicidad...</option>
+                                                            <option value="Diaria">Diaria</option>
+                                                            <option value="Semanal">Semanal</option>
+                                                            <option value="Mensual">Mensual</option>
+                                                            <option value="Trimestral">Trimestral</option>
+                                                            <option value="Cuatrimestral">Cuatrimestral</option>
+                                                            <option value="Semestral">Semestral</option>
                                                             <option value="Anual">Anual</option>
                                                         </select>
-                                                        <div class="invalid-feedback">Debe
-                                                            seleccionar la
-                                                            periodicidad
-                                                            de reporte.</div>
+                                                        <div class="invalid-feedback">Debe seleccionar la
+                                                            periodicidad de reporte.
+                                                        </div>
                                                     </div>
                                                     <!--end::Periodicidad de Reporte-->
 
                                                     <!--begin::Periodo inicial de Reporte-->
                                                     <div class="col-md-3">
-                                                        <label for="periodicidadReporte"
-                                                            class="form-label"><strong>Fecha de
-                                                                inicio seg. *</strong></label>
-                                                        <input type="date" class="form-control" id="periodicidadReporte"
-                                                            name="periodicidadReporte" required>
-                                                        <div class="invalid-feedback">La fecha
-                                                            es obligatoria.</div>
+                                                        <label for="fecha_inicio" class="form-label"><strong>Fecha
+                                                                de inicio seg.
+                                                                *</strong></label>
+                                                        <input type="date" class="form-control" id="fecha_inicio"
+                                                            name="fecha_inicio" required>
+                                                        <div class="invalid-feedback">La fecha es obligatoria.</div>
                                                     </div>
                                                     <!--end::Periodo inicial de Reporte-->
 
-
-
                                                     <!-- Sección: Presentación -->
                                                     <div class="col-12">
-                                                        <h5 class="text-primary border-bottom mt-4">
-                                                            Presentación
+                                                        <h5 class="text-primary border-bottom mt-4">Presentación
                                                         </h5>
                                                     </div>
 
                                                     <!--begin::Formato de Presentación-->
                                                     <div class="col-md-4">
-                                                        <label class="form-label">Formato de
-                                                            Presentación *</label>
+                                                        <label class="form-label">Formato de Presentación *</label>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox"
                                                                 value="tabla" id="formatoTabla"
-                                                                name="formatoPresentacion[]">
+                                                                name="formato_presentacion[]">
                                                             <label class="form-check-label"
                                                                 for="formatoTabla">Tabla</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox"
                                                                 value="grafico" id="formatoGrafico"
-                                                                name="formatoPresentacion[]">
+                                                                name="formato_presentacion[]">
                                                             <label class="form-check-label"
                                                                 for="formatoGrafico">Gráfico</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox"
                                                                 value="dashboard" id="formatoDashboard"
-                                                                name="formatoPresentacion[]">
+                                                                name="formato_presentacion[]">
                                                             <label class="form-check-label"
                                                                 for="formatoDashboard">Dashboard</label>
                                                         </div>
-                                                        <div class="invalid-feedback">Debe
-                                                            seleccionar al menos un
-                                                            formato de presentación.</div>
+                                                        <div class="invalid-feedback">Debe seleccionar al menos un
+                                                            formato de
+                                                            presentación.</div>
                                                     </div>
                                                     <!--end::Formato de Presentación-->
 
+                                                    <!--begin::Grupos asignados-->
                                                     <div class="col-md-4">
-                                                        <label for="gruposAsignados" class="form-label">Grupos
-                                                            de
+                                                        <label for="grupos_asignados" class="form-label">Grupos de
                                                             integración</label>
-                                                        <select class="form-select" id="gruposAsignados"
-                                                            name="gruposAsignados[]" multiple>
-                                                            <option value="grupo1">Gestión
-                                                                ejecutiva</option>
-                                                            <option value="grupo2">Gestión
-                                                                Internacional</option>
-                                                            <option value="grupo3">Mercado
-                                                                Nacional</option>
-                                                            <option value="grupo4">Zona Norte
-                                                            </option>
-                                                            <option value="grupo5">Zona Centro
-                                                            </option>
-                                                            <option value="grupo6">Zona Sur
-                                                            </option>
-                                                            <option value="grupo7">Otro
-                                                                agrupamiento</option>
+                                                        <select class="form-select" id="grupos_asignados"
+                                                            name="grupos_asignados[]" multiple>
+                                                            <option value="grupo1">Gestión ejecutiva</option>
+                                                            <option value="grupo2">Gestión Internacional</option>
+                                                            <option value="grupo3">Mercado Nacional</option>
+                                                            <option value="grupo4">Zona Norte</option>
+                                                            <option value="grupo5">Zona Centro</option>
+                                                            <option value="grupo6">Zona Sur</option>
+                                                            <option value="grupo7">Otro agrupamiento</option>
                                                         </select>
-                                                        <div class="form-text">Seleccionar a qué
-                                                            grupos se integra
+                                                        <div class="form-text">Seleccionar a qué grupos se integra
                                                             (Ctrl+click). Si
-                                                            no se selecciona ninguno, solo se
-                                                            considerará
-                                                            individualmente.</div>
+                                                            no se selecciona
+                                                            ninguno, solo se considerará individualmente.</div>
                                                     </div>
+                                                    <!--end::Grupos asignados-->
 
                                                     <!--begin::Comentarios-->
                                                     <div class="col-12">
@@ -1633,6 +1551,7 @@
                                         </form>
                                         <!--end::Form-->
 
+
                                         <!--begin::JavaScript-->
                                         <script>
                                             // Validación personalizada de Bootstrap
@@ -1642,14 +1561,15 @@
                                                 const forms = document.querySelectorAll('.needs-validation');
 
                                                 Array.from(forms).forEach((form) => {
-                                                    form.addEventListener('submit', (event) => {
+                                                    form.addEventListener('submit', async (event) => {
+                                                        event.preventDefault();
+                                                        event.stopPropagation();
+
                                                         // Validar formato de presentación
                                                         const formatoCheckboxes = document.querySelectorAll('input[name="formatoPresentacion[]"]');
-                                                        const formatoSelected = Array.from(formatoCheckboxes).some(checkbox => checkbox.checked);
+                                                        const formatoSelected = Array.from(formatoCheckboxes).some(cb => cb.checked);
 
                                                         if (!formatoSelected) {
-                                                            event.preventDefault();
-                                                            event.stopPropagation();
                                                             // Mostrar mensaje de error personalizado
                                                             formatoCheckboxes[0].setCustomValidity('Debe seleccionar al menos un formato de presentación.');
                                                         } else {
@@ -1657,54 +1577,131 @@
                                                         }
 
                                                         if (!form.checkValidity()) {
-                                                            event.preventDefault();
-                                                            event.stopPropagation();
-                                                        } else {
-                                                            // Aquí iría la lógica para enviar los datos
-                                                            event.preventDefault();
-                                                            procesarFormulario();
+                                                            form.classList.add('was-validated');
+                                                            return;
                                                         }
 
+                                                        // Procesar formulario
+                                                        await procesarFormulario();
                                                         form.classList.add('was-validated');
                                                     }, false);
                                                 });
                                             })();
 
                                             // Función para procesar el formulario
+                                            (() => {
+                                                'use strict';
+
+                                                const forms = document.querySelectorAll('.needs-validation');
+
+                                                Array.from(forms).forEach((form) => {
+                                                    form.addEventListener('submit', async (event) => {
+                                                        event.preventDefault();
+                                                        event.stopPropagation();
+
+                                                        // Validar formato de presentación
+                                                        const formatoCheckboxes = document.querySelectorAll('input[name="formatoPresentacion[]"]');
+                                                        const formatoSelected = Array.from(formatoCheckboxes).some(cb => cb.checked);
+                                                        if (!formatoSelected) {
+                                                            formatoCheckboxes[0].setCustomValidity('Debe seleccionar al menos un formato de presentación.');
+                                                        } else {
+                                                            formatoCheckboxes[0].setCustomValidity('');
+                                                        }
+
+                                                        // Validar campos según tipo de meta
+                                                        const tipoMeta = document.getElementById('tipoMeta').value;
+                                                        let camposValidos = true;
+
+                                                        if (tipoMeta === 'valor') {
+                                                            const valor = document.getElementById('valorMeta').value;
+                                                            const acepta = document.getElementById('umbralPostivo').value;
+                                                            const critico = document.getElementById('umbralCritico').value;
+                                                            if (!valor || !acepta || !critico) camposValidos = false;
+                                                        }
+
+                                                        if (tipoMeta === 'rango') {
+                                                            const desde = document.getElementById('rangoDesde').value;
+                                                            const hasta = document.getElementById('rangoHasta').value;
+                                                            const acepta = document.getElementById('umbralPostivo').value;
+                                                            const critico = document.getElementById('umbralCritico').value;
+                                                            if (!desde || !hasta || !acepta || !critico) camposValidos = false;
+                                                        }
+
+                                                        if (tipoMeta === 'tendencia') {
+                                                            const tipo = document.getElementById('tipoTendencia').value;
+                                                            const ref = document.getElementById('valorReferencia').value;
+                                                            const acepta = document.getElementById('umbralPostivo').value;
+                                                            const riesgo = document.getElementById('umbralCritico').value; // si tenés otro campo de riesgo, ajustarlo
+                                                            if (!tipo || !ref || !acepta || !riesgo) camposValidos = false;
+                                                        }
+
+                                                        if (!camposValidos) {
+                                                            alert('Debe completar todos los campos obligatorios según el tipo de meta.');
+                                                            return;
+                                                        }
+
+                                                        if (!form.checkValidity()) {
+                                                            form.classList.add('was-validated');
+                                                            return;
+                                                        }
+
+                                                        await procesarFormulario();
+                                                        form.classList.add('was-validated');
+                                                    }, false);
+                                                });
+                                            })();
+
                                             async function procesarFormulario() {
                                                 const formData = new FormData(document.getElementById('indicadorForm'));
 
                                                 const formatoPresentacion = Array.from(document.querySelectorAll('input[name="formatoPresentacion[]"]:checked')).map(cb => cb.value);
-                                                const gruposIntegracion = Array.from(document.getElementById('gruposAsignados').selectedOptions).map(opt => opt.value);
+                                                const gruposAsignados = Array.from(document.getElementById('gruposAsignados').selectedOptions).map(opt => opt.value);
 
                                                 const indicadorData = {
-                                                    codigo_identificatorio: formData.get('codigoIdentificatorio'),
+                                                    codigo_id: formData.get('codigoIdentificatorio'),
                                                     nombre: formData.get('nombre'),
-                                                    dimension: formData.get('dimension'),
+                                                    dimension_id: formData.get('dimension'),
                                                     descripcion: formData.get('descripcion'),
                                                     objetivo: formData.get('objetivo'),
                                                     formula_calculo: formData.get('formulaCalculo'),
                                                     fuente_datos: formData.get('fuenteDatos'),
                                                     responsable: formData.get('responsable'),
-                                                    unidad_funcional_id: formData.get('unidadFuncional'),
+                                                    destino: formData.get('unidadFuncional'),
                                                     unidad_medida: formData.get('unidadMedida'),
                                                     frecuencia_medicion: formData.get('frecuenciaMedicion'),
-                                                    periodicidad_reporte: formData.get('periodicidadReporte'),
-                                                    demora_maxima_valor: formData.get('demoraMaximaQ'),
-                                                    demora_maxima_unidad: formData.get('unidadDemora'),
-                                                    periodo_inicial: formData.get('periodicidadReporte'),
-                                                    meta_objetivo: formData.get('metaObjetivo'),
-                                                    umbral_positivo: formData.get('umbralPositivo'),
-                                                    umbral_critico: formData.get('umbralCritico'),
-                                                    tendencia_deseada: formData.get('tendenciaDeseada'),
-                                                    categoria: formData.get('categoria'),
-                                                    criticidad: formData.get('criticidad'),
+                                                    frecuencia_reporte: formData.get('periodicidadReporte'),
+                                                    tolerancia_q: formData.get('demoraMaximaQ'),
+                                                    tolerancia_plazo: formData.get('unidadDemora'),
+                                                    fecha_inicio: formData.get('fechaInicio'),
+                                                    categoria_id: formData.get('categoria'),
+                                                    criticidad_id: formData.get('criticidad'),
                                                     formato_presentacion: formatoPresentacion.join(','),
-                                                    grupos_integracion: gruposIntegracion.join(','),
+                                                    grupos_asignados: gruposAsignados.join(','),
                                                     comentarios: formData.get('comentarios')
                                                 };
 
-                                                console.log('Datos uno del indicador:', indicadorData);
+                                                // Campos de meta según tipo
+                                                const tipoMeta = formData.get('tipoMeta');
+                                                if (tipoMeta === 'valor') {
+                                                    indicadorData.meta_tipo = 'valor';
+                                                    indicadorData.meta_valor = formData.get('valorMeta');
+                                                    indicadorData.umbral_acepta = formData.get('umbralPositivo');
+                                                    indicadorData.umbral_critico = formData.get('umbralCritico');
+                                                } else if (tipoMeta === 'rango') {
+                                                    indicadorData.meta_tipo = 'rango';
+                                                    indicadorData.meta_desde = formData.get('rangoDesde');
+                                                    indicadorData.meta_hasta = formData.get('rangoHasta');
+                                                    indicadorData.umbral_acepta = formData.get('umbralPositivo');
+                                                    indicadorData.umbral_critico = formData.get('umbralCritico');
+                                                } else if (tipoMeta === 'tendencia') {
+                                                    indicadorData.meta_tipo = 'tendencia';
+                                                    indicadorData.tenden_tipo = formData.get('tipoTendencia');
+                                                    indicadorData.tenden_refe = formData.get('valorReferencia');
+                                                    indicadorData.umbral_acepta = formData.get('umbralPostivo'); // ajustar si hay campo separado
+                                                    indicadorData.umbral_riesgo = formData.get('umbralCritico'); // ajustar si hay campo separado
+                                                }
+
+                                                console.log('Datos del indicador a enviar:', indicadorData);
 
                                                 try {
                                                     const res = await fetch('/api/indicadores', {
@@ -1713,26 +1710,22 @@
                                                         body: JSON.stringify(indicadorData)
                                                     });
 
-                                                    if (!res.ok) throw new Error('Error al guardar');
+                                                    if (!res.ok) throw new Error('Error al guardar indicador');
 
                                                     alert('Indicador guardado correctamente.');
-                                                    document.getElementById('indicadorForm').reset();
+                                                    limpiarFormulario();
                                                 } catch (err) {
                                                     console.error('Error al guardar indicador:', err);
                                                     alert('Error al guardar indicador.');
                                                 }
-
-                                                console.log('Datos del indicador:', indicadorData);
-                                                // Aquí conectarías con tu backend
-                                                // Por ejemplo: enviarABackend(indicadorData);
-                                                alert('Indicador guardado exitosamente (simulación)');
                                             }
 
-                                            // Función para limpiar el formulario
                                             function limpiarFormulario() {
-                                                document.getElementById('indicadorForm').reset();
-                                                document.getElementById('indicadorForm').classList.remove('was-validated');
+                                                const form = document.getElementById('indicadorForm');
+                                                form.reset();
+                                                form.classList.remove('was-validated');
                                             }
+
                                         </script>
                                         <!--end::JavaScript-->
                                     </div>
@@ -1847,12 +1840,47 @@
         }
 
         // Función para editar un indicador
-        function editarIndicador(codigo) {
-            alert(`Función para editar el indicador: ${codigo}`);
-            window.location.href = 'kpi-indicadores.html'
-            // Aquí iría la lógica para editar el indicador
-            console.log('Editar indicador:', codigo);
+        async function editarIndicador(codigo) {
+            try {
+                const response = await fetch(`/api/indicadores/${codigo}`);
+                if (!response.ok) throw new Error('No se pudo obtener el indicador.');
+
+                const indicador = await response.json();
+                const form = document.getElementById('indicadorForm');
+
+                // Mapear campos del formulario con los nombres de indicadorData
+                form.codigoIdentificatorio.value = indicador.codigo_id;
+                form.nombre.value = indicador.nombre;
+                form.descripcion.value = indicador.descripcion || '';
+                form.objetivo.value = indicador.objetivo || '';
+                form.unidadFuncional.value = indicador.destino || '';
+                form.responsable.value = indicador.responsable || '';
+                form.dimension.value = indicador.dimension_id || '';
+                form.categoria.value = indicador.categoria_id || '';
+                form.criticidad.value = indicador.criticidad_id || '';
+                form.frecuenciaMedicion.value = indicador.frecuencia_medicion || '';
+                form.unidadMedida.value = indicador.unidad_medida || '';
+                form.tendenciaDeseada.value = indicador.tenden_tipo || '';
+                form.metaObjetivo.value = indicador.meta_objetivo || '';
+                form.periodicidadReporte.value = indicador.periodo_inicial || '';
+                form.gruposAsignados.value = indicador.grupos_integracion?.split(',') || [];
+                form.comentarios.value = indicador.comentarios || '';
+
+                // Marcar checkboxes de formato_presentacion
+                const formatos = indicador.formato_presentacion?.split(',') || [];
+                document.querySelectorAll('input[name="formatoPresentacion[]"]').forEach(cb => {
+                    cb.checked = formatos.includes(cb.value);
+                });
+
+                // Mostrar la pestaña de edición si es modal o scroll al formulario
+                form.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error al cargar el indicador para edición:', error);
+                alert('No se pudo cargar el indicador para edición.');
+            }
         }
+
 
         // Función para eliminar un indicador
         async function eliminarIndicador(codigo_identificatorio) {
@@ -1918,7 +1946,7 @@
         });
 
         function llenarSelectUnidades(sectores) {
-            const select = document.getElementById('unidadFuncional');
+            const select = document.getElementById('destino');
             sectores.forEach(sector => {
                 const opcion = document.createElement('option');
                 opcion.value = sector.id;
@@ -1942,7 +1970,6 @@
 
     <script>
         async function cargarIndicadores() {
-
             try {
                 const response = await fetch('/api/indicadores'); // Ruta a tu backend
                 const indicadores = await response.json();
@@ -1963,57 +1990,58 @@
                 emptyState.style.display = 'none';
                 totalBadge.textContent = `${indicadores.length} indicadores`;
 
-                // indicadores.forEach(ind => {
                 for (const ind of indicadores) {
-
                     const fila = document.createElement('tr');
 
-                    let criticidad_minus = ind.criticidad.toLowerCase();
-                    let clase_criticidad = getClaseCriticidad(criticidad_minus)
+                    // Criticidad
+                    let clase_criticidad = getClaseCriticidad(ind.criticidad.toLowerCase());
 
+                    // Usuario responsable
                     const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
 
-                    const sectores = await obtenerSectoresPorUnidad(ind.unidad_funcional_id);
+                    // Sectores asignados
+                    const sectores = await obtenerSectoresPorUnidad(ind.destino);
 
                     fila.innerHTML = `
-                    <td>${ind.codigo_identificatorio}</td>
-                    <td>${ind.nombre}</td>
+                <td>${ind.codigo_id}</td>
+                <td>${ind.nombre}</td>
 
-                    <td>
-                        <span class="badge bg-${getColorDimension(ind.dimension)} badge-dimension">
-                            ${ind.dimension}
-                        </span>
-                    </td>
-                    <td>${ind.categoria}</td>
+                <td>
+                    <span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">
+                        ${ind.dimension_id}
+                    </span>
+                </td>
 
-                    <td>${sectores.nombre}</td>
-                    <td>${usuario.nombres} ${usuario.apellido}</td>
+                <td>${ind.categoria_id}</td>
+                <td>${sectores.nombre}</td>
+                <td>${usuario.nombres} ${usuario.apellido}</td>
 
-                    <td class="${clase_criticidad}">${ind.criticidad}</td>
+                <td class="${clase_criticidad}">${ind.criticidad_id}</td>
 
-                    <td>${ind.frecuencia_medicion}</td>
+                <td>${ind.frecuencia_medicion}</td>
 
-                    <td>
-                        <span class="tendencia-${ind.tendencia_deseada.toLowerCase()}">
-                            <i class="${getIconoTendencia(ind.tendencia_deseada)} me-1"></i>
-                            ${ind.tendencia_deseada}
-                        </span>
-                    </td>
+                <td>
+                    <span class="tendencia-${ind.tenden_tipo?.toLowerCase()}">
+                        <i class="${getIconoTendencia(ind.tenden_tipo)} me-1"></i>
+                        ${ind.tenden_tipo || ind.meta_tipo}
+                    </span>
+                </td>
 
-                    <td class="icon-only-actions">
-                        <button class="btn btn-primary" title="Ver" onclick="verDetalleIndicador('${ind.codigo_identificatorio}')">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button class="btn btn-warning" title="Editar" onclick="editarIndicador('${ind.codigo_identificatorio}')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-danger" title="Eliminar" onclick="eliminarIndicador('${ind.codigo_identificatorio}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
+                <td class="icon-only-actions">
+                    <button class="btn btn-primary" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-warning" title="Editar" onclick="editarIndicador('${ind.codigo_id}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger" title="Eliminar" onclick="eliminarIndicador('${ind.codigo_id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+
                     tbody.appendChild(fila);
-                };
+                }
 
                 // Inicializar DataTable luego de cargar filas
                 $('#tablaIndicadores').DataTable({
@@ -2026,8 +2054,8 @@
                 console.error('Error cargando indicadores:', error);
                 alert('No se pudieron cargar los indicadores.');
             }
-
         }
+
 
         function getClaseCriticidad(criticidad) {
             switch (criticidad.toLowerCase()) {
@@ -2106,18 +2134,18 @@
                 tabla.innerHTML = '';
 
                 const campos = {
-                    "Código": indicador.codigo_identificatorio,
+                    "Código": indicador.codigo_id,
                     "Nombre": indicador.nombre,
                     "Descripción": indicador.descripcion || '-',
-                    "objetivo": indicador.objetivo || '-',
-                    "Destino": indicador.unidad_funcional_id || '-',
+                    "Objetivo": indicador.objetivo || '-',
+                    "Destino": indicador.destino || '-',
                     "Responsable": indicador.responsable || '-',
-                    "Dimensión": indicador.dimension || '-',
-                    "Categoría": indicador.categoria || '-',
-                    "Criticidad": indicador.criticidad || '-',
+                    "Dimensión": indicador.dimension_id || '-',
+                    "Categoría": indicador.categoria_id || '-',
+                    "Criticidad": indicador.criticidad_id || '-',
                     "Frecuencia de Medición": indicador.frecuencia_medicion || '-',
                     "Unidad de Medida": indicador.unidad_medida || '-',
-                    "Tendencia Deseada": indicador.tendencia_deseada || '-',
+                    "Tendencia Deseada": indicador.tenden_tipo || '-',
                     "Meta Esperada": indicador.meta_objetivo || '-',
                     "Periodo Inicial": indicador.periodo_inicial || '-',
                     "Grupos Integración": indicador.grupos_integracion || '-',
@@ -2138,6 +2166,7 @@
                 alert('No se pudo obtener el detalle del indicador.');
             }
         }
+
     </script>
 
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
