@@ -22,84 +22,211 @@ app.use('/api/sectores', sectoresRoutes);
 app.use(express.static('public'));
 app.use('/dist', express.static('public'));
 
+
+// ✅ Crear un indicador
 app.post('/guardar', async (req, res) => {
     const data = req.body;
-    await pool.query(
-        'INSERT INTO indicadores (nombre, descripcion, unidad_medida, tipo_indicador, frecuencia_medicion, area_responsable, meta) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [data.nombre, data.descripcion, data.unidad_medida, data.tipo_indicador, data.frecuencia_medicion, data.area_responsable, data.meta]
-    );
-    res.json({ mensaje: 'Indicador guardado' });
+    try {
+        await pool.query(
+            `INSERT INTO indicadores (
+                codigo_id,
+                nombre,
+                descripcion,
+                tipo_id,
+                dimension_id,
+                categoria_id,
+                criticidad_id,
+                responsable,
+                destino,
+                objetivo,
+                meta_tipo,
+                unico_valor,
+                unico_eval,
+                unico_acepta,
+                unico_riesgo,
+                unico_critico,
+                rango_desde,
+                rango_hasta,
+                rango_acepta,
+                rango_riesgo,
+                rango_critico,
+                tenden_tipo,
+                tenden_refe,
+                tenden_acepta,
+                tenden_riesgo,
+                tenden_critico,
+                fuente_datos,
+                formula_calculo,
+                unidad_medida,
+                freq_medicion,
+                tolerancia_plazo,
+                tolerancia_q,
+                freq_reporte,
+                fecha_inicio,
+                formato,
+                grupos
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `,
+            [
+                data.codigo_id,
+                data.nombre,
+                data.descripcion,
+                data.tipo_id,
+                data.dimension_id,
+                data.categoria_id,
+                data.criticidad_id,
+                data.responsable,
+                data.destino,
+                data.objetivo,
+                data.meta_tipo,
+                data.unico_valor,
+                data.unico_eval,
+                data.unico_acepta,
+                data.unico_riesgo,
+                data.unico_critico,
+                data.rango_desde,
+                data.rango_hasta,
+                data.rango_acepta,
+                data.rango_riesgo,
+                data.rango_critico,
+                data.tenden_tipo,
+                data.tenden_refe,
+                data.tenden_acepta,
+                data.tenden_riesgo,
+                data.tenden_critico,
+                data.fuente_datos,
+                data.formula_calculo,
+                data.unidad_medida,
+                data.freq_medicion,
+                data.tolerancia_plazo,
+                data.tolerancia_q,
+                data.freq_reporte,
+                data.fecha_inicio,
+                data.formato,
+                data.grupos
+            ]
+        );
+
+        res.json({ mensaje: 'Indicador guardado' });
+    } catch (err) {
+        console.error('Error al guardar indicador:', err);
+        res.status(500).json({ mensaje: 'Error al guardar el indicador' });
+    }
 });
 
 
-// // 🚫🚫🚫GET para tomar los indicadores
-// app.get('/api/indicadores', async (req, res) => {
-//     const [rows] = await pool.query('SELECT nombre, resultado_actual, unidad_medida FROM indicadores');
-//     res.json(rows);
-// });
 
+
+// 🚫🚫🚫GET para tomar los indicadores
+
+// ✅ Obtener todos los indicadores
 app.get('/api/indicadores', async (req, res) => {
-    const [rows] = await pool.query(`
-        SELECT 
-            codigo_identificatorio,
-            nombre,
-            dimension,
-            descripcion,
-            objetivo,  
-            formula_calculo,
-            fuente_datos,
-            responsable, 
-            unidad_funcional_id,
-            unidad_medida,
-            frecuencia_medicion,
-            periodicidad_reporte,
-            demora_maxima_valor,
-            demora_maxima_unidad,
-            periodo_inicial,
-            meta_objetivo,
-            umbral_positivo,
-            umbral_critico,
-            tendencia_deseada,
-            categoria,
-            criticidad,
-            formato_presentacion, 
-            grupos_integracion,
-            comentarios,
-            creado_en,
-            peso_porcentual
-        FROM indicadores
-    `);
-    res.json(rows);
+    try {
+        const [rows] = await pool.query(`
+            SELECT 
+                id,
+                codigo_id,
+                nombre,
+                descripcion,
+                tipo_id,
+                dimension_id,
+                categoria_id,
+                criticidad_id,
+                responsable,
+                destino,
+                objetivo,
+                meta_tipo,
+                unico_valor,
+                unico_eval,
+                unico_acepta,
+                unico_riesgo,
+                unico_critico,
+                rango_desde,
+                rango_hasta,
+                rango_acepta,
+                rango_riesgo,
+                rango_critico,
+                tenden_tipo,
+                tenden_refe,
+                tenden_acepta,
+                tenden_riesgo,
+                tenden_critico,
+                fuente_datos,
+                formula_calculo,
+                unidad_medida,
+                freq_medicion,
+                tolerancia_plazo,
+                tolerancia_q,
+                freq_reporte,
+                fecha_inicio,
+                formato,
+                grupos
+            FROM indicadores
+            ORDER BY id DESC
+        `);
+
+        res.json(rows);
+    } catch (err) {
+        console.error("Error al obtener indicadores:", err);
+        res.status(500).json({ mensaje: "Error interno" });
+    }
 });
+
+
 
 
 // // 🚫🚫🚫GET para tomar un indicador
+// ✅ GET para tomar un indicador por codigo_id
 app.get('/api/indicadores/:codigo', async (req, res) => {
     const { codigo } = req.params;
 
     try {
         const [rows] = await pool.query(`
             SELECT 
-                codigo_identificatorio,
-                nombre,
-                descripcion,
-                objetivo, 
-                dimension,
-                unidad_funcional_id,
-                responsable,
-                dimension,
-                categoria,
-                criticidad,
-                frecuencia_medicion,
-                unidad_medida,
-                tendencia_deseada,
-                meta_objetivo,
-                periodo_inicial,
-                grupos_integracion, 
-                comentarios, 
-                peso_porcentual
-            FROM indicadores
-            WHERE codigo_identificatorio = ?
+                i.id,
+                i.codigo_id,
+                i.nombre,
+                i.descripcion,
+                i.tipo_id,
+                i.dimension_id,
+                i.categoria_id,
+                i.criticidad_id,
+                i.responsable,
+                u.nombres AS responsable_nombres,
+                u.apellido AS responsable_apellido,
+                i.destino,
+                s.nombre AS destino_nombre,
+                i.objetivo,
+                i.meta_tipo,
+                i.unico_valor,
+                i.unico_eval,
+                i.unico_acepta,
+                i.unico_riesgo,
+                i.unico_critico,
+                i.rango_desde,
+                i.rango_hasta,
+                i.rango_acepta,
+                i.rango_riesgo,
+                i.rango_critico,
+                i.tenden_tipo,
+                i.tenden_refe,
+                i.tenden_acepta,
+                i.tenden_riesgo,
+                i.tenden_critico,
+                i.fuente_datos,
+                i.formula_calculo,
+                i.unidad_medida,
+                i.freq_medicion,
+                i.tolerancia_plazo,
+                i.tolerancia_q,
+                i.freq_reporte,
+                i.fecha_inicio,
+                i.formato,
+                i.grupos
+            FROM indicadores i
+            LEFT JOIN sectores s ON i.destino = s.id
+            LEFT JOIN usuarios u ON i.responsable = u.legajo
+            WHERE i.codigo_id = ?
         `, [codigo]);
 
         if (rows.length === 0) {
@@ -112,6 +239,7 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
         res.status(500).json({ mensaje: 'Error interno' });
     }
 });
+
 
 
 // // 🚫🚫🚫POST para subir o reemplazar imagen
@@ -254,7 +382,7 @@ app.get('/usuarios', async (req, res) => {
 // // 🚫🚫🚫 Obtener un usuario por legajo (para edición)
 app.get('/usuarios/:legajo', async (req, res) => {
     const legajo = req.params.legajo;
-    console.log (`legajo en back: ${legajo}`)
+    console.log(`legajo en back: ${legajo}`)
     try {
         const [rows] = await pool.query('SELECT legajo, apellido, nombres, email, telefono, cargo, sector, legajo_jefe, estado, perfil FROM usuarios WHERE legajo = ?',
             [legajo]);
@@ -692,63 +820,63 @@ app.post('/api/update-weight', async (req, res) => {
 
 //  🚀 AObtener solo el VALOR de una alerta específica
 app.get('/api/alertas/:codigo/valor', async (req, res) => {
-  try {
-    const { codigo } = req.params;
-    
-    const [rows] = await pool.execute(
-      'SELECT valor FROM alertas WHERE codigo = ?',
-      [codigo]
-    );
-    
-    if (rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Alerta no encontrada'
-      });
+    try {
+        const { codigo } = req.params;
+
+        const [rows] = await pool.execute(
+            'SELECT valor FROM alertas WHERE codigo = ?',
+            [codigo]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Alerta no encontrada'
+            });
+        }
+
+        res.json({
+            success: true,
+            valor: rows[0].valor
+        });
+
+    } catch (error) {
+        console.error('Error al obtener valor de alerta:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error interno del servidor'
+        });
     }
-    
-    res.json({
-      success: true,
-      valor: rows[0].valor
-    });
-    
-  } catch (error) {
-    console.error('Error al obtener valor de alerta:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
-  }
 });
 
 
 // 🚀 Actualizar el VALOR de una alerta (0 o 1)
 app.post('/api/alertas/:codigo/valor', async (req, res) => {
 
-  try {
-    const { codigo } = req.params;
-    const { valor } = req.body; // se espera 0 o 1
+    try {
+        const { codigo } = req.params;
+        const { valor } = req.body; // se espera 0 o 1
 
-    console.log(`entro en actualizar ${valor}`)
+        console.log(`entro en actualizar ${valor}`)
 
-    if (![0, 1].includes(valor)) {
-      return res.status(400).json({ success: false, error: 'Valor inválido, debe ser 0 o 1' });
+        if (![0, 1].includes(valor)) {
+            return res.status(400).json({ success: false, error: 'Valor inválido, debe ser 0 o 1' });
+        }
+
+        const [result] = await pool.execute(
+            'UPDATE alertas SET valor = ? WHERE codigo = ?',
+            [valor, codigo]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, error: 'Alerta no encontrada' });
+        }
+
+        res.json({ success: true, codigo, valor });
+    } catch (error) {
+        console.error('Error al actualizar valor de alerta:', error);
+        res.status(500).json({ success: false, error: 'Error interno del servidor' });
     }
-
-    const [result] = await pool.execute(
-      'UPDATE alertas SET valor = ? WHERE codigo = ?',
-      [valor, codigo]
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ success: false, error: 'Alerta no encontrada' });
-    }
-
-    res.json({ success: true, codigo, valor });
-  } catch (error) {
-    console.error('Error al actualizar valor de alerta:', error);
-    res.status(500).json({ success: false, error: 'Error interno del servidor' });
-  }
 });
 
 
