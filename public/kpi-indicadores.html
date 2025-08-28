@@ -430,9 +430,7 @@
 <!--begin::Body-->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <script>
-        alert('test');
-    </script>
+
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
@@ -2255,8 +2253,7 @@
                         break;
                 }
 
-                alert(`${indicador.unico_acepta}, ${indicador.unico_riesgo}, ${indicador.unico_critico}`)
-
+                console.log("Valor actual de unico_acepta:", indicador.unico_acepta);
 
                 const campos = {
                     "Código": indicador.codigo_id,
@@ -2279,22 +2276,20 @@
                     "Márgen de Aceptación": `${Number(indicador.unico_acepta).toFixed(2)} %`,
                     "Márgen de Riesgo": `${Number(indicador.unico_riesgo).toFixed(2)} %`,
                     "Márgen Crítico": `${Number(indicador.unico_critico).toFixed(2)} %`,
-                    "Márgen de Aceptación": `${Number(indicador.unico_acepta).toFixed(2)} %`,
-
 
                     // --- Rangos
                     "Rango Desde": indicador.rango_desde || '-',
                     "Rango Hasta": indicador.rango_hasta || '-',
-                    "Márgen de Aceptación": indicador.rango_acepta || '-',
-                    "Margen de Riesgooooo": indicador.rango_riesgo || '-',
-                    "Margen Críticooooo": indicador.rango_critico || '-',
+                    "Márgen de Aceptación rango": indicador.rango_acepta || '-',
+                    "Margen de Riesgo rango": indicador.rango_riesgo || '-',
+                    "Margen Crítico rango": indicador.rango_critico || '-',
 
                     // --- Tendencia
                     "Tendencia Tipo": indicador.tenden_tipo || '-',
                     "Tendencia Referencia": indicador.tenden_refe || '-',
-                    "Margen de Aceptación": indicador.tenden_acepta || '-',
-                    "Margen de Riesgo": indicador.tenden_riesgo || '-',
-                    "Margen Crítico": indicador.tenden_critico || '-',
+                    "Margen de Aceptación tend": indicador.tenden_acepta || '-',
+                    "Margen de Riesgo tend": indicador.tenden_riesgo || '-',
+                    "Margen Crítico tend": indicador.tenden_critico || '-',
 
                     // --- Fuente y cálculo
                     "Fuente de Datos": indicador.fuente_datos || '-',
@@ -2321,8 +2316,12 @@
 
                 for (const [campo, valor] of Object.entries(campos)) {
                     const fila = document.createElement('tr');
+
                     const th = document.createElement('th');
                     th.textContent = campo;
+                    th.style.width = '200px'; // ancho fijo
+                    th.style.textAlign = 'left'; // opcional, alinear texto a la izquierda
+
                     const td = document.createElement('td');
                     td.textContent = valor;  // <-- seguro, no interpreta HTML
                     fila.appendChild(th);
