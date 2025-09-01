@@ -371,7 +371,7 @@ app.post('/usuarios', upload.single('foto'), async (req, res) => {
 // // 🚫🚫🚫 Leer usuarios con imagen
 app.get('/usuarios', async (req, res) => {
     try {
-        const [rows] = await pool.execute('SELECT legajo, apellido, nombres, cargo, sector,  legajo_jefe, email, estado, perfil, foto IS NOT NULL AS tiene_foto FROM usuarios');
+        const [rows] = await pool.execute('SELECT legajo, apellido, nombres, cargo, sector,  legajo_jefe, email, estado, perfil, foto IS NOT NULL AS tiene_foto FROM usuarios ORDER BY apellido ASC, nombres ASC');
         res.json(rows);
     } catch (error) {
         console.error('Error al obtener usuarios:', error);
@@ -878,6 +878,22 @@ app.post('/api/alertas/:codigo/valor', async (req, res) => {
         res.status(500).json({ success: false, error: 'Error interno del servidor' });
     }
 });
+
+// // 🚫🚫🚫 Leer tabla de codigos
+app.get('/api/codigos', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM codigos');
+        res.json(rows); // devuelve array de codigos {id, nombre, descripcion}
+    } catch (err) {
+        console.error('Error al obtener codigos:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+
+
+
+
 
 
 const PORT = process.env.PORT || 3000;

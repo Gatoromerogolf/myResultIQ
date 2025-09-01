@@ -915,9 +915,11 @@
                                                             </i></label>
                                                         <select id="tipo_id" name="tipo_id" class="form-select"
                                                             required>
-                                                            <option value="" disabled selected>Seleccione
-                                                                tipo...</option>
-                                                            <!-- Opciones desde tipo_indicador -->
+                                                            <option value="" disabled selected>Seleccione tipo...
+                                                            </option>
+                                                            <option value="1">Estratégico</option>
+                                                            <option value="2">Táctico</option>
+                                                            <option value="3">Operativo</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar el
                                                             tipo.</div>
@@ -940,28 +942,14 @@
                                                             </i></label>
                                                         <select class="form-select" id="dimension_id"
                                                             name="dimension_id" required>
-                                                            <option selected disabled value="">Seleccione...
+                                                            <option value="" disabled selected>Seleccione tipo...
                                                             </option>
+                                                            <option value="1">Financiera</option>
+                                                            <option value="2">Clientes</option>
+                                                            <option value="3">Procesos</option>
+                                                            <option value="4">Capital humano</option>
                                                             <!-- Opciones desde dimension_indicador -->
                                                         </select>
-
-                                                        <!-- <select class="form-select" id="dimension"
-                                                                        name="dimension" required>
-                                                                        <option selected disabled value="">Seleccione...
-                                                                        </option>
-                                                                        <option value="financiera"
-                                                                            title="Impacto económico como ingresos, costos, rentabilidad, etc.">
-                                                                            Financiera</option>
-                                                                        <option value="clientes"
-                                                                            title="Satisfacción y percepción de los clientes o usuarios.">
-                                                                            Clientes</option>
-                                                                        <option value="procesos"
-                                                                            title="Eficiencia y desempeño de los procesos internos.">
-                                                                            Procesos</option>
-                                                                        <option value="capital_humano"
-                                                                            title="Indicadores relacionados al personal y su desarrollo.">
-                                                                            Capital Humano</option>
-                                                                    </select> -->
 
                                                         <div class="invalid-feedback">Debe seleccionar una
                                                             dimensión.</div>
@@ -982,34 +970,34 @@
                                                                     • <b>Calidad:</b> Conformidad con estándares o satisfacción<br>
                                                                     • <b>Productividad:</b> Relación entre producción y recursos">
                                                             </i></label>
-                                                        <select class="form-select" id="categoria_id"
+                                                        <!-- <select class="form-select" id="categoria_id"
                                                             name="categoria_id" required>
                                                             <option selected disabled value="">Seleccione...
                                                             </option>
-                                                            <!-- Opciones desde categoria_indicador -->
-                                                        </select>
+                                                            <!-- Opciones desde categoria_indicador
+                                                        </select> -->
 
-                                                        <!-- <select class="form-select" id="categoria" name="categoria"
-                                                                        required>
-                                                                        <option selected disabled value="">Seleccione...
-                                                                        </option>
-                                                                        <option value="eficiencia"
-                                                                            title="Evalúa el uso óptimo de recursos para lograr resultados, minimizando costos y tiempos.">
-                                                                            Eficiencia
-                                                                        </option>
-                                                                        <option value="eficacia"
-                                                                            title="Mide el grado de cumplimiento de los objetivos propuestos.">
-                                                                            Eficacia
-                                                                        </option>
-                                                                        <option value="calidad"
-                                                                            title="Evalúa la conformidad con estándares, ausencia de errores o nivel de satisfacción.">
-                                                                            Calidad
-                                                                        </option>
-                                                                        <option value="productividad"
-                                                                            title="Relaciona la cantidad de productos o servicios generados con los recursos utilizados.">
-                                                                            Productividad
-                                                                        </option>
-                                                                    </select> -->
+                                                        <select class="form-select" id="categoria" name="categoria"
+                                                            required>
+                                                            <option selected disabled value="">Seleccione...
+                                                            </option>
+                                                            <option value="eficiencia"
+                                                                title="Evalúa el uso óptimo de recursos para lograr resultados, minimizando costos y tiempos.">
+                                                                Eficiencia
+                                                            </option>
+                                                            <option value="eficacia"
+                                                                title="Mide el grado de cumplimiento de los objetivos propuestos.">
+                                                                Eficacia
+                                                            </option>
+                                                            <option value="calidad"
+                                                                title="Evalúa la conformidad con estándares, ausencia de errores o nivel de satisfacción.">
+                                                                Calidad
+                                                            </option>
+                                                            <option value="productividad"
+                                                                title="Relaciona la cantidad de productos o servicios generados con los recursos utilizados.">
+                                                                Productividad
+                                                            </option>
+                                                        </select>
                                                         <div class="invalid-feedback">Debe seleccionar una categoría.
                                                         </div>
                                                     </div>
@@ -1021,9 +1009,11 @@
                                                                 *</strong></label>
                                                         <select class="form-select" id="criticidad_id"
                                                             name="criticidad_id" required>
-                                                            <option selected disabled value="">Seleccione...
+                                                            <option value="" disabled selected>Seleccione criticidad...
                                                             </option>
-                                                            <!-- Opciones desde criticidad_indicador -->
+                                                            <option value="1">Alta</option>
+                                                            <option value="2">Media</option>
+                                                            <option value="3">Baja</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar la
                                                             criticidad.</div>
@@ -1040,11 +1030,14 @@
                                                     <div class="col-md-3">
                                                         <label for="responsable" class="form-label"><strong>Responsable
                                                                 *</strong></label>
-                                                        <input type="text" class="form-control" id="responsable"
-                                                            name="responsable" placeholder="Legajo del responsable"
-                                                            required />
-                                                        <div class="invalid-feedback">El responsable es
-                                                            obligatorio.</div>
+                                                        <select id="responsable" name="responsable" class="form-select"
+                                                            required>
+                                                            <option value="" disabled selected>Seleccione un
+                                                                responsable...</option>
+                                                            <!-- Opciones se completan dinámicamente -->
+                                                        </select>
+                                                        <div class="invalid-feedback">El responsable es obligatorio.
+                                                        </div>
                                                     </div>
                                                     <!--end::Responsable-->
 
@@ -1359,13 +1352,13 @@
                                                             name="unidad_medida" required>
                                                             <option selected disabled value="">Seleccione...
                                                             </option>
-                                                            <option value="1">$ (Moneda)</option>
-                                                            <option value="2">% (Porcentaje)</option>
-                                                            <option value="3">Q (Cantidad)</option>
-                                                            <option value="4">T (Tiempo - Hora)</option>
-                                                            <option value="5">T (Tiempo - Día)</option>
-                                                            <option value="6">T (Tiempo - Semana)</option>
-                                                            <option value="7">T (Tiempo - Mes)</option>
+                                                            <option value="0101">$ (Moneda)</option>
+                                                            <option value="0102">% (Porcentaje)</option>
+                                                            <option value="0103">Q (Cantidad)</option>
+                                                            <option value="0104">T (Tiempo - Hora)</option>
+                                                            <option value="0105">T (Tiempo - Día)</option>
+                                                            <option value="0106">T (Tiempo - Semana)</option>
+                                                            <option value="0107">T (Tiempo - Mes)</option>
                                                         </select>
                                                         <div class="invalid-feedback">La unidad de medida es
                                                             obligatoria.</div>
@@ -1381,13 +1374,13 @@
                                                             name="frecuencia_medicion" required>
                                                             <option selected disabled value="">Seleccione...
                                                             </option>
-                                                            <option value="Diaria">Diaria</option>
-                                                            <option value="Semanal">Semanal</option>
-                                                            <option value="Mensual">Mensual</option>
-                                                            <option value="Trimestral">Trimestral</option>
-                                                            <option value="Cuatrimestral">Cuatrimestral</option>
-                                                            <option value="Semestral">Semestral</option>
-                                                            <option value="Anual">Anual</option>
+                                                            <option value="0201">Diaria</option>
+                                                            <option value="0202">Semanal</option>
+                                                            <option value="0203">Mensual</option>
+                                                            <option value="0204">Trimestral</option>
+                                                            <option value="0205">Cuatrimestral</option>
+                                                            <option value="0206">Semestral</option>
+                                                            <option value="0207">Anual</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar la frecuencia
                                                             de medición.
@@ -1425,9 +1418,9 @@
                                                             name="tolerancia_plazo" required>
                                                             <option selected disabled value="">Seleccione unidad...
                                                             </option>
-                                                            <option value="Días">Día</option>
-                                                            <option value="Semanas">Semana</option>
-                                                            <option value="Meses">Mes</option>
+                                                            <option value="0301">Día</option>
+                                                            <option value="0302">Semana</option>
+                                                            <option value="0303">Mes</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar el máximo de
                                                             demora admitido.
@@ -1444,13 +1437,13 @@
                                                             name="frecuencia_reporte" required>
                                                             <option selected disabled value="">Seleccione
                                                                 periodicidad...</option>
-                                                            <option value="Diaria">Diaria</option>
-                                                            <option value="Semanal">Semanal</option>
-                                                            <option value="Mensual">Mensual</option>
-                                                            <option value="Trimestral">Trimestral</option>
-                                                            <option value="Cuatrimestral">Cuatrimestral</option>
-                                                            <option value="Semestral">Semestral</option>
-                                                            <option value="Anual">Anual</option>
+                                                            <option value="0201">Diaria</option>
+                                                            <option value="0202">Semanal</option>
+                                                            <option value="0203">Mensual</option>
+                                                            <option value="0204">Trimestral</option>
+                                                            <option value="0205">Cuatrimestral</option>
+                                                            <option value="0206">Semestral</option>
+                                                            <option value="0207">Anual</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar la
                                                             periodicidad de reporte.
@@ -1961,9 +1954,35 @@
             console.log('Exportar indicadores');
         }
 
-    </script>
 
-    <script>  //  llena sectores
+        async function cargarResponsables() {
+            const select = document.getElementById('responsable');
+
+            try {
+                const response = await fetch('/usuarios');
+                if (!response.ok) throw new Error('No se pudieron obtener los usuarios');
+                const usuarios = await response.json();
+
+                // Filtrar solo activos (opcional)
+                const activos = usuarios.filter(u => u.estado === 'activo');
+
+                activos.forEach(u => {
+                    const option = document.createElement('option');
+                    option.value = u.legajo; // este será el valor enviado al backend
+                    option.textContent = `${u.apellido}, ${u.nombres}`; // lo que se muestra al usuario
+                    select.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // Llamar la función al cargar el formulario
+        cargarResponsables();
+
+
+        //  llena sectores
         const API_SECTORES = '/api/sectores'; // Reemplazá con la ruta real
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -2154,6 +2173,24 @@
         // });
 
         async function verDetalleIndicador(codigo) {
+
+            //  lee tabla de codigos
+            const response = await fetch('/api/codigos')
+            if (!response.ok) throw new Error('No se pudo obtener los codigos.');
+            const codigos = await response.json();
+
+            console.table(codigos)
+
+            // armar un mapa clave→valor
+            const codigosMap = {};
+            codigos.forEach(c => {
+                codigosMap[c.cod_tabla] = c.cod_nombre;
+            });
+
+            function getNombreCodigo(codigo) {
+                return codigosMap[codigo] || '-';
+            }
+
             try {
                 const response = await fetch(`/api/indicadores/${codigo}`);
                 if (!response.ok) throw new Error('No se pudo obtener el indicador.');
@@ -2255,6 +2292,7 @@
 
                 console.log("Valor actual de unico_acepta:", indicador.unico_acepta);
 
+                // --- Campos comunes a todos los indicadores
                 const campos = {
                     "Código": indicador.codigo_id,
                     "Nombre": indicador.nombre,
@@ -2264,57 +2302,81 @@
                     "Responsable": indicador.responsable
                         ? `${indicador.responsable} - ${indicador.responsable_nombres || ''} ${indicador.responsable_apellido || ''}`
                         : '-',
+
+                    // 👇 agrego un marcador
+                    "__sep1__": null,
+
                     "Tipo": `${indicador.tipo_id} - ${tipoIndicador}` || '-',
                     "Dimensión": `${indicador.dimension_id} - ${dimensionIndicador}` || '-',
                     "Categoría": `${indicador.categoria_id} - ${categoria_indicador}` || '-',
                     "Criticidad": `${indicador.criticidad_id} - ${criticidad_indicador}` || '-',
 
-                    // --- Meta
+                    // 👇 agrego un marcador
+                    "__sep2__": null,
+
                     "Tipo de Meta": `${indicador.meta_tipo} - ${tipoMetaTexto}` || '-',
-                    "Valor Meta": indicador.unico_valor || '-',
-                    "Método de evaluación": `${indicador.unico_eval} - ${tipoEvaluacion}` || '-',
-                    "Márgen de Aceptación": `${Number(indicador.unico_acepta).toFixed(2)} %`,
-                    "Márgen de Riesgo": `${Number(indicador.unico_riesgo).toFixed(2)} %`,
-                    "Márgen Crítico": `${Number(indicador.unico_critico).toFixed(2)} %`,
+                }
 
-                    // --- Rangos
-                    "Rango Desde": indicador.rango_desde || '-',
-                    "Rango Hasta": indicador.rango_hasta || '-',
-                    "Márgen de Aceptación rango": indicador.rango_acepta || '-',
-                    "Margen de Riesgo rango": indicador.rango_riesgo || '-',
-                    "Margen Crítico rango": indicador.rango_critico || '-',
+                // --- Agregar campos según el tipo de meta
+                if (indicador.meta_tipo === 1) {
+                    Object.assign(campos, {
+                        "Valor Meta": indicador.unico_valor || '-',
+                        "Método de evaluación": `${indicador.unico_eval} - ${tipoEvaluacion}` || '-',
+                        "Márgen de Aceptación": `${Number(indicador.unico_acepta).toFixed(2)} %`,
+                        "Márgen de Riesgo": `${Number(indicador.unico_riesgo).toFixed(2)} %`,
+                        "Márgen Crítico": `${Number(indicador.unico_critico).toFixed(2)} %`,
+                        // 👇 agrego un marcador
+                        "__sep3__": null,
+                    });
+                } else if (indicador.meta_tipo === 2) {
+                    Object.assign(campos, {
+                        "Rango Desde": indicador.rango_desde || '-',
+                        "Rango Hasta": indicador.rango_hasta || '-',
+                        "Márgen de Aceptación rango": indicador.rango_acepta || '-',
+                        "Margen de Riesgo rango": indicador.rango_riesgo || '-',
+                        "Margen Crítico rango": indicador.rango_critico || '-',
+                        // 👇 agrego un marcador
+                        "__sep4__": null,
+                    });
+                } else if (indicador.meta_tipo === 3) {
+                    Object.assign(campos, {
+                        "Tendencia Tipo": indicador.tenden_tipo || '-',
+                        "Tendencia Referencia": indicador.tenden_refe || '-',
+                        "Margen de Aceptación tend": indicador.tenden_acepta || '-',
+                        "Margen de Riesgo tend": indicador.tenden_riesgo || '-',
+                        "Margen Crítico tend": indicador.tenden_critico || '-',
+                        // 👇 agrego un marcador
+                        "__sep5__": null,
+                    });
+                }
 
-                    // --- Tendencia
-                    "Tendencia Tipo": indicador.tenden_tipo || '-',
-                    "Tendencia Referencia": indicador.tenden_refe || '-',
-                    "Margen de Aceptación tend": indicador.tenden_acepta || '-',
-                    "Margen de Riesgo tend": indicador.tenden_riesgo || '-',
-                    "Margen Crítico tend": indicador.tenden_critico || '-',
+                // --- Otros campos comunes
+                Object.assign(campos, {
 
-                    // --- Fuente y cálculo
                     "Fuente de Datos": indicador.fuente_datos || '-',
                     "Fórmula de Cálculo": indicador.formula_calculo || '-',
-
-                    // --- Medición y reporte
-                    "Unidad de Medida": indicador.unidad_medida || '-',
-                    "Frecuencia de Medición": indicador.freq_medicion || '-',
-                    "Tolerancia de Plazo": indicador.tolerancia_plazo || '-',
+                    "Unidad de Medida": getNombreCodigo(indicador.unidad_medida),
+                    "Frecuencia de Medición": getNombreCodigo(indicador.freq_medicion),
+                    "Tolerancia de Plazo": getNombreCodigo(indicador.tolerancia_plazo),
                     "Tolerancia Q": indicador.tolerancia_q || '-',
-                    "Frecuencia de Reporte": indicador.freq_reporte || '-',
-
-                    // --- Otros
+                    "Frecuencia de Reporte": getNombreCodigo(indicador.freq_reporte),
                     "Fecha de Inicio": indicador.fecha_inicio || '-',
                     "Formato de Presentación": indicador.formato || '-',
                     "Grupos": indicador.grupos || '-'
-                };
-
-                // for (const [campo, valor] of Object.entries(campos)) {
-                //     const fila = document.createElement('tr');
-                //     fila.innerHTML = `<th>${campo}</th><td>${valor}</td>`;
-                //     tabla.appendChild(fila);
-                // }
+                });
 
                 for (const [campo, valor] of Object.entries(campos)) {
+
+                    if (campo.startsWith("__sep")) {
+                        // insertar fila separadora
+                        const sepRow = document.createElement('tr');
+                        const sepCell = document.createElement('td');
+                        sepCell.colSpan = 2;
+                        sepCell.innerHTML = "&nbsp;"; // espacio en blanco
+                        sepRow.appendChild(sepCell);
+                        tabla.appendChild(sepRow);
+                        continue; // pasar al siguiente campo
+                    }
                     const fila = document.createElement('tr');
 
                     const th = document.createElement('th');
@@ -2338,7 +2400,6 @@
                 alert('No se pudo obtener el detalle del indicador.');
             }
         }
-
 
     </script>
 
