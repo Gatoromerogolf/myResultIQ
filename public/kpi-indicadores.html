@@ -831,7 +831,6 @@
                                     <!--begin::Form Carga Indicadores-->
                                     <div class="card card-primary card-outline mb-4">
                                         <!--begin::Form-->
-
                                         <form class="needs-validation" novalidate id="indicadorForm">
                                             <!--begin::Body-->
                                             <div class="card-body">
@@ -972,28 +971,31 @@
                                                             </i></label>
                                                         <!-- <select class="form-select" id="categoria_id"
                                                             name="categoria_id" required>
-                                                            <option selected disabled value="">Seleccione...
+                                                            <option value="" disabled selected>Seleccione catgegoria...
                                                             </option>
-                                                            <!-- Opciones desde categoria_indicador
+                                                            <option value="1">Eficiencia</option>
+                                                            <option value="2">Eficacia</option>
+                                                            <option value="3">Calidad</option>
+                                                            <option value="4">Productividades</option>
                                                         </select> -->
 
-                                                        <select class="form-select" id="categoria" name="categoria"
-                                                            required>
+                                                        <select class="form-select" id="categoria_id"
+                                                            name="categoria_id" required>
                                                             <option selected disabled value="">Seleccione...
                                                             </option>
-                                                            <option value="eficiencia"
+                                                            <option value="1"
                                                                 title="Evalúa el uso óptimo de recursos para lograr resultados, minimizando costos y tiempos.">
                                                                 Eficiencia
                                                             </option>
-                                                            <option value="eficacia"
+                                                            <option value="2"
                                                                 title="Mide el grado de cumplimiento de los objetivos propuestos.">
                                                                 Eficacia
                                                             </option>
-                                                            <option value="calidad"
+                                                            <option value="3"
                                                                 title="Evalúa la conformidad con estándares, ausencia de errores o nivel de satisfacción.">
                                                                 Calidad
                                                             </option>
-                                                            <option value="productividad"
+                                                            <option value="4"
                                                                 title="Relaciona la cantidad de productos o servicios generados con los recursos utilizados.">
                                                                 Productividad
                                                             </option>
@@ -1075,9 +1077,9 @@
 
                                                     <!-- Tipo de meta -->
                                                     <div class="row align-items-end">
+
                                                         <div class="mt-2 col-md-2">
-                                                            <label for="tipo_meta" class="form-label"><strong>Tipo
-                                                                    de
+                                                            <label for="tipo_meta" class="form-label"><strong>Tipo de
                                                                     meta:</strong>
                                                                 <i class="fas fa-info-circle info-icon"
                                                                     data-bs-toggle="tooltip" data-bs-html="true"
@@ -1091,9 +1093,9 @@
                                                             <select id="tipo_meta" name="tipo_meta" class="form-select"
                                                                 onchange="mostrarCamposMeta()">
                                                                 <option value="">-- Seleccionar --</option>
-                                                                <option value="valor">Valor único</option>
-                                                                <option value="rango">Rango de valores</option>
-                                                                <option value="tendencia">Tendencia</option>
+                                                                <option value="1">Valor único</option>
+                                                                <option value="2">Rango de valores</option>
+                                                                <option value="3">Tendencia</option>
                                                             </select>
                                                         </div>
 
@@ -1102,8 +1104,7 @@
                                                             <div class="row mt-2">
                                                                 <div class="col-md-2">
                                                                     <label for="valor_meta"
-                                                                        class="form-label"><strong>Valor
-                                                                            meta:</strong>
+                                                                        class="form-label"><strong>Valor meta:</strong>
                                                                         <i class="fas fa-info-circle info-icon"
                                                                             data-bs-toggle="tooltip" data-bs-html="true"
                                                                             data-bs-custom-class="dark-tooltip"
@@ -1129,24 +1130,18 @@
                                                                                 • <b>Meta inversa: </b> El valor es el máximo tolerado,cuanto menos mejor, alejarse es positivo<br>Ej: Tiempo de respuesta.<br><br>
                                                                                 • <b>Meta puntual: </b> Valor exacto.  Cualquier desviación es negativa.<br> Ej: Control de calidad crítico, procesos normativos">
                                                                         </i></label>
-                                                                    <select id="evaluacion_meta" name="evaluacion_meta"
+                                                                    <select id="evaluacion_meta" name="unico_evaluacion"
                                                                         class="form-select">
-                                                                        <option value="superable_positiva">Superable
-                                                                            positiva – Más es mejor</option>
-                                                                        <option value="umbral_maximo">Límite máximo
-                                                                            – No debe superarse
+                                                                        <option value="1">Superable positiva – Más es
+                                                                            mejor</option>
+                                                                        <option value="2">Límite máximo – No debe
+                                                                            superarse</option>
+                                                                        <option value="3">Tolerancia simétrica –
+                                                                            Penaliza desviaciones</option>
+                                                                        <option value="4">Menor es mejor – Más es
+                                                                            negativo – Alejarse en menos es mejor
                                                                         </option>
-                                                                        <option value="tolerancia_simetrica">
-                                                                            Tolerancia
-                                                                            simétrica – Penaliza desviaciones
-                                                                        </option>
-                                                                        <option value="mejor_mientras_menos">Menor
-                                                                            es
-                                                                            mejor – Más es negativo – Distancia
-                                                                            creciente
-                                                                            es mejor</option>
-                                                                        <option value="valor_exacto">Valor exacto –
-                                                                            Cero tolerancia
+                                                                        <option value="5">Valor exacto – Cero tolerancia
                                                                         </option>
                                                                     </select>
                                                                 </div>
@@ -1162,7 +1157,7 @@
                                                                             title="Δ Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
                                                                         </i></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_aceptable" name="umbral_aceptable"
+                                                                        id="umbral_aceptable" name="unico_aceptable"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
 
@@ -1171,7 +1166,7 @@
                                                                         class="form-label"><strong>% Riesgo
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_riesgo" name="umbral_riesgo"
+                                                                        id="umbral_riesgo" name="unico_riesgo"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
 
@@ -1180,7 +1175,7 @@
                                                                         class="form-label"><strong>% Crítico
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_critico" name="umbral_critico"
+                                                                        id="umbral_critico" name="unico_critico"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
                                                             </div>
@@ -1210,7 +1205,7 @@
                                                                         class="form-label"><strong>% Aceptable
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_aceptable" name="umbral_aceptable"
+                                                                        id="rango_aceptable" name="umbral_aceptable"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
 
@@ -1220,7 +1215,7 @@
                                                                         class="form-label"><strong>% Riesgo
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_riesgo" name="umbral_riesgo"
+                                                                        id="rango_riesgo" name="umbral_riesgo"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
 
@@ -1230,7 +1225,7 @@
                                                                         class="form-label"><strong>% Crítico
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_critico" name="umbral_critico"
+                                                                        id="rango_critico" name="umbral_critico"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
                                                             </div>
@@ -1243,12 +1238,11 @@
                                                                     <label for="tipo_tendencia"
                                                                         class="form-label"><strong>Tipo de
                                                                             Tendencia:</strong></label>
-                                                                    <select id="tipo_tendencia" name="tipo_tendencia"
+                                                                    <select id="tipo_tendencia" name="tenden_tipo"
                                                                         class="form-select">
                                                                         <option value="">-- Seleccionar --</option>
                                                                         <option value="aumentar">Aumento</option>
-                                                                        <option value="disminuir">Disminución
-                                                                        </option>
+                                                                        <option value="disminuir">Disminución</option>
                                                                         <option value="mantener">Estable</option>
                                                                     </select>
                                                                 </div>
@@ -1258,7 +1252,7 @@
                                                                         class="form-label"><strong>Valor de
                                                                             referencia:</strong></label>
                                                                     <input type="number" step="any"
-                                                                        id="valor_referencia" name="valor_referencia"
+                                                                        id="tenden_referencia" name="tenden_referencia"
                                                                         class="form-control" placeholder="Ej: 65">
                                                                 </div>
 
@@ -1273,7 +1267,7 @@
                                                                             title="Δ Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
                                                                         </i></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_aceptable" name="umbral_aceptable"
+                                                                        id="tenden_aceptable" name="tenden_aceptable"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
                                                                 <div class="col-md-2">
@@ -1281,7 +1275,7 @@
                                                                         class="form-label"><strong>% Riesgo
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_riesgo" name="umbral_riesgo"
+                                                                        id="tenden_riesgo" name="tenden_riesgo"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
                                                                 <div class="col-md-2">
@@ -1289,7 +1283,7 @@
                                                                         class="form-label"><strong>% Crítico
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_critico" name="umbral_critico"
+                                                                        id="tenden_critico" name="tenden_critico"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
                                                             </div>
@@ -1299,9 +1293,9 @@
                                                     <script>
                                                         function mostrarCamposMeta() {
                                                             const tipo = document.getElementById('tipo_meta').value;
-                                                            document.getElementById('metaValor').classList.toggle('hidden', tipo !== 'valor');
-                                                            document.getElementById('metaRango').classList.toggle('hidden', tipo !== 'rango');
-                                                            document.getElementById('metaTendencia').classList.toggle('hidden', tipo !== 'tendencia');
+                                                            document.getElementById('metaValor').classList.toggle('hidden', tipo !== '1');
+                                                            document.getElementById('metaRango').classList.toggle('hidden', tipo !== '2');
+                                                            document.getElementById('metaTendencia').classList.toggle('hidden', tipo !== '3');
                                                         }
                                                     </script>
 
@@ -1313,7 +1307,7 @@
                                                     </div>
 
                                                     <!--begin::Fuente de Datos-->
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <label for="fuente_datos" class="form-label"><strong>Fuente
                                                                 de Datos
                                                                 *</strong></label>
@@ -1388,27 +1382,10 @@
                                                     </div>
                                                     <!--end::Frecuencia de Medición-->
 
-                                                    <!--begin::Tolerancia de carga-->
-                                                    <div class="col-md-2">
-                                                        <label for="tolerancia_q" class="form-label"><strong>Tolerancia
-                                                                *</strong>
-                                                            <i class="fas fa-info-circle info-icon"
-                                                                data-bs-toggle="tooltip" data-bs-html="true"
-                                                                data-bs-custom-class="dark-tooltip"
-                                                                title="Demora máxima para informar el valor del indicador, según la frecuencia establecida"></i>
-                                                        </label>
-                                                        <input type="text" class="form-control" id="tolerancia_q"
-                                                            name="tolerancia_q" placeholder="Ej: 1, 2, 3 " />
-                                                        <div class="invalid-feedback">Debe seleccionar demora
-                                                            máxima.</div>
-                                                    </div>
-                                                    <!--end::Tolerancia de carga-->
-
                                                     <!--begin::Unidad de demora-->
-                                                    <div class="col-md-2">
-                                                        <label for="tolerancia_plazo" class="form-label"><strong>Plazo
-                                                                tolerancia
-                                                                *</strong>
+                                                    <div class="col-md-3">
+                                                        <label for="tolerancia_plazo" class="form-label"><strong>Demora
+                                                                admitida *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="dark-tooltip"
@@ -1427,6 +1404,44 @@
                                                         </div>
                                                     </div>
                                                     <!--end::Unidad de demora-->
+
+                                                    <!--begin::Tolerancia de carga-->
+                                                    <div class="col-md-3">
+                                                        <label for="tolerancia_q" class="form-label"><strong>Demora en Q
+                                                                *</strong>
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip" data-bs-html="true"
+                                                                data-bs-custom-class="dark-tooltip"
+                                                                title="Cantidad de unidades de demora admitidas para informar el valor de la medición"></i>
+                                                        </label>
+                                                        <input type="text" class="form-control" id="tolerancia_q"
+                                                            name="tolerancia_q" placeholder="Ej: 1, 2, 3 " />
+                                                        <div class="invalid-feedback">Debe seleccionar demora
+                                                            máxima.</div>
+                                                    </div>
+                                                    <!--end::Tolerancia de carga-->
+
+                                                    <!-- Sección: Presentación -->
+                                                    <div class="col-12">
+                                                        <h5 class="text-primary border-bottom mt-4">Presentación
+                                                        </h5>
+                                                    </div>
+
+                                                    <!--begin::Periodo inicial de Reporte-->
+                                                    <div class="col-md-3">
+                                                        <label for="fecha_inicio" class="form-label"><strong>Fecha
+                                                                de vigencia *</strong>
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip" data-bs-html="true"
+                                                                data-bs-custom-class="dark-tooltip"
+                                                                title="Fecha de primera medición o inicio de vigencia del indicador">
+                                                            </i>
+                                                        </label>
+                                                        <input type="date" class="form-control" id="fecha_inicio"
+                                                            name="fecha_inicio" required>
+                                                        <div class="invalid-feedback">La fecha es obligatoria.</div>
+                                                    </div>
+                                                    <!--end::Periodo inicial de Reporte-->
 
                                                     <!--begin::Periodicidad de Reporte-->
                                                     <div class="col-md-3">
@@ -1451,47 +1466,20 @@
                                                     </div>
                                                     <!--end::Periodicidad de Reporte-->
 
-                                                    <!--begin::Periodo inicial de Reporte-->
-                                                    <div class="col-md-3">
-                                                        <label for="fecha_inicio" class="form-label"><strong>Fecha
-                                                                de inicio seg.
-                                                                *</strong></label>
-                                                        <input type="date" class="form-control" id="fecha_inicio"
-                                                            name="fecha_inicio" required>
-                                                        <div class="invalid-feedback">La fecha es obligatoria.</div>
-                                                    </div>
-                                                    <!--end::Periodo inicial de Reporte-->
-
-                                                    <!-- Sección: Presentación -->
-                                                    <div class="col-12">
-                                                        <h5 class="text-primary border-bottom mt-4">Presentación
-                                                        </h5>
-                                                    </div>
-
                                                     <!--begin::Formato de Presentación-->
                                                     <div class="col-md-4">
-                                                        <label class="form-label">Formato de Presentación *</label>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="tabla" id="formatoTabla"
-                                                                name="formato_presentacion[]">
-                                                            <label class="form-check-label"
-                                                                for="formatoTabla">Tabla</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="grafico" id="formatoGrafico"
-                                                                name="formato_presentacion[]">
-                                                            <label class="form-check-label"
-                                                                for="formatoGrafico">Gráfico</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="dashboard" id="formatoDashboard"
-                                                                name="formato_presentacion[]">
-                                                            <label class="form-check-label"
-                                                                for="formatoDashboard">Dashboard</label>
-                                                        </div>
+                                                        <label class="form-label"><strong>Formato de Presentación
+                                                                *</strong></label>
+
+                                                        <select class="form-select" id="formato_presentacion"
+                                                            name="formato_presentacion" required>
+                                                            <option value="" disabled selected>Seleccione standard...
+                                                            </option>
+                                                            <option value="1">Tabla</option>
+                                                            <option value="2">Grafico</option>
+                                                            <option value="3">Dashboard</option>
+                                                        </select>
+
                                                         <div class="invalid-feedback">Debe seleccionar al menos un
                                                             formato de
                                                             presentación.</div>
@@ -1499,7 +1487,7 @@
                                                     <!--end::Formato de Presentación-->
 
                                                     <!--begin::Grupos asignados-->
-                                                    <div class="col-md-4">
+                                                    <!-- <div class="col-md-4">
                                                         <label for="grupos_asignados" class="form-label">Grupos de
                                                             integración</label>
                                                         <select class="form-select" id="grupos_asignados"
@@ -1516,12 +1504,13 @@
                                                             (Ctrl+click). Si
                                                             no se selecciona
                                                             ninguno, solo se considerará individualmente.</div>
-                                                    </div>
+                                                    </div> -->
                                                     <!--end::Grupos asignados-->
 
                                                     <!--begin::Comentarios-->
                                                     <div class="col-12">
-                                                        <label for="comentarios" class="form-label">Comentarios</label>
+                                                        <label for="comentarios"
+                                                            class="form-label"><strong>Comentarios</strong></label>
                                                         <textarea class="form-control" id="comentarios"
                                                             name="comentarios" rows="3"
                                                             placeholder="Comentarios adicionales sobre el indicador"></textarea>
@@ -1560,14 +1549,15 @@
                                                         event.stopPropagation();
 
                                                         // Validar formato de presentación
-                                                        const formatoCheckboxes = document.querySelectorAll('input[name="formatoPresentacion[]"]');
+                                                        const formatoCheckboxes = document.querySelectorAll('input[name="formato_presentacion[]"]');
                                                         const formatoSelected = Array.from(formatoCheckboxes).some(cb => cb.checked);
 
-                                                        if (!formatoSelected) {
-                                                            // Mostrar mensaje de error personalizado
-                                                            formatoCheckboxes[0].setCustomValidity('Debe seleccionar al menos un formato de presentación.');
-                                                        } else {
-                                                            formatoCheckboxes[0].setCustomValidity('');
+                                                        if (formatoCheckboxes.length > 0) {
+                                                            if (!formatoSelected) {
+                                                                formatoCheckboxes[0].setCustomValidity('Debe seleccionar al menos un formato de presentación.');
+                                                            } else {
+                                                                formatoCheckboxes[0].setCustomValidity('');
+                                                            }
                                                         }
 
                                                         if (!form.checkValidity()) {
@@ -1592,15 +1582,6 @@
                                                     form.addEventListener('submit', async (event) => {
                                                         event.preventDefault();
                                                         event.stopPropagation();
-
-                                                        // Validar formato de presentación
-                                                        const formatoCheckboxes = document.querySelectorAll('input[name="formatoPresentacion[]"]');
-                                                        const formatoSelected = Array.from(formatoCheckboxes).some(cb => cb.checked);
-                                                        if (!formatoSelected) {
-                                                            formatoCheckboxes[0].setCustomValidity('Debe seleccionar al menos un formato de presentación.');
-                                                        } else {
-                                                            formatoCheckboxes[0].setCustomValidity('');
-                                                        }
 
                                                         // Validar campos según tipo de meta
                                                         const tipoMeta = document.getElementById('tipoMeta').value;
@@ -1648,51 +1629,80 @@
                                             async function procesarFormulario() {
                                                 const formData = new FormData(document.getElementById('indicadorForm'));
 
-                                                const formatoPresentacion = Array.from(document.querySelectorAll('input[name="formatoPresentacion[]"]:checked')).map(cb => cb.value);
-                                                const gruposAsignados = Array.from(document.getElementById('gruposAsignados').selectedOptions).map(opt => opt.value);
-
                                                 const indicadorData = {
-                                                    codigo_id: formData.get('codigoIdentificatorio'),
+                                                    // --- Identificación
+                                                    codigo_id: formData.get('codigo_id'),
                                                     nombre: formData.get('nombre'),
-                                                    dimension_id: formData.get('dimension'),
                                                     descripcion: formData.get('descripcion'),
-                                                    objetivo: formData.get('objetivo'),
-                                                    formula_calculo: formData.get('formulaCalculo'),
-                                                    fuente_datos: formData.get('fuenteDatos'),
+
+                                                    // --- Alineación estratégica
+                                                    dimension_id: formData.get('dimension_id'),
+                                                    tipo_id: formData.get('tipo_id'),
+                                                    categoria_id: formData.get('categoria_id'),
+                                                    criticidad_id: formData.get('criticidad_id'),
                                                     responsable: formData.get('responsable'),
-                                                    destino: formData.get('unidadFuncional'),
-                                                    unidad_medida: formData.get('unidadMedida'),
-                                                    frecuencia_medicion: formData.get('frecuenciaMedicion'),
-                                                    frecuencia_reporte: formData.get('periodicidadReporte'),
-                                                    tolerancia_q: formData.get('demoraMaximaQ'),
-                                                    tolerancia_plazo: formData.get('unidadDemora'),
-                                                    fecha_inicio: formData.get('fechaInicio'),
-                                                    categoria_id: formData.get('categoria'),
-                                                    criticidad_id: formData.get('criticidad'),
-                                                    formato_presentacion: formatoPresentacion.join(','),
-                                                    grupos_asignados: gruposAsignados.join(','),
-                                                    comentarios: formData.get('comentarios')
+                                                    destino: formData.get('destino'),
+
+                                                    // --- Objetivo
+                                                    objetivo: formData.get('objetivo'),
+
+                                                    // --- Medición
+                                                    formula_calculo: formData.get('formula_calculo'),
+                                                    fuente_datos: formData.get('fuente_datos'),
+                                                    unidad_medida: formData.get('unidad_medida'),
+                                                    frecuencia_medicion: formData.get('frecuencia_medicion'),
+                                                    frecuencia_reporte: formData.get('frecuencia_reporte'),
+                                                    tolerancia_q: formData.get('tolerancia_q'),
+                                                    tolerancia_plazo: formData.get('tolerancia_plazo'),
+                                                    fecha_inicio: formData.get('fecha_inicio'),
+
+                                                    // --- Presentación
+                                                    formato_presentacion: formData.get('formato_presentacion'),
+                                                    comentarios: formData.get('comentarios'),
                                                 };
 
-                                                // Campos de meta según tipo
-                                                const tipoMeta = formData.get('tipoMeta');
-                                                if (tipoMeta === 'valor') {
-                                                    indicadorData.meta_tipo = 'valor';
-                                                    indicadorData.meta_valor = formData.get('valorMeta');
-                                                    indicadorData.umbral_acepta = formData.get('umbralPositivo');
-                                                    indicadorData.umbral_critico = formData.get('umbralCritico');
-                                                } else if (tipoMeta === 'rango') {
-                                                    indicadorData.meta_tipo = 'rango';
-                                                    indicadorData.meta_desde = formData.get('rangoDesde');
-                                                    indicadorData.meta_hasta = formData.get('rangoHasta');
-                                                    indicadorData.umbral_acepta = formData.get('umbralPositivo');
-                                                    indicadorData.umbral_critico = formData.get('umbralCritico');
-                                                } else if (tipoMeta === 'tendencia') {
-                                                    indicadorData.meta_tipo = 'tendencia';
-                                                    indicadorData.tenden_tipo = formData.get('tipoTendencia');
-                                                    indicadorData.tenden_refe = formData.get('valorReferencia');
-                                                    indicadorData.umbral_acepta = formData.get('umbralPostivo'); // ajustar si hay campo separado
-                                                    indicadorData.umbral_riesgo = formData.get('umbralCritico'); // ajustar si hay campo separado
+                                                // --- Metas según tipo
+
+                                                indicadorData.unico_valor = 0;
+                                                indicadorData.unico_eval = 0;
+                                                indicadorData.unico_acepta = 0;
+                                                indicadorData.unico_riesgo = 0;
+                                                indicadorData.unico_critico = 0;
+
+                                                indicadorData.rango_desde = 0;
+                                                indicadorData.rango_hasta = 0;
+                                                indicadorData.rango_acepta = 0;
+                                                indicadorData.rango_riesgo = 0;
+                                                indicadorData.rango_critico = 0;
+
+                                                indicadorData.tenden_tipo = 0;
+                                                indicadorData.tenden_refe = 0;
+                                                indicadorData.tenden_acepta = 0;
+                                                indicadorData.tenden_riesgo = 0;
+                                                indicadorData.tenden_critico = 0;
+
+                                                indicadorData.meta_tipo = formData.get('tipo_meta')
+                                                const tipoMeta = formData.get('tipo_meta');
+                                                if (tipoMeta === '1') {
+                                                    indicadorData.unico_valor = formData.get('valor_meta');
+                                                    indicadorData.unico_eval = formData.get('unico_evaluacion');
+                                                    indicadorData.unico_acepta = formData.get('unico_aceptable');
+                                                    indicadorData.unico_riesgo = formData.get('unico_riesgo');
+                                                    indicadorData.unico_critico = formData.get('unico_critico');
+
+                                                } else if (tipoMeta === '2') {
+                                                    indicadorData.rango_desde = formData.get('rango_min');
+                                                    indicadorData.rango_hasta = formData.get('rango_max');
+                                                    indicadorData.rango_acepta = formData.get('rango_aceptable');
+                                                    indicadorData.rango_riesgo = formData.get('rango_riesgo');
+                                                    indicadorData.rango_critico = formData.get('rango_critico');
+
+                                                } else if (tipoMeta === '3') {
+                                                    indicadorData.tenden_tipo = formData.get('tenden_tipo');
+                                                    indicadorData.tenden_refe = formData.get('tenden_referencia');
+                                                    indicadorData.tenden_acepta = formData.get('tenden_aceptable');
+                                                    indicadorData.tenden_riesgo = formData.get('tenden_riesgo');
+                                                    indicadorData.tenden_critico = formData.get('tenden_critico');
                                                 }
 
                                                 console.log('Datos del indicador a enviar:', indicadorData);
@@ -1719,6 +1729,7 @@
                                                 form.reset();
                                                 form.classList.remove('was-validated');
                                             }
+
 
                                         </script>
                                         <!--end::JavaScript-->
@@ -1836,6 +1847,8 @@
 
         // ✅ Función para editar un indicador
         async function editarIndicador(codigo) {
+
+            console.log('entro en editar indicador')
             try {
                 const response = await fetch(`/api/indicadores/${codigo}`);
                 if (!response.ok) throw new Error('No se pudo obtener el indicador.');
@@ -1856,24 +1869,24 @@
                 form.objetivo.value = indicador.objetivo || '';
 
                 // Meta
-                form.meta_tipo.value = indicador.meta_tipo || '';
-                form.unico_valor.value = indicador.unico_valor || '';
-                form.unico_eval.value = indicador.unico_eval || '';
-                form.unico_acepta.value = indicador.unico_acepta || '';
+                form.tipo_meta.value = indicador.meta_tipo || '';
+                form.valor_meta.value = indicador.unico_valor || '';
+                form.unico_evaluacion.value = indicador.unico_eval || '';
+                form.unico_aceptable.value = indicador.unico_acepta || '';
                 form.unico_riesgo.value = indicador.unico_riesgo || '';
                 form.unico_critico.value = indicador.unico_critico || '';
 
                 // Rangos
-                form.rango_desde.value = indicador.rango_desde || '';
-                form.rango_hasta.value = indicador.rango_hasta || '';
-                form.rango_acepta.value = indicador.rango_acepta || '';
+                form.rango_min.value = indicador.rango_desde || '';
+                form.rango_max.value = indicador.rango_hasta || '';
+                form.rango_aceptable.value = indicador.rango_acepta || '';
                 form.rango_riesgo.value = indicador.rango_riesgo || '';
                 form.rango_critico.value = indicador.rango_critico || '';
 
                 // Tendencias
                 form.tenden_tipo.value = indicador.tenden_tipo || '';
-                form.tenden_refe.value = indicador.tenden_refe || '';
-                form.tenden_acepta.value = indicador.tenden_acepta || '';
+                form.tenden_referencia.value = indicador.tenden_refe || '';
+                form.tenden_aceptable.value = indicador.tenden_acepta || '';
                 form.tenden_riesgo.value = indicador.tenden_riesgo || '';
                 form.tenden_critico.value = indicador.tenden_critico || '';
 
@@ -1883,20 +1896,22 @@
 
                 // Medición y tolerancia
                 form.unidad_medida.value = indicador.unidad_medida || '';
-                form.freq_medicion.value = indicador.freq_medicion || '';
+                form.frecuencia_medicion.value = indicador.freq_medicion || '';
                 form.tolerancia_plazo.value = indicador.tolerancia_plazo || '';
                 form.tolerancia_q.value = indicador.tolerancia_q || '';
-                form.freq_reporte.value = indicador.freq_reporte || '';
+                form.frecuencia_reporte.value = indicador.freq_reporte || '';
 
                 // Fecha y formato
                 form.fecha_inicio.value = indicador.fecha_inicio || '';
-                form.formato.value = indicador.formato || '';
+                form.formato_presentacion.value = indicador.formato || '';
 
                 // Grupos
-                form.grupos.value = indicador.grupos || '';
+                form.comentarios.value = indicador.comentarios || '';
 
                 // Mostrar la pestaña de edición si es modal o scroll al formulario
-                form.scrollIntoView({ behavior: 'smooth' });
+                console.log('Formulario encontrado:', form);
+                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                form.querySelector('input, textarea, select')?.focus();
 
             } catch (error) {
                 console.error('Error al cargar el indicador para edición:', error);
@@ -2015,10 +2030,8 @@
             }
             return cadena.join(' > ');
         }
-    </script>
 
 
-    <script>
         async function cargarIndicadores() {
             try {
                 const response = await fetch('/api/indicadores'); // Ruta a tu backend
@@ -2041,10 +2054,15 @@
                 totalBadge.textContent = `${indicadores.length} indicadores`;
 
                 for (const ind of indicadores) {
+
+                    console.log('criticidad: ' + ind.criticidad_id);
                     const fila = document.createElement('tr');
 
                     // Criticidad
                     let clase_criticidad = getClaseCriticidad(ind.criticidad_id);
+
+                    // categoría
+                    let clase_categoria = getClaseCategoria(ind.categoria_id);
 
                     // Usuario responsable
                     const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
@@ -2062,11 +2080,11 @@
                     </span>
                 </td>
 
-                <td>${ind.categoria_id}</td>
+                <td>${clase_categoria}</td>
                 <td>${sectores.nombre}</td>
                 <td>${usuario.nombres} ${usuario.apellido}</td>
 
-                <td class="${clase_criticidad}">${ind.criticidad_id}</td>
+                <td>${clase_criticidad}</td>
 
                 <td>${ind.frecuencia_medicion}</td>
 
@@ -2108,13 +2126,29 @@
 
 
         function getClaseCriticidad(criticidad) {
-            switch (criticidad_id) {
-                case 'alta':
-                    return 'criticidad-alta';
-                case 'media':
-                    return 'criticidad-media';
-                case 'baja':
-                    return 'criticidad-baja';
+            switch (criticidad) {
+                case 1:
+                    return 'Alta';
+                case 2:
+                    return 'Media';
+                case 3:
+                    return 'Baja';
+                default:
+                    return '';
+            }
+        }
+
+
+        function getClaseCategoria(categoria) {
+            switch (categoria) {
+                case 1:
+                    return 'Eficiencia';
+                case 2:
+                    return 'Eficacia';
+                case 3:
+                    return 'Calidad';
+                case 4:
+                    return 'Productividad';
                 default:
                     return '';
             }
@@ -2163,14 +2197,6 @@
                 return null;
             }
         }
-        // // Ejemplo de uso
-        // obtenerUsuarioPorLegajo(responsable).then(usuario => {
-        //     if (usuario) {
-        //         // acá podés actualizar tu UI con los datos
-        //         document.getElementById('nombreUsuario').textContent = usuario.nombre;
-        //         document.getElementById('emailUsuario').textContent = usuario.email;
-        //     }
-        // });
 
         async function verDetalleIndicador(codigo) {
 
@@ -2199,6 +2225,7 @@
                 const tabla = document.getElementById('tablaDetalleIndicador');
                 tabla.innerHTML = '';
 
+                console.log('comentarios:' + indicador.comentarios)
                 let tipoIndicador = '-';
                 switch (indicador.tipo_id) {
                     case 1:
@@ -2290,6 +2317,18 @@
                         break;
                 }
 
+                let formatoPresentacion = '-';
+                switch (indicador.formato) {
+                    case 1:
+                        formatoPresentacion = 'Tabla';
+                        break;
+                    case 2:
+                        formatoPresentacion = 'Grafico';
+                        break;
+                    case 3:
+                        formatoPresentacion = 'Dashboard';
+                        break;
+                }
                 console.log("Valor actual de unico_acepta:", indicador.unico_acepta);
 
                 // --- Campos comunes a todos los indicadores
@@ -2361,8 +2400,8 @@
                     "Tolerancia Q": indicador.tolerancia_q || '-',
                     "Frecuencia de Reporte": getNombreCodigo(indicador.freq_reporte),
                     "Fecha de Inicio": indicador.fecha_inicio || '-',
-                    "Formato de Presentación": indicador.formato || '-',
-                    "Grupos": indicador.grupos || '-'
+                    "Formato de Presentación": `${indicador.formato} - ${formatoPresentacion}` || '-',
+                    "Comentarios": indicador.comentarios || '-'
                 });
 
                 for (const [campo, valor] of Object.entries(campos)) {

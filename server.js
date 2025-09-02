@@ -160,7 +160,8 @@ app.get('/api/indicadores', async (req, res) => {
                 freq_reporte,
                 fecha_inicio,
                 formato,
-                grupos
+                grupos,
+                comentarios
             FROM indicadores
             ORDER BY id DESC
         `);
@@ -222,7 +223,8 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
                 i.freq_reporte,
                 i.fecha_inicio,
                 i.formato,
-                i.grupos
+                i.grupos,
+                i.comentarios
             FROM indicadores i
             LEFT JOIN sectores s ON i.destino = s.id
             LEFT JOIN usuarios u ON i.responsable = u.legajo
@@ -288,30 +290,45 @@ app.delete('/api/organigrama', async (req, res) => {
 // // 🚫🚫🚫 Carga de indicadores
 app.post('/api/indicadores', async (req, res) => {
     const {
-        codigo_identificatorio, nombre, dimension, descripcion, objetivo, formula_calculo,
-        fuente_datos, responsable, unidad_funcional_id, unidad_medida, frecuencia_medicion,
-        periodicidad_reporte, demora_maxima_valor, demora_maxima_unidad, periodo_inicial,
-        meta_objetivo, umbral_positivo, umbral_critico, tendencia_deseada, categoria,
-        criticidad, formato_presentacion, grupos_integracion, comentarios
+        codigo_id, nombre, descripcion,
+        tipo_id, dimension_id, categoria_id, criticidad_id,
+        responsable, destino, objetivo,
+        meta_tipo, unico_valor, unico_eval, unico_acepta, unico_riesgo, unico_critico,
+        rango_desde, rango_hasta, rango_acepta, rango_riesgo, rango_critico,
+        tenden_tipo, tenden_refe, tenden_acepta, tenden_riesgo, tenden_critico,
+        fuente_datos, formula_calculo,
+        unidad_medida, frecuencia_medicion, tolerancia_plazo, tolerancia_q,
+        frecuencia_reporte, fecha_inicio,
+        formato_presentacion, comentarios
     } = req.body;
 
     try {
         const sql = `
             INSERT INTO indicadores (
-                codigo_identificatorio, nombre, dimension, descripcion, objetivo, formula_calculo,
-                fuente_datos, responsable, unidad_funcional_id, unidad_medida, frecuencia_medicion,
-                periodicidad_reporte, demora_maxima_valor, demora_maxima_unidad, periodo_inicial,
-                meta_objetivo, umbral_positivo, umbral_critico, tendencia_deseada, categoria,
-                criticidad, formato_presentacion, grupos_integracion, comentarios
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                codigo_id, nombre, descripcion,
+                tipo_id, dimension_id, categoria_id, criticidad_id,
+                responsable, destino, objetivo,
+                meta_tipo, unico_valor, unico_eval, unico_acepta, unico_riesgo, unico_critico,
+                rango_desde, rango_hasta, rango_acepta, rango_riesgo, rango_critico,
+                tenden_tipo, tenden_refe, tenden_acepta, tenden_riesgo, tenden_critico,
+                fuente_datos, formula_calculo,
+                unidad_medida, freq_medicion, tolerancia_plazo, tolerancia_q,
+                freq_reporte, fecha_inicio,
+                formato, comentarios
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         await pool.execute(sql, [
-            codigo_identificatorio, nombre, dimension, descripcion, objetivo, formula_calculo,
-            fuente_datos, responsable, unidad_funcional_id, unidad_medida, frecuencia_medicion,
-            periodicidad_reporte, demora_maxima_valor, demora_maxima_unidad, periodo_inicial,
-            meta_objetivo, umbral_positivo, umbral_critico, tendencia_deseada, categoria,
-            criticidad, formato_presentacion, grupos_integracion, comentarios
+            codigo_id, nombre, descripcion,
+            tipo_id, dimension_id, categoria_id, criticidad_id,
+            responsable, destino, objetivo,
+            meta_tipo, unico_valor, unico_eval, unico_acepta, unico_riesgo, unico_critico,
+            rango_desde, rango_hasta, rango_acepta, rango_riesgo, rango_critico,
+            tenden_tipo, tenden_refe, tenden_acepta, tenden_riesgo, tenden_critico,
+            fuente_datos, formula_calculo,
+            unidad_medida, frecuencia_medicion, tolerancia_plazo, tolerancia_q,
+            frecuencia_reporte, fecha_inicio,
+            formato_presentacion, comentarios
         ]);
 
         res.status(201).json({ message: 'Indicador creado correctamente' });
@@ -320,6 +337,7 @@ app.post('/api/indicadores', async (req, res) => {
         res.status(500).json({ error: 'Error al guardar el indicador' });
     }
 });
+
 
 
 // // 🚫🚫🚫 Eliminar indicador
