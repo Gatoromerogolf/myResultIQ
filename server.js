@@ -24,8 +24,10 @@ app.use('/dist', express.static('public'));
 
 
 // ✅ Crear un indicador
-app.post('/guardar', async (req, res) => {
+app.post('/api/guardar', async (req, res) => {
+
     const data = req.body;
+
     try {
         await pool.query(
             `INSERT INTO indicadores (
@@ -64,7 +66,7 @@ app.post('/guardar', async (req, res) => {
                 freq_reporte,
                 fecha_inicio,
                 formato,
-                grupos
+                comentarios
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `,
             [
@@ -103,7 +105,7 @@ app.post('/guardar', async (req, res) => {
                 data.freq_reporte,
                 data.fecha_inicio,
                 data.formato,
-                data.grupos
+                data.comentarios
             ]
         );
 
@@ -160,7 +162,6 @@ app.get('/api/indicadores', async (req, res) => {
                 freq_reporte,
                 fecha_inicio,
                 formato,
-                grupos,
                 comentarios
             FROM indicadores
             ORDER BY id DESC
@@ -223,7 +224,6 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
                 i.freq_reporte,
                 i.fecha_inicio,
                 i.formato,
-                i.grupos,
                 i.comentarios
             FROM indicadores i
             LEFT JOIN sectores s ON i.destino = s.id

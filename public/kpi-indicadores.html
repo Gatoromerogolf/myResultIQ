@@ -830,6 +830,7 @@
                                 <div class="col-12">
                                     <!--begin::Form Carga Indicadores-->
                                     <div class="card card-primary card-outline mb-4">
+
                                         <!--begin::Form-->
                                         <form class="needs-validation" novalidate id="indicadorForm">
                                             <!--begin::Body-->
@@ -860,8 +861,8 @@
                                                         </label>
                                                         <input type="text" class="form-control" id="codigo_id"
                                                             name="codigo_id" placeholder="Ej: FIN001" required />
-                                                        <div class="invalid-feedback">El código
-                                                            identificatorio es obligatorio.</div>
+                                                        <div class="invalid-feedback">El código identificatorio es
+                                                            obligatorio.</div>
                                                     </div>
                                                     <!--end::Código Identificatorio-->
 
@@ -871,8 +872,7 @@
                                                                 *</strong></label>
                                                         <input type="text" class="form-control" id="nombre"
                                                             name="nombre" placeholder="Nombre del indicador" required />
-                                                        <div class="invalid-feedback">El nombre es
-                                                            obligatorio.</div>
+                                                        <div class="invalid-feedback">El nombre es obligatorio.</div>
                                                     </div>
                                                     <!--end::Nombre-->
 
@@ -884,8 +884,8 @@
                                                             name="descripcion" rows="3"
                                                             placeholder="Explicación detallada de qué mide el indicador"
                                                             required></textarea>
-                                                        <div class="invalid-feedback">La descripción es
-                                                            obligatoria.</div>
+                                                        <div class="invalid-feedback">La descripción es obligatoria.
+                                                        </div>
                                                     </div>
                                                     <!--end::Descripción-->
 
@@ -902,8 +902,7 @@
 
                                                     <!--begin::Tipo-->
                                                     <div class="col-md-3">
-                                                        <label for="tipo_id" class="form-label"><strong>Tipo
-                                                                *</strong>
+                                                        <label for="tipo_id" class="form-label"><strong>Tipo *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="custom-tooltip"
@@ -941,7 +940,7 @@
                                                             </i></label>
                                                         <select class="form-select" id="dimension_id"
                                                             name="dimension_id" required>
-                                                            <option value="" disabled selected>Seleccione tipo...
+                                                            <option value="" disabled selected>Seleccione Dimensión...
                                                             </option>
                                                             <option value="1">Financiera</option>
                                                             <option value="2">Clientes</option>
@@ -949,9 +948,8 @@
                                                             <option value="4">Capital humano</option>
                                                             <!-- Opciones desde dimension_indicador -->
                                                         </select>
-
-                                                        <div class="invalid-feedback">Debe seleccionar una
-                                                            dimensión.</div>
+                                                        <div class="invalid-feedback">Debe seleccionar una dimensión.
+                                                        </div>
                                                     </div>
                                                     <!--end::Dimensión-->
 
@@ -969,16 +967,6 @@
                                                                     • <b>Calidad:</b> Conformidad con estándares o satisfacción<br>
                                                                     • <b>Productividad:</b> Relación entre producción y recursos">
                                                             </i></label>
-                                                        <!-- <select class="form-select" id="categoria_id"
-                                                            name="categoria_id" required>
-                                                            <option value="" disabled selected>Seleccione catgegoria...
-                                                            </option>
-                                                            <option value="1">Eficiencia</option>
-                                                            <option value="2">Eficacia</option>
-                                                            <option value="3">Calidad</option>
-                                                            <option value="4">Productividades</option>
-                                                        </select> -->
-
                                                         <select class="form-select" id="categoria_id"
                                                             name="categoria_id" required>
                                                             <option selected disabled value="">Seleccione...
@@ -1017,8 +1005,8 @@
                                                             <option value="2">Media</option>
                                                             <option value="3">Baja</option>
                                                         </select>
-                                                        <div class="invalid-feedback">Debe seleccionar la
-                                                            criticidad.</div>
+                                                        <div class="invalid-feedback">Debe seleccionar la criticidad.
+                                                        </div>
                                                     </div>
                                                     <!--end::Criticidad-->
 
@@ -1049,12 +1037,11 @@
                                                                 *</strong></label>
                                                         <select class="form-select" id="destino" name="destino"
                                                             required>
-                                                            <option selected disabled value="">Seleccione
-                                                                destino...</option>
+                                                            <option selected disabled value="">Seleccione destino...
+                                                            </option>
                                                             <!-- Opciones desde sectores -->
                                                         </select>
-                                                        <div class="invalid-feedback">El destino es
-                                                            obligatorio.</div>
+                                                        <div class="invalid-feedback">El destino es obligatorio.</div>
                                                     </div>
                                                     <!--end::Unidad funcional-->
 
@@ -1090,7 +1077,7 @@
                                                                         • <b>Rango de valores:</b> 📊 evaluación dentro de un intervalo tolerado.<br><br>
                                                                         • <b>Tendencia:</b> 📈📉 análisis de la dirección del cambio a lo largo del tiempo">
                                                                 </i></label>
-                                                            <select id="tipo_meta" name="tipo_meta" class="form-select"
+                                                            <select id="meta_tipo" name="meta_tipo" class="form-select"
                                                                 onchange="mostrarCamposMeta()">
                                                                 <option value="">-- Seleccionar --</option>
                                                                 <option value="1">Valor único</option>
@@ -1110,8 +1097,8 @@
                                                                             data-bs-custom-class="dark-tooltip"
                                                                             title="🎯 Valor objetivo">
                                                                         </i></label>
-                                                                    <input type="number" step="any" id="valor_meta"
-                                                                        name="valor_meta" class="form-control"
+                                                                    <input type="number" step="any" id="unico_valor"
+                                                                        name="unico_valor" class="form-control"
                                                                         placeholder="Ej: 85">
                                                                 </div>
 
@@ -1130,8 +1117,9 @@
                                                                                 • <b>Meta inversa: </b> El valor es el máximo tolerado,cuanto menos mejor, alejarse es positivo<br>Ej: Tiempo de respuesta.<br><br>
                                                                                 • <b>Meta puntual: </b> Valor exacto.  Cualquier desviación es negativa.<br> Ej: Control de calidad crítico, procesos normativos">
                                                                         </i></label>
-                                                                    <select id="evaluacion_meta" name="unico_evaluacion"
+                                                                    <select id="unico_eval" name="unico_eval"
                                                                         class="form-select">
+                                                                        <option value="">-- Seleccionar --</option>
                                                                         <option value="1">Superable positiva – Más es
                                                                             mejor</option>
                                                                         <option value="2">Límite máximo – No debe
@@ -1157,7 +1145,7 @@
                                                                             title="Δ Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
                                                                         </i></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_aceptable" name="unico_aceptable"
+                                                                        id="unico_acepta" name="unico_acepta"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
 
@@ -1166,7 +1154,7 @@
                                                                         class="form-label"><strong>% Riesgo
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_riesgo" name="unico_riesgo"
+                                                                        id="unico_riesgo" name="unico_riesgo"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
 
@@ -1175,7 +1163,7 @@
                                                                         class="form-label"><strong>% Crítico
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="umbral_critico" name="unico_critico"
+                                                                        id="unico_critico" name="unico_critico"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
                                                             </div>
@@ -1189,12 +1177,12 @@
                                                                             deseado:</strong></label>
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">Desde</span>
-                                                                        <input type="number" step="any" id="rango_min"
-                                                                            name="rango_min" class="form-control"
+                                                                        <input type="number" step="any" id="rango_desde"
+                                                                            name="rango_desde" class="form-control"
                                                                             placeholder="Ej: 60">
                                                                         <span class="input-group-text">Hasta</span>
-                                                                        <input type="number" step="any" id="rango_max"
-                                                                            name="rango_max" class="form-control"
+                                                                        <input type="number" step="any" id="rango_hasta"
+                                                                            name="rango_hasta" class="form-control"
                                                                             placeholder="Ej: 75">
                                                                     </div>
                                                                 </div>
@@ -1205,7 +1193,7 @@
                                                                         class="form-label"><strong>% Aceptable
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="rango_aceptable" name="umbral_aceptable"
+                                                                        id="rango_acepta" name="rango_acepta"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
 
@@ -1215,7 +1203,7 @@
                                                                         class="form-label"><strong>% Riesgo
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="rango_riesgo" name="umbral_riesgo"
+                                                                        id="rango_riesgo" name="rango_riesgo"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
 
@@ -1225,7 +1213,7 @@
                                                                         class="form-label"><strong>% Crítico
                                                                             *</strong></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="rango_critico" name="umbral_critico"
+                                                                        id="rango_critico" name="rango_critico"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
                                                             </div>
@@ -1238,7 +1226,7 @@
                                                                     <label for="tipo_tendencia"
                                                                         class="form-label"><strong>Tipo de
                                                                             Tendencia:</strong></label>
-                                                                    <select id="tipo_tendencia" name="tenden_tipo"
+                                                                    <select id="tenden_tipo" name="tenden_tipo"
                                                                         class="form-select">
                                                                         <option value="">-- Seleccionar --</option>
                                                                         <option value="aumentar">Aumento</option>
@@ -1251,9 +1239,9 @@
                                                                     <label for="valor_referencia"
                                                                         class="form-label"><strong>Valor de
                                                                             referencia:</strong></label>
-                                                                    <input type="number" step="any"
-                                                                        id="tenden_referencia" name="tenden_referencia"
-                                                                        class="form-control" placeholder="Ej: 65">
+                                                                    <input type="number" step="any" id="tenden_refe"
+                                                                        name="tenden_refe" class="form-control"
+                                                                        placeholder="Ej: 65">
                                                                 </div>
 
                                                                 <!-- Umbrales -->
@@ -1267,7 +1255,7 @@
                                                                             title="Δ Desviación máxima aceptada c/r a la meta establecida, para considerarlo cercano al objetivo">
                                                                         </i></label>
                                                                     <input type="text" class="form-control"
-                                                                        id="tenden_aceptable" name="tenden_aceptable"
+                                                                        id="tenden_acepta" name="tenden_acepta"
                                                                         placeholder="(Δ) % c/r a la meta" />
                                                                 </div>
                                                                 <div class="col-md-2">
@@ -1292,14 +1280,12 @@
 
                                                     <script>
                                                         function mostrarCamposMeta() {
-                                                            const tipo = document.getElementById('tipo_meta').value;
+                                                            const tipo = document.getElementById('meta_tipo').value;
                                                             document.getElementById('metaValor').classList.toggle('hidden', tipo !== '1');
                                                             document.getElementById('metaRango').classList.toggle('hidden', tipo !== '2');
                                                             document.getElementById('metaTendencia').classList.toggle('hidden', tipo !== '3');
                                                         }
                                                     </script>
-
-
 
                                                     <!-- Sección: Medición -->
                                                     <div class="col-12">
@@ -1308,22 +1294,20 @@
 
                                                     <!--begin::Fuente de Datos-->
                                                     <div class="col-md-4">
-                                                        <label for="fuente_datos" class="form-label"><strong>Fuente
-                                                                de Datos
-                                                                *</strong></label>
+                                                        <label for="fuente_datos" class="form-label"><strong>Fuente de
+                                                                Datos *</strong></label>
                                                         <input type="text" class="form-control" id="fuente_datos"
                                                             name="fuente_datos" placeholder="Origen de los valores"
                                                             required />
-                                                        <div class="invalid-feedback">La fuente de datos es
-                                                            obligatoria.</div>
+                                                        <div class="invalid-feedback">La fuente de datos es obligatoria.
+                                                        </div>
                                                     </div>
                                                     <!--end::Fuente de Datos-->
 
                                                     <!--begin::Fórmula de Cálculo-->
                                                     <div class="col-md-4 mt-3">
                                                         <label for="formula_calculo" class="form-label"><strong>Fórmula
-                                                                de Cálculo
-                                                                *</strong>
+                                                                de Cálculo *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="dark-tooltip"
@@ -1364,8 +1348,8 @@
                                                         <label for="frecuencia_medicion"
                                                             class="form-label"><strong>Frecuencia de
                                                                 Medición *</strong></label>
-                                                        <select class="form-select" id="frecuencia_medicion"
-                                                            name="frecuencia_medicion" required>
+                                                        <select class="form-select" id="freq_medicion"
+                                                            name="freq_medicion" required>
                                                             <option selected disabled value="">Seleccione...
                                                             </option>
                                                             <option value="0201">Diaria</option>
@@ -1376,8 +1360,8 @@
                                                             <option value="0206">Semestral</option>
                                                             <option value="0207">Anual</option>
                                                         </select>
-                                                        <div class="invalid-feedback">Debe seleccionar la frecuencia
-                                                            de medición.
+                                                        <div class="invalid-feedback">Debe seleccionar la frecuencia de
+                                                            medición.
                                                         </div>
                                                     </div>
                                                     <!--end::Frecuencia de Medición-->
@@ -1393,7 +1377,7 @@
                                                         </label>
                                                         <select class="form-select" id="tolerancia_plazo"
                                                             name="tolerancia_plazo" required>
-                                                            <option selected disabled value="">Seleccione unidad...
+                                                            <option selected disabled value="">Seleccione ...
                                                             </option>
                                                             <option value="0301">Día</option>
                                                             <option value="0302">Semana</option>
@@ -1416,8 +1400,8 @@
                                                         </label>
                                                         <input type="text" class="form-control" id="tolerancia_q"
                                                             name="tolerancia_q" placeholder="Ej: 1, 2, 3 " />
-                                                        <div class="invalid-feedback">Debe seleccionar demora
-                                                            máxima.</div>
+                                                        <div class="invalid-feedback">Debe seleccionar demora máxima.
+                                                        </div>
                                                     </div>
                                                     <!--end::Tolerancia de carga-->
 
@@ -1448,8 +1432,8 @@
                                                         <label for="frecuencia_reporte"
                                                             class="form-label"><strong>Frecuencia de
                                                                 Reporte *</strong></label>
-                                                        <select class="form-select" id="frecuencia_reporte"
-                                                            name="frecuencia_reporte" required>
+                                                        <select class="form-select" id="freq_reporte"
+                                                            name="freq_reporte" required>
                                                             <option selected disabled value="">Seleccione
                                                                 periodicidad...</option>
                                                             <option value="0201">Diaria</option>
@@ -1471,8 +1455,8 @@
                                                         <label class="form-label"><strong>Formato de Presentación
                                                                 *</strong></label>
 
-                                                        <select class="form-select" id="formato_presentacion"
-                                                            name="formato_presentacion" required>
+                                                        <select class="form-select" id="formato" name="formato"
+                                                            required>
                                                             <option value="" disabled selected>Seleccione standard...
                                                             </option>
                                                             <option value="1">Tabla</option>
@@ -1481,8 +1465,7 @@
                                                         </select>
 
                                                         <div class="invalid-feedback">Debe seleccionar al menos un
-                                                            formato de
-                                                            presentación.</div>
+                                                            formato de presentación.</div>
                                                     </div>
                                                     <!--end::Formato de Presentación-->
 
@@ -1523,8 +1506,7 @@
                                             <!--end::Body-->
                                             <!--begin::Footer-->
                                             <div class="card-footer">
-                                                <button class="btn btn-primary" type="submit">Guardar
-                                                    Indicador</button>
+                                                <button class="btn btn-primary" type="submit">Guardar Indicador</button>
                                                 <button class="btn btn-secondary ms-2" type="button"
                                                     onclick="limpiarFormulario()">Limpiar</button>
                                                 <button class="btn btn-outline-secondary float-end" type="button"
@@ -1549,21 +1531,21 @@
                                                         event.stopPropagation();
 
                                                         // Validar formato de presentación
-                                                        const formatoCheckboxes = document.querySelectorAll('input[name="formato_presentacion[]"]');
-                                                        const formatoSelected = Array.from(formatoCheckboxes).some(cb => cb.checked);
+                                                        // const formatoCheckboxes = document.querySelectorAll('input[name="formato_presentacion[]"]');
+                                                        // const formatoSelected = Array.from(formatoCheckboxes).some(cb => cb.checked);
 
-                                                        if (formatoCheckboxes.length > 0) {
-                                                            if (!formatoSelected) {
-                                                                formatoCheckboxes[0].setCustomValidity('Debe seleccionar al menos un formato de presentación.');
-                                                            } else {
-                                                                formatoCheckboxes[0].setCustomValidity('');
-                                                            }
-                                                        }
+                                                        // if (formatoCheckboxes.length > 0) {
+                                                        //     if (!formatoSelected) {
+                                                        //         formatoCheckboxes[0].setCustomValidity('Debe seleccionar al menos un formato de presentación.');
+                                                        //     } else {
+                                                        //         formatoCheckboxes[0].setCustomValidity('');
+                                                        //     }
+                                                        // }
 
-                                                        if (!form.checkValidity()) {
-                                                            form.classList.add('was-validated');
-                                                            return;
-                                                        }
+                                                        // if (!form.checkValidity()) {
+                                                        //     form.classList.add('was-validated');
+                                                        //     return;
+                                                        // }
 
                                                         // Procesar formulario
                                                         await procesarFormulario();
@@ -1626,7 +1608,7 @@
                                                 });
                                             })();
 
-                                            async function procesarFormulario() {
+                                            async function procesarFormularioXXX() {
                                                 const formData = new FormData(document.getElementById('indicadorForm'));
 
                                                 const indicadorData = {
@@ -1681,8 +1663,8 @@
                                                 indicadorData.tenden_riesgo = 0;
                                                 indicadorData.tenden_critico = 0;
 
-                                                indicadorData.meta_tipo = formData.get('tipo_meta')
-                                                const tipoMeta = formData.get('tipo_meta');
+                                                indicadorData.meta_tipo = formData.get('meta_tipo')
+                                                const tipoMeta = formData.get('meta_tipo');
                                                 if (tipoMeta === '1') {
                                                     indicadorData.unico_valor = formData.get('valor_meta');
                                                     indicadorData.unico_eval = formData.get('unico_evaluacion');
@@ -1724,12 +1706,131 @@
                                                 }
                                             }
 
-                                            function limpiarFormulario() {
+
+                                            function getValue(formData, name) {
+                                                const val = formData.get(name);
+                                                return val === undefined || val === "" ? null : val;
+                                            }
+
+                                            async function procesarFormulario() {
+                                                const form = document.getElementById('indicadorForm');
+                                                const formData = new FormData(form);
+
+                                                const indicadorData = {
+                                                    // --- Identificación
+                                                    codigo_id: getValue(formData, 'codigo_id'),
+                                                    nombre: getValue(formData, 'nombre'),
+                                                    descripcion: getValue(formData, 'descripcion'),
+
+                                                    // --- Alineación estratégica
+                                                    dimension_id: getValue(formData, 'dimension_id'),
+                                                    tipo_id: getValue(formData, 'tipo_id'),
+                                                    categoria_id: getValue(formData, 'categoria_id'),
+                                                    criticidad_id: getValue(formData, 'criticidad_id'),
+                                                    responsable: getValue(formData, 'responsable'),
+                                                    destino: getValue(formData, 'destino'),
+
+                                                    // --- Objetivo
+                                                    objetivo: getValue(formData, 'objetivo'),
+
+                                                    // --- Medición
+                                                    formula_calculo: getValue(formData, 'formula_calculo'),
+                                                    fuente_datos: getValue(formData, 'fuente_datos'),
+                                                    unidad_medida: getValue(formData, 'unidad_medida'),
+                                                    freq_medicion: getValue(formData, 'freq_medicion'),
+                                                    freq_reporte: getValue(formData, 'freq_reporte'),
+                                                    tolerancia_q: getValue(formData, 'tolerancia_q'),
+                                                    tolerancia_plazo: getValue(formData, 'tolerancia_plazo'),
+                                                    fecha_inicio: getValue(formData, 'fecha_inicio'),
+
+                                                    // --- Presentación
+                                                    formato: getValue(formData, 'formato'),
+                                                    comentarios: getValue(formData, 'comentarios'),
+
+                                                    // --- Meta tipo
+                                                    meta_tipo: getValue(formData, 'meta_tipo'),
+
+                                                    // Valores por defecto
+                                                    unico_valor: 0,
+                                                    unico_eval: 0,
+                                                    unico_acepta: 0,
+                                                    unico_riesgo: 0,
+                                                    unico_critico: 0,
+
+                                                    rango_desde: 0,
+                                                    rango_hasta: 0,
+                                                    rango_acepta: 0,
+                                                    rango_riesgo: 0,
+                                                    rango_critico: 0,
+
+                                                    tenden_tipo: 0,
+                                                    tenden_refe: 0,
+                                                    tenden_acepta: 0,
+                                                    tenden_riesgo: 0,
+                                                    tenden_critico: 0
+                                                };
+
+                                                // --- Metas según tipo seleccionado
+                                                const tipoMeta = indicadorData.meta_tipo;
+                                                if (tipoMeta === '1') {
+                                                    indicadorData.unico_valor = getValue(formData, 'unico_valor');
+                                                    indicadorData.unico_eval = getValue(formData, 'unico_eval');
+                                                    indicadorData.unico_acepta = getValue(formData, 'unico_acepta');
+                                                    indicadorData.unico_riesgo = getValue(formData, 'unico_riesgo');
+                                                    indicadorData.unico_critico = getValue(formData, 'unico_critico');
+
+                                                } else if (tipoMeta === '2') {
+                                                    indicadorData.rango_desde = getValue(formData, 'rango_desde');
+                                                    indicadorData.rango_hasta = getValue(formData, 'rango_hasta');
+                                                    indicadorData.rango_acepta = getValue(formData, 'rango_acepta');
+                                                    indicadorData.rango_riesgo = getValue(formData, 'rango_riesgo');
+                                                    indicadorData.rango_critico = getValue(formData, 'rango_critico');
+
+                                                } else if (tipoMeta === '3') {
+                                                    indicadorData.tenden_tipo = getValue(formData, 'tenden_tipo');
+                                                    indicadorData.tenden_refe = getValue(formData, 'tenden_refe');
+                                                    indicadorData.tenden_acepta = getValue(formData, 'tenden_acepta');
+                                                    indicadorData.tenden_riesgo = getValue(formData, 'tenden_riesgo');
+                                                    indicadorData.tenden_critico = getValue(formData, 'tenden_critico');
+                                                }
+
+                                                console.table('Datos del indicador a enviar:', indicadorData);
+
+                                                try {
+                                                    const res = await fetch('/api/guardar', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify(indicadorData)
+                                                    });
+
+                                                    if (!res.ok) throw new Error('Error al guardar indicador');
+
+                                                    alert('Indicador guardado correctamente ✅');
+                                                    window.location.href = 'kpi-indicadores.html';
+                                                    limpiarFormulario();
+                                                } catch (err) {
+                                                    console.error('Error al guardar indicador:', err);
+                                                    alert('Error al guardar indicador ❌');
+                                                }
+                                            }
+
+                                            function limpiarFormularioXXX() {
                                                 const form = document.getElementById('indicadorForm');
                                                 form.reset();
                                                 form.classList.remove('was-validated');
                                             }
 
+                                            function limpiarFormulario() {
+                                                const form = document.getElementById('indicadorForm');
+                                                form.reset();
+                                                form.classList.remove('was-validated');
+
+                                                // Limpia validaciones campo por campo
+                                                const inputs = form.querySelectorAll('.form-control, .form-select, textarea');
+                                                inputs.forEach(input => {
+                                                    input.classList.remove('is-valid', 'is-invalid');
+                                                });
+                                            }
 
                                         </script>
                                         <!--end::JavaScript-->
@@ -1770,6 +1871,7 @@
             </div>
         </div>
     </div>
+
     <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
@@ -1781,7 +1883,6 @@
         });
     </script>
     <!-- Final del Modal de Confirmación de Logout -->
-
 
     <div class="modal fade" id="modalDetalleIndicador" tabindex="-1" aria-labelledby="detalleIndicadorLabel"
         aria-hidden="true">
@@ -1801,7 +1902,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -1835,7 +1935,6 @@
             return iconos[tendencia] || 'fas fa-minus';
         }
 
-
         // Función para ver un indicador específico
         function verIndicador(codigo) {
             alert(`Función para ver el indicador: ${codigo}`);
@@ -1844,9 +1943,8 @@
             console.log('Ver indicador:', codigo);
         }
 
-
         // ✅ Función para editar un indicador
-        async function editarIndicador(codigo) {
+        async function editarIndicadorXXX(codigo) {
 
             console.log('entro en editar indicador')
             try {
@@ -1869,24 +1967,24 @@
                 form.objetivo.value = indicador.objetivo || '';
 
                 // Meta
-                form.tipo_meta.value = indicador.meta_tipo || '';
-                form.valor_meta.value = indicador.unico_valor || '';
-                form.unico_evaluacion.value = indicador.unico_eval || '';
-                form.unico_aceptable.value = indicador.unico_acepta || '';
+                form.tipo_meta.value = indicador.tipo_meta || '';
+                form.valor_meta.value = indicador.valor_meta || '';
+                form.unico_evaluacion.value = indicador.unico_evaluacion || '';
+                form.unico_aceptable.value = indicador.unico_aceptable || '';
                 form.unico_riesgo.value = indicador.unico_riesgo || '';
                 form.unico_critico.value = indicador.unico_critico || '';
 
                 // Rangos
-                form.rango_min.value = indicador.rango_desde || '';
-                form.rango_max.value = indicador.rango_hasta || '';
-                form.rango_aceptable.value = indicador.rango_acepta || '';
-                form.rango_riesgo.value = indicador.rango_riesgo || '';
-                form.rango_critico.value = indicador.rango_critico || '';
+                form.rango_min.value = indicador.rango_min || '';
+                form.rango_max.value = indicador.rango_max || '';
+                form.rango_aceptable.value = indicador.umbral_aceptable || '';
+                form.rango_riesgo.value = indicador.umbral_riesgo || '';
+                form.rango_critico.value = indicador.umbral_critico || '';
 
                 // Tendencias
                 form.tenden_tipo.value = indicador.tenden_tipo || '';
-                form.tenden_referencia.value = indicador.tenden_refe || '';
-                form.tenden_aceptable.value = indicador.tenden_acepta || '';
+                form.tenden_referencia.value = indicador.tenden_referencia || '';
+                form.tenden_aceptable.value = indicador.tenden_aceptable || '';
                 form.tenden_riesgo.value = indicador.tenden_riesgo || '';
                 form.tenden_critico.value = indicador.tenden_critico || '';
 
@@ -1896,20 +1994,22 @@
 
                 // Medición y tolerancia
                 form.unidad_medida.value = indicador.unidad_medida || '';
-                form.frecuencia_medicion.value = indicador.freq_medicion || '';
+                form.frecuencia_medicion.value = indicador.frecuencia_medicion || '';
                 form.tolerancia_plazo.value = indicador.tolerancia_plazo || '';
                 form.tolerancia_q.value = indicador.tolerancia_q || '';
-                form.frecuencia_reporte.value = indicador.freq_reporte || '';
+                form.frecuencia_reporte.value = indicador.frecuencia_reporte || '';
 
                 // Fecha y formato
                 form.fecha_inicio.value = indicador.fecha_inicio || '';
-                form.formato_presentacion.value = indicador.formato || '';
+                form.formato_presentacion.value = indicador.formato_presentacion || '';
 
-                // Grupos
+                // Comentarios
                 form.comentarios.value = indicador.comentarios || '';
 
                 // Mostrar la pestaña de edición si es modal o scroll al formulario
                 console.log('Formulario encontrado:', form);
+                console.log(indicador)
+                document.getElementById('indicadorForm').style.display = 'block';
                 form.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 form.querySelector('input, textarea, select')?.focus();
 
@@ -1919,9 +2019,318 @@
             }
         }
 
+        function editarIndicadorZZZ(indicador) {
+            // Recorremos cada campo del formulario según los name/id que definimos en el HTML
+            const form = document.getElementById("indicadorForm");
+
+            // Asignación directa (campos simples tipo texto, fecha, select, textarea)
+            form.codigo_id.value = indicador.codigo_id || "";
+            form.nombre.value = indicador.nombre || "";
+            form.descripcion.value = indicador.descripcion || "";
+            form.tipo_id.value = indicador.tipo_id || "";
+            form.dimension_id.value = indicador.dimension_id || "";
+            form.categoria_id.value = indicador.categoria_id || "";
+            form.criticidad_id.value = indicador.criticidad_id || "";
+            form.responsable.value = indicador.responsable || "";
+            form.destino.value = indicador.destino || "";
+            form.objetivo.value = indicador.objetivo || "";
+            form.meta_tipo.value = indicador.meta_tipo || "";
+            form.fuente_datos.value = indicador.fuente_datos || "";
+            form.formula_calculo.value = indicador.formula_calculo || "";
+            form.unidad_medida.value = indicador.unidad_medida || "";
+            form.freq_medicion.value = indicador.freq_medicion || "";
+            form.tolerancia_plazo.value = indicador.tolerancia_plazo || "";
+            form.tolerancia_q.value = indicador.tolerancia_q || "";
+            form.fecha_inicio.value = indicador.fecha_inicio
+                ? indicador.fecha_inicio.split("T")[0] // yyyy-mm-dd
+                : "";
+            form.freq_reporte.value = indicador.freq_reporte || "";
+            form.formato.value = indicador.formato || "";
+            form.comentarios.value = indicador.comentarios || "";
+
+            // ----- Valores de Meta -----
+            if (indicador.meta_tipo == 1) {
+                // Valor único
+                document.getElementById("metaValor").classList.remove("hidden");
+                document.getElementById("metaRango").classList.add("hidden");
+                document.getElementById("metaTendencia").classList.add("hidden");
+
+                form.unico_valor.value = indicador.unico_valor || "";
+                form.unico_eval.value = indicador.unico_eval || "";
+                form.unico_acepta.value = indicador.unico_acepta || "";
+                form.unico_riesgo.value = indicador.unico_riesgo || "";
+                form.unico_critico.value = indicador.unico_critico || "";
+
+            } else if (indicador.meta_tipo == 2) {
+                // Rango
+                document.getElementById("metaValor").classList.add("hidden");
+                document.getElementById("metaRango").classList.remove("hidden");
+                document.getElementById("metaTendencia").classList.add("hidden");
+
+                form.rango_desde.value = indicador.rango_desde || "";
+                form.rango_hasta.value = indicador.rango_hasta || "";
+                form.rango_acepta.value = indicador.rango_acepta || "";
+                form.rango_riesgo.value = indicador.rango_riesgo || "";
+                form.rango_critico.value = indicador.rango_critico || "";
+
+            } else if (indicador.meta_tipo == 3) {
+                // Tendencia
+                document.getElementById("metaValor").classList.add("hidden");
+                document.getElementById("metaRango").classList.add("hidden");
+                document.getElementById("metaTendencia").classList.remove("hidden");
+
+                form.tenden_tipo.value = indicador.tenden_tipo || "";
+                form.tenden_refe.value = indicador.tenden_refe || "";
+                form.tenden_acepta.value = indicador.tenden_acepta || "";
+                form.tenden_riesgo.value = indicador.tenden_riesgo || "";
+                form.tenden_critico.value = indicador.tenden_critico || "";
+            } else {
+                // Si no hay meta_tipo, ocultamos todos
+                document.getElementById("metaValor").classList.add("hidden");
+                document.getElementById("metaRango").classList.add("hidden");
+                document.getElementById("metaTendencia").classList.add("hidden");
+            }
+
+            // Scroll al formulario (para editar cómodo)
+            form.scrollIntoView({ behavior: "smooth" });
+        }
 
 
-        // Función para eliminar un indicador
+        // Cargar un indicador en el formulario para editar
+        async function editarIndicadorHHH(codigo) {
+            try {
+                const response = await fetch(`/api/indicadores/${codigo}`);
+                if (!response.ok) throw new Error('No se pudo obtener el indicador.');
+
+                const indicador = await response.json();
+                console.log("Indicador cargado para edición:", indicador);
+
+                const form = document.getElementById('indicadorForm');
+
+                // --- Identificación
+                form.elements['codigo_id'].value = indicador.codigo_id || '';
+                form.elements['nombre'].value = indicador.nombre || '';
+                form.elements['descripcion'].value = indicador.descripcion || '';
+
+                // --- Alineación estratégica
+                form.elements['dimension_id'].value = indicador.dimension_id || '';
+                form.elements['tipo_id'].value = indicador.tipo_id || '';
+                form.elements['categoria_id'].value = indicador.categoria_id || '';
+                form.elements['criticidad_id'].value = indicador.criticidad_id || '';
+                form.elements['responsable'].value = indicador.responsable || '';
+                form.elements['destino'].value = indicador.destino || '';
+
+                // --- Objetivo
+                form.elements['objetivo'].value = indicador.objetivo || '';
+
+                // --- Medición
+                form.elements['formula_calculo'].value = indicador.formula_calculo || '';
+                form.elements['fuente_datos'].value = indicador.fuente_datos || '';
+                form.elements['unidad_medida'].value = indicador.unidad_medida || '';
+                form.elements['freq_medicion'].value = indicador.freq_medicion || '';
+                form.elements['freq_reporte'].value = indicador.freq_reporte || '';
+                form.elements['tolerancia_q'].value = indicador.tolerancia_q || '';
+                form.elements['tolerancia_plazo'].value = indicador.tolerancia_plazo || '';
+                form.elements['fecha_inicio'].value = indicador.fecha_inicio
+                    ? indicador.fecha_inicio.split('T')[0] // si viene con timestamp
+                    : '';
+
+                // --- Presentación
+                form.elements['formato'].value = indicador.formato || '';
+                form.elements['comentarios'].value = indicador.comentarios || '';
+
+                // --- Metas según tipo
+                form.elements['meta_tipo'].value = indicador.meta_tipo || '';
+                mostrarCamposMeta();
+
+                if (indicador.meta_tipo == 1) {
+                    form.elements['unico_valor'].value = indicador.unico_valor || '';
+                    form.elements['unico_eval'].value = indicador.unico_eval || '';
+                    form.elements['unico_acepta'].value = indicador.unico_acepta || '';
+                    form.elements['unico_riesgo'].value = indicador.unico_riesgo || '';
+                    form.elements['unico_critico'].value = indicador.unico_critico || '';
+                } else if (indicador.meta_tipo == 2) {
+                    form.elements['rango_desde'].value = indicador.rango_desde || '';
+                    form.elements['rango_hasta'].value = indicador.rango_hasta || '';
+                    form.elements['rango_acepta'].value = indicador.rango_acepta || '';
+                    form.elements['rango_riesgo'].value = indicador.rango_riesgo || '';
+                    form.elements['rango_critico'].value = indicador.rango_critico || '';
+                } else if (indicador.meta_tipo == 3) {
+                    form.elements['tenden_tipo'].value = indicador.tenden_tipo || '';
+                    form.elements['tenden_refe'].value = indicador.tenden_refe || '';
+                    form.elements['tenden_acepta'].value = indicador.tenden_acepta || '';
+                    form.elements['tenden_riesgo'].value = indicador.tenden_riesgo || '';
+                    form.elements['tenden_critico'].value = indicador.tenden_critico || '';
+                }
+
+                // --- Opcional: scroll al formulario si está más abajo en la página
+                form.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error al cargar indicador:', error);
+                alert('No se pudo cargar el indicador para editar.');
+            }
+        }
+
+        // Función auxiliar: espera hasta que el select tenga opciones antes de asignar el valor
+        function asignarValorSelect(selectElement, valor) {
+            return new Promise((resolve) => {
+                const interval = setInterval(() => {
+                    if (selectElement.options.length > 0) {
+                        selectElement.value = valor || '';
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 50); // revisa cada 50ms
+            });
+        }
+
+        // Cargar un indicador en el formulario para editar
+        async function editarIndicadoZZZZZZ(codigo) {
+            try {
+                const response = await fetch(`/api/indicadores/${codigo}`);
+                if (!response.ok) throw new Error('No se pudo obtener el indicador.');
+
+                const indicador = await response.json();
+                console.log("Indicador cargado para edición:", indicador);
+
+                const form = document.getElementById('indicadorForm');
+
+                // --- Identificación
+                form.elements['codigo_id'].value = indicador.codigo_id || '';
+                form.elements['nombre'].value = indicador.nombre || '';
+                form.elements['descripcion'].value = indicador.descripcion || '';
+
+                // --- Alineación estratégica
+                form.elements['dimension_id'].value = indicador.dimension_id || '';
+                form.elements['tipo_id'].value = indicador.tipo_id || '';
+                form.elements['categoria_id'].value = indicador.categoria_id || '';
+                form.elements['criticidad_id'].value = indicador.criticidad_id || '';
+
+                // --- Responsable y destino (espera que los selects estén cargados)
+                await asignarValorSelect(form.elements['responsable'], indicador.responsable);
+                await asignarValorSelect(form.elements['destino'], indicador.destino);
+
+                // --- Objetivo
+                form.elements['objetivo'].value = indicador.objetivo || '';
+
+                // --- Medición
+                form.elements['formula_calculo'].value = indicador.formula_calculo || '';
+                form.elements['fuente_datos'].value = indicador.fuente_datos || '';
+                form.elements['unidad_medida'].value = indicador.unidad_medida || '';
+                form.elements['freq_medicion'].value = indicador.freq_medicion || '';
+                form.elements['freq_reporte'].value = indicador.freq_reporte || '';
+                form.elements['tolerancia_q'].value = indicador.tolerancia_q || '';
+                form.elements['tolerancia_plazo'].value = indicador.tolerancia_plazo || '';
+                form.elements['fecha_inicio'].value = indicador.fecha_inicio
+                    ? indicador.fecha_inicio.split('T')[0]
+                    : '';
+
+                // --- Presentación
+                form.elements['formato'].value = indicador.formato || '';
+                form.elements['comentarios'].value = indicador.comentarios || '';
+
+                // --- Metas según tipo
+                form.elements['meta_tipo'].value = indicador.meta_tipo || '';
+                mostrarCamposMeta();
+
+                if (indicador.meta_tipo == 1) {
+                    form.elements['unico_valor'].value = indicador.unico_valor || '';
+                    form.elements['unico_eval'].value = indicador.unico_eval || '';
+                    form.elements['unico_acepta'].value = indicador.unico_acepta || '';
+                    form.elements['unico_riesgo'].value = indicador.unico_riesgo || '';
+                    form.elements['unico_critico'].value = indicador.unico_critico || '';
+                } else if (indicador.meta_tipo == 2) {
+                    form.elements['rango_desde'].value = indicador.rango_desde || '';
+                    form.elements['rango_hasta'].value = indicador.rango_hasta || '';
+                    form.elements['rango_acepta'].value = indicador.rango_acepta || '';
+                    form.elements['rango_riesgo'].value = indicador.rango_riesgo || '';
+                    form.elements['rango_critico'].value = indicador.rango_critico || '';
+                } else if (indicador.meta_tipo == 3) {
+                    form.elements['tenden_tipo'].value = indicador.tenden_tipo || '';
+                    form.elements['tenden_refe'].value = indicador.tenden_refe || '';
+                    form.elements['tenden_acepta'].value = indicador.tenden_acepta || '';
+                    form.elements['tenden_riesgo'].value = indicador.tenden_riesgo || '';
+                    form.elements['tenden_critico'].value = indicador.tenden_critico || '';
+                }
+
+                // --- Mostrar formulario y hacer scroll
+                form.style.display = 'block';
+                form.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error al cargar indicador:', error);
+                alert('No se pudo cargar el indicador para editar.');
+            }
+        }
+
+        async function editarIndicador(codigo) {
+            try {
+                const response = await fetch(`/api/indicadores/${codigo}`);
+                if (!response.ok) throw new Error('No se pudo obtener el indicador.');
+
+                const indicador = await response.json();
+                console.log("Indicador cargado parcialmente:", indicador);
+
+                const form = document.getElementById('indicadorForm');
+
+                // --- Identificación básica
+                form.elements['codigo_id'].value = indicador.codigo_id || '';
+                form.elements['nombre'].value = indicador.nombre || '';
+                form.elements['descripcion'].value = indicador.descripcion || '';
+
+                // --- Objetivo
+                form.elements['objetivo'].value = indicador.objetivo || '';
+
+                // --- Medición básica
+                form.elements['formula_calculo'].value = indicador.formula_calculo || '';
+                form.elements['fuente_datos'].value = indicador.fuente_datos || '';
+                form.elements['unidad_medida'].value = indicador.unidad_medida || '';
+                form.elements['fecha_inicio'].value = indicador.fecha_inicio
+                    ? indicador.fecha_inicio.split('T')[0]
+                    : '';
+
+                // --- Presentación
+                form.elements['formato'].value = indicador.formato || '';
+                form.elements['comentarios'].value = indicador.comentarios || '';
+
+                // --- Metas que no requieren selects dinámicos
+                form.elements['meta_tipo'].value = indicador.meta_tipo || '';
+                mostrarCamposMeta();
+
+                if (indicador.meta_tipo == 1) {
+                    form.elements['unico_valor'].value = indicador.unico_valor || '';
+                    form.elements['unico_eval'].value = indicador.unico_eval || '';
+                    form.elements['unico_acepta'].value = indicador.unico_acepta || '';
+                    form.elements['unico_riesgo'].value = indicador.unico_riesgo || '';
+                    form.elements['unico_critico'].value = indicador.unico_critico || '';
+                } else if (indicador.meta_tipo == 2) {
+                    form.elements['rango_desde'].value = indicador.rango_desde || '';
+                    form.elements['rango_hasta'].value = indicador.rango_hasta || '';
+                } else if (indicador.meta_tipo == 3) {
+                    form.elements['tenden_tipo'].value = indicador.tenden_tipo || '';
+                    form.elements['tenden_refe'].value = indicador.tenden_refe || '';
+                }
+
+                // --- Mostrar el formulario
+                form.style.display = 'block';
+                form.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error al cargar indicador parcialmente:', error);
+                alert('No se pudo cargar el indicador parcialmente.');
+            }
+        }
+
+
+
+
+
+
+
+
+        // #region Función para eliminar un indicador
+
         async function eliminarIndicador(codigo_identificatorio) {
             const confirmado = confirm(`¿Estás seguro de que querés eliminar este indicador?: ${codigo_identificatorio}`);
             if (!confirmado) return;
@@ -1943,7 +2352,7 @@
                 alert('Ocurrió un error inesperado.');
             }
         }
-
+        // #endregion
 
         // Función para agregar un nuevo indicador
         function agregarIndicador() {
@@ -1963,12 +2372,12 @@
         }
 
         // Función para exportar la lista de indicadores
+
         function exportarIndicadores() {
             alert('Exportando lista de indicadores...');
             // Aquí iría la lógica para exportar (CSV, Excel, etc.)
             console.log('Exportar indicadores');
         }
-
 
         async function cargarResponsables() {
             const select = document.getElementById('responsable');
@@ -1995,7 +2404,6 @@
 
         // Llamar la función al cargar el formulario
         cargarResponsables();
-
 
         //  llena sectores
         const API_SECTORES = '/api/sectores'; // Reemplazá con la ruta real
@@ -2030,7 +2438,6 @@
             }
             return cadena.join(' > ');
         }
-
 
         async function cargarIndicadores() {
             try {
@@ -2124,7 +2531,6 @@
             }
         }
 
-
         function getClaseCriticidad(criticidad) {
             switch (criticidad) {
                 case 1:
@@ -2137,7 +2543,6 @@
                     return '';
             }
         }
-
 
         function getClaseCategoria(categoria) {
             switch (categoria) {
@@ -2156,9 +2561,7 @@
 
         // Llamar a la función cuando cargue la página
         document.addEventListener('DOMContentLoaded', cargarIndicadores);
-    </script>
 
-    <script>
         async function obtenerUsuarioPorLegajo(responsable) {
             try {
                 const response = await fetch(`/usuarios/${responsable}`);
@@ -2177,7 +2580,6 @@
                 return null;
             }
         }
-
 
         async function obtenerSectoresPorUnidad(unidad) {
             try {
