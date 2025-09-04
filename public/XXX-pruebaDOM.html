@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ejemplo DOMContentLoaded vs load</title>
+</head>
+<body>
+  <h1 id="titulo">Prueba de eventos</h1>
+
+  <!-- Imagen grande para simular carga lenta -->
+  <img
+    src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Fronalpstock_big.jpg"
+    alt="Imagen grande de prueba"
+    style="max-width: 100%; height: auto;"
+  />
+
+  <script>
+    // Se dispara cuando el DOM está listo (estructura HTML procesada)
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("✅ DOMContentLoaded: el DOM ya está disponible");
+      document.getElementById("titulo").style.color = "blue";
+    });
+
+    // Se dispara cuando TODO (HTML + imágenes + estilos + iframes) ha cargado
+    window.addEventListener("load", () => {
+      console.log("🌍 window.onload: toda la página con recursos externos ya cargó");
+      document.getElementById("titulo").textContent += " (todo cargado)";
+    });
+  </script>
+</body>
+</html>

@@ -25,9 +25,7 @@ app.use('/dist', express.static('public'));
 
 // ✅ Crear un indicador
 app.post('/api/guardar', async (req, res) => {
-
     const data = req.body;
-
     try {
         await pool.query(
             `INSERT INTO indicadores (
@@ -108,18 +106,130 @@ app.post('/api/guardar', async (req, res) => {
                 data.comentarios
             ]
         );
-
-        res.json({ mensaje: 'Indicador guardado' });
+        res.json({ success: true, mensaje: 'Indicador guardado' });
     } catch (err) {
         console.error('Error al guardar indicador:', err);
-        res.status(500).json({ mensaje: 'Error al guardar el indicador' });
+        res.status(500).json({ success: false, error: 'Error al guardar el indicador' });
+
+    }
+});
+
+
+// ✅  DELETE elimina un indicador
+app.delete('/api/indicadores/delete/:codigo', async (req, res) => {
+    const codigo = req.params.codigo;
+
+    try {
+        const [result] = await pool.query(
+            'DELETE FROM indicadores WHERE codigo_id = ?',
+            [codigo]
+        );
+
+        if (result.affectedRows > 0) {
+            res.json({ success: true, message: 'Indicador eliminado correctamente.' });
+        } else {
+            res.status(404).json({ success: false, message: 'Indicador no encontrado.' });
+        }
+    } catch (error) {
+        console.error('Error eliminando indicador:', error);
+        res.status(500).json({ success: false, message: 'Error al eliminar indicador.' });
     }
 });
 
 
 
+// ✅ Actualizar un indicador
+app.put('/api/actualizar/:id', async (req, res) => {
 
-// 🚫🚫🚫GET para tomar los indicadores
+    try {
+        const { id } = req.params;
+        const data = req.body;
+        await pool.query(
+            `UPDATE indicadores SET
+                codigo_id = ?,
+                nombre = ?,
+                descripcion = ?,
+                tipo_id = ?,
+                dimension_id = ?,
+                categoria_id = ?,
+                criticidad_id = ?,
+                responsable = ?,
+                destino = ?,
+                objetivo = ?,
+                meta_tipo = ?,
+                unico_valor = ?,
+                unico_eval = ?,
+                unico_acepta = ?,
+                unico_riesgo = ?,
+                unico_critico = ?,
+                rango_desde = ?,
+                rango_hasta = ?,
+                rango_acepta = ?,
+                rango_riesgo = ?,
+                rango_critico = ?,
+                tenden_tipo = ?,
+                tenden_refe = ?,
+                tenden_acepta = ?,
+                tenden_riesgo = ?,
+                tenden_critico = ?,
+                fuente_datos = ?,
+                formula_calculo = ?,
+                unidad_medida = ?,
+                freq_medicion = ?,
+                tolerancia_plazo = ?,
+                tolerancia_q = ?,
+                freq_reporte = ?,
+                fecha_inicio = ?,
+                formato = ?,
+                comentarios = ?
+            WHERE id = ?`,
+            [
+                data.codigo_id,
+                data.nombre,
+                data.descripcion,
+                data.tipo_id,
+                data.dimension_id,
+                data.categoria_id,
+                data.criticidad_id,
+                data.responsable,
+                data.destino,
+                data.objetivo,
+                data.meta_tipo,
+                data.unico_valor,
+                data.unico_eval,
+                data.unico_acepta,
+                data.unico_riesgo,
+                data.unico_critico,
+                data.rango_desde,
+                data.rango_hasta,
+                data.rango_acepta,
+                data.rango_riesgo,
+                data.rango_critico,
+                data.tenden_tipo,
+                data.tenden_refe,
+                data.tenden_acepta,
+                data.tenden_riesgo,
+                data.tenden_critico,
+                data.fuente_datos,
+                data.formula_calculo,
+                data.unidad_medida,
+                data.freq_medicion,
+                data.tolerancia_plazo,
+                data.tolerancia_q,
+                data.freq_reporte,
+                data.fecha_inicio,
+                data.formato,
+                data.comentarios,
+                id
+            ]
+        );
+        res.json({ success: true, mensaje: 'Indicador actualizado' });
+    } catch (err) {
+        console.error('Error al actualizar indicador:', err);
+        res.status(500).json({ success: false, error: 'Error al actualizar el indicador' });
+    }
+});
+
 
 // ✅ Obtener todos los indicadores
 app.get('/api/indicadores', async (req, res) => {
@@ -175,9 +285,6 @@ app.get('/api/indicadores', async (req, res) => {
 });
 
 
-
-
-// // 🚫🚫🚫GET para tomar un indicador
 // ✅ GET para tomar un indicador por codigo_id
 app.get('/api/indicadores/:codigo', async (req, res) => {
     const { codigo } = req.params;
@@ -400,7 +507,7 @@ app.get('/usuarios', async (req, res) => {
 // // 🚫🚫🚫 Obtener un usuario por legajo (para edición)
 app.get('/usuarios/:legajo', async (req, res) => {
     const legajo = req.params.legajo;
-    console.log(`legajo en back: ${legajo}`)
+
     try {
         const [rows] = await pool.query('SELECT legajo, apellido, nombres, email, telefono, cargo, sector, legajo_jefe, estado, perfil FROM usuarios WHERE legajo = ?',
             [legajo]);

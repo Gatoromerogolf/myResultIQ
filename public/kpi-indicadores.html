@@ -764,6 +764,7 @@
                                     <!--begin::Footer-->
                                     <div class="card-footer">
                                         <button class="btn btn-primary" onclick="agregarIndicador()">
+                                            <!-- <button type="submit" class="btn btn-primary"> -->
                                             <i class="fas fa-plus me-2"></i>
                                             Agregar Nuevo Indicador
                                         </button>
@@ -837,6 +838,9 @@
                                             <div class="card-body">
                                                 <!--begin::Row-->
                                                 <div class="row g-3">
+
+                                                    <input type="hidden" id="id" name="id">
+                                                    <!-- Solo tendrá valor si es edición -->
 
                                                     <!-- Sección: Identificación -->
                                                     <div class="col-12">
@@ -1520,317 +1524,308 @@
                                         <!--begin::JavaScript-->
                                         <script>
                                             // Validación personalizada de Bootstrap
-                                            (() => {
-                                                'use strict';
+                                            // (() => {
+                                            //     'use strict';
 
-                                                const forms = document.querySelectorAll('.needs-validation');
+                                            //     const forms = document.querySelectorAll('.needs-validation');
 
-                                                Array.from(forms).forEach((form) => {
-                                                    form.addEventListener('submit', async (event) => {
-                                                        event.preventDefault();
-                                                        event.stopPropagation();
-
-                                                        // Validar formato de presentación
-                                                        // const formatoCheckboxes = document.querySelectorAll('input[name="formato_presentacion[]"]');
-                                                        // const formatoSelected = Array.from(formatoCheckboxes).some(cb => cb.checked);
-
-                                                        // if (formatoCheckboxes.length > 0) {
-                                                        //     if (!formatoSelected) {
-                                                        //         formatoCheckboxes[0].setCustomValidity('Debe seleccionar al menos un formato de presentación.');
-                                                        //     } else {
-                                                        //         formatoCheckboxes[0].setCustomValidity('');
-                                                        //     }
-                                                        // }
-
-                                                        // if (!form.checkValidity()) {
-                                                        //     form.classList.add('was-validated');
-                                                        //     return;
-                                                        // }
-
-                                                        // Procesar formulario
-                                                        await procesarFormulario();
-                                                        form.classList.add('was-validated');
-                                                    }, false);
-                                                });
-                                            })();
+                                            //     Array.from(forms).forEach((form) => {
+                                            //         form.addEventListener('submit', async (event) => {
+                                            //             event.preventDefault();
+                                            //             event.stopPropagation();
+                                            //             await procesarFormulario();
+                                            //             form.classList.add('was-validated');
+                                            //         }, false);
+                                            //     });
+                                            // })();
 
                                             // Función para procesar el formulario
-                                            (() => {
-                                                'use strict';
+                                            // (() => {
+                                            //     'use strict';
 
-                                                const forms = document.querySelectorAll('.needs-validation');
+                                            //     const forms = document.querySelectorAll('.needs-validation');
 
-                                                Array.from(forms).forEach((form) => {
-                                                    form.addEventListener('submit', async (event) => {
-                                                        event.preventDefault();
-                                                        event.stopPropagation();
-
-                                                        // Validar campos según tipo de meta
-                                                        const tipoMeta = document.getElementById('tipoMeta').value;
-                                                        let camposValidos = true;
-
-                                                        if (tipoMeta === 'valor') {
-                                                            const valor = document.getElementById('valorMeta').value;
-                                                            const acepta = document.getElementById('umbralPostivo').value;
-                                                            const critico = document.getElementById('umbralCritico').value;
-                                                            if (!valor || !acepta || !critico) camposValidos = false;
-                                                        }
-
-                                                        if (tipoMeta === 'rango') {
-                                                            const desde = document.getElementById('rangoDesde').value;
-                                                            const hasta = document.getElementById('rangoHasta').value;
-                                                            const acepta = document.getElementById('umbralPostivo').value;
-                                                            const critico = document.getElementById('umbralCritico').value;
-                                                            if (!desde || !hasta || !acepta || !critico) camposValidos = false;
-                                                        }
-
-                                                        if (tipoMeta === 'tendencia') {
-                                                            const tipo = document.getElementById('tipoTendencia').value;
-                                                            const ref = document.getElementById('valorReferencia').value;
-                                                            const acepta = document.getElementById('umbralPostivo').value;
-                                                            const riesgo = document.getElementById('umbralCritico').value; // si tenés otro campo de riesgo, ajustarlo
-                                                            if (!tipo || !ref || !acepta || !riesgo) camposValidos = false;
-                                                        }
-
-                                                        if (!camposValidos) {
-                                                            alert('Debe completar todos los campos obligatorios según el tipo de meta.');
-                                                            return;
-                                                        }
-
-                                                        if (!form.checkValidity()) {
-                                                            form.classList.add('was-validated');
-                                                            return;
-                                                        }
-
-                                                        await procesarFormulario();
-                                                        form.classList.add('was-validated');
-                                                    }, false);
-                                                });
-                                            })();
-
-                                            async function procesarFormularioXXX() {
-                                                const formData = new FormData(document.getElementById('indicadorForm'));
-
-                                                const indicadorData = {
-                                                    // --- Identificación
-                                                    codigo_id: formData.get('codigo_id'),
-                                                    nombre: formData.get('nombre'),
-                                                    descripcion: formData.get('descripcion'),
-
-                                                    // --- Alineación estratégica
-                                                    dimension_id: formData.get('dimension_id'),
-                                                    tipo_id: formData.get('tipo_id'),
-                                                    categoria_id: formData.get('categoria_id'),
-                                                    criticidad_id: formData.get('criticidad_id'),
-                                                    responsable: formData.get('responsable'),
-                                                    destino: formData.get('destino'),
-
-                                                    // --- Objetivo
-                                                    objetivo: formData.get('objetivo'),
-
-                                                    // --- Medición
-                                                    formula_calculo: formData.get('formula_calculo'),
-                                                    fuente_datos: formData.get('fuente_datos'),
-                                                    unidad_medida: formData.get('unidad_medida'),
-                                                    frecuencia_medicion: formData.get('frecuencia_medicion'),
-                                                    frecuencia_reporte: formData.get('frecuencia_reporte'),
-                                                    tolerancia_q: formData.get('tolerancia_q'),
-                                                    tolerancia_plazo: formData.get('tolerancia_plazo'),
-                                                    fecha_inicio: formData.get('fecha_inicio'),
-
-                                                    // --- Presentación
-                                                    formato_presentacion: formData.get('formato_presentacion'),
-                                                    comentarios: formData.get('comentarios'),
-                                                };
-
-                                                // --- Metas según tipo
-
-                                                indicadorData.unico_valor = 0;
-                                                indicadorData.unico_eval = 0;
-                                                indicadorData.unico_acepta = 0;
-                                                indicadorData.unico_riesgo = 0;
-                                                indicadorData.unico_critico = 0;
-
-                                                indicadorData.rango_desde = 0;
-                                                indicadorData.rango_hasta = 0;
-                                                indicadorData.rango_acepta = 0;
-                                                indicadorData.rango_riesgo = 0;
-                                                indicadorData.rango_critico = 0;
-
-                                                indicadorData.tenden_tipo = 0;
-                                                indicadorData.tenden_refe = 0;
-                                                indicadorData.tenden_acepta = 0;
-                                                indicadorData.tenden_riesgo = 0;
-                                                indicadorData.tenden_critico = 0;
-
-                                                indicadorData.meta_tipo = formData.get('meta_tipo')
-                                                const tipoMeta = formData.get('meta_tipo');
-                                                if (tipoMeta === '1') {
-                                                    indicadorData.unico_valor = formData.get('valor_meta');
-                                                    indicadorData.unico_eval = formData.get('unico_evaluacion');
-                                                    indicadorData.unico_acepta = formData.get('unico_aceptable');
-                                                    indicadorData.unico_riesgo = formData.get('unico_riesgo');
-                                                    indicadorData.unico_critico = formData.get('unico_critico');
-
-                                                } else if (tipoMeta === '2') {
-                                                    indicadorData.rango_desde = formData.get('rango_min');
-                                                    indicadorData.rango_hasta = formData.get('rango_max');
-                                                    indicadorData.rango_acepta = formData.get('rango_aceptable');
-                                                    indicadorData.rango_riesgo = formData.get('rango_riesgo');
-                                                    indicadorData.rango_critico = formData.get('rango_critico');
-
-                                                } else if (tipoMeta === '3') {
-                                                    indicadorData.tenden_tipo = formData.get('tenden_tipo');
-                                                    indicadorData.tenden_refe = formData.get('tenden_referencia');
-                                                    indicadorData.tenden_acepta = formData.get('tenden_aceptable');
-                                                    indicadorData.tenden_riesgo = formData.get('tenden_riesgo');
-                                                    indicadorData.tenden_critico = formData.get('tenden_critico');
-                                                }
-
-                                                console.log('Datos del indicador a enviar:', indicadorData);
-
-                                                try {
-                                                    const res = await fetch('/api/indicadores', {
-                                                        method: 'POST',
-                                                        headers: { 'Content-Type': 'application/json' },
-                                                        body: JSON.stringify(indicadorData)
-                                                    });
-
-                                                    if (!res.ok) throw new Error('Error al guardar indicador');
-
-                                                    alert('Indicador guardado correctamente.');
-                                                    limpiarFormulario();
-                                                } catch (err) {
-                                                    console.error('Error al guardar indicador:', err);
-                                                    alert('Error al guardar indicador.');
-                                                }
-                                            }
+                                            //     Array.from(forms).forEach((form) => {
+                                            //         form.addEventListener('submit', async (event) => {
+                                            //             event.preventDefault();
+                                            //             event.stopPropagation();
 
 
-                                            function getValue(formData, name) {
-                                                const val = formData.get(name);
-                                                return val === undefined || val === "" ? null : val;
-                                            }
+                                            //             const tipoMeta = document.getElementById('meta_tipo').value;
+                                            //             let camposValidos = true;
 
-                                            async function procesarFormulario() {
-                                                const form = document.getElementById('indicadorForm');
-                                                const formData = new FormData(form);
+                                            //             if (tipoMeta === 'valor') {
+                                            //                 const valor = document.getElementById('valorMeta').value;
+                                            //                 const acepta = document.getElementById('umbralPostivo').value;
+                                            //                 const critico = document.getElementById('umbralCritico').value;
+                                            //                 if (!valor || !acepta || !critico) camposValidos = false;
+                                            //             }
 
-                                                const indicadorData = {
-                                                    // --- Identificación
-                                                    codigo_id: getValue(formData, 'codigo_id'),
-                                                    nombre: getValue(formData, 'nombre'),
-                                                    descripcion: getValue(formData, 'descripcion'),
+                                            //             if (tipoMeta === 'rango') {
+                                            //                 const desde = document.getElementById('rangoDesde').value;
+                                            //                 const hasta = document.getElementById('rangoHasta').value;
+                                            //                 const acepta = document.getElementById('umbralPostivo').value;
+                                            //                 const critico = document.getElementById('umbralCritico').value;
+                                            //                 if (!desde || !hasta || !acepta || !critico) camposValidos = false;
+                                            //             }
 
-                                                    // --- Alineación estratégica
-                                                    dimension_id: getValue(formData, 'dimension_id'),
-                                                    tipo_id: getValue(formData, 'tipo_id'),
-                                                    categoria_id: getValue(formData, 'categoria_id'),
-                                                    criticidad_id: getValue(formData, 'criticidad_id'),
-                                                    responsable: getValue(formData, 'responsable'),
-                                                    destino: getValue(formData, 'destino'),
+                                            //             if (tipoMeta === 'tendencia') {
+                                            //                 const tipo = document.getElementById('tipoTendencia').value;
+                                            //                 const ref = document.getElementById('valorReferencia').value;
+                                            //                 const acepta = document.getElementById('umbralPostivo').value;
+                                            //                 const riesgo = document.getElementById('umbralCritico').value; // si tenés otro campo de riesgo, ajustarlo
+                                            //                 if (!tipo || !ref || !acepta || !riesgo) camposValidos = false;
+                                            //             }
 
-                                                    // --- Objetivo
-                                                    objetivo: getValue(formData, 'objetivo'),
+                                            //             if (!camposValidos) {
+                                            //                 alert('Debe completar todos los campos obligatorios según el tipo de meta.');
+                                            //                 return;
+                                            //             }
 
-                                                    // --- Medición
-                                                    formula_calculo: getValue(formData, 'formula_calculo'),
-                                                    fuente_datos: getValue(formData, 'fuente_datos'),
-                                                    unidad_medida: getValue(formData, 'unidad_medida'),
-                                                    freq_medicion: getValue(formData, 'freq_medicion'),
-                                                    freq_reporte: getValue(formData, 'freq_reporte'),
-                                                    tolerancia_q: getValue(formData, 'tolerancia_q'),
-                                                    tolerancia_plazo: getValue(formData, 'tolerancia_plazo'),
-                                                    fecha_inicio: getValue(formData, 'fecha_inicio'),
+                                            //             if (!form.checkValidity()) {
+                                            //                 form.classList.add('was-validated');
+                                            //                 return;
+                                            //             }
 
-                                                    // --- Presentación
-                                                    formato: getValue(formData, 'formato'),
-                                                    comentarios: getValue(formData, 'comentarios'),
+                                            //             await procesarFormulario();
+                                            //             form.classList.add('was-validated');
+                                            //         }, false);
+                                            //     });
+                                            // })();
 
-                                                    // --- Meta tipo
-                                                    meta_tipo: getValue(formData, 'meta_tipo'),
+                                            // async function procesarFormularioXXX() {
+                                            //     const formData = new FormData(document.getElementById('indicadorForm'));
 
-                                                    // Valores por defecto
-                                                    unico_valor: 0,
-                                                    unico_eval: 0,
-                                                    unico_acepta: 0,
-                                                    unico_riesgo: 0,
-                                                    unico_critico: 0,
+                                            //     const indicadorData = {
+                                            //         // --- Identificación
+                                            //         codigo_id: formData.get('codigo_id'),
+                                            //         nombre: formData.get('nombre'),
+                                            //         descripcion: formData.get('descripcion'),
 
-                                                    rango_desde: 0,
-                                                    rango_hasta: 0,
-                                                    rango_acepta: 0,
-                                                    rango_riesgo: 0,
-                                                    rango_critico: 0,
+                                            //         // --- Alineación estratégica
+                                            //         dimension_id: formData.get('dimension_id'),
+                                            //         tipo_id: formData.get('tipo_id'),
+                                            //         categoria_id: formData.get('categoria_id'),
+                                            //         criticidad_id: formData.get('criticidad_id'),
+                                            //         responsable: formData.get('responsable'),
+                                            //         destino: formData.get('destino'),
 
-                                                    tenden_tipo: 0,
-                                                    tenden_refe: 0,
-                                                    tenden_acepta: 0,
-                                                    tenden_riesgo: 0,
-                                                    tenden_critico: 0
-                                                };
+                                            //         // --- Objetivo
+                                            //         objetivo: formData.get('objetivo'),
 
-                                                // --- Metas según tipo seleccionado
-                                                const tipoMeta = indicadorData.meta_tipo;
-                                                if (tipoMeta === '1') {
-                                                    indicadorData.unico_valor = getValue(formData, 'unico_valor');
-                                                    indicadorData.unico_eval = getValue(formData, 'unico_eval');
-                                                    indicadorData.unico_acepta = getValue(formData, 'unico_acepta');
-                                                    indicadorData.unico_riesgo = getValue(formData, 'unico_riesgo');
-                                                    indicadorData.unico_critico = getValue(formData, 'unico_critico');
+                                            //         // --- Medición
+                                            //         formula_calculo: formData.get('formula_calculo'),
+                                            //         fuente_datos: formData.get('fuente_datos'),
+                                            //         unidad_medida: formData.get('unidad_medida'),
+                                            //         frecuencia_medicion: formData.get('frecuencia_medicion'),
+                                            //         frecuencia_reporte: formData.get('frecuencia_reporte'),
+                                            //         tolerancia_q: formData.get('tolerancia_q'),
+                                            //         tolerancia_plazo: formData.get('tolerancia_plazo'),
+                                            //         fecha_inicio: formData.get('fecha_inicio'),
 
-                                                } else if (tipoMeta === '2') {
-                                                    indicadorData.rango_desde = getValue(formData, 'rango_desde');
-                                                    indicadorData.rango_hasta = getValue(formData, 'rango_hasta');
-                                                    indicadorData.rango_acepta = getValue(formData, 'rango_acepta');
-                                                    indicadorData.rango_riesgo = getValue(formData, 'rango_riesgo');
-                                                    indicadorData.rango_critico = getValue(formData, 'rango_critico');
+                                            //         // --- Presentación
+                                            //         formato_presentacion: formData.get('formato_presentacion'),
+                                            //         comentarios: formData.get('comentarios'),
+                                            //     };
 
-                                                } else if (tipoMeta === '3') {
-                                                    indicadorData.tenden_tipo = getValue(formData, 'tenden_tipo');
-                                                    indicadorData.tenden_refe = getValue(formData, 'tenden_refe');
-                                                    indicadorData.tenden_acepta = getValue(formData, 'tenden_acepta');
-                                                    indicadorData.tenden_riesgo = getValue(formData, 'tenden_riesgo');
-                                                    indicadorData.tenden_critico = getValue(formData, 'tenden_critico');
-                                                }
+                                            //     // --- Metas según tipo
 
-                                                console.table('Datos del indicador a enviar:', indicadorData);
+                                            //     indicadorData.unico_valor = 0;
+                                            //     indicadorData.unico_eval = 0;
+                                            //     indicadorData.unico_acepta = 0;
+                                            //     indicadorData.unico_riesgo = 0;
+                                            //     indicadorData.unico_critico = 0;
 
-                                                try {
-                                                    const res = await fetch('/api/guardar', {
-                                                        method: 'POST',
-                                                        headers: { 'Content-Type': 'application/json' },
-                                                        body: JSON.stringify(indicadorData)
-                                                    });
+                                            //     indicadorData.rango_desde = 0;
+                                            //     indicadorData.rango_hasta = 0;
+                                            //     indicadorData.rango_acepta = 0;
+                                            //     indicadorData.rango_riesgo = 0;
+                                            //     indicadorData.rango_critico = 0;
 
-                                                    if (!res.ok) throw new Error('Error al guardar indicador');
+                                            //     indicadorData.tenden_tipo = 0;
+                                            //     indicadorData.tenden_refe = 0;
+                                            //     indicadorData.tenden_acepta = 0;
+                                            //     indicadorData.tenden_riesgo = 0;
+                                            //     indicadorData.tenden_critico = 0;
 
-                                                    alert('Indicador guardado correctamente ✅');
-                                                    window.location.href = 'kpi-indicadores.html';
-                                                    limpiarFormulario();
-                                                } catch (err) {
-                                                    console.error('Error al guardar indicador:', err);
-                                                    alert('Error al guardar indicador ❌');
-                                                }
-                                            }
+                                            //     indicadorData.meta_tipo = formData.get('meta_tipo')
+                                            //     const tipoMeta = formData.get('meta_tipo');
+                                            //     if (tipoMeta === '1') {
+                                            //         indicadorData.unico_valor = formData.get('valor_meta');
+                                            //         indicadorData.unico_eval = formData.get('unico_evaluacion');
+                                            //         indicadorData.unico_acepta = formData.get('unico_aceptable');
+                                            //         indicadorData.unico_riesgo = formData.get('unico_riesgo');
+                                            //         indicadorData.unico_critico = formData.get('unico_critico');
 
-                                            function limpiarFormularioXXX() {
-                                                const form = document.getElementById('indicadorForm');
-                                                form.reset();
-                                                form.classList.remove('was-validated');
-                                            }
+                                            //     } else if (tipoMeta === '2') {
+                                            //         indicadorData.rango_desde = formData.get('rango_min');
+                                            //         indicadorData.rango_hasta = formData.get('rango_max');
+                                            //         indicadorData.rango_acepta = formData.get('rango_aceptable');
+                                            //         indicadorData.rango_riesgo = formData.get('rango_riesgo');
+                                            //         indicadorData.rango_critico = formData.get('rango_critico');
 
-                                            function limpiarFormulario() {
-                                                const form = document.getElementById('indicadorForm');
-                                                form.reset();
-                                                form.classList.remove('was-validated');
+                                            //     } else if (tipoMeta === '3') {
+                                            //         indicadorData.tenden_tipo = formData.get('tenden_tipo');
+                                            //         indicadorData.tenden_refe = formData.get('tenden_referencia');
+                                            //         indicadorData.tenden_acepta = formData.get('tenden_aceptable');
+                                            //         indicadorData.tenden_riesgo = formData.get('tenden_riesgo');
+                                            //         indicadorData.tenden_critico = formData.get('tenden_critico');
+                                            //     }
 
-                                                // Limpia validaciones campo por campo
-                                                const inputs = form.querySelectorAll('.form-control, .form-select, textarea');
-                                                inputs.forEach(input => {
-                                                    input.classList.remove('is-valid', 'is-invalid');
-                                                });
-                                            }
+                                            //     console.log('Datos del indicador a enviar:', indicadorData);
+
+                                            //     try {
+                                            //         const res = await fetch('/api/indicadores', {
+                                            //             method: 'POST',
+                                            //             headers: { 'Content-Type': 'application/json' },
+                                            //             body: JSON.stringify(indicadorData)
+                                            //         });
+
+                                            //         if (!res.ok) throw new Error('Error al guardar indicador');
+
+                                            //         alert('Indicador guardado correctamente.');
+                                            //         limpiarFormulario();
+                                            //     } catch (err) {
+                                            //         console.error('Error al guardar indicador:', err);
+                                            //         alert('Error al guardar indicador.');
+                                            //     }
+                                            // }
+
+
+                                            // function getValue(formData, name) {
+                                            //     const val = formData.get(name);
+                                            //     return val === undefined || val === "" ? null : val;
+                                            // }
+
+                                            // async function procesarFormulario() {
+                                            //     const form = document.getElementById('indicadorForm');
+                                            //     const formData = new FormData(form);
+
+                                            //     const indicadorData = {
+                                            //         // --- Identificación
+                                            //         codigo_id: getValue(formData, 'codigo_id'),
+                                            //         nombre: getValue(formData, 'nombre'),
+                                            //         descripcion: getValue(formData, 'descripcion'),
+
+                                            //         // --- Alineación estratégica
+                                            //         dimension_id: getValue(formData, 'dimension_id'),
+                                            //         tipo_id: getValue(formData, 'tipo_id'),
+                                            //         categoria_id: getValue(formData, 'categoria_id'),
+                                            //         criticidad_id: getValue(formData, 'criticidad_id'),
+                                            //         responsable: getValue(formData, 'responsable'),
+                                            //         destino: getValue(formData, 'destino'),
+
+                                            //         // --- Objetivo
+                                            //         objetivo: getValue(formData, 'objetivo'),
+
+                                            //         // --- Medición
+                                            //         formula_calculo: getValue(formData, 'formula_calculo'),
+                                            //         fuente_datos: getValue(formData, 'fuente_datos'),
+                                            //         unidad_medida: getValue(formData, 'unidad_medida'),
+                                            //         freq_medicion: getValue(formData, 'freq_medicion'),
+                                            //         freq_reporte: getValue(formData, 'freq_reporte'),
+                                            //         tolerancia_q: getValue(formData, 'tolerancia_q'),
+                                            //         tolerancia_plazo: getValue(formData, 'tolerancia_plazo'),
+                                            //         fecha_inicio: getValue(formData, 'fecha_inicio'),
+
+                                            //         // --- Presentación
+                                            //         formato: getValue(formData, 'formato'),
+                                            //         comentarios: getValue(formData, 'comentarios'),
+
+                                            //         // --- Meta tipo
+                                            //         meta_tipo: getValue(formData, 'meta_tipo'),
+
+                                            //         // Valores por defecto
+                                            //         unico_valor: 0,
+                                            //         unico_eval: 0,
+                                            //         unico_acepta: 0,
+                                            //         unico_riesgo: 0,
+                                            //         unico_critico: 0,
+
+                                            //         rango_desde: 0,
+                                            //         rango_hasta: 0,
+                                            //         rango_acepta: 0,
+                                            //         rango_riesgo: 0,
+                                            //         rango_critico: 0,
+
+                                            //         tenden_tipo: 0,
+                                            //         tenden_refe: 0,
+                                            //         tenden_acepta: 0,
+                                            //         tenden_riesgo: 0,
+                                            //         tenden_critico: 0
+                                            //     };
+
+                                            //     // --- Metas según tipo seleccionado
+                                            //     const tipoMeta = indicadorData.meta_tipo;
+                                            //     if (tipoMeta === '1') {
+                                            //         indicadorData.unico_valor = getValue(formData, 'unico_valor');
+                                            //         indicadorData.unico_eval = getValue(formData, 'unico_eval');
+                                            //         indicadorData.unico_acepta = getValue(formData, 'unico_acepta');
+                                            //         indicadorData.unico_riesgo = getValue(formData, 'unico_riesgo');
+                                            //         indicadorData.unico_critico = getValue(formData, 'unico_critico');
+
+                                            //     } else if (tipoMeta === '2') {
+                                            //         indicadorData.rango_desde = getValue(formData, 'rango_desde');
+                                            //         indicadorData.rango_hasta = getValue(formData, 'rango_hasta');
+                                            //         indicadorData.rango_acepta = getValue(formData, 'rango_acepta');
+                                            //         indicadorData.rango_riesgo = getValue(formData, 'rango_riesgo');
+                                            //         indicadorData.rango_critico = getValue(formData, 'rango_critico');
+
+                                            //     } else if (tipoMeta === '3') {
+                                            //         indicadorData.tenden_tipo = getValue(formData, 'tenden_tipo');
+                                            //         indicadorData.tenden_refe = getValue(formData, 'tenden_refe');
+                                            //         indicadorData.tenden_acepta = getValue(formData, 'tenden_acepta');
+                                            //         indicadorData.tenden_riesgo = getValue(formData, 'tenden_riesgo');
+                                            //         indicadorData.tenden_critico = getValue(formData, 'tenden_critico');
+                                            //     }
+
+                                            //     console.table('Datos del indicador a enviar:', indicadorData);
+
+                                            //     const id = document.getElementById('id').value; // hidden
+
+                                            //     let url = '/api/guardar';
+                                            //     let method = 'POST';
+
+                                            //     if (id) { // si existe id => UPDATE
+                                            //         url = `/api/actualizar/${id}`;
+                                            //         method = 'PUT';
+                                            //     }
+
+                                            //     console.log('valor de id: ' + id);
+
+                                            //     try {
+                                            //         const response = await fetch(url, {
+                                            //             method,
+                                            //             headers: { 'Content-Type': 'application/json' },
+                                            //             body: JSON.stringify(indicadorData)
+                                            //         });
+
+                                            //         const result = await response.json();
+
+                                            //         if (result.success) {
+                                            //             alert(id ? 'Indicador actualizado!' : 'Indicador creado!');
+                                            //             form.reset();
+                                            //             document.getElementById('id').value = ''; // limpiar id si era edición
+                                            //         } else {
+                                            //             alert('Error en procesarFormulario: ' + (result.error || 'Error desconocido'));
+                                            //         }
+                                            //     } catch (error) {
+                                            //         console.error(error);
+                                            //         alert('Error en la comunicación con el servidor');
+                                            //     }
+                                            // };
+
+                                            // function limpiarFormulario() {
+                                            //     const form = document.getElementById('indicadorForm');
+                                            //     form.reset();
+                                            //     form.classList.remove('was-validated');
+
+                                            //     // Limpia validaciones campo por campo
+                                            //     const inputs = form.querySelectorAll('.form-control, .form-select, textarea');
+                                            //     inputs.forEach(input => {
+                                            //         input.classList.remove('is-valid', 'is-invalid');
+                                            //     });
+                                            // }
 
                                         </script>
                                         <!--end::JavaScript-->
@@ -1912,7 +1907,376 @@
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
+
+    <!--begin::JavaScript-->
     <script>
+        // Validación personalizada de Bootstrap
+        // (() => {
+        //     'use strict';
+
+        //     const forms = document.querySelectorAll('.needs-validation');
+
+        //     Array.from(forms).forEach((form) => {
+        //         form.addEventListener('submit', async (event) => {
+        //             event.preventDefault();
+        //             event.stopPropagation();
+        //             //     form.classList.add('was-validated');
+        //             //     return;
+        //             // }
+
+        //             // Procesar formulario
+        //             await procesarFormulario();
+        //             form.classList.add('was-validated');
+        //         }, false);
+        //     });
+        // })();
+
+        // Función para procesar el formulario
+        (() => {
+            'use strict';
+
+            const forms = document.querySelectorAll('.needs-validation');
+
+            Array.from(forms).forEach((form) => {
+                form.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    // Validar campos según tipo de meta
+                    const tipoMeta = document.getElementById('meta_tipo').value;
+                    let camposValidos = true;
+
+                    if (tipoMeta === 'valor') {
+                        const valor = document.getElementById('valorMeta').value;
+                        const acepta = document.getElementById('umbralPostivo').value;
+                        const critico = document.getElementById('umbralCritico').value;
+                        if (!valor || !acepta || !critico) camposValidos = false;
+                    }
+
+                    if (tipoMeta === 'rango') {
+                        const desde = document.getElementById('rangoDesde').value;
+                        const hasta = document.getElementById('rangoHasta').value;
+                        const acepta = document.getElementById('umbralPostivo').value;
+                        const critico = document.getElementById('umbralCritico').value;
+                        if (!desde || !hasta || !acepta || !critico) camposValidos = false;
+                    }
+
+                    if (tipoMeta === 'tendencia') {
+                        const tipo = document.getElementById('tipoTendencia').value;
+                        const ref = document.getElementById('valorReferencia').value;
+                        const acepta = document.getElementById('umbralPostivo').value;
+                        const riesgo = document.getElementById('umbralCritico').value; // si tenés otro campo de riesgo, ajustarlo
+                        if (!tipo || !ref || !acepta || !riesgo) camposValidos = false;
+                    }
+
+                    if (!camposValidos) {
+                        alert('Debe completar todos los campos obligatorios según el tipo de meta.');
+                        return;
+                    }
+
+                    // === Validación HTML5 / Bootstrap ===
+                    if (!form.checkValidity()) {
+                        form.classList.add('was-validated');
+                        return;
+                    }
+
+                    // Guardamos el estado de si era edición o alta (para el mensaje)
+                    const wasEdit = Boolean(form.querySelector('#id')?.value);
+
+                    // Llamamos a procesarFormulario pasando el form
+                    const form = document.getElementById('indicadorForm');
+                    const resultado = await procesarFormulario(form);
+
+                    if (resultado && resultado.success) {
+                        // Éxito: actuamos sobre la UI (limpiar, ocultar formulario, recargar tabla)
+                        alert(wasEdit ? 'Indicador actualizado!' : 'Indicador creado!');
+
+                        form.reset();
+                        form.classList.remove('was-validated');
+
+                        // Si usás un hidden con id="id", lo limpiamos
+                        const idInput = form.querySelector('#id');
+                        if (idInput) idInput.value = '';
+
+                        // Ocultar / mostrar contenedores (ajustá los IDs a tus contenedores reales)
+                        const formContainer = document.getElementById('formContainer');   // <- ajustar si tu contenedor tiene otro id
+                        const tablaContainer = document.getElementById('tablaContainer'); // <- ajustar si tu contenedor tiene otro id
+                        if (formContainer && tablaContainer) {
+                            formContainer.style.display = 'none';
+                            tablaContainer.style.display = 'block';
+                        }
+
+                        // Refrescar la tabla (si existe la función)
+                        if (typeof cargarIndicadores === 'function') {
+                            cargarIndicadores();
+                        }
+                    } else {
+                        // Fracaso: mostramos validación/alert y mantenemos el form visible
+                        form.classList.add('was-validated');
+                        const msg = resultado?.error || resultado?.mensaje || 'Error desconocido';
+                        alert('No se pudo guardar el indicador: ' + msg);
+                    }
+
+                    // await procesarFormulario();
+                    // form.classList.add('was-validated');
+
+                }, false);
+            });
+        })();
+
+        // async function procesarFormularioXXX() {
+        //     const formData = new FormData(document.getElementById('indicadorForm'));
+
+        //     const indicadorData = {
+        //         // --- Identificación
+        //         codigo_id: formData.get('codigo_id'),
+        //         nombre: formData.get('nombre'),
+        //         descripcion: formData.get('descripcion'),
+
+        //         // --- Alineación estratégica
+        //         dimension_id: formData.get('dimension_id'),
+        //         tipo_id: formData.get('tipo_id'),
+        //         categoria_id: formData.get('categoria_id'),
+        //         criticidad_id: formData.get('criticidad_id'),
+        //         responsable: formData.get('responsable'),
+        //         destino: formData.get('destino'),
+
+        //         // --- Objetivo
+        //         objetivo: formData.get('objetivo'),
+
+        //         // --- Medición
+        //         formula_calculo: formData.get('formula_calculo'),
+        //         fuente_datos: formData.get('fuente_datos'),
+        //         unidad_medida: formData.get('unidad_medida'),
+        //         frecuencia_medicion: formData.get('frecuencia_medicion'),
+        //         frecuencia_reporte: formData.get('frecuencia_reporte'),
+        //         tolerancia_q: formData.get('tolerancia_q'),
+        //         tolerancia_plazo: formData.get('tolerancia_plazo'),
+        //         fecha_inicio: formData.get('fecha_inicio'),
+
+        //         // --- Presentación
+        //         formato_presentacion: formData.get('formato_presentacion'),
+        //         comentarios: formData.get('comentarios'),
+        //     };
+
+        //     // --- Metas según tipo
+
+        //     indicadorData.unico_valor = 0;
+        //     indicadorData.unico_eval = 0;
+        //     indicadorData.unico_acepta = 0;
+        //     indicadorData.unico_riesgo = 0;
+        //     indicadorData.unico_critico = 0;
+
+        //     indicadorData.rango_desde = 0;
+        //     indicadorData.rango_hasta = 0;
+        //     indicadorData.rango_acepta = 0;
+        //     indicadorData.rango_riesgo = 0;
+        //     indicadorData.rango_critico = 0;
+
+        //     indicadorData.tenden_tipo = 0;
+        //     indicadorData.tenden_refe = 0;
+        //     indicadorData.tenden_acepta = 0;
+        //     indicadorData.tenden_riesgo = 0;
+        //     indicadorData.tenden_critico = 0;
+
+        //     indicadorData.meta_tipo = formData.get('meta_tipo')
+        //     const tipoMeta = formData.get('meta_tipo');
+        //     if (tipoMeta === '1') {
+        //         indicadorData.unico_valor = formData.get('valor_meta');
+        //         indicadorData.unico_eval = formData.get('unico_evaluacion');
+        //         indicadorData.unico_acepta = formData.get('unico_aceptable');
+        //         indicadorData.unico_riesgo = formData.get('unico_riesgo');
+        //         indicadorData.unico_critico = formData.get('unico_critico');
+
+        //     } else if (tipoMeta === '2') {
+        //         indicadorData.rango_desde = formData.get('rango_min');
+        //         indicadorData.rango_hasta = formData.get('rango_max');
+        //         indicadorData.rango_acepta = formData.get('rango_aceptable');
+        //         indicadorData.rango_riesgo = formData.get('rango_riesgo');
+        //         indicadorData.rango_critico = formData.get('rango_critico');
+
+        //     } else if (tipoMeta === '3') {
+        //         indicadorData.tenden_tipo = formData.get('tenden_tipo');
+        //         indicadorData.tenden_refe = formData.get('tenden_referencia');
+        //         indicadorData.tenden_acepta = formData.get('tenden_aceptable');
+        //         indicadorData.tenden_riesgo = formData.get('tenden_riesgo');
+        //         indicadorData.tenden_critico = formData.get('tenden_critico');
+        //     }
+
+        //     console.log('Datos del indicador a enviar:', indicadorData);
+
+        //     try {
+        //         const res = await fetch('/api/indicadores', {
+        //             method: 'POST',
+        //             headers: { 'Content-Type': 'application/json' },
+        //             body: JSON.stringify(indicadorData)
+        //         });
+
+        //         if (!res.ok) throw new Error('Error al guardar indicador');
+
+        //         alert('Indicador guardado correctamente.');
+        //         limpiarFormulario();
+        //     } catch (err) {
+        //         console.error('Error al guardar indicador:', err);
+        //         alert('Error al guardar indicador.');
+        //     }
+        // }
+
+
+        function getValue(formData, name) {
+            const val = formData.get(name);
+            return val === undefined || val === "" ? null : val;
+        }
+
+        // ------------------------- procesarFormulario(form) -------------------------
+        async function procesarFormulario(form) {
+            // Acepta el formulario como parámetro (pasado por el listener)
+            const formEl = form || document.getElementById('indicadorForm') || document.getElementById('indicadorForm') || document.querySelector('form.needs-validation');
+            if (!formEl) {
+                console.error('No se encontró el formulario para procesar.');
+                return { success: false, error: 'Formulario no encontrado' };
+            }
+
+            const formData = new FormData(formEl);
+
+            const indicadorData = {
+                // --- Identificación
+                codigo_id: getValue(formData, 'codigo_id'),
+                nombre: getValue(formData, 'nombre'),
+                descripcion: getValue(formData, 'descripcion'),
+
+                // --- Alineación estratégica
+                dimension_id: getValue(formData, 'dimension_id'),
+                tipo_id: getValue(formData, 'tipo_id'),
+                categoria_id: getValue(formData, 'categoria_id'),
+                criticidad_id: getValue(formData, 'criticidad_id'),
+                responsable: getValue(formData, 'responsable'),
+                destino: getValue(formData, 'destino'),
+
+                // --- Objetivo
+                objetivo: getValue(formData, 'objetivo'),
+
+                // --- Medición
+                formula_calculo: getValue(formData, 'formula_calculo'),
+                fuente_datos: getValue(formData, 'fuente_datos'),
+                unidad_medida: getValue(formData, 'unidad_medida'),
+                freq_medicion: getValue(formData, 'freq_medicion'),
+                freq_reporte: getValue(formData, 'freq_reporte'),
+                tolerancia_q: getValue(formData, 'tolerancia_q'),
+                tolerancia_plazo: getValue(formData, 'tolerancia_plazo'),
+                fecha_inicio: getValue(formData, 'fecha_inicio'),
+
+                // --- Presentación
+                formato: getValue(formData, 'formato'),
+                comentarios: getValue(formData, 'comentarios'),
+
+                // --- Meta tipo
+                meta_tipo: getValue(formData, 'meta_tipo'),
+
+                // Valores por defecto
+                unico_valor: 0,
+                unico_eval: 0,
+                unico_acepta: 0,
+                unico_riesgo: 0,
+                unico_critico: 0,
+
+                rango_desde: 0,
+                rango_hasta: 0,
+                rango_acepta: 0,
+                rango_riesgo: 0,
+                rango_critico: 0,
+
+                tenden_tipo: 0,
+                tenden_refe: 0,
+                tenden_acepta: 0,
+                tenden_riesgo: 0,
+                tenden_critico: 0
+            };
+
+            // --- Metas según tipo seleccionado
+            const tipoMeta = indicadorData.meta_tipo;
+            if (tipoMeta === '1') {
+                indicadorData.unico_valor = getValue(formData, 'unico_valor');
+                indicadorData.unico_eval = getValue(formData, 'unico_eval');
+                indicadorData.unico_acepta = getValue(formData, 'unico_acepta');
+                indicadorData.unico_riesgo = getValue(formData, 'unico_riesgo');
+                indicadorData.unico_critico = getValue(formData, 'unico_critico');
+
+            } else if (tipoMeta === '2') {
+                indicadorData.rango_desde = getValue(formData, 'rango_desde');
+                indicadorData.rango_hasta = getValue(formData, 'rango_hasta');
+                indicadorData.rango_acepta = getValue(formData, 'rango_acepta');
+                indicadorData.rango_riesgo = getValue(formData, 'rango_riesgo');
+                indicadorData.rango_critico = getValue(formData, 'rango_critico');
+
+            } else if (tipoMeta === '3') {
+                indicadorData.tenden_tipo = getValue(formData, 'tenden_tipo');
+                indicadorData.tenden_refe = getValue(formData, 'tenden_refe');
+                indicadorData.tenden_acepta = getValue(formData, 'tenden_acepta');
+                indicadorData.tenden_riesgo = getValue(formData, 'tenden_riesgo');
+                indicadorData.tenden_critico = getValue(formData, 'tenden_critico');
+            }
+
+            console.table('Datos del indicador a enviar:', indicadorData);
+
+
+            // Detectar si es alta o edición (buscar el hidden #id dentro del formulario)
+            const idInput = formEl.querySelector('#id') || formEl.querySelector('input[name="id"]');
+            const id = idInput ? idInput.value.trim() : '';
+
+            let url = '/api/guardar';
+            let method = 'POST';
+            if (id) {
+                url = `/api/actualizar/${id}`;
+                method = 'PUT';
+            }
+
+            console.log('valor de id: ' + id);
+
+            try {
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(indicadorData)
+                });
+
+                const text = await response.text();
+                // Intentamos parsear JSON; si no es JSON, lo devolvemos como mensaje bruto
+                let result;
+                try {
+                    result = text ? JSON.parse(text) : {};
+                } catch (parseErr) {
+                    console.warn('Respuesta del servidor no es JSON:', text);
+                    result = { success: !!response.ok, mensaje: text };
+                }
+
+                // Normalizar: si backend no devuelve success, lo inferimos desde response.ok
+                if (typeof result.success === 'undefined') {
+                    result.success = !!response.ok;
+                }
+
+                // Devolver el objeto result para que el caller decida la UI
+                return result;
+
+            } catch (error) {
+                console.error('Error en procesarFormulario:', error);
+                return { success: false, error: error.message || String(error) };
+            }
+        }
+
+        function limpiarFormulario() {
+            const form = document.getElementById('indicadorForm');
+            form.reset();
+            form.classList.remove('was-validated');
+
+            // Limpia validaciones campo por campo
+            const inputs = form.querySelectorAll('.form-control, .form-select, textarea');
+            inputs.forEach(input => {
+                input.classList.remove('is-valid', 'is-invalid');
+            });
+        }
+
+
         // Función para obtener el color de la dimensión
         function getColorDimension(dimension) {
             const colores = {
@@ -1944,233 +2308,233 @@
         }
 
         // ✅ Función para editar un indicador
-        async function editarIndicadorXXX(codigo) {
+        // async function editarIndicadorXXX(codigo) {
 
-            console.log('entro en editar indicador')
-            try {
-                const response = await fetch(`/api/indicadores/${codigo}`);
-                if (!response.ok) throw new Error('No se pudo obtener el indicador.');
+        //     console.log('entro en editar indicador')
+        //     try {
+        //         const response = await fetch(`/api/indicadores/${codigo}`);
+        //         if (!response.ok) throw new Error('No se pudo obtener el indicador.');
 
-                const indicador = await response.json();
-                const form = document.getElementById('indicadorForm');
+        //         const indicador = await response.json();
+        //         const form = document.getElementById('indicadorForm');
 
-                // Mapear campos del formulario con los nombres de la tabla indicadores
-                form.codigo_id.value = indicador.codigo_id || '';
-                form.nombre.value = indicador.nombre || '';
-                form.descripcion.value = indicador.descripcion || '';
-                form.tipo_id.value = indicador.tipo_id || '';
-                form.dimension_id.value = indicador.dimension_id || '';
-                form.categoria_id.value = indicador.categoria_id || '';
-                form.criticidad_id.value = indicador.criticidad_id || '';
-                form.responsable.value = indicador.responsable || '';
-                form.destino.value = indicador.destino || '';
-                form.objetivo.value = indicador.objetivo || '';
+        //         // Mapear campos del formulario con los nombres de la tabla indicadores
+        //         form.codigo_id.value = indicador.codigo_id || '';
+        //         form.nombre.value = indicador.nombre || '';
+        //         form.descripcion.value = indicador.descripcion || '';
+        //         form.tipo_id.value = indicador.tipo_id || '';
+        //         form.dimension_id.value = indicador.dimension_id || '';
+        //         form.categoria_id.value = indicador.categoria_id || '';
+        //         form.criticidad_id.value = indicador.criticidad_id || '';
+        //         form.responsable.value = indicador.responsable || '';
+        //         form.destino.value = indicador.destino || '';
+        //         form.objetivo.value = indicador.objetivo || '';
 
-                // Meta
-                form.tipo_meta.value = indicador.tipo_meta || '';
-                form.valor_meta.value = indicador.valor_meta || '';
-                form.unico_evaluacion.value = indicador.unico_evaluacion || '';
-                form.unico_aceptable.value = indicador.unico_aceptable || '';
-                form.unico_riesgo.value = indicador.unico_riesgo || '';
-                form.unico_critico.value = indicador.unico_critico || '';
+        //         // Meta
+        //         form.tipo_meta.value = indicador.tipo_meta || '';
+        //         form.valor_meta.value = indicador.valor_meta || '';
+        //         form.unico_evaluacion.value = indicador.unico_evaluacion || '';
+        //         form.unico_aceptable.value = indicador.unico_aceptable || '';
+        //         form.unico_riesgo.value = indicador.unico_riesgo || '';
+        //         form.unico_critico.value = indicador.unico_critico || '';
 
-                // Rangos
-                form.rango_min.value = indicador.rango_min || '';
-                form.rango_max.value = indicador.rango_max || '';
-                form.rango_aceptable.value = indicador.umbral_aceptable || '';
-                form.rango_riesgo.value = indicador.umbral_riesgo || '';
-                form.rango_critico.value = indicador.umbral_critico || '';
+        //         // Rangos
+        //         form.rango_min.value = indicador.rango_min || '';
+        //         form.rango_max.value = indicador.rango_max || '';
+        //         form.rango_aceptable.value = indicador.umbral_aceptable || '';
+        //         form.rango_riesgo.value = indicador.umbral_riesgo || '';
+        //         form.rango_critico.value = indicador.umbral_critico || '';
 
-                // Tendencias
-                form.tenden_tipo.value = indicador.tenden_tipo || '';
-                form.tenden_referencia.value = indicador.tenden_referencia || '';
-                form.tenden_aceptable.value = indicador.tenden_aceptable || '';
-                form.tenden_riesgo.value = indicador.tenden_riesgo || '';
-                form.tenden_critico.value = indicador.tenden_critico || '';
+        //         // Tendencias
+        //         form.tenden_tipo.value = indicador.tenden_tipo || '';
+        //         form.tenden_referencia.value = indicador.tenden_referencia || '';
+        //         form.tenden_aceptable.value = indicador.tenden_aceptable || '';
+        //         form.tenden_riesgo.value = indicador.tenden_riesgo || '';
+        //         form.tenden_critico.value = indicador.tenden_critico || '';
 
-                // Fuente y cálculo
-                form.fuente_datos.value = indicador.fuente_datos || '';
-                form.formula_calculo.value = indicador.formula_calculo || '';
+        //         // Fuente y cálculo
+        //         form.fuente_datos.value = indicador.fuente_datos || '';
+        //         form.formula_calculo.value = indicador.formula_calculo || '';
 
-                // Medición y tolerancia
-                form.unidad_medida.value = indicador.unidad_medida || '';
-                form.frecuencia_medicion.value = indicador.frecuencia_medicion || '';
-                form.tolerancia_plazo.value = indicador.tolerancia_plazo || '';
-                form.tolerancia_q.value = indicador.tolerancia_q || '';
-                form.frecuencia_reporte.value = indicador.frecuencia_reporte || '';
+        //         // Medición y tolerancia
+        //         form.unidad_medida.value = indicador.unidad_medida || '';
+        //         form.frecuencia_medicion.value = indicador.frecuencia_medicion || '';
+        //         form.tolerancia_plazo.value = indicador.tolerancia_plazo || '';
+        //         form.tolerancia_q.value = indicador.tolerancia_q || '';
+        //         form.frecuencia_reporte.value = indicador.frecuencia_reporte || '';
 
-                // Fecha y formato
-                form.fecha_inicio.value = indicador.fecha_inicio || '';
-                form.formato_presentacion.value = indicador.formato_presentacion || '';
+        //         // Fecha y formato
+        //         form.fecha_inicio.value = indicador.fecha_inicio || '';
+        //         form.formato_presentacion.value = indicador.formato_presentacion || '';
 
-                // Comentarios
-                form.comentarios.value = indicador.comentarios || '';
+        //         // Comentarios
+        //         form.comentarios.value = indicador.comentarios || '';
 
-                // Mostrar la pestaña de edición si es modal o scroll al formulario
-                console.log('Formulario encontrado:', form);
-                console.log(indicador)
-                document.getElementById('indicadorForm').style.display = 'block';
-                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                form.querySelector('input, textarea, select')?.focus();
+        //         // Mostrar la pestaña de edición si es modal o scroll al formulario
+        //         console.log('Formulario encontrado:', form);
+        //         console.log(indicador)
+        //         document.getElementById('indicadorForm').style.display = 'block';
+        //         form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        //         form.querySelector('input, textarea, select')?.focus();
 
-            } catch (error) {
-                console.error('Error al cargar el indicador para edición:', error);
-                alert('No se pudo cargar el indicador para edición.');
-            }
-        }
+        //     } catch (error) {
+        //         console.error('Error al cargar el indicador para edición:', error);
+        //         alert('No se pudo cargar el indicador para edición.');
+        //     }
+        // }
 
-        function editarIndicadorZZZ(indicador) {
-            // Recorremos cada campo del formulario según los name/id que definimos en el HTML
-            const form = document.getElementById("indicadorForm");
+        // function editarIndicadorZZZ(indicador) {
+        //     // Recorremos cada campo del formulario según los name/id que definimos en el HTML
+        //     const form = document.getElementById("indicadorForm");
 
-            // Asignación directa (campos simples tipo texto, fecha, select, textarea)
-            form.codigo_id.value = indicador.codigo_id || "";
-            form.nombre.value = indicador.nombre || "";
-            form.descripcion.value = indicador.descripcion || "";
-            form.tipo_id.value = indicador.tipo_id || "";
-            form.dimension_id.value = indicador.dimension_id || "";
-            form.categoria_id.value = indicador.categoria_id || "";
-            form.criticidad_id.value = indicador.criticidad_id || "";
-            form.responsable.value = indicador.responsable || "";
-            form.destino.value = indicador.destino || "";
-            form.objetivo.value = indicador.objetivo || "";
-            form.meta_tipo.value = indicador.meta_tipo || "";
-            form.fuente_datos.value = indicador.fuente_datos || "";
-            form.formula_calculo.value = indicador.formula_calculo || "";
-            form.unidad_medida.value = indicador.unidad_medida || "";
-            form.freq_medicion.value = indicador.freq_medicion || "";
-            form.tolerancia_plazo.value = indicador.tolerancia_plazo || "";
-            form.tolerancia_q.value = indicador.tolerancia_q || "";
-            form.fecha_inicio.value = indicador.fecha_inicio
-                ? indicador.fecha_inicio.split("T")[0] // yyyy-mm-dd
-                : "";
-            form.freq_reporte.value = indicador.freq_reporte || "";
-            form.formato.value = indicador.formato || "";
-            form.comentarios.value = indicador.comentarios || "";
+        //     // Asignación directa (campos simples tipo texto, fecha, select, textarea)
+        //     form.codigo_id.value = indicador.codigo_id || "";
+        //     form.nombre.value = indicador.nombre || "";
+        //     form.descripcion.value = indicador.descripcion || "";
+        //     form.tipo_id.value = indicador.tipo_id || "";
+        //     form.dimension_id.value = indicador.dimension_id || "";
+        //     form.categoria_id.value = indicador.categoria_id || "";
+        //     form.criticidad_id.value = indicador.criticidad_id || "";
+        //     form.responsable.value = indicador.responsable || "";
+        //     form.destino.value = indicador.destino || "";
+        //     form.objetivo.value = indicador.objetivo || "";
+        //     form.meta_tipo.value = indicador.meta_tipo || "";
+        //     form.fuente_datos.value = indicador.fuente_datos || "";
+        //     form.formula_calculo.value = indicador.formula_calculo || "";
+        //     form.unidad_medida.value = indicador.unidad_medida || "";
+        //     form.freq_medicion.value = indicador.freq_medicion || "";
+        //     form.tolerancia_plazo.value = indicador.tolerancia_plazo || "";
+        //     form.tolerancia_q.value = indicador.tolerancia_q || "";
+        //     form.fecha_inicio.value = indicador.fecha_inicio
+        //         ? indicador.fecha_inicio.split("T")[0] // yyyy-mm-dd
+        //         : "";
+        //     form.freq_reporte.value = indicador.freq_reporte || "";
+        //     form.formato.value = indicador.formato || "";
+        //     form.comentarios.value = indicador.comentarios || "";
 
-            // ----- Valores de Meta -----
-            if (indicador.meta_tipo == 1) {
-                // Valor único
-                document.getElementById("metaValor").classList.remove("hidden");
-                document.getElementById("metaRango").classList.add("hidden");
-                document.getElementById("metaTendencia").classList.add("hidden");
+        //     // ----- Valores de Meta -----
+        //     if (indicador.meta_tipo == 1) {
+        //         // Valor único
+        //         document.getElementById("metaValor").classList.remove("hidden");
+        //         document.getElementById("metaRango").classList.add("hidden");
+        //         document.getElementById("metaTendencia").classList.add("hidden");
 
-                form.unico_valor.value = indicador.unico_valor || "";
-                form.unico_eval.value = indicador.unico_eval || "";
-                form.unico_acepta.value = indicador.unico_acepta || "";
-                form.unico_riesgo.value = indicador.unico_riesgo || "";
-                form.unico_critico.value = indicador.unico_critico || "";
+        //         form.unico_valor.value = indicador.unico_valor || "";
+        //         form.unico_eval.value = indicador.unico_eval || "";
+        //         form.unico_acepta.value = indicador.unico_acepta || "";
+        //         form.unico_riesgo.value = indicador.unico_riesgo || "";
+        //         form.unico_critico.value = indicador.unico_critico || "";
 
-            } else if (indicador.meta_tipo == 2) {
-                // Rango
-                document.getElementById("metaValor").classList.add("hidden");
-                document.getElementById("metaRango").classList.remove("hidden");
-                document.getElementById("metaTendencia").classList.add("hidden");
+        //     } else if (indicador.meta_tipo == 2) {
+        //         // Rango
+        //         document.getElementById("metaValor").classList.add("hidden");
+        //         document.getElementById("metaRango").classList.remove("hidden");
+        //         document.getElementById("metaTendencia").classList.add("hidden");
 
-                form.rango_desde.value = indicador.rango_desde || "";
-                form.rango_hasta.value = indicador.rango_hasta || "";
-                form.rango_acepta.value = indicador.rango_acepta || "";
-                form.rango_riesgo.value = indicador.rango_riesgo || "";
-                form.rango_critico.value = indicador.rango_critico || "";
+        //         form.rango_desde.value = indicador.rango_desde || "";
+        //         form.rango_hasta.value = indicador.rango_hasta || "";
+        //         form.rango_acepta.value = indicador.rango_acepta || "";
+        //         form.rango_riesgo.value = indicador.rango_riesgo || "";
+        //         form.rango_critico.value = indicador.rango_critico || "";
 
-            } else if (indicador.meta_tipo == 3) {
-                // Tendencia
-                document.getElementById("metaValor").classList.add("hidden");
-                document.getElementById("metaRango").classList.add("hidden");
-                document.getElementById("metaTendencia").classList.remove("hidden");
+        //     } else if (indicador.meta_tipo == 3) {
+        //         // Tendencia
+        //         document.getElementById("metaValor").classList.add("hidden");
+        //         document.getElementById("metaRango").classList.add("hidden");
+        //         document.getElementById("metaTendencia").classList.remove("hidden");
 
-                form.tenden_tipo.value = indicador.tenden_tipo || "";
-                form.tenden_refe.value = indicador.tenden_refe || "";
-                form.tenden_acepta.value = indicador.tenden_acepta || "";
-                form.tenden_riesgo.value = indicador.tenden_riesgo || "";
-                form.tenden_critico.value = indicador.tenden_critico || "";
-            } else {
-                // Si no hay meta_tipo, ocultamos todos
-                document.getElementById("metaValor").classList.add("hidden");
-                document.getElementById("metaRango").classList.add("hidden");
-                document.getElementById("metaTendencia").classList.add("hidden");
-            }
+        //         form.tenden_tipo.value = indicador.tenden_tipo || "";
+        //         form.tenden_refe.value = indicador.tenden_refe || "";
+        //         form.tenden_acepta.value = indicador.tenden_acepta || "";
+        //         form.tenden_riesgo.value = indicador.tenden_riesgo || "";
+        //         form.tenden_critico.value = indicador.tenden_critico || "";
+        //     } else {
+        //         // Si no hay meta_tipo, ocultamos todos
+        //         document.getElementById("metaValor").classList.add("hidden");
+        //         document.getElementById("metaRango").classList.add("hidden");
+        //         document.getElementById("metaTendencia").classList.add("hidden");
+        //     }
 
-            // Scroll al formulario (para editar cómodo)
-            form.scrollIntoView({ behavior: "smooth" });
-        }
+        //     // Scroll al formulario (para editar cómodo)
+        //     form.scrollIntoView({ behavior: "smooth" });
+        // }
 
 
         // Cargar un indicador en el formulario para editar
-        async function editarIndicadorHHH(codigo) {
-            try {
-                const response = await fetch(`/api/indicadores/${codigo}`);
-                if (!response.ok) throw new Error('No se pudo obtener el indicador.');
+        // async function editarIndicadorHHH(codigo) {
+        //     try {
+        //         const response = await fetch(`/api/indicadores/${codigo}`);
+        //         if (!response.ok) throw new Error('No se pudo obtener el indicador.');
 
-                const indicador = await response.json();
-                console.log("Indicador cargado para edición:", indicador);
+        //         const indicador = await response.json();
+        //         console.log("Indicador cargado para edición:", indicador);
 
-                const form = document.getElementById('indicadorForm');
+        //         const form = document.getElementById('indicadorForm');
 
-                // --- Identificación
-                form.elements['codigo_id'].value = indicador.codigo_id || '';
-                form.elements['nombre'].value = indicador.nombre || '';
-                form.elements['descripcion'].value = indicador.descripcion || '';
+        //         // --- Identificación
+        //         form.elements['codigo_id'].value = indicador.codigo_id || '';
+        //         form.elements['nombre'].value = indicador.nombre || '';
+        //         form.elements['descripcion'].value = indicador.descripcion || '';
 
-                // --- Alineación estratégica
-                form.elements['dimension_id'].value = indicador.dimension_id || '';
-                form.elements['tipo_id'].value = indicador.tipo_id || '';
-                form.elements['categoria_id'].value = indicador.categoria_id || '';
-                form.elements['criticidad_id'].value = indicador.criticidad_id || '';
-                form.elements['responsable'].value = indicador.responsable || '';
-                form.elements['destino'].value = indicador.destino || '';
+        //         // --- Alineación estratégica
+        //         form.elements['dimension_id'].value = indicador.dimension_id || '';
+        //         form.elements['tipo_id'].value = indicador.tipo_id || '';
+        //         form.elements['categoria_id'].value = indicador.categoria_id || '';
+        //         form.elements['criticidad_id'].value = indicador.criticidad_id || '';
+        //         form.elements['responsable'].value = indicador.responsable || '';
+        //         form.elements['destino'].value = indicador.destino || '';
 
-                // --- Objetivo
-                form.elements['objetivo'].value = indicador.objetivo || '';
+        //         // --- Objetivo
+        //         form.elements['objetivo'].value = indicador.objetivo || '';
 
-                // --- Medición
-                form.elements['formula_calculo'].value = indicador.formula_calculo || '';
-                form.elements['fuente_datos'].value = indicador.fuente_datos || '';
-                form.elements['unidad_medida'].value = indicador.unidad_medida || '';
-                form.elements['freq_medicion'].value = indicador.freq_medicion || '';
-                form.elements['freq_reporte'].value = indicador.freq_reporte || '';
-                form.elements['tolerancia_q'].value = indicador.tolerancia_q || '';
-                form.elements['tolerancia_plazo'].value = indicador.tolerancia_plazo || '';
-                form.elements['fecha_inicio'].value = indicador.fecha_inicio
-                    ? indicador.fecha_inicio.split('T')[0] // si viene con timestamp
-                    : '';
+        //         // --- Medición
+        //         form.elements['formula_calculo'].value = indicador.formula_calculo || '';
+        //         form.elements['fuente_datos'].value = indicador.fuente_datos || '';
+        //         form.elements['unidad_medida'].value = indicador.unidad_medida || '';
+        //         form.elements['freq_medicion'].value = indicador.freq_medicion || '';
+        //         form.elements['freq_reporte'].value = indicador.freq_reporte || '';
+        //         form.elements['tolerancia_q'].value = indicador.tolerancia_q || '';
+        //         form.elements['tolerancia_plazo'].value = indicador.tolerancia_plazo || '';
+        //         form.elements['fecha_inicio'].value = indicador.fecha_inicio
+        //             ? indicador.fecha_inicio.split('T')[0] // si viene con timestamp
+        //             : '';
 
-                // --- Presentación
-                form.elements['formato'].value = indicador.formato || '';
-                form.elements['comentarios'].value = indicador.comentarios || '';
+        //         // --- Presentación
+        //         form.elements['formato'].value = indicador.formato || '';
+        //         form.elements['comentarios'].value = indicador.comentarios || '';
 
-                // --- Metas según tipo
-                form.elements['meta_tipo'].value = indicador.meta_tipo || '';
-                mostrarCamposMeta();
+        //         // --- Metas según tipo
+        //         form.elements['meta_tipo'].value = indicador.meta_tipo || '';
+        //         mostrarCamposMeta();
 
-                if (indicador.meta_tipo == 1) {
-                    form.elements['unico_valor'].value = indicador.unico_valor || '';
-                    form.elements['unico_eval'].value = indicador.unico_eval || '';
-                    form.elements['unico_acepta'].value = indicador.unico_acepta || '';
-                    form.elements['unico_riesgo'].value = indicador.unico_riesgo || '';
-                    form.elements['unico_critico'].value = indicador.unico_critico || '';
-                } else if (indicador.meta_tipo == 2) {
-                    form.elements['rango_desde'].value = indicador.rango_desde || '';
-                    form.elements['rango_hasta'].value = indicador.rango_hasta || '';
-                    form.elements['rango_acepta'].value = indicador.rango_acepta || '';
-                    form.elements['rango_riesgo'].value = indicador.rango_riesgo || '';
-                    form.elements['rango_critico'].value = indicador.rango_critico || '';
-                } else if (indicador.meta_tipo == 3) {
-                    form.elements['tenden_tipo'].value = indicador.tenden_tipo || '';
-                    form.elements['tenden_refe'].value = indicador.tenden_refe || '';
-                    form.elements['tenden_acepta'].value = indicador.tenden_acepta || '';
-                    form.elements['tenden_riesgo'].value = indicador.tenden_riesgo || '';
-                    form.elements['tenden_critico'].value = indicador.tenden_critico || '';
-                }
+        //         if (indicador.meta_tipo == 1) {
+        //             form.elements['unico_valor'].value = indicador.unico_valor || '';
+        //             form.elements['unico_eval'].value = indicador.unico_eval || '';
+        //             form.elements['unico_acepta'].value = indicador.unico_acepta || '';
+        //             form.elements['unico_riesgo'].value = indicador.unico_riesgo || '';
+        //             form.elements['unico_critico'].value = indicador.unico_critico || '';
+        //         } else if (indicador.meta_tipo == 2) {
+        //             form.elements['rango_desde'].value = indicador.rango_desde || '';
+        //             form.elements['rango_hasta'].value = indicador.rango_hasta || '';
+        //             form.elements['rango_acepta'].value = indicador.rango_acepta || '';
+        //             form.elements['rango_riesgo'].value = indicador.rango_riesgo || '';
+        //             form.elements['rango_critico'].value = indicador.rango_critico || '';
+        //         } else if (indicador.meta_tipo == 3) {
+        //             form.elements['tenden_tipo'].value = indicador.tenden_tipo || '';
+        //             form.elements['tenden_refe'].value = indicador.tenden_refe || '';
+        //             form.elements['tenden_acepta'].value = indicador.tenden_acepta || '';
+        //             form.elements['tenden_riesgo'].value = indicador.tenden_riesgo || '';
+        //             form.elements['tenden_critico'].value = indicador.tenden_critico || '';
+        //         }
 
-                // --- Opcional: scroll al formulario si está más abajo en la página
-                form.scrollIntoView({ behavior: 'smooth' });
+        //         // --- Opcional: scroll al formulario si está más abajo en la página
+        //         form.scrollIntoView({ behavior: 'smooth' });
 
-            } catch (error) {
-                console.error('Error al cargar indicador:', error);
-                alert('No se pudo cargar el indicador para editar.');
-            }
-        }
+        //     } catch (error) {
+        //         console.error('Error al cargar indicador:', error);
+        //         alert('No se pudo cargar el indicador para editar.');
+        //     }
+        // }
 
         // Función auxiliar: espera hasta que el select tenga opciones antes de asignar el valor
         function asignarValorSelect(selectElement, valor) {
@@ -2186,13 +2550,13 @@
         }
 
         // Cargar un indicador en el formulario para editar
-        async function editarIndicadoZZZZZZ(codigo) {
+        async function editarIndicador(codigo) {
             try {
                 const response = await fetch(`/api/indicadores/${codigo}`);
                 if (!response.ok) throw new Error('No se pudo obtener el indicador.');
 
                 const indicador = await response.json();
-                console.log("Indicador cargado para edición:", indicador);
+                console.log("Indicador cargado para edición:", indicador.id);
 
                 const form = document.getElementById('indicadorForm');
 
@@ -2254,9 +2618,19 @@
                     form.elements['tenden_critico'].value = indicador.tenden_critico || '';
                 }
 
+                form.elements['id'].value = indicador.id || ''; // hidden para identificar edición
+
                 // --- Mostrar formulario y hacer scroll
                 form.style.display = 'block';
                 form.scrollIntoView({ behavior: 'smooth' });
+
+                const div2 = document.getElementById("appContent");
+                div2.style.display = "none";
+
+                const div = document.getElementById("appMainCarga");
+                div.style.display = "block"; // o usar "flex", según tu diseño
+
+                window.scrollTo({ top: 0, behavior: "smooth" });
 
             } catch (error) {
                 console.error('Error al cargar indicador:', error);
@@ -2264,69 +2638,73 @@
             }
         }
 
-        async function editarIndicador(codigo) {
-            try {
-                const response = await fetch(`/api/indicadores/${codigo}`);
-                if (!response.ok) throw new Error('No se pudo obtener el indicador.');
+        // async function editarIndicadoParcial(codigo) {
+        //     try {
+        //         const response = await fetch(`/api/indicadores/${codigo}`);
+        //         if (!response.ok) throw new Error('No se pudo obtener el indicador.');
 
-                const indicador = await response.json();
-                console.log("Indicador cargado parcialmente:", indicador);
+        //         const indicador = await response.json();
+        //         console.log("Indicador cargado parcialmente:", indicador);
 
-                const form = document.getElementById('indicadorForm');
+        //         const form = document.getElementById('indicadorForm');
 
-                // --- Identificación básica
-                form.elements['codigo_id'].value = indicador.codigo_id || '';
-                form.elements['nombre'].value = indicador.nombre || '';
-                form.elements['descripcion'].value = indicador.descripcion || '';
+        //         // --- Identificación básica
+        //         form.elements['codigo_id'].value = indicador.codigo_id || '';
+        //         form.elements['nombre'].value = indicador.nombre || '';
+        //         form.elements['descripcion'].value = indicador.descripcion || '';
 
-                // --- Objetivo
-                form.elements['objetivo'].value = indicador.objetivo || '';
+        //         // --- Objetivo
+        //         form.elements['objetivo'].value = indicador.objetivo || '';
 
-                // --- Medición básica
-                form.elements['formula_calculo'].value = indicador.formula_calculo || '';
-                form.elements['fuente_datos'].value = indicador.fuente_datos || '';
-                form.elements['unidad_medida'].value = indicador.unidad_medida || '';
-                form.elements['fecha_inicio'].value = indicador.fecha_inicio
-                    ? indicador.fecha_inicio.split('T')[0]
-                    : '';
+        //         // --- Medición básica
+        //         form.elements['formula_calculo'].value = indicador.formula_calculo || '';
+        //         form.elements['fuente_datos'].value = indicador.fuente_datos || '';
+        //         form.elements['unidad_medida'].value = indicador.unidad_medida || '';
+        //         form.elements['fecha_inicio'].value = indicador.fecha_inicio
+        //             ? indicador.fecha_inicio.split('T')[0]
+        //             : '';
 
-                // --- Presentación
-                form.elements['formato'].value = indicador.formato || '';
-                form.elements['comentarios'].value = indicador.comentarios || '';
+        //         // --- Presentación
+        //         form.elements['formato'].value = indicador.formato || '';
+        //         form.elements['comentarios'].value = indicador.comentarios || '';
 
-                // --- Metas que no requieren selects dinámicos
-                form.elements['meta_tipo'].value = indicador.meta_tipo || '';
-                mostrarCamposMeta();
+        //         // --- Metas que no requieren selects dinámicos
+        //         form.elements['meta_tipo'].value = indicador.meta_tipo || '';
+        //         mostrarCamposMeta();
 
-                if (indicador.meta_tipo == 1) {
-                    form.elements['unico_valor'].value = indicador.unico_valor || '';
-                    form.elements['unico_eval'].value = indicador.unico_eval || '';
-                    form.elements['unico_acepta'].value = indicador.unico_acepta || '';
-                    form.elements['unico_riesgo'].value = indicador.unico_riesgo || '';
-                    form.elements['unico_critico'].value = indicador.unico_critico || '';
-                } else if (indicador.meta_tipo == 2) {
-                    form.elements['rango_desde'].value = indicador.rango_desde || '';
-                    form.elements['rango_hasta'].value = indicador.rango_hasta || '';
-                } else if (indicador.meta_tipo == 3) {
-                    form.elements['tenden_tipo'].value = indicador.tenden_tipo || '';
-                    form.elements['tenden_refe'].value = indicador.tenden_refe || '';
-                }
-
-                // --- Mostrar el formulario
-                form.style.display = 'block';
-                form.scrollIntoView({ behavior: 'smooth' });
-
-            } catch (error) {
-                console.error('Error al cargar indicador parcialmente:', error);
-                alert('No se pudo cargar el indicador parcialmente.');
-            }
-        }
+        //         if (indicador.meta_tipo == 1) {
+        //             form.elements['unico_valor'].value = indicador.unico_valor || '';
+        //             form.elements['unico_eval'].value = indicador.unico_eval || '';
+        //             form.elements['unico_acepta'].value = indicador.unico_acepta || '';
+        //             form.elements['unico_riesgo'].value = indicador.unico_riesgo || '';
+        //             form.elements['unico_critico'].value = indicador.unico_critico || '';
+        //         } else if (indicador.meta_tipo == 2) {
+        //             form.elements['rango_desde'].value = indicador.rango_desde || '';
+        //             form.elements['rango_hasta'].value = indicador.rango_hasta || '';
+        //         } else if (indicador.meta_tipo == 3) {
+        //             form.elements['tenden_tipo'].value = indicador.tenden_tipo || '';
+        //             form.elements['tenden_refe'].value = indicador.tenden_refe || '';
+        //         }
 
 
 
+        //         // --- Mostrar el formulario
+        //         form.style.display = 'block';
+        //         form.scrollIntoView({ behavior: 'smooth' });
 
+        //         const div2 = document.getElementById("appContent");
+        //         div2.style.display = "none";
 
+        //         const div = document.getElementById("appMainCarga");
+        //         div.style.display = "block"; // o usar "flex", según tu diseño
 
+        //         window.scrollTo({ top: 0, behavior: "smooth" });
+
+        //     } catch (error) {
+        //         console.error('Error al cargar indicador parcialmente:', error);
+        //         alert('No se pudo cargar el indicador parcialmente.');
+        //     }
+        // }
 
 
         // #region Función para eliminar un indicador
@@ -2336,7 +2714,7 @@
             if (!confirmado) return;
 
             try {
-                const response = await fetch(`/api/indicadores/${codigo_identificatorio}`, {
+                const response = await fetch(`/api/indicadores/delete/${codigo_identificatorio}`, {
                     method: 'DELETE'
                 });
 
@@ -2354,92 +2732,7 @@
         }
         // #endregion
 
-        // Función para agregar un nuevo indicador
-        function agregarIndicador() {
-            // alert('Redirigiendo al formulario de creación de indicador...');
-
-            const div2 = document.getElementById("appContent");
-            div2.style.display = "none";
-
-            const div = document.getElementById("appMainCarga");
-            div.style.display = "block"; // o usar "flex", según tu diseño
-
-            window.scrollTo({ top: 0, behavior: "smooth" });
-
-            // window.location.href = 'kpi-indicadoresCarga.html'
-            // // Aquí iría la lógica para ir al formulario de creación
-            // console.log('Agregar nuevo indicador');
-        }
-
-        // Función para exportar la lista de indicadores
-
-        function exportarIndicadores() {
-            alert('Exportando lista de indicadores...');
-            // Aquí iría la lógica para exportar (CSV, Excel, etc.)
-            console.log('Exportar indicadores');
-        }
-
-        async function cargarResponsables() {
-            const select = document.getElementById('responsable');
-
-            try {
-                const response = await fetch('/usuarios');
-                if (!response.ok) throw new Error('No se pudieron obtener los usuarios');
-                const usuarios = await response.json();
-
-                // Filtrar solo activos (opcional)
-                const activos = usuarios.filter(u => u.estado === 'activo');
-
-                activos.forEach(u => {
-                    const option = document.createElement('option');
-                    option.value = u.legajo; // este será el valor enviado al backend
-                    option.textContent = `${u.apellido}, ${u.nombres}`; // lo que se muestra al usuario
-                    select.appendChild(option);
-                });
-
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        // Llamar la función al cargar el formulario
-        cargarResponsables();
-
-        //  llena sectores
-        const API_SECTORES = '/api/sectores'; // Reemplazá con la ruta real
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const response = await fetch(API_SECTORES);
-                const sectores = await response.json();
-                llenarSelectUnidades(sectores);
-            } catch (error) {
-                console.error('Error al cargar sectores:', error);
-            }
-        });
-
-        function llenarSelectUnidades(sectores) {
-            const select = document.getElementById('destino');
-            sectores.forEach(sector => {
-                const opcion = document.createElement('option');
-                opcion.value = sector.id;
-                opcion.textContent = obtenerNombreJerarquico(sector, sectores);
-                select.appendChild(opcion);
-            });
-        }
-
-        // (opcional) Mostrar estructura jerárquica si los sectores tienen padres
-        function obtenerNombreJerarquico(sector, todos) {
-            const cadena = [sector.nombre];
-            let actual = sector;
-            while (actual.sector_padre_id) {
-                actual = todos.find(s => s.id === actual.sector_padre_id);
-                if (actual) cadena.unshift(actual.nombre);
-            }
-            return cadena.join(' > ');
-        }
-
-        async function cargarIndicadores() {
+        async function cargarIndicadoresXXX() {
             try {
                 const response = await fetch('/api/indicadores'); // Ruta a tu backend
                 const indicadores = await response.json();
@@ -2461,8 +2754,6 @@
                 totalBadge.textContent = `${indicadores.length} indicadores`;
 
                 for (const ind of indicadores) {
-
-                    console.log('criticidad: ' + ind.criticidad_id);
                     const fila = document.createElement('tr');
 
                     // Criticidad
@@ -2531,77 +2822,199 @@
             }
         }
 
-        function getClaseCriticidad(criticidad) {
-            switch (criticidad) {
-                case 1:
-                    return 'Alta';
-                case 2:
-                    return 'Media';
-                case 3:
-                    return 'Baja';
-                default:
-                    return '';
-            }
-        }
+        // let tablaIndicadores; // variable global para la instancia
 
-        function getClaseCategoria(categoria) {
-            switch (categoria) {
-                case 1:
-                    return 'Eficiencia';
-                case 2:
-                    return 'Eficacia';
-                case 3:
-                    return 'Calidad';
-                case 4:
-                    return 'Productividad';
-                default:
-                    return '';
-            }
-        }
+        // async function cargarIndicadores() {
+        //     try {
+        //         const response = await fetch('/api/indicadores'); // Ruta a tu backend
+        //         const indicadores = await response.json();
 
-        // Llamar a la función cuando cargue la página
-        document.addEventListener('DOMContentLoaded', cargarIndicadores);
+        //         const tbody = document.getElementById('tbodyIndicadores');
+        //         const emptyState = document.getElementById('emptyState');
+        //         const totalBadge = document.getElementById('totalIndicadores');
 
-        async function obtenerUsuarioPorLegajo(responsable) {
+        //         // Limpiar tabla
+        //         tbody.innerHTML = '';
+
+        //         if (indicadores.length === 0) {
+        //             emptyState.style.display = 'block';
+        //             totalBadge.textContent = '0 indicadores';
+        //             if (tablaIndicadores) tablaIndicadores.clear().draw(); // limpiar si ya estaba inicializada
+        //             return;
+        //         }
+
+        //         emptyState.style.display = 'none';
+        //         totalBadge.textContent = `${indicadores.length} indicadores`;
+
+        //         // Generar filas
+        //         for (const ind of indicadores) {
+        //             const fila = document.createElement('tr');
+
+        //             let clase_criticidad = getClaseCriticidad(ind.criticidad_id);
+        //             let clase_categoria = getClaseCategoria(ind.categoria_id);
+        //             const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
+        //             const sectores = await obtenerSectoresPorUnidad(ind.destino);
+
+        //             fila.innerHTML = `
+        //         <td>${ind.codigo_id}</td>
+        //         <td>${ind.nombre}</td>
+        //         <td>
+        //             <span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">
+        //                 ${ind.dimension_id}
+        //             </span>
+        //         </td>
+        //         <td>${clase_categoria}</td>
+        //         <td>${sectores.nombre}</td>
+        //         <td>${usuario.nombres} ${usuario.apellido}</td>
+        //         <td>${clase_criticidad}</td>
+        //         <td>${ind.frecuencia_medicion}</td>
+        //         <td>
+        //             <span class="tendencia-${ind.tenden_tipo}">
+        //                 <i class="${getIconoTendencia(ind.tenden_tipo)} me-1"></i>
+        //                 ${ind.tenden_tipo || ind.meta_tipo}
+        //             </span>
+        //         </td>
+        //         <td class="icon-only-actions">
+        //             <button class="btn btn-primary" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
+        //                 <i class="fas fa-eye"></i>
+        //             </button>
+        //             <button class="btn btn-warning" title="Editar" onclick="editarIndicador('${ind.codigo_id}')">
+        //                 <i class="fas fa-edit"></i>
+        //             </button>
+        //             <button class="btn btn-danger" title="Eliminar" onclick="eliminarIndicador('${ind.codigo_id}')">
+        //                 <i class="fas fa-trash"></i>
+        //             </button>
+        //         </td>
+        //     `;
+        //             tbody.appendChild(fila);
+        //         }
+
+        //         // Inicializar o refrescar DataTable
+        //         if (!tablaIndicadores) {
+        //             tablaIndicadores = $('#tablaIndicadores').DataTable({
+        //                 responsive: true,
+        //                 autoWidth: false,
+        //                 order: [[0, 'asc']]
+        //             });
+        //         } else {
+        //             tablaIndicadores.clear().destroy(); // limpiar instancia anterior
+        //             tablaIndicadores = $('#tablaIndicadores').DataTable({
+        //                 responsive: true,
+        //                 autoWidth: false,
+        //                 order: [[0, 'asc']]
+        //             });
+        //         }
+
+        //     } catch (error) {
+        //         console.error('Error cargando indicadores:', error);
+        //         alert('No se pudieron cargar los indicadores.');
+        //     }
+        // }
+
+        let tablaIndicadores; // instancia global
+
+        async function cargarIndicadores() {
             try {
-                const response = await fetch(`/usuarios/${responsable}`);
+                const response = await fetch('/api/indicadores');
+                const indicadores = await response.json();
 
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        console.warn('Usuario no encontrado');
-                        return null;
-                    }
-                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
+                // Transformamos los datos para que DataTable los entienda
+                const datosTabla = await Promise.all(indicadores.map(async (ind) => {
+                    const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
+                    const sectores = await obtenerSectoresPorUnidad(ind.destino);
+
+                    return {
+                        codigo: ind.codigo_id,
+                        nombre: ind.nombre,
+                        dimension: `<span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">${ind.dimension_id}</span>`,
+                        categoria: getClaseCategoria(ind.categoria_id),
+                        sectores: sectores.nombre,
+                        responsable: `${usuario.nombres} ${usuario.apellido}`,
+                        criticidad: getClaseCriticidad(ind.criticidad_id),
+                        frecuencia: ind.freq_medicion,
+                        tendencia: `<span class="tendencia-${ind.tenden_tipo}">
+                      <i class="${getIconoTendencia(ind.tenden_tipo)} me-1"></i>
+                      ${ind.tenden_tipo || ind.meta_tipo}
+                    </span>`,
+                        acciones: `
+                        <td class="icon-only-actions">
+                            <button class="btn btn-primary btn-sm" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-warning btn-sm" title="Editar" onclick="editarIndicador('${ind.codigo_id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" title="Eliminar" onclick="eliminarIndicador('${ind.codigo_id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                        `
+                    };
+                }));
+
+                // Inicializar tabla la primera vez
+                if (!tablaIndicadores) {
+                    tablaIndicadores = $('#tablaIndicadores').DataTable({
+                        data: datosTabla,
+                        columns: [
+                            { data: 'codigo', title: 'Código' },
+                            { data: 'nombre', title: 'Nombre' },
+                            { data: 'dimension', title: 'Dimensión' },
+                            { data: 'categoria', title: 'Categoría' },
+                            { data: 'sectores', title: 'Sectores' },
+                            { data: 'responsable', title: 'Responsable' },
+                            { data: 'criticidad', title: 'Criticidad' },
+                            { data: 'frecuencia', title: 'Frecuencia' },
+                            { data: 'tendencia', title: 'Tendencia' },
+                            { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
+                        ],
+                        responsive: true,
+                        autoWidth: false,
+                        order: [[0, 'asc']]
+                    });
+                } else {
+                    // Actualizar datos sin destruir la tabla
+                    tablaIndicadores.clear().rows.add(datosTabla).draw();
                 }
-                const usuario = await response.json();
-                return usuario;
-            } catch (err) {
-                console.error('Error en fetch:', err);
-                return null;
+
+                // Mostrar total y empty state
+                const totalBadge = document.getElementById('totalIndicadores');
+                const emptyState = document.getElementById('emptyState');
+
+                if (datosTabla.length === 0) {
+                    emptyState.style.display = 'block';
+                    totalBadge.textContent = '0 indicadores';
+                } else {
+                    emptyState.style.display = 'none';
+                    totalBadge.textContent = `${datosTabla.length} indicadores`;
+                }
+
+            } catch (error) {
+                console.error('Error cargando indicadores:', error);
+                alert('No se pudieron cargar los indicadores.');
             }
         }
 
-        async function obtenerSectoresPorUnidad(unidad) {
-            try {
-                const response = await fetch(`/sectores/${unidad}`);
 
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        console.warn('Sector no encontrado');
-                        return null;
-                    }
-                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
-                }
-                const sector = await response.json();
-                return sector;
-            } catch (err) {
-                console.error('Error en fetch:', err);
-                return null;
-            }
+        function agregarIndicador() {
+            // alert('Redirigiendo al formulario de creación de indicador...');
+
+            const div2 = document.getElementById("appContent");
+            div2.style.display = "none";
+
+            const div = document.getElementById("appMainCarga");
+            div.style.display = "block"; // o usar "flex", según tu diseño
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function exportarIndicadores() {
+            alert('Exportando lista de indicadores...');
+            // Aquí iría la lógica para exportar (CSV, Excel, etc.)
+            console.log('Exportar indicadores');
         }
 
         async function verDetalleIndicador(codigo) {
-
             //  lee tabla de codigos
             const response = await fetch('/api/codigos')
             if (!response.ok) throw new Error('No se pudo obtener los codigos.');
@@ -2832,7 +3245,6 @@
                     tabla.appendChild(fila);
                 }
 
-
                 const modal = new bootstrap.Modal(document.getElementById('modalDetalleIndicador'));
                 modal.show();
 
@@ -2841,6 +3253,355 @@
                 alert('No se pudo obtener el detalle del indicador.');
             }
         }
+
+        async function cargarResponsables() {
+            const select = document.getElementById('responsable');
+
+            try {
+                const response = await fetch('/usuarios');
+                if (!response.ok) throw new Error('No se pudieron obtener los usuarios');
+                const usuarios = await response.json();
+
+                // Filtrar solo activos (opcional)
+                const activos = usuarios.filter(u => u.estado === 'activo');
+
+                activos.forEach(u => {
+                    const option = document.createElement('option');
+                    option.value = u.legajo; // este será el valor enviado al backend
+                    option.textContent = `${u.apellido}, ${u.nombres}`; // lo que se muestra al usuario
+                    select.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function llenarSelectUnidades(sectores) {
+            const select = document.getElementById('destino');
+            sectores.forEach(sector => {
+                const opcion = document.createElement('option');
+                opcion.value = sector.id;
+                opcion.textContent = obtenerNombreJerarquico(sector, sectores);
+                select.appendChild(opcion);
+            });
+        }
+
+        function obtenerNombreJerarquico(sector, todos) { // (opcional) Mostrar estructura jerárquica si los sectores tienen padres
+            const cadena = [sector.nombre];
+            let actual = sector;
+            while (actual.sector_padre_id) {
+                actual = todos.find(s => s.id === actual.sector_padre_id);
+                if (actual) cadena.unshift(actual.nombre);
+            }
+            return cadena.join(' > ');
+        }
+
+        function getClaseCriticidad(criticidad) {
+            switch (criticidad) {
+                case 1:
+                    return 'Alta';
+                case 2:
+                    return 'Media';
+                case 3:
+                    return 'Baja';
+                default:
+                    return '';
+            }
+        }
+
+        function getClaseCategoria(categoria) {
+            switch (categoria) {
+                case 1:
+                    return 'Eficiencia';
+                case 2:
+                    return 'Eficacia';
+                case 3:
+                    return 'Calidad';
+                case 4:
+                    return 'Productividad';
+                default:
+                    return '';
+            }
+        }
+
+        async function obtenerUsuarioPorLegajo(responsable) {
+            try {
+                const response = await fetch(`/usuarios/${responsable}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn('Usuario no encontrado');
+                        return null;
+                    }
+                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
+                }
+                const usuario = await response.json();
+                return usuario;
+            } catch (err) {
+                console.error('Error en fetch:', err);
+                return null;
+            }
+        }
+
+        async function obtenerSectoresPorUnidad(unidad) {
+            try {
+                const response = await fetch(`/sectores/${unidad}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn('Sector no encontrado');
+                        return null;
+                    }
+                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
+                }
+                const sector = await response.json();
+                return sector;
+            } catch (err) {
+                console.error('Error en fetch:', err);
+                return null;
+            }
+        }
+
+        // async function verDetalleIndicador(codigo) {
+        //     //  lee tabla de codigos
+        //     const response = await fetch('/api/codigos')
+        //     if (!response.ok) throw new Error('No se pudo obtener los codigos.');
+        //     const codigos = await response.json();
+
+        //     console.table(codigos)
+
+        //     // armar un mapa clave→valor
+        //     const codigosMap = {};
+        //     codigos.forEach(c => {
+        //         codigosMap[c.cod_tabla] = c.cod_nombre;
+        //     });
+
+        //     function getNombreCodigo(codigo) {
+        //         return codigosMap[codigo] || '-';
+        //     }
+
+        //     try {
+        //         const response = await fetch(`/api/indicadores/${codigo}`);
+        //         if (!response.ok) throw new Error('No se pudo obtener el indicador.');
+
+        //         const indicador = await response.json();
+        //         const tabla = document.getElementById('tablaDetalleIndicador');
+        //         tabla.innerHTML = '';
+
+        //         console.log('comentarios:' + indicador.comentarios)
+        //         let tipoIndicador = '-';
+        //         switch (indicador.tipo_id) {
+        //             case 1:
+        //                 tipoIndicador = 'Estratégico';
+        //                 break;
+        //             case 2:
+        //                 tipoIndicador = 'Táctico';
+        //                 break;
+        //             case 3:
+        //                 tipoIndicador = 'Operativo';
+        //                 break;
+        //         }
+
+        //         let dimensionIndicador = '-';
+        //         switch (indicador.dimension_id) {
+        //             case 1:
+        //                 dimensionIndicador = 'Financiera';
+        //                 break;
+        //             case 2:
+        //                 dimensionIndicador = 'Clientes';
+        //                 break;
+        //             case 3:
+        //                 dimensionIndicador = 'Procesos';
+        //                 break;
+        //             case 4:
+        //                 dimensionIndicador = 'Capital Humano';
+        //                 break;
+        //         }
+
+        //         let categoria_indicador = '-';
+        //         switch (indicador.categoria_id) {
+        //             case 1:
+        //                 categoria_indicador = 'Eficiencia';
+        //                 break;
+        //             case 2:
+        //                 categoria_indicador = 'Eficacia';
+        //                 break;
+        //             case 3:
+        //                 categoria_indicador = 'Calidad';
+        //                 break;
+        //             case 4:
+        //                 categoria_indicador = 'Productividad';
+        //                 break;
+        //         }
+
+
+        //         let criticidad_indicador = '-';
+        //         switch (indicador.criticidad_id) {
+        //             case 1:
+        //                 criticidad_indicador = 'Alta';
+        //                 break;
+        //             case 2:
+        //                 criticidad_indicador = 'Media';
+        //                 break;
+        //             case 3:
+        //                 criticidad_indicador = 'Baja';
+        //                 break;
+        //         }
+
+        //         let tipoMetaTexto = '-';
+        //         switch (indicador.meta_tipo) {
+        //             case 1:
+        //                 tipoMetaTexto = 'Valor único';
+        //                 break;
+        //             case 2:
+        //                 tipoMetaTexto = 'Rango de valores';
+        //                 break;
+        //             case 3:
+        //                 tipoMetaTexto = 'Tendencia';
+        //                 break;
+        //         }
+
+        //         let tipoEvaluacion = '-';
+        //         switch (indicador.unico_eval) {
+        //             case 1:
+        //                 tipoEvaluacion = 'Superable positiva - Más es mejor';
+        //                 break;
+        //             case 2:
+        //                 tipoEvaluacion = 'Límite máximo - No debe superarse';
+        //                 break;
+        //             case 3:
+        //                 tipoEvaluacion = 'Tolerancia simétrica - Penaliza desviaciones';
+        //                 break;
+        //             case 4:
+        //                 tipoEvaluacion = 'Menor es mejor - Más es negativo - Distancia creciente es mejor';
+        //                 break;
+        //             case 5:
+        //                 tipoEvaluacion = 'Valor exacto - Cero tolerancia';
+        //                 break;
+        //         }
+
+        //         let formatoPresentacion = '-';
+        //         switch (indicador.formato) {
+        //             case 1:
+        //                 formatoPresentacion = 'Tabla';
+        //                 break;
+        //             case 2:
+        //                 formatoPresentacion = 'Grafico';
+        //                 break;
+        //             case 3:
+        //                 formatoPresentacion = 'Dashboard';
+        //                 break;
+        //         }
+        //         console.log("Valor actual de unico_acepta:", indicador.unico_acepta);
+
+        //         // --- Campos comunes a todos los indicadores
+        //         const campos = {
+        //             "Código": indicador.codigo_id,
+        //             "Nombre": indicador.nombre,
+        //             "Descripción": indicador.descripcion || '-',
+        //             "Objetivo": indicador.objetivo || '-',
+        //             "Destino": `${indicador.destino || '-'} - ${indicador.destino_nombre || ''}`,
+        //             "Responsable": indicador.responsable
+        //                 ? `${indicador.responsable} - ${indicador.responsable_nombres || ''} ${indicador.responsable_apellido || ''}`
+        //                 : '-',
+
+        //             // 👇 agrego un marcador
+        //             "__sep1__": null,
+
+        //             "Tipo": `${indicador.tipo_id} - ${tipoIndicador}` || '-',
+        //             "Dimensión": `${indicador.dimension_id} - ${dimensionIndicador}` || '-',
+        //             "Categoría": `${indicador.categoria_id} - ${categoria_indicador}` || '-',
+        //             "Criticidad": `${indicador.criticidad_id} - ${criticidad_indicador}` || '-',
+
+        //             // 👇 agrego un marcador
+        //             "__sep2__": null,
+
+        //             "Tipo de Meta": `${indicador.meta_tipo} - ${tipoMetaTexto}` || '-',
+        //         }
+
+        //         // --- Agregar campos según el tipo de meta
+        //         if (indicador.meta_tipo === 1) {
+        //             Object.assign(campos, {
+        //                 "Valor Meta": indicador.unico_valor || '-',
+        //                 "Método de evaluación": `${indicador.unico_eval} - ${tipoEvaluacion}` || '-',
+        //                 "Márgen de Aceptación": `${Number(indicador.unico_acepta).toFixed(2)} %`,
+        //                 "Márgen de Riesgo": `${Number(indicador.unico_riesgo).toFixed(2)} %`,
+        //                 "Márgen Crítico": `${Number(indicador.unico_critico).toFixed(2)} %`,
+        //                 // 👇 agrego un marcador
+        //                 "__sep3__": null,
+        //             });
+        //         } else if (indicador.meta_tipo === 2) {
+        //             Object.assign(campos, {
+        //                 "Rango Desde": indicador.rango_desde || '-',
+        //                 "Rango Hasta": indicador.rango_hasta || '-',
+        //                 "Márgen de Aceptación rango": indicador.rango_acepta || '-',
+        //                 "Margen de Riesgo rango": indicador.rango_riesgo || '-',
+        //                 "Margen Crítico rango": indicador.rango_critico || '-',
+        //                 // 👇 agrego un marcador
+        //                 "__sep4__": null,
+        //             });
+        //         } else if (indicador.meta_tipo === 3) {
+        //             Object.assign(campos, {
+        //                 "Tendencia Tipo": indicador.tenden_tipo || '-',
+        //                 "Tendencia Referencia": indicador.tenden_refe || '-',
+        //                 "Margen de Aceptación tend": indicador.tenden_acepta || '-',
+        //                 "Margen de Riesgo tend": indicador.tenden_riesgo || '-',
+        //                 "Margen Crítico tend": indicador.tenden_critico || '-',
+        //                 // 👇 agrego un marcador
+        //                 "__sep5__": null,
+        //             });
+        //         }
+
+        //         // --- Otros campos comunes
+        //         Object.assign(campos, {
+
+        //             "Fuente de Datos": indicador.fuente_datos || '-',
+        //             "Fórmula de Cálculo": indicador.formula_calculo || '-',
+        //             "Unidad de Medida": getNombreCodigo(indicador.unidad_medida),
+        //             "Frecuencia de Medición": getNombreCodigo(indicador.freq_medicion),
+        //             "Tolerancia de Plazo": getNombreCodigo(indicador.tolerancia_plazo),
+        //             "Tolerancia Q": indicador.tolerancia_q || '-',
+        //             "Frecuencia de Reporte": getNombreCodigo(indicador.freq_reporte),
+        //             "Fecha de Inicio": indicador.fecha_inicio || '-',
+        //             "Formato de Presentación": `${indicador.formato} - ${formatoPresentacion}` || '-',
+        //             "Comentarios": indicador.comentarios || '-'
+        //         });
+
+        //         for (const [campo, valor] of Object.entries(campos)) {
+
+        //             if (campo.startsWith("__sep")) {
+        //                 // insertar fila separadora
+        //                 const sepRow = document.createElement('tr');
+        //                 const sepCell = document.createElement('td');
+        //                 sepCell.colSpan = 2;
+        //                 sepCell.innerHTML = "&nbsp;"; // espacio en blanco
+        //                 sepRow.appendChild(sepCell);
+        //                 tabla.appendChild(sepRow);
+        //                 continue; // pasar al siguiente campo
+        //             }
+        //             const fila = document.createElement('tr');
+
+        //             const th = document.createElement('th');
+        //             th.textContent = campo;
+        //             th.style.width = '200px'; // ancho fijo
+        //             th.style.textAlign = 'left'; // opcional, alinear texto a la izquierda
+
+        //             const td = document.createElement('td');
+        //             td.textContent = valor;  // <-- seguro, no interpreta HTML
+        //             fila.appendChild(th);
+        //             fila.appendChild(td);
+        //             tabla.appendChild(fila);
+        //         }
+
+        //         const modal = new bootstrap.Modal(document.getElementById('modalDetalleIndicador'));
+        //         modal.show();
+
+        //     } catch (error) {
+        //         console.error('Error al obtener el detalle:', error);
+        //         alert('No se pudo obtener el detalle del indicador.');
+        //     }
+        // }
 
     </script>
 
@@ -2859,14 +3620,30 @@
     <!--end::Required Plugin(AdminLTE)-->
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-            console.log('✅ Tooltips inicializados:', tooltipList.length);
+        document.addEventListener("DOMContentLoaded", async () => {
+            // 1. Cargar indicadores y responsables
+            cargarIndicadores();
+            cargarResponsables();
+
+            // 2. Llenar sectores
+            const API_SECTORES = "/api/sectores"; // Reemplazá con la ruta real
+            try {
+                const response = await fetch(API_SECTORES);
+                const sectores = await response.json();
+                llenarSelectUnidades(sectores);
+            } catch (error) {
+                console.error("Error al cargar sectores:", error);
+            }
+
+            // 3. Inicializar tooltips Bootstrap
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(
+                (el) => new bootstrap.Tooltip(el)
+            );
+            console.log("✅ Tooltips inicializados:", tooltipList.length);
         });
     </script>
+
 
 </body>
 
