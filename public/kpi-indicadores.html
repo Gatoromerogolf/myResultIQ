@@ -1984,7 +1984,7 @@
                     const wasEdit = Boolean(form.querySelector('#id')?.value);
 
                     // Llamamos a procesarFormulario pasando el form
-                    const form = document.getElementById('indicadorForm');
+                    // const form = document.getElementById('indicadorForm');
                     const resultado = await procesarFormulario(form);
 
                     if (resultado && resultado.success) {
@@ -1999,8 +1999,8 @@
                         if (idInput) idInput.value = '';
 
                         // Ocultar / mostrar contenedores (ajustá los IDs a tus contenedores reales)
-                        const formContainer = document.getElementById('formContainer');   // <- ajustar si tu contenedor tiene otro id
-                        const tablaContainer = document.getElementById('tablaContainer'); // <- ajustar si tu contenedor tiene otro id
+                        const formContainer = document.getElementById('appMainCarga');   // <- ajustar si tu contenedor tiene otro id
+                        const tablaContainer = document.getElementById('appContent'); // <- ajustar si tu contenedor tiene otro id
                         if (formContainer && tablaContainer) {
                             formContainer.style.display = 'none';
                             tablaContainer.style.display = 'block';
