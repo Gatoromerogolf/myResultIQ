@@ -424,6 +424,11 @@
             appearance: textfield;
             /* Estándar */
         }
+
+        .btn-xs {
+            padding: 0.15rem 0.35rem;
+            font-size: 0.75rem;
+        }
     </style>
 </head>
 <!--end::Head-->
@@ -729,20 +734,18 @@
                                             <!-- <table class="table table-striped table-hover mb-0"> -->
                                             <table id="tablaIndicadores"
                                                 class="table table-striped table-bordered table-sm mb-0"
-                                                style="border: 2px solid #0d6efd;">
+                                                style="border: 1px solid #2a2a2b;">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th scope="col">Código</th>
+                                                        <!-- <th scope="col">Código codigo codigo</th>
                                                         <th scope="col">Nombre</th>
                                                         <th scope="col">Dimensión</th>
-                                                        <!-- <th scope="col">Categoría</th> -->
                                                         <th scope="col">Descripción</th>
                                                         <th scope="col">Destino</th>
                                                         <th scope="col">Responsable</th>
                                                         <th scope="col">Criticidad</th>
                                                         <th scope="col">Frecuencia</th>
-                                                        <!-- <th scope="col">Tendencia</th> -->
-                                                        <th scope="col">Acciones</th>
+                                                        <th scope="col">Acciones</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody id="tbodyIndicadores">
@@ -2024,30 +2027,21 @@
                         codigo: ind.codigo_id,
                         nombre: ind.nombre,
                         dimension: `<span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">${getClaseDimension(ind.dimension_id)}</span>`,
-                        // categoria: getClaseCategoria(ind.categoria_id),
                         descripcion: ind.descripcion,
                         sectores: sectores.nombre,
                         responsable: `${usuario.nombres} ${usuario.apellido}`,
-                        // criticidad: getClaseCriticidad(ind.criticidad_id),
                         objetivo: ind.objetivo,
-                        // frecuencia: ind.freq_medicion,
-
                         frecuencia: CodigosService.getNombreCodigo(ind.freq_reporte),
-
-                        //     tendencia: `<span class="tendencia-${ind.tenden_tipo}">
-                        //   <i class="${getIconoTendencia(ind.tenden_tipo)} me-1"></i>
-                        //   ${ind.tenden_tipo || ind.meta_tipo}
-                        // </span>`,
                         acciones: `
                         <td class="icon-only-actions">
-                            <button class="btn btn-primary btn-sm" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
-                                <i class="fas fa-eye"></i>
+                            <button class="btn btn-primary btn-xs" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                <i class="fas fa-eye fa-xs"></i>
                             </button>
-                            <button class="btn btn-warning btn-sm" title="Editar" onclick="editarIndicador('${ind.codigo_id}')">
-                                <i class="fas fa-edit"></i>
+                            <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.codigo_id}')">
+                                <i class="fas fa-edit fa-xs"></i>
                             </button>
-                            <button class="btn btn-danger btn-sm" title="Eliminar" onclick="eliminarIndicador('${ind.codigo_id}')">
-                                <i class="fas fa-trash"></i>
+                            <button class="btn btn-danger btn-xs" title="Eliminar" onclick="eliminarIndicador('${ind.codigo_id}')">
+                                <i class="fas fa-trash fa-xs"></i>
                             </button>
                         </td>
                         `
@@ -2062,15 +2056,23 @@
                             { data: 'codigo', title: 'Código' },
                             { data: 'nombre', title: 'Nombre' },
                             { data: 'dimension', title: 'Dimensión' },
-                            // { data: 'categoria', title: 'Categoría' },
                             { data: 'descripcion', title: 'Descripción' },
-                            { data: 'sectores', title: 'Sectores' },
+                            { data: 'sectores', title: 'Destino' },
                             { data: 'responsable', title: 'Responsable' },
-                            // { data: 'criticidad', title: 'Criticidad' },
                             { data: 'objetivo', title: 'Objetivo' },
                             { data: 'frecuencia', title: 'Reporte' },
-                            // { data: 'tendencia', title: 'Tendencia' },
                             { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
+                        ],
+                        columnDefs: [
+                            { width: "25px", targets: 8 },   // columna Acciones angosta
+                            { width: "30px", targets: 0 },   // Código un poco angosto
+                            { width: "50px", targets: 1 },  // Nombre más ancho
+                            { width: "15px", targets: 2 },   // dimensión 
+                            { width: "50px", targets: 3 },  // Nombre más ancho
+                            { width: "40px", targets: 4 },   // sectores
+                            { width: "50px", targets: 5 },  // responsable
+                            { width: "40px", targets: 6 },   // objetivo 
+                            { width: "25px", targets: 7 },  // reporte
                         ],
                         responsive: true,
                         autoWidth: false,
@@ -2120,22 +2122,7 @@
         }
 
         async function verDetalleIndicador(codigo) {
-            //  lee tabla de codigos
-            // const response = await fetch('/api/codigos')
-            // if (!response.ok) throw new Error('No se pudo obtener los codigos.');
-            // const codigos = await response.json();
 
-            // console.table(codigos)
-
-            // armar un mapa clave→valor
-            // const codigosMap = {};
-            // codigos.forEach(c => {
-            //     codigosMap[c.cod_tabla] = c.cod_nombre;
-            // });
-
-            // function getNombreCodigo(codigo) {
-            //     return codigosMap[codigo] || '-';
-            // }
 
             try {
                 const response = await fetch(`/api/indicadores/${codigo}`);

@@ -446,9 +446,8 @@ app.post('/api/indicadores', async (req, res) => {
 });
 
 
-
 // // 🚫🚫🚫 Eliminar indicador
-app.delete('/api/indicadores/:codigo', async (req, res) => {
+app.deleteXXX('/api/indicadores/:codigo', async (req, res) => {
     try {
         const { codigo } = req.params;
         await pool.query('DELETE FROM indicadores WHERE codigo_identificatorio = ?', [codigo]);
@@ -458,6 +457,7 @@ app.delete('/api/indicadores/:codigo', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
 
 // // 🚫🚫🚫 Crear usuario con imagen
 app.post('/usuarios', upload.single('foto'), async (req, res) => {
