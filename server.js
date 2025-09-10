@@ -1127,6 +1127,23 @@ app.get('/api/codigos', async (req, res) => {
 
 
 
+// // 🚫🚫🚫 Obtener todos las mediciones
+app.get('/api/mediciones', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM mediciones');
+        res.json({
+            success: true,
+            total: rows.length,
+            data: rows
+        });
+    } catch (err) {
+        console.error('Error al obtener mediciones:', err);
+        res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+});
+
+
+
 const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
