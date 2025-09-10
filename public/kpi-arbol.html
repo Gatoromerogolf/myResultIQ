@@ -459,6 +459,7 @@
                     </div>
                 </div>
             </section>
+
             <section class="content mt-3" id="InfoIndicador" style="display: block; margin-left: 10px;">
                 <div class="container-fluid">
                     <div class="card card-primary card-outline">
@@ -469,20 +470,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="detalle" style="flex: 2;  padding: 10px; margin-left: 20px;">
+                        <div id="detalle2" style="flex: 2;  padding: 10px; margin-left: 20px;">
                             <p>Seleccione un indicador para ver el detalle aquí.</p>
                         </div>
                     </div>
                 </div>
-    </div>
-    <!-- </div> -->
-    </section>
+            </section>
 
-    <footer class="main-footer text-center">
-        <strong>© 2025 - myResultIQ 1.0</strong>
-    </footer>
-    </main>
-    <!--end::App nain-->
+            <footer class="main-footer text-center">
+                <strong>© 2025 - myResultIQ 1.0</strong>
+            </footer>
+        </main>
+        <!--end::App nain-->
     </div>
     <!--end::App Wrapper-->
 
@@ -505,7 +504,7 @@
         </div>
     </div>
     <!--end::Modal del usuario-->
-    </div>
+
     <!-- Modal de Confirmación de Logout -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -524,19 +523,9 @@
             </div>
         </div>
     </div>
-    <script>
-        document.getElementById('confirmLogout').addEventListener('click', function () {
-            // Limpiar lo necesario
-            sessionStorage.clear();
-            localStorage.clear(); // si usás localStorage
-
-            // Redirigir al inicio
-            window.location.href = 'index.html';
-        });
-    </script>
 
     <!-- Modal -->
-    <div class="modal fade" id="indicadoresModal" tabindex="-1" aria-hidden="true">
+    <!-- <div class="modal fade" id="indicadoresModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -552,14 +541,43 @@
                                 <th>Responsable</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaIndicadores"></tbody>
+                        <!-- <tbody id="tablaIndicadores"></tbody> -->
+    <!-- <tbody id="detalle"></tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Modal de detalle del indicador -->
+    <div class="modal fade" id="indicadoresModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalle del Indicador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detalle">
+                    <!-- Aquí se inyecta dinámicamente toda la info del indicador -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!--begin::Script-->
+
+
+
+    <script>
+        document.getElementById('confirmLogout').addEventListener('click', function () {
+            // Limpiar lo necesario
+            sessionStorage.clear();
+            localStorage.clear(); // si usás localStorage
+
+            // Redirigir al inicio
+            window.location.href = 'index.html';
+        });
+    </script>
+
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -567,10 +585,59 @@
 
     <script>
 
+        $(function () {
+            // Inicializar jsTree con lazy-loading
+            $('#arbol').jstree({
+                core: {
+                    data: function (node, cb) {
+                        $.getJSON('/api/arbol-jstree-lazy', { parent: node.id })
+                            .done(cb);
+                    }
+                },
+                plugins: ["types", "search", "wholerow"],
+                types: {
+                    sector: { icon: "fas fa-sitemap text-primary" },
+                    indicador: { icon: "fas fa-chart-line text-success" }
+                }
+            });
+
+            // Evento al seleccionar un nodo
+            $('#arbol').on("select_node.jstree", function (e, data) {
+                if (data.node.type === "indicador") {
+                    const ind = data.node.original; // Todos los campos enviados desde el backend
+
+                    // Llenar modal con todos los datos verticalmente
+                const contenido = `
+                <div class="detalle-titulo">${ind.nombre}</div>
+                <p><span class="detalle-label">Código:</span> ${ind.codigo_id || ''}</p>
+                <p><span class="detalle-label">Descripción:</span> ${ind.descripcion || ''}</p>
+                <p><span class="detalle-label">Objetivo:</span> ${ind.objetivo || ''}</p>
+                <p><span class="detalle-label">Dimensión:</span> ${ind.dimension_id || ''}</p>
+                <p><span class="detalle-label">Categoría:</span> ${ind.categoria_id || ''}</p>
+                <p><span class="detalle-label">Responsable:</span> ${ind.responsable || ''}</p>
+                <p><span class="detalle-label">Frecuencia de medición:</span> ${ind.freq_medicion || ''}</p>
+                <p><span class="detalle-label">Unidad de medida:</span> ${ind.unidad_medida || ''}</p>
+                <p><span class="detalle-label">Meta objetivo:</span> ${ind.meta_tipo || ''}</p>
+                <p><span class="detalle-label">Comentarios:</span> ${ind.comentarios || ''}</p>
+                <p><span class="detalle-label">Valoración relativa:</span> ${ind.peso_porcentual || ''} %</p>
+                `;
+
+                    // Llenar modal
+                    $('#detalle').html(contenido);
+
+                    // Llenar sección fija en la página
+                    $('#detalle2').html(contenido);
+
+                    // Abrir el modal
+                    new bootstrap.Modal(document.getElementById('indicadoresModal')).show();
+                }
+            });
+        });
+
 
         // Devuelve el array con todos los indicadores de un nodo y sus descendientes
-        function contarIndicadores(nodoId) {
-            const arbol = $.jstree.reference('#tree'); // instancia jsTree
+        function contarIndicadoresXXX(nodoId) {
+            const arbol = $.jstree.reference('#arbol'); // instancia jsTree
             const nodo = arbol.get_node(nodoId);
 
             if (!nodo) return [];
@@ -584,7 +651,7 @@
 
 
         // Actualiza el texto del árbol con la cantidad de indicadores acumulados
-        function actualizarContadores() {
+        function actualizarContadoresXXX() {
             estructura.forEach(nodo => {
                 const listaIndicadores = contarIndicadores(nodo.id);
                 // const total = listaIndicadores.length;
@@ -593,108 +660,35 @@
             });
 
             // Refrescar el árbol para mostrar los textos actualizados
-            const arbol = $('#tree').jstree(true);
+            const arbol = $('#arbol').jstree(true);
             if (arbol) {
                 arbol.settings.core.data = estructura; // reasignar datos actualizados
                 arbol.refresh();
             }
         }
 
-        // Evento al hacer click en un nodo
-        $('#tree').on("select_node.jstree", function (e, data) {
-            const lista = contarIndicadores(data.node.id);
-            const tbody = document.getElementById("tablaIndicadores");
-            tbody.innerHTML = '';
-            lista.forEach(ind => {
-                tbody.innerHTML += `<tr>
-                <td>${ind.id}</td>
-                <td>${ind.nombre}</td>
-                <td>${ind.responsable}</td>
-            </tr>`;
-            });
-            new bootstrap.Modal(document.getElementById('indicadoresModal')).show();
-        });
-    </script>
 
 
-    <script>
-        $(function () {
-            // Inicializar jsTree con carga lazy
-            $('#arbol').jstree({
-                core: {
-                    data: function (node, cb) {
-                        $.getJSON('/api/arbol-jstree-lazy', { parent: node.id })
-                            .done(function (data) {
-                                cb(data);
-                            });
-                    }
-                },
-                plugins: ["types", "search", "wholerow"],
-                types: {
-                    sector: { icon: "fas fa-sitemap text-primary" },
-                    indicador: { icon: "fas fa-chart-line text-success" }
-                }
-            });
+        // <!--begin::OverlayScrollbars Configure-->
 
-            // Evento cuando se selecciona un nodo
-            $('#arbol').on("select_node.jstree", function (e, data) {
-                if (data.node.type === "indicador") {
-                    const texto = data.node.text;
-                    const match = /\(([^)]+)\)$/.exec(texto);
-                    if (match) {
-                        const codigo = match[1];
-                        cargarDetalleIndicador(codigo);
-                    }
-                } else {
-                    $('#detalle').html("<p>Seleccione un indicador para ver el detalle aquí.</p>");
-                }
-            });
-        });
-
-        // Función para traer el detalle del indicador
-        function cargarDetalleIndicador(codigo) {
-            $.getJSON(`/api/indicadores/${codigo}`, function (ind) {
-                $('#detalle').html(`
-            <div class="detalle-titulo">${ind.nombre}</div>
-            <p><span class="detalle-label">Código:</span> ${ind.codigo_identificatorio}</p>
-            <p><span class="detalle-label">Descripción:</span> ${ind.descripcion}</p>
-            <p><span class="detalle-label">Objetivo:</span> ${ind.objetivo || ''}</p>
-            <p><span class="detalle-label">Dimensión:</span> ${ind.dimension || ''}</p>
-            <p><span class="detalle-label">Categoría:</span> ${ind.categoria || ''}</p>
-            <p><span class="detalle-label">Responsable:</span> ${ind.responsable || ''}</p>
-            <p><span class="detalle-label">Frecuencia de medición:</span> ${ind.frecuencia_medicion || ''}</p>
-            <p><span class="detalle-label">Unidad de medida:</span> ${ind.unidad_medida || ''}</p>
-            <p><span class="detalle-label">Meta objetivo:</span> ${ind.meta_objetivo || ''}</p>
-            <p><span class="detalle-label">Comentarios:</span> ${ind.comentarios || ''}</p>
-            <p><span class="detalle-label">Valoración relativa:</span> ${ind.peso_porcentual || ''} %</p>
-        `);
-            }).fail(function () {
-                $('#detalle').html(`<p style="color:red;">Error al cargar el detalle del indicador.</p>`);
-            });
-        }
-
-    </script>
-
-    <!--begin::OverlayScrollbars Configure-->
-    <script>
-        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-        const Default = {
-            scrollbarTheme: 'os-theme-light',
-            scrollbarAutoHide: 'leave',
-            scrollbarClickScroll: true,
-        };
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-            if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
-                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                        theme: Default.scrollbarTheme,
-                        autoHide: Default.scrollbarAutoHide,
-                        clickScroll: Default.scrollbarClickScroll,
-                    },
-                });
-            }
-        });
+        // const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+        // const Default = {
+        //     scrollbarTheme: 'os-theme-light',
+        //     scrollbarAutoHide: 'leave',
+        //     scrollbarClickScroll: true,
+        // };
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+        //     if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
+        //         OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+        //             scrollbars: {
+        //                 theme: Default.scrollbarTheme,
+        //                 autoHide: Default.scrollbarAutoHide,
+        //                 clickScroll: Default.scrollbarClickScroll,
+        //             },
+        //         });
+        //     }
+        // });
     </script>
 
     <!-- apexcharts -->

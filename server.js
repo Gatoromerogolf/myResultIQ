@@ -447,16 +447,16 @@ app.post('/api/indicadores', async (req, res) => {
 
 
 // // 🚫🚫🚫 Eliminar indicador
-app.deleteXXX('/api/indicadores/:codigo', async (req, res) => {
-    try {
-        const { codigo } = req.params;
-        await pool.query('DELETE FROM indicadores WHERE codigo_identificatorio = ?', [codigo]);
-        res.sendStatus(200);
-    } catch (err) {
-        console.error(err);
-        res.sendStatus(500);
-    }
-});
+// app.deleteXXX('/api/indicadores/:codigo', async (req, res) => {
+//     try {
+//         const { codigo } = req.params;
+//         await pool.query('DELETE FROM indicadores WHERE codigo_identificatorio = ?', [codigo]);
+//         res.sendStatus(200);
+//     } catch (err) {
+//         console.error(err);
+//         res.sendStatus(500);
+//     }
+// });
 
 
 // // 🚫🚫🚫 Crear usuario con imagen
@@ -690,7 +690,7 @@ app.get('/api/arbol-jstree', async (req, res) => {
 
         // 2. Traer indicadores
         const [indicadores] = await pool.query(`
-            SELECT id, codigo_identificatorio, nombre, unidad_funcional_id, peso_porcentual
+            SELECT id, codigo_id, nombre, destino, peso_porcentual
             FROM indicadores
         `);
 
@@ -712,8 +712,8 @@ app.get('/api/arbol-jstree', async (req, res) => {
         indicadores.forEach(ind => {
             nodos.push({
                 id: `indicador-${ind.id}`,
-                parent: `sector-${ind.unidad_funcional_id}`,
-                text: `${ind.nombre} (${ind.codigo_identificatorio})`,
+                parent: `sector-${ind.destino}`,
+                text: `${ind.nombre} (${ind.codigo_id})`,
                 weight: ind.peso_porcentual ?? 0, // usar valor guardado
                 icon: "fas fa-chart-line", // ícono de indicador
                 type: "indicador"
@@ -728,95 +728,95 @@ app.get('/api/arbol-jstree', async (req, res) => {
 });
 
 // 🚀 Ruta para lazy loading de jsTree
-app.get('/api/arbol-jstree-lazy-anulada', async (req, res) => {
-    try {
-        const parent = req.query.parent; // "#" o "sector-X"
+// app.get('/api/arbol-jstree-lazy-anulada', async (req, res) => {
+//     try {
+//         const parent = req.query.parent; // "#" o "sector-X"
 
-        if (parent === "#") {
-            // NODOS RAÍZ: sectores sin padre
-            const [sectoresRaiz] = await pool.query(`
-                SELECT id, nombre 
-                FROM sectores 
-                WHERE sector_padre_id IS NULL
-            `);
+//         if (parent === "#") {
+//             // NODOS RAÍZ: sectores sin padre
+//             const [sectoresRaiz] = await pool.query(`
+//                 SELECT id, nombre 
+//                 FROM sectores 
+//                 WHERE sector_padre_id IS NULL
+//             `);
 
-            const nodos = sectoresRaiz.map(sec => ({
-                id: `sector-${sec.id}`,
-                parent: "#",
-                text: sec.nombre,
-                icon: "fas fa-sitemap",
-                type: "sector",
-                children: true // indica que puede tener hijos
-            }));
+//             const nodos = sectoresRaiz.map(sec => ({
+//                 id: `sector-${sec.id}`,
+//                 parent: "#",
+//                 text: sec.nombre,
+//                 icon: "fas fa-sitemap",
+//                 type: "sector",
+//                 children: true // indica que puede tener hijos
+//             }));
 
-            return res.json(nodos);
-        }
+//             return res.json(nodos);
+//         }
 
-        // Si el parent es un sector: traer hijos e indicadores
-        if (parent.startsWith("sector-")) {
-            const sectorId = parent.replace("sector-", "");
+//         // Si el parent es un sector: traer hijos e indicadores
+//         if (parent.startsWith("sector-")) {
+//             const sectorId = parent.replace("sector-", "");
 
-            // Sectores hijos
-            const [sectoresHijos] = await pool.query(`
-                SELECT id, nombre
-                FROM sectores
-                WHERE sector_padre_id = ?
-            `, [sectorId]);
+//             // Sectores hijos
+//             const [sectoresHijos] = await pool.query(`
+//                 SELECT id, nombre
+//                 FROM sectores
+//                 WHERE sector_padre_id = ?
+//             `, [sectorId]);
 
-            // Indicadores del sector
-            const [indicadores] = await pool.query(`
-                SELECT id, codigo_identificatorio, nombre
-                FROM indicadores
-                WHERE unidad_funcional_id = ?
-            `, [sectorId]);
+//             // Indicadores del sector
+//             const [indicadores] = await pool.query(`
+//                 SELECT id, codigo_id, nombre
+//                 FROM indicadores
+//                 WHERE destino = ?
+//             `, [sectorId]);
 
-            const nodos = [
-                ...sectoresHijos.map(sec => ({
-                    id: `sector-${sec.id}`,
-                    parent: `sector-${sectorId}`,
-                    text: sec.nombre,
-                    icon: "fas fa-sitemap",
-                    type: "sector",
-                    children: true
-                })),
-                ...indicadores.map(ind => ({
-                    id: `indicador-${ind.id}`,
-                    parent: `sector-${sectorId}`,
-                    text: `${ind.nombre} (${ind.codigo_identificatorio})`,
-                    icon: "fas fa-chart-line",
-                    type: "indicador",
-                    children: false
-                }))
-            ];
+//             const nodos = [
+//                 ...sectoresHijos.map(sec => ({
+//                     id: `sector-${sec.id}`,
+//                     parent: `sector-${sectorId}`,
+//                     text: sec.nombre,
+//                     icon: "fas fa-sitemap",
+//                     type: "sector",
+//                     children: true
+//                 })),
+//                 ...indicadores.map(ind => ({
+//                     id: `indicador-${ind.id}`,
+//                     parent: `sector-${sectorId}`,
+//                     text: `${ind.nombre} (${ind.codigo_id})`,
+//                     icon: "fas fa-chart-line",
+//                     type: "indicador",
+//                     children: false
+//                 }))
+//             ];
 
-            return res.json(nodos);
-        }
+//             return res.json(nodos);
+//         }
 
-        // Si es un indicador, no tiene hijos
-        return res.json([]);
+//         // Si es un indicador, no tiene hijos
+//         return res.json([]);
 
-    } catch (err) {
-        console.error('Error al armar árbol lazy:', err);
-        res.status(500).json({ error: 'Error al generar árbol' });
-    }
-});
+//     } catch (err) {
+//         console.error('Error al armar árbol lazy:', err);
+//         res.status(500).json({ error: 'Error al generar árbol' });
+//     }
+// });
 
 
 // 🚀 Ruta jsTree con conteo acumulado
-app.get('/api/arbol-jstree-lazy', async (req, res) => {
+app.get('/api/arbol-jstree-lazy-Nofunciona', async (req, res) => {
     try {
         const parent = req.query.parent;
 
         // Siempre cargamos toda la estructura en memoria para contar
         const [sectores] = await pool.query(`SELECT id, nombre, sector_padre_id, sector_porcentual  FROM sectores`);
-        const [indicadores] = await pool.query(`SELECT id, codigo_identificatorio, nombre, unidad_funcional_id, peso_porcentual FROM indicadores`);
+        const [indicadores] = await pool.query(`SELECT id, codigo_id, nombre, destino, peso_porcentual FROM indicadores`);
 
         // Contar indicadores directos
         const conteoDirecto = {};
         sectores.forEach(s => conteoDirecto[s.id] = 0);
         indicadores.forEach(ind => {
-            if (!conteoDirecto[ind.unidad_funcional_id]) conteoDirecto[ind.unidad_funcional_id] = 0;
-            conteoDirecto[ind.unidad_funcional_id]++;
+            if (!conteoDirecto[ind.destino]) conteoDirecto[ind.destino] = 0;
+            conteoDirecto[ind.destino]++;
         });
 
         // Función para contar acumulado
@@ -881,16 +881,28 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
 
             // Indicadores de este sector
             const inds = indicadores
-                .filter(ind => ind.unidad_funcional_id === sectorId)
+                .filter(ind => ind.destino === sectorId)
                 .map(ind => ({
                     id: `indicador-${ind.id}`,
                     parent: `sector-${sectorId}`,
-                    text: ` (${ind.peso_porcentual ?? ''}%) ${ind.nombre} (${ind.codigo_identificatorio})`,
+                    text: ` (${ind.peso_porcentual ?? ''}%) ${ind.nombre} (${ind.codigo_id})`,
                     icon: "fas fa-chart-line",
                     type: "indicador",
                     children: false,
-                    peso_porcentual: ind.peso_porcentual
+                    peso_porcentual: ind.peso_porcentual,
+                    nombre: ind.nombre,
+                    codigo_id: ind.codigo_id,
+                    descripcion: ind.descripcion,
+                    objetivo: ind.objetivo,
+                    dimension_id: ind.dimension_id,
+                    categoria_id: ind.categoria_id,
+                    responsable: ind.responsable,
+                    freq_medicion: ind.freq_medicion,
+                    unidad_medida: ind.unidad_medida,
+                    meta_tipo: ind.meta_tipo,
+                    comentarios: ind.comentarios
                 }));
+
 
             return res.json([...hijos, ...inds]);
         }
@@ -902,6 +914,104 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
         res.status(500).json({ error: 'Error al generar árbol' });
     }
 });
+
+app.get('/api/arbol-jstree-lazy', async (req, res) => {
+    try {
+        const parent = req.query.parent;
+
+        // Traer toda la estructura
+        const [sectores] = await pool.query(`SELECT id, nombre, sector_padre_id, sector_porcentual FROM sectores`);
+        const [indicadores] = await pool.query(`
+            SELECT id, codigo_id, nombre, destino, peso_porcentual, descripcion,
+                   objetivo, dimension_id, categoria_id, responsable,
+                   freq_medicion, unidad_medida, meta_tipo, comentarios
+            FROM indicadores
+        `);
+
+        // Función para contar indicadores acumulados
+        const conteoDirecto = {};
+        sectores.forEach(s => conteoDirecto[s.id] = 0);
+        indicadores.forEach(ind => {
+            if (!conteoDirecto[ind.destino]) conteoDirecto[ind.destino] = 0;
+            conteoDirecto[ind.destino]++;
+        });
+
+        function contarTotal(sectorId) {
+            let total = conteoDirecto[sectorId] || 0;
+            const hijos = sectores.filter(s => s.sector_padre_id === sectorId);
+            hijos.forEach(hijo => total += contarTotal(hijo.id));
+            return total;
+        }
+
+        // Nodo raíz
+        if (parent === "#") {
+            const sectoresRaiz = sectores.filter(s => !s.sector_padre_id);
+            const nodos = sectoresRaiz.map(s => ({
+                id: `sector-${s.id}`,
+                parent: "#",
+                text: `(${s.sector_porcentual ?? ''}%) ${s.nombre} (${contarTotal(s.id)})`,
+                icon: "fas fa-sitemap",
+                type: "sector",
+                children: true,
+                sector_porcentual: s.sector_porcentual
+            }));
+            return res.json(nodos);
+        }
+
+        // Nodo hijo
+        if (parent.startsWith("sector-")) {
+            const sectorId = parseInt(parent.replace("sector-", ""), 10);
+
+            // Sectores hijos
+            const hijos = sectores
+                .filter(s => s.sector_padre_id === sectorId)
+                .map(s => ({
+                    id: `sector-${s.id}`,
+                    parent: `sector-${sectorId}`,
+                    text: `(${s.sector_porcentual ?? ''}%) ${s.nombre} (${contarTotal(s.id)})`,
+                    icon: "fas fa-sitemap",
+                    type: "sector",
+                    children: true,
+                    sector_porcentual: s.sector_porcentual
+                }));
+
+            // Indicadores
+            const inds = indicadores
+                .filter(ind => ind.destino === sectorId)
+                .map(ind => ({
+                    id: `indicador-${ind.id}`,
+                    parent: `sector-${sectorId}`,
+                    text: `(${ind.peso_porcentual ?? ''}%) ${ind.nombre} (${ind.codigo_id})`,
+                    icon: "fas fa-chart-line",
+                    type: "indicador",
+                    children: false,
+                    peso_porcentual: ind.peso_porcentual,
+                    // TODOS los campos necesarios
+                    nombre: ind.nombre,
+                    codigo_id: ind.codigo_id,
+                    descripcion: ind.descripcion,
+                    objetivo: ind.objetivo,
+                    dimension_id: ind.dimension_id,
+                    categoria_id: ind.categoria_id,
+                    responsable: ind.responsable,
+                    freq_medicion: ind.freq_medicion,
+                    unidad_medida: ind.unidad_medida,
+                    meta_tipo: ind.meta_tipo,
+                    comentarios: ind.comentarios
+                }));
+
+            return res.json([...hijos, ...inds]);
+        }
+
+        res.json([]);
+    } catch (err) {
+        console.error('Error al armar árbol lazy:', err);
+        res.status(500).json({ error: 'Error al generar árbol' });
+    }
+});
+
+
+
 
 
 // 🚀 Actualiza porcentajes de sector e indicador
@@ -982,7 +1092,7 @@ app.post('/api/alertas/:codigo/valor', async (req, res) => {
         const { codigo } = req.params;
         const { valor } = req.body; // se espera 0 o 1
 
-        console.log(`entro en actualizar ${valor}`)
+        // console.log(`entro en actualizar ${valor}`)
 
         if (![0, 1].includes(valor)) {
             return res.status(400).json({ success: false, error: 'Valor inválido, debe ser 0 o 1' });
@@ -1014,10 +1124,6 @@ app.get('/api/codigos', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
-
-
-
-
 
 
 
