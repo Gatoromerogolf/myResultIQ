@@ -2,16 +2,7 @@
 <html lang="es">
 <!--begin::Head-->
 
-<style>
-    .brand-image {
-        opacity: 1 !important;
-        width: 40px;
-        height: auto;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        object-fit: contain;
-    }
-</style>
+
 
 <head>
     <meta charset="UTF-8">
@@ -53,6 +44,27 @@
 
     <!-- Font Awesome desde CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+    <style>
+    .brand-image {
+        opacity: 1 !important;
+        width: 40px;
+        height: auto;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        object-fit: contain;
+    }
+
+    .tooltip-inner {
+        max-width: 600px;
+        /* ancho máximo del tooltip */
+        white-space: normal;
+        /* permite saltos de línea */
+        text-align: left;
+        /* opcional: alinear texto a la izquierda */
+    }
+</style>
 </head>
 <!--end::Head-->
 
@@ -315,45 +327,6 @@
                         </div>
                     </div>
 
-                    <!-- <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="filtroCantidad" class="form-label">Mostrar</label>
-                            <select id="filtroCantidad" class="form-select w-auto d-inline-block">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                            </select>
-                            <span>registros por página</span>
-                        </div>
-                        <div class="col-md-6 text-end">
-                            <label class="form-label">Ordenar por:</label>
-                            <button class="btn btn-outline-primary btn-sm ms-2" onclick="ordenarPor('fecha')">
-                                Fecha <i class="bi bi-sort-down"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="ordenarPor('codigo')">
-                                Código Indicador <i class="bi bi-sort-alpha-down"></i>
-                            </button>
-                        </div>
-                    </div> -->
-
-                    <!-- <div class="table-responsive">
-                        <table class="table table-bordered table-hover table-striped">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Fecha de Registro</th>
-                                    <th>Indicador</th>
-                                    <th>Descripción</th>
-                                    <th>Comentario</th>
-                                    <th>Valor</th>
-                                    <th>Unidad</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tablaHistorico">
-                                <!-- Los registros se insertan dinámicamente aquí -->
-                            </tbody>
-                        </table>
-                    </div> -->
-
 
                     <!--begin::Empty State-->
                     <div class="text-center py-5" id="emptyState" style="display: none;">
@@ -372,14 +345,15 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Indicador</th>
-                                <th>Fecha Medición</th>
-                                <th>Tipo Periodo</th>
-                                <th>Valor Periodo</th>
+                                <th>Medición</th>
+                                <th>Año</th>
+                                <th>Periodo</th>
+                                <th>Per.valor</th>
                                 <th>Valor</th>
-                                <th>Unidades</th>
+                                <th>Unid</th>
                                 <th>Comentarios</th>
-                                <th>Responsable Medición</th>
-                                <th>Responsable Registro</th>
+                                <th>Respons. Medición</th>
+                                <th>Respons. Registro</th>
                                 <th>Fecha Registro</th>
                             </tr>
                         </thead>
@@ -389,6 +363,26 @@
                 </div>
             </div>
         </main>
+    </div>
+
+
+    <!-- Modal de Confirmación de Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    Esta acción cerrará tu sesión actual y volverás a la página de inicio.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- Scripts -->
     <!-- <script src="plugins/jquery/jquery.min.js"></script> -->
@@ -436,52 +430,8 @@
         let cantidadPorPagina = 10;
         let ordenActual = 'fecha';
 
-    //     function mostrarTabla() {
-    //         const inicio = (paginaActual - 1) * cantidadPorPagina;
-    //         const fin = inicio + cantidadPorPagina;
-    //         const registrosPaginados = [...registros]
-    //             .sort((a, b) => {
-    //                 if (ordenActual === 'fecha') return new Date(b.fecha) - new Date(a.fecha);
-    //                 if (ordenActual === 'codigo') return a.codigo.localeCompare(b.codigo);
-    //             })
-    //             .slice(inicio, fin);
-
-    //         const tbody = document.getElementById('tablaHistorico');
-    //         tbody.innerHTML = registrosPaginados.map(r => `
-    //     <tr>
-    //       <td>${r.fecha}</td>
-    //       <td>${r.codigo}</td>
-    //       <td>${r.descripcion}</td>
-    //       <td>${r.comentario}</td>
-    //       <td>${r.valor}</td>
-    //       <td>${r.unidad}</td>
-    //     </tr>
-    //   `).join('');
-
-    //     }
-
-
-
-        // function irAPagina(nro) {
-        //     paginaActual = nro;
-        //     mostrarTabla();
-        // }
-
-        // function ordenarPor(campo) {
-        //     ordenActual = campo;
-        //     mostrarTabla();
-        // }
-
-        // document.getElementById('filtroCantidad').addEventListener('change', e => {
-        //     cantidadPorPagina = parseInt(e.target.value);
-        //     paginaActual = 1;
-        //     mostrarTabla();
-        // });
-
-        // mostrarTabla();
-
-
         async function obtenerUsuarioPorLegajo(responsable) {
+            console.log('legajo recibido: ' + responsable)
             try {
                 const response = await fetch(`/usuarios/${responsable}`);
 
@@ -493,6 +443,7 @@
                     throw new Error(`Error al obtener usuario: ${response.statusText}`);
                 }
                 const usuario = await response.json();
+                console.log('Usuario obtenido:', usuario);
                 return usuario;
             } catch (err) {
                 console.error('Error en fetch:', err);
@@ -520,11 +471,15 @@
         }
 
         let tablaIndicadores; // instancia global
+        let indicadores;
 
         async function cargarIndicadores() {
             try {
                 const response = await fetch('/api/indicadores');
-                const indicadores = await response.json();
+                indicadores = await response.json();
+
+                // acá recién creás la DataTable de mediciones
+                leerMediciones();
 
                 // Transformamos los datos para que DataTable los entienda
                 const datosTabla = await Promise.all(indicadores.map(async (ind) => {
@@ -619,30 +574,103 @@
                 // backend devuelve { success, total, data }
                 const filas = data.success ? data.data : [];
 
+                const filasConUsuario = await Promise.all(
+                    filas.map(async m => {
+                        const usuario = await obtenerUsuarioPorLegajo(m.med_legajo_resp_medicion);
+                        const resp_registro = await obtenerUsuarioPorLegajo(m.med_legajo_resp_registro);
+                        return {
+                            ...m,
+                            nombre_usuario: usuario ? usuario.apellido + ' ' + usuario.nombres : m.med_legajo_resp_medicion,
+                            nombre_resp_registro: resp_registro ? resp_registro.apellido + ' ' + resp_registro.nombres : m.med_legajo_resp_registro
+                        };
+                    })
+                );
+
                 // Inicializar la DataTable si aún no existe
                 if (!$.fn.DataTable.isDataTable('#tablaMediciones')) {
                     tablaMediciones = $('#tablaMediciones').DataTable({
-                        data: filas,
+                        data: filasConUsuario,
                         columns: [
                             { data: 'id' },
-                            { data: 'indicador_id' },  // si tenés nombre del indicador, podés mapearlo
-                            { data: 'fecha_medicion' },
-                            { data: 'tipo_periodo' },
-                            { data: 'valor_periodo' },
-                            { data: 'valor' },
-                            { data: 'unidades' },
-                            { data: 'comentarios' },
-                            { data: 'responsable_medicion' },
-                            { data: 'responsable_registro' },
-                            { data: 'fecha_registro' }
+                            {
+                                data: 'med_indicador_id',
+                                render: function (data, type, row) {
+                                    const indicador = indicadores.find(i => i.id === data);
+                                    return indicador ? indicador.codigo_id : data;
+                                }
+                            },
+                            {
+                                data: 'med_fecha_medicion',
+                                render: function (data) {
+                                    if (!data) return '';
+                                    return new Date(data).toLocaleDateString('es-ES');
+                                }
+                            },
+                            { data: 'med_anio' },
+                            { data: 'med_tipo_periodo' },
+                            {
+                                data: 'med_valor_periodo',
+                                className: 'text-center',
+                                title: `Valor del período 
+                                        <i class="bi bi-info-circle" 
+                                        data-bs-toggle="tooltip" 
+                                        data-bs-html="true"
+                                        style="max-width:400px; color: red;"
+                                        title="
+                                        Según Período:<br>
+                                        - <strong>día:</strong> fecha<br>
+                                        - <strong>semana:</strong> número de semana del año (1 a 52)<br>
+                                        - <strong>quincena:</strong> número de mes y quincena (1 o 2)<br>
+                                        - <strong>mes:</strong> número de mes (1 a 12)<br>
+                                        - <strong>bimestre:</strong> número de bimestre en el año (1 a 6)<br>
+                                        - <strong>trimestre:</strong> número de trimestre en el año (1 a 4)<br>
+                                        - <strong>cuatrimestre:</strong> número de cuatrimestre en el año (1 a 3)<br>
+                                        - <strong>semestre:</strong> número de semestre en el año (1 a 2)
+                                        "
+                                        ></i>`
+                            },
+                            {
+                                data: 'med_valor',
+                                className: 'text-end',
+                                render: function (data, type, row) {
+                                    if (data == null) return '';
+
+                                    const numero = parseFloat(data);  // Cambia Number() por parseFloat()
+
+                                    return numero.toLocaleString('es-ES', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
+                                }
+                            }
+                            ,
+                            { data: 'med_unidad_medida' },
+                            { data: 'med_comentarios' },
+                            { data: 'nombre_usuario' },
+                            { data: 'nombre_resp_registro' },
+                            {
+                                data: 'med_fecha_registro',
+                                render: function (data) {
+                                    if (!data) return '';
+                                    return new Date(data).toLocaleDateString('es-ES');
+                                }
+                            }
                         ],
                         responsive: true,
                         autoWidth: false,
                         pageLength: 10,
                         language: {
-                            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
                         },
-                        order: [[2, 'desc']] // ordena por fecha_medicion descendente
+                        order: [[2, 'desc']], // ordena por fecha_medicion descendente
+
+                        // 🔹 drawCallback: inicializa tooltips después de renderizar
+                        drawCallback: function () {
+                            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                            tooltipTriggerList.map(function (el) {
+                                return new bootstrap.Tooltip(el);
+                            });
+                        }
                     });
                 } else {
                     // Si la tabla ya existe, actualizamos los datos
@@ -652,6 +680,7 @@
                 console.error("Error cargando mediciones:", err);
             }
         }
+
 
         // Servicio global para textp de tabla de códigos 
         const CodigosService = {
@@ -681,14 +710,14 @@
             cargarIndicadores();
 
             // 2. Leer mediciones
-            await leerMediciones();
+            // await leerMediciones();
 
             // 3. Inicializa CodigosService
             await CodigosService.init();
         }
 
-
     </script>
+    <script src="dist/js/adminlte.min.js"></script>
 
 </body>
 

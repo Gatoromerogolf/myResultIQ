@@ -737,15 +737,6 @@
                                                 style="border: 1px solid #2a2a2b;">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <!-- <th scope="col">Código codigo codigo</th>
-                                                        <th scope="col">Nombre</th>
-                                                        <th scope="col">Dimensión</th>
-                                                        <th scope="col">Descripción</th>
-                                                        <th scope="col">Destino</th>
-                                                        <th scope="col">Responsable</th>
-                                                        <th scope="col">Criticidad</th>
-                                                        <th scope="col">Frecuencia</th>
-                                                        <th scope="col">Acciones</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody id="tbodyIndicadores">
@@ -2122,8 +2113,6 @@
         }
 
         async function verDetalleIndicador(codigo) {
-
-
             try {
                 const response = await fetch(`/api/indicadores/${codigo}`);
                 if (!response.ok) throw new Error('No se pudo obtener el indicador.');
@@ -2364,7 +2353,6 @@
 
         async function cargarResponsables() {
             const select = document.getElementById('responsable');
-
             try {
                 const response = await fetch('/usuarios');
                 if (!response.ok) throw new Error('No se pudieron obtener los usuarios');
