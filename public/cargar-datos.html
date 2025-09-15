@@ -483,6 +483,8 @@
 
         cancelarBtn.addEventListener('click', () => {
             formulario.style.display = 'none';
+            const titulo = document.getElementById('titulo-indicador');
+            titulo.innerHTML = `Seleccionar Indicador`;
         });
 
         const tipoSelect = document.getElementById('tipo_id');
