@@ -1143,6 +1143,49 @@ app.get('/api/mediciones', async (req, res) => {
 });
 
 
+// // 🚫🚫🚫 Grabar una medicion
+app.post('/api/mediciones', async (req, res) => {
+    try {
+        const { med_indicador_id, med_fecha_medicion, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_comntarios, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro } = req.body;
+
+        // Validar datos
+        const errores = [];
+        if (!med_indicador_id) errores.push("Debe seleccionar un indicador.");
+        if (isNaN(med_valor)) errores.push("El valor debe ser numérico.");
+        if (!med_tipo_periodo) errores.push("Debe seleccionar un tipo de período.");
+        if (!isNaN(med_anio) && (med_anio < 1900 || med_anio > 2100)) errores.push("Año inválido.");
+
+        if (errores.length > 0) {
+            return res.status(400).json({ success: false, errores });
+        }
+
+                // --- Validación de duplicados ---
+        const [rows] = await pool.query(
+            `SELECT id FROM mediciones 
+             WHERE med_indicador_id = ? AND med_fecha_medicion = ?`,
+            [med_indicador_id, med_fecha_medicion]
+        );
+
+        if (rows.length > 0) {
+            return res.status(409).json({ 
+                ok: false, 
+                error: "Ya existe una medición para este indicador en esa fecha." 
+            });
+        }
+
+        // Grabar medición
+        const [result] = await pool.query(
+            'INSERT INTO mediciones (med_indicador_id, med_fecha_medicion, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [med_indicador_id, med_fecha_medicion, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro]
+        );
+
+        res.status(201).json({ ok: true, id: result.insertId });
+    } catch (err) {
+        console.error('Error al grabar medición:', err);
+        res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+});
+
 
 const PORT = process.env.PORT || 3000;
 

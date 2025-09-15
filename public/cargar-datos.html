@@ -338,7 +338,7 @@
 
                     <div class="card mb-4">
                         <div class="card-header border-0">
-                            <h3 class="card-title">Seleccionar Indicador</h3>
+                            <h3 id="titulo-indicador" class="card-title">Seleccionar Indicador</h3>
                             <div class="card-tools">
                                 <!-- <a href="#" class="btn btn-tool btn-sm"> <i class="bi bi-download"></i> </a> -->
                                 <a href="#" class="btn btn-tool btn-sm" onclick="alert('Hiciste clic')">
@@ -348,10 +348,12 @@
                             </div>
                         </div>
 
-                        <div id="formulario-carga" class="p-3 mt-3 border rounded shadow-sm bg-light"
+                        <div id="formulario-carga" class="p-3 mt-3 ml-3 border rounded shadow-sm bg-light"
                             style="display: none;">
                             <h5 id="titulo-indicador"></h5>
-                            <form id="form-carga">
+                            <input type="hidden" id="indicadorCodigo" name="indicadorCodigo">
+
+                            <form id="form-carga" class="ml-3 m-1 bg-light" style="width: 80%;">
                                 <div class="row mb-2">
                                     <div class="col-md-2">
                                         <label>Fecha de medición</label>
@@ -388,6 +390,7 @@
                                         <label>Unidad</label>
                                         <div class="form-control-plaintext" id="unidad-carga"></div>
                                     </div>
+                                    <input type="hidden" id="unidadMedidaCodigo" name="unidadMedidaCodigo">
 
                                     <div class="col-md-7 mt-2">
                                         <label>Comentario</label>
@@ -473,29 +476,14 @@
 
         let tablaIndicadores; // instancia global
 
-        const botonesSeleccionar = document.querySelectorAll('.seleccionar-btn');
+        // const botonesSeleccionar = document.querySelectorAll('.seleccionar-btn');
         const formulario = document.getElementById('formulario-carga');
         const titulo = document.getElementById('titulo-indicador');
         const cancelarBtn = document.getElementById('cancelar-carga');
 
-        // botonesSeleccionar.forEach(btn => {
-        //     btn.addEventListener('click', () => {
-        //         const codigo = btn.getAttribute('data-codigo');
-        //         const nombre = btn.getAttribute('data-nombre');
-        //         const unidad = btn.getAttribute('data-unidad');
-        //         titulo.innerText = `Carga de indicador: ${codigo} - ${nombre}`;
-        //         formulario.style.display = 'block';
-        //         document.getElementById('fecha-carga').value = '';
-        //         document.getElementById('valor-carga').value = '';
-        //         document.getElementById('unidad-carga').innerText = unidad;
-        //         document.getElementById('comentario-carga').value = '';
-        //     });
-        // });
-
         cancelarBtn.addEventListener('click', () => {
             formulario.style.display = 'none';
         });
-
 
         const tipoSelect = document.getElementById('tipo_id');
         const valorPeriodo = document.getElementById('valor-periodo');
@@ -530,18 +518,52 @@
         document.getElementById('form-carga').addEventListener('submit', async function (e) {
             e.preventDefault();
 
+            const errores = [];
+            const indId = document.getElementById('indicadorCodigo').value;
+
+            const unidad = document.getElementById('unidadMedidaCodigo').value;
+
+            const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
+            const fechaInputDate = new Date(fechaInputStr); // ahora es un Date
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0); // solo día/mes/año
+
+            if (fechaInputDate > hoy) {
+                errores.push("La fecha no puede ser mayor a la fecha de hoy.");
+            }
+
+            let anio_ISO = null;
+            const fechaISO = validarFechaISO(fechaInputDate);
+
+            if (fechaISO) {
+                anio_ISO = fechaInputDate.getFullYear();
+            } else {
+                errores.push("Fecha inválida o fuera de rango (1900-2100).");
+            }
+
             // Tomar los valores de los campos
             const datos = {
-                fecha: fechaMedicion.value,
-                tipo_id: tipoSelect.value,
-                valor_periodo: valorPeriodo.value,
-                valor_carga: document.getElementById('valor-carga').value,
-                unidad: document.getElementById('unidad-carga').innerText,
-                comentario: document.getElementById('comentario-carga').value
+                med_indicador_id: indId,
+                med_fecha_medicion: document.getElementById('fecha-carga').value,
+                med_tipo_periodo: document.getElementById('tipo_id').value,
+                med_valor_periodo: document.getElementById('valor-periodo').value,
+                med_anio: anio_ISO,
+                med_valor: parseFloat(document.getElementById('valor-carga').value),
+                med_comentarios: document.getElementById('comentario-carga').value.trim(),
+                med_unidad_medida: unidad,
+                med_legajo_resp_medicion: '5432',
+                med_legajo_resp_registro: '1234',
+                med_fecha_registro: new Date().toISOString().split('T')[0] // fecha actual en ISO
             };
+
+            if (errores.length > 0) {
+                alert("Errores:\n- " + errores.join("\n- "));
+                return; // No manda nada al servidor
+            }
 
             console.log("Datos a enviar:", datos);
 
+            // === Envío al backend ===
             try {
                 const response = await fetch('/api/mediciones', {
                     method: 'POST',
@@ -550,18 +572,52 @@
                 });
 
                 const result = await response.json();
-                if (result.success) {
-                    alert("Guardado correctamente");
-                    // ocultar el formulario o limpiar los campos si querés
+
+                if (response.ok && result.ok) {
+                    alert("Guardado correctamente ✅");
                     e.target.reset();
                 } else {
-                    alert("Error: " + result.message);
+                    // El backend también devuelve errores si algo se escapó
+                    alert("Error del servidor:\n" + (result.errores ? result.errores.join("\n- ") : result.error));
                 }
             } catch (err) {
                 console.error("Error al guardar:", err);
+                alert("Ocurrió un error inesperado.");
             }
         });
 
+        function validarFechaDDMMYYYY(fechaStr) {
+            // formato correcto dd/mm/yyyy ?
+            const partes = fechaStr.split("/");
+            if (partes.length !== 3) return null;
+
+            const [dd, mm, yyyy] = partes.map(p => parseInt(p, 10));
+
+            if (isNaN(dd) || isNaN(mm) || isNaN(yyyy)) return null;
+            if (yyyy < 1900 || yyyy > 2100) return null; // rango lógico
+            if (mm < 1 || mm > 12) return null;
+
+            // crear fecha con JS (mes -1 porque Date usa 0-11)
+            const date = new Date(yyyy, mm - 1, dd);
+
+            // verificar que coincida (por ej. no aceptar 31/02/2025)
+            if (date.getFullYear() !== yyyy || date.getMonth() !== mm - 1 || date.getDate() !== dd) {
+                return null;
+            }
+
+            // devolver en formato ISO (yyyy-mm-dd) si todo está bien
+            return `${yyyy}-${String(mm).padStart(2, "0")}-${String(dd).padStart(2, "0")}`;
+        }
+
+        function validarFechaISO(fechaStr) {
+            const date = new Date(fechaStr);
+            if (isNaN(date.getTime())) return null;
+
+            const yyyy = date.getFullYear();
+            if (yyyy < 1900 || yyyy > 2100) return null;
+
+            return fechaStr; // ya está en formato yyyy-mm-dd
+        }
 
         let indicadores;
         async function cargarIndicadores() {
@@ -590,7 +646,7 @@
                             <button class="btn btn-primary btn-xs" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
                                 <i class="fas fa-eye fa-xs"></i>
                             </button>
-                            <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}')">
+                            <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}')">
                                 <i class="fas fa-edit fa-xs"></i>
                             </button>
                         </td>
@@ -688,19 +744,20 @@
             }
         }
 
-
         // Cargar un indicador en el formulario para editar
-        async function editarIndicador(codigo, nombre, unidad) {
+        async function editarIndicador(indId, codigo, nombre, unidad) {
+
 
             const titulo = document.getElementById('titulo-indicador');
-            titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
+            titulo.innerText = `Indicador: ${codigo} - ${nombre} --- Registrar Medición:`;
 
-            // document.getElementById('fecha-carga').value = ind.fecha_inicio ? new Date(ind.fecha_inicio).toISOString().split('T')[0] : '';
-            // document.getElementById('valor-carga').value = ind.valor_objetivo || '';
+            // guardo el código en el hidden para usarlo después
+            document.getElementById('indicadorCodigo').value = indId;
+
             const unid_medida = CodigosService.getNombreCodigo(unidad);
             document.getElementById('unidad-carga').innerText = unid_medida || '';
-
-            // document.getElementById('comentario-carga').value = ind.descripcion || '';
+            // guardo en el hidden
+            document.getElementById('unidadMedidaCodigo').value = unidad;
 
             formulario.style.display = 'block';
             // Llevar al inicio de la página
@@ -724,8 +781,6 @@
             }
         }
 
-
-
         // Servicio global para textp de tabla de códigos 
         const CodigosService = {
             codigosMap: {},
@@ -744,7 +799,6 @@
                 return this.codigosMap[codigo] || '-';
             }
         };
-
 
         document.addEventListener("DOMContentLoaded", () => {
             iniciarPagina();

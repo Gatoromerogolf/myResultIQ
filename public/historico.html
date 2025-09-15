@@ -47,24 +47,24 @@
 
 
     <style>
-    .brand-image {
-        opacity: 1 !important;
-        width: 40px;
-        height: auto;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        object-fit: contain;
-    }
+        .brand-image {
+            opacity: 1 !important;
+            width: 40px;
+            height: auto;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+            border-radius: 6px;
+            object-fit: contain;
+        }
 
-    .tooltip-inner {
-        max-width: 600px;
-        /* ancho máximo del tooltip */
-        white-space: normal;
-        /* permite saltos de línea */
-        text-align: left;
-        /* opcional: alinear texto a la izquierda */
-    }
-</style>
+        .tooltip-inner {
+            max-width: 600px;
+            /* ancho máximo del tooltip */
+            white-space: normal;
+            /* permite saltos de línea */
+            text-align: left;
+            /* opcional: alinear texto a la izquierda */
+        }
+    </style>
 </head>
 <!--end::Head-->
 
@@ -431,19 +431,20 @@
         let ordenActual = 'fecha';
 
         async function obtenerUsuarioPorLegajo(responsable) {
-            console.log('legajo recibido: ' + responsable)
+            // console.log('legajo recibido: ' + responsable)
             try {
                 const response = await fetch(`/usuarios/${responsable}`);
 
                 if (!response.ok) {
                     if (response.status === 404) {
                         console.warn('Usuario no encontrado');
+                        console.log (`no encontro a :  ${responsable}`);
                         return null;
                     }
                     throw new Error(`Error al obtener usuario: ${response.statusText}`);
                 }
                 const usuario = await response.json();
-                console.log('Usuario obtenido:', usuario);
+                // console.log('Usuario obtenido:', usuario);
                 return usuario;
             } catch (err) {
                 console.error('Error en fetch:', err);
@@ -563,7 +564,6 @@
             }
         }
 
-
         let tablaMediciones;
 
         async function leerMediciones() {
@@ -644,7 +644,13 @@
                                 }
                             }
                             ,
-                            { data: 'med_unidad_medida' },
+                            {
+                                data: 'med_unidad_medida',  // propiedad en la fila
+                                render: function (data, type, row) {
+                                    if (!data) return '';
+                                    return CodigosService.getNombreCodigo(data);  // convierte el código a nombre
+                                }
+                            },
                             { data: 'med_comentarios' },
                             { data: 'nombre_usuario' },
                             { data: 'nombre_resp_registro' },
@@ -681,6 +687,27 @@
             }
         }
 
+        async function cargarResponsables() {
+            const select = document.getElementById('responsable');
+            try {
+                const response = await fetch('/usuarios');
+                if (!response.ok) throw new Error('No se pudieron obtener los usuarios');
+                const usuarios = await response.json();
+
+                // Filtrar solo activos (opcional)
+                const activos = usuarios.filter(u => u.estado === 'activo');
+
+                activos.forEach(u => {
+                    const option = document.createElement('option');
+                    option.value = u.legajo; // este será el valor enviado al backend
+                    option.textContent = `${u.apellido}, ${u.nombres}`; // lo que se muestra al usuario
+                    select.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
 
         // Servicio global para textp de tabla de códigos 
         const CodigosService = {
@@ -706,14 +733,14 @@
         });
 
         async function iniciarPagina() {
-            // 1. Cargar indicadores y responsables
-            cargarIndicadores();
-
-            // 2. Leer mediciones
-            // await leerMediciones();
-
-            // 3. Inicializa CodigosService
+            // 1. Inicializa CodigosService
             await CodigosService.init();
+
+            // 2. Cargar indicadores y responsables
+            await cargarIndicadores();
+
+            // 3. Cargar responsables
+            await cargarResponsables();
         }
 
     </script>
