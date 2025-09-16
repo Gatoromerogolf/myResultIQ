@@ -438,7 +438,7 @@
                 if (!response.ok) {
                     if (response.status === 404) {
                         console.warn('Usuario no encontrado');
-                        console.log (`no encontro a :  ${responsable}`);
+                        console.log(`no encontro a :  ${responsable}`);
                         return null;
                     }
                     throw new Error(`Error al obtener usuario: ${response.statusText}`);
@@ -474,99 +474,107 @@
         let tablaIndicadores; // instancia global
         let indicadores;
 
-        async function cargarIndicadores() {
-            try {
-                const response = await fetch('/api/indicadores');
-                indicadores = await response.json();
+        // async function cargarIndicadores() {
+        //     try {
+        //         const response = await fetch('/api/indicadores');
+        //         indicadores = await response.json();
 
-                // acá recién creás la DataTable de mediciones
-                leerMediciones();
+        //         // acá recién creás la DataTable de mediciones
+        //         leerMediciones();
 
-                // Transformamos los datos para que DataTable los entienda
-                const datosTabla = await Promise.all(indicadores.map(async (ind) => {
-                    const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
-                    const sectores = await obtenerSectoresPorUnidad(ind.destino);
+        //         // Transformamos los datos para que DataTable los entienda
+        //         const datosTabla = await Promise.all(indicadores.map(async (ind) => {
+        //             const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
+        //             const sectores = await obtenerSectoresPorUnidad(ind.destino);
 
-                    //  dimension: `<span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">${ind.dimension_id}</span>`,
+        //             //  dimension: `<span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">${ind.dimension_id}</span>`,
 
-                    return {
-                        codigo: ind.codigo_id,
-                        nombre: ind.nombre,
-                        descripcion: ind.descripcion,
-                        sectores: sectores.nombre,
-                        responsable: `${usuario.nombres} ${usuario.apellido}`,
-                        objetivo: ind.objetivo,
-                        frecuencia: CodigosService.getNombreCodigo(ind.freq_reporte),
-                        carga: ind.fecha_inicio ? new Date(ind.fecha_inicio).toLocaleDateString() : '-',
-                        estado: `<td><span class="badge text-bg-warning"> Demorado </span></td>`,
-                        acciones: `
-                        <td class="icon-only-actions">
-                            <button class="btn btn-primary btn-xs" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
-                                <i class="fas fa-eye fa-xs"></i>
-                            </button>
-                            <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.codigo_id}')">
-                                <i class="fas fa-edit fa-xs"></i>
-                            </button>
-                        </td>
-                        `
-                    };
-                }));
+        //             return {
+        //                 codigo: ind.codigo_id,
+        //                 nombre: ind.nombre,
+        //                 descripcion: ind.descripcion,
+        //                 sectores: sectores.nombre,
+        //                 responsable: `${usuario.nombres} ${usuario.apellido}`,
+        //                 objetivo: ind.objetivo,
+        //                 frecuencia: CodigosService.getNombreCodigo(ind.freq_reporte),
+        //                 carga: ind.fecha_inicio ? new Date(ind.fecha_inicio).toLocaleDateString() : '-',
+        //                 estado: `<td><span class="badge text-bg-warning"> Demorado </span></td>`,
+        //                 acciones: `
+        //                 <td class="icon-only-actions">
+        //                     <button class="btn btn-primary btn-xs" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
+        //                         <i class="fas fa-eye fa-xs"></i>
+        //                     </button>
+        //                     <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.codigo_id}')">
+        //                         <i class="fas fa-edit fa-xs"></i>
+        //                     </button>
+        //                 </td>
+        //                 `
+        //             };
+        //         }));
 
-                // Inicializar tabla la primera vez
-                if (!tablaIndicadores) {
-                    tablaIndicadores = $('#tablaIndicadores').DataTable({
-                        data: datosTabla,
-                        columns: [
-                            { data: 'codigo', title: 'Código' },
-                            { data: 'nombre', title: 'Nombre' },
-                            { data: 'descripcion', title: 'Descripción' },
-                            { data: 'responsable', title: 'Responsable' },
-                            { data: 'frecuencia', title: 'Medición' },
-                            { data: 'carga', title: 'Ultima Carga' },
-                            { data: 'estado', title: 'Estado' },
-                            { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
-                        ],
-                        columnDefs: [
+        //         // Inicializar tabla la primera vez
+        //         if (!tablaIndicadores) {
+        //             tablaIndicadores = $('#tablaIndicadores').DataTable({
+        //                 data: datosTabla,
+        //                 columns: [
+        //                     { data: 'codigo', title: 'Código' },
+        //                     { data: 'nombre', title: 'Nombre' },
+        //                     { data: 'descripcion', title: 'Descripción' },
+        //                     { data: 'responsable', title: 'Responsable' },
+        //                     { data: 'frecuencia', title: 'Medición' },
+        //                     { data: 'carga', title: 'Ultima Carga' },
+        //                     { data: 'estado', title: 'Estado' },
+        //                     { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
+        //                 ],
+        //                 columnDefs: [
 
-                            { width: "30px", targets: 0 },   // Código un poco angosto
-                            { width: "50px", targets: 1 },  // Nombre más ancho
-                            { width: "15px", targets: 2 },   // descripcion
-                            { width: "50px", targets: 3 },  // responsable
-                            { width: "40px", targets: 4 },   // medicion
-                            { width: "40px", targets: 5 },   // carga
-                            { width: "25px", targets: 6 },  // estado
-                            { width: "40px", targets: 7 },   // acciones
-                        ],
-                        responsive: true,
-                        autoWidth: false,
-                        order: [[0, 'asc']]
-                    });
-                } else {
-                    // Actualizar datos sin destruir la tabla
-                    tablaIndicadores.clear().rows.add(datosTabla).draw();
-                }
+        //                     { width: "30px", targets: 0 },   // Código un poco angosto
+        //                     { width: "50px", targets: 1 },  // Nombre más ancho
+        //                     { width: "15px", targets: 2 },   // descripcion
+        //                     { width: "50px", targets: 3 },  // responsable
+        //                     { width: "40px", targets: 4 },   // medicion
+        //                     { width: "40px", targets: 5 },   // carga
+        //                     { width: "25px", targets: 6 },  // estado
+        //                     { width: "40px", targets: 7 },   // acciones
+        //                 ],
+        //                 responsive: true,
+        //                 autoWidth: false,
+        //                 order: [[0, 'asc']]
+        //             });
+        //         } else {
+        //             // Actualizar datos sin destruir la tabla
+        //             tablaIndicadores.clear().rows.add(datosTabla).draw();
+        //         }
 
-                // Mostrar total y empty state
-                const totalBadge = document.getElementById('totalIndicadores');
-                const emptyState = document.getElementById('emptyState');
+        //         // Mostrar total y empty state
+        //         const totalBadge = document.getElementById('totalIndicadores');
+        //         const emptyState = document.getElementById('emptyState');
 
-                if (datosTabla.length === 0) {
-                    emptyState.style.display = 'block';
-                    totalBadge.textContent = '0 indicadores';
-                } else {
-                    emptyState.style.display = 'none';
-                    totalBadge.textContent = `${datosTabla.length} indicadores`;
-                }
+        //         if (datosTabla.length === 0) {
+        //             emptyState.style.display = 'block';
+        //             totalBadge.textContent = '0 indicadores';
+        //         } else {
+        //             emptyState.style.display = 'none';
+        //             totalBadge.textContent = `${datosTabla.length} indicadores`;
+        //         }
 
-            } catch (error) {
-                console.error('Error cargando indicadores:', error);
-                alert('No se pudieron cargar los indicadores.');
-            }
-        }
+        //     } catch (error) {
+        //         console.error('Error cargando indicadores:', error);
+        //         alert('No se pudieron cargar los indicadores.');
+        //     }
+        // }
 
         let tablaMediciones;
 
         async function leerMediciones() {
+            try {
+                const response = await fetch('/api/indicadores');
+                indicadores = await response.json();
+            } catch (error) {
+                console.error('Error cargando indicadores:', error);
+                alert('No se pudieron cargar los indicadores.');
+            }
+
             try {
                 const response = await fetch('/api/mediciones');
                 const data = await response.json();
@@ -607,7 +615,14 @@
                                 }
                             },
                             { data: 'med_anio' },
-                            { data: 'med_tipo_periodo' },
+
+                            {
+                                data: 'med_tipo_periodo',
+                                render: function (data, type, row) {
+                                    return CodigosService.getNombreCodigo(data);
+                                }
+                            },
+
                             {
                                 data: 'med_valor_periodo',
                                 className: 'text-center',
@@ -687,8 +702,25 @@
             }
         }
 
+
+        function getUltimaMedicionPorIndicador(mediciones, indicadorId) {
+            // Filtrar por el indicador
+            const filtradas = mediciones.filter(m => m.med_indicador_id === indicadorId);
+
+            // Si no hay ninguna, devolvemos null
+            if (filtradas.length === 0) return null;
+
+            // Buscar la más reciente comparando fechas
+            return filtradas.reduce((ultima, actual) => {
+                return new Date(actual.med_fecha_medicion) > new Date(ultima.med_fecha_medicion)
+                    ? actual
+                    : ultima;
+            });
+        }
+
+
         async function cargarResponsables() {
-            const select = document.getElementById('responsable');
+            // const select = document.getElementById('responsable');
             try {
                 const response = await fetch('/usuarios');
                 if (!response.ok) throw new Error('No se pudieron obtener los usuarios');
@@ -697,12 +729,12 @@
                 // Filtrar solo activos (opcional)
                 const activos = usuarios.filter(u => u.estado === 'activo');
 
-                activos.forEach(u => {
-                    const option = document.createElement('option');
-                    option.value = u.legajo; // este será el valor enviado al backend
-                    option.textContent = `${u.apellido}, ${u.nombres}`; // lo que se muestra al usuario
-                    select.appendChild(option);
-                });
+                // activos.forEach(u => {
+                //     const option = document.createElement('option');
+                //     option.value = u.legajo; // este será el valor enviado al backend
+                //     option.textContent = `${u.apellido}, ${u.nombres}`; // lo que se muestra al usuario
+                //     select.appendChild(option);
+                // });
 
             } catch (error) {
                 console.error(error);
@@ -717,6 +749,7 @@
                 const response = await fetch('/api/codigos');
                 if (!response.ok) throw new Error('No se pudo obtener los codigos.');
                 const codigos = await response.json();
+                console.table(codigos)
 
                 codigos.forEach(c => {
                     this.codigosMap[c.cod_tabla] = c.cod_nombre;
@@ -737,7 +770,8 @@
             await CodigosService.init();
 
             // 2. Cargar indicadores y responsables
-            await cargarIndicadores();
+            // await cargarIndicadores();
+            await leerMediciones();
 
             // 3. Cargar responsables
             await cargarResponsables();

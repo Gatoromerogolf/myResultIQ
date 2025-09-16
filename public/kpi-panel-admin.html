@@ -604,6 +604,206 @@
         });
 
 
+        function calcularFechaEsperada(fechaConsulta, tipoPeriodo) {
+            // segun la fecha del dia determina qué fecha deberia ya haber informado el usuario
+            const partes = fechaConsulta.split('-'); // "2025-09-16" → ["2025","09","16"]
+            const fecha = new Date(partes[0], partes[1] - 1, partes[2]); // año, mesIndex, día
+            let resultado;
+            let dia = fecha.getDate();
+            console.log(`dia considerado: ${dia}`);
+            let mes = fecha.getMonth() + 1; // 1-12
+            let anio = fecha.getFullYear();
+
+            switch (tipoPeriodo) {
+                case '01': // diaria (día hábil anterior)
+                    const diaHabil = getDiaHabilAnterior(fecha);
+                    resultado = diaHabil.toISOString().split('T')[0]; // yyyy-mm-dd
+                    break;
+
+                case '02': // semanal
+                    // Obtener semana ISO y año ISO
+                    const { anioISO, semanaISO } = getSemanaISO(fecha);
+
+                    // Semana anterior
+                    let semanaAnterior = semanaISO - 1;
+                    let anioSemanaAnterior = anioISO;
+
+                    // Si la semana anterior cae en el año anterior
+                    if (semanaAnterior === 0) {
+                        // Última semana ISO del año anterior (52 o 53 según el año)
+                        anioSemanaAnterior = anioISO - 1;
+                        semanaAnterior = getSemanaISO(new Date(anioSemanaAnterior, 11, 31)).semanaISO;
+                    }
+
+                    // Guardar resultado en formato uniforme: "AAAA+semana"
+                    resultado = `${anioSemanaAnterior}${semanaAnterior}`;
+                    break;
+
+
+                case '03': // quincenal
+                    if (dia < 16) {
+                        mes = mes - 1;
+                        if (mes === 0) {
+                            mes = 12;
+                            anio = anio - 1;
+                        }
+                        resultado = `${mes}2`; // segunda quincena del mes anterior
+                    } else {
+                        resultado = `${mes}1`; // primera quincena del mes actual
+                    }
+                    break;
+
+                case '04': // mensual
+                    if (mes === 1) {
+                        // si enero, el mes anterior es diciembre del año anterior
+                        resultado = `${anio - 1}12`;
+                    } else {
+                        // cualquier otro mes: mes anterior del mismo año
+                        resultado = `${anio}${mes - 1}`;
+                    }
+                    break;
+
+
+                case '05': // bimestral
+                    if (mes === 1 || mes === 2) {
+                        // ene-feb → año anterior + 6 (último bimestre del año anterior)
+                        resultado = `${anio - 1}6`;
+                    } else if (mes === 3 || mes === 4) {
+                        // mar-abr → año actual + 1
+                        resultado = `${anio}1`;
+                    } else if (mes === 5 || mes === 6) {
+                        // may-jun → año actual + 2
+                        resultado = `${anio}2`;
+                    } else if (mes === 7 || mes === 8) {
+                        // jul-ago → año actual + 3
+                        resultado = `${anio}3`;
+                    } else if (mes === 9 || mes === 10) {
+                        // sep-oct → año actual + 4
+                        resultado = `${anio}4`;
+                    } else if (mes === 11 || mes === 12) {
+                        // nov-dic → año actual + 5
+                        resultado = `${anio}5`;
+                    }
+                    break;
+
+
+                case '06': // trimestral
+                    if (mes >= 1 && mes <= 3) {
+                        // meses 1-3 → año anterior + sufijo 4
+                        resultado = `${anio - 1}4`;
+                    } else if (mes >= 4 && mes <= 6) {
+                        // meses 4-6 → año actual + sufijo 1
+                        resultado = `${anio}1`;
+                    } else if (mes >= 7 && mes <= 9) {
+                        // meses 7-9 → año actual + sufijo 2
+                        resultado = `${anio}2`;
+                    } else if (mes >= 10 && mes <= 12) {
+                        // meses 10-12 → año actual + sufijo 3
+                        resultado = `${anio}3`;
+                    }
+                    break;
+
+
+                case '07': // cuatrimestral
+                    if (mes >= 1 && mes <= 4) {
+                        // meses 1-4 → año anterior + sufijo 3
+                        resultado = `${anio - 1}3`;
+                    } else if (mes >= 5 && mes <= 8) {
+                        // meses 5-8 → año actual + sufijo 1
+                        resultado = `${anio}1`;
+                    } else if (mes >= 9 && mes <= 12) {
+                        // meses 9-12 → año actual + sufijo 2
+                        resultado = `${anio}2`;
+                    }
+                    break;
+
+
+                case '08': // semestral
+                    if (mes < 7) {
+                        // primer semestre ya pasó → apéndice 2, año anterior
+                        resultado = `${anio - 1}2`;
+                    } else {
+                        // segundo semestre → apéndice 1, año actual
+                        resultado = `${anio}1`;
+                    }
+                    break;
+
+                case '09': // anual
+                    resultado = anio - 1; // año anterior
+                    break;
+
+                default:
+                    resultado = null;
+            }
+
+            return resultado;
+        }
+
+        /**
+ * Devuelve la semana ISO y el año ISO de una fecha
+ * @param {Date|string} fecha - objeto Date o string interpretable como fecha
+ * @returns {{anioISO: number, semanaISO: number}}
+ */
+        function getSemanaISO(fecha = new Date()) {
+            const f = new Date(Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()));
+
+            // Obtener el día de la semana (lunes = 1, domingo = 7)
+            const diaSemana = f.getUTCDay() || 7;
+
+            // Ajustar al jueves de la misma semana
+            f.setUTCDate(f.getUTCDate() + 4 - diaSemana);
+
+            // Año ISO
+            const anioISO = f.getUTCFullYear();
+
+            // Primer día del año ISO
+            const primerDiaAnoISO = new Date(Date.UTC(anioISO, 0, 1));
+
+            // Diferencia en días
+            const diffDias = (f - primerDiaAnoISO) / (24 * 60 * 60 * 1000);
+
+            // Semana ISO
+            const semanaISO = Math.ceil((diffDias + 1) / 7);
+
+            return { anioISO, semanaISO };
+        }
+
+        // Ejemplo de uso:
+        const hoy = new Date();
+        const { anioISO, semanaISO } = getSemanaISO(hoy);
+        console.log(`Hoy ${hoy.toISOString().split('T')[0]} → Semana ISO: ${semanaISO}, Año ISO: ${anioISO}`);
+
+        console.log(calcularFechaEsperada('2025-09-16', '01')); // diaria → "2025-09-15"
+        console.log(calcularFechaEsperada('2025-09-16', '02')); // semanal → semana anterior
+        console.log(calcularFechaEsperada('2025-09-16', '03')); // quincenal → "91"
+        console.log(calcularFechaEsperada('2025-09-16', '04')); // mensual → 8
+        console.log(calcularFechaEsperada('2025-09-16', '05')); // bimestral → 4
+        console.log(calcularFechaEsperada('2025-09-16', '06')); // trimestral → 3
+        console.log(calcularFechaEsperada('2025-09-16', '07')); // cuatrimestral → 3
+        console.log(calcularFechaEsperada('2025-09-16', '08')); // semestral → 2
+        console.log(calcularFechaEsperada('2025-09-16', '09')); // anual → 2024
+
+
+        /**
+ * Devuelve el día hábil anterior a la fecha dada
+ * @param {Date|string} fecha - fecha a partir de la cual buscar
+ * @returns {Date} día hábil anterior
+ */
+        function getDiaHabilAnterior(fecha) {
+            // Crear fecha solo con año/mes/día, ignorando horas y zona horaria
+            const f = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+            do {
+                f.setDate(f.getDate() - 1);
+            } while (f.getDay() === 0 || f.getDay() === 6);
+            return f;
+        }
+
+        console.log('ultimo ajuste' + calcularFechaEsperada('2025-09-16', '01'));
+        // Ejemplo:
+        const diaHabil = getDiaHabilAnterior(hoy);
+        console.log(diaHabil.toISOString().split('T')[0]); // "2025-09-15"
+
+
     </script>
 
 

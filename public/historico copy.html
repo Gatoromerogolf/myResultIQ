@@ -3,6 +3,7 @@
 <!--begin::Head-->
 
 
+
 <head>
     <meta charset="UTF-8">
     <title>Cargar datos - Gestión de KPIs</title>
@@ -55,24 +56,15 @@
             object-fit: contain;
         }
 
-        #tablaIndicadores th,
-        #tablaIndicadores td {
-            border-right: none !important;
-        }
-
-        #tablaIndicadores {
-            border-top: 1px solid #dee2e6;
-            /* mismo color que usa Bootstrap */
-            border-right: 1px solid #dee2e6;
-            /* mismo color que usa Bootstrap */
-        }
-
-        div.dataTables_filter {
-            margin-bottom: 1rem;
-            /* espacio debajo del buscador */
+        .tooltip-inner {
+            max-width: 600px;
+            /* ancho máximo del tooltip */
+            white-space: normal;
+            /* permite saltos de línea */
+            text-align: left;
+            /* opcional: alinear texto a la izquierda */
         }
     </style>
-
 </head>
 <!--end::Head-->
 
@@ -281,16 +273,16 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="cargar-datos.html" class="nav-link active">
+                            <a href="cargar-datos.html" class="nav-link">
                                 <i class="nav-icon fas fa-upload fa-tachometer-alt text-primary"></i>
-                                <p>Registro de Datos</p>
+                                <p>Cargar Datos</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="historico.html" class="nav-link">
+                            <a href="historico.html" class="nav-link active">
                                 <i class="nav-icon fas fa-history text-primary"></i>
-                                <p>Histórico de Registros</p>
+                                <p>Histórico</p>
                             </a>
                         </li>
 
@@ -322,11 +314,10 @@
             <div class="app-content-header">
                 <!--begin::Container-->
                 <div class="container-fluid mb-3">
-
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Registrar mediciones</h3>
+                            <h3 class="mb-0">Histórico de cargas</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -336,297 +327,160 @@
                         </div>
                     </div>
 
-                    <div class="card mb-4">
-                        <div class="card-header border-0">
-                            <h3 id="titulo-indicador" class="card-title">Seleccionar Indicador</h3>
-                            <h4 id="subtitulo-indicador" class="card-title" style="display: none;"></h4>
-                            <div class="card-tools">
-                                <!-- <a href="#" class="btn btn-tool btn-sm"> <i class="bi bi-download"></i> </a> -->
-                                <a href="#" class="btn btn-tool btn-sm" onclick="alert('Hiciste clic')">
-                                    <i class="bi bi-download"></i>
-                                </a>
-                                <a href="#" class="btn btn-tool btn-sm"> <i class="bi bi-list"></i> </a>
-                            </div>
-                        </div>
 
-                        <div id="formulario-carga" class="p-3 mt-3 ml-3 border rounded shadow-sm bg-light"
-                            style="display: none;">
-                            <h5 id="titulo-indicador"></h5>
-                            <input type="hidden" id="indicadorCodigo" name="indicadorCodigo">
-
-                            <form id="form-carga" class="ml-3 m-1 bg-light" style="width: 80%;">
-                                <div class="row mb-2">
-                                    <div class="col-md-2">
-                                        <label>Fecha de medición</label>
-                                        <input type="date" class="form-control" id="fecha-carga" required>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <label>Período</label>
-                                        <select id="tipo_id" name="tipo_id" class="form-select" required>
-                                            <option value="" disabled selected>Seleccione...</option>
-                                            <option value="1">Día</option>
-                                            <option value="2">Semana</option>
-                                            <option value="3">Quincena</option>
-                                            <option value="4">Mes</option>
-                                            <option value="5">Bimestre</option>
-                                            <option value="6">Trimestre</option>
-                                            <option value="7">Cuatrimestre</option>
-                                            <option value="8">Semestre</option>
-                                            <option value="9">Año</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <label>Valor Período</label>
-                                        <input type="text" class="form-control" id="valor-periodo" required>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <label>Valor/Cantidad</label>
-                                        <input type="number" class="form-control" id="valor-carga" step="0.01" required>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label>Unidad</label>
-                                        <div class="form-control-plaintext" id="unidad-carga"></div>
-                                    </div>
-                                    <input type="hidden" id="unidadMedidaCodigo" name="unidadMedidaCodigo">
-
-                                    <div class="col-md-7 mt-2">
-                                        <label>Comentario</label>
-                                        <input type="text" class="form-control" id="comentario-carga">
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn btn-success  mt-2">Guardar</button>
-                                <button type="button" class="btn btn-secondary mt-2"
-                                    id="cancelar-carga">Cancelar</button>
-                            </form>
-                        </div>
-
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <div class="card-title">
-                                <i class="fas fa-chart-line me-2"></i>
-                                Lista de Indicadores
-                            </div>
-                            <div class="card-tools">
-                                <span class="badge bg-primary" id="totalIndicadores">0 indicadores</span>
-                            </div>
-                        </div>
-
-                        <div class="table-responsive m-4">
-                            <!-- <table class="table table-striped table-hover mb-0"> -->
-                            <table id="tablaIndicadores" class="table table-striped table-bordered table-sm">
-                            </table>
-
-                            <thead class="table-light">
-                                <tr>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyIndicadores">
-                                <!-- Los datos se cargarán dinámicamente aquí -->
-                            </tbody>
-                            </table>
-                        </div>
-                        <!--end::Table-->
-
-                        <!--begin::Empty State-->
-                        <div class="text-center py-5" id="emptyState" style="display: none;">
-                            <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No hay indicadores registrados</h5>
-                            <p class="text-muted">Comience agregando su primer indicador PKI</p>
-                        </div>
-                        <!--end::Empty State-->
-
+                    <!--begin::Empty State-->
+                    <div class="text-center py-5" id="emptyState" style="display: none;">
+                        <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No hay indicadores registrados</h5>
+                        <p class="text-muted">Comience agregando su primer indicador PKI</p>
                     </div>
+                    <!--end::Empty State-->
+
+                    <div class="card-tools">
+                        <span class="badge bg-primary" id="totalIndicadores">0 indicadores</span>
+                    </div>
+
+                    <table id="tablaMediciones" class="table table-striped table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Indicador</th>
+                                <th>Medición</th>
+                                <th>Año</th>
+                                <th>Periodo</th>
+                                <th>Per.valor</th>
+                                <th>Valor</th>
+                                <th>Unid</th>
+                                <th>Comentarios</th>
+                                <th>Respons. Medición</th>
+                                <th>Respons. Registro</th>
+                                <th>Fecha Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
                 </div>
+            </div>
         </main>
+    </div>
 
-        <!-- Modal de Confirmación de Logout -->
-        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        Esta acción cerrará tu sesión actual y volverás a la página de inicio.
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
-                    </div>
+
+    <!-- Modal de Confirmación de Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    Esta acción cerrará tu sesión actual y volverás a la página de inicio.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
                 </div>
             </div>
         </div>
-        <script>
-            document.getElementById('confirmLogout').addEventListener('click', function () {
-                // Limpiar lo necesario
-                sessionStorage.clear();
-                localStorage.clear(); // si usás localStorage
-
-                // Redirigir al inicio
-                window.location.href = 'index.html';
-            });
-        </script>
     </div>
+    <!-- Scripts -->
+    <!-- <script src="plugins/jquery/jquery.min.js"></script> -->
+    <!-- <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script> -->
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+
+    <!-- Bootstrap (bundle con Popper incluido) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <!-- <script src="../../dist/js/adminlte.js"></script> -->
+    <script src="../js/adminlte.js"></script>
+    <!--end::Required Plugin(AdminLTE)-->
+
+    <!--begin::Required Plugin(AdminLTE)-->
+    <script src="../js/adminlte.min.js"></script>
+
+
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
 
     <script>
+        const registros = [
+            { fecha: '2025-07-01', codigo: 'FIN001', descripcion: 'Margen de Ganancia Bruta', comentario: 'Comentarios a considerar en la medición', valor: 18.5, unidad: '%' },
+            { fecha: '2025-06-01', codigo: 'FIN001', descripcion: 'Margen de Ganancia Bruta', comentario: 'Efecto de la pandemia', valor: 18.0, unidad: '%' },
 
-        let tablaIndicadores; // instancia global
+            // Agregá más registros simulados o reemplazá con datos reales del backend
+        ];
 
-        // const botonesSeleccionar = document.querySelectorAll('.seleccionar-btn');
-        const formulario = document.getElementById('formulario-carga');
-        const titulo = document.getElementById('titulo-indicador');
-        const cancelarBtn = document.getElementById('cancelar-carga');
+        let paginaActual = 1;
+        let cantidadPorPagina = 10;
+        let ordenActual = 'fecha';
 
-        cancelarBtn.addEventListener('click', () => {
-            formulario.style.display = 'none';
-            const titulo = document.getElementById('titulo-indicador');
-            titulo.innerHTML = `Seleccionar Indicador`;
-        });
-
-        const tipoSelect = document.getElementById('tipo_id');
-        const valorPeriodo = document.getElementById('valor-periodo');
-        const fechaMedicion = document.getElementById('fecha-carga');
-
-        // Cambiar Valor Período según el tipo de periodo
-        tipoSelect.addEventListener('change', function () {
-            if (this.value === "1") { // Día
-                if (fechaMedicion.value) {
-                    const partes = fechaMedicion.value.split('-'); // ["2025","09","01"]
-                    const anio = partes[0];
-                    const mes = partes[1];
-                    const dia = partes[2];
-                    valorPeriodo.value = `${dia}-${mes}-${anio}`; // DD-MM-AAAA
-                } else {
-                    valorPeriodo.value = "";
-                }
-                valorPeriodo.readOnly = true; // bloquea edición
-            } else {
-                valorPeriodo.value = "";       // limpio el campo
-                valorPeriodo.readOnly = false; // permite editar
-            }
-        });
-
-        // Opcional: actualizar Valor Período si cambian la fecha cuando Tipo = Día
-        fechaMedicion.addEventListener('change', function () {
-            if (tipoSelect.value === "1") {
-                valorPeriodo.value = this.value;
-            }
-        });
-
-        document.getElementById('form-carga').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const errores = [];
-            const indId = document.getElementById('indicadorCodigo').value;
-
-            const unidad = document.getElementById('unidadMedidaCodigo').value;
-
-            const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
-            const fechaInputDate = new Date(fechaInputStr); // ahora es un Date
-            const hoy = new Date();
-            hoy.setHours(0, 0, 0, 0); // solo día/mes/año
-
-            if (fechaInputDate > hoy) {
-                errores.push("La fecha no puede ser mayor a la fecha de hoy.");
-            }
-
-            let anio_ISO = null;
-            const fechaISO = validarFechaISO(fechaInputDate);
-
-            if (fechaISO) {
-                anio_ISO = fechaInputDate.getFullYear();
-            } else {
-                errores.push("Fecha inválida o fuera de rango (1900-2100).");
-            }
-
-            // Tomar los valores de los campos
-            const datos = {
-                med_indicador_id: indId,
-                med_fecha_medicion: document.getElementById('fecha-carga').value,
-                med_tipo_periodo: document.getElementById('tipo_id').value,
-                med_valor_periodo: document.getElementById('valor-periodo').value,
-                med_anio: anio_ISO,
-                med_valor: parseFloat(document.getElementById('valor-carga').value),
-                med_comentarios: document.getElementById('comentario-carga').value.trim(),
-                med_unidad_medida: unidad,
-                med_legajo_resp_medicion: '5432',
-                med_legajo_resp_registro: '1234',
-                med_fecha_registro: new Date().toISOString().split('T')[0] // fecha actual en ISO
-            };
-
-            if (errores.length > 0) {
-                alert("Errores:\n- " + errores.join("\n- "));
-                return; // No manda nada al servidor
-            }
-
-            console.log("Datos a enviar:", datos);
-
-            // === Envío al backend ===
+        async function obtenerUsuarioPorLegajo(responsable) {
+            // console.log('legajo recibido: ' + responsable)
             try {
-                const response = await fetch('/api/mediciones', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datos)
-                });
+                const response = await fetch(`/usuarios/${responsable}`);
 
-                const result = await response.json();
-
-                if (response.ok && result.ok) {
-                    alert("Guardado correctamente ✅");
-                    e.target.reset();
-                } else {
-                    // El backend también devuelve errores si algo se escapó
-                    alert("Error del servidor:\n" + (result.errores ? result.errores.join("\n- ") : result.error));
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn('Usuario no encontrado');
+                        console.log (`no encontro a :  ${responsable}`);
+                        return null;
+                    }
+                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
                 }
+                const usuario = await response.json();
+                // console.log('Usuario obtenido:', usuario);
+                return usuario;
             } catch (err) {
-                console.error("Error al guardar:", err);
-                alert("Ocurrió un error inesperado.");
-            }
-        });
-
-        function validarFechaDDMMYYYY(fechaStr) {
-            // formato correcto dd/mm/yyyy ?
-            const partes = fechaStr.split("/");
-            if (partes.length !== 3) return null;
-
-            const [dd, mm, yyyy] = partes.map(p => parseInt(p, 10));
-
-            if (isNaN(dd) || isNaN(mm) || isNaN(yyyy)) return null;
-            if (yyyy < 1900 || yyyy > 2100) return null; // rango lógico
-            if (mm < 1 || mm > 12) return null;
-
-            // crear fecha con JS (mes -1 porque Date usa 0-11)
-            const date = new Date(yyyy, mm - 1, dd);
-
-            // verificar que coincida (por ej. no aceptar 31/02/2025)
-            if (date.getFullYear() !== yyyy || date.getMonth() !== mm - 1 || date.getDate() !== dd) {
+                console.error('Error en fetch:', err);
                 return null;
             }
-
-            // devolver en formato ISO (yyyy-mm-dd) si todo está bien
-            return `${yyyy}-${String(mm).padStart(2, "0")}-${String(dd).padStart(2, "0")}`;
         }
 
-        function validarFechaISO(fechaStr) {
-            const date = new Date(fechaStr);
-            if (isNaN(date.getTime())) return null;
+        async function obtenerSectoresPorUnidad(unidad) {
+            try {
+                const response = await fetch(`/sectores/${unidad}`);
 
-            const yyyy = date.getFullYear();
-            if (yyyy < 1900 || yyyy > 2100) return null;
-
-            return fechaStr; // ya está en formato yyyy-mm-dd
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn('Sector no encontrado');
+                        return null;
+                    }
+                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
+                }
+                const sector = await response.json();
+                return sector;
+            } catch (err) {
+                console.error('Error en fetch:', err);
+                return null;
+            }
         }
 
+        let tablaIndicadores; // instancia global
         let indicadores;
+
         async function cargarIndicadores() {
             try {
                 const response = await fetch('/api/indicadores');
                 indicadores = await response.json();
+
+                // acá recién creás la DataTable de mediciones
+                leerMediciones();
 
                 // Transformamos los datos para que DataTable los entienda
                 const datosTabla = await Promise.all(indicadores.map(async (ind) => {
@@ -641,7 +495,8 @@
                         descripcion: ind.descripcion,
                         sectores: sectores.nombre,
                         responsable: `${usuario.nombres} ${usuario.apellido}`,
-                        frecuencia: CodigosService.getNombreCodigo(ind.freq_medicion),
+                        objetivo: ind.objetivo,
+                        frecuencia: CodigosService.getNombreCodigo(ind.freq_reporte),
                         carga: ind.fecha_inicio ? new Date(ind.fecha_inicio).toLocaleDateString() : '-',
                         estado: `<td><span class="badge text-bg-warning"> Demorado </span></td>`,
                         acciones: `
@@ -649,7 +504,7 @@
                             <button class="btn btn-primary btn-xs" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
                                 <i class="fas fa-eye fa-xs"></i>
                             </button>
-                            <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}')">
+                            <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.codigo_id}')">
                                 <i class="fas fa-edit fa-xs"></i>
                             </button>
                         </td>
@@ -667,7 +522,7 @@
                             { data: 'descripcion', title: 'Descripción' },
                             { data: 'responsable', title: 'Responsable' },
                             { data: 'frecuencia', title: 'Medición' },
-                            { data: 'carga', title: 'Ultima Medición' },
+                            { data: 'carga', title: 'Ultima Carga' },
                             { data: 'estado', title: 'Estado' },
                             { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
                         ],
@@ -709,120 +564,150 @@
             }
         }
 
-        async function obtenerUsuarioPorLegajo(responsable) {
-            try {
-                const response = await fetch(`/usuarios/${responsable}`);
+        let tablaMediciones;
 
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        console.warn('Usuario no encontrado');
-                        return null;
-                    }
-                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
-                }
-                const usuario = await response.json();
-                return usuario;
-            } catch (err) {
-                console.error('Error en fetch:', err);
-                return null;
-            }
-        }
-
-        async function obtenerSectoresPorUnidad(unidad) {
-            try {
-                const response = await fetch(`/sectores/${unidad}`);
-
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        console.warn('Sector no encontrado');
-                        return null;
-                    }
-                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
-                }
-                const sector = await response.json();
-                return sector;
-            } catch (err) {
-                console.error('Error en fetch:', err);
-                return null;
-            }
-        }
-
-        // Cargar un indicador en el formulario para editar
-        async function editarIndicador(indId, codigo, nombre, unidad) {
-
-            const ultima = await getUltimaMedicionPorIndicador(indId);
-            const fecha = new Date(ultima.med_fecha_medicion);
-            const fechaFormateada = fecha.toLocaleDateString('es-AR'); // "16/09/2025"
-
-
-            const titulo = document.getElementById('titulo-indicador');
-            titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
-
-            const subtitulo = document.getElementById('subtitulo-indicador');
-
-            // limpiar primero, para que no se acumulen
-            subtitulo.textContent = "";
-
-            // insertar el <br>
-            subtitulo.appendChild(document.createElement("br"));
-            subtitulo.appendChild(document.createElement("br"));
-
-            // insertar el texto
-            subtitulo.append(`Ultima medición registrada: ${fechaFormateada}`);
-
-            subtitulo.style.display = 'block';
-
-            // guardo el código en el hidden para usarlo después
-            document.getElementById('indicadorCodigo').value = indId;
-
-            const unid_medida = CodigosService.getNombreCodigo(unidad);
-            document.getElementById('unidad-carga').innerText = unid_medida || '';
-            // guardo en el hidden
-            document.getElementById('unidadMedidaCodigo').value = unidad;
-
-            formulario.style.display = 'block';
-            // Llevar al inicio de la página
-            window.scrollTo({ behavior: 'smooth', top: 0 });
-
-        }
-
-        let medicionesGral = [];
         async function leerMediciones() {
             try {
-                const res = await fetch('/api/mediciones');
-                const json = await res.json();
+                const response = await fetch('/api/mediciones');
+                const data = await response.json();
 
-                if (Array.isArray(json)) {
-                    return json;
-                } else if (json.success) {
-                    return json.data || [];
+                // backend devuelve { success, total, data }
+                const filas = data.success ? data.data : [];
+
+                const filasConUsuario = await Promise.all(
+                    filas.map(async m => {
+                        const usuario = await obtenerUsuarioPorLegajo(m.med_legajo_resp_medicion);
+                        const resp_registro = await obtenerUsuarioPorLegajo(m.med_legajo_resp_registro);
+                        return {
+                            ...m,
+                            nombre_usuario: usuario ? usuario.apellido + ' ' + usuario.nombres : m.med_legajo_resp_medicion,
+                            nombre_resp_registro: resp_registro ? resp_registro.apellido + ' ' + resp_registro.nombres : m.med_legajo_resp_registro
+                        };
+                    })
+                );
+
+                // Inicializar la DataTable si aún no existe
+                if (!$.fn.DataTable.isDataTable('#tablaMediciones')) {
+                    tablaMediciones = $('#tablaMediciones').DataTable({
+                        data: filasConUsuario,
+                        columns: [
+                            { data: 'id' },
+                            {
+                                data: 'med_indicador_id',
+                                render: function (data, type, row) {
+                                    const indicador = indicadores.find(i => i.id === data);
+                                    return indicador ? indicador.codigo_id : data;
+                                }
+                            },
+                            {
+                                data: 'med_fecha_medicion',
+                                render: function (data) {
+                                    if (!data) return '';
+                                    return new Date(data).toLocaleDateString('es-ES');
+                                }
+                            },
+                            { data: 'med_anio' },
+                            { data: 'med_tipo_periodo' },
+                            {
+                                data: 'med_valor_periodo',
+                                className: 'text-center',
+                                title: `Valor del período 
+                                        <i class="bi bi-info-circle" 
+                                        data-bs-toggle="tooltip" 
+                                        data-bs-html="true"
+                                        style="max-width:400px; color: red;"
+                                        title="
+                                        Según Período:<br>
+                                        - <strong>día:</strong> fecha<br>
+                                        - <strong>semana:</strong> número de semana del año (1 a 52)<br>
+                                        - <strong>quincena:</strong> número de mes y quincena (1 o 2)<br>
+                                        - <strong>mes:</strong> número de mes (1 a 12)<br>
+                                        - <strong>bimestre:</strong> número de bimestre en el año (1 a 6)<br>
+                                        - <strong>trimestre:</strong> número de trimestre en el año (1 a 4)<br>
+                                        - <strong>cuatrimestre:</strong> número de cuatrimestre en el año (1 a 3)<br>
+                                        - <strong>semestre:</strong> número de semestre en el año (1 a 2)
+                                        "
+                                        ></i>`
+                            },
+                            {
+                                data: 'med_valor',
+                                className: 'text-end',
+                                render: function (data, type, row) {
+                                    if (data == null) return '';
+
+                                    const numero = parseFloat(data);  // Cambia Number() por parseFloat()
+
+                                    return numero.toLocaleString('es-ES', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
+                                }
+                            }
+                            ,
+                            {
+                                data: 'med_unidad_medida',  // propiedad en la fila
+                                render: function (data, type, row) {
+                                    if (!data) return '';
+                                    return CodigosService.getNombreCodigo(data);  // convierte el código a nombre
+                                }
+                            },
+                            { data: 'med_comentarios' },
+                            { data: 'nombre_usuario' },
+                            { data: 'nombre_resp_registro' },
+                            {
+                                data: 'med_fecha_registro',
+                                render: function (data) {
+                                    if (!data) return '';
+                                    return new Date(data).toLocaleDateString('es-ES');
+                                }
+                            }
+                        ],
+                        responsive: true,
+                        autoWidth: false,
+                        pageLength: 10,
+                        language: {
+                            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                        },
+                        order: [[2, 'desc']], // ordena por fecha_medicion descendente
+
+                        // 🔹 drawCallback: inicializa tooltips después de renderizar
+                        drawCallback: function () {
+                            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                            tooltipTriggerList.map(function (el) {
+                                return new bootstrap.Tooltip(el);
+                            });
+                        }
+                    });
                 } else {
-                    console.error("Error en la respuesta:", json);
-                    return [];
+                    // Si la tabla ya existe, actualizamos los datos
+                    tablaMediciones.clear().rows.add(filas).draw();
                 }
             } catch (err) {
-                console.error("Error leyendo mediciones:", err);
-                return [];
+                console.error("Error cargando mediciones:", err);
             }
         }
 
-        async function getUltimaMedicionPorIndicador(indicadorId) {
-            // Filtrar por el indicador
-            const mediciones = await leerMediciones();
-            console.table(mediciones)
-            const filtradas = mediciones.filter(m => m.med_indicador_id == indicadorId);
-            console.log(filtradas);
-            // Si no hay ninguna, devolvemos null
-            if (filtradas.length === 0) return null;
+        async function cargarResponsables() {
+            // const select = document.getElementById('responsable');
+            try {
+                const response = await fetch('/usuarios');
+                if (!response.ok) throw new Error('No se pudieron obtener los usuarios');
+                const usuarios = await response.json();
 
-            // Buscar la más reciente comparando fechas
-            return filtradas.reduce((ultima, actual) => {
-                return new Date(actual.med_fecha_medicion) > new Date(ultima.med_fecha_medicion)
-                    ? actual
-                    : ultima;
-            });
+                // Filtrar solo activos (opcional)
+                const activos = usuarios.filter(u => u.estado === 'activo');
+
+                // activos.forEach(u => {
+                //     const option = document.createElement('option');
+                //     option.value = u.legajo; // este será el valor enviado al backend
+                //     option.textContent = `${u.apellido}, ${u.nombres}`; // lo que se muestra al usuario
+                //     select.appendChild(option);
+                // });
+
+            } catch (error) {
+                console.error(error);
+            }
         }
-
 
         // Servicio global para textp de tabla de códigos 
         const CodigosService = {
@@ -848,40 +733,20 @@
         });
 
         async function iniciarPagina() {
-            // 1. Cargar codigos e indicadores
-            await CodigosService.init();   // 🔹 primero inicializo los códigos
-            await cargarIndicadores();     // 🔹 después cargo los indicadores
+            // 1. Inicializa CodigosService
+            await CodigosService.init();
 
-            // 2. Leer mediciones
-            await leerMediciones();
+            // 2. Cargar indicadores y responsables
+            // await cargarIndicadores();
+            leerMediciones();
 
-
+            // 3. Cargar responsables
+            await cargarResponsables();
         }
 
-
     </script>
+    <script src="dist/js/adminlte.min.js"></script>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <!-- <script src="plugins/jquery/jquery.min.js"></script>
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script> -->
-    <!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)
---><!--begin::Required Plugin(Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../js/adminlte.min.js"></script>
 </body>
 
 </html>
