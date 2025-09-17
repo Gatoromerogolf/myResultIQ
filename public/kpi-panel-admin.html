@@ -610,7 +610,6 @@
             const fecha = new Date(partes[0], partes[1] - 1, partes[2]); // año, mesIndex, día
             let resultado;
             let dia = fecha.getDate();
-            console.log(`dia considerado: ${dia}`);
             let mes = fecha.getMonth() + 1; // 1-12
             let anio = fecha.getFullYear();
 
@@ -647,9 +646,9 @@
                             mes = 12;
                             anio = anio - 1;
                         }
-                        resultado = `${mes}2`; // segunda quincena del mes anterior
+                        resultado = `${anio}${mes}2`; // segunda quincena del mes anterior
                     } else {
-                        resultado = `${mes}1`; // primera quincena del mes actual
+                        resultado = `${anio}${mes}1`; // primera quincena del mes actual
                     }
                     break;
 
@@ -773,15 +772,15 @@
         const { anioISO, semanaISO } = getSemanaISO(hoy);
         console.log(`Hoy ${hoy.toISOString().split('T')[0]} → Semana ISO: ${semanaISO}, Año ISO: ${anioISO}`);
 
-        console.log(calcularFechaEsperada('2025-09-16', '01')); // diaria → "2025-09-15"
-        console.log(calcularFechaEsperada('2025-09-16', '02')); // semanal → semana anterior
-        console.log(calcularFechaEsperada('2025-09-16', '03')); // quincenal → "91"
-        console.log(calcularFechaEsperada('2025-09-16', '04')); // mensual → 8
-        console.log(calcularFechaEsperada('2025-09-16', '05')); // bimestral → 4
-        console.log(calcularFechaEsperada('2025-09-16', '06')); // trimestral → 3
-        console.log(calcularFechaEsperada('2025-09-16', '07')); // cuatrimestral → 3
-        console.log(calcularFechaEsperada('2025-09-16', '08')); // semestral → 2
-        console.log(calcularFechaEsperada('2025-09-16', '09')); // anual → 2024
+        console.log('diaria: ' + calcularFechaEsperada('2025-09-16', '01')); // diaria → "2025-09-15"
+        console.log('semanal: ' + calcularFechaEsperada('2025-09-16', '02')); // semanal → "2025-09-01"
+        console.log('quincenal: ' + calcularFechaEsperada('2025-09-16', '03')); // quincenal → "91"
+        console.log('mensual: ' + calcularFechaEsperada('2025-09-16', '04')); // mensual → 8
+        console.log('bimestral: ' + calcularFechaEsperada('2025-09-16', '05')); // bimestral → 4
+        console.log('trimestral: ' + calcularFechaEsperada('2025-09-16', '06')); // trimestral → 3
+        console.log('cuatrimestral: ' + calcularFechaEsperada('2025-09-16', '07')); // cuatrimestral → 3
+        console.log('semestral: ' + calcularFechaEsperada('2025-09-16', '08')); // semestral → 2
+        console.log('anual: ' + calcularFechaEsperada('2025-09-16', '09')); // anual → 2024
 
 
         /**

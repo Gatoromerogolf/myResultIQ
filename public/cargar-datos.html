@@ -339,7 +339,6 @@
                     <div class="card mb-4">
                         <div class="card-header border-0">
                             <h3 id="titulo-indicador" class="card-title">Seleccionar Indicador</h3>
-                            <h4 id="subtitulo-indicador" class="card-title" style="display: none;"></h4>
                             <div class="card-tools">
                                 <!-- <a href="#" class="btn btn-tool btn-sm"> <i class="bi bi-download"></i> </a> -->
                                 <a href="#" class="btn btn-tool btn-sm" onclick="alert('Hiciste clic')">
@@ -347,6 +346,7 @@
                                 </a>
                                 <a href="#" class="btn btn-tool btn-sm"> <i class="bi bi-list"></i> </a>
                             </div>
+                            <h4 id="subtitulo-indicador" class="card-title" style="display: none;"></h4>
                         </div>
 
                         <div id="formulario-carga" class="p-3 mt-3 ml-3 border rounded shadow-sm bg-light"
@@ -363,18 +363,7 @@
 
                                     <div class="col-md-2">
                                         <label>Período</label>
-                                        <select id="tipo_id" name="tipo_id" class="form-select" required>
-                                            <option value="" disabled selected>Seleccione...</option>
-                                            <option value="1">Día</option>
-                                            <option value="2">Semana</option>
-                                            <option value="3">Quincena</option>
-                                            <option value="4">Mes</option>
-                                            <option value="5">Bimestre</option>
-                                            <option value="6">Trimestre</option>
-                                            <option value="7">Cuatrimestre</option>
-                                            <option value="8">Semestre</option>
-                                            <option value="9">Año</option>
-                                        </select>
+                                        <input id="tipo_id" type="text" class="form-control" readonly>
                                     </div>
 
                                     <div class="col-md-2">
@@ -389,7 +378,7 @@
 
                                     <div class="col-md-3">
                                         <label>Unidad</label>
-                                        <div class="form-control-plaintext" id="unidad-carga"></div>
+                                        <div class="form-control" id="unidad-carga"></div>
                                     </div>
                                     <input type="hidden" id="unidadMedidaCodigo" name="unidadMedidaCodigo">
 
@@ -486,108 +475,116 @@
             formulario.style.display = 'none';
             const titulo = document.getElementById('titulo-indicador');
             titulo.innerHTML = `Seleccionar Indicador`;
+            const subtitulo = document.getElementById('subtitulo-indicador');
+            subtitulo.innerHTML = "";
+            subtitulo.style.display = "none";
         });
 
-        const tipoSelect = document.getElementById('tipo_id');
-        const valorPeriodo = document.getElementById('valor-periodo');
-        const fechaMedicion = document.getElementById('fecha-carga');
 
-        // Cambiar Valor Período según el tipo de periodo
-        tipoSelect.addEventListener('change', function () {
-            if (this.value === "1") { // Día
-                if (fechaMedicion.value) {
-                    const partes = fechaMedicion.value.split('-'); // ["2025","09","01"]
-                    const anio = partes[0];
-                    const mes = partes[1];
-                    const dia = partes[2];
-                    valorPeriodo.value = `${dia}-${mes}-${anio}`; // DD-MM-AAAA
-                } else {
-                    valorPeriodo.value = "";
-                }
-                valorPeriodo.readOnly = true; // bloquea edición
-            } else {
-                valorPeriodo.value = "";       // limpio el campo
-                valorPeriodo.readOnly = false; // permite editar
-            }
-        });
+        // const tipoSelect = document.getElementById('tipo_id');
+        // const valorPeriodo = document.getElementById('valor-periodo');
+        // const fechaMedicion = document.getElementById('fecha-carga');
+
+        // tipoSelect.addEventListener('change', function () {
+        //     if (this.value === "Diaria") { // Día
+        //         if (fechaMedicion.value) {
+        //             const partes = fechaMedicion.value.split('-'); // ["2025","09","01"]
+        //             const anio = partes[0];
+        //             const mes = partes[1];
+        //             const dia = partes[2];
+        //             valorPeriodo.value = `${dia}-${mes}-${anio}`; // DD-MM-AAAA
+        //         } else {
+        //             valorPeriodo.value = "";
+        //         }
+        //         valorPeriodo.readOnly = true; // bloquea edición
+        //     } else {
+        //         valorPeriodo.value = "";       // limpio el campo
+        //         valorPeriodo.readOnly = false; // permite editar
+        //     }
+        // });
 
         // Opcional: actualizar Valor Período si cambian la fecha cuando Tipo = Día
-        fechaMedicion.addEventListener('change', function () {
-            if (tipoSelect.value === "1") {
-                valorPeriodo.value = this.value;
-            }
-        });
+        // fechaMedicion.addEventListener('change', function () {
+        //     if (tipoSelect.value === "1") {
+        //         valorPeriodo.value = this.value;
+        //     }
+        // });
 
-        document.getElementById('form-carga').addEventListener('submit', async function (e) {
-            e.preventDefault();
+        // document.getElementById('form-carga').addEventListener('submit', async function (e) {
+        //     e.preventDefault();
 
-            const errores = [];
-            const indId = document.getElementById('indicadorCodigo').value;
+        //     const errores = [];
+        //     const indId = document.getElementById('indicadorCodigo').value;
 
-            const unidad = document.getElementById('unidadMedidaCodigo').value;
+        //     const unidad = document.getElementById('unidadMedidaCodigo').value;
 
-            const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
-            const fechaInputDate = new Date(fechaInputStr); // ahora es un Date
-            const hoy = new Date();
-            hoy.setHours(0, 0, 0, 0); // solo día/mes/año
+        //     const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
+        //     const fechaInputDate = new Date(fechaInputStr); // ahora es un Date
+        //     const hoy = new Date();
+        //     hoy.setHours(0, 0, 0, 0); // solo día/mes/año
 
-            if (fechaInputDate > hoy) {
-                errores.push("La fecha no puede ser mayor a la fecha de hoy.");
-            }
+        //     if (fechaInputDate > hoy) {
+        //         errores.push("La fecha no puede ser mayor a la fecha de hoy.");
+        //     }
 
-            let anio_ISO = null;
-            const fechaISO = validarFechaISO(fechaInputDate);
+        //     let anio_ISO = null;
+        //     const fechaISO = validarFechaISO(fechaInputDate);
 
-            if (fechaISO) {
-                anio_ISO = fechaInputDate.getFullYear();
-            } else {
-                errores.push("Fecha inválida o fuera de rango (1900-2100).");
-            }
+        //     if (fechaISO) {
+        //         anio_ISO = fechaInputDate.getFullYear();
+        //     } else {
+        //         errores.push("Fecha inválida o fuera de rango (1900-2100).");
+        //     }
 
-            // Tomar los valores de los campos
-            const datos = {
-                med_indicador_id: indId,
-                med_fecha_medicion: document.getElementById('fecha-carga').value,
-                med_tipo_periodo: document.getElementById('tipo_id').value,
-                med_valor_periodo: document.getElementById('valor-periodo').value,
-                med_anio: anio_ISO,
-                med_valor: parseFloat(document.getElementById('valor-carga').value),
-                med_comentarios: document.getElementById('comentario-carga').value.trim(),
-                med_unidad_medida: unidad,
-                med_legajo_resp_medicion: '5432',
-                med_legajo_resp_registro: '1234',
-                med_fecha_registro: new Date().toISOString().split('T')[0] // fecha actual en ISO
-            };
+        //     const datos = {
+        //         med_indicador_id: indId,
+        //         med_fecha_medicion: document.getElementById('fecha-carga').value,
+        //         med_tipo_periodo: document.getElementById('tipo_id').value,
+        //         med_valor_periodo: document.getElementById('valor-periodo').value,
+        //         med_anio: anio_ISO,
+        //         med_valor: parseFloat(document.getElementById('valor-carga').value),
+        //         med_comentarios: document.getElementById('comentario-carga').value.trim(),
+        //         med_unidad_medida: unidad,
+        //         med_legajo_resp_medicion: '5432',
+        //         med_legajo_resp_registro: '1234',
+        //         med_fecha_registro: new Date().toISOString().split('T')[0] // fecha actual en ISO
+        //     };
 
-            if (errores.length > 0) {
-                alert("Errores:\n- " + errores.join("\n- "));
-                return; // No manda nada al servidor
-            }
+        //     if (errores.length > 0) {
+        //         alert("Errores:\n- " + errores.join("\n- "));
+        //         return;
+        //     }
 
-            console.log("Datos a enviar:", datos);
+        //     console.log("Datos a enviar:", datos);
 
-            // === Envío al backend ===
-            try {
-                const response = await fetch('/api/mediciones', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datos)
-                });
 
-                const result = await response.json();
+        //     try {
+        //         const response = await fetch('/api/mediciones', {
+        //             method: 'POST',
+        //             headers: { 'Content-Type': 'application/json' },
+        //             body: JSON.stringify(datos)
+        //         });
 
-                if (response.ok && result.ok) {
-                    alert("Guardado correctamente ✅");
-                    e.target.reset();
-                } else {
-                    // El backend también devuelve errores si algo se escapó
-                    alert("Error del servidor:\n" + (result.errores ? result.errores.join("\n- ") : result.error));
-                }
-            } catch (err) {
-                console.error("Error al guardar:", err);
-                alert("Ocurrió un error inesperado.");
-            }
-        });
+        //         const result = await response.json();
+
+        //         if (response.ok && result.ok) {
+        //             alert("Guardado correctamente ✅");
+        //             e.target.reset();
+        //             const formulario = document.getElementById('formulario-carga');
+        //             const titulo = document.getElementById('titulo-indicador');
+        //             formulario.style.display = 'none';
+        //             titulo.innerHTML = `Seleccionar Indicador`;
+        //             const subtitulo = document.getElementById('subtitulo-indicador');
+        //             subtitulo.innerHTML = "";
+        //             subtitulo.style.display = "none";
+        //         } else {
+        //             alert("Error del servidor:\n" + (result.errores ? result.errores.join("\n- ") : result.error));
+        //         }
+        //     } catch (err) {
+        //         console.error("Error al guardar:", err);
+        //         alert("Ocurrió un error inesperado.");
+        //     }
+        // });
 
         function validarFechaDDMMYYYY(fechaStr) {
             // formato correcto dd/mm/yyyy ?
@@ -639,7 +636,7 @@
                         codigo: ind.codigo_id,
                         nombre: ind.nombre,
                         descripcion: ind.descripcion,
-                        sectores: sectores.nombre,
+                        // sectores: sectores.nombre,
                         responsable: `${usuario.nombres} ${usuario.apellido}`,
                         frecuencia: CodigosService.getNombreCodigo(ind.freq_medicion),
                         carga: ind.fecha_inicio ? new Date(ind.fecha_inicio).toLocaleDateString() : '-',
@@ -649,7 +646,7 @@
                             <button class="btn btn-primary btn-xs" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
                                 <i class="fas fa-eye fa-xs"></i>
                             </button>
-                            <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}')">
+                            <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}')">
                                 <i class="fas fa-edit fa-xs"></i>
                             </button>
                         </td>
@@ -748,17 +745,15 @@
         }
 
         // Cargar un indicador en el formulario para editar
-        async function editarIndicador(indId, codigo, nombre, unidad) {
-
-            const ultima = await getUltimaMedicionPorIndicador(indId);
-            const fecha = new Date(ultima.med_fecha_medicion);
-            const fechaFormateada = fecha.toLocaleDateString('es-AR'); // "16/09/2025"
-
+        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia) {
 
             const titulo = document.getElementById('titulo-indicador');
             titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
 
             const subtitulo = document.getElementById('subtitulo-indicador');
+            subtitulo.style.float = "none";
+            subtitulo.style.textAlign = "center";
+            subtitulo.style.width = "100%";
 
             // limpiar primero, para que no se acumulen
             subtitulo.textContent = "";
@@ -767,13 +762,22 @@
             subtitulo.appendChild(document.createElement("br"));
             subtitulo.appendChild(document.createElement("br"));
 
-            // insertar el texto
-            subtitulo.append(`Ultima medición registrada: ${fechaFormateada}`);
+            const ultima = await getUltimaMedicionPorIndicador(indId);
+            if (ultima) {
+                const fecha = new Date(ultima.med_fecha_medicion);
+                const fechaFormateada = fecha.toLocaleDateString('es-AR');
+                subtitulo.append(`Ultima medición registrada: ${fechaFormateada}`);
+            } else {
+                subtitulo.append("Sin mediciones registradas");
+            }
 
             subtitulo.style.display = 'block';
 
             // guardo el código en el hidden para usarlo después
             document.getElementById('indicadorCodigo').value = indId;
+
+            const tipoSelect = document.getElementById('tipo_id');
+            tipoSelect.value = CodigosService.getNombreCodigo(frecuencia) || ''; // valor inicial vacío
 
             const unid_medida = CodigosService.getNombreCodigo(unidad);
             document.getElementById('unidad-carga').innerText = unid_medida || '';
@@ -783,6 +787,192 @@
             formulario.style.display = 'block';
             // Llevar al inicio de la página
             window.scrollTo({ behavior: 'smooth', top: 0 });
+
+            document.getElementById('form-carga').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const tipoSelect = document.getElementById('tipo_id');
+                const valorPeriodo = document.getElementById('valor-periodo');
+                const fechaMedicion = document.getElementById('fecha-carga');
+
+                alert(`valor de tipoSelect: ${tipoSelect.value}`);
+
+                // Cambiar Valor Período según el tipo de periodo
+                tipoSelect.addEventListener('change', function () {
+                    if (this.value === "0201") { // Día
+                        if (fechaMedicion.value) {
+                            const partes = fechaMedicion.value.split('-'); // ["2025","09","01"]
+                            const anio = partes[0];
+                            const mes = partes[1];
+                            const dia = partes[2];
+                            valorPeriodo.value = `${dia}-${mes}-${anio}`; // DD-MM-AAAA
+                        } else {
+                            valorPeriodo.value = "";
+                        }
+                        valorPeriodo.readOnly = true; // bloquea edición
+                    } else {
+                        valorPeriodo.value = "";       // limpio el campo
+                        valorPeriodo.readOnly = false; // permite editar
+                    }
+                });
+
+
+
+
+
+
+
+Cómo corregirlo
+
+Tenés que enganchar los listeners de tipoSelect y fechaMedicion afuera del submit, es decir, cuando armás el formulario. Algo así:
+
+// este bloque va dentro de editarIndicador, pero ANTES del submit
+const tipoSelect = document.getElementById('tipo_id');
+const valorPeriodo = document.getElementById('valor-periodo');
+const fechaMedicion = document.getElementById('fecha-carga');
+
+// cuando cambia el tipo de periodo
+tipoSelect.addEventListener('change', function () {
+    if (this.value === "0201") { // Día
+        if (fechaMedicion.value) {
+            const partes = fechaMedicion.value.split('-');
+            const anio = partes[0];
+            const mes = partes[1];
+            const dia = partes[2];
+            valorPeriodo.value = `${dia}-${mes}-${anio}`;
+        } else {
+            valorPeriodo.value = "";
+        }
+        valorPeriodo.readOnly = true;
+    } else {
+        valorPeriodo.value = "";
+        valorPeriodo.readOnly = false;
+    }
+});
+
+// además: cuando cambia la fecha, actualizar también (si es diario)
+fechaMedicion.addEventListener('change', function () {
+    if (tipoSelect.value === "0201") {
+        const partes = this.value.split('-');
+        const anio = partes[0];
+        const mes = partes[1];
+        const dia = partes[2];
+        valorPeriodo.value = `${dia}-${mes}-${anio}`;
+    }
+});
+
+
+Y el submit queda solo para procesar/guardar:
+
+document.getElementById('form-carga').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // acá armás los datos y hacés el POST/PUT
+});
+
+
+👉 Resumiendo:
+
+Los listeners de campos (change en fecha o tipo) se agregan al iniciar la edición.
+
+El listener de submit se queda solo para enviar.
+
+¿Querés que te reescriba tu editarIndicador completo ya con los listeners acomodados en su lugar?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                const errores = [];
+                const indId = document.getElementById('indicadorCodigo').value;
+
+                const unidad = document.getElementById('unidadMedidaCodigo').value;
+
+                const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
+                const fechaInputDate = new Date(fechaInputStr); // ahora es un Date
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0); // solo día/mes/año
+
+                if (fechaInputDate > hoy) {
+                    errores.push("La fecha no puede ser mayor a la fecha de hoy.");
+                }
+
+                let anio_ISO = null;
+                const fechaISO = validarFechaISO(fechaInputDate);
+
+                if (fechaISO) {
+                    anio_ISO = fechaInputDate.getFullYear();
+                } else {
+                    errores.push("Fecha inválida o fuera de rango (1900-2100).");
+                }
+
+                // Tomar los valores de los campos
+                const datos = {
+                    med_indicador_id: indId,
+                    med_fecha_medicion: document.getElementById('fecha-carga').value,
+                    med_tipo_periodo: document.getElementById('tipo_id').value,
+                    med_valor_periodo: document.getElementById('valor-periodo').value,
+                    med_anio: anio_ISO,
+                    med_valor: parseFloat(document.getElementById('valor-carga').value),
+                    med_comentarios: document.getElementById('comentario-carga').value.trim(),
+                    med_unidad_medida: unidad,
+                    med_legajo_resp_medicion: '5432',
+                    med_legajo_resp_registro: '1234',
+                    med_fecha_registro: new Date().toISOString().split('T')[0] // fecha actual en ISO
+                };
+
+                if (errores.length > 0) {
+                    alert("Errores:\n- " + errores.join("\n- "));
+                    return; // No manda nada al servidor
+                }
+
+                console.log("Datos a enviar:", datos);
+
+                // === Envío al backend ===
+                try {
+                    const response = await fetch('/api/mediciones', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(datos)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.ok) {
+                        alert("Guardado correctamente ✅");
+                        e.target.reset();
+                        const formulario = document.getElementById('formulario-carga');
+                        const titulo = document.getElementById('titulo-indicador');
+                        formulario.style.display = 'none';
+                        titulo.innerHTML = `Seleccionar Indicador`;
+                        const subtitulo = document.getElementById('subtitulo-indicador');
+                        subtitulo.innerHTML = "";
+                        subtitulo.style.display = "none";
+
+                    } else {
+                        // El backend también devuelve errores si algo se escapó
+                        alert("Error del servidor:\n" + (result.errores ? result.errores.join("\n- ") : result.error));
+                    }
+                } catch (err) {
+                    console.error("Error al guardar:", err);
+                    alert("Ocurrió un error inesperado.");
+                }
+            });
+
+
+
+
+
 
         }
 
@@ -822,7 +1012,6 @@
                     : ultima;
             });
         }
-
 
         // Servicio global para textp de tabla de códigos 
         const CodigosService = {
