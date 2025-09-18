@@ -338,15 +338,18 @@
 
                     <div class="card mb-4">
                         <div class="card-header border-0">
-                            <h3 id="titulo-indicador" class="card-title">Seleccionar Indicador</h3>
-                            <div class="card-tools">
-                                <!-- <a href="#" class="btn btn-tool btn-sm"> <i class="bi bi-download"></i> </a> -->
-                                <a href="#" class="btn btn-tool btn-sm" onclick="alert('Hiciste clic')">
-                                    <i class="bi bi-download"></i>
-                                </a>
-                                <a href="#" class="btn btn-tool btn-sm"> <i class="bi bi-list"></i> </a>
+                            <div>
+                                <h3 id="titulo-indicador" class="card-title">Seleccionar Indicador</h3>
+                            <!-- </div>
+                        </div> -->
+                        <!-- 
+                        <div id="subtitulos-indicador" class="card-title" style="display: block">
+                            <div> -->
+                                <h4 id="subtitulo-indicador" class="card-title"></h4>
+                            <!-- </div>
+                            <div> -->
+                                <h4 id="subtitulo-indicador2" class="card-title"></h4>
                             </div>
-                            <h4 id="subtitulo-indicador" class="card-title" style="display: none;"></h4>
                         </div>
 
                         <div id="formulario-carga" class="p-3 mt-3 ml-3 border rounded shadow-sm bg-light"
@@ -356,34 +359,35 @@
 
                             <form id="form-carga" class="ml-3 m-1 bg-light" style="width: 80%;">
                                 <div class="row mb-2">
-                                    <div class="col-md-2">
-                                        <label>Fecha de medición</label>
-                                        <input type="date" class="form-control" id="fecha-carga" required>
-                                    </div>
 
                                     <div class="col-md-2">
-                                        <label>Período</label>
+                                        <label>Frecuencia:</label>
                                         <input id="tipo_id" type="text" class="form-control" readonly>
                                     </div>
 
                                     <div class="col-md-2">
-                                        <label>Valor Período</label>
+                                        <label>Fecha de medición:</label>
+                                        <input type="date" class="form-control" id="fecha-carga" required>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label>Corresponde a:</label>
                                         <input type="text" class="form-control" id="valor-periodo" required>
                                     </div>
 
                                     <div class="col-md-2">
-                                        <label>Valor/Cantidad</label>
+                                        <label>Valor medido:</label>
                                         <input type="number" class="form-control" id="valor-carga" step="0.01" required>
                                     </div>
 
                                     <div class="col-md-3">
-                                        <label>Unidad</label>
+                                        <label>Unidad:</label>
                                         <div class="form-control" id="unidad-carga"></div>
                                     </div>
                                     <input type="hidden" id="unidadMedidaCodigo" name="unidadMedidaCodigo">
 
                                     <div class="col-md-7 mt-2">
-                                        <label>Comentario</label>
+                                        <label>Comentarios:</label>
                                         <input type="text" class="form-control" id="comentario-carga">
                                     </div>
                                 </div>
@@ -427,7 +431,6 @@
                             <p class="text-muted">Comience agregando su primer indicador PKI</p>
                         </div>
                         <!--end::Empty State-->
-
                     </div>
                 </div>
         </main>
@@ -478,6 +481,9 @@
             const subtitulo = document.getElementById('subtitulo-indicador');
             subtitulo.innerHTML = "";
             subtitulo.style.display = "none";
+            const subtitulo2 = document.getElementById('subtitulo-indicador2');
+            subtitulo2.innerHTML = "";
+            subtitulo2.style.display = "none";
         });
 
 
@@ -751,16 +757,16 @@
             titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
 
             const subtitulo = document.getElementById('subtitulo-indicador');
-            subtitulo.style.float = "none";
-            subtitulo.style.textAlign = "center";
-            subtitulo.style.width = "100%";
+            // subtitulo.style.float = "none";
+            subtitulo.style.textAlign = "left";
+            // subtitulo.style.width = "100%";
 
             // limpiar primero, para que no se acumulen
             subtitulo.textContent = "";
 
             // insertar el <br>
-            subtitulo.appendChild(document.createElement("br"));
-            subtitulo.appendChild(document.createElement("br"));
+            // subtitulo.appendChild(document.createElement("br"));
+
 
             const ultima = await getUltimaMedicionPorIndicador(indId);
             if (ultima) {
@@ -773,125 +779,127 @@
 
             subtitulo.style.display = 'block';
 
+
+            const subtitulo2 = document.getElementById('subtitulo-indicador2');
+
+            // subtitulo.style.textAlign = "left";
+
+
+            // limpiar primero, para que no se acumulen
+            subtitulo2.textContent = "";
+
+            // insertar el <br>
+            subtitulo2.appendChild(document.createElement("br"));
+
+            
+            const tipoSelect = document.getElementById('tipo_id');
+            subtitulo2.textContent = CodigosService.getNombreCodigo(frecuencia) || ''; // valor inicial vacío
+
+            const freqMedicion = await getUltimaMedicionPorIndicador(indId);
+            
+            subtitulo2.style.display = 'block';
+            // if (ultima) {
+            //     const fecha = new Date(ultima.med_fecha_medicion);
+            //     const fechaFormateada = fecha.toLocaleDateString('es-AR');
+            //     subtitulo.append(`Ultima medición registrada: ${fechaFormateada}`);
+            // } else {
+            //     subtitulo.append("Sin mediciones registradas");
+            // }
+
+
+
+
+
             // guardo el código en el hidden para usarlo después
             document.getElementById('indicadorCodigo').value = indId;
 
-            const tipoSelect = document.getElementById('tipo_id');
-            tipoSelect.value = CodigosService.getNombreCodigo(frecuencia) || ''; // valor inicial vacío
+            // const tipoSelect = document.getElementById('tipo_id');
+            // tipoSelect.value = CodigosService.getNombreCodigo(frecuencia) || ''; // valor inicial vacío
 
             const unid_medida = CodigosService.getNombreCodigo(unidad);
             document.getElementById('unidad-carga').innerText = unid_medida || '';
             // guardo en el hidden
             document.getElementById('unidadMedidaCodigo').value = unidad;
 
+            const valorPeriodo = document.getElementById('valor-periodo');
+            const fechaMedicion = document.getElementById('fecha-carga');
+
+            switch (tipoSelect.value) {
+                case '0201': // diaria (día hábil anterior)
+                    valorPeriodo.value = "Texto 2";
+                    break;
+
+                case 'Semanal': // semanal
+                    valorPeriodo.value = "N° de Semana:"
+                    break;
+
+                case 'Quincenal': // diaria (día hábil anterior)
+                    valorPeriodo.value = "N° mes y quincena (1/2)";
+                    break;
+
+                case '0204': // semanal
+                    valorPeriodo.value = "N° de Mes:";
+                    break;
+            }
+
             formulario.style.display = 'block';
             // Llevar al inicio de la página
             window.scrollTo({ behavior: 'smooth', top: 0 });
 
+
+            // Cambiar Valor Período según el tipo de periodo
+            // tipoSelect.addEventListener('change', function () {
+            //     if (this.value === "Diaria") { // Día
+            //         if (fechaMedicion.value) {
+            //             const partes = fechaMedicion.value.split('-'); // ["2025","09","01"]
+            //             const anio = partes[0];
+            //             const mes = partes[1];
+            //             const dia = partes[2];
+            //             valorPeriodo.value = `${dia}-${mes}-${anio}`; // DD-MM-AAAA
+            //             valorPeriodo.setAttribute('readonly', 'readonly');
+            //         } else {
+            //             valorPeriodo.value = "";
+            //             valorPeriodo.setAttribute('readonly', 'readonly');
+            //         }
+            //     } else {
+            //         valorPeriodo.value = "";       // limpio el campo
+            //         valorPeriodo.readonly = false; // permite editar
+            //     }
+            // });
+
+            // además: cuando cambia la fecha, actualizar también (si es diario)
+            fechaMedicion.addEventListener('change', function () {
+                if (tipoSelect.value === "Diaria") {
+                    const partes = this.value.split('-');
+                    const anio = partes[0];
+                    const mes = partes[1];
+                    const dia = partes[2];
+                    valorPeriodo.value = `${dia}-${mes}-${anio}`;
+                    valorPeriodo.setAttribute('readonly', 'readonly');
+                }
+
+                const codFrecuencia = frecuencia.slice(-2); // obtener los últimos 2 caracteres
+                const corresponde = calcularFechaEsperada(fechaMedicion.value, codFrecuencia); // diaria → "2025-09-15"
+                alert(`corresponde a:  ${corresponde}`);
+
+            });
+
+            // ✅ AGREGADO: Ejecutar la lógica inicial al cargar si ya hay un valor en tipoSelect
+            if (tipoSelect.value === "Diaria") {
+                if (fechaMedicion.value) {
+                    const partes = fechaMedicion.value.split('-');
+                    const anio = partes[0];
+                    const mes = partes[1];
+                    const dia = partes[2];
+                    valorPeriodo.value = `${dia}-${mes}-${anio}`;
+                }
+                valorPeriodo.setAttribute('readonly', 'readonly');
+            }
+
+
+
             document.getElementById('form-carga').addEventListener('submit', async function (e) {
                 e.preventDefault();
-
-                const tipoSelect = document.getElementById('tipo_id');
-                const valorPeriodo = document.getElementById('valor-periodo');
-                const fechaMedicion = document.getElementById('fecha-carga');
-
-                alert(`valor de tipoSelect: ${tipoSelect.value}`);
-
-                // Cambiar Valor Período según el tipo de periodo
-                tipoSelect.addEventListener('change', function () {
-                    if (this.value === "0201") { // Día
-                        if (fechaMedicion.value) {
-                            const partes = fechaMedicion.value.split('-'); // ["2025","09","01"]
-                            const anio = partes[0];
-                            const mes = partes[1];
-                            const dia = partes[2];
-                            valorPeriodo.value = `${dia}-${mes}-${anio}`; // DD-MM-AAAA
-                        } else {
-                            valorPeriodo.value = "";
-                        }
-                        valorPeriodo.readOnly = true; // bloquea edición
-                    } else {
-                        valorPeriodo.value = "";       // limpio el campo
-                        valorPeriodo.readOnly = false; // permite editar
-                    }
-                });
-
-
-
-
-
-
-
-Cómo corregirlo
-
-Tenés que enganchar los listeners de tipoSelect y fechaMedicion afuera del submit, es decir, cuando armás el formulario. Algo así:
-
-// este bloque va dentro de editarIndicador, pero ANTES del submit
-const tipoSelect = document.getElementById('tipo_id');
-const valorPeriodo = document.getElementById('valor-periodo');
-const fechaMedicion = document.getElementById('fecha-carga');
-
-// cuando cambia el tipo de periodo
-tipoSelect.addEventListener('change', function () {
-    if (this.value === "0201") { // Día
-        if (fechaMedicion.value) {
-            const partes = fechaMedicion.value.split('-');
-            const anio = partes[0];
-            const mes = partes[1];
-            const dia = partes[2];
-            valorPeriodo.value = `${dia}-${mes}-${anio}`;
-        } else {
-            valorPeriodo.value = "";
-        }
-        valorPeriodo.readOnly = true;
-    } else {
-        valorPeriodo.value = "";
-        valorPeriodo.readOnly = false;
-    }
-});
-
-// además: cuando cambia la fecha, actualizar también (si es diario)
-fechaMedicion.addEventListener('change', function () {
-    if (tipoSelect.value === "0201") {
-        const partes = this.value.split('-');
-        const anio = partes[0];
-        const mes = partes[1];
-        const dia = partes[2];
-        valorPeriodo.value = `${dia}-${mes}-${anio}`;
-    }
-});
-
-
-Y el submit queda solo para procesar/guardar:
-
-document.getElementById('form-carga').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    // acá armás los datos y hacés el POST/PUT
-});
-
-
-👉 Resumiendo:
-
-Los listeners de campos (change en fecha o tipo) se agregan al iniciar la edición.
-
-El listener de submit se queda solo para enviar.
-
-¿Querés que te reescriba tu editarIndicador completo ya con los listeners acomodados en su lugar?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 const errores = [];
                 const indId = document.getElementById('indicadorCodigo').value;
@@ -920,14 +928,15 @@ El listener de submit se queda solo para enviar.
                 const datos = {
                     med_indicador_id: indId,
                     med_fecha_medicion: document.getElementById('fecha-carga').value,
-                    med_tipo_periodo: document.getElementById('tipo_id').value,
+                    // med_tipo_periodo: document.getElementById('tipo_id').value,
+                    med_tipo_periodo: frecuencia,
                     med_valor_periodo: document.getElementById('valor-periodo').value,
                     med_anio: anio_ISO,
                     med_valor: parseFloat(document.getElementById('valor-carga').value),
                     med_comentarios: document.getElementById('comentario-carga').value.trim(),
                     med_unidad_medida: unidad,
-                    med_legajo_resp_medicion: '5432',
-                    med_legajo_resp_registro: '1234',
+                    med_legajo_resp_medicion: '1',
+                    med_legajo_resp_registro: '3',
                     med_fecha_registro: new Date().toISOString().split('T')[0] // fecha actual en ISO
                 };
 
@@ -968,12 +977,6 @@ El listener de submit se queda solo para enviar.
                     alert("Ocurrió un error inesperado.");
                 }
             });
-
-
-
-
-
-
         }
 
         let medicionesGral = [];
@@ -1011,6 +1014,210 @@ El listener de submit se queda solo para enviar.
                     ? actual
                     : ultima;
             });
+        }
+
+        const hoy = new Date();
+        const { anioISO, semanaISO } = getSemanaISO(hoy);
+        console.log(`Hoy ${hoy.toISOString().split('T')[0]} → Semana ISO: ${semanaISO}, Año ISO: ${anioISO}`);
+
+
+
+        // Ejemplo:
+        const diaHabil = getDiaHabilAnterior(hoy);
+        console.log(diaHabil.toISOString().split('T')[0]); // "2025-09-15"
+
+
+        function calcularFechaEsperada(fechaConsulta, tipoPeriodo) {
+
+            console.log(`valores recibidos: ${fechaConsulta}, ${tipoPeriodo}`);
+            console.log("tipoPeriodo:", tipoPeriodo, "tipo:", typeof tipoPeriodo);
+            // segun la fecha del dia determina qué fecha deberia ya haber informado el usuario
+            const partes = fechaConsulta.split('-'); // "2025-09-16" → ["2025","09","16"]
+            const fecha = new Date(partes[0], partes[1] - 1, partes[2]); // año, mesIndex, día
+            let resultado;
+            let dia = fecha.getDate();
+            let mes = fecha.getMonth() + 1; // 1-12
+            let anio = fecha.getFullYear();
+
+            switch (tipoPeriodo) {
+                case '01': // diaria (día hábil anterior)
+                    // const diaHabil = getDiaHabilAnterior(fecha);
+                    // resultado = diaHabil.toISOString().split('T')[0]; // yyyy-mm-dd
+                    resultado = fechaConsulta
+                    break;
+
+                case '02': // semanal
+                    // Obtener semana ISO y año ISO
+                    const { anioISO, semanaISO } = getSemanaISO(fecha);
+
+                    // Semana anterior
+                    // let semanaAnterior = semanaISO - 1;
+                    // let anioSemanaAnterior = anioISO;
+
+                    // Si la semana anterior cae en el año anterior
+                    // if (semanaAnterior === 0) {
+                    // Última semana ISO del año anterior (52 o 53 según el año)
+                    //     anioSemanaAnterior = anioISO - 1;
+                    //     semanaAnterior = getSemanaISO(new Date(anioSemanaAnterior, 11, 31)).semanaISO;
+                    // }
+
+                    // Guardar resultado en formato uniforme: "AAAA+semana"
+                    // resultado = `${anioSemanaAnterior}${semanaAnterior}`;
+
+                    resultado = `${anioISO}-${semanaISO}`;
+                    break;
+
+
+                case '03': // quincenal
+                    // if (dia < 16) {
+                    //     mes = mes - 1;
+                    //     if (mes === 0) {
+                    //         mes = 12;
+                    //         anio = anio - 1;
+                    //     }
+                    //     resultado = `${anio}${mes}2`; // segunda quincena del mes anterior
+                    // } else {
+                    //     resultado = `${anio}${mes}1`; // primera quincena del mes actual
+                    // }
+
+                    if (dia < 16) {
+                        resultado = `${anio}-${mes}-1`;
+                    } else {
+                        resultado = `${anio}-${mes}-2`;
+                    }
+                    break;
+
+                case '04': // mensual
+                    // if (mes === 1) {
+                    //     // si enero, el mes anterior es diciembre del año anterior
+                    //     resultado = `${anio - 1}12`;
+                    // } else {
+                    //     // cualquier otro mes: mes anterior del mismo año
+                    //     resultado = `${anio}${mes - 1}`;
+                    // }
+
+                    resultado = `${anio}-${String(mes).padStart(2, '0')}`;
+                    break;
+
+
+                case '05': // bimestral
+                    if (mes === 1 || mes === 2) {
+                        // ene-feb → año anterior + 6 (último bimestre del año anterior)
+                        resultado = `${anio - 1}6`;
+                    } else if (mes === 3 || mes === 4) {
+                        // mar-abr → año actual + 1
+                        resultado = `${anio}1`;
+                    } else if (mes === 5 || mes === 6) {
+                        // may-jun → año actual + 2
+                        resultado = `${anio}2`;
+                    } else if (mes === 7 || mes === 8) {
+                        // jul-ago → año actual + 3
+                        resultado = `${anio}3`;
+                    } else if (mes === 9 || mes === 10) {
+                        // sep-oct → año actual + 4
+                        resultado = `${anio}4`;
+                    } else if (mes === 11 || mes === 12) {
+                        // nov-dic → año actual + 5
+                        resultado = `${anio}5`;
+                    }
+                    break;
+
+
+                case '06': // trimestral
+                    if (mes >= 1 && mes <= 3) {
+                        // meses 1-3 → año anterior + sufijo 4
+                        resultado = `${anio - 1}4`;
+                    } else if (mes >= 4 && mes <= 6) {
+                        // meses 4-6 → año actual + sufijo 1
+                        resultado = `${anio}1`;
+                    } else if (mes >= 7 && mes <= 9) {
+                        // meses 7-9 → año actual + sufijo 2
+                        resultado = `${anio}2`;
+                    } else if (mes >= 10 && mes <= 12) {
+                        // meses 10-12 → año actual + sufijo 3
+                        resultado = `${anio}3`;
+                    }
+                    break;
+
+
+                case '07': // cuatrimestral
+                    if (mes >= 1 && mes <= 4) {
+                        // meses 1-4 → año anterior + sufijo 3
+                        resultado = `${anio - 1}3`;
+                    } else if (mes >= 5 && mes <= 8) {
+                        // meses 5-8 → año actual + sufijo 1
+                        resultado = `${anio}1`;
+                    } else if (mes >= 9 && mes <= 12) {
+                        // meses 9-12 → año actual + sufijo 2
+                        resultado = `${anio}2`;
+                    }
+                    break;
+
+
+                case '08': // semestral
+                    if (mes < 7) {
+                        // primer semestre ya pasó → apéndice 2, año anterior
+                        resultado = `${anio - 1}2`;
+                    } else {
+                        // segundo semestre → apéndice 1, año actual
+                        resultado = `${anio}1`;
+                    }
+                    break;
+
+                case '09': // anual
+                    resultado = anio - 1; // año anterior
+                    break;
+
+                default:
+                    console.log('Tipo de período no reconocido');
+                    resultado = null;
+            }
+
+            return resultado;
+        }
+
+        /**
+ * Devuelve el día hábil anterior a la fecha dada
+ * @param {Date|string} fecha - fecha a partir de la cual buscar
+ * @returns {Date} día hábil anterior
+ */
+        function getDiaHabilAnterior(fecha) {
+            // Crear fecha solo con año/mes/día, ignorando horas y zona horaria
+            const f = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+            do {
+                f.setDate(f.getDate() - 1);
+            } while (f.getDay() === 0 || f.getDay() === 6);
+            return f;
+        }
+
+
+        /**
+* Devuelve la semana ISO y el año ISO de una fecha
+* @param {Date|string} fecha - objeto Date o string interpretable como fecha
+* @returns {{anioISO: number, semanaISO: number}}
+*/
+        function getSemanaISO(fecha = new Date()) {
+            const f = new Date(Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()));
+
+            // Obtener el día de la semana (lunes = 1, domingo = 7)
+            const diaSemana = f.getUTCDay() || 7;
+
+            // Ajustar al jueves de la misma semana
+            f.setUTCDate(f.getUTCDate() + 4 - diaSemana);
+
+            // Año ISO
+            const anioISO = f.getUTCFullYear();
+
+            // Primer día del año ISO
+            const primerDiaAnoISO = new Date(Date.UTC(anioISO, 0, 1));
+
+            // Diferencia en días
+            const diffDias = (f - primerDiaAnoISO) / (24 * 60 * 60 * 1000);
+
+            // Semana ISO
+            const semanaISO = Math.ceil((diffDias + 1) / 7);
+
+            return { anioISO, semanaISO };
         }
 
         // Servicio global para textp de tabla de códigos 
