@@ -71,6 +71,23 @@
             margin-bottom: 1rem;
             /* espacio debajo del buscador */
         }
+
+        /* 🆕 NUEVO: Tooltip oscuro elegante - AGREGAR ESTO */
+        /* 🔥 TOOLTIP OSCURO COMPLETO */
+        .dark-tooltip .tooltip-inner {
+            /* background: linear-gradient(135deg, #8893a5 0%, #4a5568 100%) !important; */
+            background-color: rgb(8, 8, 8);
+            color: white !important;
+            padding: 12px 16px !important;
+            border-radius: 8px !important;
+            font-size: 16px !important;
+            font-weight: 300 !important;
+            line-height: 1.4 !important;
+            box-shadow: 0 10px 25px rgba(88, 88, 88, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            max-width: 600px !important;
+            text-align: left !important;
+        }
     </style>
 
 </head>
@@ -337,56 +354,81 @@
                     </div>
 
                     <div class="card mb-4">
-                        <div class="card-header border-0">
+                        <div class="card-header border-0" style="display: block">
+                            <!-- <div style="display: flex; flex-direction: column; align-items: flex-start;"> -->
                             <div>
-                                <h3 id="titulo-indicador" class="card-title">Seleccionar Indicador</h3>
-                            <!-- </div>
-                        </div> -->
-                        <!-- 
-                        <div id="subtitulos-indicador" class="card-title" style="display: block">
-                            <div> -->
-                                <h4 id="subtitulo-indicador" class="card-title"></h4>
-                            <!-- </div>
-                            <div> -->
-                                <h4 id="subtitulo-indicador2" class="card-title"></h4>
+                                <h4 id="titulo-indicador">Seleccionar Indicador</h4>
                             </div>
                         </div>
 
-                        <div id="formulario-carga" class="p-3 mt-3 ml-3 border rounded shadow-sm bg-light"
+                        <div id="formulario-carga" class="p-3  ml-3 border rounded shadow-sm bg-light"
                             style="display: none;">
-                            <h5 id="titulo-indicador"></h5>
                             <input type="hidden" id="indicadorCodigo" name="indicadorCodigo">
+                            <h5 id="titulo-frecuencia">Frecuencia de medición: <span id="valor-frecuencia"></span></h5>
 
-                            <form id="form-carga" class="ml-3 m-1 bg-light" style="width: 80%;">
+                            <h5 id="titulo-ult-medicion" style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                                Última Medición: <span id="valor-ultima-medicion"></span>
+                                <span style="margin-left: 10px;">Correspondiente a:</span>
+                                <span id="periodo-ultima-medicion"></span>
+                            </h5>
+
+                            <h5>Registre nueva medición:</h5>
+
+                            <form id="form-carga" class="ml-3 m-1 bg-light" style="width: 90%;">
                                 <div class="row mb-2">
 
                                     <div class="col-md-2">
-                                        <label>Frecuencia:</label>
-                                        <input id="tipo_id" type="text" class="form-control" readonly>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <label>Fecha de medición:</label>
+                                        <label for="fecha-carga" class="form-label"><strong>Fecha:</strong>
+                                            <i class="fas fa-info-circle info-icon" data-bs-toggle="tooltip"
+                                                data-bs-html="true" data-bs-custom-class="dark-tooltip"
+                                                title="Fecha de realización del cálculo o relevamiento de datos, según la metodología establecida para este indicador.">
+                                            </i>
+                                        </label>
                                         <input type="date" class="form-control" id="fecha-carga" required>
                                     </div>
 
                                     <div class="col-md-2">
-                                        <label>Corresponde a:</label>
-                                        <input type="text" class="form-control" id="valor-periodo" required>
+                                        <label for="texto-período" class="form-label"><strong>Período medido:</strong>
+                                            <i class="fas fa-info-circle info-icon" data-bs-toggle="tooltip"
+                                                data-bs-html="true" data-bs-custom-class="dark-tooltip" title="Identificación del período al que corresponde la medición.<br><br>
+                                                • <b>Diaria: </b> Dia evaluado<br><br>
+                                                • <b>Semanal: </b> Número de semana en el año (1 a 52)<br><br>
+                                                • <b>Quincenal: </b> N° de 1 a 24 a razón de dos quincenas por mes)<br>Ejemplo: 2da de agosto = 16 (7 x 2 + 2)<br><br>
+                                                • <b>Mensual: </b> Número de mes en el año (1 a 12)<br><br>
+                                                • <b>Bimestral: </b> Número de bimestre en el año (1 a 6)<br><br>
+                                                • <b>Trimestral: </b> Número de trimestre en el año (1 a 4)<br><br>
+                                                • <b>Cuatrimestral: </b> Número de cuatrimestre en el año (1 a 3)<br><br>
+                                                • <b>Semestral: </b> Número de semestre en el año (1 o 2)<br><br>
+                                                • <b>Anual: </b> Año evaluado<br><br>">
+                                            </i>
+                                        </label>
+                                        <span id="texto-periodo" class="form-control-plaintext"></span>
                                     </div>
 
                                     <div class="col-md-2">
-                                        <label>Valor medido:</label>
+                                        <label id="label-valor-periodo" for="valor-periodo" class="form-label">
+                                            <strong>Valor período:</strong>
+                                        </label>
+                                        <input type="text" class="form-control" id="valor-periodo" required>
+                                    </div>
+
+                                    <div class="col-md-2" id="campo-label-anio" style="display: block">
+                                        <label id="label-anio-periodo" for="label-anio-periodo" class="form-label">
+                                            <strong>Año:</strong></label>
+                                        <input type="text" class="form-control" id="label-anio-periodo" required>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="form-label"><strong>Unidad:</strong></label>
+                                        <span id="unidad-carga" class="form-control-plaintext"></span>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="form-label"><strong>Valor medido:</strong></label>
                                         <input type="number" class="form-control" id="valor-carga" step="0.01" required>
                                     </div>
 
-                                    <div class="col-md-3">
-                                        <label>Unidad:</label>
-                                        <div class="form-control" id="unidad-carga"></div>
-                                    </div>
-                                    <input type="hidden" id="unidadMedidaCodigo" name="unidadMedidaCodigo">
-
-                                    <div class="col-md-7 mt-2">
+                                    <div class="col-md-12 mt-2">
                                         <label>Comentarios:</label>
                                         <input type="text" class="form-control" id="comentario-carga">
                                     </div>
@@ -486,112 +528,6 @@
             subtitulo2.style.display = "none";
         });
 
-
-        // const tipoSelect = document.getElementById('tipo_id');
-        // const valorPeriodo = document.getElementById('valor-periodo');
-        // const fechaMedicion = document.getElementById('fecha-carga');
-
-        // tipoSelect.addEventListener('change', function () {
-        //     if (this.value === "Diaria") { // Día
-        //         if (fechaMedicion.value) {
-        //             const partes = fechaMedicion.value.split('-'); // ["2025","09","01"]
-        //             const anio = partes[0];
-        //             const mes = partes[1];
-        //             const dia = partes[2];
-        //             valorPeriodo.value = `${dia}-${mes}-${anio}`; // DD-MM-AAAA
-        //         } else {
-        //             valorPeriodo.value = "";
-        //         }
-        //         valorPeriodo.readOnly = true; // bloquea edición
-        //     } else {
-        //         valorPeriodo.value = "";       // limpio el campo
-        //         valorPeriodo.readOnly = false; // permite editar
-        //     }
-        // });
-
-        // Opcional: actualizar Valor Período si cambian la fecha cuando Tipo = Día
-        // fechaMedicion.addEventListener('change', function () {
-        //     if (tipoSelect.value === "1") {
-        //         valorPeriodo.value = this.value;
-        //     }
-        // });
-
-        // document.getElementById('form-carga').addEventListener('submit', async function (e) {
-        //     e.preventDefault();
-
-        //     const errores = [];
-        //     const indId = document.getElementById('indicadorCodigo').value;
-
-        //     const unidad = document.getElementById('unidadMedidaCodigo').value;
-
-        //     const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
-        //     const fechaInputDate = new Date(fechaInputStr); // ahora es un Date
-        //     const hoy = new Date();
-        //     hoy.setHours(0, 0, 0, 0); // solo día/mes/año
-
-        //     if (fechaInputDate > hoy) {
-        //         errores.push("La fecha no puede ser mayor a la fecha de hoy.");
-        //     }
-
-        //     let anio_ISO = null;
-        //     const fechaISO = validarFechaISO(fechaInputDate);
-
-        //     if (fechaISO) {
-        //         anio_ISO = fechaInputDate.getFullYear();
-        //     } else {
-        //         errores.push("Fecha inválida o fuera de rango (1900-2100).");
-        //     }
-
-        //     const datos = {
-        //         med_indicador_id: indId,
-        //         med_fecha_medicion: document.getElementById('fecha-carga').value,
-        //         med_tipo_periodo: document.getElementById('tipo_id').value,
-        //         med_valor_periodo: document.getElementById('valor-periodo').value,
-        //         med_anio: anio_ISO,
-        //         med_valor: parseFloat(document.getElementById('valor-carga').value),
-        //         med_comentarios: document.getElementById('comentario-carga').value.trim(),
-        //         med_unidad_medida: unidad,
-        //         med_legajo_resp_medicion: '5432',
-        //         med_legajo_resp_registro: '1234',
-        //         med_fecha_registro: new Date().toISOString().split('T')[0] // fecha actual en ISO
-        //     };
-
-        //     if (errores.length > 0) {
-        //         alert("Errores:\n- " + errores.join("\n- "));
-        //         return;
-        //     }
-
-        //     console.log("Datos a enviar:", datos);
-
-
-        //     try {
-        //         const response = await fetch('/api/mediciones', {
-        //             method: 'POST',
-        //             headers: { 'Content-Type': 'application/json' },
-        //             body: JSON.stringify(datos)
-        //         });
-
-        //         const result = await response.json();
-
-        //         if (response.ok && result.ok) {
-        //             alert("Guardado correctamente ✅");
-        //             e.target.reset();
-        //             const formulario = document.getElementById('formulario-carga');
-        //             const titulo = document.getElementById('titulo-indicador');
-        //             formulario.style.display = 'none';
-        //             titulo.innerHTML = `Seleccionar Indicador`;
-        //             const subtitulo = document.getElementById('subtitulo-indicador');
-        //             subtitulo.innerHTML = "";
-        //             subtitulo.style.display = "none";
-        //         } else {
-        //             alert("Error del servidor:\n" + (result.errores ? result.errores.join("\n- ") : result.error));
-        //         }
-        //     } catch (err) {
-        //         console.error("Error al guardar:", err);
-        //         alert("Ocurrió un error inesperado.");
-        //     }
-        // });
-
         function validarFechaDDMMYYYY(fechaStr) {
             // formato correcto dd/mm/yyyy ?
             const partes = fechaStr.split("/");
@@ -620,7 +556,7 @@
             if (isNaN(date.getTime())) return null;
 
             const yyyy = date.getFullYear();
-            if (yyyy < 1900 || yyyy > 2100) return null;
+            if (yyyy < 2024 || yyyy > 2100) return null;
 
             return fechaStr; // ya está en formato yyyy-mm-dd
         }
@@ -756,120 +692,107 @@
             const titulo = document.getElementById('titulo-indicador');
             titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
 
-            const subtitulo = document.getElementById('subtitulo-indicador');
-            // subtitulo.style.float = "none";
-            subtitulo.style.textAlign = "left";
-            // subtitulo.style.width = "100%";
+            const spanFrecuencia = document.getElementById('valor-frecuencia');
+            spanFrecuencia.textContent = CodigosService.getNombreCodigo(frecuencia) || '';
+            spanFrecuencia.style.color = "red";   // o "#ff0000" o "blue"
 
-            // limpiar primero, para que no se acumulen
-            subtitulo.textContent = "";
-
-            // insertar el <br>
-            // subtitulo.appendChild(document.createElement("br"));
-
-
+            const spanMedicion = document.getElementById('valor-ultima-medicion');
             const ultima = await getUltimaMedicionPorIndicador(indId);
             if (ultima) {
                 const fecha = new Date(ultima.med_fecha_medicion);
                 const fechaFormateada = fecha.toLocaleDateString('es-AR');
-                subtitulo.append(`Ultima medición registrada: ${fechaFormateada}`);
+                spanMedicion.textContent = fechaFormateada;
+                spanMedicion.style.color = "red";   // o "#ff0000" o "blue"
+                document.getElementById('periodo-ultima-medicion').textContent = ultima.med_valor_periodo || '';
             } else {
-                subtitulo.append("Sin mediciones registradas");
+                spanMedicion.textContent = "Sin mediciones registradas";
+                spanMedicion.style.color = "grey";   // o "#ff0000" o "blue"
+                document.getElementById('periodo-ultima-medicion').textContent = '--';
             }
-
-            subtitulo.style.display = 'block';
-
-
-            const subtitulo2 = document.getElementById('subtitulo-indicador2');
-
-            // subtitulo.style.textAlign = "left";
-
-
-            // limpiar primero, para que no se acumulen
-            subtitulo2.textContent = "";
-
-            // insertar el <br>
-            subtitulo2.appendChild(document.createElement("br"));
-
-            
-            const tipoSelect = document.getElementById('tipo_id');
-            subtitulo2.textContent = CodigosService.getNombreCodigo(frecuencia) || ''; // valor inicial vacío
-
-            const freqMedicion = await getUltimaMedicionPorIndicador(indId);
-            
-            subtitulo2.style.display = 'block';
-            // if (ultima) {
-            //     const fecha = new Date(ultima.med_fecha_medicion);
-            //     const fechaFormateada = fecha.toLocaleDateString('es-AR');
-            //     subtitulo.append(`Ultima medición registrada: ${fechaFormateada}`);
-            // } else {
-            //     subtitulo.append("Sin mediciones registradas");
-            // }
-
-
-
-
 
             // guardo el código en el hidden para usarlo después
             document.getElementById('indicadorCodigo').value = indId;
 
-            // const tipoSelect = document.getElementById('tipo_id');
-            // tipoSelect.value = CodigosService.getNombreCodigo(frecuencia) || ''; // valor inicial vacío
+            document.getElementById('unidad-carga').textContent = CodigosService.getNombreCodigo(unidad) || '';
 
-            const unid_medida = CodigosService.getNombreCodigo(unidad);
-            document.getElementById('unidad-carga').innerText = unid_medida || '';
-            // guardo en el hidden
-            document.getElementById('unidadMedidaCodigo').value = unidad;
-
-            const valorPeriodo = document.getElementById('valor-periodo');
             const fechaMedicion = document.getElementById('fecha-carga');
 
-            switch (tipoSelect.value) {
+            const textoPeriodo = document.getElementById('texto-periodo');
+            const labelValorPeriodo = document.getElementById('label-valor-periodo');
+            const campoLabelAnio = document.getElementById('campo-label-anio');
+            campoLabelAnio.style.display = 'block';
+
+            switch (frecuencia) {
                 case '0201': // diaria (día hábil anterior)
-                    valorPeriodo.value = "Texto 2";
+                    textoPeriodo.textContent = "Dia evaluado";
+                    labelValorPeriodo.innerHTML = "<strong>Seleccione dia:</strong>";
+                    campoLabelAnio.style.display = 'none';
                     break;
 
-                case 'Semanal': // semanal
-                    valorPeriodo.value = "N° de Semana:"
+                case '0202': // semanal
+                    textoPeriodo.textContent = "Semana (1 a 52):"
+                    labelValorPeriodo.innerHTML = "<strong>N° Semana:</strong>";
                     break;
 
-                case 'Quincenal': // diaria (día hábil anterior)
-                    valorPeriodo.value = "N° mes y quincena (1/2)";
+                case '0203': // quincenal
+                    textoPeriodo.textContent = "Quincena (1 a 24)";
+                    labelValorPeriodo.innerHTML = "<strong>N° Quincena:</strong>";
                     break;
 
-                case '0204': // semanal
-                    valorPeriodo.value = "N° de Mes:";
+                case '0204': // mensual
+                    textoPeriodo.textContent = "Mes (1 a 12):";
+                    labelValorPeriodo.innerHTML = "<strong>N° Mes:</strong>";
+                    break;
+
+                case '0205': // bimestral
+                    textoPeriodo.textContent = "Bimestre (1 a 6):"
+                    labelValorPeriodo.innerHTML = "<strong>N° Bimestre:</strong>";
+                    break;
+
+                case '0206': // trimestral
+                    textoPeriodo.textContent = "Trimestre (1 a 4)";
+                    labelValorPeriodo.innerHTML = "<strong>N° Trimestre:</strong>";
+                    break;
+
+                case '0207': // cuatrimestral
+                    textoPeriodo.textContent = "Cuatrim.(1 a 3):";
+                    labelValorPeriodo.innerHTML = "<strong>N° Cuatrim.:</strong>";
+                    break;
+
+                case '0208': // semestral
+                    textoPeriodo.textContent = "Semestre (1ó2)";
+                    labelValorPeriodo.innerHTML = "<strong>N° Semestre:</strong>";
+                    break;
+
+                case '0209': // anual
+                    textoPeriodo.textContent = "Año (AAAA):";
+                    labelValorPeriodo.innerHTML = "<strong>Año:</strong>";
                     break;
             }
 
+            const valorPeriodo = document.getElementById('valor-periodo');
+
+            if (frecuencia === "0201") {
+                valorPeriodo.type = "date";
+                labelValorPeriodo.innerHTML = "<strong>Dia:</strong>";
+                valorPeriodo.value = "";
+                valorPeriodo.className = "form-control"; // ✅ mantiene estilo correcto
+            } else {
+                valorPeriodo.type = "number";
+                valorPeriodo.value = "";
+                valorPeriodo.className = "form-control"; // ✅ asegura alineación
+            }
+
+            valorPeriodo.className = "form-control align-middle";
+
+            const formulario = document.getElementById('formulario-carga');
             formulario.style.display = 'block';
             // Llevar al inicio de la página
             window.scrollTo({ behavior: 'smooth', top: 0 });
 
-
-            // Cambiar Valor Período según el tipo de periodo
-            // tipoSelect.addEventListener('change', function () {
-            //     if (this.value === "Diaria") { // Día
-            //         if (fechaMedicion.value) {
-            //             const partes = fechaMedicion.value.split('-'); // ["2025","09","01"]
-            //             const anio = partes[0];
-            //             const mes = partes[1];
-            //             const dia = partes[2];
-            //             valorPeriodo.value = `${dia}-${mes}-${anio}`; // DD-MM-AAAA
-            //             valorPeriodo.setAttribute('readonly', 'readonly');
-            //         } else {
-            //             valorPeriodo.value = "";
-            //             valorPeriodo.setAttribute('readonly', 'readonly');
-            //         }
-            //     } else {
-            //         valorPeriodo.value = "";       // limpio el campo
-            //         valorPeriodo.readonly = false; // permite editar
-            //     }
-            // });
-
             // además: cuando cambia la fecha, actualizar también (si es diario)
             fechaMedicion.addEventListener('change', function () {
-                if (tipoSelect.value === "Diaria") {
+                if (frecuencia === "0201") {
                     const partes = this.value.split('-');
                     const anio = partes[0];
                     const mes = partes[1];
@@ -881,11 +804,11 @@
                 const codFrecuencia = frecuencia.slice(-2); // obtener los últimos 2 caracteres
                 const corresponde = calcularFechaEsperada(fechaMedicion.value, codFrecuencia); // diaria → "2025-09-15"
                 alert(`corresponde a:  ${corresponde}`);
-
             });
 
             // ✅ AGREGADO: Ejecutar la lógica inicial al cargar si ya hay un valor en tipoSelect
-            if (tipoSelect.value === "Diaria") {
+            // if (tipoSelect.value === "Diaria") {
+            if (frecuencia === "0201") {
                 if (fechaMedicion.value) {
                     const partes = fechaMedicion.value.split('-');
                     const anio = partes[0];
@@ -897,14 +820,13 @@
             }
 
 
-
             document.getElementById('form-carga').addEventListener('submit', async function (e) {
                 e.preventDefault();
 
                 const errores = [];
-                const indId = document.getElementById('indicadorCodigo').value;
+                // const indId = document.getElementById('indicadorCodigo').value;
 
-                const unidad = document.getElementById('unidadMedidaCodigo').value;
+                // const unidad = document.getElementById('unidadMedidaCodigo').value;
 
                 const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
                 const fechaInputDate = new Date(fechaInputStr); // ahora es un Date
@@ -924,6 +846,8 @@
                     errores.push("Fecha inválida o fuera de rango (1900-2100).");
                 }
 
+                errores.push ("otro error detecdtado")
+                
                 // Tomar los valores de los campos
                 const datos = {
                     med_indicador_id: indId,
@@ -1020,12 +944,9 @@
         const { anioISO, semanaISO } = getSemanaISO(hoy);
         console.log(`Hoy ${hoy.toISOString().split('T')[0]} → Semana ISO: ${semanaISO}, Año ISO: ${anioISO}`);
 
-
-
         // Ejemplo:
         const diaHabil = getDiaHabilAnterior(hoy);
         console.log(diaHabil.toISOString().split('T')[0]); // "2025-09-15"
-
 
         function calcularFechaEsperada(fechaConsulta, tipoPeriodo) {
 
@@ -1249,9 +1170,14 @@
             await cargarIndicadores();     // 🔹 después cargo los indicadores
 
             // 2. Leer mediciones
-            await leerMediciones();
+            medicionesGral = await leerMediciones();
 
-
+            // 3. Inicializar tooltips Bootstrap
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(
+                (el) => new bootstrap.Tooltip(el)
+            );
+            console.log("✅ Tooltips inicializados:", tooltipList.length);
         }
 
 
