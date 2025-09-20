@@ -1049,6 +1049,7 @@
                         const demorado = await controlaActualizacion(ind.id, ind.freq_medicion);
 
                         if (demorado !== ultima.med_valor_periodo) {
+                            console.log (`un distinto, calculado: ${demorado} y leido: ${ultima.med_valor_periodo}`)
                             resultadoActualizacion = `<td><span class="badge text-bg-danger"> Demorado </span></td>`;
                         }
                         else {
