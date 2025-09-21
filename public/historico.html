@@ -64,6 +64,23 @@
             text-align: left;
             /* opcional: alinear texto a la izquierda */
         }
+
+        #tablaMediciones th,
+        #tablaMediciones td {
+            border-right: none !important;
+        }
+
+        #tablaMediciones {
+            border-top: 1px solid #dee2e6;
+            /* mismo color que usa Bootstrap */
+            border-right: 1px solid #dee2e6;
+            /* mismo color que usa Bootstrap */
+        }
+
+        div.dataTables_filter {
+            margin-bottom: 1rem;
+            /* espacio debajo del buscador */
+        }
     </style>
 </head>
 <!--end::Head-->
@@ -419,12 +436,12 @@
 
 
     <script>
-        const registros = [
-            { fecha: '2025-07-01', codigo: 'FIN001', descripcion: 'Margen de Ganancia Bruta', comentario: 'Comentarios a considerar en la medición', valor: 18.5, unidad: '%' },
-            { fecha: '2025-06-01', codigo: 'FIN001', descripcion: 'Margen de Ganancia Bruta', comentario: 'Efecto de la pandemia', valor: 18.0, unidad: '%' },
+        // const registros = [
+        //     { fecha: '2025-07-01', codigo: 'FIN001', descripcion: 'Margen de Ganancia Bruta', comentario: 'Comentarios a considerar en la medición', valor: 18.5, unidad: '%' },
+        //     { fecha: '2025-06-01', codigo: 'FIN001', descripcion: 'Margen de Ganancia Bruta', comentario: 'Efecto de la pandemia', valor: 18.0, unidad: '%' },
 
-            // Agregá más registros simulados o reemplazá con datos reales del backend
-        ];
+        //     // Agregá más registros simulados o reemplazá con datos reales del backend
+        // ];
 
         let paginaActual = 1;
         let cantidadPorPagina = 10;
@@ -473,96 +490,6 @@
 
         let tablaIndicadores; // instancia global
         let indicadores;
-
-        // async function cargarIndicadores() {
-        //     try {
-        //         const response = await fetch('/api/indicadores');
-        //         indicadores = await response.json();
-
-        //         // acá recién creás la DataTable de mediciones
-        //         leerMediciones();
-
-        //         // Transformamos los datos para que DataTable los entienda
-        //         const datosTabla = await Promise.all(indicadores.map(async (ind) => {
-        //             const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
-        //             const sectores = await obtenerSectoresPorUnidad(ind.destino);
-
-        //             //  dimension: `<span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">${ind.dimension_id}</span>`,
-
-        //             return {
-        //                 codigo: ind.codigo_id,
-        //                 nombre: ind.nombre,
-        //                 descripcion: ind.descripcion,
-        //                 sectores: sectores.nombre,
-        //                 responsable: `${usuario.nombres} ${usuario.apellido}`,
-        //                 objetivo: ind.objetivo,
-        //                 frecuencia: CodigosService.getNombreCodigo(ind.freq_reporte),
-        //                 carga: ind.fecha_inicio ? new Date(ind.fecha_inicio).toLocaleDateString() : '-',
-        //                 estado: `<td><span class="badge text-bg-warning"> Demorado </span></td>`,
-        //                 acciones: `
-        //                 <td class="icon-only-actions">
-        //                     <button class="btn btn-primary btn-xs" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
-        //                         <i class="fas fa-eye fa-xs"></i>
-        //                     </button>
-        //                     <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.codigo_id}')">
-        //                         <i class="fas fa-edit fa-xs"></i>
-        //                     </button>
-        //                 </td>
-        //                 `
-        //             };
-        //         }));
-
-        //         // Inicializar tabla la primera vez
-        //         if (!tablaIndicadores) {
-        //             tablaIndicadores = $('#tablaIndicadores').DataTable({
-        //                 data: datosTabla,
-        //                 columns: [
-        //                     { data: 'codigo', title: 'Código' },
-        //                     { data: 'nombre', title: 'Nombre' },
-        //                     { data: 'descripcion', title: 'Descripción' },
-        //                     { data: 'responsable', title: 'Responsable' },
-        //                     { data: 'frecuencia', title: 'Medición' },
-        //                     { data: 'carga', title: 'Ultima Carga' },
-        //                     { data: 'estado', title: 'Estado' },
-        //                     { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
-        //                 ],
-        //                 columnDefs: [
-
-        //                     { width: "30px", targets: 0 },   // Código un poco angosto
-        //                     { width: "50px", targets: 1 },  // Nombre más ancho
-        //                     { width: "15px", targets: 2 },   // descripcion
-        //                     { width: "50px", targets: 3 },  // responsable
-        //                     { width: "40px", targets: 4 },   // medicion
-        //                     { width: "40px", targets: 5 },   // carga
-        //                     { width: "25px", targets: 6 },  // estado
-        //                     { width: "40px", targets: 7 },   // acciones
-        //                 ],
-        //                 responsive: true,
-        //                 autoWidth: false,
-        //                 order: [[0, 'asc']]
-        //             });
-        //         } else {
-        //             // Actualizar datos sin destruir la tabla
-        //             tablaIndicadores.clear().rows.add(datosTabla).draw();
-        //         }
-
-        //         // Mostrar total y empty state
-        //         const totalBadge = document.getElementById('totalIndicadores');
-        //         const emptyState = document.getElementById('emptyState');
-
-        //         if (datosTabla.length === 0) {
-        //             emptyState.style.display = 'block';
-        //             totalBadge.textContent = '0 indicadores';
-        //         } else {
-        //             emptyState.style.display = 'none';
-        //             totalBadge.textContent = `${datosTabla.length} indicadores`;
-        //         }
-
-        //     } catch (error) {
-        //         console.error('Error cargando indicadores:', error);
-        //         alert('No se pudieron cargar los indicadores.');
-        //     }
-        // }
 
         let tablaMediciones;
 

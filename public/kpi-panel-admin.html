@@ -69,6 +69,29 @@
         .card-title {
             text-align: center !important;
         }
+
+        #tablaIndicadores th,
+        #tablaIndicadores td {
+            border-right: none !important;
+        }
+
+        #tablaIndicadores {
+            border-top: 1px solid #dee2e6;
+            /* mismo color que usa Bootstrap */
+            border-right: 1px solid #dee2e6;
+            /* mismo color que usa Bootstrap */
+        }
+
+        div.dataTables_filter {
+            margin-bottom: 1rem;
+            /* espacio debajo del buscador */
+        }
+
+        .btn-icon-minimal {
+            padding: 2px 4px !important;
+            line-height: 1 !important;
+            min-width: auto !important;
+        }
     </style>
 </head>
 <!--end::Head-->
@@ -900,19 +923,19 @@
         }
 
         // Ejemplo de uso:
-        const hoy = new Date();
-        const { anioISO, semanaISO } = getSemanaISO(hoy);
-        console.log(`Hoy ${hoy.toISOString().split('T')[0]} → Semana ISO: ${semanaISO}, Año ISO: ${anioISO}`);
+        // const hoy = new Date();
+        // const { anioISO, semanaISO } = getSemanaISO(hoy);
+        // console.log(`Hoy ${hoy.toISOString().split('T')[0]} → Semana ISO: ${semanaISO}, Año ISO: ${anioISO}`);
 
-        console.log('diaria: ' + calcularFechaEsperada('2025-09-16', '01')); // diaria → "2025-09-15"
-        console.log('semanal: ' + calcularFechaEsperada('2025-09-16', '02')); // semanal → "2025-09-01"
-        console.log('quincenal: ' + calcularFechaEsperada('2025-09-16', '03')); // quincenal → "91"
-        console.log('mensual: ' + calcularFechaEsperada('2025-09-16', '04')); // mensual → 8
-        console.log('bimestral: ' + calcularFechaEsperada('2025-09-16', '05')); // bimestral → 4
-        console.log('trimestral: ' + calcularFechaEsperada('2025-09-16', '06')); // trimestral → 3
-        console.log('cuatrimestral: ' + calcularFechaEsperada('2025-09-16', '07')); // cuatrimestral → 3
-        console.log('semestral: ' + calcularFechaEsperada('2025-09-16', '08')); // semestral → 2
-        console.log('anual: ' + calcularFechaEsperada('2025-09-16', '09')); // anual → 2024
+        // console.log('diaria: ' + calcularFechaEsperada('2025-09-16', '01')); // diaria → "2025-09-15"
+        // console.log('semanal: ' + calcularFechaEsperada('2025-09-16', '02')); // semanal → "2025-09-01"
+        // console.log('quincenal: ' + calcularFechaEsperada('2025-09-16', '03')); // quincenal → "91"
+        // console.log('mensual: ' + calcularFechaEsperada('2025-09-16', '04')); // mensual → 8
+        // console.log('bimestral: ' + calcularFechaEsperada('2025-09-16', '05')); // bimestral → 4
+        // console.log('trimestral: ' + calcularFechaEsperada('2025-09-16', '06')); // trimestral → 3
+        // console.log('cuatrimestral: ' + calcularFechaEsperada('2025-09-16', '07')); // cuatrimestral → 3
+        // console.log('semestral: ' + calcularFechaEsperada('2025-09-16', '08')); // semestral → 2
+        // console.log('anual: ' + calcularFechaEsperada('2025-09-16', '09')); // anual → 2024
 
 
         /**
@@ -929,10 +952,10 @@
             return f;
         }
 
-        console.log('ultimo ajuste' + calcularFechaEsperada('2025-09-16', '01'));
-        // Ejemplo:
-        const diaHabil = getDiaHabilAnterior(hoy);
-        console.log(diaHabil.toISOString().split('T')[0]); // "2025-09-15"
+        // console.log('ultimo ajuste' + calcularFechaEsperada('2025-09-16', '01'));
+        // // Ejemplo:
+        // const diaHabil = getDiaHabilAnterior(hoy);
+        // console.log(diaHabil.toISOString().split('T')[0]); // "2025-09-15"
 
 
         let indicadores;
@@ -965,14 +988,14 @@
 
                                 anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
                                 segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
-                                fecha = "Semana " + segunda + ' de ' + anio
+                                fecha = "Sem. " + segunda + ' de ' + anio
                                 break;
 
                             case '0203': // quincenal
                                 anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
                                 segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
                                 tercera = ultima.med_valor_periodo.substring(6, 7);
-                                fecha = tercera + ' Quincena de ' + segunda + ' de ' + anio;
+                                fecha = tercera + ' Quin. ' + segunda + ' de ' + anio;
                                 break;
 
                             case '0204': // mensual
@@ -1046,10 +1069,16 @@
                                 break;
                         }
 
-                        const demorado = await controlaActualizacion(ind.id, ind.freq_medicion);
+                        // controla actualización
 
-                        if (demorado !== ultima.med_valor_periodo) {
-                            console.log (`un distinto, calculado: ${demorado} y leido: ${ultima.med_valor_periodo}`)
+                        const freqMedi = ind.freq_medicion.substring(2, 4);
+                        const hoy = new Date();
+                        const fechaFormateada = hoy.toISOString().split('T')[0];
+                        const resultado = await calcularFechaEsperada(fechaFormateada, freqMedi);
+                        console.log(`dio como resultado: ${ind.id} , ${freqMedi} , ${resultado}`)
+
+                        if (resultado !== ultima.med_valor_periodo) {
+                            console.log(`un distinto, calculado: ${resultado} y leido: ${ultima.med_valor_periodo}`)
                             resultadoActualizacion = `<td><span class="badge text-bg-danger"> Demorado </span></td>`;
                         }
                         else {
@@ -1072,10 +1101,10 @@
                         estado: resultadoActualizacion,
                         acciones: `
                         <td class="icon-only-actions">
-                            <button class="btn btn-primary btn-xs" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
+                            <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
                                 <i class="fas fa-eye fa-xs"></i>
                             </button>
-                            <button class="btn btn-warning btn-xs" title="Editar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}')">
+                            <button class="btn btn-warning btn-xs btn-icon-minimal" title="Editar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}')">
                                 <i class="fas fa-edit fa-xs"></i>
                             </button>
                         </td>
@@ -1110,6 +1139,9 @@
                         ],
                         responsive: true,
                         autoWidth: false,
+                        language: {
+                            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                        },
                         order: [[0, 'asc']]
                     });
                 } else {
@@ -1135,13 +1167,13 @@
             }
         }
 
-        async function controlaActualizacion(ind, freq) {
-            const freqMedi = freq.substring(2, 4);
-            const hoy = new Date();
-            const fechaFormateada = hoy.toISOString().split('T')[0];
-            const resultado = await calcularFechaEsperada(fechaFormateada, freqMedi);
-            console.log(`dio como resultado: ${ind} , ${freq} , ${resultado}`)
-        }
+        // async function controlaActualizacion(ind, freq) {
+        //     const freqMedi = freq.substring(2, 4);
+        //     const hoy = new Date();
+        //     const fechaFormateada = hoy.toISOString().split('T')[0];
+        //     const resultado = await calcularFechaEsperada(fechaFormateada, freqMedi);
+        //     console.log(`dio como resultado: ${ind} , ${freq} , ${resultado}`)
+        // }
 
         async function getUltimaMedicionPorIndicador(indicadorId) {
             // Filtrar por el indicador

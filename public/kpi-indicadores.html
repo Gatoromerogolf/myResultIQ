@@ -128,20 +128,18 @@
             font-size: 12px !important;
         }
 
-        #tablaIndicadores {
+        /* #tablaIndicadores {
             border: 2px solid #0d6efd !important;
             border-collapse: collapse;
-            /* 👈 asegura que los bordes se unan */
-        }
+        } */
 
-        #tablaIndicadores th,
+        /* #tablaIndicadores th,
         #tablaIndicadores td {
             border: 2px solid #0d6efd !important;
-            /* bordes internos también */
-        }
+        } */
 
         #tablaIndicadores thead th {
-            font-size: 14px !important;
+            font-size: 16px !important;
             padding: 6px 4px !important;
             font-weight: 600;
             line-height: 1.2;
@@ -200,7 +198,7 @@
         /* Si tienes badges o elementos dentro de las celdas */
         #tablaIndicadores .badge {
             font-size: 12px !important;
-            padding: 2px 6px !important;
+            padding: 4px 8px !important;
         }
 
         /* Ajustar ancho de columnas para mejor uso del espacio */
@@ -255,6 +253,24 @@
             width: 8%;
         }
 
+        /* Eliminar bordes de la tabla y las celdas */
+        #tablaIndicadores,
+        #tablaIndicadores th,
+        #tablaIndicadores td {
+            border: none !important;
+        }
+
+        /* Si quieres mantener el borde del encabezado */
+        #tablaIndicadores thead th {
+            border-bottom: 10px !important;
+            /* Elimina el borde inferior si es necesario */
+        }
+
+        /* Eliminar los bordes verticales solo para el cuerpo */
+        #tablaIndicadores tbody td {
+            border-left: none !important;
+            border-right: none !important;
+        }
 
         /* OPCIÓN 1: Solo iconos sin fondo (más limpio) */
         .icon-only-actions .btn {
@@ -2011,8 +2027,6 @@
                 const datosTabla = await Promise.all(indicadores.map(async (ind) => {
                     const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
                     const sectores = await obtenerSectoresPorUnidad(ind.destino);
-
-                    //  dimension: `<span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">${ind.dimension_id}</span>`,
 
                     return {
                         codigo: ind.codigo_id,
