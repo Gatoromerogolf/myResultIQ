@@ -421,7 +421,7 @@
                                     <div class="col-md-2" id="campo-label-anio" style="display: block">
                                         <label id="label-anio-periodo" for="label-anio-periodo" class="form-label">
                                             <strong>Año:</strong></label>
-                                        <input type="text" class="form-control" id="label-anio-periodo" required>
+                                        <input type="text" class="form-control" id="input-anio-periodo" readonly>
                                     </div>
 
                                     <div class="col-md-2">
@@ -781,7 +781,6 @@
             }
         }
 
-
         cancelarBtn.addEventListener('click', () => {
             formulario.style.display = 'none';
             const titulo = document.getElementById('titulo-indicador');
@@ -836,17 +835,20 @@
                 // Transformamos los datos para que DataTable los entienda
                 const datosTabla = await Promise.all(indicadores.map(async (ind) => {
                     const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
-                    // const sectores = await obtenerSectoresPorUnidad(ind.destino);
 
+                    // lee la ultima medición del indicador 
                     const ultima = await getUltimaMedicionPorIndicador(ind.id);
                     let fecha = '';
                     let resultadoActualizacion = 0;
                     let botones = '';
+                    let ultimoValorPeriodo = '';
 
                     if (ultima) {
                         let anio = 0;
                         let segunda = 0;
                         let tercera = 0;
+
+                        ultimoValorPeriodo = ultima.med_valor_periodo;
 
                         switch (ind.freq_medicion) {
                             case '0201': // diaria (día hábil anterior)
@@ -860,12 +862,22 @@
                                 fecha = "Sem. " + segunda + ' de ' + anio
                                 break;
 
-                            case '0203': // quincenal
-                                anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
-                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
-                                tercera = ultima.med_valor_periodo.substring(6, 7);
-                                fecha = tercera + ' Quin. ' + segunda + ' de ' + anio;
+                            case '0203': // quincenal con quincenas 1-24
+                                anio = ultima.med_valor_periodo.substring(0, 4);        // AAAA
+                                let quincenaGlobal = parseInt(ultima.med_valor_periodo.substring(4, 6)); // 1 a 24
+
+                                // Determinar el mes
+                                let mesNum = Math.ceil(quincenaGlobal / 2); // 1-12
+                                let quincenaDelMes = (quincenaGlobal % 2 === 0) ? 2 : 1;
+
+                                // Array con nombres de meses abreviados
+                                const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                                let mesTexto = meses[mesNum - 1]; // restamos 1 porque el array es base 0
+
+                                // Componer fecha
+                                fecha = quincenaDelMes + 'a.' + ' Quin. de ' + mesTexto + ' de ' + anio + ' (' + quincenaGlobal + ')';
                                 break;
+
 
                             case '0204': // mensual
                                 anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
@@ -939,11 +951,13 @@
                                 break;
                         }
 
+                        //  calcula cual debería ser la ultima fecha de medición según la fecha del día y la frecuencia de medición
                         const freqMedi = ind.freq_medicion.substring(2, 4);
                         const hoy = new Date();
                         const fechaFormateada = hoy.toISOString().split('T')[0];
                         const resultado = await calcularFechaEsperada(fechaFormateada, freqMedi);
 
+                        //  si la que debería ser no es igual a la ultima que tiene , pone marca de demorado
                         if (resultado !== ultima.med_valor_periodo) {
                             console.log(`un distinto, calculado: ${resultado} y leido: ${ultima.med_valor_periodo}`)
                             resultadoActualizacion = `<td><span class="badge text-bg-danger"> Demorado </span></td>`;
@@ -952,7 +966,7 @@
                                 <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
                                     <i class="fas fa-eye fa-xs"></i>
                                 </button>
-                                <button class="btn btn-warning btn-xs btn-icon-minimal" title="Registrar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}')">
+                                <button class="btn btn-warning btn-xs btn-icon-minimal" title="Registrar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}', '${ultimoValorPeriodo}')">
                                     <i class="fas fa-edit fa-xs"></i>
                                 </button>
                             </td>
@@ -969,6 +983,8 @@
                             `
                         }
                     }
+
+                    // si no tiene ninguna medición:
                     else {
                         fecha = "sin mediciones";
                         resultadoActualizacion = `<td><span class="badge text-bg-secondary"> Pendiente </span></td>`;
@@ -977,7 +993,7 @@
                             <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
                                 <i class="fas fa-eye fa-xs"></i>
                             </button>
-                            <button class="btn btn-warning btn-xs btn-icon-minimal" title="Editar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}')">
+                            <button class="btn btn-warning btn-xs btn-icon-minimal" title="Editar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}', '${ultimoValorPeriodo}')">
                                 <i class="fas fa-edit fa-xs"></i>
                             </button>
                         </td>
@@ -1011,7 +1027,6 @@
                             { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
                         ],
                         columnDefs: [
-
                             { width: "30px", targets: 0 },   // Código un poco angosto
                             { width: "50px", targets: 1 },  // Nombre más ancho
                             { width: "15px", targets: 2 },   // descripcion
@@ -1106,7 +1121,7 @@
         }
 
         // Cargar un indicador en el formulario para editar
-        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo) {
+        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo) {
 
             const titulo = document.getElementById('titulo-indicador');
             titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
@@ -1123,7 +1138,6 @@
                 const fechaFormateada = fecha.toLocaleDateString('es-AR');
                 spanMedicion.textContent = fechaFormateada;
                 spanMedicion.style.color = "red";   // o "#ff0000" o "blue"
-                // document.getElementById('periodo-ultima-medicion').textContent = ultima.med_valor_periodo || '';
                 document.getElementById('periodo-ultima-medicion').textContent = ultPeriodo || '';
                 spanUltimoPeriodo.style.color = "red";
             } else {
@@ -1192,19 +1206,30 @@
             }
 
             const valorPeriodo = document.getElementById('valor-periodo');
-
+            valorPeriodo.className = "form-control align-middle";
             if (frecuencia === "0201") {
                 valorPeriodo.type = "date";
                 labelValorPeriodo.innerHTML = "<strong>Dia:</strong>";
                 valorPeriodo.value = "";
-                valorPeriodo.className = "form-control"; // ✅ mantiene estilo correcto
             } else {
                 valorPeriodo.type = "number";
                 valorPeriodo.value = "";
-                valorPeriodo.className = "form-control"; // ✅ asegura alineación
+                labelValorPeriodo.innerHTML = "<strong>Valor período:</strong>";
+                const periodo = frecuencia.substring(2, 4);
+                resultado = await siguientePeriodo(ultimoValorPeriodo, periodo);
+                alert(`nuevo resultado  ${resultado}`)
+                let anioResultado = resultado.substring(0, 4);
+                let otroResultado = resultado.substring(4, 6);
+
+                document.getElementById('valor-periodo').value = otroResultado; 
+                document.getElementById('valor-periodo').className = "form-control-plaintext"; 
+                document.getElementById('input-anio-periodo').value = anioResultado; 
+                document.getElementById('input-anio-periodo').className = "form-control-plaintext"; 
+
+
             }
 
-            valorPeriodo.className = "form-control align-middle";
+            // valorPeriodo.className = "form-control align-middle";
 
             const formulario = document.getElementById('formulario-carga');
             formulario.style.display = 'block';
@@ -1212,33 +1237,33 @@
             window.scrollTo({ behavior: 'smooth', top: 0 });
 
             // además: cuando cambia la fecha, actualizar también (si es diario)
-            fechaMedicion.addEventListener('change', function () {
-                if (frecuencia === "0201") {
-                    const partes = this.value.split('-');
-                    const anio = partes[0];
-                    const mes = partes[1];
-                    const dia = partes[2];
-                    valorPeriodo.value = `${dia}-${mes}-${anio}`;
-                    valorPeriodo.setAttribute('readonly', 'readonly');
-                }
+            // fechaMedicion.addEventListener('change', function () {
+            //     if (frecuencia === "0201") {
+            //         const partes = this.value.split('-');
+            //         const anio = partes[0];
+            //         const mes = partes[1];
+            //         const dia = partes[2];
+            //         valorPeriodo.value = `${dia}-${mes}-${anio}`;
+            //         valorPeriodo.setAttribute('readonly', 'readonly');
+            //     }
 
-                const codFrecuencia = frecuencia.slice(-2); // obtener los últimos 2 caracteres
-                const corresponde = calcularFechaEsperada(fechaMedicion.value, codFrecuencia); // diaria → "2025-09-15"
-                alert(`corresponde a:  ${corresponde}`);
-            });
+            //     const codFrecuencia = frecuencia.slice(-2); // obtener los últimos 2 caracteres
+            //     const corresponde = calcularFechaEsperada(fechaMedicion.value, codFrecuencia); // diaria → "2025-09-15"
+            //     alert(`corresponde a:  ${corresponde}`);
+            // });
 
             // ✅ AGREGADO: Ejecutar la lógica inicial al cargar si ya hay un valor en tipoSelect
             // if (tipoSelect.value === "Diaria") {
-            if (frecuencia === "0201") {
-                if (fechaMedicion.value) {
-                    const partes = fechaMedicion.value.split('-');
-                    const anio = partes[0];
-                    const mes = partes[1];
-                    const dia = partes[2];
-                    valorPeriodo.value = `${dia}-${mes}-${anio}`;
-                }
-                valorPeriodo.setAttribute('readonly', 'readonly');
-            }
+            // if (frecuencia === "0201") {
+            //     if (fechaMedicion.value) {
+            //         const partes = fechaMedicion.value.split('-');
+            //         const anio = partes[0];
+            //         const mes = partes[1];
+            //         const dia = partes[2];
+            //         valorPeriodo.value = `${dia}-${mes}-${anio}`;
+            //     }
+            //     valorPeriodo.setAttribute('readonly', 'readonly');
+            // }
 
             document.getElementById('form-carga').addEventListener('submit', async function (e) {
                 e.preventDefault();
@@ -1262,13 +1287,12 @@
                     errores.push("Fecha inválida o fuera de rango (1900-2100).");
                 }
 
-                errores.push("otro error detecdtado")
+                errores.push("otro error detectado")
 
                 // Tomar los valores de los campos
                 const datos = {
                     med_indicador_id: indId,
                     med_fecha_medicion: document.getElementById('fecha-carga').value,
-                    // med_tipo_periodo: document.getElementById('tipo_id').value,
                     med_tipo_periodo: frecuencia,
                     med_valor_periodo: document.getElementById('valor-periodo').value,
                     med_anio: anio_ISO,
@@ -1307,7 +1331,6 @@
                         const subtitulo = document.getElementById('subtitulo-indicador');
                         subtitulo.innerHTML = "";
                         subtitulo.style.display = "none";
-
                     } else {
                         // El backend también devuelve errores si algo se escapó
                         alert("Error del servidor:\n" + (result.errores ? result.errores.join("\n- ") : result.error));
@@ -1388,20 +1411,27 @@
                     resultado = `${anioSemanaAnterior}${semanaAnterior}`;
                     break;
 
-                case '03': // quincenal
+                case '03': // quincenal 1-24
+                    let quincenaGlobal;
                     if (dia < 16) {
-                        mes = mes - 1;
-                        if (mes === 0) {
-                            mes = 12;
-                            anio = anio - 1;
+                        // Segunda quincena del mes anterior
+                        let mesAnterior = mes - 1;
+                        let anioAnterior = anio;
+                        if (mesAnterior === 0) {
+                            mesAnterior = 12;
+                            anioAnterior -= 1;
                         }
-                        mes = String(mes).padStart(2, "0"); // ✅ "09"
-                        resultado = `${anio}${mes}2`; // segunda quincena del mes anterior
+                        quincenaGlobal = (mesAnterior - 1) * 2 + 2; // segunda quincena del mes anterior
+                        anio = anioAnterior;
                     } else {
-                        mes = String(mes).padStart(2, "0"); // ✅ "09"
-                        resultado = `${anio}${mes}1`; // primera quincena del mes actual
+                        // Primera quincena del mes actual
+                        quincenaGlobal = (mes - 1) * 2 + 1;
                     }
+
+                    // Guardar resultado como AAAA + quincena en 2 dígitos
+                    resultado = `${anio}${String(quincenaGlobal).padStart(2, "0")}`;
                     break;
+
 
                 case '04': // mensual
                     if (mes === 1) {
@@ -1437,7 +1467,6 @@
                     }
                     break;
 
-
                 case '06': // trimestral
                     if (mes >= 1 && mes <= 3) {
                         // meses 1-3 → año anterior + sufijo 4
@@ -1454,7 +1483,6 @@
                     }
                     break;
 
-
                 case '07': // cuatrimestral
                     if (mes >= 1 && mes <= 4) {
                         // meses 1-4 → año anterior + sufijo 3
@@ -1467,7 +1495,6 @@
                         resultado = `${anio}2`;
                     }
                     break;
-
 
                 case '08': // semestral
                     if (mes < 7) {
@@ -1489,154 +1516,152 @@
             return resultado;
         }
 
-        function calcularFechaEsperadaXXX(fechaConsulta, tipoPeriodo) {
+        async function siguientePeriodo(periodoRegistrado, periodo) {
+            let anio = parseInt(periodoRegistrado.substring(0, 4));
+            let resultado = "";
 
-            // console.log(`valores recibidos: ${fechaConsulta}, ${tipoPeriodo}`);
-            // console.log("tipoPeriodo:", tipoPeriodo, "tipo:", typeof tipoPeriodo);
-            // segun la fecha del dia determina qué fecha deberia ya haber informado el usuario
-            const partes = fechaConsulta.split('-'); // "2025-09-16" → ["2025","09","16"]
-            const fecha = new Date(partes[0], partes[1] - 1, partes[2]); // año, mesIndex, día
-            let resultado;
-            let dia = fecha.getDate();
-            let mes = fecha.getMonth() + 1; // 1-12
-            let anio = fecha.getFullYear();
+            switch (periodo) {
 
-            switch (tipoPeriodo) {
-                case '01': // diaria (día hábil anterior)
-                    // const diaHabil = getDiaHabilAnterior(fecha);
-                    // resultado = diaHabil.toISOString().split('T')[0]; // yyyy-mm-dd
-                    resultado = fechaConsulta
-                    break;
-
-                case '02': // semanal
-                    // Obtener semana ISO y año ISO
-                    const { anioISO, semanaISO } = getSemanaISO(fecha);
-
-                    // Semana anterior
-                    // let semanaAnterior = semanaISO - 1;
-                    // let anioSemanaAnterior = anioISO;
-
-                    // Si la semana anterior cae en el año anterior
-                    // if (semanaAnterior === 0) {
-                    // Última semana ISO del año anterior (52 o 53 según el año)
-                    //     anioSemanaAnterior = anioISO - 1;
-                    //     semanaAnterior = getSemanaISO(new Date(anioSemanaAnterior, 11, 31)).semanaISO;
-                    // }
-
-                    // Guardar resultado en formato uniforme: "AAAA+semana"
-                    // resultado = `${anioSemanaAnterior}${semanaAnterior}`;
-
-                    resultado = `${anioISO}-${semanaISO}`;
-                    break;
-
-
-                case '03': // quincenal
-                    // if (dia < 16) {
-                    //     mes = mes - 1;
-                    //     if (mes === 0) {
-                    //         mes = 12;
-                    //         anio = anio - 1;
-                    //     }
-                    //     resultado = `${anio}${mes}2`; // segunda quincena del mes anterior
-                    // } else {
-                    //     resultado = `${anio}${mes}1`; // primera quincena del mes actual
-                    // }
-
-                    if (dia < 16) {
-                        resultado = `${anio}-${mes}-1`;
+                case '02': // Semanal AAAASS
+                    let semana = parseInt(periodoRegistrado.substring(4, 6));
+                    const ultSemana = getSemanaISO(new Date(anio, 11, 31)).semanaISO;
+                    if (semana >= ultSemana) {
+                        anio += 1;
+                        semana = 1;
                     } else {
-                        resultado = `${anio}-${mes}-2`;
+                        semana += 1;
                     }
+                    resultado = `${anio}${String(semana).padStart(2, "0")}`;
                     break;
 
-                case '04': // mensual
-                    // if (mes === 1) {
-                    //     // si enero, el mes anterior es diciembre del año anterior
-                    //     resultado = `${anio - 1}12`;
-                    // } else {
-                    //     // cualquier otro mes: mes anterior del mismo año
-                    //     resultado = `${anio}${mes - 1}`;
-                    // }
-
-                    resultado = `${anio}-${String(mes).padStart(2, '0')}`;
-                    break;
-
-
-                case '05': // bimestral
-                    if (mes === 1 || mes === 2) {
-                        // ene-feb → año anterior + 6 (último bimestre del año anterior)
-                        resultado = `${anio - 1}6`;
-                    } else if (mes === 3 || mes === 4) {
-                        // mar-abr → año actual + 1
-                        resultado = `${anio}1`;
-                    } else if (mes === 5 || mes === 6) {
-                        // may-jun → año actual + 2
-                        resultado = `${anio}2`;
-                    } else if (mes === 7 || mes === 8) {
-                        // jul-ago → año actual + 3
-                        resultado = `${anio}3`;
-                    } else if (mes === 9 || mes === 10) {
-                        // sep-oct → año actual + 4
-                        resultado = `${anio}4`;
-                    } else if (mes === 11 || mes === 12) {
-                        // nov-dic → año actual + 5
-                        resultado = `${anio}5`;
+                case '03': // Quincenal 1-24
+                    let quincena = parseInt(periodoRegistrado.substring(4, 6)); // 1-24
+                    quincena += 1;
+                    if (quincena > 24) {
+                        quincena = 1;
+                        anio += 1;
                     }
+                    // Guardamos el período como AAAA + quincena en 2 dígitos
+                    resultado = `${anio}${String(quincena).padStart(2, "0")}`;
                     break;
 
 
-                case '06': // trimestral
-                    if (mes >= 1 && mes <= 3) {
-                        // meses 1-3 → año anterior + sufijo 4
-                        resultado = `${anio - 1}4`;
-                    } else if (mes >= 4 && mes <= 6) {
-                        // meses 4-6 → año actual + sufijo 1
-                        resultado = `${anio}1`;
-                    } else if (mes >= 7 && mes <= 9) {
-                        // meses 7-9 → año actual + sufijo 2
-                        resultado = `${anio}2`;
-                    } else if (mes >= 10 && mes <= 12) {
-                        // meses 10-12 → año actual + sufijo 3
-                        resultado = `${anio}3`;
-                    }
+                case '04': // Mensual AAAAMM
+                    let mesM = parseInt(periodoRegistrado.substring(4, 6));
+                    mesM = (mesM === 12) ? (anio++, 1) : mesM + 1;
+                    resultado = `${anio}${String(mesM).padStart(2, "0")}`;
                     break;
 
-
-                case '07': // cuatrimestral
-                    if (mes >= 1 && mes <= 4) {
-                        // meses 1-4 → año anterior + sufijo 3
-                        resultado = `${anio - 1}3`;
-                    } else if (mes >= 5 && mes <= 8) {
-                        // meses 5-8 → año actual + sufijo 1
-                        resultado = `${anio}1`;
-                    } else if (mes >= 9 && mes <= 12) {
-                        // meses 9-12 → año actual + sufijo 2
-                        resultado = `${anio}2`;
-                    }
+                case '05': // Bimestral AAAAB (B=1-6)
+                    let b = parseInt(periodoRegistrado.substring(4, 5));
+                    b = (b === 6) ? (anio++, 1) : b + 1;
+                    resultado = `${anio}${b}`;
                     break;
 
-
-                case '08': // semestral
-                    if (mes < 7) {
-                        // primer semestre ya pasó → apéndice 2, año anterior
-                        resultado = `${anio - 1}2`;
-                    } else {
-                        // segundo semestre → apéndice 1, año actual
-                        resultado = `${anio}1`;
-                    }
+                case '06': // Trimestral AAAAT (T=1-4)
+                    let t = parseInt(periodoRegistrado.substring(4, 5));
+                    t = (t === 4) ? (anio++, 1) : t + 1;
+                    resultado = `${anio}${t}`;
                     break;
 
-                case '09': // anual
-                    resultado = anio - 1; // año anterior
+                case '07': // Cuatrimestre AAAAC (C=1-3)
+                    let c = parseInt(periodoRegistrado.substring(4, 5));
+                    c = (c === 3) ? (anio++, 1) : c + 1;
+                    resultado = `${anio}${c}`;
+                    break;
+
+                case '08': // Semestre AAAAS (S=1-2)
+                    let s = parseInt(periodoRegistrado.substring(4, 5));
+                    s = (s === 2) ? (anio++, 1) : s + 1;
+                    resultado = `${anio}${s}`;
+                    break;
+
+                case '09': // Año AAAA
+                    resultado = `${anio + 1}`;
                     break;
 
                 default:
-                    console.log('Tipo de período no reconocido');
-                    resultado = null;
+                    throw new Error("Frecuencia no reconocida");
             }
 
             return resultado;
         }
+
+
+        // un ejemplo con reglas genéricas:
+        // Definimos las reglas por frecuencia
+        const reglasPeriodo = {
+            '02': { tipo: 'semana', digitos: 2 },       // Semanal AAAASS
+            '03': { tipo: 'quincenal', digitosMes: 2, digitosQ: 1 }, // AAAAMMQ
+            '04': { tipo: 'mes', digitos: 2 },          // Mensual AAAAMM
+            '05': { tipo: 'bimestre', max: 6 },         // AAAAB
+            '06': { tipo: 'trimestre', max: 4 },        // AAAAT
+            '07': { tipo: 'cuatrimestre', max: 3 },     // AAAAC
+            '08': { tipo: 'semestre', max: 2 },         // AAAAS
+            '09': { tipo: 'anio' }                       // AAAA
+        };
+
+        // Función genérica para calcular el siguiente período
+        function siguientePeriodoGenerico(periodoRegistrado, frecuencia) {
+            let anio = parseInt(periodoRegistrado.substring(0, 4));
+            const regla = reglasPeriodo[frecuencia];
+
+            if (!regla) throw new Error("Frecuencia no reconocida");
+
+            let resultado = "";
+
+            switch (regla.tipo) {
+
+                case 'semana': // AAAASS
+                    let semana = parseInt(periodoRegistrado.substring(4, 6));
+                    const ultSemana = getSemanaISO(new Date(anio, 11, 31)).semanaISO;
+                    semana = (semana >= ultSemana) ? (anio++, 1) : semana + 1;
+                    resultado = `${anio}${String(semana).padStart(2, "0")}`;
+                    break;
+
+                case 'quincenal': // AAAAMMQ
+                    let mesQ = parseInt(periodoRegistrado.substring(4, 6));
+                    let q = parseInt(periodoRegistrado.substring(6, 7));
+                    if (q === 1) {
+                        q = 2;
+                    } else { // q === 2
+                        q = 1;
+                        if (mesQ === 12) {
+                            mesQ = 1;
+                            anio += 1;
+                        } else {
+                            mesQ += 1;
+                        }
+                    }
+                    resultado = `${anio}${String(mesQ).padStart(2, "0")}${q}`;
+                    break;
+
+                case 'mes': // AAAAMM
+                    let mesM = parseInt(periodoRegistrado.substring(4, 6));
+                    mesM = (mesM === 12) ? (anio++, 1) : mesM + 1;
+                    resultado = `${anio}${String(mesM).padStart(2, "0")}`;
+                    break;
+
+                case 'bimestre':
+                case 'trimestre':
+                case 'cuatrimestre':
+                case 'semestre':
+                    let valor = parseInt(periodoRegistrado.substring(4, 5));
+                    valor = (valor >= regla.max) ? (anio++, 1) : valor + 1;
+                    resultado = `${anio}${valor}`;
+                    break;
+
+                case 'anio':
+                    resultado = `${anio + 1}`;
+                    break;
+
+                default:
+                    throw new Error("Tipo de período no reconocido");
+            }
+
+            return resultado;
+        }
+
 
         /**
  * Devuelve el día hábil anterior a la fecha dada
@@ -1721,7 +1746,6 @@
             console.log("✅ Tooltips inicializados:", tooltipList.length);
         }
 
-
     </script>
 
     <!-- jQuery -->
@@ -1738,12 +1762,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)
---><!--begin::Required Plugin(Bootstrap 5)-->
+    <!--end::Required Plugin(popperjs for Bootstrap 5)-->
+    <!--begin::Required Plugin(Bootstrap 5)-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
+    <!--end::Required Plugin(Bootstrap 5)-->
+    <!--begin::Required Plugin(AdminLTE)-->
     <script src="../js/adminlte.min.js"></script>
 </body>
 
