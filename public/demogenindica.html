@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Indicadores - Claude Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .form-section {
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1.1rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .btn-secondary:hover {
+            background: #edf2f7;
+        }
+        
+        .results-section {
+            padding: 40px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            display: none;
+        }
+        
+        .results-section.show {
+            display: block;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .indicator-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .indicator-card h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .indicator-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .detail-item {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            color: #2d3748;
+        }
+        
+        .select-btn {
+            background: #48bb78;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .select-btn:hover {
+            background: #38a169;
+            transform: translateY(-1px);
+        }
+        
+        .error {
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .success {
+            background: #c6f6d5;
+            border: 1px solid #9ae6b4;
+            color: #2f855a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Generador de Indicadores</h1>
+            <p>Powered by Claude AI - Define indicadores inteligentes para tu organización</p>
+        </div>
+        
+        <form class="form-section" id="indicatorForm">
+            <div class="form-group">
+                <label for="area">Área o Proceso *</label>
+                <input type="text" id="area" name="area" required placeholder="Ej: Ventas, Recursos Humanos, Producción...">
+            </div>
+            
+            <div class="form-group">
+                <label for="descripcion">Descripción de la Actividad *</label>
+                <textarea id="descripcion" name="descripcion" required placeholder="Describe qué actividades se realizan en esta área y qué aspectos necesitas medir..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="objetivo">Objetivo del Indicador</label>
+                <select id="objetivo" name="objetivo">
+                    <option value="">Selecciona un objetivo...</option>
+                    <option value="eficiencia">Medir Eficiencia</option>
+                    <option value="calidad">Medir Calidad</option>
+                    <option value="productividad">Medir Productividad</option>
+                    <option value="satisfaccion">Medir Satisfacción</option>
+                    <option value="cumplimiento">Medir Cumplimiento</option>
+                    <option value="costo">Controlar Costos</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="industria">Tipo de Organización</label>
+                <input type="text" id="industria" name="industria" placeholder="Ej: Manufactura, Servicios, Retail, ONG...">
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="btn-primary">🚀 Generar Indicadores</button>
+                <button type="button" class="btn-secondary" onclick="limpiarFormulario()">🗑️ Limpiar</button>
+            </div>
+        </form>
+        
+        <div class="results-section" id="results">
+            <!-- Los resultados se mostrarán aquí -->
+        </div>
+    </div>
+
+    <script>
+        // Configuración - REEMPLAZA con tu API key real
+        const CLAUDE_API_KEY = 'TU_API_KEY_AQUI';
+        const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
+
+        // Manejo del formulario
+        document.getElementById('indicatorForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await generarIndicadores();
+        });
+
+        async function generarIndicadores() {
+            const formData = new FormData(document.getElementById('indicatorForm'));
+            const data = Object.fromEntries(formData);
+            
+            if (!data.area || !data.descripcion) {
+                mostrarError('Por favor completa los campos obligatorios.');
+                return;
+            }
+            
+            mostrarCargando();
+            
+            try {
+                // Crear el prompt estructurado
+                const prompt = crearPrompt(data);
+                
+                // Llamar a la API de Claude
+                const indicadores = await llamarClaudeAPI(prompt);
+                
+                // Mostrar resultados
+                mostrarIndicadores(indicadores);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarError('Error al generar indicadores: ' + error.message);
+            }
+        }
+
+        function crearPrompt(data) {
+            return `Como experto en indicadores de gestión y KPIs, necesito que me ayudes a definir indicadores para la siguiente situación:
+
+INFORMACIÓN PROPORCIONADA:
+- Área/Proceso: ${data.area}
+- Descripción de actividad: ${data.descripcion}
+- Objetivo principal: ${data.objetivo || 'No especificado'}
+- Tipo de organización: ${data.industria || 'No especificado'}
+
+INSTRUCCIONES:
+Genera exactamente 4 indicadores relevantes y específicos para esta situación. Para cada indicador, proporciona la información en el siguiente formato JSON:
+
+{
+  "indicadores": [
+    {
+      "nombre": "Nombre descriptivo del indicador",
+      "formula": "Fórmula matemática clara",
+      "unidad": "Unidad de medida",
+      "frecuencia": "Frecuencia de medición",
+      "fuente": "Fuente de datos",
+      "meta_sugerida": "Meta o rango objetivo",
+      "descripcion": "Breve descripción del por qué es importante"
+    }
+  ]
+}
+
+IMPORTANTE: Responde ÚNICAMENTE con el JSON válido, sin texto adicional antes o después.`;
+        }
+
+        async function llamarClaudeAPI(prompt) {
+            // NOTA: Este código usa la API directamente desde el frontend
+            // En producción, deberías hacer esto desde tu backend por seguridad
+            
+            const response = await fetch(CLAUDE_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': CLAUDE_API_KEY,
+                    'anthropic-version': '2023-06-01'
+                },
+                body: JSON.stringify({
+                    model: 'claude-3-5-sonnet-20241022', // Modelo disponible
+                    max_tokens: 2000,
+                    temperature: 0.3,
+                    messages: [{
+                        role: 'user',
+                        content: prompt
+                    }]
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            const content = data.content[0].text;
+            
+            try {
+                return JSON.parse(content);
+            } catch (e) {
+                // Si no es JSON válido, intentar extraerlo
+                const jsonMatch = content.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    return JSON.parse(jsonMatch[0]);
+                }
+                throw new Error('Respuesta no válida de Claude');
+            }
+        }
+
+        function mostrarCargando() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <h3>🤖 Claude está generando tus indicadores...</h3>
+                    <p>Esto puede tomar unos segundos</p>
+                </div>
+            `;
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function mostrarIndicadores(data) {
+            const resultsDiv = document.getElementById('results');
+            
+            if (!data.indicadores || data.indicadores.length === 0) {
+                mostrarError('No se pudieron generar indicadores válidos.');
+                return;
+            }
+            
+            let html = '<h2>🎯 Indicadores Generados</h2>';
+            
+            data.indicadores.forEach((indicador, index) => {
+                html += `
+                    <div class="indicator-card">
+                        <h3>${indicador.nombre}</h3>
+                        <div class="indicator-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Fórmula</div>
+                                <div class="detail-value">${indicador.formula}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Unidad</div>
+                                <div class="detail-value">${indicador.unidad}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Frecuencia</div>
+                                <div class="detail-value">${indicador.frecuencia}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Fuente de Datos</div>
+                                <div class="detail-value">${indicador.fuente}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Meta Sugerida</div>
+                                <div class="detail-value">${indicador.meta_sugerida}</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 15px; font-style: italic; color: #666;">
+                            ${indicador.descripcion}
+                        </p>
+                        <button class="select-btn" onclick="seleccionarIndicador(${index}, '${indicador.nombre.replace(/'/g, "\\'")}')">
+                            ✅ Seleccionar este indicador
+                        </button>
+                    </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = html;
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function seleccionarIndicador(index, nombre) {
+            // Aquí integrarías con tu base de datos
+            // Por ahora solo mostramos confirmación
+            
+            // Simular guardado en BD
+            setTimeout(() => {
+                mostrarExito(`Indicador "${nombre}" guardado exitosamente en la base de datos.`);
+                
+                // Aquí podrías hacer la llamada real a tu backend:
+                // guardarIndicadorEnBD(indicadorData);
+            }, 500);
+        }
+
+        function mostrarError(mensaje) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `<div class="error">❌ ${mensaje}</div>`;
+            resultsDiv.classList.add('show');
+        }
+
+        function mostrarExito(mensaje) {
+            const resultsDiv = document.getElementById('results');
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success';
+            successDiv.innerHTML = `✅ ${mensaje}`;
+            resultsDiv.appendChild(successDiv);
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('indicatorForm').reset();
+            document.getElementById('results').classList.remove('show');
+        }
+
+        // Función para integrar con tu backend (ejemplo)
+        async function guardarIndicadorEnBD(indicadorData) {
+            try {
+                const response = await fetch('/api/indicadores', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(indicadorData)
+                });
+                
+                if (response.ok) {
+                    console.log('Indicador guardado exitosamente');
+                } else {
+                    throw new Error('Error al guardar indicador');
+                }
+            } catch (error) {
+                console.error('Error guardando indicador:', error);
+            }
+        }
+
+        // Mostrar advertencia si no hay API key configurada
+        if (CLAUDE_API_KEY === 'TU_API_KEY_AQUI') {
+            setTimeout(() => {
+                mostrarError('⚠️ Necesitas configurar tu API key de Claude para usar esta funcionalidad. Reemplaza TU_API_KEY_AQUI en el código JavaScript.');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
