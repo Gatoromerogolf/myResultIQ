@@ -1308,7 +1308,7 @@
                                                     </div>
 
                                                     <!--begin::Fuente de Datos-->
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-5">
                                                         <label for="fuente_datos" class="form-label"><strong>Fuente de
                                                                 Datos *</strong></label>
                                                         <input type="text" class="form-control" id="fuente_datos"
@@ -1359,7 +1359,7 @@
                                                     <!--end::Unidad de Medida-->
 
                                                     <!--begin::Frecuencia de Medición-->
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-2">
                                                         <label for="frecuencia_medicion"
                                                             class="form-label"><strong>Frecuencia de
                                                                 Medición *</strong></label>
@@ -1382,52 +1382,24 @@
                                                     <!--end::Frecuencia de Medición-->
 
                                                     <!--begin::Unidad de demora-->
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-2">
                                                         <label for="tolerancia_plazo" class="form-label"><strong>Demora
                                                                 admitida *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="dark-tooltip"
-                                                                title="Demora máxima para informar el valor del indicador, según la frecuencia establecida"></i>
+                                                                title="Demora máxima en días para informar el valor del indicador, según la frecuencia establecida"></i>
                                                         </label>
-                                                        <select class="form-select" id="tolerancia_plazo"
-                                                            name="tolerancia_plazo" required>
-                                                            <option selected disabled value="">Seleccione ...
-                                                            </option>
-                                                            <option value="0301">Día</option>
-                                                            <option value="0302">Semana</option>
-                                                            <option value="0303">Mes</option>
-                                                        </select>
+                                                        <input type="text" class="form-control" id="tolerancia_plazo"
+                                                            name="tolerancia_plazo" placeholder="Ej: 0" required>
                                                         <div class="invalid-feedback">Debe seleccionar el máximo de
                                                             demora admitido.
                                                         </div>
                                                     </div>
                                                     <!--end::Unidad de demora-->
 
-                                                    <!--begin::Tolerancia de carga-->
-                                                    <div class="col-md-3">
-                                                        <label for="tolerancia_q" class="form-label"><strong>Demora en Q
-                                                                *</strong>
-                                                            <i class="fas fa-info-circle info-icon"
-                                                                data-bs-toggle="tooltip" data-bs-html="true"
-                                                                data-bs-custom-class="dark-tooltip"
-                                                                title="Cantidad de unidades de demora admitidas para informar el valor de la medición"></i>
-                                                        </label>
-                                                        <input type="text" class="form-control" id="tolerancia_q"
-                                                            name="tolerancia_q" placeholder="Ej: 1, 2, 3 " />
-                                                        <div class="invalid-feedback">Debe seleccionar demora máxima.
-                                                        </div>
-                                                    </div>
-                                                    <!--end::Tolerancia de carga-->
-
-                                                    <!-- Sección: Presentación -->
-                                                    <div class="col-12">
-                                                        <h5 class="text-primary border-bottom mt-4">Presentación
-                                                        </h5>
-                                                    </div>
-
-                                                    <!--begin::Periodo inicial de Reporte-->
-                                                    <div class="col-md-3">
+                                                    <!--begin::Fecha de vigencia-->
+                                                    <div class="col-md-2">
                                                         <label for="fecha_inicio" class="form-label"><strong>Fecha
                                                                 de vigencia *</strong>
                                                             <i class="fas fa-info-circle info-icon"
@@ -1440,7 +1412,28 @@
                                                             name="fecha_inicio" required>
                                                         <div class="invalid-feedback">La fecha es obligatoria.</div>
                                                     </div>
-                                                    <!--end::Periodo inicial de Reporte-->
+                                                    <!--end::Fecha de vigencia-->
+
+                                                   <!--begin::Medición inicial-->
+                                                    <div class="col-md-2">
+                                                        <label for="med_inicial" class="form-label"><strong>Primera medición *</strong>
+                                                            <i class="fas fa-info-circle info-icon"
+                                                                data-bs-toggle="tooltip" data-bs-html="true"
+                                                                data-bs-custom-class="dark-tooltip"
+                                                                title="Valor inicial del indicador"></i>
+                                                        </label>
+                                                        <input type="text" class="form-control" id="med_inicial"
+                                                            name="med_inicial" placeholder="Ej: 100" required />
+                                                        <div class="invalid-feedback">Debe ingresar la primera medición.
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Medición inicial-->
+
+                                                    <!-- Sección: Presentación -->
+                                                    <div class="col-12">
+                                                        <h5 class="text-primary border-bottom mt-4">Presentación
+                                                        </h5>
+                                                    </div>
 
                                                     <!--begin::Periodicidad de Reporte-->
                                                     <div class="col-md-3">
@@ -1483,6 +1476,24 @@
                                                             formato de presentación.</div>
                                                     </div>
                                                     <!--end::Formato de Presentación-->
+
+                                                    <!--begin::Estado-->
+                                                    <div class="col-md-2">
+                                                        <label for="estado" class="form-label"><strong>Estado
+                                                                *</strong></label>
+                                                        <select class="form-select" id="estado" name="estado"
+                                                            required>
+                                                            <option selected disabled value="">Seleccione...
+                                                            </option>
+                                                            <option value="1">Vigente</option>
+                                                            <option value="2">Suspendido</option>
+                                                            <option value="3">Anulado</option>
+
+                                                        </select>
+                                                        <div class="invalid-feedback">El estado es
+                                                            obligatorio.</div>
+                                                    </div>
+                                                    <!--end::Unidad de Medida-->
 
                                                     <!--begin::Grupos asignados-->
                                                     <!-- <div class="col-md-4">
@@ -1744,7 +1755,8 @@
                 unidad_medida: getValue(formData, 'unidad_medida'),
                 freq_medicion: getValue(formData, 'freq_medicion'),
                 freq_reporte: getValue(formData, 'freq_reporte'),
-                tolerancia_q: getValue(formData, 'tolerancia_q'),
+                estado: getValue(formData, 'estado'),
+                med_inicial: getValue(formData, 'med_inicial'),
                 tolerancia_plazo: getValue(formData, 'tolerancia_plazo'),
                 fecha_inicio: getValue(formData, 'fecha_inicio'),
 
@@ -1936,7 +1948,7 @@
                 form.elements['unidad_medida'].value = indicador.unidad_medida || '';
                 form.elements['freq_medicion'].value = indicador.freq_medicion || '';
                 form.elements['freq_reporte'].value = indicador.freq_reporte || '';
-                form.elements['tolerancia_q'].value = indicador.tolerancia_q || '';
+                form.elements['estado'].value = indicador.estado || '';
                 form.elements['tolerancia_plazo'].value = indicador.tolerancia_plazo || '';
                 form.elements['fecha_inicio'].value = indicador.fecha_inicio
                     ? indicador.fecha_inicio.split('T')[0]
@@ -2319,13 +2331,17 @@
                     "Fórmula de Cálculo": indicador.formula_calculo || '-',
                     "Unidad de Medida": CodigosService.getNombreCodigo(indicador.unidad_medida),
                     "Frecuencia de Medición": CodigosService.getNombreCodigo(indicador.freq_medicion),
-                    "Tolerancia de Plazo": CodigosService.getNombreCodigo(indicador.tolerancia_plazo),
-                    "Tolerancia Q": indicador.tolerancia_q || '-',
-                    "__sep6__": null,
-                    "Frecuencia de Reporte": CodigosService.getNombreCodigo(indicador.freq_reporte),
+                    "Demora admitida": indicador.tolerancia_plazo || '-',
                     "Fecha de Inicio": indicador.fecha_inicio
                         ? new Date(indicador.fecha_inicio).toLocaleDateString('es-AR')
                         : '-',
+
+
+
+                    "Estado": indicador.estado || '-',
+                    "__sep6__": null,
+                    "Frecuencia de Reporte": CodigosService.getNombreCodigo(indicador.freq_reporte),
+
                     "Formato de Presentación": `${indicador.formato} - ${formatoPresentacion}` || '-',
                     "Comentarios": indicador.comentarios || '-'
                 });

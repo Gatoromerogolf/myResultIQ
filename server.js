@@ -60,12 +60,13 @@ app.post('/api/guardar', async (req, res) => {
                 unidad_medida,
                 freq_medicion,
                 tolerancia_plazo,
-                tolerancia_q,
+                med_inicial
                 freq_reporte,
                 fecha_inicio,
                 formato,
-                comentarios
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                comentarios,
+                estado
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `,
             [
                 data.codigo_id,
@@ -99,11 +100,12 @@ app.post('/api/guardar', async (req, res) => {
                 data.unidad_medida,
                 data.freq_medicion,
                 data.tolerancia_plazo,
-                data.tolerancia_q,
+                data.med_inicial,
                 data.freq_reporte,
                 data.fecha_inicio,
                 data.formato,
-                data.comentarios
+                data.comentarios,
+                data.estado 
             ]
         );
         res.json({ success: true, mensaje: 'Indicador guardado' });
@@ -177,11 +179,12 @@ app.put('/api/actualizar/:id', async (req, res) => {
                 unidad_medida = ?,
                 freq_medicion = ?,
                 tolerancia_plazo = ?,
-                tolerancia_q = ?,
+                med_inicial = ?,
                 freq_reporte = ?,
                 fecha_inicio = ?,
                 formato = ?,
-                comentarios = ?
+                comentarios = ?,
+                estado = ?
             WHERE id = ?`,
             [
                 data.codigo_id,
@@ -215,11 +218,12 @@ app.put('/api/actualizar/:id', async (req, res) => {
                 data.unidad_medida,
                 data.freq_medicion,
                 data.tolerancia_plazo,
-                data.tolerancia_q,
+                data.med_inicial,
                 data.freq_reporte,
                 data.fecha_inicio,
                 data.formato,
                 data.comentarios,
+                data.estado,
                 id
             ]
         );
@@ -268,11 +272,12 @@ app.get('/api/indicadores', async (req, res) => {
                 unidad_medida,
                 freq_medicion,
                 tolerancia_plazo,
-                tolerancia_q,
+                med_inicial,
                 freq_reporte,
                 fecha_inicio,
                 formato,
-                comentarios
+                comentarios,
+                estado
             FROM indicadores
             ORDER BY id DESC
         `);
@@ -327,11 +332,12 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
                 i.unidad_medida,
                 i.freq_medicion,
                 i.tolerancia_plazo,
-                i.tolerancia_q,
+                i.med_inicial,
                 i.freq_reporte,
                 i.fecha_inicio,
                 i.formato,
-                i.comentarios
+                i.comentarios,
+                i.estado
             FROM indicadores i
             LEFT JOIN sectores s ON i.destino = s.id
             LEFT JOIN usuarios u ON i.responsable = u.legajo
@@ -404,9 +410,9 @@ app.post('/api/indicadores', async (req, res) => {
         rango_desde, rango_hasta, rango_acepta, rango_riesgo, rango_critico,
         tenden_tipo, tenden_refe, tenden_acepta, tenden_riesgo, tenden_critico,
         fuente_datos, formula_calculo,
-        unidad_medida, frecuencia_medicion, tolerancia_plazo, tolerancia_q,
+        unidad_medida, frecuencia_medicion, tolerancia_plazo, med_inicial,
         frecuencia_reporte, fecha_inicio,
-        formato_presentacion, comentarios
+        formato_presentacion, comentarios, estado
     } = req.body;
 
     try {
@@ -419,10 +425,10 @@ app.post('/api/indicadores', async (req, res) => {
                 rango_desde, rango_hasta, rango_acepta, rango_riesgo, rango_critico,
                 tenden_tipo, tenden_refe, tenden_acepta, tenden_riesgo, tenden_critico,
                 fuente_datos, formula_calculo,
-                unidad_medida, freq_medicion, tolerancia_plazo, tolerancia_q,
+                unidad_medida, freq_medicion, tolerancia_plazo, med_inicial,
                 freq_reporte, fecha_inicio,
-                formato, comentarios
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                formato, comentarios, estado
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         await pool.execute(sql, [
@@ -433,9 +439,9 @@ app.post('/api/indicadores', async (req, res) => {
             rango_desde, rango_hasta, rango_acepta, rango_riesgo, rango_critico,
             tenden_tipo, tenden_refe, tenden_acepta, tenden_riesgo, tenden_critico,
             fuente_datos, formula_calculo,
-            unidad_medida, frecuencia_medicion, tolerancia_plazo, tolerancia_q,
+            unidad_medida, frecuencia_medicion, tolerancia_plazo, med_inicial,
             frecuencia_reporte, fecha_inicio,
-            formato_presentacion, comentarios
+            formato_presentacion, comentarios, estado
         ]);
 
         res.status(201).json({ message: 'Indicador creado correctamente' });
@@ -900,7 +906,8 @@ app.get('/api/arbol-jstree-lazy-Nofunciona', async (req, res) => {
                     freq_medicion: ind.freq_medicion,
                     unidad_medida: ind.unidad_medida,
                     meta_tipo: ind.meta_tipo,
-                    comentarios: ind.comentarios
+                    comentarios: ind.comentarios,
+                    estado: ind.estado
                 }));
 
 
@@ -924,7 +931,7 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
         const [indicadores] = await pool.query(`
             SELECT id, codigo_id, nombre, destino, peso_porcentual, descripcion,
                    objetivo, dimension_id, categoria_id, responsable,
-                   freq_medicion, unidad_medida, meta_tipo, comentarios
+                   freq_medicion, unidad_medida, meta_tipo, comentarios, estado
             FROM indicadores
         `);
 
@@ -997,7 +1004,8 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
                     freq_medicion: ind.freq_medicion,
                     unidad_medida: ind.unidad_medida,
                     meta_tipo: ind.meta_tipo,
-                    comentarios: ind.comentarios
+                    comentarios: ind.comentarios,
+                    estado: ind.estado
                 }));
 
             return res.json([...hijos, ...inds]);
