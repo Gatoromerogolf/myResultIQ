@@ -722,7 +722,8 @@ app.get('/api/arbol-jstree', async (req, res) => {
                 text: `${ind.nombre} (${ind.codigo_id})`,
                 weight: ind.peso_porcentual ?? 0, // usar valor guardado
                 icon: "fas fa-chart-line", // ícono de indicador
-                type: "indicador"
+                type: "indicador",
+                codigo_id: ind.codigo_id   // 👈 agregado
             });
         });
 

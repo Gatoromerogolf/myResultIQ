@@ -1671,7 +1671,7 @@
                     const medicionInicial = document.getElementById('med_inicial').value;  
                     const estado = document.getElementById('estado').value;    
                     alert (`medición inicial: ${medicionInicial} - estado: ${estado}`);     
-                    if( estado === 1 && medicionInicial <= 0) {
+                    if( estado == 1 && medicionInicial <= 0) {
                         alert('La primera medición debe ser mayor a cero si el indicador está vigente.');
                         return;
                     }   
@@ -1822,7 +1822,6 @@
 
             console.table('Datos del indicador a enviar:', indicadorData);
 
-
             // Detectar si es alta o edición (buscar el hidden #id dentro del formulario)
             const idInput = formEl.querySelector('#id') || formEl.querySelector('input[name="id"]');
             const id = idInput ? idInput.value.trim() : '';
@@ -1902,12 +1901,12 @@
         }
 
         // Función para ver un indicador específico
-        function verIndicador(codigo) {
-            alert(`Función para ver el indicador: ${codigo}`);
-            window.location.href = 'kpi-indicadores.html'
-            // Aquí iría la lógica para mostrar el detalle del indicador
-            console.log('Ver indicador:', codigo);
-        }
+        // function verIndicador(codigo) {
+        //     alert(`Función para ver el indicador: ${codigo}`);
+        //     window.location.href = 'kpi-indicadores.html'
+        //     // Aquí iría la lógica para mostrar el detalle del indicador
+        //     console.log('Ver indicador:', codigo);
+        // }
 
         // Función auxiliar: espera hasta que el select tenga opciones antes de asignar el valor
         function asignarValorSelect(selectElement, valor) {
@@ -2048,6 +2047,7 @@
                 const datosTabla = await Promise.all(indicadores.map(async (ind) => {
                     const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
                     const sectores = await obtenerSectoresPorUnidad(ind.destino);
+                    xestado = ind.estado == 1 ? 'V' : (ind.estado == 2 ? 'S' : 'A');
 
                     return {
                         codigo: ind.codigo_id,
@@ -2058,6 +2058,7 @@
                         responsable: `${usuario.nombres} ${usuario.apellido}`,
                         objetivo: ind.objetivo,
                         frecuencia: CodigosService.getNombreCodigo(ind.freq_reporte),
+                        estado: xestado,
                         acciones: `
                         <td class="icon-only-actions">
                             <button class="btn btn-primary btn-xs" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
@@ -2087,6 +2088,7 @@
                             { data: 'responsable', title: 'Responsable' },
                             { data: 'frecuencia', title: 'Reporte' },
                             { data: 'dimension', title: 'Dimensión' },
+                            { data: 'estado', title: 'Est' },
                             { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
                         ],
                         columnDefs: [
@@ -2098,6 +2100,7 @@
                             { width: "40px", targets: 4 },   // sectores
                             { width: "50px", targets: 5 },  // responsable
                             { width: "40px", targets: 6 },   // objetivo 
+                            { width: "10px", targets: 7 },   // estado
                             { width: "25px", targets: 7 },  // reporte
                         ],
                         responsive: true,

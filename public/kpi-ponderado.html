@@ -132,6 +132,43 @@
             margin-left: 60px;
             margin-top: 0.05rem;
         }
+
+
+        /* Colores personalizados */
+        .text-orange {
+            color: #fd7e14 !important;
+            /* Naranja */
+        }
+
+        .text-purple {
+            color: #6f42c1 !important;
+            /* Violeta */
+        }
+
+        .text-teal {
+            color: #20c997 !important;
+            /* Verde azulado */
+        }
+
+        /* 🎨 Estilo link para indicadores */
+        .link-indicador {
+            color: #449df1;
+            /* Naranja */
+            font-weight: 500;
+            /* Un poquito más grueso */
+            cursor: pointer;
+            /* Mano al pasar */
+            text-decoration: none;
+            /* Sin subrayado */
+            transition: color 0.2s ease;
+        }
+
+        .link-indicador:hover {
+            color: #c85a00;
+            /* Más oscuro al pasar */
+            text-decoration: underline;
+            /* Opcional: subrayado solo en hover */
+        }
     </style>
 
 </head>
@@ -158,13 +195,7 @@
                 <!--end::Start Navbar Links-->
                 <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
-                    <!--begin::Navbar Search-->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                            <i class="bi bi-search"></i>
-                        </a>
-                    </li> -->
-                    <!--end::Navbar Search-->
+
 
                     <!--begin::Messages Dropdown Menu-->
                     <li class="nav-item dropdown">
@@ -498,7 +529,6 @@
         </div>
     </div>
 
-    <!-- Proceso de Logout -->
     <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
@@ -508,6 +538,275 @@
             // Redirigir al inicio
             window.location.href = 'index.html';
         });
+    </script>
+
+
+    <div class="modal fade" id="modalDetalleIndicador" tabindex="-1" aria-labelledby="detalleIndicadorLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleIndicadorLabel">Detalle del Indicador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-sm">
+                        <tbody id="tablaDetalleIndicador">
+                            <!-- Se carga dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        // 🎲🎲🎲 Ver Detalle Indicador
+        async function verDetalleIndicador(codigo) {
+            try {
+                const response = await fetch(`/api/indicadores/${codigo}`);
+                if (!response.ok) throw new Error('No se pudo obtener el indicador.');
+
+                const indicador = await response.json();
+                const tabla = document.getElementById('tablaDetalleIndicador');
+                tabla.innerHTML = '';
+
+                console.log('comentarios:' + indicador.comentarios)
+                let tipoIndicador = '-';
+                switch (indicador.tipo_id) {
+                    case 1:
+                        tipoIndicador = 'Estratégico';
+                        break;
+                    case 2:
+                        tipoIndicador = 'Táctico';
+                        break;
+                    case 3:
+                        tipoIndicador = 'Operativo';
+                        break;
+                }
+
+                let dimensionIndicador = '-';
+                switch (indicador.dimension_id) {
+                    case 1:
+                        dimensionIndicador = 'Financiera';
+                        break;
+                    case 2:
+                        dimensionIndicador = 'Clientes';
+                        break;
+                    case 3:
+                        dimensionIndicador = 'Procesos';
+                        break;
+                    case 4:
+                        dimensionIndicador = 'Capital Humano';
+                        break;
+                }
+
+                let categoria_indicador = '-';
+                switch (indicador.categoria_id) {
+                    case 1:
+                        categoria_indicador = 'Eficiencia';
+                        break;
+                    case 2:
+                        categoria_indicador = 'Eficacia';
+                        break;
+                    case 3:
+                        categoria_indicador = 'Calidad';
+                        break;
+                    case 4:
+                        categoria_indicador = 'Productividad';
+                        break;
+                }
+
+
+                let criticidad_indicador = '-';
+                switch (indicador.criticidad_id) {
+                    case 1:
+                        criticidad_indicador = 'Alta';
+                        break;
+                    case 2:
+                        criticidad_indicador = 'Media';
+                        break;
+                    case 3:
+                        criticidad_indicador = 'Baja';
+                        break;
+                }
+
+                let tipoMetaTexto = '-';
+                switch (indicador.meta_tipo) {
+                    case 1:
+                        tipoMetaTexto = 'Valor único';
+                        break;
+                    case 2:
+                        tipoMetaTexto = 'Rango de valores';
+                        break;
+                    case 3:
+                        tipoMetaTexto = 'Tendencia';
+                        break;
+                }
+
+                let tipoTendencia = '-';
+                switch (indicador.tenden_tipo) {
+                    case 1:
+                        tipoTendencia = 'Creciente';
+                        break;
+                    case 2:
+                        tipoTendencia = 'Decreciente';
+                        break;
+                    case 3:
+                        tipoTendencia = 'Estable';
+                        break;
+                }
+
+                let tipoEvaluacion = '-';
+                switch (indicador.unico_eval) {
+                    case 1:
+                        tipoEvaluacion = 'Superable positiva - Más es mejor';
+                        break;
+                    case 2:
+                        tipoEvaluacion = 'Límite máximo - No debe superarse';
+                        break;
+                    case 3:
+                        tipoEvaluacion = 'Tolerancia simétrica - Penaliza desviaciones';
+                        break;
+                    case 4:
+                        tipoEvaluacion = 'Menor es mejor - Más es negativo - Distancia creciente es mejor';
+                        break;
+                    case 5:
+                        tipoEvaluacion = 'Valor exacto - Cero tolerancia';
+                        break;
+                }
+
+                let formatoPresentacion = '-';
+                switch (indicador.formato) {
+                    case 1:
+                        formatoPresentacion = 'Tabla';
+                        break;
+                    case 2:
+                        formatoPresentacion = 'Grafico';
+                        break;
+                    case 3:
+                        formatoPresentacion = 'Dashboard';
+                        break;
+                }
+                console.log("Valor actual de unico_acepta:", indicador.unico_acepta);
+
+                // --- Campos comunes a todos los indicadores
+                const campos = {
+                    "Código": indicador.codigo_id,
+                    "Nombre": indicador.nombre,
+                    "Descripción": indicador.descripcion || '-',
+                    "Objetivo": indicador.objetivo || '-',
+                    "Destino": `${indicador.destino || '-'} - ${indicador.destino_nombre || ''}`,
+                    "Responsable": indicador.responsable
+                        ? `${indicador.responsable} - ${indicador.responsable_nombres || ''} ${indicador.responsable_apellido || ''}`
+                        : '-',
+
+                    // 👇 agrego un marcador
+                    "__sep1__": null,
+
+                    "Tipo": `${indicador.tipo_id} - ${tipoIndicador}` || '-',
+                    "Dimensión": `${indicador.dimension_id} - ${dimensionIndicador}` || '-',
+                    "Categoría": `${indicador.categoria_id} - ${categoria_indicador}` || '-',
+                    "Criticidad": `${indicador.criticidad_id} - ${criticidad_indicador}` || '-',
+
+                    // 👇 agrego un marcador
+                    "__sep2__": null,
+
+                    "Tipo de Meta": `${indicador.meta_tipo} - ${tipoMetaTexto}` || '-',
+                }
+
+                // --- Agregar campos según el tipo de meta
+                if (indicador.meta_tipo === 1) {
+                    Object.assign(campos, {
+                        "Valor Meta": indicador.unico_valor || '-',
+                        "Método de evaluación": `${indicador.unico_eval} - ${tipoEvaluacion}` || '-',
+                        "Márgen de Aceptación": `${Number(indicador.unico_acepta).toFixed(2)} %`,
+                        "Márgen de Riesgo": `${Number(indicador.unico_riesgo).toFixed(2)} %`,
+                        "Márgen Crítico": `${Number(indicador.unico_critico).toFixed(2)} %`,
+                        // 👇 agrego un marcador
+                        "__sep3__": null,
+                    });
+                } else if (indicador.meta_tipo === 2) {
+                    Object.assign(campos, {
+                        "Rango Desde": indicador.rango_desde || '-',
+                        "Rango Hasta": indicador.rango_hasta || '-',
+                        "Márgen de Aceptación": indicador.rango_acepta || '-',
+                        "Margen de Riesgo": indicador.rango_riesgo || '-',
+                        "Margen Crítico": indicador.rango_critico || '-',
+                        // 👇 agrego un marcador
+                        "__sep4__": null,
+                    });
+                } else if (indicador.meta_tipo === 3) {
+                    Object.assign(campos, {
+                        "Tendencia Tipo": tipoTendencia || '-',
+                        "Tendencia Referencia": indicador.tenden_refe || '-',
+                        "Margen de Aceptación": indicador.tenden_acepta || '-',
+                        "Margen de Riesgo": indicador.tenden_riesgo || '-',
+                        "Margen Crítico": indicador.tenden_critico || '-',
+                        // 👇 agrego un marcador
+                        "__sep5__": null,
+                    });
+                }
+
+                // --- Otros campos comunes
+                Object.assign(campos, {
+
+                    "Fuente de Datos": indicador.fuente_datos || '-',
+                    "Fórmula de Cálculo": indicador.formula_calculo || '-',
+                    "Unidad de Medida": CodigosService.getNombreCodigo(indicador.unidad_medida),
+                    "Frecuencia de Medición": CodigosService.getNombreCodigo(indicador.freq_medicion),
+                    "Demora admitida": indicador.tolerancia_plazo || '-',
+                    "Fecha de Inicio": indicador.fecha_inicio
+                        ? new Date(indicador.fecha_inicio).toLocaleDateString('es-AR')
+                        : '-',
+
+
+
+                    "Estado": indicador.estado || '-',
+                    "__sep6__": null,
+                    "Frecuencia de Reporte": CodigosService.getNombreCodigo(indicador.freq_reporte),
+
+                    "Formato de Presentación": `${indicador.formato} - ${formatoPresentacion}` || '-',
+                    "Comentarios": indicador.comentarios || '-'
+                });
+
+                for (const [campo, valor] of Object.entries(campos)) {
+
+                    if (campo.startsWith("__sep")) {
+                        // insertar fila separadora
+                        const sepRow = document.createElement('tr');
+                        const sepCell = document.createElement('td');
+                        sepCell.colSpan = 2;
+                        sepCell.innerHTML = "&nbsp;"; // espacio en blanco
+                        sepRow.appendChild(sepCell);
+                        tabla.appendChild(sepRow);
+                        continue; // pasar al siguiente campo
+                    }
+                    const fila = document.createElement('tr');
+
+                    const th = document.createElement('th');
+                    th.textContent = campo;
+                    th.style.width = '200px'; // ancho fijo
+                    th.style.textAlign = 'left'; // opcional, alinear texto a la izquierda
+
+                    const td = document.createElement('td');
+                    td.textContent = valor;  // <-- seguro, no interpreta HTML
+                    fila.appendChild(th);
+                    fila.appendChild(td);
+                    tabla.appendChild(fila);
+                }
+
+                const modal = new bootstrap.Modal(document.getElementById('modalDetalleIndicador'));
+                modal.show();
+
+            } catch (error) {
+                console.error('Error al obtener el detalle:', error);
+                alert('No se pudo obtener el detalle del indicador.');
+            }
+        }
+
 
         // 🎲🎲🎲 Arma el árbol
         async function fetchData() {
@@ -643,6 +942,7 @@
             const container = document.createElement('div');
             container.className = 'list-group-item node-container node-' + node.type; // usa estilo AdminLTE/list-group
 
+
             // Cabecera con input y nombre
             const header = document.createElement('div');
             header.className = 'node-header';
@@ -653,13 +953,46 @@
             header.appendChild(icon);
 
             // === Color según nivel ===
-            const title = document.createElement('span');
+            let title = document.createElement('span');
             title.textContent = node.name || node.text;
 
             // Clases de color por nivel (0 = raíz, 1 = hijos de raíz, etc.)
-            const colores = ["text-dark", "text-primary", "text-success", "text-dark", "text-danger"];
-            const colorClase = colores[level % colores.length]; // rota si hay más niveles
-            title.classList.add(colorClase);
+            // const colores = ["text-dark", "text-primary", "text-success", "text-dark", "text-purple", "text-teal", "text-orange"];
+            // const colorClase = colores[level % colores.length]; // rota si hay más niveles
+            // title.classList.add(colorClase);
+
+            // if (node.type === 'indicador') {
+            //     // 🔸 Un único color para todos los indicadores
+            //     title.classList.add('text-purple');
+            // } else {
+            //     // 🎨 Colores rotativos para los sectores según nivel
+            //     const colores = ["text-dark", "text-primary", "text-success", "text-dark", "text-purple", "text-teal"];
+            //     const colorClase = colores[level % colores.length];
+            //     title.classList.add(colorClase);
+            // }
+
+            if (node.type === 'indicador') {
+                // 🔸 Si es un indicador, usar <a> en lugar de <span>
+                title = document.createElement('a');
+                title.href = "#"; // para que sea clickeable
+                title.classList.add('link-indicador');
+                title.textContent = node.name || node.text;
+
+                // 👉 evento para abrir modal
+                title.addEventListener('click', (e) => {
+                    e.preventDefault(); // evita el scroll arriba por el href="#"
+                    verDetalleIndicador(node.codigo_id); // función que muestra el modal con info
+                });
+            } else {
+                // 🎨 Sectores siguen siendo un <span>
+                title = document.createElement('span');
+                title.textContent = node.name || node.text;
+
+                const colores = ["text-dark", "text-dark", "text-dark", "text-dark", "text-dark", "text-primary", "text-success", "text-dark", "text-purple", "text-teal"];
+                const colorClase = colores[level % colores.length];
+                title.classList.add(colorClase);
+            }
+
 
             header.appendChild(title);
             container.appendChild(header);
@@ -729,7 +1062,6 @@
             title2.textContent = node.name || node.text;
             header.appendChild(title);
 
-            container.appendChild(header);
 
             // Barra de progreso
             const progress = document.createElement('div');
@@ -744,25 +1076,14 @@
             if (node.children && node.children.length > 0) {
                 const errorMsg = document.createElement('div');
                 errorMsg.className = 'error-msg';
-                errorMsg.textContent = 'La suma de los pesos de este nivel debe ser 100%';
+                errorMsg.textContent = '- - - La suma de los pesos de este nivel debe ser 100% - - -';
+                errorMsg.style.fontSize = '16px';
+                errorMsg.style.fontWeight = 'bold';
                 errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
                 container.appendChild(errorMsg);
                 node._errorMsg = errorMsg;
                 const tieneError = !checkWeights(node)
                 if (tieneError) { console.log(`tiene error: ${tieneError}`) };
-
-                // 🔹 Actualizar alertas.valor en la BD
-                // (async () => {
-                //     try {
-                //         await fetch(`/api/alertas/1/valor`, {
-                //             method: 'POST',
-                //             headers: { 'Content-Type': 'application/json' },
-                //             body: JSON.stringify({ valor: tieneError ? 1 : 0 })
-                //         });
-                //     } catch (err) {
-                //         console.error('Error actualizando alertas.valor', err);
-                //     }
-                // })();
             }
 
             // Hijos recursivos
@@ -827,6 +1148,26 @@
             return thisNodeValid;
         }
 
+        // Servicio global para textp de tabla de códigos 
+        const CodigosService = {
+            codigosMap: {},
+
+            async init() {
+                const response = await fetch('/api/codigos');
+                if (!response.ok) throw new Error('No se pudo obtener los codigos.');
+                const codigos = await response.json();
+
+                codigos.forEach(c => {
+                    this.codigosMap[c.cod_tabla] = c.cod_nombre;
+                });
+            },
+
+            getNombreCodigo(codigo) {
+                return this.codigosMap[codigo] || '-';
+            }
+        };
+
+
         // 🎲🎲🎲 MAIN 🎲🎲🎲
         (async () => {
             window.treeRoot = await fetchData();
@@ -844,6 +1185,8 @@
             const container = document.getElementById('treeContainer');
             container.innerHTML = '';
             container.appendChild(buildTree(window.treeRoot));
+
+            await CodigosService.init();
         })();
     </script>
 
