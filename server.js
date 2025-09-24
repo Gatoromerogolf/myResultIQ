@@ -60,7 +60,7 @@ app.post('/api/guardar', async (req, res) => {
                 unidad_medida,
                 freq_medicion,
                 tolerancia_plazo,
-                med_inicial
+                med_inicial,
                 freq_reporte,
                 fecha_inicio,
                 formato,

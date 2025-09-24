@@ -1667,6 +1667,15 @@
                         return;
                     }
 
+                    // si se da de alta como vigente, tiene que tener primera medición mayor a cero.
+                    const medicionInicial = document.getElementById('med_inicial').value;  
+                    const estado = document.getElementById('estado').value;    
+                    alert (`medición inicial: ${medicionInicial} - estado: ${estado}`);     
+                    if( estado === 1 && medicionInicial <= 0) {
+                        alert('La primera medición debe ser mayor a cero si el indicador está vigente.');
+                        return;
+                    }   
+
                     // === Validación HTML5 / Bootstrap ===
                     if (!form.checkValidity()) {
                         form.classList.add('was-validated');
