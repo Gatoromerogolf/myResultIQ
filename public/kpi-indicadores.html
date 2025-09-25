@@ -1369,11 +1369,13 @@
                                                             </option>
                                                             <option value="0201">Diaria</option>
                                                             <option value="0202">Semanal</option>
-                                                            <option value="0203">Mensual</option>
-                                                            <option value="0204">Trimestral</option>
-                                                            <option value="0205">Cuatrimestral</option>
-                                                            <option value="0206">Semestral</option>
-                                                            <option value="0207">Anual</option>
+                                                            <option value="0203">Quincenal</option>
+                                                            <option value="0204">Mensual</option>
+                                                            <option value="0205">Bimensual</option>
+                                                            <option value="0206">Trimestral</option>
+                                                            <option value="0207">Cuatrimestral</option>
+                                                            <option value="0208">Semestral</option>
+                                                            <option value="0209">Anual</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar la frecuencia de
                                                             medición.
@@ -1414,9 +1416,10 @@
                                                     </div>
                                                     <!--end::Fecha de vigencia-->
 
-                                                   <!--begin::Medición inicial-->
+                                                    <!--begin::Medición inicial-->
                                                     <div class="col-md-2">
-                                                        <label for="med_inicial" class="form-label"><strong>Primera medición *</strong>
+                                                        <label for="med_inicial" class="form-label"><strong>Primera
+                                                                medición *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="dark-tooltip"
@@ -1481,8 +1484,7 @@
                                                     <div class="col-md-2">
                                                         <label for="estado" class="form-label"><strong>Estado
                                                                 *</strong></label>
-                                                        <select class="form-select" id="estado" name="estado"
-                                                            required>
+                                                        <select class="form-select" id="estado" name="estado" required>
                                                             <option selected disabled value="">Seleccione...
                                                             </option>
                                                             <option value="1">Vigente</option>
@@ -1668,13 +1670,13 @@
                     }
 
                     // si se da de alta como vigente, tiene que tener primera medición mayor a cero.
-                    const medicionInicial = document.getElementById('med_inicial').value;  
-                    const estado = document.getElementById('estado').value;    
-                    alert (`medición inicial: ${medicionInicial} - estado: ${estado}`);     
-                    if( estado == 1 && medicionInicial <= 0) {
+                    const medicionInicial = document.getElementById('med_inicial').value;
+                    const estado = document.getElementById('estado').value;
+                    alert(`medición inicial: ${medicionInicial} - estado: ${estado}`);
+                    if (estado == 1 && medicionInicial <= 0) {
                         alert('La primera medición debe ser mayor a cero si el indicador está vigente.');
                         return;
-                    }   
+                    }
 
                     // === Validación HTML5 / Bootstrap ===
                     if (!form.checkValidity()) {
@@ -1827,10 +1829,11 @@
             const id = idInput ? idInput.value.trim() : '';
 
             let url = '/api/guardar';
-            let method = 'POST';
+            let method = 'POST';  // por defecto es alta
+
             if (id) {
                 url = `/api/actualizar/${id}`;
-                method = 'PUT';
+                method = 'PUT'; // si hay id, es edición
             }
 
             console.log('valor de id: ' + id);
@@ -1857,6 +1860,11 @@
                     result.success = !!response.ok;
                 }
 
+                // 👇 Ahora sí, después del insert exitoso
+                if (method === 'POST' && result.success && result.id) {
+                    indicadorData.id = result.id;   // guardás el id generado
+                    await crearMedicion(indicadorData);
+                }
                 // Devolver el objeto result para que el caller decida la UI
                 return result;
 
@@ -1865,6 +1873,45 @@
                 return { success: false, error: error.message || String(error) };
             }
         }
+
+        async function crearMedicion(indicadorData) {
+            const datos = {
+                med_indicador_id: indicadorData.id,
+                med_fecha_medicion: indicadorData.fecha_inicio,
+                med_tipo_periodo: indicadorData.freq_medicion,
+                med_anio: indicadorData.fecha_inicio.substring(0, 4),
+                med_valor_periodo: indicadorData.fecha_inicio.substring(0, 4) + indicadorData.freq_reporte,
+                med_valor: indicadorData.med_inicial,
+                med_comentarios: "Valor inicial de creación",
+                med_unidad_medida: indicadorData.unidad_medida,
+                med_legajo_resp_medicion: '1',
+                med_legajo_resp_registro: '3',
+                med_fecha_registro: new Date().toISOString().split('T')[0]
+            };
+
+            console.log("Datos a enviar al backend:", datos);
+
+
+            // === Envío al backend ===
+            try {
+                const response = await fetch('/api/mediciones', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datos)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.ok) {
+                    alert("Guardado correctamente ✅");
+                } else {
+                    alert("Error del servidor:\n" + (result.errores ? result.errores.join("\n- ") : result.error));
+                }
+            } catch (err) {
+                console.error("Error al guardar:", err);
+                alert("Ocurrió un error inesperado.");
+            }
+        };
 
         function limpiarFormulario() {
             const form = document.getElementById('indicadorForm');
@@ -1878,7 +1925,6 @@
             });
         }
 
-        // Función para obtener el color de la dimensión
         function getColorDimension(dimension) {
             const colores = {
                 '1': 'primary',
@@ -2105,6 +2151,9 @@
                         ],
                         responsive: true,
                         autoWidth: false,
+                        language: {
+                            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                        },
                         order: [[0, 'asc']]
                     });
                 } else {

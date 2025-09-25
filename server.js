@@ -25,9 +25,10 @@ app.use('/dist', express.static('public'));
 
 // ✅ Crear un indicador
 app.post('/api/guardar', async (req, res) => {
-    const data = req.body;
+
     try {
-        await pool.query(
+    const data = req.body;
+    const [result] = await pool.query(
             `INSERT INTO indicadores (
                 codigo_id,
                 nombre,
@@ -108,7 +109,7 @@ app.post('/api/guardar', async (req, res) => {
                 data.estado 
             ]
         );
-        res.json({ success: true, mensaje: 'Indicador guardado' });
+        res.json({ success: true, mensaje: 'Indicador guardado', id: result.insertId  });
     } catch (err) {
         console.error('Error al guardar indicador:', err);
         res.status(500).json({ success: false, error: 'Error al guardar el indicador' });

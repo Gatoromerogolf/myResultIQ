@@ -1120,189 +1120,189 @@
         }
 
 
-// ✅ 1) ENGANCHE GLOBAL DEL FORMULARIO (una sola vez)
-document.getElementById('form-carga').addEventListener('submit', async function (e) {
-    e.preventDefault();
+        // ✅ 1) ENGANCHE GLOBAL DEL FORMULARIO (una sola vez)
+        document.getElementById('form-carga').addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-    const errores = [];
-    const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
-    const fechaInputDate = new Date(fechaInputStr);
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
+            const errores = [];
+            const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
+            const fechaInputDate = new Date(fechaInputStr);
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
 
-    if (fechaInputDate > hoy) {
-        errores.push("La fecha no puede ser mayor a la fecha de hoy.");
-    }
+            if (fechaInputDate > hoy) {
+                errores.push("La fecha no puede ser mayor a la fecha de hoy.");
+            }
 
-    let anio_ISO = null;
-    const fechaISO = validarFechaISO(fechaInputDate);
+            let anio_ISO = null;
+            const fechaISO = validarFechaISO(fechaInputDate);
 
-    if (fechaISO) {
-        anio_ISO = fechaInputDate.getFullYear();
-    } else {
-        errores.push("Fecha inválida o fuera de rango (1900-2100).");
-    }
+            if (fechaISO) {
+                anio_ISO = fechaInputDate.getFullYear();
+            } else {
+                errores.push("Fecha inválida o fuera de rango (1900-2100).");
+            }
 
-    // Tomar valores desde hidden y campos del form
-    const indId = document.getElementById('indicadorCodigo').value;
-    const unidad = document.getElementById('unidad-carga').dataset.unidad || ''; 
-    const frecuencia = document.getElementById('unidad-carga').dataset.frecuencia || ''; 
+            // Tomar valores desde hidden y campos del form
+            const indId = document.getElementById('indicadorCodigo').value;
+            const unidad = document.getElementById('unidad-carga').dataset.unidad || '';
+            const frecuencia = document.getElementById('unidad-carga').dataset.frecuencia || '';
 
-    const datos = {
-        med_indicador_id: indId,
-        med_fecha_medicion: document.getElementById('fecha-carga').value,
-        med_tipo_periodo: frecuencia,
-        med_valor_periodo: anio_ISO + document.getElementById('valor-periodo').value,
-        med_anio: anio_ISO,
-        med_valor: parseFloat(document.getElementById('valor-carga').value),
-        med_comentarios: document.getElementById('comentario-carga').value.trim(),
-        med_unidad_medida: unidad,
-        med_legajo_resp_medicion: '1',
-        med_legajo_resp_registro: '3',
-        med_fecha_registro: new Date().toISOString().split('T')[0]
-    };
+            const datos = {
+                med_indicador_id: indId,
+                med_fecha_medicion: document.getElementById('fecha-carga').value,
+                med_tipo_periodo: frecuencia,
+                med_valor_periodo: anio_ISO + document.getElementById('valor-periodo').value,
+                med_anio: anio_ISO,
+                med_valor: parseFloat(document.getElementById('valor-carga').value),
+                med_comentarios: document.getElementById('comentario-carga').value.trim(),
+                med_unidad_medida: unidad,
+                med_legajo_resp_medicion: '1',
+                med_legajo_resp_registro: '3',
+                med_fecha_registro: new Date().toISOString().split('T')[0]
+            };
 
-    if (errores.length > 0) {
-        alert("Errores:\n- " + errores.join("\n- "));
-        return;
-    }
+            if (errores.length > 0) {
+                alert("Errores:\n- " + errores.join("\n- "));
+                return;
+            }
 
-    // === Envío al backend ===
-    try {
-        const response = await fetch('/api/mediciones', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datos)
+            // === Envío al backend ===
+            try {
+                const response = await fetch('/api/mediciones', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datos)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.ok) {
+                    alert("Guardado correctamente ✅");
+                    const titulo = document.getElementById('titulo-indicador');
+                    titulo.innerHTML = `Seleccionar Indicador`;
+                    document.getElementById('form-carga').reset();
+                    const formulario = document.getElementById('formulario-carga');
+                    formulario.style.display = 'none';
+                    cargarIndicadores(); // recargar tabla
+                } else {
+                    alert("Error del servidor:\n" + (result.errores ? result.errores.join("\n- ") : result.error));
+                }
+            } catch (err) {
+                console.error("Error al guardar:", err);
+                alert("Ocurrió un error inesperado.");
+            }
         });
 
-        const result = await response.json();
 
-        if (response.ok && result.ok) {
-            alert("Guardado correctamente ✅");
+        // ✅ 2) FUNCIÓN editarIndicador SOLO PREPARA DATOS (sin listeners)
+        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo) {
+
             const titulo = document.getElementById('titulo-indicador');
-            titulo.innerHTML = `Seleccionar Indicador`;
-            document.getElementById('form-carga').reset();
+            titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
+
+            const spanFrecuencia = document.getElementById('valor-frecuencia');
+            spanFrecuencia.textContent = CodigosService.getNombreCodigo(frecuencia) || '';
+            spanFrecuencia.style.color = "red";
+
+            const spanMedicion = document.getElementById('valor-ultima-medicion');
+            const spanUltimoPeriodo = document.getElementById('periodo-ultima-medicion');
+            const ultima = await getUltimaMedicionPorIndicador(indId);
+            if (ultima) {
+                const fecha = new Date(ultima.med_fecha_medicion);
+                const fechaFormateada = fecha.toLocaleDateString('es-AR');
+                spanMedicion.textContent = fechaFormateada;
+                spanMedicion.style.color = "red";
+                document.getElementById('periodo-ultima-medicion').textContent = ultPeriodo || '';
+                spanUltimoPeriodo.style.color = "red";
+            } else {
+                spanMedicion.textContent = "Sin mediciones registradas";
+                spanMedicion.style.color = "grey";
+                document.getElementById('periodo-ultima-medicion').textContent = '--';
+            }
+
+            // Guardar id y extras en hidden/dataset para usarlos en el submit
+            document.getElementById('indicadorCodigo').value = indId;
+            const unidadCarga = document.getElementById('unidad-carga');
+            unidadCarga.textContent = CodigosService.getNombreCodigo(unidad) || '';
+            unidadCarga.dataset.unidad = unidad;
+            unidadCarga.dataset.frecuencia = frecuencia;
+
+            const fechaMedicion = document.getElementById('fecha-carga');
+            const textoPeriodo = document.getElementById('texto-periodo');
+            const labelValorPeriodo = document.getElementById('label-valor-periodo');
+            const campoLabelAnio = document.getElementById('campo-label-anio');
+            campoLabelAnio.style.display = 'block';
+
+            switch (frecuencia) {
+                case '0201':
+                    textoPeriodo.textContent = "Dia evaluado";
+                    labelValorPeriodo.innerHTML = "<strong>Seleccione dia:</strong>";
+                    campoLabelAnio.style.display = 'none';
+                    break;
+                case '0202':
+                    textoPeriodo.textContent = "Semana (1 a 52):";
+                    labelValorPeriodo.innerHTML = "<strong>N° Semana:</strong>";
+                    break;
+                case '0203':
+                    textoPeriodo.textContent = "Quincena (1 a 24)";
+                    labelValorPeriodo.innerHTML = "<strong>N° Quincena:</strong>";
+                    break;
+                case '0204':
+                    textoPeriodo.textContent = "Mes (1 a 12):";
+                    labelValorPeriodo.innerHTML = "<strong>N° Mes:</strong>";
+                    break;
+                case '0205':
+                    textoPeriodo.textContent = "Bimestre (1 a 6):";
+                    labelValorPeriodo.innerHTML = "<strong>N° Bimestre:</strong>";
+                    break;
+                case '0206':
+                    textoPeriodo.textContent = "Trimestre (1 a 4)";
+                    labelValorPeriodo.innerHTML = "<strong>N° Trimestre:</strong>";
+                    break;
+                case '0207':
+                    textoPeriodo.textContent = "Cuatrim.(1 a 3):";
+                    labelValorPeriodo.innerHTML = "<strong>N° Cuatrim.:</strong>";
+                    break;
+                case '0208':
+                    textoPeriodo.textContent = "Semestre (1 ó 2)";
+                    labelValorPeriodo.innerHTML = "<strong>N° Semestre:</strong>";
+                    break;
+                case '0209':
+                    textoPeriodo.textContent = "Año (AAAA):";
+                    labelValorPeriodo.innerHTML = "<strong>Año:</strong>";
+                    break;
+            }
+
+            const valorPeriodo = document.getElementById('valor-periodo');
+            valorPeriodo.className = "form-control align-middle";
+
+            if (frecuencia === "0201") {
+                valorPeriodo.type = "date";
+                labelValorPeriodo.innerHTML = "<strong>Dia:</strong>";
+                valorPeriodo.value = "";
+            } else {
+                valorPeriodo.type = "number";
+                valorPeriodo.value = "";
+                labelValorPeriodo.innerHTML = "<strong>Valor período:</strong>";
+
+                const periodo = frecuencia.substring(2, 4);
+                const resultado = await siguientePeriodo(ultimoValorPeriodo, periodo);
+                let anioResultado = resultado.substring(0, 4);
+                let otroResultado = resultado.substring(4, 6);
+
+                document.getElementById('valor-periodo').value = otroResultado;
+                document.getElementById('valor-periodo').className = "form-control-plaintext";
+                document.getElementById('input-anio-periodo').value = anioResultado;
+                document.getElementById('input-anio-periodo').className = "form-control-plaintext";
+            }
+
+            // Mostrar formulario
             const formulario = document.getElementById('formulario-carga');
-            formulario.style.display = 'none';
-            cargarIndicadores(); // recargar tabla
-        } else {
-            alert("Error del servidor:\n" + (result.errores ? result.errores.join("\n- ") : result.error));
+            formulario.style.display = 'block';
+            window.scrollTo({ behavior: 'smooth', top: 0 });
         }
-    } catch (err) {
-        console.error("Error al guardar:", err);
-        alert("Ocurrió un error inesperado.");
-    }
-});
 
-
-// ✅ 2) FUNCIÓN editarIndicador SOLO PREPARA DATOS (sin listeners)
-async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo) {
-
-    const titulo = document.getElementById('titulo-indicador');
-    titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
-
-    const spanFrecuencia = document.getElementById('valor-frecuencia');
-    spanFrecuencia.textContent = CodigosService.getNombreCodigo(frecuencia) || '';
-    spanFrecuencia.style.color = "red";
-
-    const spanMedicion = document.getElementById('valor-ultima-medicion');
-    const spanUltimoPeriodo = document.getElementById('periodo-ultima-medicion');
-    const ultima = await getUltimaMedicionPorIndicador(indId);
-    if (ultima) {
-        const fecha = new Date(ultima.med_fecha_medicion);
-        const fechaFormateada = fecha.toLocaleDateString('es-AR');
-        spanMedicion.textContent = fechaFormateada;
-        spanMedicion.style.color = "red";
-        document.getElementById('periodo-ultima-medicion').textContent = ultPeriodo || '';
-        spanUltimoPeriodo.style.color = "red";
-    } else {
-        spanMedicion.textContent = "Sin mediciones registradas";
-        spanMedicion.style.color = "grey";
-        document.getElementById('periodo-ultima-medicion').textContent = '--';
-    }
-
-    // Guardar id y extras en hidden/dataset para usarlos en el submit
-    document.getElementById('indicadorCodigo').value = indId;
-    const unidadCarga = document.getElementById('unidad-carga');
-    unidadCarga.textContent = CodigosService.getNombreCodigo(unidad) || '';
-    unidadCarga.dataset.unidad = unidad;
-    unidadCarga.dataset.frecuencia = frecuencia;
-
-    const fechaMedicion = document.getElementById('fecha-carga');
-    const textoPeriodo = document.getElementById('texto-periodo');
-    const labelValorPeriodo = document.getElementById('label-valor-periodo');
-    const campoLabelAnio = document.getElementById('campo-label-anio');
-    campoLabelAnio.style.display = 'block';
-
-    switch (frecuencia) {
-        case '0201':
-            textoPeriodo.textContent = "Dia evaluado";
-            labelValorPeriodo.innerHTML = "<strong>Seleccione dia:</strong>";
-            campoLabelAnio.style.display = 'none';
-            break;
-        case '0202':
-            textoPeriodo.textContent = "Semana (1 a 52):";
-            labelValorPeriodo.innerHTML = "<strong>N° Semana:</strong>";
-            break;
-        case '0203':
-            textoPeriodo.textContent = "Quincena (1 a 24)";
-            labelValorPeriodo.innerHTML = "<strong>N° Quincena:</strong>";
-            break;
-        case '0204':
-            textoPeriodo.textContent = "Mes (1 a 12):";
-            labelValorPeriodo.innerHTML = "<strong>N° Mes:</strong>";
-            break;
-        case '0205':
-            textoPeriodo.textContent = "Bimestre (1 a 6):";
-            labelValorPeriodo.innerHTML = "<strong>N° Bimestre:</strong>";
-            break;
-        case '0206':
-            textoPeriodo.textContent = "Trimestre (1 a 4)";
-            labelValorPeriodo.innerHTML = "<strong>N° Trimestre:</strong>";
-            break;
-        case '0207':
-            textoPeriodo.textContent = "Cuatrim.(1 a 3):";
-            labelValorPeriodo.innerHTML = "<strong>N° Cuatrim.:</strong>";
-            break;
-        case '0208':
-            textoPeriodo.textContent = "Semestre (1 ó 2)";
-            labelValorPeriodo.innerHTML = "<strong>N° Semestre:</strong>";
-            break;
-        case '0209':
-            textoPeriodo.textContent = "Año (AAAA):";
-            labelValorPeriodo.innerHTML = "<strong>Año:</strong>";
-            break;
-    }
-
-    const valorPeriodo = document.getElementById('valor-periodo');
-    valorPeriodo.className = "form-control align-middle";
-
-    if (frecuencia === "0201") {
-        valorPeriodo.type = "date";
-        labelValorPeriodo.innerHTML = "<strong>Dia:</strong>";
-        valorPeriodo.value = "";
-    } else {
-        valorPeriodo.type = "number";
-        valorPeriodo.value = "";
-        labelValorPeriodo.innerHTML = "<strong>Valor período:</strong>";
-
-        const periodo = frecuencia.substring(2, 4);
-        const resultado = await siguientePeriodo(ultimoValorPeriodo, periodo);
-        let anioResultado = resultado.substring(0, 4);
-        let otroResultado = resultado.substring(4, 6);
-
-        document.getElementById('valor-periodo').value = otroResultado;
-        document.getElementById('valor-periodo').className = "form-control-plaintext";
-        document.getElementById('input-anio-periodo').value = anioResultado;
-        document.getElementById('input-anio-periodo').className = "form-control-plaintext";
-    }
-
-    // Mostrar formulario
-    const formulario = document.getElementById('formulario-carga');
-    formulario.style.display = 'block';
-    window.scrollTo({ behavior: 'smooth', top: 0 });
-}
- 
         let medicionesGral = [];
         async function leerMediciones() {
             try {
@@ -1548,7 +1548,6 @@ async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPer
             return resultado;
         }
 
-
         // un ejemplo con reglas genéricas:
         // Definimos las reglas por frecuencia
         const reglasPeriodo = {
@@ -1619,16 +1618,14 @@ async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPer
                 default:
                     throw new Error("Tipo de período no reconocido");
             }
-
             return resultado;
         }
 
-
         /**
- * Devuelve el día hábil anterior a la fecha dada
- * @param {Date|string} fecha - fecha a partir de la cual buscar
- * @returns {Date} día hábil anterior
- */
+         * Devuelve el día hábil anterior a la fecha dada
+         * @param {Date|string} fecha - fecha a partir de la cual buscar
+         * @returns {Date} día hábil anterior
+         */
         function getDiaHabilAnterior(fecha) {
             // Crear fecha solo con año/mes/día, ignorando horas y zona horaria
             const f = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
@@ -1638,12 +1635,11 @@ async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPer
             return f;
         }
 
-
         /**
-* Devuelve la semana ISO y el año ISO de una fecha
-* @param {Date|string} fecha - objeto Date o string interpretable como fecha
-* @returns {{anioISO: number, semanaISO: number}}
-*/
+         *** Devuelve la semana ISO y el año ISO de una fecha
+        * @param {Date|string} fecha - objeto Date o string interpretable como fecha
+        * @returns {{anioISO: number, semanaISO: number}}
+        */
         function getSemanaISO(fecha = new Date()) {
             const f = new Date(Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()));
 
