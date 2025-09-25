@@ -1156,7 +1156,7 @@ app.get('/api/mediciones', async (req, res) => {
 // // 🚫🚫🚫 Grabar una medicion
 app.post('/api/mediciones', async (req, res) => {
     try {
-        const { med_indicador_id, med_fecha_medicion, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_comntarios, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro } = req.body;
+        const { med_indicador_id, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro } = req.body;
 
         // Validar datos
         const errores = [];
@@ -1172,8 +1172,9 @@ app.post('/api/mediciones', async (req, res) => {
                 // --- Validación de duplicados ---
         const [rows] = await pool.query(
             `SELECT id FROM mediciones 
-             WHERE med_indicador_id = ? AND med_fecha_medicion = ?`,
-            [med_indicador_id, med_fecha_medicion]
+             WHERE med_indicador_id = ? AND med_valor_periodo = ?`,
+            [med_indicador_id, med_valor_periodo],
+            console.log(med_indicador_id, med_valor_periodo)
         );
 
         if (rows.length > 0) {
@@ -1185,8 +1186,8 @@ app.post('/api/mediciones', async (req, res) => {
 
         // Grabar medición
         const [result] = await pool.query(
-            'INSERT INTO mediciones (med_indicador_id, med_fecha_medicion, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [med_indicador_id, med_fecha_medicion, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro]
+            'INSERT INTO mediciones (med_indicador_id, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [med_indicador_id, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro]
         );
 
         res.status(201).json({ ok: true, id: result.insertId });

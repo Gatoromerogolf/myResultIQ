@@ -376,13 +376,15 @@
                                 Última Medición: <span id="valor-ultima-medicion"></span>
                                 <span style="margin-left: 10px;">Correspondiente a:</span>
                                 <span id="periodo-ultima-medicion"></span>
+                                <span style="margin-left: 10px;">Valor medido:</span>
+                                <span id="cantidad-ultima-medicion"></span>
                             </h5>
 
                             <h5>Registre nueva medición:</h5>
 
                             <form id="form-carga" class="ml-3 m-1 bg-light" style="width: 90%;">
                                 <div class="row mb-2">
-
+                                    <!-- 
                                     <div class="col-md-2">
                                         <label for="fecha-carga" class="form-label"><strong>Fecha:</strong>
                                             <i class="fas fa-info-circle info-icon" data-bs-toggle="tooltip"
@@ -391,7 +393,7 @@
                                             </i>
                                         </label>
                                         <input type="date" class="form-control" id="fecha-carga" required>
-                                    </div>
+                                    </div> -->
 
                                     <div class="col-md-2">
                                         <label for="texto-período" class="form-label"><strong>Período medido:</strong>
@@ -412,7 +414,7 @@
                                     </div>
 
                                     <div class="col-md-2">
-                                        <label id="label-valor-periodo" for="valor-periodo" class="form-label">
+                                        <label id="label-valor-periodo" for="label-valor-periodo" class="form-label">
                                             <strong>Valor período:</strong>
                                         </label>
                                         <input type="text" class="form-control" id="valor-periodo" required>
@@ -785,12 +787,12 @@
             formulario.style.display = 'none';
             const titulo = document.getElementById('titulo-indicador');
             titulo.innerHTML = `Seleccionar Indicador`;
-            const subtitulo = document.getElementById('subtitulo-indicador');
-            subtitulo.innerHTML = "";
-            subtitulo.style.display = "none";
-            const subtitulo2 = document.getElementById('subtitulo-indicador2');
-            subtitulo2.innerHTML = "";
-            subtitulo2.style.display = "none";
+            // const subtitulo = document.getElementById('subtitulo-indicador');
+            // subtitulo.innerHTML = "";
+            // subtitulo.style.display = "none";
+            // const subtitulo2 = document.getElementById('subtitulo-indicador2');
+            // subtitulo2.innerHTML = "";
+            // subtitulo2.style.display = "none";
         });
 
         function validarFechaDDMMYYYY(fechaStr) {
@@ -842,6 +844,7 @@
                     let resultadoActualizacion = 0;
                     let botones = '';
                     let ultimoValorPeriodo = '';
+                    let ultimaMedicion = 0
 
                     if (ultima) {
                         let anio = 0;
@@ -849,10 +852,12 @@
                         let tercera = 0;
 
                         ultimoValorPeriodo = ultima.med_valor_periodo;
+                        ultimaMedicion = ultima.med_valor;
+
 
                         switch (ind.freq_medicion) {
                             case '0201': // diaria (día hábil anterior)
-                                const fechax = new Date(ultima.med_fecha_medicion);
+                                const fechax = new Date(ultima.med_valor_periodo);
                                 fecha = fechax.toLocaleDateString('es-AR');
                                 break;
 
@@ -965,7 +970,7 @@
                                 <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
                                     <i class="fas fa-eye fa-xs"></i>
                                 </button>
-                                <button class="btn btn-warning btn-xs btn-icon-minimal" title="Registrar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}', '${ultimoValorPeriodo}')">
+                                <button class="btn btn-warning btn-xs btn-icon-minimal" title="Registrar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}', '${ultimoValorPeriodo}', '${ultimaMedicion}')">
                                     <i class="fas fa-edit fa-xs"></i>
                                 </button>
                             </td>
@@ -1065,7 +1070,7 @@
             }
         }
 
-        async function getUltimaMedicionPorIndicador(indicadorId) {
+        async function getUltimaMedicionPorIndicadorXXX(indicadorId) {
             // Filtrar por el indicador
             const mediciones = await leerMediciones();
             const filtradas = mediciones.filter(m => m.med_indicador_id == indicadorId);
@@ -1079,6 +1084,33 @@
                     ? actual
                     : ultima;
             });
+        }
+
+        async function getUltimaMedicionPorIndicador(indicadorId) {
+            // Filtrar por el indicador
+            const mediciones = await leerMediciones();
+            const filtradas = mediciones.filter(m => m.med_indicador_id == indicadorId);
+
+            if (filtradas.length === 0) return null;
+
+            // Ver el tipo de periodo (asumo que todas las mediciones del indicador tienen el mismo)
+            const tipoPeriodo = filtradas[0].med_tipo_periodo;
+
+            if (tipoPeriodo === '0201') {
+                // Caso diario: comparar por fecha
+                return filtradas.reduce((ultima, actual) =>
+                    new Date(actual.med_valor_periodo) > new Date(ultima.med_valor_periodo)
+                        ? actual
+                        : ultima
+                );
+            } else {
+                // Otros casos: comparar por med_valor_periodo (aseguramos que sea número)
+                return filtradas.reduce((ultima, actual) =>
+                    Number(actual.med_valor_periodo) > Number(ultima.med_valor_periodo)
+                        ? actual
+                        : ultima
+                );
+            }
         }
 
         async function obtenerUsuarioPorLegajo(responsable) {
@@ -1125,35 +1157,40 @@
             e.preventDefault();
 
             const errores = [];
-            const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
-            const fechaInputDate = new Date(fechaInputStr);
+            // const fechaInputStr = document.getElementById('fecha-carga').value; // yyyy-mm-dd
+            // const fechaInputDate = new Date(fechaInputStr);
             const hoy = new Date();
             hoy.setHours(0, 0, 0, 0);
 
-            if (fechaInputDate > hoy) {
-                errores.push("La fecha no puede ser mayor a la fecha de hoy.");
-            }
+            // if (fechaInputDate > hoy) {
+            //     errores.push("La fecha no puede ser mayor a la fecha de hoy.");
+            // }
 
-            let anio_ISO = null;
-            const fechaISO = validarFechaISO(fechaInputDate);
+            // let anio_ISO = null;
+            // const fechaISO = validarFechaISO(fechaInputDate);
 
-            if (fechaISO) {
-                anio_ISO = fechaInputDate.getFullYear();
-            } else {
-                errores.push("Fecha inválida o fuera de rango (1900-2100).");
-            }
+            // if (fechaISO) {
+            // const anio_ISO = hoy.getFullYear();
+            // } else {
+            //     errores.push("Fecha inválida o fuera de rango (1900-2100).");
+            // }
 
             // Tomar valores desde hidden y campos del form
             const indId = document.getElementById('indicadorCodigo').value;
             const unidad = document.getElementById('unidad-carga').dataset.unidad || '';
             const frecuencia = document.getElementById('unidad-carga').dataset.frecuencia || '';
+            const valorPeriodo = document.getElementById('valor-periodo').value;
+            const anioPeriodo = document.getElementById('input-anio-periodo').value;
 
             const datos = {
                 med_indicador_id: indId,
-                med_fecha_medicion: document.getElementById('fecha-carga').value,
                 med_tipo_periodo: frecuencia,
-                med_valor_periodo: anio_ISO + document.getElementById('valor-periodo').value,
-                med_anio: anio_ISO,
+                med_valor_periodo: (frecuencia === '0201')
+                    ? valorPeriodo
+                    : anioPeriodo + valorPeriodo,
+                med_anio: (frecuencia === '0201')
+                    ? Number(valorPeriodo.substring(0, 4))  // extrae año de "AAAAMMDD"
+                    : anioPeriodo,
                 med_valor: parseFloat(document.getElementById('valor-carga').value),
                 med_comentarios: document.getElementById('comentario-carga').value.trim(),
                 med_unidad_medida: unidad,
@@ -1161,6 +1198,8 @@
                 med_legajo_resp_registro: '3',
                 med_fecha_registro: new Date().toISOString().split('T')[0]
             };
+
+            console.log("Datos a enviar:", datos);
 
             if (errores.length > 0) {
                 alert("Errores:\n- " + errores.join("\n- "));
@@ -1196,7 +1235,7 @@
 
 
         // ✅ 2) FUNCIÓN editarIndicador SOLO PREPARA DATOS (sin listeners)
-        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo) {
+        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo, ultimaMedicion) {
 
             const titulo = document.getElementById('titulo-indicador');
             titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
@@ -1207,18 +1246,31 @@
 
             const spanMedicion = document.getElementById('valor-ultima-medicion');
             const spanUltimoPeriodo = document.getElementById('periodo-ultima-medicion');
+            const spanValorMedido = document.getElementById('cantidad-ultima-medicion');
             const ultima = await getUltimaMedicionPorIndicador(indId);
             if (ultima) {
-                const fecha = new Date(ultima.med_fecha_medicion);
+                const fecha = new Date(ultima.med_fecha_registro);
                 const fechaFormateada = fecha.toLocaleDateString('es-AR');
                 spanMedicion.textContent = fechaFormateada;
                 spanMedicion.style.color = "red";
-                document.getElementById('periodo-ultima-medicion').textContent = ultPeriodo || '';
+                // document.getElementById('periodo-ultima-medicion').textContent = ultPeriodo || '';
+                spanUltimoPeriodo.textContent = ultPeriodo || '';
                 spanUltimoPeriodo.style.color = "red";
+                // document.getElementById('cantidad-ultima-medicion').textContent = ultimaMedicion || '';
+                // spanValorMedido.textContent = ultimaMedicion !== undefined ? ultimaMedicion : '';
+                spanValorMedido.textContent = ultimaMedicion !== undefined
+                    ? Number(ultimaMedicion).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                    : '';
+                /*                 <!-- 'es-AR' → separador de miles con punto y decimales con coma (1.234,56).
+                minimumFractionDigits: 2 → asegura que siempre tenga 2 decimales.
+                maximumFractionDigits: 2 → no muestre más de 2 decimales.  */
+
+                spanValorMedido.style.color = "red";
             } else {
                 spanMedicion.textContent = "Sin mediciones registradas";
                 spanMedicion.style.color = "grey";
-                document.getElementById('periodo-ultima-medicion').textContent = '--';
+                spanValorMedido.textContent = '';
+                spanUltimoPeriodo.textContent = '- - - ';
             }
 
             // Guardar id y extras en hidden/dataset para usarlos en el submit
@@ -1230,7 +1282,8 @@
 
             const fechaMedicion = document.getElementById('fecha-carga');
             const textoPeriodo = document.getElementById('texto-periodo');
-            const labelValorPeriodo = document.getElementById('label-valor-periodo');
+
+            let labelValorPeriodo = document.getElementById('label-valor-periodo');
             const campoLabelAnio = document.getElementById('campo-label-anio');
             campoLabelAnio.style.display = 'block';
 
@@ -1284,7 +1337,6 @@
             } else {
                 valorPeriodo.type = "number";
                 valorPeriodo.value = "";
-                labelValorPeriodo.innerHTML = "<strong>Valor período:</strong>";
 
                 const periodo = frecuencia.substring(2, 4);
                 const resultado = await siguientePeriodo(ultimoValorPeriodo, periodo);
@@ -1295,6 +1347,22 @@
                 document.getElementById('valor-periodo').className = "form-control-plaintext";
                 document.getElementById('input-anio-periodo').value = anioResultado;
                 document.getElementById('input-anio-periodo').className = "form-control-plaintext";
+            }
+
+            if (!ultima) {
+                if (frecuencia === "0201") {
+                    valorPeriodo.type = "date";
+                    labelValorPeriodo.innerHTML = "<strong>Dia:</strong>";
+                    valorPeriodo.value = "";
+                    document.getElementById('valor-periodo').className = "form-control";
+                    campoLabelAnio.style.display = 'none';
+                } else {
+                    valorPeriodo.type = "number";
+                    valorPeriodo.value = "";
+                    document.getElementById('valor-periodo').className = "form-control";
+                    document.getElementById('input-anio-periodo').className = "form-control";
+                    document.getElementById('input-anio-periodo').value = '';
+                }
             }
 
             // Mostrar formulario
@@ -1323,7 +1391,7 @@
             }
         }
 
-        async function getUltimaMedicionPorIndicador(indicadorId) {
+        async function getUltimaMedicionPorIndicadorZZZ(indicadorId) {
             // Filtrar por el indicador
             const mediciones = await leerMediciones();
             const filtradas = mediciones.filter(m => m.med_indicador_id == indicadorId);
@@ -1485,7 +1553,7 @@
 
                 case '02': // Semanal AAAASS
                     let semana = parseInt(periodoRegistrado.substring(4, 6));
-                    const ultSemana = getSemanaISO(new Date(anio, 11, 31)).semanaISO;
+                    const ultSemana = getSemanaISO(new Date(anio, 11, 28)).semanaISO;
                     if (semana >= ultSemana) {
                         anio += 1;
                         semana = 1;
