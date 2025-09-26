@@ -1417,7 +1417,7 @@
                                                     <!--end::Fecha de vigencia-->
 
                                                     <!--begin::Medición inicial-->
-                                                    <div class="col-md-2">
+                                                    <!-- <div class="col-md-2">
                                                         <label for="med_inicial" class="form-label"><strong>Primera
                                                                 medición *</strong>
                                                             <i class="fas fa-info-circle info-icon"
@@ -1429,7 +1429,7 @@
                                                             name="med_inicial" placeholder="Ej: 100" required />
                                                         <div class="invalid-feedback">Debe ingresar la primera medición.
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <!--end::Medición inicial-->
 
                                                     <!-- Sección: Presentación -->
@@ -1670,13 +1670,13 @@
                     }
 
                     // si se da de alta como vigente, tiene que tener primera medición mayor a cero.
-                    const medicionInicial = document.getElementById('med_inicial').value;
-                    const estado = document.getElementById('estado').value;
-                    alert(`medición inicial: ${medicionInicial} - estado: ${estado}`);
-                    if (estado == 1 && medicionInicial <= 0) {
-                        alert('La primera medición debe ser mayor a cero si el indicador está vigente.');
-                        return;
-                    }
+                    // const medicionInicial = document.getElementById('med_inicial').value;
+                    // const estado = document.getElementById('estado').value;
+                    // alert(`medición inicial: ${medicionInicial} - estado: ${estado}`);
+                    // if (estado == 1 && medicionInicial <= 0) {
+                    //     alert('La primera medición debe ser mayor a cero si el indicador está vigente.');
+                    //     return;
+                    // }
 
                     // === Validación HTML5 / Bootstrap ===
                     if (!form.checkValidity()) {
@@ -1861,10 +1861,11 @@
                 }
 
                 // 👇 Ahora sí, después del insert exitoso
-                if (method === 'POST' && result.success && result.id) {
-                    indicadorData.id = result.id;   // guardás el id generado
-                    await crearMedicion(indicadorData);
-                }
+                // if (method === 'POST' && result.success && result.id) {
+                //     indicadorData.id = result.id;   // guardás el id generado
+                //     await crearMedicion(indicadorData);
+                // }
+
                 // Devolver el objeto result para que el caller decida la UI
                 return result;
 

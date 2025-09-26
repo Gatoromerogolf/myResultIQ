@@ -363,9 +363,8 @@
                                 <th>ID</th>
                                 <th>Indicador</th>
                                 <th>Medición</th>
-                                <th>Año</th>
                                 <th>Periodo</th>
-                                <th>Per.valor</th>
+                                <th>Año</th>
                                 <th>Valor</th>
                                 <th>Unid</th>
                                 <th>Comentarios</th>
@@ -534,14 +533,6 @@
                                     return indicador ? indicador.codigo_id : data;
                                 }
                             },
-                            {
-                                data: 'med_fecha_medicion',
-                                render: function (data) {
-                                    if (!data) return '';
-                                    return new Date(data).toLocaleDateString('es-ES');
-                                }
-                            },
-                            { data: 'med_anio' },
 
                             {
                                 data: 'med_tipo_periodo',
@@ -550,10 +541,26 @@
                                 }
                             },
 
+                            // {
+                            //     data: 'med_fecha_medicion',
+                            //     render: function (data) {
+                            //         if (!data) return '';
+                            //         return new Date(data).toLocaleDateString('es-ES');
+                            //     }
+                            // },
+
+
+                            // {
+                            //     data: 'med_tipo_periodo',
+                            //     render: function (data, type, row) {
+                            //         return CodigosService.getNombreCodigo(data);
+                            //     }
+                            // },
+
                             {
                                 data: 'med_valor_periodo',
                                 className: 'text-center',
-                                title: `Valor del período 
+                                title: `Período 
                                         <i class="bi bi-info-circle" 
                                         data-bs-toggle="tooltip" 
                                         data-bs-html="true"
@@ -569,8 +576,20 @@
                                         - <strong>cuatrimestre:</strong> número de cuatrimestre en el año (1 a 3)<br>
                                         - <strong>semestre:</strong> número de semestre en el año (1 a 2)
                                         "
-                                        ></i>`
+                                        ></i>`,
+                                render: function (data, type, row) {
+                                    if (row.med_tipo_periodo === '0201') {
+                                        // Caso diario → mostrar la fecha como viene
+                                        return data;
+                                    } else {
+                                        // Otros casos → devolver solo los últimos 2 dígitos
+                                        return data ? String(data).slice(-2) : '';
+                                    }
+                                }
                             },
+
+                            { data: 'med_anio' },
+
                             {
                                 data: 'med_valor',
                                 className: 'text-end',

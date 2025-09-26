@@ -61,13 +61,12 @@ app.post('/api/guardar', async (req, res) => {
                 unidad_medida,
                 freq_medicion,
                 tolerancia_plazo,
-                med_inicial,
                 freq_reporte,
                 fecha_inicio,
                 formato,
                 comentarios,
                 estado
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `,
             [
                 data.codigo_id,
@@ -101,7 +100,6 @@ app.post('/api/guardar', async (req, res) => {
                 data.unidad_medida,
                 data.freq_medicion,
                 data.tolerancia_plazo,
-                data.med_inicial,
                 data.freq_reporte,
                 data.fecha_inicio,
                 data.formato,
@@ -180,7 +178,6 @@ app.put('/api/actualizar/:id', async (req, res) => {
                 unidad_medida = ?,
                 freq_medicion = ?,
                 tolerancia_plazo = ?,
-                med_inicial = ?,
                 freq_reporte = ?,
                 fecha_inicio = ?,
                 formato = ?,
@@ -219,7 +216,6 @@ app.put('/api/actualizar/:id', async (req, res) => {
                 data.unidad_medida,
                 data.freq_medicion,
                 data.tolerancia_plazo,
-                data.med_inicial,
                 data.freq_reporte,
                 data.fecha_inicio,
                 data.formato,
@@ -273,7 +269,6 @@ app.get('/api/indicadores', async (req, res) => {
                 unidad_medida,
                 freq_medicion,
                 tolerancia_plazo,
-                med_inicial,
                 freq_reporte,
                 fecha_inicio,
                 formato,
@@ -333,7 +328,6 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
                 i.unidad_medida,
                 i.freq_medicion,
                 i.tolerancia_plazo,
-                i.med_inicial,
                 i.freq_reporte,
                 i.fecha_inicio,
                 i.formato,
@@ -411,7 +405,7 @@ app.post('/api/indicadores', async (req, res) => {
         rango_desde, rango_hasta, rango_acepta, rango_riesgo, rango_critico,
         tenden_tipo, tenden_refe, tenden_acepta, tenden_riesgo, tenden_critico,
         fuente_datos, formula_calculo,
-        unidad_medida, frecuencia_medicion, tolerancia_plazo, med_inicial,
+        unidad_medida, frecuencia_medicion, tolerancia_plazo, 
         frecuencia_reporte, fecha_inicio,
         formato_presentacion, comentarios, estado
     } = req.body;
@@ -426,10 +420,10 @@ app.post('/api/indicadores', async (req, res) => {
                 rango_desde, rango_hasta, rango_acepta, rango_riesgo, rango_critico,
                 tenden_tipo, tenden_refe, tenden_acepta, tenden_riesgo, tenden_critico,
                 fuente_datos, formula_calculo,
-                unidad_medida, freq_medicion, tolerancia_plazo, med_inicial,
+                unidad_medida, freq_medicion, tolerancia_plazo, 
                 freq_reporte, fecha_inicio,
                 formato, comentarios, estado
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         await pool.execute(sql, [
@@ -440,7 +434,7 @@ app.post('/api/indicadores', async (req, res) => {
             rango_desde, rango_hasta, rango_acepta, rango_riesgo, rango_critico,
             tenden_tipo, tenden_refe, tenden_acepta, tenden_riesgo, tenden_critico,
             fuente_datos, formula_calculo,
-            unidad_medida, frecuencia_medicion, tolerancia_plazo, med_inicial,
+            unidad_medida, frecuencia_medicion, tolerancia_plazo,
             frecuencia_reporte, fecha_inicio,
             formato_presentacion, comentarios, estado
         ]);

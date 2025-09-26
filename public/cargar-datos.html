@@ -787,12 +787,6 @@
             formulario.style.display = 'none';
             const titulo = document.getElementById('titulo-indicador');
             titulo.innerHTML = `Seleccionar Indicador`;
-            // const subtitulo = document.getElementById('subtitulo-indicador');
-            // subtitulo.innerHTML = "";
-            // subtitulo.style.display = "none";
-            // const subtitulo2 = document.getElementById('subtitulo-indicador2');
-            // subtitulo2.innerHTML = "";
-            // subtitulo2.style.display = "none";
         });
 
         function validarFechaDDMMYYYY(fechaStr) {
@@ -851,14 +845,13 @@
                         let segunda = 0;
                         let tercera = 0;
 
-                        ultimoValorPeriodo = ultima.med_valor_periodo;
-                        ultimaMedicion = ultima.med_valor;
-
+                        ultimoValorPeriodo = ultima.med_valor_periodo;  //AAAA y lo que sigue ó AAAA-MM-DD
+                        ultimaMedicion = ultima.med_valor; // valor numérico
 
                         switch (ind.freq_medicion) {
                             case '0201': // diaria (día hábil anterior)
-                                const fechax = new Date(ultima.med_valor_periodo);
-                                fecha = fechax.toLocaleDateString('es-AR');
+                                const partes = ultima.med_valor_periodo.split("-"); // [2025,08,04]
+                                fecha = `${partes[2]}/${partes[1]}/${partes[0]}`;   // 04/08/2025
                                 break;
 
                             case '0202': // semanal
@@ -1070,22 +1063,6 @@
             }
         }
 
-        async function getUltimaMedicionPorIndicadorXXX(indicadorId) {
-            // Filtrar por el indicador
-            const mediciones = await leerMediciones();
-            const filtradas = mediciones.filter(m => m.med_indicador_id == indicadorId);
-            // console.log(filtradas);
-            // Si no hay ninguna, devolvemos null
-            if (filtradas.length === 0) return null;
-
-            // Buscar la más reciente comparando fechas
-            return filtradas.reduce((ultima, actual) => {
-                return new Date(actual.med_fecha_medicion) > new Date(ultima.med_fecha_medicion)
-                    ? actual
-                    : ultima;
-            });
-        }
-
         async function getUltimaMedicionPorIndicador(indicadorId) {
             // Filtrar por el indicador
             const mediciones = await leerMediciones();
@@ -1099,7 +1076,7 @@
             if (tipoPeriodo === '0201') {
                 // Caso diario: comparar por fecha
                 return filtradas.reduce((ultima, actual) =>
-                    new Date(actual.med_valor_periodo) > new Date(ultima.med_valor_periodo)
+                    actual.med_valor_periodo > ultima.med_valor_periodo
                         ? actual
                         : ultima
                 );
@@ -1247,17 +1224,25 @@
             const spanMedicion = document.getElementById('valor-ultima-medicion');
             const spanUltimoPeriodo = document.getElementById('periodo-ultima-medicion');
             const spanValorMedido = document.getElementById('cantidad-ultima-medicion');
+
             const ultima = await getUltimaMedicionPorIndicador(indId);
             if (ultima) {
                 const fecha = new Date(ultima.med_fecha_registro);
                 const fechaFormateada = fecha.toLocaleDateString('es-AR');
                 spanMedicion.textContent = fechaFormateada;
                 spanMedicion.style.color = "red";
-                // document.getElementById('periodo-ultima-medicion').textContent = ultPeriodo || '';
-                spanUltimoPeriodo.textContent = ultPeriodo || '';
+
+                if (ultima.med_tipo_periodo == '0201') {
+                    // diaria
+                    const partes = ultima.med_valor_periodo.split("-"); // [2025,08,04]
+                    const fechaPeriodoFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;   // 04/08/2025
+                    spanUltimoPeriodo.textContent = fechaPeriodoFormateada || '';
+                } else {
+                    // otras
+                    spanUltimoPeriodo.textContent = ultima.med_valor_periodo || '';
+                }
+                // spanUltimoPeriodo.textContent = ultima.ultPeriodo || '';
                 spanUltimoPeriodo.style.color = "red";
-                // document.getElementById('cantidad-ultima-medicion').textContent = ultimaMedicion || '';
-                // spanValorMedido.textContent = ultimaMedicion !== undefined ? ultimaMedicion : '';
                 spanValorMedido.textContent = ultimaMedicion !== undefined
                     ? Number(ultimaMedicion).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                     : '';
