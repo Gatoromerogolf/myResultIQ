@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ROI Marketing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f5f5f5; }
+        .kpi-card { border-left: 4px solid; transition: transform 0.2s; }
+        .kpi-card:hover { transform: translateY(-2px); }
+        .kpi-value { font-size: 2rem; font-weight: bold; }
+        .chart-container { height: 400px; margin: 20px 0; }
+        .tab-button { cursor: pointer; padding: 12px 24px; border: none; background: white; transition: all 0.3s; }
+        .tab-button:hover { background-color: #f8f9fa; }
+        .tab-button.active { border-bottom: 3px solid #0d6efd; color: #0d6efd; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="fw-bold mb-2">📊 Dashboard ROI Marketing</h1>
+                <p class="text-muted">Retorno de inversión generado por campañas y actividades de marketing</p>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4" id="kpiCards"></div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="bg-white rounded shadow-sm">
+                    <div class="d-flex border-bottom" id="tabButtons"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="bg-white rounded shadow-sm p-4">
+                    <h3 class="mb-4" id="chartTitle">Evolución del ROI</h3>
+                    <div class="chart-container">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="bg-white rounded shadow-sm p-4">
+                    <h4 class="fw-bold mb-3">📋 Análisis y Recomendaciones</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold mb-3">🔍 Observaciones Clave:</h5>
+                            <ul class="text-muted">
+                                <li>Crecimiento sostenido enero-abril (+114%)</li>
+                                <li>Mejor resultado en abril: $210</li>
+                                <li>Caída en mayo (-14%), recuperación en junio</li>
+                                <li>Brecha promedio vs meta: -$133</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold mb-3">💡 Recomendaciones:</h5>
+                            <ul class="text-muted">
+                                <li>Analizar factores del éxito de abril</li>
+                                <li>Investigar causas de la caída de mayo</li>
+                                <li>Mantener tendencia positiva de junio</li>
+                                <li>Requiere +54% para alcanzar meta</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const datos = {
+            meses: ['Ene 2025', 'Feb 2025', 'Mar 2025', 'Abr 2025', 'May 2025', 'Jun 2025'],
+            valores: [98, 135, 180, 210, 180, 195],
+            meta: 300
+        };
+
+        const valorActual = datos.valores[datos.valores.length - 1];
+        const valorAnterior = datos.valores[datos.valores.length - 2];
+        const promedio = Math.round(datos.valores.reduce((a, b) => a + b, 0) / datos.valores.length);
+        const mejorMes = Math.max(...datos.valores);
+        const cambio = Math.round(((valorActual - valorAnterior) / valorAnterior) * 100);
+        const cumplimiento = Math.round((valorActual / datos.meta) * 100);
+
+        function crearKPICards() {
+            const kpis = [
+                { titulo: 'ROI Actual (Jun 2025)', valor: `$${valorActual}`, subtitulo: `${cambio > 0 ? '↗️' : '↘️'} ${cambio > 0 ? '+' : ''}${cambio}% vs mes anterior`, color: cambio > 0 ? '#198754' : '#dc3545', icono: '💰' },
+                { titulo: 'Cumplimiento Meta', valor: `${cumplimiento}%`, subtitulo: 'Meta: $300', color: cumplimiento >= 100 ? '#198754' : '#ffc107', icono: '🎯' },
+                { titulo: 'Promedio 6 meses', valor: `$${promedio}`, subtitulo: 'Ene - Jun 2025', color: '#6c757d', icono: '📊' },
+                { titulo: 'Mejor Resultado', valor: `$${mejorMes}`, subtitulo: 'Abril 2025', color: '#0dcaf0', icono: '🏆' }
+            ];
+
+            const container = document.getElementById('kpiCards');
+            container.innerHTML = kpis.map(kpi => `
+                <div class="col-md-6 col-lg-3">
+                    <div class="card kpi-card h-100" style="border-left-color: ${kpi.color}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted small mb-1">${kpi.titulo}</p>
+                                    <h2 class="kpi-value mb-1" style="color: ${kpi.color}">${kpi.valor}</h2>
+                                    <p class="text-muted small mb-0">${kpi.subtitulo}</p>
+                                </div>
+                                <span style="font-size: 2rem;">${kpi.icono}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function crearTabs() {
+            const tabs = [
+                { id: 'tendencia', label: '📈 Tendencia', titulo: 'Evolución del ROI - Enero a Junio 2025' },
+                { id: 'barras', label: '📊 Comparativo', titulo: 'Comparativo Mensual del ROI' },
+                { id: 'area', label: '📉 Evolución', titulo: 'Evolución Acumulativa del ROI' },
+                { id: 'brecha', label: '🎯 Brecha vs Meta', titulo: 'Brecha vs Meta por Mes' }
+            ];
+
+            const container = document.getElementById('tabButtons');
+            container.innerHTML = tabs.map((tab, i) => `
+                <button class="tab-button ${i === 0 ? 'active' : ''}" onclick="cambiarGrafico('${tab.id}', '${tab.titulo}')">${tab.label}</button>
+            `).join('');
+        }
+
+        let chartInstance = null;
+
+        function crearGrafico(tipo) {
+            if (chartInstance) chartInstance.destroy();
+
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            const metaArray = new Array(datos.meses.length).fill(datos.meta);
+            const brechas = datos.valores.map(v => v - datos.meta);
+
+            const configs = {
+                tendencia: {
+                    type: 'line',
+                    data: {
+                        labels: datos.meses,
+                        datasets: [{
+                            label: 'ROI Actual',
+                            data: datos.valores,
+                            borderColor: '#0d6efd',
+                            backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }, {
+                            label: 'Meta',
+                            data: metaArray,
+                            borderColor: '#dc3545',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0
+                        }]
+                    }
+                },
+                barras: {
+                    type: 'bar',
+                    data: {
+                        labels: datos.meses,
+                        datasets: [{
+                            label: 'ROI',
+                            data: datos.valores,
+                            backgroundColor: '#0d6efd'
+                        }]
+                    }
+                },
+                area: {
+                    type: 'line',
+                    data: {
+                        labels: datos.meses,
+                        datasets: [{
+                            label: 'ROI',
+                            data: datos.valores,
+                            borderColor: '#0d6efd',
+                            backgroundColor: 'rgba(13, 110, 253, 0.3)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    }
+                },
+                brecha: {
+                    type: 'bar',
+                    data: {
+                        labels: datos.meses,
+                        datasets: [{
+                            label: 'Brecha vs Meta',
+                            data: brechas,
+                            backgroundColor: '#dc3545'
+                        }]
+                    }
+                }
+            };
+
+            chartInstance = new Chart(ctx, {
+                ...configs[tipo],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: true, position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + Math.abs(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function cambiarGrafico(tipo, titulo) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('chartTitle').textContent = titulo;
+            crearGrafico(tipo);
+        }
+
+        crearKPICards();
+        crearTabs();
+        crearGrafico('tendencia');
+    </script>
+</body>
+</html>
+<!-- 
+¡Listo! Ahora sí está completo el HTML. Esta página incluye:
+✅ Características:
+
+4 KPI Cards con iconos y colores
+4 tipos de gráficos con pestañas:
+
+Tendencia (línea)
+Comparativo (barras)
+Evolución (área)
+Brecha vs Meta
+
+
+Sección de análisis con observaciones y recomendaciones
+Totalmente responsive con Bootstrap
+Sin dependencias externas excepto Bootstrap y Chart.js (desde CDN)
+
+📋 Para integrar en tu aplicación:
+
+Copia el HTML completo y guárdalo como dashboard-roi.html
+O intégralo en tu página existente copiando las secciones que necesites
+Personaliza los datos modificando el objeto datos en el JavaScript
+
+🔧 Para usar tus propios datos:
+Busca esta sección en el JavaScript y modifica los valores:
+javascriptconst datos = {
+    meses: ['Ene 2025', 'Feb 2025', 'Mar 2025', 'Abr 2025', 'May 2025', 'Jun 2025'],
+    valores: [98, 135, 180, 210, 180, 195],
+    meta: 300
+};
+¿Funciona bien ahora? ¿Necesitas que ajuste algo más?ReintentarClaude aún no tiene la capacidad de ejecutar el código que genera. -->

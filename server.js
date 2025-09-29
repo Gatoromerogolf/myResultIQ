@@ -27,8 +27,8 @@ app.use('/dist', express.static('public'));
 app.post('/api/guardar', async (req, res) => {
 
     try {
-    const data = req.body;
-    const [result] = await pool.query(
+        const data = req.body;
+        const [result] = await pool.query(
             `INSERT INTO indicadores (
                 codigo_id,
                 nombre,
@@ -104,10 +104,10 @@ app.post('/api/guardar', async (req, res) => {
                 data.fecha_inicio,
                 data.formato,
                 data.comentarios,
-                data.estado 
+                data.estado
             ]
         );
-        res.json({ success: true, mensaje: 'Indicador guardado', id: result.insertId  });
+        res.json({ success: true, mensaje: 'Indicador guardado', id: result.insertId });
     } catch (err) {
         console.error('Error al guardar indicador:', err);
         res.status(500).json({ success: false, error: 'Error al guardar el indicador' });
@@ -405,7 +405,7 @@ app.post('/api/indicadores', async (req, res) => {
         rango_desde, rango_hasta, rango_acepta, rango_riesgo, rango_critico,
         tenden_tipo, tenden_refe, tenden_acepta, tenden_riesgo, tenden_critico,
         fuente_datos, formula_calculo,
-        unidad_medida, frecuencia_medicion, tolerancia_plazo, 
+        unidad_medida, frecuencia_medicion, tolerancia_plazo,
         frecuencia_reporte, fecha_inicio,
         formato_presentacion, comentarios, estado
     } = req.body;
@@ -1163,20 +1163,29 @@ app.post('/api/mediciones', async (req, res) => {
             return res.status(400).json({ success: false, errores });
         }
 
-                // --- Validación de duplicados ---
-        const [rows] = await pool.query(
-            `SELECT id FROM mediciones 
+        // --- Validación de duplicados ---
+        if (!med_tipo_periodo == "0210") {  // si no es eventual controla duplicados
+            const [rows] = await pool.query(
+                `SELECT id FROM mediciones 
              WHERE med_indicador_id = ? AND med_valor_periodo = ?`,
-            [med_indicador_id, med_valor_periodo],
-            console.log(med_indicador_id, med_valor_periodo)
-        );
+                [med_indicador_id, med_valor_periodo]
+            );
+            console.log(med_indicador_id, med_valor_periodo);
 
-        if (rows.length > 0) {
-            return res.status(409).json({ 
-                ok: false, 
-                error: "Ya existe una medición para este indicador en esa fecha." 
-            });
-        }
+            if (rows.length > 0) {
+                return res.status(409).json({
+                    ok: false,
+                    error: "Ya existe una medición para este indicador en esa fecha."
+                });
+            }
+        };
+
+        // if (rows.length > 0) {
+        //     return res.status(409).json({
+        //         ok: false,
+        //         error: "Ya existe una medición para este indicador en esa fecha."
+        //     });
+        // }
 
         // Grabar medición
         const [result] = await pool.query(

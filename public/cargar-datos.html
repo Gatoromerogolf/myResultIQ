@@ -372,12 +372,16 @@
                             <input type="hidden" id="indicadorCodigo" name="indicadorCodigo">
                             <h5 id="titulo-frecuencia">Frecuencia de medición: <span id="valor-frecuencia"></span></h5>
 
-                            <h5 id="titulo-ult-medicion" style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                            <h5 id="titulo-ult-medicion" ;>
                                 Última Medición: <span id="valor-ultima-medicion"></span>
                                 <span style="margin-left: 10px;">Correspondiente a:</span>
                                 <span id="periodo-ultima-medicion"></span>
                                 <span style="margin-left: 10px;">Valor medido:</span>
                                 <span id="cantidad-ultima-medicion"></span>
+                            </h5>
+
+                            <h5 id="titulo-comentarios" style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                                Comentarios: <span id="valor-comentarios"></span>
                             </h5>
 
                             <h5>Registre nueva medición:</h5>
@@ -876,7 +880,6 @@
                                 fecha = quincenaDelMes + 'a.' + ' Quin. de ' + mesTexto + ' de ' + anio + ' (' + quincenaGlobal + ')';
                                 break;
 
-
                             case '0204': // mensual
                                 anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
                                 segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
@@ -922,30 +925,36 @@
 
                             case '0205': // bimestral
                                 anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
-                                segunda = ultima.med_valor_periodo.substring(4, 5);  // siguientes 2
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 1
                                 fecha = segunda + ' Bimestre de ' + ultima.med_anio;
                                 break;
 
                             case '0206': // trimestral
                                 anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
-                                segunda = ultima.med_valor_periodo.substring(4, 5);  // siguientes 2
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 1
                                 fecha = segunda + ' Trimestre de ' + ultima.med_anio
                                 break;
 
                             case '0207': // cuatrimestral
                                 anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
-                                segunda = ultima.med_valor_periodo.substring(4, 5);  // siguientes 1
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
                                 fecha = segunda + ' Cuatrimestre de ' + anio
                                 break;
 
                             case '0208': // semestral
                                 anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
-                                segunda = ultima.med_valor_periodo.substring(4, 5);  // siguientes 1
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
                                 fecha = segunda + ' Semestre de ' + anio
                                 break;
 
                             case '0209': // anual
                                 fecha = 'Año ' + ultima.med_valor_periodo
+                                break;
+
+                            case '0210': // anual
+                                anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
+                                fecha = segunda + ' de ' + anio;
                                 break;
                         }
 
@@ -957,7 +966,11 @@
 
                         //  si la que debería ser no es igual a la ultima que tiene , pone marca de demorado
                         if (resultado !== ultima.med_valor_periodo) {
-                            resultadoActualizacion = `<td><span class="badge text-bg-danger"> Demorado </span></td>`;
+                            if (ind.freq_medicion == '0210') {
+                                resultadoActualizacion = `<td><span class="badge text-bg-info"> Informado </span></td>`;
+                            } else {
+                                resultadoActualizacion = `<td><span class="badge text-bg-danger"> Demorado </span></td>`;
+                            }
                             botones = `
                             <td class="icon-only-actions">
                                 <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
@@ -970,7 +983,11 @@
                             `
                         }
                         else {
-                            resultadoActualizacion = `<td><span class="badge text-bg-success"> Actualizado </span></td>`;
+                            if (ind.freq_medicion == '0210') {
+                                resultadoActualizacion = `<td><span class="badge text-bg-info"> Informado </span></td>`;
+                            } else {
+                                resultadoActualizacion = `<td><span class="badge text-bg-success"> Actualizado </span></td>`;
+                            }
                             botones = `
                             <td class="icon-only-actions">
                                 <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
@@ -1024,14 +1041,14 @@
                             { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
                         ],
                         columnDefs: [
-                            { width: "30px", targets: 0 },   // Código un poco angosto
-                            { width: "50px", targets: 1 },  // Nombre más ancho
-                            { width: "15px", targets: 2 },   // descripcion
-                            { width: "50px", targets: 3 },  // responsable
-                            { width: "40px", targets: 4 },   // medicion
-                            { width: "40px", targets: 5 },   // carga
-                            { width: "25px", targets: 6 },  // estado
-                            { width: "40px", targets: 7 },   // acciones
+                            { width: "80px", targets: 0 },   // Código un poco angosto
+                            { width: "150px", targets: 1 },  // Nombre más ancho
+                            { width: "260px", targets: 2 },   // descripcion
+                            { width: "120px", targets: 3 },  // responsable
+                            { width: "100px", targets: 4 },   // medicion
+                            { width: "80px", targets: 5 },   // carga
+                            { width: "60px", targets: 6 },  // estado
+                            { width: "20px", targets: 7 },   // acciones
                         ],
                         responsive: true,
                         autoWidth: false,
@@ -1224,6 +1241,7 @@
             const spanMedicion = document.getElementById('valor-ultima-medicion');
             const spanUltimoPeriodo = document.getElementById('periodo-ultima-medicion');
             const spanValorMedido = document.getElementById('cantidad-ultima-medicion');
+            const spanComentarios = document.getElementById('valor-comentarios');
 
             const ultima = await getUltimaMedicionPorIndicador(indId);
             if (ultima) {
@@ -1231,6 +1249,7 @@
                 const fechaFormateada = fecha.toLocaleDateString('es-AR');
                 spanMedicion.textContent = fechaFormateada;
                 spanMedicion.style.color = "red";
+                spanComentarios.textContent = ultima.med_comentarios || '-';
 
                 if (ultima.med_tipo_periodo == '0201') {
                     // diaria
@@ -1239,7 +1258,15 @@
                     spanUltimoPeriodo.textContent = fechaPeriodoFormateada || '';
                 } else {
                     // otras
-                    spanUltimoPeriodo.textContent = ultima.med_valor_periodo || '';
+                    // spanUltimoPeriodo.textContent = ultima.med_valor_periodo || '';
+                    const valorOriginal = ultima.med_valor_periodo || '';
+                    if (valorOriginal.length === 6) {
+                        const anio = valorOriginal.substring(0, 4);  // AAAA
+                        const ciclo = valorOriginal.substring(4, 6); // CC
+                        spanUltimoPeriodo.textContent = `${ciclo} - ${anio}`;
+                    } else {
+                        spanUltimoPeriodo.textContent = valorOriginal;
+                    }
                 }
                 // spanUltimoPeriodo.textContent = ultima.ultPeriodo || '';
                 spanUltimoPeriodo.style.color = "red";
@@ -1265,9 +1292,8 @@
             unidadCarga.dataset.unidad = unidad;
             unidadCarga.dataset.frecuencia = frecuencia;
 
-            const fechaMedicion = document.getElementById('fecha-carga');
+            // const fechaMedicion = document.getElementById('fecha-carga');
             const textoPeriodo = document.getElementById('texto-periodo');
-
             let labelValorPeriodo = document.getElementById('label-valor-periodo');
             const campoLabelAnio = document.getElementById('campo-label-anio');
             campoLabelAnio.style.display = 'block';
@@ -1310,6 +1336,10 @@
                     textoPeriodo.textContent = "Año (AAAA):";
                     labelValorPeriodo.innerHTML = "<strong>Año:</strong>";
                     break;
+                case '0210':
+                    textoPeriodo.textContent = "Mes del evento (1 a 12)";
+                    labelValorPeriodo.innerHTML = "<strong>Mes:</strong>";
+                    break;
             }
 
             const valorPeriodo = document.getElementById('valor-periodo');
@@ -1347,7 +1377,16 @@
                     document.getElementById('valor-periodo').className = "form-control";
                     document.getElementById('input-anio-periodo').className = "form-control";
                     document.getElementById('input-anio-periodo').value = '';
+                    document.getElementById('input-anio-periodo').readOnly = false;
                 }
+            }
+
+            if (frecuencia == "0210") {
+                document.getElementById('valor-periodo').className = "form-control";
+                document.getElementById('input-anio-periodo').className = "form-control";
+                document.getElementById('input-anio-periodo').readOnly = false;
+                // document.getElementById('input-anio-periodo').value = '';
+                // document.getElementById('input-anio-periodo').readOnly = false;
             }
 
             // Mostrar formulario
@@ -1592,6 +1631,10 @@
 
                 case '09': // Año AAAA
                     resultado = `${anio + 1}`;
+                    break;
+
+                case '10': // Eventual
+                    resultado = ''
                     break;
 
                 default:

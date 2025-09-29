@@ -1376,6 +1376,7 @@
                                                             <option value="0207">Cuatrimestral</option>
                                                             <option value="0208">Semestral</option>
                                                             <option value="0209">Anual</option>
+                                                            <option value="0210">Eventual</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar la frecuencia de
                                                             medición.
@@ -1416,22 +1417,6 @@
                                                     </div>
                                                     <!--end::Fecha de vigencia-->
 
-                                                    <!--begin::Medición inicial-->
-                                                    <!-- <div class="col-md-2">
-                                                        <label for="med_inicial" class="form-label"><strong>Primera
-                                                                medición *</strong>
-                                                            <i class="fas fa-info-circle info-icon"
-                                                                data-bs-toggle="tooltip" data-bs-html="true"
-                                                                data-bs-custom-class="dark-tooltip"
-                                                                title="Valor inicial del indicador"></i>
-                                                        </label>
-                                                        <input type="text" class="form-control" id="med_inicial"
-                                                            name="med_inicial" placeholder="Ej: 100" required />
-                                                        <div class="invalid-feedback">Debe ingresar la primera medición.
-                                                        </div>
-                                                    </div> -->
-                                                    <!--end::Medición inicial-->
-
                                                     <!-- Sección: Presentación -->
                                                     <div class="col-12">
                                                         <h5 class="text-primary border-bottom mt-4">Presentación
@@ -1449,11 +1434,14 @@
                                                                 periodicidad...</option>
                                                             <option value="0201">Diaria</option>
                                                             <option value="0202">Semanal</option>
-                                                            <option value="0203">Mensual</option>
-                                                            <option value="0204">Trimestral</option>
-                                                            <option value="0205">Cuatrimestral</option>
-                                                            <option value="0206">Semestral</option>
-                                                            <option value="0207">Anual</option>
+                                                            <option value="0203">Quincenal</option>
+                                                            <option value="0204">Mensual</option>
+                                                            <option value="0205">Bimensual</option>
+                                                            <option value="0206">Trimestral</option>
+                                                            <option value="0207">Cuatrimestral</option>
+                                                            <option value="0208">Semestral</option>
+                                                            <option value="0209">Anual</option>
+                                                            <option value="0210">Eventual</option>
                                                         </select>
                                                         <div class="invalid-feedback">Debe seleccionar la
                                                             periodicidad de reporte.
@@ -1496,27 +1484,6 @@
                                                             obligatorio.</div>
                                                     </div>
                                                     <!--end::Unidad de Medida-->
-
-                                                    <!--begin::Grupos asignados-->
-                                                    <!-- <div class="col-md-4">
-                                                        <label for="grupos_asignados" class="form-label">Grupos de
-                                                            integración</label>
-                                                        <select class="form-select" id="grupos_asignados"
-                                                            name="grupos_asignados[]" multiple>
-                                                            <option value="grupo1">Gestión ejecutiva</option>
-                                                            <option value="grupo2">Gestión Internacional</option>
-                                                            <option value="grupo3">Mercado Nacional</option>
-                                                            <option value="grupo4">Zona Norte</option>
-                                                            <option value="grupo5">Zona Centro</option>
-                                                            <option value="grupo6">Zona Sur</option>
-                                                            <option value="grupo7">Otro agrupamiento</option>
-                                                        </select>
-                                                        <div class="form-text">Seleccionar a qué grupos se integra
-                                                            (Ctrl+click). Si
-                                                            no se selecciona
-                                                            ninguno, solo se considerará individualmente.</div>
-                                                    </div> -->
-                                                    <!--end::Grupos asignados-->
 
                                                     <!--begin::Comentarios-->
                                                     <div class="col-12">
@@ -1947,14 +1914,6 @@
             return iconos[tendencia] || 'fas fa-minus';
         }
 
-        // Función para ver un indicador específico
-        // function verIndicador(codigo) {
-        //     alert(`Función para ver el indicador: ${codigo}`);
-        //     window.location.href = 'kpi-indicadores.html'
-        //     // Aquí iría la lógica para mostrar el detalle del indicador
-        //     console.log('Ver indicador:', codigo);
-        // }
-
         // Función auxiliar: espera hasta que el select tenga opciones antes de asignar el valor
         function asignarValorSelect(selectElement, valor) {
             return new Promise((resolve) => {
@@ -2139,16 +2098,16 @@
                             { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
                         ],
                         columnDefs: [
-                            { width: "25px", targets: 8 },   // columna Acciones angosta
-                            { width: "30px", targets: 0 },   // Código un poco angosto
-                            { width: "50px", targets: 1 },  // Nombre más ancho
-                            { width: "15px", targets: 2 },   // dimensión 
-                            { width: "50px", targets: 3 },  // Nombre más ancho
-                            { width: "40px", targets: 4 },   // sectores
-                            { width: "50px", targets: 5 },  // responsable
-                            { width: "40px", targets: 6 },   // objetivo 
-                            { width: "10px", targets: 7 },   // estado
-                            { width: "25px", targets: 7 },  // reporte
+                            { width: "30px", targets: 0 },   // codigo
+                            { width: "50px", targets: 1 },  // nombre
+                            { width: "50px", targets: 2 },   // destino
+                            { width: "150px", targets: 3 },  // descripcion
+                            { width: "150px", targets: 4 },   // objetivo
+                            { width: "60px", targets: 5 },  // responsable
+                            { width: "30px", targets: 6 },   // reporte
+                            { width: "30px", targets: 7 },   // dimension
+                            { width: "20px", targets: 8 },   // estado
+                            { width: "25px", targets: 9 },   // acciones
                         ],
                         responsive: true,
                         autoWidth: false,
