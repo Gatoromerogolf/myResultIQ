@@ -4,23 +4,49 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>myResultIQ | Ind Asig</title>
+    <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+    <meta name="title" content="AdminLTE v4 | Dashboard" />
+    <meta name="author" content="ColorlibHQ" />
+    <meta name="description"
+        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+    <meta name="keywords"
+        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+    <!--end::Primary Meta Tags-->
+
+    <!--begin::Fonts-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
         integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
         integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
+
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
         integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
+
+    <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../css/estilos-custom.css">
+
+    <!-- apexcharts -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
         integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
+
+    <!-- jsvectormap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
         integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- AdminLTE se basa en Bootstrap, así que hay que incluirlo primero:-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--  Bootstrap Icons (Para que <i class="bi bi-..."> funcione) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!--  AdminLTE CSS (Estilos del template)-->
     <link rel="stylesheet" href="../css/adminlte.css" />
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
 
     <style>
@@ -145,11 +171,12 @@
             margin-top: 12px;
         }
 
-        #childrenArea {
+        #childrenArea { /* Contenedor de fichas */
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 12px;
             justify-content: start;
+            /* Alinea las fichas a la izquierda */
         }
 
         .tile {
@@ -161,10 +188,10 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
-        .tile .title {
+        .tile .title { /* Título y subtítulo dentro de cada ficha */
             font-weight: 600;
             margin-bottom: 4px;
-            word-break: break-word;
+            word-break: break-word; /* Asegura que el título también respete los límites */
             overflow-wrap: anywhere;
         }
 
@@ -190,61 +217,17 @@
             border-radius: 8px;
             background: linear-gradient(90deg, #007bff, #66b0ff);
         }
-
-        /* Estilos para el botón de detalle */
-        .btn-detail {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 4px 8px;
-            font-size: 12px;
-            z-index: 10;
-        }
-
-        /* Estilos para el panel de detalle expandible */
-        .indicator-detail-panel {
-            margin-top: 15px;
-            border-left: 4px solid #0d6efd;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .metric-card {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid #dee2e6;
-        }
-
-        .metric-label {
-            font-size: 12px;
-            color: #6c757d;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .metric-value {
-            font-size: 24px;
-            font-weight: bold;
-        }
     </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
     <div class="app-wrapper">
+        <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body">
+            <!--begin::Container-->
             <div class="container-fluid">
+                <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
@@ -252,109 +235,256 @@
                         </a>
                     </li>
                     <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
+                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
                 </ul>
+                <!--end::Start Navbar Links-->
+                <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
+                    <!--begin::Navbar Search-->
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                            <i class="bi bi-search"></i>
+                        </a>
+                    </li> -->
+                    <!--end::Navbar Search-->
+
+                    <!--begin::Messages Dropdown Menu-->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-bs-toggle="dropdown" href="#">
                             <i class="bi bi-chat-text"></i>
                             <span class="navbar-badge badge text-bg-danger">3</span>
                         </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                            <a href="#" class="dropdown-item">
+                                <!--begin::Message-->
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <img src="dist/images/user1-128x128.jpg" alt="User Avatar"
+                                            class="img-size-50 rounded-circle me-3" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h3 class="dropdown-item-title">
+                                            Brad Diesel
+                                            <span class="float-end fs-7 text-danger"><i
+                                                    class="bi bi-star-fill"></i></span>
+                                        </h3>
+                                        <p class="fs-7">Call me whenever you can...</p>
+                                        <p class="fs-7 text-secondary">
+                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
+                                        </p>
+                                    </div>
+                                </div>
+                                <!--end::Message-->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <!--begin::Message-->
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <img src="dist/images/user8-128x128.jpg" alt="User Avatar"
+                                            class="img-size-50 rounded-circle me-3" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h3 class="dropdown-item-title">
+                                            John Pierce
+                                            <span class="float-end fs-7 text-secondary">
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                        </h3>
+                                        <p class="fs-7">I got your message bro</p>
+                                        <p class="fs-7 text-secondary">
+                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
+                                        </p>
+                                    </div>
+                                </div>
+                                <!--end::Message-->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <!--begin::Message-->
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <img src="dist/images/user3-128x128.jpg" alt="User Avatar"
+                                            class="img-size-50 rounded-circle me-3" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h3 class="dropdown-item-title">
+                                            Nora Silvester
+                                            <span class="float-end fs-7 text-warning">
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                        </h3>
+                                        <p class="fs-7">The subject goes here</p>
+                                        <p class="fs-7 text-secondary">
+                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
+                                        </p>
+                                    </div>
+                                </div>
+                                <!--end::Message-->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+                        </div>
                     </li>
+                    <!--end::Messages Dropdown Menu-->
+                    <!--begin::Notifications Dropdown Menu-->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-bs-toggle="dropdown" href="#">
                             <i class="bi bi-bell-fill"></i>
                             <span class="navbar-badge badge text-bg-warning">15</span>
                         </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                            <span class="dropdown-item dropdown-header">15 Notifications</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-envelope me-2"></i> 4 new messages
+                                <span class="float-end text-secondary fs-7">3 mins</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-people-fill me-2"></i> 8 friend requests
+                                <span class="float-end text-secondary fs-7">12 hours</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
+                                <span class="float-end text-secondary fs-7">2 days</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
+                        </div>
                     </li>
+                    <!--end::Notifications Dropdown Menu-->
+
+                    <!--begin::Fullscreen Toggle-->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
                             <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
                             <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
                         </a>
                     </li>
+                    <!--end::Fullscreen Toggle-->
+
+                    <!--begin::User Menu Dropdown"-->
                     <li class="nav-item dropdown1 user-menu">
+
                         <span class="nav-link dropdown-toggle">
-                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Daniel González (ADM)</strong></span>
+                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Daniel González
+                                    (ADM)</strong></span>
                             <img src="/dist/images/user6-128x128.jpg" class="user-image rounded-circle shadow"
                                 style="width: 40px; height: 40px;" alt="User Image" />
                         </span>
                     </li>
+                    <!--end::User Menu Dropdown-->
+
                     <li>
+                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
                         <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
                             <i class="fas fa-sign-out-alt me-1"></i> Salir
                         </a>
                     </li>
+                    <!--end::User Menu Dropdown-->
                 </ul>
+                <!--end::End Navbar Links-->
             </div>
+            <!--end::Container-->
         </nav>
+        <!--end::Header-->
 
+        <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light">
+            <!--begin::Sidebar Brand-->
             <div class="sidebar-brand">
+                <!--begin::Brand Link-->
+                <!-- <a href="./index.html" class="brand-link"> -->
+                <!--begin::Brand Image-->
                 <img src="dist/images/leon.png" alt="León blanco símbolo de la aplicación" class="fade-in"
                     style="width: 40px; border-radius: 50%; margin-bottom: 0px;">
+                <!--end::Brand Image-->
+                <!--begin::Brand Text-->
                 <span class="brand-text fw-light fs-5">myResultIQ 1</span>
+                <!--end::Brand Text-->
+                </a>
+                <!--end::Brand Link-->
             </div>
+            <!--end::Sidebar Brand-->
+            <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
+                    <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-header">
                             <h5>Menu Administrador</h5>
                         </li>
+
                         <li class="nav-item">
                             <a href="kpi-panel-admin.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Panel Administrador</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="kpi-dashboard-global.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Posición Global</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="kpi-ponderado.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Valoración %</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="kpi-indicadores.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Indicadores</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="kpi-usuarios.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Usuarios</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="kpi-organigrama.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>Destinos</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p>----------------------</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="kpi-arbol.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
                                 <p><i class="fas fa-sitemap text-primary"></i> Entidades-Indicadores</p>
                             </a>
                         </li>
+
                     </ul>
+                    <!--end::Sidebar Menu-->
                 </nav>
             </div>
+            <!--end::Sidebar Wrapper-->
         </aside>
+        <!--end::Sidebar-->
 
+        <!--begin::App Main-->
         <main class="app-main">
+            <!--begin::App Content Header-->
             <div class="app-content-header">
                 <div class="container-fluid">
                     <div class="row">
@@ -369,6 +499,8 @@
                         </div>
                     </div>
 
+
+                    <!-- Main content -->
                     <section class="content">
                         <div class="container-fluid">
                             <div class="card card-primary card-outline">
@@ -392,7 +524,9 @@
                                             <div class="mt-3 text-muted small">
                                                 <p><strong>Leyenda:</strong></p>
                                                 <ul>
-                                                    <li>% cumplimiento = valor/objetivo (máx. 100%) ponderado por el peso.</li>
+                                                    <li>% cumplimiento = valor/objetivo (máx. 100%) ponderado por el
+                                                        peso.
+                                                    </li>
                                                     <li>Si faltan pesos, se distribuyen en partes iguales.</li>
                                                 </ul>
                                             </div>
@@ -401,7 +535,7 @@
                                         <div class="col-md-8">
                                             <h5 id="nodeTitle"></h5>
                                             <p class="text-muted" id="nodeDesc"></p>
-                                            <div id="childrenArea"></div>
+                                            <div id="childrenArea"></div> <!-- solo ID, CSS ahora se aplica aquí -->
                                             <div id="indicatorDetail" class="mt-3"></div>
                                         </div>
                                     </div>
@@ -410,14 +544,39 @@
                         </div>
                     </section>
 
+                    <!--end::App Content-->
+
                     <footer class="main-footer text-center">
                         <strong>© 2025 - myResultIQ 1.0</strong>
                     </footer>
                 </div>
             </div>
         </main>
+        <!--end::App main-->
     </div>
+    <!--end::App Wrapper-->
 
+    <!--begin::Modal del usuario-->
+    <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleUsuarioLabel">Info Responsable</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="/dist/images/user1-128x128.jpg" class="rounded-circle shadow mb-3" alt="User Image" />
+                    <p class="mb-1">Gerente de Operaciones</p>
+                    <p class="mb-1">rdieguez@company.com.ar</p>
+                    <p>+54 11 452 7898</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal del usuario-->
+
+    <!-- Modal de Confirmación de Logout -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -437,30 +596,38 @@
     </div>
 
     <script>
+
         let orgData = null;
         let stack = [];
-        let expandedIndicatorId = null;
 
         document.getElementById('confirmLogout').addEventListener('click', function () {
+            // Limpiar lo necesario
             sessionStorage.clear();
-            localStorage.clear();
+            localStorage.clear(); // si usás localStorage
+
+            // Redirigir al inicio
             window.location.href = 'index.html';
         });
 
+
+        // // 🚫🚫🚫  build Hierarchy
         function buildHierarchy(sectores, indicadores) {
+            // Construye la jerarquía a partir de la tabla plana
             const map = {};
             const roots = [];
 
+            // Inicializar sectores
             sectores.forEach(r => {
                 map[r.id] = {
                     id: r.id,
                     name: r.nombre,
                     type: 'sector',
-                    weight: r.sector_porcentual ?? 100,
+                    weight: r.sector_porcentual ?? 100, // default 100 si no hay peso
                     children: []
                 };
             });
 
+            // Armar jerarquía de sectores
             sectores.forEach(r => {
                 if (r.sector_padre_id && map[r.sector_padre_id]) {
                     map[r.sector_padre_id].children.push(map[r.id]);
@@ -469,18 +636,22 @@
                 }
             });
 
+            // Asociar indicadores al sector destino
             indicadores.forEach(ind => {
                 const sector = map[ind.destino];
                 if (sector) {
                     const peso = Number(ind.peso_porcentual) || 0;
+
+                    // Calcular cumplimiento
                     const cumplimiento = calcularCumplimiento(
-                        ind.ultimo_valor,
-                        ind.unico_valor,
+                        ind.ultimo_valor,    // valor real
+                        ind.unico_valor,     // meta / objetivo
                         ind.unico_acepta,
                         ind.unico_riesgo,
                         ind.unico_critico
                     );
 
+                    // Color de cumplimiento
                     const colorCumplimiento = cumplimiento === null ? 'gray' :
                         cumplimiento >= 100 ? 'green' :
                             cumplimiento >= 50 ? 'orange' : 'red';
@@ -495,40 +666,46 @@
                         colorCumplimiento: colorCumplimiento,
                         target: ind.unico_valor || 100,
                         fechaUltimaMedicion: ind.fecha_ultima_medicion || null,
-                        unidadMedida: ind.unidadMedida ?? '',
-                        description: `Descripción del indicador ${ind.nombre}. Este KPI mide aspectos clave del desempeño organizacional.`,
-                        objective: `El objetivo es alcanzar ${ind.unico_valor || 100} ${ind.unidadMedida || 'unidades'} para optimizar los resultados en esta área.`,
-                        responsible: `Responsable: ${sector.name} - Coordinador del área`
+                        unidadMedida: ind.unidadMedida ?? ''
                     });
                 }
             });
 
+            // Nodo raíz "Organización"
             return {
                 id: 'root',
                 name: 'Organización',
                 type: 'node',
-                weight: 100,
+                weight: 100, // raíz con peso 100
                 children: roots
             };
         }
 
+        // // 🚫🚫🚫  CodigosService
         const CodigosService = {
+            // Servicio global para texto de tabla de códigos 
             codigosMap: {},
+
             async init() {
                 const response = await fetch('/api/codigos');
                 if (!response.ok) throw new Error('No se pudo obtener los codigos.');
                 const codigos = await response.json();
+
                 codigos.forEach(c => {
                     this.codigosMap[c.cod_tabla] = c.cod_nombre;
                 });
             },
+
             getNombreCodigo(codigo) {
                 return this.codigosMap[codigo] || '-';
             }
         };
 
+        // // 🚫🚫🚫  loadData
         async function loadData() {
+            //fetch inicial
             try {
+                // Inicializar códigos ANTES de usar
                 await CodigosService.init();
 
                 const [sectoresRes, indicadoresRes] = await Promise.all([
@@ -539,6 +716,7 @@
                 const sectores = await sectoresRes.json();
                 const indicadores = await indicadoresRes.json();
 
+                // Añadimos campo de cumplimiento y unidad de medida ya resuelta
                 const indicadoresConCumplimiento = indicadores.map(ind => {
                     const cumplimiento = calcularCumplimiento(
                         ind.ultimo_valor,
@@ -548,7 +726,11 @@
                         ind.unico_critico
                     );
 
+                    // Mapeo seguro de unidad (usa nombre si existe, sino el código raw, sino vacío)
                     const unidadNombre = CodigosService.getNombreCodigo(ind.unidad_medida) || (ind.unidad_medida ?? '');
+
+                    // DEBUG: si querés ver en consola qué mapea
+                    // console.log('unidad map', ind.id, ind.unidad_medida, '->', unidadNombre);
 
                     return {
                         ...ind,
@@ -565,94 +747,107 @@
             }
         }
 
+        // Llamamos al inicio
         loadData();
 
+        // // 🚫🚫🚫  calcularCumplimiento
         function calcularCumplimiento(valor, meta, acepta, riesgo, critico) {
             if (valor === null || meta === null || meta == 0 || valor == 0) return null;
+
+            // Porcentaje del valor respecto a la meta
             const porcentaje = (valor / meta) * 100;
             return porcentaje;
+            if (porcentaje >= acepta) return 100;   // Cumplimiento óptimo
+            if (porcentaje >= riesgo) return 50;    // Cumplimiento medio
+            if (porcentaje >= critico) return 25;   // Cumplimiento bajo
+            return 0;                               // Crítico
         }
 
+        // // 🚫🚫🚫  computeCompliance
         function computeCompliance(node) {
+            // Cálculo recursivo del cumplimiento ponderado
             if (!node) return 0;
+
+            // Nodo hoja (indicador)
             if (!node.children || node.children.length === 0) {
                 return node.cumplimiento ?? 0;
             }
 
+            // Nodo con hijos (sectores o indicadores)
             let total = 0;
             let sumWeights = 0;
 
             for (const child of node.children) {
                 const childCompliance = Number(computeCompliance(child)) ?? 0;
                 const weight = Number(child.weight ?? 0);
+
                 total += childCompliance * weight;
                 sumWeights += weight;
             }
             return sumWeights > 0 ? total / sumWeights : 0;
         }
 
+        // // 🚫🚫🚫  render
         function render() {
+            // Renderizado del nodo actual y actualización de globalPercent
             const node = stack[stack.length - 1];
             if (!node) return;
 
+            // Cumplimiento ponderado de todos los niveles
             const comp = computeCompliance(node);
 
+            // Actualizamos globalPercent
             const globalPercentEl = document.getElementById('globalPercent');
             if (globalPercentEl) globalPercentEl.innerText = comp.toFixed(2) + '%';
 
+            // Actualizar título 
             const nodeTitleEl = document.getElementById('nodeTitle');
             if (nodeTitleEl) nodeTitleEl.innerText = node.name || "Sin nombre";
 
+            // Actualizar descripción del nodo
             const nodeDescEl = document.getElementById('nodeDesc');
             if (nodeDescEl) {
                 if (node.type === 'indicator') {
                     const unidad = node.unidadMedida ? ` ${node.unidadMedida}` : '';
                     const valor = (typeof node.value === 'number') ? node.value.toFixed(2) : node.value ?? '-';
                     const objetivo = (typeof node.target === 'number') ? node.target.toFixed(2) : node.target ?? '-';
+
                     nodeDescEl.innerText = `Valor: ${valor}${unidad} / Objetivo: ${objetivo}${unidad}`;
                 } else {
                     nodeDescEl.innerText = `${(node.children || []).length} hijos`;
                 }
             }
 
-            drawRing('ring', comp);
-            renderBreadcrumb();
-            renderChildren(node);
-            renderIndicatorDetail(node);
+            drawRing('ring', comp);       // gráfico circular
+            renderBreadcrumb();           // breadcrumb
+            renderChildren(node);         // tiles de hijos
+            renderIndicatorDetail(node);  // detalle si es indicador
         }
 
+        // // 🚫🚫🚫  drawRing
         function drawRing(id, percent) {
             const svg = document.getElementById(id);
             const size = 120, r = 48, c = 2 * Math.PI * r;
             svg.innerHTML = '';
             const bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            bg.setAttribute('cx', 60); bg.setAttribute('cy', 60); bg.setAttribute('r', r); 
-            bg.setAttribute('fill', 'none'); bg.setAttribute('stroke', '#eee'); 
-            bg.setAttribute('stroke-width', '12');
+            bg.setAttribute('cx', 60); bg.setAttribute('cy', 60); bg.setAttribute('r', r); bg.setAttribute('fill', 'none'); bg.setAttribute('stroke', '#eee'); bg.setAttribute('stroke-width', '12');
             svg.appendChild(bg);
             const fg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            fg.setAttribute('cx', 60); fg.setAttribute('cy', 60); fg.setAttribute('r', r); 
-            fg.setAttribute('fill', 'none'); fg.setAttribute('stroke-width', '12');
-            fg.setAttribute('stroke-linecap', 'round'); 
-            fg.setAttribute('stroke-dasharray', `${(percent / 100) * c} ${c}`);
+            fg.setAttribute('cx', 60); fg.setAttribute('cy', 60); fg.setAttribute('r', r); fg.setAttribute('fill', 'none'); fg.setAttribute('stroke-width', '12');
+            fg.setAttribute('stroke-linecap', 'round'); fg.setAttribute('stroke-dasharray', `${(percent / 100) * c} ${c}`);
             fg.setAttribute('transform', 'rotate(-90 60 60)');
             fg.setAttribute('stroke', 'url(#grad1)');
+            // gradient
             const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-            const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient'); 
-            grad.id = 'grad1'; grad.setAttribute('x1', '0%'); grad.setAttribute('x2', '100%');
-            const s1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop'); 
-            s1.setAttribute('offset', '0%'); s1.setAttribute('stop-color', '#2563eb');
-            const s2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop'); 
-            s2.setAttribute('offset', '100%'); s2.setAttribute('stop-color', '#60a5fa');
+            const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient'); grad.id = 'grad1'; grad.setAttribute('x1', '0%'); grad.setAttribute('x2', '100%');
+            const s1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop'); s1.setAttribute('offset', '0%'); s1.setAttribute('stop-color', '#2563eb');
+            const s2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop'); s2.setAttribute('offset', '100%'); s2.setAttribute('stop-color', '#60a5fa');
             grad.appendChild(s1); grad.appendChild(s2); defs.appendChild(grad); svg.appendChild(defs);
             svg.appendChild(fg);
-            const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text'); 
-            txt.setAttribute('x', 60); txt.setAttribute('y', 68); txt.setAttribute('text-anchor', 'middle'); 
-            txt.setAttribute('font-size', '18'); txt.setAttribute('font-weight', '700'); 
-            txt.textContent = percent.toFixed(1) + '%'; 
-            svg.appendChild(txt);
+            const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text'); txt.setAttribute('x', 60); txt.setAttribute('y', 68); txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-size', '18'); txt.setAttribute('font-weight', '700'); txt.textContent = percent.toFixed(1) + '%'; svg.appendChild(txt);
         }
 
+        // // 🚫🚫🚫  renderBreadcrumb
         function renderBreadcrumb() {
             const breadcrumbEl = document.getElementById("breadcrumb");
             if (!breadcrumbEl) {
@@ -667,17 +862,18 @@
                 li.className = "breadcrumb-item";
 
                 if (idx === stack.length - 1) {
+                    // Último → activo
                     li.classList.add("active");
                     li.setAttribute("aria-current", "page");
                     li.innerText = node.name || "Sin nombre";
                 } else {
+                    // Enlace clickeable → volver a ese nivel
                     const a = document.createElement("a");
                     a.href = "#";
                     a.innerText = node.name || "Sin nombre";
                     a.addEventListener("click", (e) => {
                         e.preventDefault();
-                        stack = stack.slice(0, idx + 1);
-                        expandedIndicatorId = null;
+                        stack = stack.slice(0, idx + 1); // recortamos hasta ese nodo
                         render();
                     });
                     li.appendChild(a);
@@ -686,15 +882,7 @@
             });
         }
 
-        function toggleIndicatorDetail(indicator) {
-            if (expandedIndicatorId === indicator.id) {
-                expandedIndicatorId = null;
-            } else {
-                expandedIndicatorId = indicator.id;
-            }
-            render();
-        }
-
+        // // 🚫🚫🚫  renderChildren(node)
         function renderChildren(node) {
             const container = document.getElementById("childrenArea");
             if (!container) {
@@ -710,9 +898,11 @@
             }
 
             node.children.forEach(child => {
+                // Cumplimiento ponderado del sub-nodo
                 const comp = computeCompliance(child);
                 const weight = Number(child.weight) || 0;
 
+                // Determinar color (si es indicador se usa colorCumplimiento, si es sector usamos verde-naranja-rojo según comp)
                 let color = "gray";
                 if (child.type === "indicator") {
                     color = child.colorCumplimiento || "gray";
@@ -722,15 +912,11 @@
                 }
 
                 const tile = document.createElement("div");
+                tile.className = "col-12";
                 tile.className = "col-12 mb-2";
 
-                const isExpanded = expandedIndicatorId === child.id;
-
                 tile.innerHTML = `
-                    <div class="info-box bg-light elevation-2" style="cursor:pointer; position: relative;">
-                        ${child.type === 'indicator' ? `<button class="btn btn-sm btn-primary btn-detail" onclick="event.stopPropagation(); toggleIndicatorDetail(${JSON.stringify(child).replace(/"/g, '&quot;')})">
-                            <i class="bi bi-info-circle"></i> ${isExpanded ? 'Ocultar' : 'Ver detalle'}
-                        </button>` : ''}
+                    <div class="info-box bg-light elevation-2" style="cursor:pointer;">
                         <div class="info-box-content">
                             <span class="info-box-text font-weight-bold">${child.name || "Sin nombre"}</span>
                             <span class="info-box-number">Cumplimiento: ${comp.toFixed(2)}%</span>
@@ -742,79 +928,17 @@
                     </div>
                 `;
 
-                // Panel de detalle expandible
-                if (child.type === 'indicator' && isExpanded) {
-                    const detailPanel = document.createElement('div');
-                    detailPanel.className = 'card indicator-detail-panel mt-2';
-                    
-                    const unidad = child.unidadMedida ? ` ${child.unidadMedida}` : '';
-                    const cumplimientoNum = child.cumplimiento !== null ? child.cumplimiento.toFixed(1) : '0';
-                    
-                    let complianceColor = 'text-success';
-                    if (child.cumplimiento < 90) complianceColor = 'text-warning';
-                    if (child.cumplimiento < 70) complianceColor = 'text-danger';
-
-                    detailPanel.innerHTML = `
-                        <div class="card-body">
-                            <!-- Header -->
-                            <div class="mb-3">
-                                <h5 class="mb-1">${child.name}</h5>
-                                <p class="text-muted mb-0"><i class="bi bi-person-circle"></i> ${child.responsible || 'Sin responsable asignado'}</p>
-                            </div>
-
-                            <!-- Descripción y Objetivo -->
-                            <div class="alert alert-info mb-3">
-                                <h6 class="fw-bold mb-2"><i class="bi bi-info-circle"></i> Descripción</h6>
-                                <p class="mb-3">${child.description || 'No hay descripción disponible'}</p>
-                                <h6 class="fw-bold mb-2"><i class="bi bi-bullseye"></i> Objetivo</h6>
-                                <p class="mb-0">${child.objective || 'No hay objetivo definido'}</p>
-                            </div>
-
-                            <!-- Métricas -->
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <div class="metric-card">
-                                        <div class="metric-label">Valor Actual</div>
-                                        <div class="metric-value text-dark">${child.value.toFixed(2)}${unidad}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="metric-card">
-                                        <div class="metric-label">Meta</div>
-                                        <div class="metric-value text-primary">${child.target.toFixed(2)}${unidad}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="metric-card">
-                                        <div class="metric-label">Cumplimiento</div>
-                                        <div class="metric-value ${complianceColor}">${cumplimientoNum}%</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    
-                    tile.appendChild(detailPanel);
-                }
-
-                // Click en el tile para drill-down (solo para sectores)
+                // Drill down → apilamos el nodo hijo en la pila
                 tile.addEventListener("click", () => {
-                    if (child.type !== 'indicator') {
-                        stack.push(child);
-                        expandedIndicatorId = null;
-                        render();
-                    }
+                    stack.push(child);
+                    render();
                 });
 
                 container.appendChild(tile);
             });
         }
 
-        // Hacer la función accesible globalmente para el onclick
-        window.toggleIndicatorDetail = function(indicator) {
-            toggleIndicatorDetail(indicator);
-        };
-
+        // // 🚫🚫🚫  renderIndicatorDetail(node)
         function renderIndicatorDetail(node) {
             const det = document.getElementById('indicatorDetail');
             det.innerHTML = '';
@@ -829,7 +953,7 @@
                     : '-';
 
                 const cumplimientoNum = node.cumplimiento;
-                const cumplimientoText = cumplimientoNum !== null ? cumplimientoNum.toFixed(1) + '%' : 'Sin medición';
+                const cumplimientoText = cumplimientoNum !== null ? cumplimientoNum + '%' : 'Sin medición';
 
                 det.innerHTML = `
                     <div class="card card-body bg-light">
@@ -847,10 +971,11 @@
             }
         }
 
+        // // 🚫🚫🚫  Exportación CSV
         function exportCSV() {
             const rows = [];
             function walk(n, path) {
-                const comp = computeCompliance(n);
+                const comp = computeCompliance(n).percent;
                 rows.push([
                     n.id || '',
                     path.join(' > '),
@@ -867,7 +992,7 @@
             const csv = [['id', 'ruta', 'type', 'weight', 'value', 'target', 'compliance%']]
                 .concat(rows)
                 .map(r => r.map(v => `"${v}"`).join(','))
-                .join('\n');
+                .join('\\n');
 
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
@@ -878,9 +1003,9 @@
             URL.revokeObjectURL(url);
         }
 
+        // // 🚫🚫🚫  Eventos e inicialización
         document.getElementById('btnReset').onclick = () => {
             stack = [orgData];
-            expandedIndicatorId = null;
             render();
         };
 
@@ -889,14 +1014,22 @@
         render();
     </script>
 
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap (bundle con Popper incluido) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+
+    <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
+
+    <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+
 </body>
 
 </html>

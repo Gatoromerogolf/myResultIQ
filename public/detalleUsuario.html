@@ -464,13 +464,13 @@
                                                 </div>
                                             </div>
                                             <!-- /.progress-group -->
-                                            <!-- <div class="progress-group">
+                                            <div class="progress-group">
                                                 Send Inquiries
                                                 <span class="float-end"><b>250</b>/500</span>
                                                 <div class="progress progress-sm">
                                                     <div class="progress-bar text-bg-warning" style="width: 50%"></div>
                                                 </div>
-                                            </div> -->
+                                            </div>
                                             <!-- /.progress-group -->
                                         </div>
                                         <!-- /.col -->
@@ -480,8 +480,8 @@
                                 <!-- ./card-body -->
                                 <div class="card-footer">
                                     <!--begin::Row-->
-                                    <!-- <div class="row"> -->
-                                    <!-- <div class="col-md-3 col-6">
+                                    <div class="row">
+                                    <div class="col-md-3 col-6">
                                             <div class="text-center border-end">
                                                 <span class="text-success">
                                                     <i class="bi bi-caret-up-fill"></i> 17%
@@ -489,18 +489,18 @@
                                                 <h5 class="fw-bold mb-0">$35,210.43</h5>
                                                 <span class="text-uppercase">TOTAL REVENUE</span>
                                             </div>
-                                        </div> -->
+                                        </div>
                                     <!-- /.col -->
-                                    <!-- <div class="col-md-3 col-6">
+                                    <div class="col-md-3 col-6">
                                             <div class="text-center border-end">
                                                 <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 0%
                                                 </span>
                                                 <h5 class="fw-bold mb-0">$10,390.90</h5>
                                                 <span class="text-uppercase">TOTAL COST</span>
                                             </div>
-                                        </div> -->
+                                        </div>
                                     <!-- /.col -->
-                                    <!-- <div class="col-md-3 col-6">
+                                    <div class="col-md-3 col-6">
                                             <div class="text-center border-end">
                                                 <span class="text-success">
                                                     <i class="bi bi-caret-up-fill"></i> 20%
@@ -508,9 +508,9 @@
                                                 <h5 class="fw-bold mb-0">$24,813.53</h5>
                                                 <span class="text-uppercase">TOTAL PROFIT</span>
                                             </div>
-                                        </div> -->
+                                        </div>
                                     <!-- /.col -->
-                                    <!-- <div class="col-md-3 col-6">
+                                    <div class="col-md-3 col-6">
                                             <div class="text-center">
                                                 <span class="text-danger">
                                                     <i class="bi bi-caret-down-fill"></i> 18%
@@ -518,7 +518,7 @@
                                                 <h5 class="fw-bold mb-0">1200</h5>
                                                 <span class="text-uppercase">GOAL COMPLETIONS</span>
                                             </div>
-                                        </div> -->
+                                        </div>
                                     <!-- </div> -->
                                     <!--end::Row-->
                                 </div>
@@ -838,9 +838,32 @@ Debería poder verse una unica curva que represente el total de mediciones solic
                     data: [50, 50, 85, 95, 50, 50, 50],
                 },
             ],
+
+// Tipos principales de gráficos:
+
+// 'line' - Gráfico de líneas (el que estás usando)
+// 'area' - Gráfico de área (comentado en tu código)
+// 'bar' - Gráfico de barras (comentado en tu código)
+// 'column' - Gráfico de columnas (barras verticales)
+// 'pie' - Gráfico circular/torta
+// 'donut' - Gráfico de dona
+// 'radialBar' - Barra radial/circular
+// 'scatter' - Gráfico de dispersión
+// 'bubble' - Gráfico de burbujas
+// 'heatmap' - Mapa de calor
+// 'treemap' - Mapa de árbol
+// 'boxPlot' - Diagrama de caja
+// 'candlestick' - Gráfico de velas (para datos financieros)
+// 'radar' - Gráfico de radar/araña
+// 'polarArea' - Gráfico de área polar
+// 'rangeBar' - Barras de rango (para rangos de tiempo/valores)
+
             chart: {
                 height: 180,
-                type: 'area',  // type: 'bar'  -   line
+                // type: 'area',
+                // type: 'bar',
+                // type: 'line',
+                type: 'area',
                 toolbar: {
                     show: true,
                 },
