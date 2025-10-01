@@ -182,6 +182,7 @@ app.put('/api/actualizar/:id', async (req, res) => {
                 fecha_inicio = ?,
                 formato = ?,
                 comentarios = ?,
+                peso_porcentual = ?,
                 estado = ?
             WHERE id = ?`,
             [
@@ -220,6 +221,7 @@ app.put('/api/actualizar/:id', async (req, res) => {
                 data.fecha_inicio,
                 data.formato,
                 data.comentarios,
+                data.peso_porcentual,
                 data.estado,
                 id
             ]
@@ -232,58 +234,195 @@ app.put('/api/actualizar/:id', async (req, res) => {
 });
 
 
-// ✅ Obtener todos los indicadores
+// // ✅ Obtener todos los indicadores
+// app.get('/api/indicadores', async (req, res) => {
+//     try {
+//         const [rows] = await pool.query(`
+//             SELECT 
+//                 id,
+//                 codigo_id,
+//                 nombre,
+//                 descripcion,
+//                 tipo_id,
+//                 dimension_id,
+//                 categoria_id,
+//                 criticidad_id,
+//                 responsable,
+//                 destino,
+//                 objetivo,
+//                 meta_tipo,
+//                 unico_valor,
+//                 unico_eval,
+//                 unico_acepta,
+//                 unico_riesgo,
+//                 unico_critico,
+//                 rango_desde,
+//                 rango_hasta,
+//                 rango_acepta,
+//                 rango_riesgo,
+//                 rango_critico,
+//                 tenden_tipo,
+//                 tenden_refe,
+//                 tenden_acepta,
+//                 tenden_riesgo,
+//                 tenden_critico,
+//                 fuente_datos,
+//                 formula_calculo,
+//                 unidad_medida,
+//                 freq_medicion,
+//                 tolerancia_plazo,
+//                 freq_reporte,
+//                 fecha_inicio,
+//                 formato,
+//                 comentarios,
+//                 peso_porcentual,
+//                 estado
+//             FROM indicadores
+//             ORDER BY id DESC
+//         `);
+
+//         res.json(rows);
+//     } catch (err) {
+//         console.error("Error al obtener indicadores:", err);
+//         res.status(500).json({ mensaje: "Error interno" });
+//     }
+// });
+
+
+// Obtener todos los indicadores con última medición
+// app.get('/api/indicadores', async (req, res) => {
+//     try {
+//         const [rows] = await pool.query(`
+//             WITH ultimas AS (
+//                 SELECT m.*,
+//                        ROW_NUMBER() OVER (
+//                            PARTITION BY m.ind_id
+//                            ORDER BY m.med_valor_periodo DESC, m.med_fecha_registro DESC
+//                        ) AS rn
+//                 FROM mediciones m
+//             )
+//             SELECT 
+//                 i.id,
+//                 i.codigo_id,
+//                 i.nombre,
+//                 i.descripcion,
+//                 i.tipo_id,
+//                 i.dimension_id,
+//                 i.categoria_id,
+//                 i.criticidad_id,
+//                 i.responsable,
+//                 i.destino,
+//                 i.objetivo,
+//                 i.meta_tipo,
+//                 i.unico_valor,
+//                 i.unico_eval,
+//                 i.unico_acepta,
+//                 i.unico_riesgo,
+//                 i.unico_critico,
+//                 i.rango_desde,
+//                 i.rango_hasta,
+//                 i.rango_acepta,
+//                 i.rango_riesgo,
+//                 i.rango_critico,
+//                 i.tenden_tipo,
+//                 i.tenden_refe,
+//                 i.tenden_acepta,
+//                 i.tenden_riesgo,
+//                 i.tenden_critico,
+//                 i.fuente_datos,
+//                 i.formula_calculo,
+//                 i.unidad_medida,
+//                 i.freq_medicion,
+//                 i.tolerancia_plazo,
+//                 i.freq_reporte,
+//                 i.fecha_inicio,
+//                 i.formato,
+//                 i.comentarios,
+//                 i.peso_porcentual,
+//                 i.estado,
+//                 u.med_valor_periodo AS ultimo_valor,
+//                 u.med_fecha_registro AS fecha_ultima_medicion
+//             FROM indicadores i
+//             LEFT JOIN ultimas u 
+//               ON u.ind_id = i.id AND u.rn = 1
+//             ORDER BY i.id DESC;
+//         `);
+
+//         res.json(rows);
+
+//     } catch (err) {
+//         console.error("Error al obtener indicadores con última medición:", err);
+//         res.status(500).json({ mensaje: "Error interno" });
+//     }
+// });
+
+// Obtener todos los indicadores con última medición
 app.get('/api/indicadores', async (req, res) => {
     try {
         const [rows] = await pool.query(`
+            WITH ultimas AS (
+                SELECT m.*,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY m.med_indicador_id
+                           ORDER BY m.med_valor_periodo DESC, m.med_fecha_registro DESC
+                       ) AS rn
+                FROM mediciones m
+            )
             SELECT 
-                id,
-                codigo_id,
-                nombre,
-                descripcion,
-                tipo_id,
-                dimension_id,
-                categoria_id,
-                criticidad_id,
-                responsable,
-                destino,
-                objetivo,
-                meta_tipo,
-                unico_valor,
-                unico_eval,
-                unico_acepta,
-                unico_riesgo,
-                unico_critico,
-                rango_desde,
-                rango_hasta,
-                rango_acepta,
-                rango_riesgo,
-                rango_critico,
-                tenden_tipo,
-                tenden_refe,
-                tenden_acepta,
-                tenden_riesgo,
-                tenden_critico,
-                fuente_datos,
-                formula_calculo,
-                unidad_medida,
-                freq_medicion,
-                tolerancia_plazo,
-                freq_reporte,
-                fecha_inicio,
-                formato,
-                comentarios,
-                estado
-            FROM indicadores
-            ORDER BY id DESC
+                i.id,
+                i.codigo_id,
+                i.nombre,
+                i.descripcion,
+                i.tipo_id,
+                i.dimension_id,
+                i.categoria_id,
+                i.criticidad_id,
+                i.responsable,
+                i.destino,
+                i.objetivo,
+                i.meta_tipo,
+                i.unico_valor,
+                i.unico_eval,
+                i.unico_acepta,
+                i.unico_riesgo,
+                i.unico_critico,
+                i.rango_desde,
+                i.rango_hasta,
+                i.rango_acepta,
+                i.rango_riesgo,
+                i.rango_critico,
+                i.tenden_tipo,
+                i.tenden_refe,
+                i.tenden_acepta,
+                i.tenden_riesgo,
+                i.tenden_critico,
+                i.fuente_datos,
+                i.formula_calculo,
+                i.unidad_medida,
+                i.freq_medicion,
+                i.tolerancia_plazo,
+                i.freq_reporte,
+                i.fecha_inicio,
+                i.formato,
+                i.comentarios,
+                i.peso_porcentual,
+                i.estado,
+                u.med_valor AS ultimo_valor,
+                u.med_fecha_registro AS fecha_ultima_medicion
+            FROM indicadores i
+            LEFT JOIN ultimas u 
+              ON u.med_indicador_id = i.id AND u.rn = 1
+            ORDER BY i.id DESC;
         `);
 
         res.json(rows);
+
     } catch (err) {
-        console.error("Error al obtener indicadores:", err);
+        console.error("Error al obtener indicadores con última medición:", err);
         res.status(500).json({ mensaje: "Error interno" });
     }
 });
+
 
 
 // ✅ GET para tomar un indicador por codigo_id
@@ -332,6 +471,7 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
                 i.fecha_inicio,
                 i.formato,
                 i.comentarios,
+                i.peso_porcentual,
                 i.estado
             FROM indicadores i
             LEFT JOIN sectores s ON i.destino = s.id
@@ -349,7 +489,6 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
         res.status(500).json({ mensaje: 'Error interno' });
     }
 });
-
 
 
 // // 🚫🚫🚫POST para subir o reemplazar imagen
@@ -407,7 +546,7 @@ app.post('/api/indicadores', async (req, res) => {
         fuente_datos, formula_calculo,
         unidad_medida, frecuencia_medicion, tolerancia_plazo,
         frecuencia_reporte, fecha_inicio,
-        formato_presentacion, comentarios, estado
+        formato_presentacion, comentarios, porcentual, estado
     } = req.body;
 
     try {
@@ -422,7 +561,7 @@ app.post('/api/indicadores', async (req, res) => {
                 fuente_datos, formula_calculo,
                 unidad_medida, freq_medicion, tolerancia_plazo, 
                 freq_reporte, fecha_inicio,
-                formato, comentarios, estado
+                formato, comentarios, peso_porcentual, estado
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
@@ -436,7 +575,7 @@ app.post('/api/indicadores', async (req, res) => {
             fuente_datos, formula_calculo,
             unidad_medida, frecuencia_medicion, tolerancia_plazo,
             frecuencia_reporte, fecha_inicio,
-            formato_presentacion, comentarios, estado
+            formato_presentacion, comentarios, porcentual, estado
         ]);
 
         res.status(201).json({ message: 'Indicador creado correctamente' });
@@ -445,19 +584,6 @@ app.post('/api/indicadores', async (req, res) => {
         res.status(500).json({ error: 'Error al guardar el indicador' });
     }
 });
-
-
-// // 🚫🚫🚫 Eliminar indicador
-// app.deleteXXX('/api/indicadores/:codigo', async (req, res) => {
-//     try {
-//         const { codigo } = req.params;
-//         await pool.query('DELETE FROM indicadores WHERE codigo_identificatorio = ?', [codigo]);
-//         res.sendStatus(200);
-//     } catch (err) {
-//         console.error(err);
-//         res.sendStatus(500);
-//     }
-// });
 
 
 // // 🚫🚫🚫 Crear usuario con imagen
@@ -729,79 +855,6 @@ app.get('/api/arbol-jstree', async (req, res) => {
     }
 });
 
-// 🚀 Ruta para lazy loading de jsTree
-// app.get('/api/arbol-jstree-lazy-anulada', async (req, res) => {
-//     try {
-//         const parent = req.query.parent; // "#" o "sector-X"
-
-//         if (parent === "#") {
-//             // NODOS RAÍZ: sectores sin padre
-//             const [sectoresRaiz] = await pool.query(`
-//                 SELECT id, nombre 
-//                 FROM sectores 
-//                 WHERE sector_padre_id IS NULL
-//             `);
-
-//             const nodos = sectoresRaiz.map(sec => ({
-//                 id: `sector-${sec.id}`,
-//                 parent: "#",
-//                 text: sec.nombre,
-//                 icon: "fas fa-sitemap",
-//                 type: "sector",
-//                 children: true // indica que puede tener hijos
-//             }));
-
-//             return res.json(nodos);
-//         }
-
-//         // Si el parent es un sector: traer hijos e indicadores
-//         if (parent.startsWith("sector-")) {
-//             const sectorId = parent.replace("sector-", "");
-
-//             // Sectores hijos
-//             const [sectoresHijos] = await pool.query(`
-//                 SELECT id, nombre
-//                 FROM sectores
-//                 WHERE sector_padre_id = ?
-//             `, [sectorId]);
-
-//             // Indicadores del sector
-//             const [indicadores] = await pool.query(`
-//                 SELECT id, codigo_id, nombre
-//                 FROM indicadores
-//                 WHERE destino = ?
-//             `, [sectorId]);
-
-//             const nodos = [
-//                 ...sectoresHijos.map(sec => ({
-//                     id: `sector-${sec.id}`,
-//                     parent: `sector-${sectorId}`,
-//                     text: sec.nombre,
-//                     icon: "fas fa-sitemap",
-//                     type: "sector",
-//                     children: true
-//                 })),
-//                 ...indicadores.map(ind => ({
-//                     id: `indicador-${ind.id}`,
-//                     parent: `sector-${sectorId}`,
-//                     text: `${ind.nombre} (${ind.codigo_id})`,
-//                     icon: "fas fa-chart-line",
-//                     type: "indicador",
-//                     children: false
-//                 }))
-//             ];
-
-//             return res.json(nodos);
-//         }
-
-//         // Si es un indicador, no tiene hijos
-//         return res.json([]);
-
-//     } catch (err) {
-//         console.error('Error al armar árbol lazy:', err);
-//         res.status(500).json({ error: 'Error al generar árbol' });
-//     }
-// });
 
 
 // 🚀 Ruta jsTree con conteo acumulado
@@ -905,7 +958,6 @@ app.get('/api/arbol-jstree-lazy-Nofunciona', async (req, res) => {
                     comentarios: ind.comentarios,
                     estado: ind.estado
                 }));
-
 
             return res.json([...hijos, ...inds]);
         }
@@ -1013,9 +1065,6 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
         res.status(500).json({ error: 'Error al generar árbol' });
     }
 });
-
-
-
 
 
 // 🚀 Actualiza porcentajes de sector e indicador
@@ -1179,13 +1228,6 @@ app.post('/api/mediciones', async (req, res) => {
                 });
             }
         };
-
-        // if (rows.length > 0) {
-        //     return res.status(409).json({
-        //         ok: false,
-        //         error: "Ya existe una medición para este indicador en esa fecha."
-        //     });
-        // }
 
         // Grabar medición
         const [result] = await pool.query(

@@ -239,20 +239,6 @@
             border-radius: 8px;
             background: linear-gradient(90deg, #007bff, #66b0ff);
         }
-
-        .info-box .info-box-content {
-            flex: 1 1 auto;
-            width: 100%;
-            /* ocupa todo el ancho */
-            white-space: normal;
-            /* permite saltos de línea */
-              word-break: break-word;  /* corta solo entre palabras, no en medio */
-        }
-
-        .info-box .info-box-icon {
-            display: none;
-            /* asegura que no “robe” espacio */
-        }
     </style>
 
 
@@ -435,17 +421,19 @@
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light">
             <!--begin::Sidebar Brand-->
             <div class="sidebar-brand">
+                <!--begin::Brand Link-->
+                <!-- <a href="./index.html" class="brand-link"> -->
                 <!--begin::Brand Image-->
                 <img src="dist/images/leon.png" alt="León blanco símbolo de la aplicación" class="fade-in"
                     style="width: 40px; border-radius: 50%; margin-bottom: 0px;">
                 <!--end::Brand Image-->
-
                 <!--begin::Brand Text-->
                 <span class="brand-text fw-light fs-5">myResultIQ 1</span>
                 <!--end::Brand Text-->
+                </a>
+                <!--end::Brand Link-->
             </div>
             <!--end::Sidebar Brand-->
-
             <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
@@ -457,23 +445,23 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-operaciones.html" class="nav-link active">
+                            <a href="kpi-panel-admin.html" class="nav-link active">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Indicadores Asignados</p>
+                                <p>Panel Administrador</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-arbol.html" class="nav-link">
+                            <a href="kpi-dashboard-global.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Arbol</p>
+                                <p>Posición Global</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link">
+                            <a href="kpi-ponderado.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Usuarios</p>
+                                <p>Valoración %</p>
                             </a>
                         </li>
 
@@ -485,18 +473,33 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="kpi-gruposInd.html" class="nav-link">
+                            <a href="kpi-usuarios.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Grupos de Indicadores</p>
+                                <p>Usuarios</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="kpi-organigrama.html" class="nav-link">
                                 <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Destinos - Entidades</p>
+                                <p>Destinos</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p>----------------------</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="kpi-arbol.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-danger"></i>
+                                <p><i class="fas fa-sitemap text-primary"></i> Entidades-Indicadores</p>
+                            </a>
+                        </li>
+
                     </ul>
                     <!--end::Sidebar Menu-->
                 </nav>
@@ -508,51 +511,57 @@
         <!--begin::App Main-->
         <main class="app-main">
             <!--begin::App Content Header-->
-            <!-- Content Header -->
-            <section class="content-header">
+            <div class="app-content-header">
                 <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6 mt-2">
-                            <h1><i class="bi bi-bar-chart"></i> KPI — Presentación en cascada</h1>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="mb-0">KPI — Posición Global</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-end">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                            </ol>
                         </div>
                     </div>
-                </div>
-            </section>
 
-            <!-- Main content -->
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="card">
-                        <div class="card-body">
-                            <ol class="breadcrumb bg-light p-2 rounded" id="breadcrumb"></ol>
 
-                            <div class="row mt-3">
-                                <div class="col-md-4">
-                                    <div class="overview">
-                                        <svg class="progress-ring" id="ring" viewBox="0 0 120 120"></svg>
-                                        <div class="summary">
-                                            <div class="big-number" id="globalPercent">-</div>
-                                            <div class="muted">Cumplimiento ponderado del nodo actual</div>
-                                            <div class="controls">
-                                                <button id="btnReset">Volver al global</button>
-                                                <button id="btnExport">Exportar CSV</button>
+                    <!-- Main content -->
+                    <section class="content">
+                        <div class="container-fluid">
+                            <div class="card card-primary card-outline">
+                                <div class="card-body">
+                                    <ol class="breadcrumb bg-light p-2 rounded" id="breadcrumb"></ol>
+
+                                    <div class="row mt-3">
+                                        <div class="col-md-4">
+                                            <div class="overview">
+                                                <svg class="progress-ring" id="ring" viewBox="0 0 120 120"></svg>
+                                                <div class="summary">
+                                                    <div class="big-number" id="globalPercent">-</div>
+                                                    <div class="muted">Cumplimiento ponderado del nodo actual</div>
+                                                    <div class="controls">
+                                                        <button id="btnReset">Volver al global</button>
+                                                        <button id="btnExport">Exportar CSV</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-3 text-muted small">
+                                                <p><strong>Leyenda:</strong></p>
+                                                <ul>
+                                                    <li>% cumplimiento = valor/objetivo (máx. 100%) ponderado por el
+                                                        peso.
+                                                    </li>
+                                                    <li>Si faltan pesos, se distribuyen en partes iguales.</li>
+                                                </ul>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="mt-3 text-muted small">
-                                        <p><strong>Leyenda:</strong></p>
-                                        <ul>
-                                            <li>% cumplimiento = valor/objetivo (máx. 100%) ponderado por el peso.</li>
-                                            <li>Si faltan pesos, se distribuyen en partes iguales.</li>
-                                        </ul>
-                                    </div>
-                                </div>
 
                                 <div class="col-md-8">
                                     <h5 id="nodeTitle"></h5>
                                     <p class="text-muted" id="nodeDesc"></p>
-                                    <div id="childrenArea" class="children-grid"></div>
+                                    <div id="childrenArea"></div> <!-- solo ID, CSS ahora se aplica aquí -->
                                     <div id="indicatorDetail" class="mt-3"></div>
                                 </div>
                             </div>
@@ -561,14 +570,15 @@
                 </div>
             </section>
 
-            <!--end::App Content-->
+                    <!--end::App Content-->
 
-            <footer class="main-footer text-center">
-                <strong>© 2025 - myResultIQ 1.0</strong>
-            </footer>
+                    <footer class="main-footer text-center">
+                        <strong>© 2025 - myResultIQ 1.0</strong>
+                    </footer>
+                </div>
+            </div>
         </main>
-        <!--end::App nain-->
-
+        <!--end::App main-->
     </div>
     <!--end::App Wrapper-->
 
@@ -622,36 +632,15 @@
     </script>
 
     <script>
-        // ============================
-        // ESTRUCTURA DE DATOS EJEMPLO
-        // ============================
-        // const orgData = {
-        //     id: 'root', name: 'Organización', type: 'node', children: [
-        //         {
-        //             id: 's1', name: 'Sector A', type: 'node', weight: 40, children: [
-        //                 { id: 'a1', name: 'Indicador A1', type: 'indicator', weight: 50, value: 78, target: 100 },
-        //                 { id: 'a2', name: 'Indicador A2', type: 'indicator', weight: 30, value: 60, target: 80 },
-        //                 { id: 'a3', name: 'Indicador A3', type: 'indicator', weight: 20, value: 40, target: 50 }
-        //             ]
-        //         },
-        //         {
-        //             id: 's2', name: 'Sector B', type: 'node', weight: 35, children: [
-        //                 { id: 'b1', name: 'Indicador B1', type: 'indicator', weight: 70, value: 90, target: 120 },
-        //                 { id: 'b2', name: 'Indicador B2', type: 'indicator', weight: 30, value: 30, target: 50 }
-        //             ]
-        //         },
-        //         {
-        //             id: 's3', name: 'Sector C', type: 'node', weight: 25, children: [
-        //                 { id: 'c1', name: 'Indicador C1', type: 'indicator', weight: 100, value: 45, target: 60 }
-        //             ]
-        //         }
-        //     ]
-        // };
 
         let orgData = null;
         let stack = [];
 
+
+
+        // ============================
         // Construye la jerarquía a partir de la tabla plana
+        // ============================
         function buildHierarchy(sectores, indicadores) {
             const map = {};
             const roots = [];
@@ -662,7 +651,7 @@
                     id: r.id,
                     name: r.nombre,
                     type: 'sector',
-                    weight: r.sector_porcentual || 0,
+                    weight: r.sector_porcentual ?? 100, // default 100 si no hay peso
                     children: []
                 };
             });
@@ -680,13 +669,33 @@
             indicadores.forEach(ind => {
                 const sector = map[ind.destino];
                 if (sector) {
+                    const peso = Number(ind.peso_porcentual) || 0;
+
+                    // Calcular cumplimiento
+                    const cumplimiento = calcularCumplimiento(
+                        ind.ultimo_valor,    // valor real
+                        ind.unico_valor,     // meta / objetivo
+                        ind.unico_acepta,
+                        ind.unico_riesgo,
+                        ind.unico_critico
+                    );
+
+                    // Color de cumplimiento
+                    const colorCumplimiento = cumplimiento === null ? 'gray' :
+                        cumplimiento >= 100 ? 'green' :
+                            cumplimiento >= 50 ? 'orange' : 'red';
+
                     sector.children.push({
                         id: ind.id,
                         name: ind.nombre,
                         type: 'indicator',
-                        weight: ind.peso_porcentual || 0,
-                        value: ind.unico_valor || 0,   // ⚡ ajustar según cómo guardás la medición
-                        target: ind.rango_hasta || 100 // ⚡ provisional hasta definir la lógica de meta
+                        weight: peso,
+                        value: ind.ultimo_valor || 0,
+                        cumplimiento: cumplimiento,
+                        colorCumplimiento: colorCumplimiento,
+                        target: ind.unico_valor || 100,
+                        fechaUltimaMedicion: ind.fecha_ultima_medicion || null,
+                        unidadMedida: ind.unidadMedida ?? ''
                     });
                 }
             });
@@ -696,9 +705,31 @@
                 id: 'root',
                 name: 'Organización',
                 type: 'node',
+                weight: 100, // raíz con peso 100
                 children: roots
             };
         }
+
+
+        // Servicio global para texto de tabla de códigos 
+        const CodigosService = {
+            codigosMap: {},
+
+            async init() {
+                const response = await fetch('/api/codigos');
+                if (!response.ok) throw new Error('No se pudo obtener los codigos.');
+                const codigos = await response.json();
+
+                codigos.forEach(c => {
+                    this.codigosMap[c.cod_tabla] = c.cod_nombre;
+                });
+            },
+
+            getNombreCodigo(codigo) {
+                return this.codigosMap[codigo] || '-';
+            }
+        };
+
 
 
         // ============================
@@ -706,6 +737,9 @@
         // ============================
         async function loadData() {
             try {
+                // Inicializar códigos ANTES de usar
+                await CodigosService.init();
+
                 const [sectoresRes, indicadoresRes] = await Promise.all([
                     fetch('/api/sectores'),
                     fetch('/api/indicadores')
@@ -714,7 +748,30 @@
                 const sectores = await sectoresRes.json();
                 const indicadores = await indicadoresRes.json();
 
-                orgData = buildHierarchy(sectores, indicadores);
+                // Añadimos campo de cumplimiento y unidad de medida ya resuelta
+                const indicadoresConCumplimiento = indicadores.map(ind => {
+                    const cumplimiento = calcularCumplimiento(
+                        ind.ultimo_valor,
+                        ind.unico_valor,
+                        ind.unico_acepta,
+                        ind.unico_riesgo,
+                        ind.unico_critico
+                    );
+
+                    // Mapeo seguro de unidad (usa nombre si existe, sino el código raw, sino vacío)
+                    const unidadNombre = CodigosService.getNombreCodigo(ind.unidad_medida) || (ind.unidad_medida ?? '');
+
+                    // DEBUG: si querés ver en consola qué mapea
+                    // console.log('unidad map', ind.id, ind.unidad_medida, '->', unidadNombre);
+
+                    return {
+                        ...ind,
+                        cumplimiento,
+                        unidadMedida: unidadNombre
+                    };
+                });
+
+                orgData = buildHierarchy(sectores, indicadoresConCumplimiento);
                 stack = [orgData];
                 render();
             } catch (err) {
@@ -726,110 +783,140 @@
         // Llamamos al inicio
         loadData();
 
+        function calcularCumplimiento(valor, meta, acepta, riesgo, critico) {
+            if (valor === null || meta === null || meta == 0 || valor == 0) return null;
 
-        // ============================
-        // FUNCIONES DE CÁLCULO
-        // ============================
+            // Porcentaje del valor respecto a la meta
+            const porcentaje = (valor / meta) * 100;
+            return porcentaje;
+            if (porcentaje >= acepta) return 100;   // Cumplimiento óptimo
+            if (porcentaje >= riesgo) return 50;    // Cumplimiento medio
+            if (porcentaje >= critico) return 25;   // Cumplimiento bajo
+            return 0;                               // Crítico
+        }
+
+
+
+
         // function computeCompliance(node) {
-        //     if (node.type === 'indicator') {
-        //         const ratio = node.target === 0 ? 0 : (node.value / node.target);
-        //         return { percent: Math.min(ratio, 1) * 100, totalWeight: node.weight || 0 };
+        //     if (!node) return 0; // ✅ evita que falle si node es undefined
+
+        //     if (!node.children || node.children.length === 0) {
+        //         // Nodo hoja (indicador con cumplimiento directo)
+        //         return node.cumplimiento || 0;
         //     }
 
-        //     const kids = node.children || [];
-        //     const sumW = kids.reduce((a, b) => a + (b.weight || 0), 0);
-        //     let agg = 0;
-        //     let totalW = 0;
+        //     // Nodo con hijos → cálculo ponderado por sector_porcentual
+        //     let total = 0;
+        //     let sumWeights = 0;
 
-        //     kids.forEach(k => {
-        //         const childRes = computeCompliance(k);
-        //         const w = sumW === 0 ? (1 / kids.length) : ((k.weight || 0) / sumW);
-        //         agg += (childRes.percent || 0) * w;
-        //         totalW += w * (childRes.totalWeight || 1);
-        //     });
+        //     for (const child of node.children) {
+        //         const childCompliance = computeCompliance(child);
+        //         const weight = child.weight || 0;
+        //         total += childCompliance * weight;
+        //         sumWeights += weight;
+        //     }
 
-        //     return { percent: agg, totalWeight: totalW };
+        //     return sumWeights === 0 ? 0 : total / sumWeights;
         // }
 
+        // ============================
+        // Cálculo recursivo del cumplimiento ponderado
+        // ============================
         function computeCompliance(node) {
-            if (!node) return 0; // ✅ evita que falle si node es undefined
+            if (!node) return 0;
 
+            // Nodo hoja (indicador)
             if (!node.children || node.children.length === 0) {
-                // Nodo hoja (indicador con cumplimiento directo)
-                return node.compliance || 0;
+                return node.cumplimiento ?? 0;
             }
 
-            // Nodo con hijos → cálculo ponderado por sector_porcentual
+            // Nodo con hijos (sectores o indicadores)
             let total = 0;
             let sumWeights = 0;
 
             for (const child of node.children) {
-                const childCompliance = computeCompliance(child);
-                const weight = child.weight || 0;
+                const childCompliance = Number(computeCompliance(child)) ?? 0;
+                const weight = Number(child.weight ?? 0);
+
                 total += childCompliance * weight;
                 sumWeights += weight;
             }
 
-            return sumWeights === 0 ? 0 : total / sumWeights;
+            return sumWeights > 0 ? total / sumWeights : 0;
         }
 
 
-        // ============================
-        // RENDERIZADO
-        // ============================
-        // let stack = [orgData];
 
         // function render() {
         //     const node = stack[stack.length - 1];
-        //     const comp = Number(computeCompliance(node).percent) || 0;
+        //     if (!node) {
+        //         console.warn("⚠️ No hay nodo actual para renderizar");
+        //         return;
+        //     }
 
-        //     document.getElementById('globalPercent').innerText = comp.toFixed(2) + '%';
-        //     document.getElementById('nodeTitle').innerText = node.name;
-        //     document.getElementById('nodeDesc').innerText =
-        //         node.type === 'indicator'
-        //             ? `Valor: ${node.value} / Objetivo: ${node.target}`
-        //             : `${(node.children || []).length} hijos`;
+        //     const comp = Number(computeCompliance(node)) || 0; // ✅ computeCompliance devuelve un número
+
+        //     const globalPercentEl = document.getElementById('globalPercent');
+        //     if (globalPercentEl) globalPercentEl.innerText = comp.toFixed(2) + '%';
+
+        //     const nodeTitleEl = document.getElementById('nodeTitle');
+        //     if (nodeTitleEl) nodeTitleEl.innerText = node.name || "Sin nombre";
+
+        //     const nodeDescEl = document.getElementById('nodeDesc');
+        //     if (nodeDescEl) {
+        //         nodeDescEl.innerText =
+        //             node.type === 'indicator'
+        //                 ? `Valor: ${node.value} / Objetivo: ${node.target}`
+        //                 : `${(node.children || []).length} hijos`;
+        //     }
 
         //     drawRing('ring', comp);
         //     renderBreadcrumb();
-        //     renderChildren(node.children || []);
+
+        //     // ✅ acá pasamos el nodo, no el array
+        //     renderChildren(node);
+
         //     renderIndicatorDetail(node);
         // }
 
+        // ============================
+        // Renderizado del nodo actual y actualización de globalPercent
+        // ============================
         function render() {
             const node = stack[stack.length - 1];
-            if (!node) {
-                console.warn("⚠️ No hay nodo actual para renderizar");
-                return;
-            }
+            if (!node) return;
 
-            const comp = Number(computeCompliance(node)) || 0; // ✅ computeCompliance devuelve un número
+            // Cumplimiento ponderado de todos los niveles
+            const comp = computeCompliance(node);
 
+            // Actualizamos globalPercent
             const globalPercentEl = document.getElementById('globalPercent');
             if (globalPercentEl) globalPercentEl.innerText = comp.toFixed(2) + '%';
 
+            // Actualizar título 
             const nodeTitleEl = document.getElementById('nodeTitle');
             if (nodeTitleEl) nodeTitleEl.innerText = node.name || "Sin nombre";
 
+            // Actualizar descripción del nodo
             const nodeDescEl = document.getElementById('nodeDesc');
             if (nodeDescEl) {
-                nodeDescEl.innerText =
-                    node.type === 'indicator'
-                        ? `Valor: ${node.value} / Objetivo: ${node.target}`
-                        : `${(node.children || []).length} hijos`;
+                if (node.type === 'indicator') {
+                    const unidad = node.unidadMedida ? ` ${node.unidadMedida}` : '';
+                    const valor = (typeof node.value === 'number') ? node.value.toFixed(2) : node.value ?? '-';
+                    const objetivo = (typeof node.target === 'number') ? node.target.toFixed(2) : node.target ?? '-';
+
+                    nodeDescEl.innerText = `Valor: ${valor}${unidad} / Objetivo: ${objetivo}${unidad}`;
+                } else {
+                    nodeDescEl.innerText = `${(node.children || []).length} hijos`;
+                }
             }
 
-            drawRing('ring', comp);
-            renderBreadcrumb();
-
-            // ✅ acá pasamos el nodo, no el array
-            renderChildren(node);
-
-            renderIndicatorDetail(node);
+            drawRing('ring', comp);       // gráfico circular
+            renderBreadcrumb();           // breadcrumb
+            renderChildren(node);         // tiles de hijos
+            renderIndicatorDetail(node);  // detalle si es indicador
         }
-
-
-
 
         function drawRing(id, percent) {
             const svg = document.getElementById(id);
@@ -852,20 +939,6 @@
             svg.appendChild(fg);
             const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text'); txt.setAttribute('x', 60); txt.setAttribute('y', 68); txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-size', '18'); txt.setAttribute('font-weight', '700'); txt.textContent = percent.toFixed(1) + '%'; svg.appendChild(txt);
         }
-
-        // function renderBreadcrumb() {
-        //     const bc = document.getElementById('breadcrumb'); bc.innerHTML = '';
-        //     stack.forEach((n, i) => {
-        //         const el = document.createElement('span');
-        //         el.className = 'breadcrumb-item';
-        //         el.textContent = n.name;
-        //         el.onclick = () => {
-        //             stack = stack.slice(0, i + 1);
-        //             render();
-        //         };
-        //         bc.appendChild(el);
-        //     });
-        // }
 
         function renderBreadcrumb() {
             const breadcrumbEl = document.getElementById("breadcrumb");
@@ -902,57 +975,31 @@
             });
         }
 
-
-        //     function renderChildren(children) {
-        //         const area = document.getElementById('childrenArea');
-        //         area.innerHTML = '';
-        //         if (children.length === 0) {
-        //             area.innerHTML = '<div class="text-muted">No hay hijos</div>';
-        //             return;
-        //         }
-
-        //         const sumW = children.reduce((a, b) => a + (b.weight || 0), 0);
-
-        //         children.forEach(child => {
-        //             const tile = document.createElement('div');
-        //             tile.className = 'tile';
-        //             tile.onclick = () => {
-        //                 stack.push(child);
-        //                 render();
-        //             };
-
-        //             const comp = computeCompliance(child).percent;
-        //             const w = sumW === 0 ? (100 / children.length) : ((child.weight || 0) / sumW * 100);
-
-        //             tile.innerHTML = `
-        //     <div class="title">${child.name}</div>
-        //     <div class="sub">Peso: ${w.toFixed(1)}%</div>
-        //     <div class="bar"><i style="width:${comp.toFixed(2)}%"></i></div>
-        //     <div class="text-muted mt-1">Cumplimiento: ${comp.toFixed(2)}%</div>
-        //   `;
-
-        //             area.appendChild(tile);
-        //         });
-        //     }
         // function renderChildren(node) {
-        //     const container = document.getElementById("kpi-container");
+        //     const container = document.getElementById("childrenArea");
+        //     if (!container) {
+        //         console.error("❌ No se encontró el contenedor #childrenArea en el DOM");
+        //         return;
+        //     }
+
         //     container.innerHTML = "";
 
-        //     if (!node.children || node.children.length === 0) {
+        //     if (!node || !node.children || node.children.length === 0) {
         //         container.innerHTML = `<p class="text-muted">No hay elementos para mostrar en este nivel.</p>`;
         //         return;
         //     }
 
         //     node.children.forEach(child => {
-        //         const comp = computeCompliance(child);
-        //         const weight = Number(child.weight) || 0; // ✅ usamos directamente sector_porcentual
+        //         const comp = Number(computeCompliance(child)) || 0;
+        //         const weight = Number(child.weight) || 0;
 
         //         const tile = document.createElement("div");
-        //         tile.className = "col-md-4";
+        //         tile.className = "col-12";
+
         //         tile.innerHTML = `
         //     <div class="info-box bg-light elevation-2" style="cursor:pointer;">
         //         <div class="info-box-content">
-        //             <span class="info-box-text font-weight-bold">${child.name}</span>
+        //             <span class="info-box-text font-weight-bold">${child.name || "Sin nombre"}</span>
         //             <span class="info-box-number">Cumplimiento: ${comp.toFixed(2)}%</span>
         //             <div class="progress">
         //                 <div class="progress-bar bg-success" style="width: ${comp.toFixed(2)}%"></div>
@@ -961,12 +1008,10 @@
         //         </div>
         //     </div>
         // `;
-
-        //         // Drill down si el nodo tiene hijos
+        //         // Drill down → apilamos el nodo hijo en la pila
         //         tile.addEventListener("click", () => {
-        //             currentNode = child;
-        //             updateBreadcrumb(child);
-        //             renderChildren(child);
+        //             stack.push(child);
+        //             render();
         //         });
 
         //         container.appendChild(tile);
@@ -988,19 +1033,30 @@
             }
 
             node.children.forEach(child => {
-                const comp = Number(computeCompliance(child)) || 0;
+                // Cumplimiento ponderado del sub-nodo
+                const comp = computeCompliance(child);
                 const weight = Number(child.weight) || 0;
+
+                // Determinar color (si es indicador se usa colorCumplimiento, si es sector usamos verde-naranja-rojo según comp)
+                let color = "gray";
+                if (child.type === "indicator") {
+                    color = child.colorCumplimiento || "gray";
+                } else {
+                    color = comp >= 100 ? "green" :
+                        comp >= 50 ? "orange" : "red";
+                }
 
                 const tile = document.createElement("div");
                 tile.className = "col-12";
+                tile.className = "col-12 mb-2";
 
                 tile.innerHTML = `
             <div class="info-box bg-light elevation-2" style="cursor:pointer;">
                 <div class="info-box-content">
                     <span class="info-box-text font-weight-bold">${child.name || "Sin nombre"}</span>
                     <span class="info-box-number">Cumplimiento: ${comp.toFixed(2)}%</span>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" style="width: ${comp.toFixed(2)}%"></div>
+                    <div class="progress" style="height: 12px; border-radius:6px; overflow:hidden;">
+                        <div class="progress-bar" style="width: ${comp.toFixed(2)}%; background:${color};"></div>
                     </div>
                     <span class="progress-description">Peso: ${weight.toFixed(1)}%</span>
                 </div>
@@ -1018,21 +1074,39 @@
         }
 
 
-
         function renderIndicatorDetail(node) {
             const det = document.getElementById('indicatorDetail');
             det.innerHTML = '';
+
             if (node.type === 'indicator') {
+                const peso = node.weight ?? 0;
+                const valor = node.value ?? '-';
+                const objetivo = node.target ?? '-';
+                const unidad = node.unidadMedida ? ` ${node.unidadMedida}` : '';
+                const fecha = node.fechaUltimaMedicion
+                    ? new Date(node.fechaUltimaMedicion).toLocaleDateString('es-AR')
+                    : '-';
+
+                const cumplimientoNum = node.cumplimiento;
+                const cumplimientoText = cumplimientoNum !== null ? cumplimientoNum + '%' : 'Sin medición';
+
                 det.innerHTML = `
-        <div class="card card-body bg-light">
-          <strong>Detalle del indicador</strong>
-          <div class="mt-2">Valor: ${node.value}</div>
-          <div>Objetivo: ${node.target}</div>
-          <div>Peso relativo: ${node.weight || 0}</div>
-        </div>
-      `;
+                    <div class="card card-body bg-light">
+                        <strong>Detalle del indicador</strong>
+                        <div>Peso relativo: ${peso}%</div>
+                        <div class="mt-2">Valor: ${valor} ${unidad}</div>
+                        <div>Objetivo: ${objetivo} ${unidad}</div>
+                        <div>Cumplimiento: <span style="color:${node.colorCumplimiento}; font-weight:bold">${cumplimientoText}</span></div>
+                        <div>Fecha última medición: ${fecha}</div>
+                        <div style="margin-top:5px; height:12px; background:#eee; border-radius:6px; overflow:hidden;">
+                            <div style="width:${cumplimientoNum !== null ? cumplimientoNum + '%' : '0%'}; background:${node.colorCumplimiento}; height:100%;"></div>
+                        </div>
+                    </div>
+                `;
             }
         }
+
+
 
         // ============================
         // EXPORTACIÓN CSV
