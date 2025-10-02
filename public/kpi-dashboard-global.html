@@ -49,6 +49,9 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         :root {
             --bg: #c75509;
@@ -549,11 +552,143 @@
 
                     <!--end::App Content-->
 
-                    <footer class="main-footer text-center">
-                        <strong>© 2025 - myResultIQ 1.0</strong>
-                    </footer>
+
+                    <div class="row" id="grafico-evolucion" style="display: none;">
+                        <div class="col-md-12">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="card-title">Reporte de Evolución Mensual</h5>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                        </button>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-tool dropdown-toggle"
+                                                data-bs-toggle="dropdown">
+                                                <i class="bi bi-wrench"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" role="menu">
+                                                <a href="#" class="dropdown-item">Action</a>
+                                                <a href="#" class="dropdown-item">Another action</a>
+                                                <a href="#" class="dropdown-item"> Something else here </a>
+                                                <a class="dropdown-divider"></a>
+                                                <a href="#" class="dropdown-item">Separated link</a>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <p class="text-center">
+                                                <strong>Evolución último semestre</strong>
+                                            </p>
+                                            <div id="sales-chart"></div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-4">
+                                            <p class="text-center"><strong>Cumplimiento de
+                                                    Objetivos</strong></p>
+                                            <div class="progress-group">
+                                                Margen de Ganancia Bruta
+                                                <span class="float-end"><b>160</b>/200</span>
+                                                <div class="progress progress-sm">
+                                                    <div class="progress-bar text-bg-success" style="width: 80%"></div>
+                                                </div>
+                                            </div>
+                                            <!-- /.progress-group -->
+                                            <div class="progress-group">
+                                                Satisfacción del Cliente
+                                                <span class="float-end"><b>310</b>/400</span>
+                                                <div class="progress progress-sm">
+                                                    <div class="progress-bar text-bg-primary" style="width: 75%"></div>
+                                                </div>
+                                            </div>
+                                            <!-- /.progress-group -->
+                                            <div class="progress-group">
+                                                <span class="progress-text">Tiempo de procesamiento</span>
+                                                <span class="float-end"><b>480</b>/800</span>
+                                                <div class="progress progress-sm">
+                                                    <div class="progress-bar text-bg-danger" style="width: 60%"></div>
+                                                </div>
+                                            </div>
+                                            <!-- /.progress-group -->
+                                            <div class="progress-group">
+                                                Send Inquiries
+                                                <span class="float-end"><b>250</b>/500</span>
+                                                <div class="progress progress-sm">
+                                                    <div class="progress-bar text-bg-warning" style="width: 50%"></div>
+                                                </div>
+                                            </div>
+                                            <!-- /.progress-group -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!--end::Row-->
+                                </div>
+                                <!-- ./card-body -->
+                                <div class="card-footer">
+                                    <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-md-3 col-6">
+                                            <div class="text-center border-end">
+                                                <span class="text-success">
+                                                    <i class="bi bi-caret-up-fill"></i> 17%
+                                                </span>
+                                                <h5 class="fw-bold mb-0">$35,210.43</h5>
+                                                <span class="text-uppercase">TOTAL REVENUE</span>
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-6">
+                                            <div class="text-center border-end">
+                                                <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 0%
+                                                </span>
+                                                <h5 class="fw-bold mb-0">$10,390.90</h5>
+                                                <span class="text-uppercase">TOTAL COST</span>
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-6">
+                                            <div class="text-center border-end">
+                                                <span class="text-success">
+                                                    <i class="bi bi-caret-up-fill"></i> 20%
+                                                </span>
+                                                <h5 class="fw-bold mb-0">$24,813.53</h5>
+                                                <span class="text-uppercase">TOTAL PROFIT</span>
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-6">
+                                            <div class="text-center">
+                                                <span class="text-danger">
+                                                    <i class="bi bi-caret-down-fill"></i> 18%
+                                                </span>
+                                                <h5 class="fw-bold mb-0">1200</h5>
+                                                <span class="text-uppercase">GOAL COMPLETIONS</span>
+                                            </div>
+                                        </div>
+                                        <!-- </div> -->
+                                        <!--end::Row-->
+                                    </div>
+                                    <!-- /.card-footer -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <!-- /.col -->
+                        </div>
+
+                        <footer class="main-footer text-center">
+                            <strong>© 2025 - myResultIQ 1.0</strong>
+                        </footer>
+                    </div>
                 </div>
-            </div>
         </main>
         <!--end::App main-->
     </div>
@@ -669,7 +804,16 @@
                         colorCumplimiento: colorCumplimiento,
                         target: ind.unico_valor || 100,
                         fechaUltimaMedicion: ind.fecha_ultima_medicion || null,
-                        unidadMedida: ind.unidadMedida ?? ''
+                        unidadMedida: ind.unidadMedida ?? '',
+
+                        // 👇 propiedades adicionales que vas a usar en el detalle
+                        codigo_id: ind.codigo_id ?? '',
+                        descripcion: ind.descripcion ?? '',
+                        objetivo: ind.objetivo ?? '',
+                        responsable: ind.responsable ?? '',
+                        fuente_datos: ind.fuente_datos ?? '',
+                        formula_calculo: ind.formula_calculo ?? '',
+                        freq_medicion: ind.freq_medicion ?? ''
                     });
                 }
             });
@@ -809,25 +953,12 @@
 
             // Actualizar descripción del nodo
             const nodeDescEl = document.getElementById('nodeDesc');
-            // if (nodeDescEl) {
-            //     if (node.type === 'indicator') {
-            //         const unidad = node.unidadMedida ? ` ${node.unidadMedida}` : '';
-            //         const valor = (typeof node.value === 'number') ? node.value.toFixed(2) : node.value ?? '-';
-            //         const objetivo = (typeof node.target === 'number') ? node.target.toFixed(2) : node.target ?? '-';
-
-            //         nodeDescEl.innerText =
-            //             `Objetivo: ${objetivo}${unidad} / Resultado: ${valor}${unidad} <br>
-            //           Cumplimiento:  ${(node.cumplimiento ?? '-')}% (Peso: ${node.weight ?? 0}%)`;
-            //     } else {
-            //         nodeDescEl.innerText = `${(node.children || []).length} hijos`;
-            //     }
-            // }
 
             if (nodeDescEl) {
                 if (node.type === 'indicator') {
                     const unidad = node.unidadMedida ? ` ${node.unidadMedida}` : '';
                     const valor = (typeof node.value === 'number') ? node.value.toFixed(2) : node.value ?? '-';
-                    const objetivo = (typeof node.target === 'number') ? node.target.toFixed(2) : node.target ?? '-';
+                    const meta = (typeof node.target === 'number') ? node.target.toFixed(2) : node.target ?? '-';
 
                     const color = node.colorCumplimiento || "gray";
                     const cumplimiento = (node.cumplimiento ?? 0);
@@ -838,7 +969,7 @@
 
                     nodeDescEl.innerHTML = `
                             <div>
-                                Objetivo: ${objetivo}${unidad} / Resultado: ${valor}${unidad}
+                                Meta: ${meta}${unidad} / Ultima medición: ${valor}${unidad} con fecha ${fecha}
                             </div>
 
                             <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
@@ -849,15 +980,13 @@
                             </div>
 
                             <div style="margin-top:4px;">
-                                Peso relativo: ${peso}% | Fecha última medición: ${fecha}
+                                Peso relativo: ${peso}% 
                             </div>
                         `;
                 } else {
                     nodeDescEl.innerText = `${(node.children || []).length} hijos`;
                 }
             }
-
-
 
             drawRing('ring', comp);       // gráfico circular
             renderBreadcrumb();           // breadcrumb
@@ -934,7 +1063,8 @@
             container.innerHTML = "";
 
             if (!node || !node.children || node.children.length === 0) {
-                container.innerHTML = `<p class="text-muted">No hay elementos para mostrar en este nivel.</p>`;
+                // container.innerHTML = `<p class="text-muted">No hay elementos para mostrar en este nivel.</p>`;
+                container.innerHTML = `<p class="text-muted">--</p>`;
                 return;
             }
 
@@ -979,6 +1109,9 @@
             });
         }
 
+
+        let evolucionChart = null; // variable global para el gráfico
+
         // // 🚫🚫🚫  renderIndicatorDetail(node)
         function renderIndicatorDetail(node) {
             const det = document.getElementById('indicatorDetail');
@@ -987,7 +1120,7 @@
             if (node.type === 'indicator') {
                 const peso = node.weight ?? 0;
                 const valor = node.value ?? '-';
-                const objetivo = node.target ?? '-';
+                const meta = node.target ?? '-';
                 const unidad = node.unidadMedida ? ` ${node.unidadMedida}` : '';
                 const fecha = node.fechaUltimaMedicion
                     ? new Date(node.fechaUltimaMedicion).toLocaleDateString('es-AR')
@@ -997,44 +1130,131 @@
                 const cumplimientoText = cumplimientoNum !== null ? cumplimientoNum + '%' : 'Sin medición';
                 const descripcion = node.descripcion || "Sin descripción";
                 const codigo = node.codigo_id ?? "-";
+                const objetivo = node.objetivo ?? "-";
+                const fuente_datos = node.fuente_datos ?? "-";
+                const formula_calculo = node.formula_calculo ?? "-";
+                const freq_medicion = CodigosService.getNombreCodigo(node.freq_medicion) || (node.freq_medicion ?? '');
+                const responsable = node.responsable ?? "-";
 
-                // det.innerHTML = `
-                //     <div class="card card-body bg-light">
-                //         <strong>Detalle del indicador</strong>
-                //         <div>Peso relativo: ${peso}%</div>
-                //         <div class="mt-2">Valor: ${valor} ${unidad}</div>
-                //         <div>Objetivo: ${objetivo} ${unidad}</div>
-                //         <div>Cumplimiento: <span style="color:${node.colorCumplimiento}; font-weight:bold">${cumplimientoText}</span></div>
-                //         <div>Fecha última medición: ${fecha}</div>
-                //         <div style="margin-top:5px; height:12px; background:#eee; border-radius:6px; overflow:hidden;">
-                //             <div style="width:${cumplimientoNum !== null ? cumplimientoNum + '%' : '0%'}; background:${node.colorCumplimiento}; height:100%;"></div>
-                //         </div>
-                //     </div>
-                // `;
 
                 det.innerHTML = `
-                            <div class="card card-body bg-light">
-                                <strong>Detalle del indicador</strong>
-                                <div class="mt-1"><strong>ID:</strong> ${codigo}</div>
+                    <div class="card card-body bg-light">
+                        <strong>Detalle del indicador</strong>
+                        <div class="mt-1"><strong>ID:</strong> ${codigo}</div>
+                        <div class="mt-1"><em><strong>Descripción:</strong> ${descripcion}</em></div>
+                        <div class="mt-1"><em><strong>Objetivo:</strong> ${objetivo}</em></div>
 
-                                <div class="mt-1"><em>${descripcion}</em></div>
-                                <div>Peso relativo: ${peso}%</div>
-                                <div>Objetivo: ${objetivo}${unidad}</div>
-                                <div>Valor: ${valor}${unidad}</div>
+                        <!-- Botones de acción -->
+                        <div class="mt-3 d-flex justify-content-end gap-2">
+                            <button id="btnDetalle" class="btn btn-sm btn-primary">
+                                <i class="bi bi-info-circle"></i> Más detalles
+                            </button>
+                            <button id="btnEvolucion" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-graph-up"></i> Evolución
+                            </button>
+                        </div>
+                    </div>
 
-                                <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
-                                    <span>Cumplimiento:</span>
-                                    <span style="color:${node.colorCumplimiento}; font-weight:bold">${cumplimientoText}</span>
-                                    <div style="flex:1; height:12px; background:#eee; border-radius:6px; overflow:hidden;">
-                                        <div style="width:${cumplimientoNum !== null ? cumplimientoNum + '%' : '0%'}; background:${node.colorCumplimiento}; height:100%;"></div>
-                                    </div>
-                                </div>
+                    <!-- Modal Detalle -->
+                    <div class="modal fade" id="modalDetalle" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Detalle del Indicador</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" id="modalDetalleBody">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                        </div>
+                    </div>
+                    </div>
 
-                                <div class="mt-1">Fecha última medición: ${fecha}</div>
-                            </div>
-                        `;
+                    <!-- Modal Evolución -->
+                    <div class="modal fade" id="modalEvolucion" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Evolución del Indicador</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <canvas id="chartEvolucion"></canvas>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                `;
+
+                // Eventos de los botones
+                document.getElementById('btnDetalle').onclick = () => {
+                    document.getElementById('modalDetalleBody').innerHTML = `
+                <p><strong>Código:</strong> ${codigo}</p>
+                <p><strong>Descripción:</strong> ${descripcion}</p>
+                <p><strong>Objetivo:</strong> ${objetivo}${unidad}</p>
+                <p><strong>Fuente de datos:</strong> ${fuente_datos}</p>
+                <p><strong>Forma de cálculo:</strong> ${formula_calculo}</p>
+                <p><strong>Frecuencia de medición:</strong> ${freq_medicion}</p>
+                <p><strong>Peso relativo:</strong> ${peso}%</p>
+                <p><strong>Responsable:</strong> ${responsable}</p>
+            `;
+                    new bootstrap.Modal(document.getElementById('modalDetalle')).show();
+                };
+
+                // Evento botón evolución
+                document.getElementById('btnEvolucion').onclick = async () => {
+                    try {
+                        // Llamada al backend
+                        const res = await fetch(`/api/mediciones/${node.id}`);
+                        const json = await res.json();
+                        if (!json.success) throw new Error("Error cargando mediciones");
+                        const mediciones = json.data;   // 👈 acá está el array
+
+                        // Ordenar por fecha (por seguridad)
+                        mediciones.sort((a, b) => new Date(a.med_fecha_registro) - new Date(b.med_fecha_registro));
+
+                        // Preparar datos
+                        const labels = mediciones.map(m =>
+                            new Date(m.med_fecha_registro).toLocaleDateString('es-AR')
+                        );
+                        const valores = mediciones.map(m => m.med_valor);
+
+                        // Destruir gráfico anterior si existe
+                        if (evolucionChart) {
+                            evolucionChart.destroy();
+                        }
+
+                        const ctx = document.getElementById('chartEvolucion').getContext('2d');
+                        evolucionChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels,
+                                datasets: [{
+                                    label: 'Valor',
+                                    data: valores,
+                                    borderColor: '#2563eb',
+                                    backgroundColor: 'rgba(37,99,235,0.1)',
+                                    fill: true,
+                                    tension: 0.3
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: { display: false }
+                                }
+                            }
+                        });
+
+                        new bootstrap.Modal(document.getElementById('modalEvolucion')).show();
+                    } catch (err) {
+                        console.error(err);
+                        alert("No se pudo cargar la evolución del indicador.");
+                    }
+                };
             }
         }
+
 
         // // 🚫🚫🚫  Exportación CSV
         function exportCSV() {

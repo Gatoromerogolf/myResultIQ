@@ -1073,6 +1073,28 @@ app.get('/api/mediciones', async (req, res) => {
     }
 });
 
+// ✅ Obtener todas las mediciones de un indicador en particular
+app.get('/api/mediciones/:idIndicador', async (req, res) => {
+    const { idIndicador } = req.params;
+    try {
+        const [rows] = await pool.query(
+            `SELECT med_valor, med_valor_periodo, med_fecha_registro 
+             FROM mediciones 
+             WHERE id = ? 
+             ORDER BY med_valor_periodo ASC`,
+            [idIndicador]
+        );
+
+        res.json({
+            success: true,
+            total: rows.length,
+            data: rows
+        });
+    } catch (err) {
+        console.error('Error al obtener mediciones por indicador:', err);
+        res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+});
 
 // // 🚫🚫🚫 Grabar una medicion
 app.post('/api/mediciones', async (req, res) => {
