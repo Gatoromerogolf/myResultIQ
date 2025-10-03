@@ -1076,11 +1076,12 @@ app.get('/api/mediciones', async (req, res) => {
 // ✅ Obtener todas las mediciones de un indicador en particular
 app.get('/api/mediciones/:idIndicador', async (req, res) => {
     const { idIndicador } = req.params;
+    console.log("ID Indicador recibido:", idIndicador);
     try {
         const [rows] = await pool.query(
             `SELECT med_valor, med_valor_periodo, med_fecha_registro 
              FROM mediciones 
-             WHERE id = ? 
+             WHERE med_indicador_id = ? 
              ORDER BY med_valor_periodo ASC`,
             [idIndicador]
         );
