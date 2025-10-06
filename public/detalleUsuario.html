@@ -54,6 +54,12 @@
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 
 
+    <style>
+        [id^="sparkline-"] {
+            margin-top: 5px;
+        }
+    </style>
+
 </head>
 <!--end::Head-->
 
@@ -348,7 +354,7 @@
                                                     <td>Vigente sin inicial es error</td>
                                                 </tr>
 
-                                                
+
                                                 <tr>
                                                     <td>Generar registro de medición en el alta con fecha vigencia</td>
                                                 </tr>
@@ -428,6 +434,7 @@
                                 <div class="card-body">
                                     <!--begin::Row-->
                                     <div class="row">
+                                        <!--Evolución ultimo semestre - SALES-CHART-->
                                         <div class="col-md-8">
                                             <p class="text-center">
                                                 <strong>Evolución último semestre</strong>
@@ -435,6 +442,8 @@
                                             <div id="sales-chart"></div>
                                         </div>
                                         <!-- /.col -->
+
+                                        <!--Cumplimiento de objetivos-->
                                         <div class="col-md-4">
                                             <p class="text-center"><strong>Cumplimiento de
                                                     Objetivos</strong></p>
@@ -475,11 +484,12 @@
                                     </div>
                                     <!--end::Row-->
                                 </div>
+
                                 <!-- ./card-body -->
                                 <div class="card-footer">
                                     <!--begin::Row-->
                                     <div class="row">
-                                    <div class="col-md-3 col-6">
+                                        <div class="col-md-3 col-6">
                                             <div class="text-center border-end">
                                                 <span class="text-success">
                                                     <i class="bi bi-caret-up-fill"></i> 17%
@@ -488,8 +498,8 @@
                                                 <span class="text-uppercase">TOTAL REVENUE</span>
                                             </div>
                                         </div>
-                                    <!-- /.col -->
-                                    <div class="col-md-3 col-6">
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-6">
                                             <div class="text-center border-end">
                                                 <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 0%
                                                 </span>
@@ -497,8 +507,8 @@
                                                 <span class="text-uppercase">TOTAL COST</span>
                                             </div>
                                         </div>
-                                    <!-- /.col -->
-                                    <div class="col-md-3 col-6">
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-6">
                                             <div class="text-center border-end">
                                                 <span class="text-success">
                                                     <i class="bi bi-caret-up-fill"></i> 20%
@@ -507,8 +517,8 @@
                                                 <span class="text-uppercase">TOTAL PROFIT</span>
                                             </div>
                                         </div>
-                                    <!-- /.col -->
-                                    <div class="col-md-3 col-6">
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-6">
                                             <div class="text-center">
                                                 <span class="text-danger">
                                                     <i class="bi bi-caret-down-fill"></i> 18%
@@ -517,174 +527,187 @@
                                                 <span class="text-uppercase">GOAL COMPLETIONS</span>
                                             </div>
                                         </div>
-                                    <!-- </div> -->
-                                    <!--end::Row-->
+                                        <!-- </div> -->
+                                        <!--end::Row-->
+                                    </div>
+                                    <!-- /.card-footer -->
                                 </div>
-                                <!-- /.card-footer -->
+                                <!-- /.card -->
                             </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-
-                    <div class="row">
-                        <!-- Filtro por período -->
-                        <div class="col-md-4">
-                            <label for="filtro-periodo">Período</label>
-                            <select id="filtro-periodo" class="form-control">
-                                <option value="todos">Todos</option>
-                                <option value="2025-07">Julio 2025</option>
-                                <option value="2025-06">Junio 2025</option>
-                                <!-- Más períodos -->
-                            </select>
+                            <!-- /.col -->
                         </div>
 
-                        <!-- Filtro por estado -->
-                        <div class="col-md-4">
-                            <label for="filtro-estado">Estado</label>
-                            <select id="filtro-estado" class="form-control">
-                                <option value="todos">Todos</option>
-                                <option value="cargado">Cargado</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="vencido">Vencido</option>
-                            </select>
-                        </div>
+                        <div id="table-sparkline-1" style="width:150px; height:30px;"></div>
+                        <div id="table-sparkline-2" style="width:150px; height:30px;"></div>
+                        <div id="table-sparkline-3" style="width:150px; height:30px;"></div>
 
-                        <!-- Botón para aplicar filtros -->
-                        <div class="col-md-4 d-flex align-items-end">
-                            <button id="btn-filtrar" class="btn btn-primary w-100">Aplicar filtros</button>
-                        </div>
 
-                    </div>
 
-                    <!--end::Row-->
-                    <!-- Contenido principal -->
-                    <div class="content-wrapper">
-                        <div class="content-header">
-                            <div class="container-fluid">
-                                <p>Período actual: <strong>Julio 2025</strong></p>
+                        <!-- Filtros -->
+                        <div class="row">
+                            <!-- Filtro por período -->
+                            <div class="col-md-4">
+                                <label for="filtro-periodo">Período</label>
+                                <select id="filtro-periodo" class="form-control">
+                                    <option value="todos">Todos</option>
+                                    <option value="2025-07">Julio 2025</option>
+                                    <option value="2025-06">Junio 2025</option>
+                                    <!-- Más períodos -->
+                                </select>
                             </div>
+
+                            <!-- Filtro por estado -->
+                            <div class="col-md-4">
+                                <label for="filtro-estado">Estado</label>
+                                <select id="filtro-estado" class="form-control">
+                                    <option value="todos">Todos</option>
+                                    <option value="cargado">Cargado</option>
+                                    <option value="pendiente">Pendiente</option>
+                                    <option value="vencido">Vencido</option>
+                                </select>
+                            </div>
+
+                            <!-- Botón para aplicar filtros -->
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button id="btn-filtrar" class="btn btn-primary w-100">Aplicar filtros</button>
+                            </div>
+
                         </div>
 
-                        <div class="content">
-                            <div class="container-fluid">
-                                <div class="row">
-
-                                    <!-- Tarjeta KPI cargado -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="cargado" data-periodo="2025-07">
-                                        <div class="card border-success">
-                                            <div class="card-header bg-success text-white">
-                                                <h5 class="card-title">Margen de ganancia bruta</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> %</p>
-                                                <p><strong>Último valor:</strong> 3.5%</p>
-                                                <p><strong>Fecha carga:</strong> 10/07/2025</p>
-                                                <a href="#" class="btn btn-outline-primary btn-sm">Ver
-                                                    histórico</a>
-                                                <a href="#" class="btn btn-outline-secondary btn-sm">Editar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Tarjeta KPI pendiente -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="pendiente" data-periodo="2025-07">
-                                        <div class="card border-danger">
-                                            <div class="card-header bg-danger text-white">
-                                                <h5 class="card-title">Satisfacción del cliente</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> Días</p>
-                                                <p><strong>Último valor:</strong> N/D</p>
-                                                <p><strong>Fecha carga:</strong> -</p>
-                                                <a href="#" class="btn btn-danger btn-sm">Cargar ahora</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Tarjeta KPI con vencimiento próximo -->
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="vencido" data-periodo="2025-07">
-                                        <div class="card border-warning">
-                                            <div class="card-header bg-warning text-dark">
-                                                <h5 class="card-title">Tiempo de procesamiento</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> $</p>
-                                                <p><strong>Último valor:</strong> 250</p>
-                                                <p><strong>Fecha carga:</strong> 01/07/2025</p>
-                                                <a href="#" class="btn btn-warning btn-sm">Actualizar</a>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <!--end::Row-->
+                        <!-- Contenido principal -->
+                        <div class="content-wrapper">
+                            <div class="content-header">
+                                <div class="container-fluid">
+                                    <p>Período actual: <strong>Julio 2025</strong></p>
                                 </div>
+                            </div>
 
-                                <div class="row mt-3">
-                                    <div class="col-md-4 kpi-tarjeta" data-estado="cargado" data-periodo="2025-07">
-                                        <div class="card border-success">
-                                            <div class="card-header bg-success text-white">
-                                                <h5 class="card-title">Tasa de rotación</h5>
+                            <div class="content">
+                                <div class="container-fluid">
+                                    <div class="row">
+
+                                        <!-- Tarjeta KPI Margen de ganancia bruta -->
+                                        <div class="col-md-4 kpi-tarjeta" data-estado="cargado" data-periodo="2025-07">
+                                            <div class="card border-success">
+                                                <div class="card-header bg-success text-white">
+                                                    <h5 class="card-title">Margen de ganancia bruta</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p><strong>Unidad:</strong> %</p>
+                                                    <p><strong>Último valor:</strong> 3.5%</p>
+                                                    <!-- Contenedor del sparkline -->
+                                                    <div id="sparkline-margen" style="width:100%; height:40px;"></div>
+
+                                                    <p><strong>Fecha carga:</strong> 10/07/2025</p>
+                                                    <a href="#" class="btn btn-outline-primary btn-sm">Ver
+                                                        histórico</a>
+                                                    <a href="#" class="btn btn-outline-secondary btn-sm">Editar</a>
+                                                </div>
                                             </div>
-                                            <div class="card-body">
-                                                <p><strong>Unidad:</strong> %</p>
-                                                <p><strong>Último valor:</strong> 3.5%</p>
-                                                <p><strong>Fecha carga:</strong> 10/07/2025</p>
-                                                <a href="#" class="btn btn-outline-primary btn-sm">Ver
-                                                    histórico</a>
-                                                <a href="#" class="btn btn-outline-secondary btn-sm">Editar</a>
+                                        </div>
+
+                                        <!-- Tarjeta KPI Sayisfacción del cliente -->
+                                        <div class="col-md-4 kpi-tarjeta" data-estado="pendiente"
+                                            data-periodo="2025-07">
+                                            <div class="card border-danger">
+                                                <div class="card-header bg-danger text-white">
+                                                    <h5 class="card-title">Satisfacción del cliente</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p><strong>Unidad:</strong> Días</p>
+                                                    <p><strong>Último valor:</strong> N/D</p>
+                                                    <p><strong>Fecha carga:</strong> -</p>
+                                                    <a href="#" class="btn btn-danger btn-sm">Cargar ahora</a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tarjeta KPI con tiempo de procesamiento -->
+                                        <div class="col-md-4 kpi-tarjeta" data-estado="vencido" data-periodo="2025-07">
+                                            <div class="card border-warning">
+                                                <div class="card-header bg-warning text-dark">
+                                                    <h5 class="card-title">Tiempo de procesamiento</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p><strong>Unidad:</strong> $</p>
+                                                    <p><strong>Último valor:</strong> 250</p>
+                                                    <p><strong>Fecha carga:</strong> 01/07/2025</p>
+                                                    <a href="#" class="btn btn-warning btn-sm">Actualizar</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Bloque de ayuda y fechas clave -->
-                                <div class="row mt-4">
-                                    <div class="col-md-6">
-                                        <div class="card card-info">
-                                            <div class="card-header">
-                                                <h5 class="card-title"><i class="fas fa-calendar-alt"></i>
-                                                    Fechas clave
-                                                </h5>
+                                    <!-- tasa de rotación -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-4 kpi-tarjeta" data-estado="cargado" data-periodo="2025-07">
+                                            <div class="card border-success">
+                                                <div class="card-header bg-success text-white">
+                                                    <h5 class="card-title">Tasa de rotación</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p><strong>Unidad:</strong> %</p>
+                                                    <p><strong>Último valor:</strong> 3.5%</p>
+                                                    <p><strong>Fecha carga:</strong> 10/07/2025</p>
+                                                    <a href="#" class="btn btn-outline-primary btn-sm">Ver
+                                                        histórico</a>
+                                                    <a href="#" class="btn btn-outline-secondary btn-sm">Editar</a>
+                                                </div>
                                             </div>
-                                            <div class="card-body">
-                                                <ul>
-                                                    <li>Cierre de carga mensual: <strong>25 de
-                                                            julio</strong></li>
-                                                    <li>Recordatorio automático: 20 de julio</li>
-                                                </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bloque de ayuda y fechas clave -->
+                                    <div class="row mt-4">
+                                        <div class="col-md-6">
+                                            <div class="card card-info">
+                                                <div class="card-header">
+                                                    <h5 class="card-title"><i class="fas fa-calendar-alt"></i>
+                                                        Fechas clave
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul>
+                                                        <li>Cierre de carga mensual: <strong>25 de
+                                                                julio</strong></li>
+                                                        <li>Recordatorio automático: 20 de julio</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="card card-light">
+                                                <div class="card-header">
+                                                    <h5 class="card-title"><i class="fas fa-question-circle"></i> Ayuda
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>¿Cómo se calcula cada KPI? Consultá el <a href="#">manual
+                                                            del
+                                                            usuario</a> o descargá las <a href="#">fichas
+                                                            técnicas</a>.</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <div class="card card-light">
-                                            <div class="card-header">
-                                                <h5 class="card-title"><i class="fas fa-question-circle"></i> Ayuda</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p>¿Cómo se calcula cada KPI? Consultá el <a href="#">manual
-                                                        del
-                                                        usuario</a> o descargá las <a href="#">fichas
-                                                        técnicas</a>.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                </div> <!-- /.container-fluid -->
+                            </div> <!-- /.content -->
+                        </div> <!-- /.content-wrapper -->
 
-                            </div> <!-- /.container-fluid -->
-                        </div> <!-- /.content -->
-                    </div> <!-- /.content-wrapper -->
-
-                </div> <!-- ./wrapper -->
-                <!-- <body class="p-4"> -->
+                    </div> <!-- ./wrapper -->
+                    <!-- <body class="p-4"> -->
 
 
-                <!--end::Container-->
-            </div>
-            <!--end::App Content-->
+                    <!--end::Container-->
+                </div>
+                <!--end::App Content-->
 
-            <footer class="main-footer text-center">
-                <strong>© 2025 - MiResultIQ 1.0</strong>
-            </footer>
+                <footer class="main-footer text-center">
+                    <strong>© 2025 - MiResultIQ 1.0</strong>
+                </footer>
 
         </main>
         <!--end::App nain-->
@@ -707,6 +730,7 @@
                 </div>
             </div>
         </div>
+
         <script>
             document.getElementById('confirmLogout').addEventListener('click', function () {
                 // Limpiar lo necesario
@@ -798,8 +822,7 @@ Debería poder verse una unica curva que represente el total de mediciones solic
         });
     </script>
     <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
+
 
     <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
@@ -807,20 +830,6 @@ Debería poder verse una unica curva que represente el total de mediciones solic
     <!-- ChartJS -->
 
     <script>
-        // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-        // IT'S ALL JUST JUNK FOR DEMO
-        // ++++++++++++++++++++++++++++++++++++++++++
-
-        /* apexcharts
-         * -------
-         * Here we will create a few charts using apexcharts
-         */
-
-        //-----------------------
-        // - MONTHLY SALES CHART -
-        //-----------------------
-
-
 
         const sales_chart_options = {
             series: [
@@ -838,24 +847,24 @@ Debería poder verse una unica curva que represente el total de mediciones solic
                 },
             ],
 
-// Tipos principales de gráficos:
+            // Tipos principales de gráficos:
 
-// 'line' - Gráfico de líneas (el que estás usando)
-// 'area' - Gráfico de área (comentado en tu código)
-// 'bar' - Gráfico de barras (comentado en tu código)
-// 'column' - Gráfico de columnas (barras verticales)
-// 'pie' - Gráfico circular/torta
-// 'donut' - Gráfico de dona
-// 'radialBar' - Barra radial/circular
-// 'scatter' - Gráfico de dispersión
-// 'bubble' - Gráfico de burbujas
-// 'heatmap' - Mapa de calor
-// 'treemap' - Mapa de árbol
-// 'boxPlot' - Diagrama de caja
-// 'candlestick' - Gráfico de velas (para datos financieros)
-// 'radar' - Gráfico de radar/araña
-// 'polarArea' - Gráfico de área polar
-// 'rangeBar' - Barras de rango (para rangos de tiempo/valores)
+            // 'line' - Gráfico de líneas (el que estás usando)
+            // 'area' - Gráfico de área (comentado en tu código)
+            // 'bar' - Gráfico de barras (comentado en tu código)
+            // 'column' - Gráfico de columnas (barras verticales)
+            // 'pie' - Gráfico circular/torta
+            // 'donut' - Gráfico de dona
+            // 'radialBar' - Barra radial/circular
+            // 'scatter' - Gráfico de dispersión
+            // 'bubble' - Gráfico de burbujas
+            // 'heatmap' - Mapa de calor
+            // 'treemap' - Mapa de árbol
+            // 'boxPlot' - Diagrama de caja
+            // 'candlestick' - Gráfico de velas (para datos financieros)
+            // 'radar' - Gráfico de radar/araña
+            // 'polarArea' - Gráfico de área polar
+            // 'rangeBar' - Barras de rango (para rangos de tiempo/valores)
 
             chart: {
                 height: 180,
@@ -990,6 +999,12 @@ Debería poder verse una unica curva que represente el total de mediciones solic
         createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
         createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
 
+        // Datos simulados para los indicadores
+        const dataMargen = [2.5, 2.8, 3.0, 3.3, 3.4, 3.5];
+
+        // Dibujar los mini gráficos (sparklines)
+        createSparklineChart('#sparkline-margen', dataMargen);
+
         //-------------
         // - PIE CHART -
         //-------------
@@ -1014,6 +1029,8 @@ Debería poder verse una unica curva que represente el total de mediciones solic
         //-----------------
     </script>
     <!--end::Script-->
+
+
 </body>
 <!--end::Body-->
 

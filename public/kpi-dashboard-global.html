@@ -559,6 +559,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card mb-4">
+
+
                                                 <div class="card-header">
                                                     <h5 class="card-title">Reporte de Evolución</h5>
                                                     <div class="card-tools">
@@ -587,20 +589,25 @@
                                                         </button>
                                                     </div>
                                                 </div>
+
+
                                                 <!-- /.card-header -->
                                                 <div class="card-body">
                                                     <!--begin::Row-->
                                                     <div class="row">
+
                                                         <div class="col-md-8">
                                                             <p class="text-center">
-                                                                <strong>Evolución último semestre</strong>
+                                                                <strong>Evolución histórica</strong>
                                                             </p>
                                                             <div id="sales-chart"></div>
                                                         </div>
+
                                                         <!-- /.col -->
                                                         <div class="col-md-4">
                                                             <p class="text-center"><strong>Cumplimiento de
                                                                     Objetivos</strong></p>
+                                                            <!-- /.progress-group Margen de Ganancia Bruta -->
                                                             <div class="progress-group">
                                                                 Margen de Ganancia Bruta
                                                                 <span class="float-end"><b>160</b>/200</span>
@@ -609,7 +616,7 @@
                                                                         style="width: 80%"></div>
                                                                 </div>
                                                             </div>
-                                                            <!-- /.progress-group -->
+                                                            <!-- /.progress-group Satisfacción del cliente -->
                                                             <div class="progress-group">
                                                                 Satisfacción del Cliente
                                                                 <span class="float-end"><b>310</b>/400</span>
@@ -618,7 +625,7 @@
                                                                         style="width: 75%"></div>
                                                                 </div>
                                                             </div>
-                                                            <!-- /.progress-group -->
+                                                            <!-- /.progress-group Tiempo de procesamiento -->
                                                             <div class="progress-group">
                                                                 <span class="progress-text">Tiempo de
                                                                     procesamiento</span>
@@ -628,7 +635,7 @@
                                                                         style="width: 60%"></div>
                                                                 </div>
                                                             </div>
-                                                            <!-- /.progress-group -->
+                                                            <!-- /.progress-group Send Inquiries-->
                                                             <div class="progress-group">
                                                                 Send Inquiries
                                                                 <span class="float-end"><b>250</b>/500</span>
@@ -639,12 +646,15 @@
                                                             </div>
                                                             <!-- /.progress-group -->
                                                         </div>
-                                                        <!-- /.col -->
+
                                                     </div>
                                                     <!--end::Row-->
+
                                                 </div>
                                                 <!-- ./card-body -->
+
                                                 <div class="card-footer">
+                                                    <!--REVENUE - COST - PROFIT - COMPLETIONS -->
                                                     <!--begin::Row-->
                                                     <div class="row">
                                                         <div class="col-md-3 col-6">
@@ -691,6 +701,7 @@
                                                     </div>
                                                     <!-- /.card-footer -->
                                                 </div>
+
                                                 <!-- /.card -->
                                                 <!-- 🔽 KPIs al pie -->
                                                 <div class="row mt-4" id="kpiCards"></div>
@@ -1160,7 +1171,7 @@
                 const formula_calculo = node.formula_calculo ?? "-";
                 const freq_medicion = CodigosService.getNombreCodigo(node.freq_medicion) || (node.freq_medicion ?? '');
                 const responsable = node.responsable ?? "-";
-
+                const key_id = node.id;
 
                 det.innerHTML = `
                     <div class="card card-body bg-light">
@@ -1214,7 +1225,7 @@
                 // Eventos de los botones
                 document.getElementById('btnDetalle').onclick = () => {
                     document.getElementById('modalDetalleBody').innerHTML = `
-                <p><strong>Código:</strong> ${codigo}</p>
+                <p><strong>Código:</strong> ${codigo} (${key_id})</p>
                 <p><strong>Descripción:</strong> ${descripcion}</p>
                 <p><strong>Objetivo:</strong> ${objetivo}${unidad}</p>
                 <p><strong>Fuente de datos:</strong> ${fuente_datos}</p>
@@ -1225,6 +1236,9 @@
             `;
                     new bootstrap.Modal(document.getElementById('modalDetalle')).show();
                 };
+
+
+
 
                 // Evento botón evolución
                 // document.getElementById('btnEvolucion').onclick = async () => {
@@ -1285,44 +1299,48 @@
                         const graficoDiv = document.getElementById("grafico-evolucion");
                         graficoDiv.style.display = "block"; // 👈 mostramos el bloque
 
-                        try {
-                            const res = await fetch(`/api/mediciones/${idIndicador}`);
-                            const json = await res.json();
-                            if (!json.success) throw new Error("Error cargando mediciones");
-                            const mediciones = json.data;
+                        // Llamamos a la función que renderiza el gráfico
+                        renderIndicadorChart(key_id);
 
-                            // Ordenar por fecha
-                            mediciones.sort((a, b) => new Date(a.med_fecha_registro) - new Date(b.med_fecha_registro));
+                        // try {
+                            // const res = await fetch(`/api/mediciones/${idIndicador}`);
+                            // const res = await fetch(`/api/mediciones/${idIndicador}`);
+                            // const json = await res.json();
+                            // if (!json.success) throw new Error("Error cargando mediciones");
+                            // const mediciones = json.data;
 
-                            // Preparar datos para Chart.js
-                            const labels = mediciones.map(m => new Date(m.med_fecha_registro).toLocaleDateString("es-AR"));
-                            const values = mediciones.map(m => m.med_valor);
+                            // // Ordenar por fecha
+                            // mediciones.sort((a, b) => new Date(a.med_fecha_registro) - new Date(b.med_fecha_registro));
 
-                            // Destruir gráfico anterior si existe
-                            if (window.evolChart) {
-                                window.evolChart.destroy();
-                            }
+                            // // Preparar datos para Chart.js
+                            // const labels = mediciones.map(m => new Date(m.med_fecha_registro).toLocaleDateString("es-AR"));
+                            // const values = mediciones.map(m => m.med_valor);
 
-                            const ctx = document.getElementById("chartEvolucion").getContext("2d");
-                            window.evolChart = new Chart(ctx, {
-                                type: "line",
-                                data: {
-                                    labels,
-                                    datasets: [{
-                                        label: "Valor",
-                                        data: values,
-                                        fill: false,
-                                        borderColor: "#2563eb",
-                                        tension: 0.1
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    plugins: {
-                                        legend: { display: true }
-                                    }
-                                }
-                            });
+                            // // Destruir gráfico anterior si existe
+                            // if (window.evolChart) {
+                            //     window.evolChart.destroy();
+                            // }
+
+                            // const ctx = document.getElementById("chartEvolucion").getContext("2d");
+                            // window.evolChart = new Chart(ctx, {
+                            //     type: "line",
+                            //     data: {
+                            //         labels,
+                            //         datasets: [{
+                            //             label: "Valor",
+                            //             data: values,
+                            //             fill: false,
+                            //             borderColor: "#2563eb",
+                            //             tension: 0.1
+                            //         }]
+                            //     },
+                            //     options: {
+                            //         responsive: true,
+                            //         plugins: {
+                            //             legend: { display: true }
+                            //         }
+                            //     }
+                            // });
 
                             // Render tarjetas con últimos valores
                             // const tarjetasDiv = document.getElementById("tarjetasEvolucion");
@@ -1336,23 +1354,23 @@
                             // `).join("");
 
                             // ✅ generar tarjetas KPI dinámicas
-                            crearKPICards({
-                                valorActual: values[values.length - 1],
-                                cambio: values.length > 1
-                                    ? ((values[values.length - 1] - values[values.length - 2]) / values[values.length - 2] * 100).toFixed(1)
-                                    : 0,
-                                cumplimiento: 80, // 🔜 después lo reemplazamos por tu cálculo real
-                                meta: "$300",
-                                promedio6: (values.slice(-6).reduce((a, b) => a + b, 0) / Math.min(6, values.length)).toFixed(1),
-                                rangoMeses: "Últimos 6 meses",
-                                mejorMesValor: Math.max(...values),
-                                mejorMesNombre: labels[values.indexOf(Math.max(...values))]
-                            });
+                            // crearKPICards({
+                            //     valorActual: values[values.length - 1],
+                            //     cambio: values.length > 1
+                            //         ? ((values[values.length - 1] - values[values.length - 2]) / values[values.length - 2] * 100).toFixed(1)
+                            //         : 0,
+                            //     cumplimiento: 80, // 🔜 después lo reemplazamos por tu cálculo real
+                            //     meta: "$300",
+                            //     promedio6: (values.slice(-6).reduce((a, b) => a + b, 0) / Math.min(6, values.length)).toFixed(1),
+                            //     rangoMeses: "Últimos 6 meses",
+                            //     mejorMesValor: Math.max(...values),
+                            //     mejorMesNombre: labels[values.indexOf(Math.max(...values))]
+                            // });
 
-                        } catch (err) {
-                            console.error(err);
-                            alert("No se pudieron cargar las mediciones");
-                        }
+                        // } catch (err) {
+                        //     console.error(err);
+                        //     alert("No se pudieron cargar las mediciones");
+                        // }
                     }
 
                     if (e.target && e.target.id === "btnCerrarEvolucion") {
@@ -1474,6 +1492,284 @@
     <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+
+
+    <script>
+        // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
+        // IT'S ALL JUST JUNK FOR DEMO
+        // ++++++++++++++++++++++++++++++++++++++++++
+
+        /* apexcharts
+         * -------
+         * Here we will create a few charts using apexcharts
+         */
+
+        //-----------------------
+        // - MONTHLY SALES CHART -
+        //-----------------------
+
+
+
+        const sales_chart_options = {
+            series: [
+                {
+                    name: 'Margen Ganancia Bruta',
+                    data: [14, 24, 40, 19, 86, 27, 80],
+                },
+                {
+                    name: 'Satisf Cliente',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                },
+                {
+                    name: 'Tiempo Procesamiento',
+                    data: [50, 50, 85, 95, 50, 50, 50],
+                },
+            ],
+
+            // Tipos principales de gráficos:
+
+            // 'line' - Gráfico de líneas (el que estás usando)
+            // 'area' - Gráfico de área (comentado en tu código)
+            // 'bar' - Gráfico de barras (comentado en tu código)
+            // 'column' - Gráfico de columnas (barras verticales)
+            // 'pie' - Gráfico circular/torta
+            // 'donut' - Gráfico de dona
+            // 'radialBar' - Barra radial/circular
+            // 'scatter' - Gráfico de dispersión
+            // 'bubble' - Gráfico de burbujas
+            // 'heatmap' - Mapa de calor
+            // 'treemap' - Mapa de árbol
+            // 'boxPlot' - Diagrama de caja
+            // 'candlestick' - Gráfico de velas (para datos financieros)
+            // 'radar' - Gráfico de radar/araña
+            // 'polarArea' - Gráfico de área polar
+            // 'rangeBar' - Barras de rango (para rangos de tiempo/valores)
+
+            chart: {
+                height: 180,
+                // type: 'area',
+                // type: 'bar',
+                // type: 'line',
+                type: 'area',
+                toolbar: {
+                    show: true,
+                },
+            },
+            legend: {
+                show: false, // leyenda de variables en eje x
+            },
+            colors: ['#20c997', '#f70505', '#0d6efd'],  // verde azul  verde  rojo
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                curve: 'smooth',
+            },
+            xaxis: {
+                type: 'datetime',
+                categories: [
+                    '2025-01-01',
+                    '2025-02-01',
+                    '2025-03-01',
+                    '2025-04-01',
+                    '2025-05-01',
+                    '2025-06-01',
+                    '2025-07-01',
+                ],
+            },
+            tooltip: {
+                x: {
+                    format: 'MMMM yyyy',
+                },
+            },
+        };
+
+        Apex.chart = {
+            locales: [{
+                name: "es",
+                options: {
+                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    days: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    shortDays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                    toolbar: {
+                        exportToSVG: "Descargar SVG",
+                        exportToPNG: "Descargar PNG",
+                        exportToCSV: "Descargar CSV",
+                        menu: "Menú",
+                        selection: "Selección",
+                        selectionZoom: "Zoom selección",
+                        zoomIn: "Acercar",
+                        zoomOut: "Alejar",
+                        pan: "Mover",
+                        reset: "Restablecer Zoom",
+                    }
+                }
+            }],
+            defaultLocale: "es"
+        };
+
+
+        // const sales_chart = new ApexCharts(
+        //     document.querySelector('#sales-chart'),
+        //     sales_chart_options,
+        // );
+        // sales_chart.render();
+
+        //---------------------------
+        // - END MONTHLY SALES CHART -
+        //---------------------------
+
+
+        // Latest Orders
+
+        function createSparklineChart(selector, data) {
+            const options = {
+                series: [{ data }],
+                chart: {
+                    type: 'line',
+                    width: 150,
+                    height: 30,
+                    sparkline: {
+                        enabled: true,
+                    },
+                },
+                colors: ['var(--bs-primary)'],
+                stroke: {
+                    width: 2,
+                },
+                tooltip: {
+                    fixed: {
+                        enabled: false,
+                    },
+                    x: {
+                        show: false,
+                    },
+                    y: {
+                        title: {
+                            formatter() {
+                                return '';
+                            },
+                        },
+                    },
+                    marker: {
+                        show: false,
+                    },
+                },
+            };
+
+            // const chart = new ApexCharts(document.querySelector(selector), options);
+            // chart.render();
+        }
+
+        const table_sparkline_1_data = [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54];
+        const table_sparkline_2_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 44];
+        const table_sparkline_3_data = [15, 46, 21, 59, 33, 15, 34, 42, 56, 19, 64];
+        const table_sparkline_4_data = [30, 56, 31, 69, 43, 35, 24, 32, 46, 29, 64];
+        const table_sparkline_5_data = [20, 76, 51, 79, 53, 35, 54, 22, 36, 49, 64];
+        const table_sparkline_6_data = [5, 36, 11, 69, 23, 15, 14, 42, 26, 19, 44];
+        const table_sparkline_7_data = [12, 56, 21, 39, 73, 45, 64, 52, 36, 59, 74];
+
+        // createSparklineChart('#table-sparkline-1', table_sparkline_1_data);
+        // createSparklineChart('#table-sparkline-2', table_sparkline_2_data);
+        // createSparklineChart('#table-sparkline-3', table_sparkline_3_data);
+        // createSparklineChart('#table-sparkline-4', table_sparkline_4_data);
+        // createSparklineChart('#table-sparkline-5', table_sparkline_5_data);
+        // createSparklineChart('#table-sparkline-6', table_sparkline_6_data);
+        // createSparklineChart('#table-sparkline-7', table_sparkline_7_data);
+
+        //-------------
+        // - PIE CHART -
+        //-------------
+
+        const pie_chart_options = {
+            series: [700, 500, 400, 600, 300, 100],
+            chart: {
+                type: 'donut',
+            },
+            labels: ['Chrome', 'Edge', 'FireFox', 'Safari', 'Opera', 'IE'],
+            dataLabels: {
+                enabled: false,
+            },
+            colors: ['#0d6efd', '#20c997', '#ffc107', '#d63384', '#6f42c1', '#adb5bd'],
+        };
+
+        // const pie_chart = new ApexCharts(document.querySelector('#pie-chart'), pie_chart_options);
+        // pie_chart.render();
+
+        //-----------------
+        // - END PIE CHART -
+        //-----------------
+    </script>
+    <!--end::Script-->
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        // Función para renderizar el gráfico de un indicador
+        async function renderIndicadorChart(idIndicador) {
+            alert(`entro en la funcion ${idIndicador}`);
+            try {
+                alert(`entro en el try ${idIndicador}`);
+                const response = await fetch(`/api/mediciones/${idIndicador}`);
+                const result = await response.json();
+
+                const chartContainer = document.querySelector('#sales-chart');
+
+                if (!result.success || result.data.length === 0) {
+                    if (window.salesChart) window.salesChart.destroy();
+                    chartContainer.innerHTML = '<p class="text-center">Sin datos</p>';
+                    return;
+                }
+
+                const valores = result.data.map(d => d.med_valor);
+
+                console.log (`valores:  ${valores}`);
+
+                const periodos = result.data.map(d => d.med_valor_periodo);
+                console.log (`periodos:  ${periodos}`);
+
+                const options = {
+                    chart: { type: 'line', height: 350, toolbar: { show: true } },
+                    series: [{ name: 'Valor', data: valores }],
+                    xaxis: { categories: periodos, type: 'datetime' },
+                    stroke: { curve: 'smooth' },
+                    tooltip: { x: { format: 'dd/MM/yyyy' } },
+                    colors: ['#0d6efd'],
+                    title: { text: 'Evolución histórica', align: 'left' },
+                    dataLabels: { enabled: false },
+                };
+
+                if (window.salesChart) window.salesChart.destroy();
+                window.salesChart = new ApexCharts(chartContainer, options);
+                window.salesChart.render();
+
+            } catch (error) {
+                console.error('Error renderizando gráfico del indicador:', error);
+            }
+        }
+
+        // // Asociar botón de Evolución
+        // document.getElementById('btnEvolucion').addEventListener('click', () => {
+        //     if (!window.activeNodeId) {
+        //         console.error('No se definió el indicador activo (node.id)');
+        //         return;
+        //     }
+        //     // renderIndicadorChart(window.activeNodeId); // usar la variable activa
+        //     renderIndicadorChart(55); // usar la variable activa
+        // });
+
+    </script>
+
+
+
+
+
+
 
 </body>
 
