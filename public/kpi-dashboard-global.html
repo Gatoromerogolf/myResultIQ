@@ -530,12 +530,15 @@
 
                                             <div class="mt-3 text-muted small">
                                                 <p><strong>Leyenda:</strong></p>
-                                                <ul>
-                                                    <li>% cumplimiento = valor/objetivo (máx. 100%) ponderado por el
+                                                <!-- <ul>
+                                                    <li>% cumplimiento = valor actual / objetivo o meta (máx. 100%) ponderado por el
                                                         peso.
                                                     </li>
                                                     <li>Si faltan pesos, se distribuyen en partes iguales.</li>
-                                                </ul>
+                                                </ul> -->
+                                                <div id="leyendaCumplimiento" class="mt-3 text-muted small">
+                                                    <!-- Texto dinámico se llenará desde JS -->
+                                                </div>
                                             </div>
                                         </div>
 
@@ -618,8 +621,8 @@
                                                                     Objetivos</strong></p> -->
 
 
-                                                            <!-- /.progress-group Margen de Ganancia Bruta -->
-                                                            <!-- <div class="progress-group">
+                                                        <!-- /.progress-group Margen de Ganancia Bruta -->
+                                                        <!-- <div class="progress-group">
                                                                 Margen de Ganancia Bruta
                                                                 <span class="float-end"><b>160</b>/200</span>
                                                                 <div class="progress progress-sm">
@@ -627,8 +630,8 @@
                                                                         style="width: 80%"></div>
                                                                 </div>
                                                             </div> -->
-                                                            <!-- /.progress-group Satisfacción del cliente -->
-                                                            <!-- <div class="progress-group">
+                                                        <!-- /.progress-group Satisfacción del cliente -->
+                                                        <!-- <div class="progress-group">
                                                                 Satisfacción del Cliente
                                                                 <span class="float-end"><b>310</b>/400</span>
                                                                 <div class="progress progress-sm">
@@ -636,8 +639,8 @@
                                                                         style="width: 75%"></div>
                                                                 </div>
                                                             </div> -->
-                                                            <!-- /.progress-group Tiempo de procesamiento -->
-                                                            <!-- <div class="progress-group">
+                                                        <!-- /.progress-group Tiempo de procesamiento -->
+                                                        <!-- <div class="progress-group">
                                                                 <span class="progress-text">Tiempo de
                                                                     procesamiento</span>
                                                                 <span class="float-end"><b>480</b>/800</span>
@@ -646,8 +649,8 @@
                                                                         style="width: 60%"></div>
                                                                 </div>
                                                             </div> -->
-                                                            <!-- /.progress-group Send Inquiries-->
-                                                            <!-- <div class="progress-group">
+                                                        <!-- /.progress-group Send Inquiries-->
+                                                        <!-- <div class="progress-group">
                                                                 Send Inquiries
                                                                 <span class="float-end"><b>250</b>/500</span>
                                                                 <div class="progress progress-sm">
@@ -655,7 +658,7 @@
                                                                         style="width: 50%"></div>
                                                                 </div>
                                                             </div> -->
-                                                            <!-- /.progress-group -->
+                                                        <!-- /.progress-group -->
                                                         <!-- </div> -->
 
                                                     </div>
@@ -664,10 +667,10 @@
                                                 </div>
                                                 <!-- ./card-body -->
 
-                                                <div class="card-footer">
-                                                    <!--REVENUE - COST - PROFIT - COMPLETIONS -->
-                                                    <!--begin::Row-->
-                                                    <div class="row">
+                                                <!-- <div class="card-footer"> -->
+                                                <!--REVENUE - COST - PROFIT - COMPLETIONS -->
+                                                <!--begin::Row-->
+                                                <!-- <div class="row">
                                                         <div class="col-md-3 col-6">
                                                             <div class="text-center border-end">
                                                                 <span class="text-success">
@@ -676,9 +679,9 @@
                                                                 <h5 class="fw-bold mb-0">$35,210.43</h5>
                                                                 <span class="text-uppercase">TOTAL REVENUE</span>
                                                             </div>
-                                                        </div>
-                                                        <!-- /.col -->
-                                                        <div class="col-md-3 col-6">
+                                                        </div> -->
+                                                <!-- /.col -->
+                                                <!-- <div class="col-md-3 col-6">
                                                             <div class="text-center border-end">
                                                                 <span class="text-info"> <i
                                                                         class="bi bi-caret-left-fill"></i> 0%
@@ -686,9 +689,9 @@
                                                                 <h5 class="fw-bold mb-0">$10,390.90</h5>
                                                                 <span class="text-uppercase">TOTAL COST</span>
                                                             </div>
-                                                        </div>
-                                                        <!-- /.col -->
-                                                        <div class="col-md-3 col-6">
+                                                        </div> -->
+                                                <!-- /.col -->
+                                                <!-- <div class="col-md-3 col-6">
                                                             <div class="text-center border-end">
                                                                 <span class="text-success">
                                                                     <i class="bi bi-caret-up-fill"></i> 20%
@@ -696,9 +699,9 @@
                                                                 <h5 class="fw-bold mb-0">$24,813.53</h5>
                                                                 <span class="text-uppercase">TOTAL PROFIT</span>
                                                             </div>
-                                                        </div>
-                                                        <!-- /.col -->
-                                                        <div class="col-md-3 col-6">
+                                                        </div> -->
+                                                <!-- /.col -->
+                                                <!-- <div class="col-md-3 col-6">
                                                             <div class="text-center">
                                                                 <span class="text-danger">
                                                                     <i class="bi bi-caret-down-fill"></i> 18%
@@ -706,12 +709,12 @@
                                                                 <h5 class="fw-bold mb-0">1200</h5>
                                                                 <span class="text-uppercase">GOAL COMPLETIONS</span>
                                                             </div>
-                                                        </div>
-                                                        <!-- </div> -->
-                                                        <!--end::Row-->
-                                                    </div>
-                                                    <!-- /.card-footer -->
-                                                </div>
+                                                        </div> -->
+                                                <!-- </div> -->
+                                                <!--end::Row-->
+                                                <!-- </div> -->
+                                                <!-- /.card-footer -->
+                                                <!-- </div> -->
 
                                                 <!-- /.card -->
                                                 <!-- 🔽 KPIs al pie -->
@@ -719,6 +722,21 @@
 
                                             </div>
                                             <!-- /.col -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="content mt-3" id="analisis-automatico" style="display: none;">
+                        <div class="container-fluid">
+                            <div class="card card-primary card-outline">
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="bg-white rounded shadow-sm p-4">
+                                            <h4 class="fw-bold mb-3">📋 Análisis Automático</h4>
+                                            <div class="row" id="analisisContainer"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -1030,6 +1048,12 @@
                 }
             }
 
+            if (node.type !== 'indicator') {
+                document.getElementById('analisis-automatico').style.display = 'none';
+            }
+
+
+            actualizarLeyenda(node); // actualiza la leyenda según el nodo actual
             drawRing('ring', comp);       // gráfico circular
             renderBreadcrumb();           // breadcrumb
             renderChildren(node);         // tiles de hijos
@@ -1058,6 +1082,22 @@
             svg.appendChild(fg);
             const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text'); txt.setAttribute('x', 60); txt.setAttribute('y', 68); txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-size', '18'); txt.setAttribute('font-weight', '700'); txt.textContent = percent.toFixed(1) + '%'; svg.appendChild(txt);
         }
+
+        function actualizarLeyenda(node) {
+            const leyendaDiv = document.getElementById('leyendaCumplimiento');
+            if (!leyendaDiv) return;
+
+            if (node.type === 'indicator') {
+                leyendaDiv.innerHTML = `
+            El porcentaje de cumplimiento corresponde a la relación entre el valor alcanzado y la meta establecida.
+        `;
+            } else {
+                leyendaDiv.innerHTML = `
+            El porcentaje de cumplimiento corresponde al promedio ponderado del cumplimiento de cada uno de los componentes del nodo.
+        `;
+            }
+        }
+
 
         // // 🚫🚫🚫  renderBreadcrumb
         function renderBreadcrumb() {
@@ -1261,7 +1301,7 @@
                 {
                     titulo: 'Valor Actual',
                     valor: `${datos.valorActual ?? '-'}`,
-                    subtitulo: `${datos.cambio >= 0 ? '↗️' : '↘️'} ${datos.cambio >= 0 ? '+' : ''}${datos.cambio}% vs mes anterior`,
+                    subtitulo: `${datos.cambio >= 0 ? '↗️' : '↘️'} ${datos.cambio >= 0 ? '+' : ''}${datos.cambio}% vs medición anterior`,
                     color: datos.cambio >= 0 ? '#198754' : '#dc3545',
                     icono: '💰'
                 },
@@ -1400,6 +1440,7 @@
 
         // Función para renderizar el gráfico de un indicador
         async function renderIndicadorChart(idIndicador, meta) {
+
             try {
                 const response = await fetch(`/api/mediciones/${idIndicador}`);
                 const result = await response.json();
@@ -1475,19 +1516,6 @@
                     window.salesChart.updateOptions({ chart: { type: 'bar' } });
                 };
 
-
-
-                // Render tarjetas con últimos valores
-                // const tarjetasDiv = document.getElementById("tarjetasEvolucion");
-                // tarjetasDiv.innerHTML = mediciones.map(m => `
-                //         <div class="card mb-2">
-                //             <div class="card-body p-2">
-                //                 <strong>${new Date(m.med_fecha_registro).toLocaleDateString("es-AR")}:</strong>
-                //                 ${m.med_valor}
-                //             </div>
-                //         </div>
-                //     `).join("");
-
                 // ✅ generar tarjetas KPI dinámicas
 
                 const valorActual = valores[valores.length - 1];
@@ -1505,15 +1533,206 @@
                     cumplimiento: cumplimiento,
                     meta: meta,
                     promedio6: (valores.slice(-6).reduce((a, b) => a + b, 0) / Math.min(6, valores.length)).toFixed(1),
-                    rangoMeses: "Últimos 6 meses",
+                    rangoMeses: "Últimas 6 mediciones",
                     mejorMesValor: mejorMes,
                     mejorMesNombre: periodos[valores.indexOf(mejorMes)]
                 });
+
+                const primerValor = valores[0];
+                const ultimoValor = valorActual;
+                const crecimientoTotal = Math.round(((ultimoValor - primerValor) / primerValor) * 100);
+                const brechaPromedio = Math.round(promedio - meta);
+                const mejorIndice = valores.indexOf(mejorMes);
+                const peorValor = Math.min(...valores);
+                const peorIndice = valores.indexOf(peorValor);
+
+                console.log('Datos para análisis:', {
+                    valores,
+                    periodos,
+                    meta,
+                    primerValor,
+                    ultimoValor,
+                    valorAnterior,
+                    crecimientoTotal,
+                    brechaPromedio,
+                    mejorIndice,
+                    mejorMes,
+                    peorValor,
+                    peorIndice,
+                    promedio,
+                    cumplimiento
+                });
+
+                const { observaciones, recomendaciones } = generarAnalisisAutomatico(
+                    valores,
+                    periodos,
+                    meta,
+                    primerValor,
+                    ultimoValor,
+                    valorAnterior,
+                    crecimientoTotal,
+                    brechaPromedio,
+                    mejorIndice,
+                    mejorMes,
+                    peorValor,
+                    peorIndice
+                );
+                const container = document.getElementById('analisisContainer');
+                document.getElementById('analisis-automatico').style.display = 'block';
+
+                container.innerHTML = `
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold mb-3">🔍 Observaciones Clave:</h5>
+                            <ul class="text-muted">
+                                ${observaciones.map(obs => `<li>${obs}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold mb-3">💡 Recomendaciones:</h5>
+                            <ul class="text-muted">
+                                ${recomendaciones.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
 
             } catch (error) {
                 console.error('Error renderizando gráfico del indicador:', error);
             }
         }
+
+        function generarAnalisisAutomatico(
+            valores,
+            periodos,
+            meta,
+            primerValor,
+            ultimoValor,
+            valorAnterior,
+            crecimientoTotal,
+            brechaPromedio,
+            mejorIndice,
+            mejorMes,
+            peorValor,
+            peorIndice,
+            promedio,
+            cumplimiento
+        ) {
+            const observaciones = [];
+            const recomendaciones = [];
+
+            console.log('Generando análisis automático con:', {
+                valores,
+                periodos,
+                meta,
+                primerValor,
+                ultimoValor,
+                valorAnterior,
+                crecimientoTotal,
+                brechaPromedio,
+                mejorIndice,
+                mejorMes,
+                peorValor,
+                peorIndice,
+                promedio,
+                cumplimiento
+            });
+
+            if (crecimientoTotal > 0) {
+                observaciones.push(`Crecimiento positivo del ${crecimientoTotal}% en el período analizado`);
+            } else if (crecimientoTotal < 0) {
+                observaciones.push(`Decrecimiento del ${Math.abs(crecimientoTotal)}% en el período analizado`);
+            }
+
+            observaciones.push(`Mejor resultado en ${periodos[mejorIndice]}: ${mejorMes}`);
+            observaciones.push(`Valor más bajo en ${periodos[peorIndice]}: ${peorValor}`);
+
+            if (brechaPromedio < 0) {
+                observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)}`);
+            } else {
+                observaciones.push(`Superó la meta en promedio por ${brechaPromedio}`);
+            }
+
+            let mesesConsecutivos = 0;
+            for (let i = 1; i < valores.length; i++) {
+                if (valores[i] > valores[i - 1]) {
+                    mesesConsecutivos++;
+                } else {
+                    break;
+                }
+            }
+            if (mesesConsecutivos >= 2) {
+                observaciones.push(`Crecimiento sostenido durante ${mesesConsecutivos + 1} meses consecutivos`);
+            }
+
+            if (ultimoValor < valorAnterior) {
+                const caida = Math.round(((ultimoValor - valorAnterior) / valorAnterior) * 100);
+                observaciones.push(`Caída del ${Math.abs(caida)}% en el último mes`);
+            }
+
+            if (mejorIndice < valores.length - 1) {
+                recomendaciones.push(`Analizar factores de éxito de ${periodos[mejorIndice]} para replicarlos`);
+            }
+
+            if (ultimoValor < meta) {
+                const necesario = Math.round(((meta - ultimoValor) / ultimoValor) * 100);
+                recomendaciones.push(`Requiere incremento del ${necesario}% para alcanzar la meta`);
+            }
+
+            if (ultimoValor > valorAnterior) {
+                recomendaciones.push('Mantener las estrategias del último mes que generaron recuperación');
+            } else if (ultimoValor < valorAnterior) {
+                recomendaciones.push('Investigar causas de la caída reciente y tomar acciones correctivas');
+            }
+
+            // const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+            // const desviacion = Math.sqrt(varianza);
+            // if (desviacion > promedio * 0.2) {
+            //     recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
+            // }
+
+            // const tendenciaReciente = valores.slice(-3);
+            // const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
+            // if (crecimientoReciente) {
+            //     recomendaciones.push('Tendencia positiva en últimos meses - continuar con estrategia actual');
+            // }
+
+            // Recomendaciones
+            if (valores && valores.length > 0) {
+                const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+                const desviacion = Math.sqrt(varianza);
+                if (desviacion > promedio * 0.2) {
+                    recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
+                }
+                const tendenciaReciente = valores.slice(-3);
+                const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
+                if (crecimientoReciente) recomendaciones.push('Tendencia positiva en últimos meses - continuar con estrategia actual');
+            }
+
+            if (cumplimiento < 70) {
+                recomendaciones.push('Revisar si la meta es realista o si se requieren recursos adicionales');
+            }
+
+            return { observaciones, recomendaciones };
+        }
+
+        // function mostrarAnalisis() {
+        //     const { observaciones, recomendaciones } = generarAnalisisAutomatico();
+        //     const container = document.getElementById('analisisContainer');
+
+        //     container.innerHTML = `
+        //         <div class="col-md-6">
+        //             <h5 class="fw-semibold mb-3">🔍 Observaciones Clave:</h5>
+        //             <ul class="text-muted">
+        //                 ${observaciones.map(obs => `<li>${obs}</li>`).join('')}
+        //             </ul>
+        //         </div>
+        //         <div class="col-md-6">
+        //             <h5 class="fw-semibold mb-3">💡 Recomendaciones:</h5>
+        //             <ul class="text-muted">
+        //                 ${recomendaciones.map(rec => `<li>${rec}</li>`).join('')}
+        //             </ul>
+        //         </div>
+        //        `;
+        // }
 
     </script>
 </body>
