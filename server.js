@@ -464,6 +464,78 @@ app.post('/api/indicadores', async (req, res) => {
 });
 
 
+// // 🚫🚫🚫 Calcula cumplimiento del indicador
+// ✅ Calcula cumplimiento del indicador + devuelve datos complementarios
+app.get('/api/indicadores/:codigo/cumplimiento', async (req, res) => {
+    const { codigo } = req.params;
+
+    try {
+        // 1️⃣ Buscar el indicador por su código_id
+        const [indicadores] = await pool.query(`
+            SELECT id, objetivo, meta_tipo, unico_valor, rango_desde, rango_hasta
+            FROM indicadores
+            WHERE codigo_id = ?
+            LIMIT 1
+        `, [codigo]);
+
+        if (!indicadores.length) {
+            return res.status(404).json({ error: 'Indicador no encontrado', porcentaje: 0 });
+        }
+
+        const indicador = indicadores[0];
+
+        // 2️⃣ Obtener la última medición usando el id del indicador
+        const [mediciones] = await pool.query(`
+            SELECT med_valor
+            FROM mediciones
+            WHERE med_indicador_id = ?
+            ORDER BY med_valor_periodo DESC, med_fecha_registro DESC
+            LIMIT 1
+        `, [indicador.id]);
+
+        if (!mediciones.length) {
+            // Sin medición → cumplimiento 0
+            return res.json({
+                porcentaje: 0,
+                objetivo: indicador.objetivo,
+                meta_tipo: indicador.meta_tipo,
+                rango_desde: indicador.rango_desde,
+                rango_hasta: indicador.rango_hasta,
+                id: indicador.id
+            });
+        }
+
+        const medicion = mediciones[0];
+
+        console.log (`Indicador ${indicador.unico_valor}, medicion ${medicion.med_valor}`);
+
+        // 3️⃣ Calcular cumplimiento (acercamiento a la meta)
+        let cumplimiento = 0;
+        if (indicador.unico_valor && medicion.med_valor) {
+            cumplimiento = (medicion.med_valor / indicador.unico_valor) * 100;
+            if (cumplimiento > 100) cumplimiento = 100;
+        }
+
+        console.log(`Cumplimiento calculado: ${cumplimiento}%`);    
+        // 4️⃣ Devolver respuesta completa
+        res.json({
+            porcentaje: cumplimiento,
+            objetivo: indicador.objetivo,
+            meta_tipo: indicador.meta_tipo,
+            unico_valor: indicador.unico_valor,
+            rango_desde: indicador.rango_desde,
+            rango_hasta: indicador.rango_hasta,
+            id: indicador.id
+        });
+
+    } catch (error) {
+        console.error('Error calculando cumplimiento del indicador:', error);
+        res.status(500).json({ error: 'Error al calcular el cumplimiento', porcentaje: 0 });
+    }
+});
+
+
+
 // // 🚫🚫🚫 Crear usuario con imagen
 app.post('/usuarios', upload.single('foto'), async (req, res) => {
     try {
