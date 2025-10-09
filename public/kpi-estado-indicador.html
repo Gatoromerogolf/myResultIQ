@@ -275,40 +275,175 @@
                         <!-- Start col -->
                         <div class="col-md-12">
                             <!--begin::Latest Order Widget-->
+
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
 
-                                    <section id="panelIndicadoresResumen" style="display:none;">
-                                        <h4 class="mb-3">Resumen general de indicadores</h4>
-                                        <div id="listaIndicadoresResumen" class="row"></div>
-                                    </section>
+                                    <!-- =============================== -->
+                                    <!-- 📊 PANEL RESUMEN DE INDICADORES -->
+                                    <!-- =============================== -->
+                                    <div id="panelIndicadoresResumen" style="display:none;">
+                                        <h4 class="mb-3">Resumen de Indicadores</h4>
 
+                                        <!-- 🔹 Barra de filtros -->
+                                        <div class="d-flex flex-wrap mb-3 gap-2 align-items-end">
+                                            <div>
+                                                <label class="form-label mb-1">Sector</label>
+                                                <select id="filtroSector" class="form-select form-select-sm">
+                                                    <option value="">Todos</option>
+                                                </select>
+                                            </div>
 
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                    <div class="table-responsive">
-                                        <table class="table m-0">
+                                            <div>
+                                                <label class="form-label mb-1">Responsable</label>
+                                                <select id="filtroResponsable" class="form-select form-select-sm">
+                                                    <option value="">Todos</option>
+                                                </select>
+                                            </div>
 
-                                        </table>
+                                            <div>
+                                                <label class="form-label mb-1">Indicador</label>
+                                                <select id="filtroIndicador" class="form-select form-select-sm">
+                                                    <option value="">Todos</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="form-label mb-1">Cumplimiento</label>
+                                                <select id="filtroCumplimiento" class="form-select form-select-sm">
+                                                    <option value="">Todos</option>
+                                                    <option value="alto">Alto (&gt;= 90%)</option>
+                                                    <option value="medio">Medio (60–89%)</option>
+                                                    <option value="bajo">Bajo (&lt; 60%)</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="flex-grow-1">
+                                                <label class="form-label mb-1">Buscar</label>
+                                                <input id="filtroTexto" type="text" class="form-control form-control-sm"
+                                                    placeholder="Nombre o descripción...">
+                                            </div>
+
+                                            <button class="btn btn-primary btn-sm"
+                                                onclick="aplicarFiltrosIndicadores()">Filtrar</button>
+                                            <button class="btn btn-secondary btn-sm"
+                                                onclick="resetFiltrosIndicadores()">Limpiar</button>
+                                        </div>
+
+                                        <!-- 🔹 Contenedor de tarjetas y spinner -->
+                                        <div id="listaIndicadoresResumen" class="row position-relative"
+                                            style="min-height: 150px;">
+                                            <!-- Spinner inicial -->
+                                            <div id="spinnerCarga" class="text-center my-5" style="display: none;">
+                                                <div class="spinner-border text-primary" role="status"></div>
+                                                <p id="spinnerTexto" class="mt-2" style="color: blue;">Cargando
+                                                    indicadores...</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <!-- /.table-responsive -->
                                 </div>
-                                <!-- /.card-body -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!--end::Row-->
-                </div>
-                <!--end::Container-->
-            </div>
-            <!--end::App Content-->
 
-            <footer class="main-footer text-center">
-                <strong>© 2025 - myResultIQ 1.0</strong>
-            </footer>
+
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!--end::Row-->
+                    </div>
+                    <!--end::Container-->
+                </div>
+                <!--end::App Content-->
+
+                <section class="content mt-3" id="grafico-evolucion" style="display: none;">
+                    <div class="container-fluid">
+                        <div class="card card-primary card-outline">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card mb-4">
+
+
+                                            <div class="card-header">
+                                                <h5 class="card-title">Reporte de Evolución</h5>
+                                                <div class="card-tools">
+                                                    <button type="button" class="btn btn-tool"
+                                                        data-lte-toggle="card-collapse">
+                                                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                                    </button>
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-tool dropdown-toggle"
+                                                            data-bs-toggle="dropdown">
+                                                            <i class="bi bi-wrench"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-end" role="menu">
+                                                            <a href="#" class="dropdown-item">Action</a>
+                                                            <a href="#" class="dropdown-item">Another action</a>
+                                                            <a href="#" class="dropdown-item"> Something else here
+                                                            </a>
+                                                            <a class="dropdown-divider"></a>
+                                                            <a href="#" class="dropdown-item">Separated link</a>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn btn-tool"
+                                                        data-lte-toggle="card-remove">
+                                                        <i class="bi bi-x-lg"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+
+                                            <!-- /.card-header -->
+                                            <div class="card-body">
+                                                <!--begin::Row-->
+                                                <div class="row">
+
+                                                    <div class="col-md-12">
+                                                        <p class="text-center">
+                                                            <strong>Evolución histórica</strong>
+                                                        </p>
+                                                        <div>
+                                                            <button id="btnLine"
+                                                                class="btn btn-sm btn-primary">Línea</button>
+                                                            <button id="btnArea"
+                                                                class="btn btn-sm btn-success">Área</button>
+                                                            <button id="btnBar"
+                                                                class="btn btn-sm btn-warning">Barra</button>
+                                                        </div>
+                                                        <div id="sales-chart"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- 🔽 KPIs al pie -->
+                                            <div class="row mt-4" id="kpiCards"></div>
+
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content mt-3" id="analisis-automatico" style="display: none;">
+                    <div class="container-fluid">
+                        <div class="card card-primary card-outline">
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="bg-white rounded shadow-sm p-4">
+                                        <h4 class="fw-bold mb-3">📋 Análisis Automático</h4>
+                                        <div class="row" id="analisisContainer"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="main-footer text-center">
+                    <strong>© 2025 - myResultIQ 1.0</strong>
+                </footer>
         </main>
         <!--end::App nain-->
 
@@ -385,8 +520,304 @@
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
     <!-- ChartJS -->
 
+    <!-- =============================== -->
+    <!-- ⚙️ SCRIPTS DE FUNCIONALIDAD -->
+    <!-- =============================== -->
     <script>
+        let indicadoresGlobal = []; // guardamos todos los indicadores originales
+
         async function mostrarPanelIndicadoresResumen() {
+            try {
+                // Mostrar el panel de resumen y ocultar otros
+                document.getElementById('panelIndicadoresResumen').style.display = 'block';
+                if (document.getElementById('tablaIndicadoresContainer'))
+                    document.getElementById('tablaIndicadoresContainer').style.display = 'none';
+                if (document.getElementById('posicionGlobalContainer'))
+                    document.getElementById('posicionGlobalContainer').style.display = 'none';
+
+                const contenedor = document.getElementById('listaIndicadoresResumen');
+                const spinner = document.getElementById('spinnerCarga');
+
+                // Mostrar spinner
+                if (spinner) spinner.style.display = 'block';
+                contenedor.innerHTML = ''; // Limpiar tarjetas antiguas
+
+                // Permitimos que el navegador pinte el spinner
+                await new Promise(resolve => setTimeout(resolve, 50));
+
+                // Obtener todos los indicadores del backend
+                const response = await fetch('/api/indicadores');
+                const indicadores = await response.json();
+
+                indicadoresGlobal = indicadores;
+
+                // Cargar las opciones de los filtros dinámicamente
+                await cargarOpcionesFiltros(indicadores);
+
+                // Por defecto no renderizamos tarjetas
+                contenedor.innerHTML = `
+            <div class="alert alert-info w-100 text-center my-4">
+                <i class="fas fa-info-circle me-2"></i>
+                Seleccioná un filtro y presioná <b>Filtrar</b> para ver los resultados.
+            </div>
+        `;
+
+            } catch (err) {
+                console.error('Error cargando resumen de indicadores:', err);
+                alert('No se pudo cargar el resumen de indicadores.');
+            } finally {
+                // Ocultar spinner
+                const spinner = document.getElementById('spinnerCarga');
+                if (spinner) spinner.style.display = 'none';
+            }
+        }
+
+
+        function normalizeKey(v) {
+            // Normaliza un valor para usar como 'clave' consistente en selects/comparaciones
+            if (v === null || v === undefined) return '';
+            if (typeof v === 'object') {
+                try {
+                    // Si es un objeto, intentamos usar algún campo conocido si existe
+                    if (v.id !== undefined) return String(v.id).trim();
+                    if (v.codigo !== undefined) return String(v.codigo).trim();
+                    if (v._id !== undefined) return String(v._id).trim();
+                    if (v.nombre !== undefined) return String(v.nombre).trim();
+                    // fallback a JSON (estable, aunque largo)
+                    return JSON.stringify(v);
+                } catch (e) {
+                    return String(v);
+                }
+            }
+            return String(v).trim();
+        }
+
+        async function cargarOpcionesFiltros(indicadores) {
+            const selectSector = document.getElementById('filtroSector');
+            const selectResponsable = document.getElementById('filtroResponsable');
+            const selectIndicador = document.getElementById('filtroIndicador');
+
+            selectSector.innerHTML = '<option value="">Todos</option>';
+            selectResponsable.innerHTML = '<option value="">Todos</option>';
+            selectIndicador.innerHTML = '<option value="">Todos</option>';
+
+            // MAP para evitar duplicados y mantener clave normalizada -> label
+            const sectorMap = new Map();
+            const responsableMap = new Map();
+
+            // rellenamos mapas con claves normalizadas
+            for (const ind of indicadores) {
+                const claveSector = normalizeKey(ind.destino);
+                if (!sectorMap.has(claveSector)) sectorMap.set(claveSector, { raw: ind.destino, label: null });
+
+                const claveResp = normalizeKey(ind.responsable);
+                if (!responsableMap.has(claveResp)) responsableMap.set(claveResp, { raw: ind.responsable, label: null });
+
+                // indicadores (directo)
+                const optI = document.createElement('option');
+                optI.value = ind.codigo_id || '';
+                optI.textContent = `${ind.nombre || ''} (${ind.codigo_id || ''})`;
+                selectIndicador.appendChild(optI);
+            }
+
+            // Obtener nombres de sectores (y rellenar labels)
+            for (const [clave, entry] of sectorMap.entries()) {
+                // intentamos obtener el objeto del sector por la raw value
+                try {
+                    const sectorObj = await obtenerSectoresPorUnidad(entry.raw);
+                    const label = sectorObj?.nombre || sectorObj?.name || String(entry.raw || clave) || clave;
+                    entry.label = label;
+                } catch (e) {
+                    entry.label = String(entry.raw || clave);
+                }
+            }
+
+            // Obtener nombres de responsables (y rellenar labels)
+            for (const [clave, entry] of responsableMap.entries()) {
+                try {
+                    const usuario = await obtenerUsuarioPorLegajo(entry.raw);
+                    const label = (usuario?.nombres || usuario?.nombre ? `${usuario.nombres || usuario.nombre} ${usuario.apellido || ''}` : String(entry.raw));
+                    entry.label = label.trim();
+                } catch (e) {
+                    entry.label = String(entry.raw || clave);
+                }
+            }
+
+            // Añadimos options al selectSector con value = clave normalizada
+            for (const [clave, entry] of sectorMap.entries()) {
+                if (!clave) continue; // omitimos claves vacías
+                const opt = document.createElement('option');
+                opt.value = clave;
+                opt.textContent = entry.label || clave;
+                selectSector.appendChild(opt);
+            }
+
+            // Añadimos options al selectResponsable con value = clave normalizada
+            for (const [clave, entry] of responsableMap.entries()) {
+                if (!clave) continue;
+                const opt = document.createElement('option');
+                opt.value = clave;
+                opt.textContent = entry.label || clave;
+                selectResponsable.appendChild(opt);
+            }
+        }
+
+        async function aplicarFiltrosIndicadores() {
+            const contenedor = document.getElementById('listaIndicadoresResumen');
+            const spinner = document.getElementById('spinnerCarga');
+
+            // 1️⃣ Mostrar spinner y ocultar tarjetas
+            if (spinner) spinner.style.display = 'block';
+            if (contenedor) contenedor.style.display = 'none';
+
+            // 2️⃣ Forzar que el navegador pinte el spinner antes de la carga pesada
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            const sectorSel = document.getElementById('filtroSector').value;
+            const responsableSel = document.getElementById('filtroResponsable').value;
+            const indicadorSel = document.getElementById('filtroIndicador').value;
+            const cumplimiento = document.getElementById('filtroCumplimiento').value;
+            const texto = document.getElementById('filtroTexto').value.toLowerCase();
+
+            try {
+                // 3️⃣ Preparar todos los indicadores en paralelo
+                const pendientes = indicadoresGlobal
+                    .filter(ind => !ind._preparado)
+                    .map(async ind => {
+                        ind._destinoKey = normalizeKey(ind.destino);
+                        ind._responsableKey = normalizeKey(ind.responsable);
+
+                        const [usuario, sector, cumplimientoInfo] = await Promise.all([
+                            obtenerUsuarioPorLegajo(ind.responsable).catch(() => null),
+                            obtenerSectoresPorUnidad(ind.destino).catch(() => null),
+                            obtenerCumplimientoIndicador(ind.codigo_id).catch(() => ({ porcentaje: 0 }))
+                        ]);
+
+                        ind._usuario = usuario;
+                        ind._sector = sector;
+                        ind._cumplimiento = cumplimientoInfo;
+                        ind._preparado = true;
+                    });
+
+                if (pendientes.length > 0) await Promise.all(pendientes);
+
+                // 4️⃣ Filtrar indicadores
+                const filtrados = indicadoresGlobal.filter(ind => {
+                    let ok = true;
+
+                    if (sectorSel) ok = ind._destinoKey === sectorSel;
+                    if (responsableSel) ok = ind._responsableKey === responsableSel;
+                    if (indicadorSel && indicadorSel !== '') ok = (ind.codigo_id || '') === indicadorSel;
+
+                    if (cumplimiento) {
+                        const p = (ind._cumplimiento?.porcentaje ?? 0);
+                        if (cumplimiento === 'alto' && p < 90) ok = false;
+                        if (cumplimiento === 'medio' && (p < 60 || p >= 90)) ok = false;
+                        if (cumplimiento === 'bajo' && p >= 60) ok = false;
+                    }
+
+                    if (texto) {
+                        const nombre = (ind.nombre || '').toLowerCase();
+                        const desc = (ind.descripcion || '').toLowerCase();
+                        if (!nombre.includes(texto) && !desc.includes(texto)) ok = false;
+                    }
+
+                    return ok;
+                });
+
+                // 5️⃣ Renderizar tarjetas
+                renderIndicadoresFiltrados(filtrados);
+
+            } catch (err) {
+                console.error('Error aplicando filtros:', err);
+                contenedor.innerHTML = `
+            <div class="alert alert-danger w-100 text-center my-4">
+                Ocurrió un error al filtrar los indicadores.
+            </div>`;
+            } finally {
+                // 6️⃣ Ocultar spinner y mostrar tarjetas
+                if (spinner) spinner.style.display = 'none';
+                if (contenedor) contenedor.style.display = 'flex';
+            }
+        }
+
+
+
+
+        function resetFiltrosIndicadores() {
+            document.getElementById('filtroSector').value = '';
+            document.getElementById('filtroResponsable').value = '';
+            document.getElementById('filtroIndicador').value = '';
+            document.getElementById('filtroCumplimiento').value = '';
+            document.getElementById('filtroTexto').value = '';
+            renderIndicadoresFiltrados(indicadoresGlobal);
+        }
+
+        async function renderIndicadoresFiltrados(lista = indicadoresGlobal) {
+            const contenedor = document.getElementById('listaIndicadoresResumen');
+            contenedor.innerHTML = '';
+
+            if (!lista || lista.length === 0) {
+                contenedor.innerHTML = `
+            <div class="alert alert-warning w-100 text-center my-4">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                No se encontraron indicadores con esos filtros.
+            </div>`;
+                return;
+            }
+
+            for (const ind of lista) {
+                // aseguramos datos auxiliares
+                const usuario = ind._usuario || await obtenerUsuarioPorLegajo(ind.responsable).catch(() => null);
+                const sectores = ind._sector || await obtenerSectoresPorUnidad(ind.destino).catch(() => null);
+                const info = ind._cumplimiento || await obtenerCumplimientoIndicador(ind.codigo_id).catch(() => ({ porcentaje: 0 }));
+
+                // cache
+                ind._usuario = usuario;
+                ind._sector = sectores;
+                ind._cumplimiento = info;
+                ind._destinoKey = ind._destinoKey || normalizeKey(ind.destino);
+
+                const porcentaje = (info && typeof info.porcentaje === 'number') ? info.porcentaje : 0;
+                const color = getColorPorCumplimiento(porcentaje);
+
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-lg-4 mb-3';
+                card.innerHTML = `
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="fw-bold mb-1">${ind.nombre}</h6>
+                            <small class="text-muted">${ind.codigo_id} · ${sectores?.nombre || sectores?.name || ''}</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge rounded-circle me-1"
+                                  style="background-color:${color}; width:18px; height:18px;"
+                                  title="Cumplimiento: ${porcentaje.toFixed(1)}%">
+                            </span>
+                            <small>${porcentaje.toFixed(1)}%</small>
+                            <button class="btn btn-link p-0 ms-2" title="Ver evolución"
+                                    onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                <i class="fas fa-chart-line text-primary"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="mt-2 mb-1"><strong>Objetivo:</strong> ${ind.objetivo}</p>
+                    <p class="mb-1"><strong>Responsable:</strong> ${usuario?.nombres || usuario?.nombre || ''} ${usuario?.apellido || ''}</p>
+                    <p class="mb-0"><small class="text-muted">${ind.descripcion || ''}</small></p>
+                </div>
+            </div>
+        `;
+                contenedor.appendChild(card);
+            }
+        }
+
+    </script>
+
+
+    <script>
+        async function mostrarPanelIndicadoresResumenXXX() {
             try {
                 // Ocultamos otras secciones
                 document.getElementById('panelIndicadoresResumen').style.display = 'block';
@@ -524,9 +955,187 @@
             }
         }
 
+        async function renderIndicadorChart(idIndicador, meta) {
+
+            try {
+                const response = await fetch(`/api/mediciones/${idIndicador}`);
+                const result = await response.json();
+
+                const chartContainer = document.querySelector('#sales-chart');
+                if (!chartContainer) {
+                    console.error('Contenedor #sales-chart no encontrado');
+                    return;
+                }
+
+                if (!result.success || !Array.isArray(result.data) || result.data.length === 0) {
+                    if (window.salesChart) {
+                        try { await window.salesChart.destroy(); } catch (e) { }
+                        window.salesChart = null;
+                    }
+                    chartContainer.innerHTML = '<p class="text-center">Sin datos</p>';
+                    return;
+                }
+
+                const valores = result.data.map(d => parseFloat(d.med_valor) || 0);
+                const periodos = result.data.map(d => {
+                    const str = String(d.med_valor_periodo);
+                    const year = str.slice(0, 4);
+                    const sufijo = str.slice(4);
+                    return `${year}-${sufijo}`;
+                });
+
+                const options = {
+                    chart: {
+                        type: 'area',
+                        height: 350,
+                        toolbar: {
+                            show: true,
+                            tools: {
+                                pan: false, // 🔒 desactiva Panning
+                                zoom: true,
+                                zoomin: true,
+                                zoomout: true,
+                                reset: true,
+                                download: true,
+                                selection: true
+                            }
+                        }
+                    },
+                    series: [{ name: 'Valor', data: valores }],
+                    xaxis: { categories: periodos },
+                    stroke: { curve: 'smooth' },
+                    tooltip: { enabled: true },
+                    colors: ['#0d6efd'],
+                    // title: { text: 'Evolución histórica', align: 'left' },
+                    dataLabels: { enabled: false },
+                };
+
+                if (window.salesChart) {
+                    try { await window.salesChart.destroy(); } catch (err) { console.warn('Error al destruir gráfico previo:', err); }
+                    window.salesChart = null;
+                }
+
+                chartContainer.innerHTML = "";
+                await new Promise(resolve => setTimeout(resolve, 50));
+
+                window.salesChart = new ApexCharts(chartContainer, options);
+                await window.salesChart.render();
+
+                // 🔄 Botones para cambiar tipo de gráfico
+                document.getElementById('btnLine').onclick = () => {
+                    window.salesChart.updateOptions({ chart: { type: 'line' } });
+                };
+                document.getElementById('btnArea').onclick = () => {
+                    window.salesChart.updateOptions({ chart: { type: 'area' } });
+                };
+                document.getElementById('btnBar').onclick = () => {
+                    window.salesChart.updateOptions({ chart: { type: 'bar' } });
+                };
+
+                // ✅ generar tarjetas KPI dinámicas
+
+                const valorActual = valores[valores.length - 1];
+                const valorAnterior = valores[valores.length - 2];
+                const promedio = Math.round(valores.reduce((a, b) => a + b, 0) / valores.length);
+                const mejorMes = Math.max(...valores);
+                const cambio = Math.round(((valorActual - valorAnterior) / valorAnterior) * 100);
+                const cumplimiento = Math.round((valorActual / meta) * 100);
+
+                crearKPICards({
+                    valorActual: valorActual,
+                    cambio: valores.length > 1
+                        ? ((valorActual - valorAnterior) / valorAnterior * 100).toFixed(1)
+                        : 0,
+                    cumplimiento: cumplimiento,
+                    meta: meta,
+                    promedio6: (valores.slice(-6).reduce((a, b) => a + b, 0) / Math.min(6, valores.length)).toFixed(1),
+                    rangoMeses: "Últimas 6 mediciones",
+                    mejorMesValor: mejorMes,
+                    mejorMesNombre: periodos[valores.indexOf(mejorMes)]
+                });
+
+                const primerValor = valores[0];
+                const ultimoValor = valorActual;
+                const crecimientoTotal = Math.round(((ultimoValor - primerValor) / primerValor) * 100);
+                const brechaPromedio = Math.round(promedio - meta);
+                const mejorIndice = valores.indexOf(mejorMes);
+                const peorValor = Math.min(...valores);
+                const peorIndice = valores.indexOf(peorValor);
+
+                console.log('Datos para análisis:', {
+                    valores,
+                    periodos,
+                    meta,
+                    primerValor,
+                    ultimoValor,
+                    valorAnterior,
+                    crecimientoTotal,
+                    brechaPromedio,
+                    mejorIndice,
+                    mejorMes,
+                    peorValor,
+                    peorIndice,
+                    promedio,
+                    cumplimiento
+                });
+
+                const { observaciones, recomendaciones } = generarAnalisisAutomatico(
+                    valores,
+                    periodos,
+                    meta,
+                    primerValor,
+                    ultimoValor,
+                    valorAnterior,
+                    crecimientoTotal,
+                    brechaPromedio,
+                    mejorIndice,
+                    mejorMes,
+                    peorValor,
+                    peorIndice
+                );
+                const container = document.getElementById('analisisContainer');
+                document.getElementById('analisis-automatico').style.display = 'block';
+
+                container.innerHTML = `
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold mb-3">🔍 Observaciones Clave:</h5>
+                            <ul class="text-muted">
+                                ${observaciones.map(obs => `<li>${obs}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold mb-3">💡 Recomendaciones:</h5>
+                            <ul class="text-muted">
+                                ${recomendaciones.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+
+            } catch (error) {
+                console.error('Error renderizando gráfico del indicador:', error);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             mostrarPanelIndicadoresResumen();
         });
+
+        // Evento botón evolución
+        function verDetalleIndicador(key_id) {
+            // Guardar en sessionStorage
+            sessionStorage.setItem('indicador_seleccionado', key_id);
+            document.getElementById('grafico-evolucion').style.display = 'block';
+
+            // Llama a la función que renderiza el gráfico
+            renderIndicadorChart(key_id, meta);
+
+
+            // Redirigir a la página de detalle
+            window.location.href = `kpi-estado-indicador.html?key_id=${key_id}`;
+        }
+
+
+
     </script>
 
 </body>
