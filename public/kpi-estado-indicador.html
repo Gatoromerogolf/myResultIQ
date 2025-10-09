@@ -53,6 +53,103 @@
     <link rel="stylesheet" href="../css/adminlte.css" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+
+    <!-- Agregar esto en el <head> junto con tus otros estilos -->
+    <style>
+        #contenedor {
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        /* Estilo para el mensaje de filtros */
+        .mensaje-filtros {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            color: white;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .mensaje-filtros i {
+            font-size: 1.5rem;
+            vertical-align: middle;
+            animation: pulse 2s infinite;
+        }
+
+        .mensaje-filtros .texto-principal {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .mensaje-filtros .texto-secundario {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .mensaje-filtros b {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Variante alternativa más sutil */
+        .mensaje-filtros-sutil {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 1.25rem;
+            margin: 1.5rem auto;
+            max-width: 600px;
+        }
+
+        .mensaje-filtros-sutil i {
+            color: #667eea;
+            font-size: 1.3rem;
+        }
+
+        .mensaje-filtros-sutil .texto-principal {
+            color: #2d3748;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .mensaje-filtros-sutil b {
+            color: #667eea;
+            font-weight: 600;
+        }
+    </style>
+
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -334,7 +431,7 @@
                                         <div id="listaIndicadoresResumen" class="row position-relative"
                                             style="min-height: 150px;">
                                             <!-- Spinner inicial -->
-                                            <div id="spinnerCarga" class="text-center my-5" style="display: none;">
+                                            <div id="spinnerCarga" class="text-center my-5" style="display: block;">
                                                 <div class="spinner-border text-primary" role="status"></div>
                                                 <p id="spinnerTexto" class="mt-2" style="color: blue;">Cargando
                                                     indicadores...</p>
@@ -362,35 +459,49 @@
                                         <div class="card mb-4">
 
 
-                                            <div class="card-header">
-                                                <h5 class="card-title">Reporte de Evolución</h5>
-                                                <div class="card-tools">
+                                            <div
+                                                class="card-header d-flex justify-content-between align-items-start flex-wrap">
+                                                <div class="d-flex flex-column">
+                                                    <h5 class="card-title mb-2">📊 Reporte de Evolución</h5>
+
+                                                    <p class="mb-1"><strong>Indicador:</strong> <span
+                                                            id="indNombre"></span></p>
+                                                    <p class="mb-1"><strong>Objetivo:</strong> <span
+                                                            id="objetivoGraf"></span></p>
+                                                    <p class="mb-1"><strong>Descripción:</strong> <span
+                                                            id="descripcionGraf"></span></p>
+                                                    <p class="mb-0"><strong>Meta:</strong> <span id="metaGraf"></span>
+                                                    </p>
+                                                </div>
+
+
+                                                <div class="card-tools d-flex align-items-start ms-auto">
                                                     <button type="button" class="btn btn-tool"
                                                         data-lte-toggle="card-collapse">
                                                         <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
                                                         <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
                                                     </button>
+
                                                     <div class="btn-group">
                                                         <button type="button" class="btn btn-tool dropdown-toggle"
                                                             data-bs-toggle="dropdown">
                                                             <i class="bi bi-wrench"></i>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-end" role="menu">
-                                                            <a href="#" class="dropdown-item">Action</a>
-                                                            <a href="#" class="dropdown-item">Another action</a>
-                                                            <a href="#" class="dropdown-item"> Something else here
-                                                            </a>
-                                                            <a class="dropdown-divider"></a>
-                                                            <a href="#" class="dropdown-item">Separated link</a>
+                                                            <a href="#" class="dropdown-item">Acción</a>
+                                                            <a href="#" class="dropdown-item">Otra acción</a>
+                                                            <a href="#" class="dropdown-item">Algo más aquí</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a href="#" class="dropdown-item">Enlace separado</a>
                                                         </div>
                                                     </div>
+
                                                     <button type="button" class="btn btn-tool"
                                                         data-lte-toggle="card-remove">
                                                         <i class="bi bi-x-lg"></i>
                                                     </button>
                                                 </div>
                                             </div>
-
 
                                             <!-- /.card-header -->
                                             <div class="card-body">
@@ -432,7 +543,7 @@
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <div class="bg-white rounded shadow-sm p-4">
-                                        <h4 class="fw-bold mb-3">📋 Análisis Automático</h4>
+                                        <h4 class="fw-bold mb-3">📋 Destacados </h4>
                                         <div class="row" id="analisisContainer"></div>
                                     </div>
                                 </div>
@@ -524,11 +635,13 @@
     <!-- ⚙️ SCRIPTS DE FUNCIONALIDAD -->
     <!-- =============================== -->
     <script>
-        let indicadoresGlobal = []; // guardamos todos los indicadores originales
+        let indicadoresGlobal = [];
+        let cacheSectores = new Map(); // Cache para sectores
+        let cacheUsuarios = new Map(); // Cache para usuarios
 
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function mostrarPanelIndicadoresResumen() {
             try {
-                // Mostrar el panel de resumen y ocultar otros
                 document.getElementById('panelIndicadoresResumen').style.display = 'block';
                 if (document.getElementById('tablaIndicadoresContainer'))
                     document.getElementById('tablaIndicadoresContainer').style.display = 'none';
@@ -537,53 +650,67 @@
 
                 const contenedor = document.getElementById('listaIndicadoresResumen');
                 const spinner = document.getElementById('spinnerCarga');
+                const spinnerTexto = document.getElementById('spinnerTexto');
 
-                // Mostrar spinner
-                if (spinner) spinner.style.display = 'block';
-                contenedor.innerHTML = ''; // Limpiar tarjetas antiguas
+                // 🔹 Limpiar contenedor y MOSTRAR spinner (sin await todavía)
+                contenedor.innerHTML = '';
+                spinner.style.display = 'block';
+                spinnerTexto.textContent = 'Cargando indicadores...';
 
-                // Permitimos que el navegador pinte el spinner
-                await new Promise(resolve => setTimeout(resolve, 50));
-
-                // Obtener todos los indicadores del backend
+                // 🔹 Cargar indicadores
                 const response = await fetch('/api/indicadores');
                 const indicadores = await response.json();
-
                 indicadoresGlobal = indicadores;
 
-                // Cargar las opciones de los filtros dinámicamente
+                spinnerTexto.textContent = 'Preparando filtros...';
+
+                // 🔹 Cargar filtros de forma PARALELA
                 await cargarOpcionesFiltros(indicadores);
 
-                // Por defecto no renderizamos tarjetas
+                // 🔹 Mostrar mensaje de instrucción (OPCIÓN 1: Moderna)
                 contenedor.innerHTML = `
-            <div class="alert alert-info w-100 text-center my-4">
-                <i class="fas fa-info-circle me-2"></i>
-                Seleccioná un filtro y presioná <b>Filtrar</b> para ver los resultados.
-            </div>
-        `;
+                    <div class="mensaje-filtros text-center">
+                        <div class="texto-principal">
+                            <i class="fas fa-filter me-2"></i>
+                            Seleccionar filtros y click en <b>Filtrar</b>
+                        </div>
+                        <div class="texto-secundario mt-2">
+                            <i class="fas fa-lightbulb me-1"></i>
+                            Combinando múltiples filtros se refina la búsqueda
+                        </div>
+                    </div>
+                `;
 
             } catch (err) {
                 console.error('Error cargando resumen de indicadores:', err);
-                alert('No se pudo cargar el resumen de indicadores.');
+                document.getElementById('listaIndicadoresResumen').innerHTML = `
+                        <div class="alert alert-info w-75 text-center mx-auto my-1 py-0 mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Seleccioná un filtro y presioná <b>Filtrar</b> para ver los resultados.
+                        </div>
+
+        `;
             } finally {
-                // Ocultar spinner
-                const spinner = document.getElementById('spinnerCarga');
-                if (spinner) spinner.style.display = 'none';
+                // Usar setTimeout para asegurar que se ejecute después de renderizar
+                setTimeout(() => {
+                    const spinner = document.getElementById('spinnerCarga');
+                    if (spinner) {
+                        spinner.style.display = 'none';
+                    }
+                }, 0);
             }
         }
 
 
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function normalizeKey(v) {
-            // Normaliza un valor para usar como 'clave' consistente en selects/comparaciones
             if (v === null || v === undefined) return '';
             if (typeof v === 'object') {
                 try {
-                    // Si es un objeto, intentamos usar algún campo conocido si existe
                     if (v.id !== undefined) return String(v.id).trim();
                     if (v.codigo !== undefined) return String(v.codigo).trim();
                     if (v._id !== undefined) return String(v._id).trim();
                     if (v.nombre !== undefined) return String(v.nombre).trim();
-                    // fallback a JSON (estable, aunque largo)
                     return JSON.stringify(v);
                 } catch (e) {
                     return String(v);
@@ -592,6 +719,48 @@
             return String(v).trim();
         }
 
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        async function obtenerSectorConCache(destino) {
+            const key = normalizeKey(destino);
+            if (!key) return null;
+
+            if (cacheSectores.has(key)) {
+                return cacheSectores.get(key);
+            }
+
+            try {
+                const sector = await obtenerSectoresPorUnidad(destino);
+                cacheSectores.set(key, sector);
+                return sector;
+            } catch (e) {
+                cacheSectores.set(key, null);
+                return null;
+            }
+        }
+
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        async function obtenerUsuarioConCache(legajo) {
+            const key = normalizeKey(legajo);
+            if (!key) return null;
+
+            if (cacheUsuarios.has(key)) {
+                return cacheUsuarios.get(key);
+            }
+
+            try {
+                const usuario = await obtenerUsuarioPorLegajo(legajo);
+                cacheUsuarios.set(key, usuario);
+                return usuario;
+            } catch (e) {
+                cacheUsuarios.set(key, null);
+                return null;
+            }
+        }
+
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function cargarOpcionesFiltros(indicadores) {
             const selectSector = document.getElementById('filtroSector');
             const selectResponsable = document.getElementById('filtroResponsable');
@@ -601,60 +770,56 @@
             selectResponsable.innerHTML = '<option value="">Todos</option>';
             selectIndicador.innerHTML = '<option value="">Todos</option>';
 
-            // MAP para evitar duplicados y mantener clave normalizada -> label
             const sectorMap = new Map();
             const responsableMap = new Map();
 
-            // rellenamos mapas con claves normalizadas
+            // 🔹 Recolectar claves únicas
             for (const ind of indicadores) {
                 const claveSector = normalizeKey(ind.destino);
-                if (!sectorMap.has(claveSector)) sectorMap.set(claveSector, { raw: ind.destino, label: null });
+                if (claveSector && !sectorMap.has(claveSector)) {
+                    sectorMap.set(claveSector, { raw: ind.destino, label: null });
+                }
 
                 const claveResp = normalizeKey(ind.responsable);
-                if (!responsableMap.has(claveResp)) responsableMap.set(claveResp, { raw: ind.responsable, label: null });
+                if (claveResp && !responsableMap.has(claveResp)) {
+                    responsableMap.set(claveResp, { raw: ind.responsable, label: null });
+                }
 
-                // indicadores (directo)
+                // Indicadores (no necesitan llamada API)
                 const optI = document.createElement('option');
                 optI.value = ind.codigo_id || '';
                 optI.textContent = `${ind.nombre || ''} (${ind.codigo_id || ''})`;
                 selectIndicador.appendChild(optI);
             }
 
-            // Obtener nombres de sectores (y rellenar labels)
-            for (const [clave, entry] of sectorMap.entries()) {
-                // intentamos obtener el objeto del sector por la raw value
-                try {
-                    const sectorObj = await obtenerSectoresPorUnidad(entry.raw);
-                    const label = sectorObj?.nombre || sectorObj?.name || String(entry.raw || clave) || clave;
-                    entry.label = label;
-                } catch (e) {
-                    entry.label = String(entry.raw || clave);
-                }
-            }
+            // 🚀 OPTIMIZACIÓN: Cargar TODOS los sectores en PARALELO
+            const promesasSectores = Array.from(sectorMap.entries()).map(async ([clave, entry]) => {
+                const sectorObj = await obtenerSectorConCache(entry.raw);
+                const label = sectorObj?.nombre || sectorObj?.name || String(entry.raw || clave) || clave;
+                entry.label = label;
+            });
 
-            // Obtener nombres de responsables (y rellenar labels)
-            for (const [clave, entry] of responsableMap.entries()) {
-                try {
-                    const usuario = await obtenerUsuarioPorLegajo(entry.raw);
-                    const label = (usuario?.nombres || usuario?.nombre ? `${usuario.nombres || usuario.nombre} ${usuario.apellido || ''}` : String(entry.raw));
-                    entry.label = label.trim();
-                } catch (e) {
-                    entry.label = String(entry.raw || clave);
-                }
-            }
+            // 🚀 OPTIMIZACIÓN: Cargar TODOS los responsables en PARALELO
+            const promesasResponsables = Array.from(responsableMap.entries()).map(async ([clave, entry]) => {
+                const usuario = await obtenerUsuarioConCache(entry.raw);
+                const label = usuario?.nombres || usuario?.nombre
+                    ? `${usuario.nombres || usuario.nombre} ${usuario.apellido || ''}`.trim()
+                    : String(entry.raw || clave);
+                entry.label = label;
+            });
 
-            // Añadimos options al selectSector con value = clave normalizada
+            // 🚀 Esperar TODAS las peticiones en paralelo
+            await Promise.all([...promesasSectores, ...promesasResponsables]);
+
+            // 🔹 Añadir opciones a los selects
             for (const [clave, entry] of sectorMap.entries()) {
-                if (!clave) continue; // omitimos claves vacías
                 const opt = document.createElement('option');
                 opt.value = clave;
                 opt.textContent = entry.label || clave;
                 selectSector.appendChild(opt);
             }
 
-            // Añadimos options al selectResponsable con value = clave normalizada
             for (const [clave, entry] of responsableMap.entries()) {
-                if (!clave) continue;
                 const opt = document.createElement('option');
                 opt.value = clave;
                 opt.textContent = entry.label || clave;
@@ -662,15 +827,21 @@
             }
         }
 
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔        
         async function aplicarFiltrosIndicadores() {
             const contenedor = document.getElementById('listaIndicadoresResumen');
             const spinner = document.getElementById('spinnerCarga');
+            const spinnerTexto = document.getElementById('spinnerTexto');
 
-            // 1️⃣ Mostrar spinner y ocultar tarjetas
-            if (spinner) spinner.style.display = 'block';
-            if (contenedor) contenedor.style.display = 'none';
+            // 1️⃣ Mostrar spinner
+            if (spinner) {
+                spinner.style.display = 'block';
+                spinnerTexto.textContent = 'Filtrando indicadores...';
+            }
+            if (contenedor) contenedor.innerHTML = '';
 
-            // 2️⃣ Forzar que el navegador pinte el spinner antes de la carga pesada
+            // 2️⃣ Dejar que el navegador pinte
             await new Promise(resolve => setTimeout(resolve, 50));
 
             const sectorSel = document.getElementById('filtroSector').value;
@@ -680,7 +851,7 @@
             const texto = document.getElementById('filtroTexto').value.toLowerCase();
 
             try {
-                // 3️⃣ Preparar todos los indicadores en paralelo
+                // 3️⃣ Preparar indicadores NO preparados EN PARALELO
                 const pendientes = indicadoresGlobal
                     .filter(ind => !ind._preparado)
                     .map(async ind => {
@@ -688,8 +859,8 @@
                         ind._responsableKey = normalizeKey(ind.responsable);
 
                         const [usuario, sector, cumplimientoInfo] = await Promise.all([
-                            obtenerUsuarioPorLegajo(ind.responsable).catch(() => null),
-                            obtenerSectoresPorUnidad(ind.destino).catch(() => null),
+                            obtenerUsuarioConCache(ind.responsable),
+                            obtenerSectorConCache(ind.destino),
                             obtenerCumplimientoIndicador(ind.codigo_id).catch(() => ({ porcentaje: 0 }))
                         ]);
 
@@ -699,30 +870,30 @@
                         ind._preparado = true;
                     });
 
-                if (pendientes.length > 0) await Promise.all(pendientes);
+                if (pendientes.length > 0) {
+                    await Promise.all(pendientes);
+                }
 
                 // 4️⃣ Filtrar indicadores
                 const filtrados = indicadoresGlobal.filter(ind => {
-                    let ok = true;
-
-                    if (sectorSel) ok = ind._destinoKey === sectorSel;
-                    if (responsableSel) ok = ind._responsableKey === responsableSel;
-                    if (indicadorSel && indicadorSel !== '') ok = (ind.codigo_id || '') === indicadorSel;
+                    if (sectorSel && ind._destinoKey !== sectorSel) return false;
+                    if (responsableSel && ind._responsableKey !== responsableSel) return false;
+                    if (indicadorSel && indicadorSel !== '' && (ind.codigo_id || '') !== indicadorSel) return false;
 
                     if (cumplimiento) {
                         const p = (ind._cumplimiento?.porcentaje ?? 0);
-                        if (cumplimiento === 'alto' && p < 90) ok = false;
-                        if (cumplimiento === 'medio' && (p < 60 || p >= 90)) ok = false;
-                        if (cumplimiento === 'bajo' && p >= 60) ok = false;
+                        if (cumplimiento === 'alto' && p < 90) return false;
+                        if (cumplimiento === 'medio' && (p < 60 || p >= 90)) return false;
+                        if (cumplimiento === 'bajo' && p >= 60) return false;
                     }
 
                     if (texto) {
                         const nombre = (ind.nombre || '').toLowerCase();
                         const desc = (ind.descripcion || '').toLowerCase();
-                        if (!nombre.includes(texto) && !desc.includes(texto)) ok = false;
+                        if (!nombre.includes(texto) && !desc.includes(texto)) return false;
                     }
 
-                    return ok;
+                    return true;
                 });
 
                 // 5️⃣ Renderizar tarjetas
@@ -732,27 +903,55 @@
                 console.error('Error aplicando filtros:', err);
                 contenedor.innerHTML = `
             <div class="alert alert-danger w-100 text-center my-4">
+                <i class="fas fa-exclamation-triangle me-2"></i>
                 Ocurrió un error al filtrar los indicadores.
             </div>`;
             } finally {
-                // 6️⃣ Ocultar spinner y mostrar tarjetas
+                // 6️⃣ Ocultar spinner
                 if (spinner) spinner.style.display = 'none';
                 if (contenedor) contenedor.style.display = 'flex';
             }
         }
 
 
-
-
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function resetFiltrosIndicadores() {
             document.getElementById('filtroSector').value = '';
             document.getElementById('filtroResponsable').value = '';
             document.getElementById('filtroIndicador').value = '';
             document.getElementById('filtroCumplimiento').value = '';
             document.getElementById('filtroTexto').value = '';
-            renderIndicadoresFiltrados(indicadoresGlobal);
+
+            const contenedor = document.getElementById('listaIndicadoresResumen');
+            /*
+            contenedor.innerHTML = `
+                <div class="mensaje-filtros text-center">
+                    <div class="texto-principal">
+                        <i class="fas fa-filter me-2"></i>
+                        Seleccioná un filtro y presioná <b>Filtrar</b>
+                    </div>
+                    <div class="texto-secundario mt-2">
+                        <i class="fas fa-lightbulb me-1"></i>
+                        Podés combinar múltiples filtros para refinar tu búsqueda
+                    </div>
+                </div>
+            `;
+            */
+
+            // OPCIÓN 2: Sutil (comentá la opción 1 y descomentá esta)
+
+            contenedor.innerHTML = `
+                <div class="mensaje-filtros-sutil">
+                    <div class="text-center texto-principal">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Seleccioná un filtro y presioná <b>Filtrar</b> para ver los resultados
+                    </div>
+                </div>
+            `;
         }
 
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function renderIndicadoresFiltrados(lista = indicadoresGlobal) {
             const contenedor = document.getElementById('listaIndicadoresResumen');
             contenedor.innerHTML = '';
@@ -784,110 +983,37 @@
                 const card = document.createElement('div');
                 card.className = 'col-md-6 col-lg-4 mb-3';
                 card.innerHTML = `
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="fw-bold mb-1">${ind.nombre}</h6>
-                            <small class="text-muted">${ind.codigo_id} · ${sectores?.nombre || sectores?.name || ''}</small>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <span class="badge rounded-circle me-1"
-                                  style="background-color:${color}; width:18px; height:18px;"
-                                  title="Cumplimiento: ${porcentaje.toFixed(1)}%">
-                            </span>
-                            <small>${porcentaje.toFixed(1)}%</small>
-                            <button class="btn btn-link p-0 ms-2" title="Ver evolución"
-                                    onclick="verDetalleIndicador('${ind.codigo_id}')">
-                                <i class="fas fa-chart-line text-primary"></i>
-                            </button>
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="fw-bold mb-1">${ind.nombre}</h6>
+                                    <small class="text-muted">${ind.codigo_id} · ${sectores?.nombre || sectores?.name || ''}</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-circle me-1"
+                                        style="background-color:${color}; width:18px; height:18px;"
+                                        title="Cumplimiento: ${porcentaje.toFixed(1)}%">
+                                    </span>
+                                    <small>${porcentaje.toFixed(1)}%</small>
+                                    <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
+                                            onclick="verDetalleIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.objetivo}', '${ind.descripcion}')">
+                                        <i class="fas fa-chart-line text-primary"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="mt-2 mb-1"><strong>Objetivo:</strong> ${ind.objetivo}</p>
+                            <p class="mb-1"><strong>Responsable:</strong> ${usuario?.nombres || usuario?.nombre || ''} ${usuario?.apellido || ''}</p>
+                            <p class="mb-0"><small class="text-muted">${ind.descripcion || ''}</small></p>
                         </div>
                     </div>
-                    <p class="mt-2 mb-1"><strong>Objetivo:</strong> ${ind.objetivo}</p>
-                    <p class="mb-1"><strong>Responsable:</strong> ${usuario?.nombres || usuario?.nombre || ''} ${usuario?.apellido || ''}</p>
-                    <p class="mb-0"><small class="text-muted">${ind.descripcion || ''}</small></p>
-                </div>
-            </div>
-        `;
+                `;
                 contenedor.appendChild(card);
             }
         }
 
-    </script>
 
-
-    <script>
-        async function mostrarPanelIndicadoresResumenXXX() {
-            try {
-                // Ocultamos otras secciones
-                document.getElementById('panelIndicadoresResumen').style.display = 'block';
-                if (document.getElementById('tablaIndicadoresContainer'))
-                    document.getElementById('tablaIndicadoresContainer').style.display = 'none';
-                if (document.getElementById('posicionGlobalContainer'))
-                    document.getElementById('posicionGlobalContainer').style.display = 'none';
-
-                const contenedor = document.getElementById('listaIndicadoresResumen');
-                contenedor.innerHTML = `<div class="text-center w-100">Cargando...</div>`;
-
-                const response = await fetch('/api/indicadores');
-                const indicadores = await response.json();
-
-                contenedor.innerHTML = ''; // limpiar
-
-                for (const ind of indicadores) {
-                    const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
-                    const sectores = await obtenerSectoresPorUnidad(ind.destino);
-
-                    // Supongamos que ya tenés una función que obtiene el cumplimiento global
-                    const info = await obtenerCumplimientoIndicador(ind.codigo_id); // devuelve %
-                    const porcentaje = (info && typeof info.porcentaje === 'number') ? info.porcentaje : 0;
-                    const color = getColorPorCumplimiento(porcentaje);
-
-                    const card = document.createElement('div');
-                    card.className = 'col-md-6 col-lg-4 mb-3';
-                    card.innerHTML = `
-                            <div class="card shadow-sm h-100">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h6 class="fw-bold mb-1">${ind.nombre}</h6>
-                                            <small class="text-muted">${ind.codigo_id} · ${sectores.nombre}</small>
-                                        </div>
-
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge rounded-circle me-1"
-                                                style="background-color:${color};
-                                                        width:18px; height:18px;"
-                                                title="Cumplimiento: ${porcentaje.toFixed(1)}%">
-                                            </span>
-                                            <small>${porcentaje.toFixed(1)}%</small>
-
-                                            <button class="btn btn-link p-0 ms-2" title="Ver evolución"
-                                                    onclick="verDetalleIndicador('${ind.codigo_id}')">
-                                                <i class="fas fa-chart-line text-primary"></i>
-                                            </button>
-                                        </div>
-
-                                    </div>
-                                    <p class="mt-2 mb-1"><strong>Objetivo:</strong> ${ind.objetivo}</p>
-                                    <p class="mb-1"><strong>Responsable:</strong> ${usuario.nombres} ${usuario.apellido}</p>
-                                    <p class="mb-0"><small class="text-muted">${ind.descripcion || ''}</small></p>
-                                </div>
-                            </div>
-                        `;
-                    contenedor.appendChild(card);
-                }
-
-                if (indicadores.length === 0) {
-                    contenedor.innerHTML = `<div class="alert alert-info w-100 text-center">No hay indicadores cargados.</div>`;
-                }
-
-            } catch (err) {
-                console.error('Error cargando resumen de indicadores:', err);
-                alert('No se pudo cargar el resumen de indicadores.');
-            }
-        }
-
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function getColorPorCumplimiento(cumplimiento) {
             if (cumplimiento >= 90) return '#28a745'; // verde
             if (cumplimiento >= 70) return '#ffc107'; // amarillo
@@ -895,6 +1021,8 @@
             return '#dc3545'; // rojo
         }
 
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔        
         async function obtenerCumplimientoIndicador(codigo) {
             try {
                 const res = await fetch(`/api/indicadores/${codigo}/cumplimiento`);
@@ -917,6 +1045,7 @@
         }
 
 
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function obtenerUsuarioPorLegajo(responsable) {
             try {
                 const response = await fetch(`/usuarios/${responsable}`);
@@ -936,6 +1065,8 @@
             }
         }
 
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function obtenerSectoresPorUnidad(unidad) {
             try {
                 const response = await fetch(`/sectores/${unidad}`);
@@ -955,17 +1086,50 @@
             }
         }
 
-        async function renderIndicadorChart(idIndicador, meta) {
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        async function renderIndicadorChart(idIndicador, nombre, meta, objetivo, descripcion) {
+
+            const chartContainer = document.querySelector('#sales-chart');
+            if (!chartContainer) {
+                console.error('Contenedor #sales-chart no encontrado');
+                return;
+            }
+            const kpiContainer = document.getElementById('kpiCards'); // Ajusta según tu HTML
+            const analisisContainer = document.getElementById('analisisContainer');
+            const analisisAuto = document.getElementById('analisis-automatico');
+            if (window.salesChart) {
+                try { await window.salesChart.destroy(); } catch (e) { console.warn('Error destruyendo gráfico previo:', e); }
+                window.salesChart = null;
+            }
+            if (chartContainer) chartContainer.innerHTML = '';
+            if (kpiContainer) kpiContainer.innerHTML = '';
+            if (analisisContainer) analisisContainer.innerHTML = '';
+            if (analisisAuto) analisisAuto.style.display = 'none';
+
+            // 🔹 Mostrar spinner mientras carga
+            if (chartContainer) {
+                chartContainer.innerHTML = `
+                    <div id="spinnerCargaGrafico" class="text-center my-3">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">Cargando gráfico...</p>
+                    </div>
+                `;
+            }
 
             try {
+
                 const response = await fetch(`/api/mediciones/${idIndicador}`);
                 const result = await response.json();
 
-                const chartContainer = document.querySelector('#sales-chart');
-                if (!chartContainer) {
-                    console.error('Contenedor #sales-chart no encontrado');
-                    return;
-                }
+                console.table(result);
+
+                // const chartContainer = document.querySelector('#sales-chart');
+                // if (!chartContainer) {
+                //     console.error('Contenedor #sales-chart no encontrado');
+                //     return;
+                // }
+
 
                 if (!result.success || !Array.isArray(result.data) || result.data.length === 0) {
                     if (window.salesChart) {
@@ -991,7 +1155,7 @@
                         toolbar: {
                             show: true,
                             tools: {
-                                pan: false, // 🔒 desactiva Panning
+                                pan: false,
                                 zoom: true,
                                 zoomin: true,
                                 zoomout: true,
@@ -1006,20 +1170,44 @@
                     stroke: { curve: 'smooth' },
                     tooltip: { enabled: true },
                     colors: ['#0d6efd'],
-                    // title: { text: 'Evolución histórica', align: 'left' },
                     dataLabels: { enabled: false },
+
+                    // 👇 NUEVO BLOQUE: línea de meta / objetivo
+                    annotations: {
+                        yaxis: [
+                            {
+                                y: meta, // ← tu variable con el valor objetivo
+                                borderColor: '#FF0000',
+                                strokeDashArray: 4,
+                                label: {
+                                    borderColor: '#FF0000',
+                                    style: {
+                                        color: '#fff',
+                                        background: '#FF0000'
+                                    },
+                                    text: `Meta: ${meta}`
+                                }
+                            }
+                        ]
+                    }
                 };
+
 
                 if (window.salesChart) {
                     try { await window.salesChart.destroy(); } catch (err) { console.warn('Error al destruir gráfico previo:', err); }
                     window.salesChart = null;
                 }
-
+                document.getElementById('indNombre').textContent = nombre;
+                document.getElementById('objetivoGraf').textContent = objetivo;
+                document.getElementById('descripcionGraf').textContent = descripcion;
+                document.getElementById('metaGraf').textContent = meta;
                 chartContainer.innerHTML = "";
                 await new Promise(resolve => setTimeout(resolve, 50));
 
                 window.salesChart = new ApexCharts(chartContainer, options);
                 await window.salesChart.render();
+                // Scroll hacia el gráfico
+                chartContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
                 // 🔄 Botones para cambiar tipo de gráfico
                 document.getElementById('btnLine').onclick = () => {
@@ -1098,7 +1286,7 @@
 
                 container.innerHTML = `
                         <div class="col-md-6">
-                            <h5 class="fw-semibold mb-3">🔍 Observaciones Clave:</h5>
+                            <h5 class="fw-semibold mb-3">🔍 Observaciones:</h5>
                             <ul class="text-muted">
                                 ${observaciones.map(obs => `<li>${obs}</li>`).join('')}
                             </ul>
@@ -1116,22 +1304,192 @@
             }
         }
 
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        function crearKPICards(datos) {
+            const kpis = [
+                {
+                    titulo: 'Valor Actual',
+                    valor: `${datos.valorActual ?? '-'}`,
+                    subtitulo: `${datos.cambio >= 0 ? '↗️' : '↘️'} ${datos.cambio >= 0 ? '+' : ''}${datos.cambio}% vs medición anterior`,
+                    color: datos.cambio >= 0 ? '#198754' : '#dc3545',
+                    icono: '💰'
+                },
+                {
+                    titulo: 'Cumplimiento Meta',
+                    valor: `${datos.cumplimiento ?? '-'}%`,
+                    subtitulo: `Meta: ${datos.meta ?? '-'}`,
+                    color: datos.cumplimiento >= 100 ? '#198754' : '#ffc107',
+                    icono: '🎯'
+                },
+                {
+                    titulo: 'Promedio',
+                    valor: `${datos.promedio6 ?? '-'}`,
+                    subtitulo: datos.rangoMeses ?? '',
+                    color: '#6c757d',
+                    icono: '📊'
+                },
+                {
+                    titulo: 'Mejor Resultado',
+                    valor: `${datos.mejorMesValor ?? '-'}`,
+                    subtitulo: datos.mejorMesNombre ?? '',
+                    color: '#0dcaf0',
+                    icono: '🏆'
+                }
+            ];
+
+            const container = document.getElementById('kpiCards');
+            container.innerHTML = kpis.map(kpi => `
+                    <div class="col-md-6 col-lg-3 mb-3 ml-3">
+                        <div class="card kpi-card h-100" style="border-left: 4px solid ${kpi.color}">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <p class="text-muted small mb-1">${kpi.titulo}</p>
+                                        <h2 class="kpi-value mb-1" style="color: ${kpi.color}">${kpi.valor}</h2>
+                                        <p class="text-muted small mb-0">${kpi.subtitulo}</p>
+                                    </div>
+                                    <span style="font-size: 2rem;">${kpi.icono}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        function generarAnalisisAutomatico(
+            valores,
+            periodos,
+            meta,
+            primerValor,
+            ultimoValor,
+            valorAnterior,
+            crecimientoTotal,
+            brechaPromedio,
+            mejorIndice,
+            mejorMes,
+            peorValor,
+            peorIndice,
+            promedio,
+            cumplimiento
+        ) {
+            const observaciones = [];
+            const recomendaciones = [];
+
+            console.log('Generando análisis automático con:', {
+                valores,
+                periodos,
+                meta,
+                primerValor,
+                ultimoValor,
+                valorAnterior,
+                crecimientoTotal,
+                brechaPromedio,
+                mejorIndice,
+                mejorMes,
+                peorValor,
+                peorIndice,
+                promedio,
+                cumplimiento
+            });
+
+            if (crecimientoTotal > 0) {
+                observaciones.push(`Crecimiento positivo del ${crecimientoTotal}% en el período analizado`);
+            } else if (crecimientoTotal < 0) {
+                observaciones.push(`Decrecimiento del ${Math.abs(crecimientoTotal)}% en el período analizado`);
+            }
+
+            observaciones.push(`Mejor resultado en ${periodos[mejorIndice]}: ${mejorMes}`);
+            observaciones.push(`Valor más bajo en ${periodos[peorIndice]}: ${peorValor}`);
+
+            if (brechaPromedio < 0) {
+                observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)}`);
+            } else {
+                observaciones.push(`Superó la meta en promedio por ${brechaPromedio}`);
+            }
+
+            let mesesConsecutivos = 0;
+            for (let i = 1; i < valores.length; i++) {
+                if (valores[i] > valores[i - 1]) {
+                    mesesConsecutivos++;
+                } else {
+                    break;
+                }
+            }
+            if (mesesConsecutivos >= 2) {
+                observaciones.push(`Crecimiento sostenido durante ${mesesConsecutivos + 1} meses consecutivos`);
+            }
+
+            if (ultimoValor < valorAnterior) {
+                const caida = Math.round(((ultimoValor - valorAnterior) / valorAnterior) * 100);
+                observaciones.push(`Caída del ${Math.abs(caida)}% en el último mes`);
+            }
+
+            if (mejorIndice < valores.length - 1) {
+                recomendaciones.push(`Analizar factores de éxito de ${periodos[mejorIndice]} para replicarlos`);
+            }
+
+            if (ultimoValor < meta) {
+                const necesario = Math.round(((meta - ultimoValor) / ultimoValor) * 100);
+                recomendaciones.push(`Requiere incremento del ${necesario}% para alcanzar la meta`);
+            }
+
+            if (ultimoValor > valorAnterior) {
+                recomendaciones.push('Mantener las estrategias del último mes que generaron recuperación');
+            } else if (ultimoValor < valorAnterior) {
+                recomendaciones.push('Investigar causas de la caída reciente y tomar acciones correctivas');
+            }
+
+            // const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+            // const desviacion = Math.sqrt(varianza);
+            // if (desviacion > promedio * 0.2) {
+            //     recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
+            // }
+
+            // const tendenciaReciente = valores.slice(-3);
+            // const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
+            // if (crecimientoReciente) {
+            //     recomendaciones.push('Tendencia positiva en últimos meses - continuar con estrategia actual');
+            // }
+
+            // Recomendaciones
+            if (valores && valores.length > 0) {
+                const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+                const desviacion = Math.sqrt(varianza);
+                if (desviacion > promedio * 0.2) {
+                    recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
+                }
+                const tendenciaReciente = valores.slice(-3);
+                const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
+                if (crecimientoReciente) recomendaciones.push('Tendencia positiva en últimos meses - continuar con estrategia actual');
+            }
+
+            if (cumplimiento < 70) {
+                recomendaciones.push('Revisar si la meta es realista o si se requieren recursos adicionales');
+            }
+
+            return { observaciones, recomendaciones };
+        }
+
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         document.addEventListener('DOMContentLoaded', function () {
             mostrarPanelIndicadoresResumen();
         });
 
-        // Evento botón evolución
-        function verDetalleIndicador(key_id) {
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        function verDetalleIndicador(key_id, nombre, meta, objetivo, descripcion) {
             // Guardar en sessionStorage
             sessionStorage.setItem('indicador_seleccionado', key_id);
             document.getElementById('grafico-evolucion').style.display = 'block';
 
             // Llama a la función que renderiza el gráfico
-            renderIndicadorChart(key_id, meta);
 
+            renderIndicadorChart(key_id, nombre, meta, objetivo, descripcion)
 
-            // Redirigir a la página de detalle
-            window.location.href = `kpi-estado-indicador.html?key_id=${key_id}`;
         }
 
 

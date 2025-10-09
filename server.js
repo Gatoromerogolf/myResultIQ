@@ -507,8 +507,6 @@ app.get('/api/indicadores/:codigo/cumplimiento', async (req, res) => {
 
         const medicion = mediciones[0];
 
-        console.log (`Indicador ${indicador.unico_valor}, medicion ${medicion.med_valor}`);
-
         // 3️⃣ Calcular cumplimiento (acercamiento a la meta)
         let cumplimiento = 0;
         if (indicador.unico_valor && medicion.med_valor) {
@@ -516,7 +514,6 @@ app.get('/api/indicadores/:codigo/cumplimiento', async (req, res) => {
             if (cumplimiento > 100) cumplimiento = 100;
         }
 
-        console.log(`Cumplimiento calculado: ${cumplimiento}%`);    
         // 4️⃣ Devolver respuesta completa
         res.json({
             porcentaje: cumplimiento,
@@ -1148,7 +1145,7 @@ app.get('/api/mediciones', async (req, res) => {
 // ✅ Obtener todas las mediciones de un indicador en particular
 app.get('/api/mediciones/:idIndicador', async (req, res) => {
     const { idIndicador } = req.params;
-    console.log(req.url)
+
     console.log("ID Indicador recibido en backend:", idIndicador);
 
     try {
