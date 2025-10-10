@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Ejecutivo — KPIs Globales</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <style>
+    :root {
+      --bg: #c75509;
+      --card: #3c0de6;
+      --muted: #01050c;
+      --accent: #2563eb;
+    }
+
+    body {
+      background: #f4f6f9;
+      font-family: Inter, ui-sans-serif, system-ui, Arial;
+      color: var(--muted);
+    }
+
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    }
+
+    .card-outline-primary {
+      border-top: 3px solid var(--accent) !important;
+    }
+
+    h5 {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* --- Filtros globales --- */
+    .filters-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      border-radius: 8px;
+      padding: 10px 15px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .filters-bar select {
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
+
+    .filters-bar button {
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    /* --- Tendencias globales --- */
+    .trend-box {
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+      margin-top: 10px;
+      border-top: 1px solid #dee2e6;
+      padding-top: 10px;
+    }
+
+    .trend-item {
+      flex: 1;
+    }
+
+    .trend-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .trend-label {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+
+    /* --- Barras horizontales --- */
+    .destination-row {
+      margin-bottom: 12px;
+    }
+
+    .destination-label {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .bar-container {
+      width: 100%;
+      background-color: #e9ecef;
+      border-radius: 8px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 10px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, var(--accent), #66b0ff);
+    }
+
+    /* --- Botones finales --- */
+    .actions-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .actions-bar button {
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    /* --- Insights automáticos --- */
+    .insight-box {
+      background: #fff;
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      margin-bottom: 12px;
+    }
+
+    .insight-title {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .insight-text {
+      font-size: 0.9rem;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body class="hold-transition layout-top-nav">
+<div class="wrapper">
+
+  <section class="content mt-4">
+    <div class="container-fluid">
+
+      <!-- === Filtros globales === -->
+      <div class="filters-bar">
+        <div>
+          <label for="filtroAnio" class="form-label mb-0 small">Año</label>
+          <select id="filtroAnio" class="form-select form-select-sm">
+            <option>2025</option>
+            <option>2024</option>
+            <option>2023</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filtroPeriodo" class="form-label mb-0 small">Período</label>
+          <select id="filtroPeriodo" class="form-select form-select-sm">
+            <option>Octubre</option>
+            <option>Septiembre</option>
+            <option>Agosto</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filtroSector" class="form-label mb-0 small">Sector</label>
+          <select id="filtroSector" class="form-select form-select-sm">
+            <option>Todos</option>
+            <option>Operaciones</option>
+            <option>Finanzas</option>
+            <option>Comercial</option>
+            <option>RRHH</option>
+          </select>
+        </div>
+
+        <button class="btn btn-sm btn-primary"><i class="fas fa-sync-alt"></i> Aplicar</button>
+      </div>
+
+      <!-- === Cumplimiento Global + Evolución === -->
+      <div class="row">
+
+        <!-- Cumplimiento Global -->
+        <div class="col-md-6">
+          <div class="card card-primary card-outline">
+            <div class="card-body">
+              <h5 class="mb-3">Cumplimiento Global</h5>
+              <div id="chartCumplimiento" style="height: 240px;"></div>
+
+              <div class="trend-box">
+                <div class="trend-item">
+                  <div class="trend-value text-success">+3.2%</div>
+                  <div class="trend-label">vs. mes anterior</div>
+                </div>
+                <div class="trend-item">
+                  <div class="trend-value text-primary">84%</div>
+                  <div class="trend-label">Promedio anual</div>
+                </div>
+                <div class="trend-item">
+                  <div class="trend-value text-danger">–1.1%</div>
+                  <div class="trend-label">Desvío ponderado</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evolución Global -->
+        <div class="col-md-6">
+          <div class="card card-primary card-outline">
+            <div class="card-body">
+              <h5 class="mb-3">Evolución del Cumplimiento</h5>
+              <div id="chartEvolucion" style="height: 240px;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- === Cumplimiento por Destino === -->
+      <div class="card card-primary card-outline">
+        <div class="card-body">
+          <h5 class="mb-3">Cumplimiento por Destino / Área</h5>
+          <div id="destinosContainer">
+            <div class="destination-row">
+              <div class="destination-label">Operaciones — 92%</div>
+              <div class="bar-container"><div class="bar-fill" style="width:92%"></div></div>
+            </div>
+            <div class="destination-row">
+              <div class="destination-label">Finanzas — 81%</div>
+              <div class="bar-container"><div class="bar-fill" style="width:81%"></div></div>
+            </div>
+            <div class="destination-row">
+              <div class="destination-label">Comercial — 74%</div>
+              <div class="bar-container"><div class="bar-fill" style="width:74%"></div></div>
+            </div>
+            <div class="destination-row">
+              <div class="destination-label">RRHH — 68%</div>
+              <div class="bar-container"><div class="bar-fill" style="width:68%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- === Mejores y Peores Indicadores === -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card card-outline" style="border-top: 3px solid #28a745;">
+            <div class="card-body">
+              <h5 class="mb-3">Indicadores Destacados (≥ 90%)</h5>
+              <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Entregas a tiempo <span class="badge bg-success">98%</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Satisfacción cliente <span class="badge bg-success">95%</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Productividad <span class="badge bg-success">92%</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card card-outline" style="border-top: 3px solid #dc3545;">
+            <div class="card-body">
+              <h5 class="mb-3">Indicadores Críticos (≤ 60%)</h5>
+              <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Accidentes laborales <span class="badge bg-danger">52%</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Rotación personal <span class="badge bg-danger">48%</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Eficiencia operativa <span class="badge bg-danger">55%</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- === Sin última medición === -->
+      <div class="card card-warning card-outline">
+        <div class="card-body">
+          <h5 class="mb-3">Indicadores sin última medición informada</h5>
+          <ul class="list-group">
+            <li class="list-group-item">Tiempo de respuesta al cliente</li>
+            <li class="list-group-item">Costos de mantenimiento</li>
+            <li class="list-group-item">Capacitación anual completada</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- === Insights Automáticos === -->
+      <div class="card card-outline card-info">
+        <div class="card-body">
+          <h5 class="mb-3">🔍 Insights Automáticos</h5>
+
+          <div class="insight-box">
+            <div class="insight-title">📈 Mejora sostenida</div>
+            <div class="insight-text">El cumplimiento global creció un 3.2% respecto al mes anterior, con tendencia positiva sostenida en los últimos 4 períodos.</div>
+          </div>
+
+          <div class="insight-box">
+            <div class="insight-title">⚠️ Riesgo en RRHH</div>
+            <div class="insight-text">El área de RRHH muestra un cumplimiento de apenas 68%, siendo la más baja del conjunto. Se sugiere revisión de planes de acción.</div>
+          </div>
+
+          <div class="insight-box">
+            <div class="insight-title">🏆 Indicador líder</div>
+            <div class="insight-text">El KPI "Entregas a tiempo" mantiene un 98% de cumplimiento, consolidándose como el de mejor desempeño del período.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- === Botones de acción === -->
+      <div class="actions-bar">
+        <button class="btn btn-secondary"><i class="fas fa-file-csv"></i> Exportar CSV</button>
+        <button class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i> Descargar PDF</button>
+        <button class="btn btn-primary"><i class="fas fa-sync"></i> Actualizar Datos</button>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<script src="https://kit.fontawesome.com/a2e0e6ad2f.js" crossorigin="anonymous"></script>
+
+<script>
+  // === Gráfico radial ===
+  const chartCumplimiento = new ApexCharts(document.querySelector("#chartCumplimiento"), {
+    chart: { type: 'radialBar', height: 240 },
+    series: [82],
+    colors: ['#2563eb'],
+    plotOptions: {
+      radialBar: {
+        hollow: { size: '65%' },
+        track: { background: '#e0e7ff' },
+        dataLabels: {
+          value: { fontSize: '28px', show: true },
+          name: { show: false }
+        }
+      }
+    }
+  });
+  chartCumplimiento.render();
+
+  // === Gráfico de línea ===
+  const chartEvolucion = new ApexCharts(document.querySelector("#chartEvolucion"), {
+    chart: { type: 'line', height: 240, toolbar: { show: false } },
+    series: [{ name: 'Cumplimiento', data: [70, 74, 79, 82, 84] }],
+    xaxis: { categories: ['Jun', 'Jul', 'Ago', 'Sep', 'Oct'] },
+    stroke: { curve: 'smooth', width: 3 },
+    colors: ['#2563eb'],
+    markers: { size: 4 },
+    grid: { borderColor: '#e9ecef' }
+  });
+  chartEvolucion.render();
+</script>
+</body>
+</html>
