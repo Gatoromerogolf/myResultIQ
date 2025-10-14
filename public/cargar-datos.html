@@ -270,73 +270,23 @@
         <!--end::Header-->
 
         <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <!-- <a href="./index.html" class="brand-link"> -->
-                <!--begin::Brand Image-->
-                <img src="dist/images/leon.png" alt="León blanco símbolo de la aplicación" class="fade-in"
-                    style="width: 40px; border-radius: 50%; margin-bottom: 0px;">
-                <!--end::Brand Image-->
-                <!--begin::Brand Text-->
-                <span class="brand-text fw-light fs-5">myResultIQ 1</span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <div class="sidebar-wrapper">
-                <nav class="mt-2">
-                    <!--begin::Sidebar Menu-->
-                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
-                        data-accordion="false">
-                        <li class="nav-header">
-                            <h5>Menu Usuario</h5>
-                        </li>
+        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
+        <script>
+            async function cargarAside() {
+                const res = await fetch('aside.html');
+                const html = await res.text();
+                document.getElementById('asideContainer').innerHTML = html;
 
-                        <li class="nav-item">
-                            <a href="detalleUsuario.html" class="nav-link">
-                                <i class="fas fa-tachometer-alt text-primary"></i>
-                                <p>Mis Indicadores</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="cargar-datos.html" class="nav-link active">
-                                <i class="nav-icon fas fa-upload fa-tachometer-alt text-primary"></i>
-                                <p>Registro de Datos</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="historico.html" class="nav-link">
-                                <i class="nav-icon fas fa-history text-primary"></i>
-                                <p>Histórico de Registros</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="miPerfil.html" class="nav-link">
-                                <i class="nav-icon fas fa-user-cog text-primary"></i>
-                                <p>Mi Perfil</p>
-                            </a>
-                        </li>
-
-                        <!-- <li class="nav-item">
-                            <a href="logout.html" class="nav-link">
-                                <i class="fas fa-sign-out-alt text-primary"></i>
-                                <p>Salir</p>
-                            </a>
-                        </li> -->
-
-                    </ul>
-                    <!--end::Sidebar Menu-->
-                </nav>
-            </div>
-            <!--end::Sidebar Wrapper-->
-        </aside>
+                // Marcar activo según la página actual
+                const links = document.querySelectorAll('#asideContainer a');
+                links.forEach(link => {
+                    if (link.href === window.location.href) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            cargarAside();
+        </script>
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
@@ -424,13 +374,13 @@
                                         <input type="text" class="form-control" id="valor-periodo" required>
                                     </div>
 
-                                    <div class="col-md-2" id="campo-label-anio" style="display: block">
+                                    <div class="col-md-1" id="campo-label-anio" style="display: block">
                                         <label id="label-anio-periodo" for="label-anio-periodo" class="form-label">
                                             <strong>Año:</strong></label>
                                         <input type="text" class="form-control" id="input-anio-periodo" readonly>
                                     </div>
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-1">
                                         <label class="form-label"><strong>Unidad:</strong></label>
                                         <span id="unidad-carga" class="form-control-plaintext"></span>
                                     </div>
@@ -438,6 +388,11 @@
                                     <div class="col-md-2">
                                         <label class="form-label"><strong>Valor medido:</strong></label>
                                         <input type="number" class="form-control" id="valor-carga" step="0.01" required>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <label class="form-label"><strong>Fórmula cálculo:</strong></label>
+                                        <span id="formula-calculo" class="form-control-plaintext"></span>
                                     </div>
 
                                     <div class="col-md-12 mt-2">
@@ -976,7 +931,8 @@
                                 <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
                                     <i class="fas fa-eye fa-xs"></i>
                                 </button>
-                                <button class="btn btn-warning btn-xs btn-icon-minimal" title="Registrar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}', '${ultimoValorPeriodo}', '${ultimaMedicion}')">
+                                <button class="btn btn-warning btn-xs btn-icon-minimal" title="Registrar" onclick="editarIndicador
+                                ('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}', '${ultimoValorPeriodo}', '${ultimaMedicion}', '${ind.formula_calculo}')">
                                     <i class="fas fa-edit fa-xs"></i>
                                 </button>
                             </td>
@@ -1007,7 +963,8 @@
                             <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
                                 <i class="fas fa-eye fa-xs"></i>
                             </button>
-                            <button class="btn btn-warning btn-xs btn-icon-minimal" title="Editar" onclick="editarIndicador('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}', '${ultimoValorPeriodo}')">
+                            <button class="btn btn-warning btn-xs btn-icon-minimal" title="Editar" onclick="editarIndicador
+                            ('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}', '${ultimoValorPeriodo}', '${ultimaMedicion}', '${ind.formula_calculo}')">
                                 <i class="fas fa-edit fa-xs"></i>
                             </button>
                         </td>
@@ -1229,7 +1186,7 @@
 
 
         // ✅ 2) FUNCIÓN editarIndicador SOLO PREPARA DATOS (sin listeners)
-        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo, ultimaMedicion) {
+        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo, ultimaMedicion, formula_calculo) {
 
             const titulo = document.getElementById('titulo-indicador');
             titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
@@ -1242,8 +1199,12 @@
             const spanUltimoPeriodo = document.getElementById('periodo-ultima-medicion');
             const spanValorMedido = document.getElementById('cantidad-ultima-medicion');
             const spanComentarios = document.getElementById('valor-comentarios');
+            const spanFormulaCalculo = document.getElementById('formula-calculo');
 
             const ultima = await getUltimaMedicionPorIndicador(indId);
+
+            spanFormulaCalculo.innerText = formula_calculo;
+
             if (ultima) {
                 const fecha = new Date(ultima.med_fecha_registro);
                 const fechaFormateada = fecha.toLocaleDateString('es-AR');

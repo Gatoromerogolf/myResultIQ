@@ -532,6 +532,48 @@ app.get('/api/indicadores/:codigo/cumplimiento', async (req, res) => {
 });
 
 
+app.get('/api/cumplimiento-por-destino', async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            WITH ultimas AS (
+                SELECT 
+                    m.*,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY m.med_indicador_id
+                        ORDER BY m.med_valor_periodo DESC
+                    ) AS rn
+                FROM mediciones m
+            )
+            SELECT 
+                s.nombre AS destino,       -- nombre legible del sector
+                COUNT(i.id) AS total_indicadores,
+                ROUND(AVG(m.med_valor), 2) AS promedio_cumplimiento,
+                SUM(CASE WHEN m.med_valor >= i.objetivo THEN 1 ELSE 0 END) AS en_meta,
+                SUM(CASE WHEN m.med_valor < i.objetivo * 0.8 THEN 1 ELSE 0 END) AS criticos,
+                MAX(m.med_valor_periodo) AS ultima_medicion
+            FROM indicadores i
+            LEFT JOIN sectores s ON s.id = i.destino
+            LEFT JOIN ultimas m ON m.med_indicador_id = i.id AND m.rn = 1
+            GROUP BY s.nombre
+            ORDER BY promedio_cumplimiento DESC;
+        `);
+
+        res.json(rows);
+    } catch (error) {
+        console.error('Error obteniendo cumplimiento por destino:', error);
+        res.status(500).json({ error: 'Error al obtener el cumplimiento por destino' });
+    }
+});
+
+
+
+
+
+
+
+
+
+
 
 // // 🚫🚫🚫 Crear usuario con imagen
 app.post('/usuarios', upload.single('foto'), async (req, res) => {

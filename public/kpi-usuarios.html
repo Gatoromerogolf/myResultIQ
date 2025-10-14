@@ -239,94 +239,25 @@
         <!--end::Header-->
 
         <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <!-- <a href="./index.html" class="brand-link"> -->
-                <!--begin::Brand Image-->
-                <img src="dist/images/leon.png" alt="León blanco símbolo de la aplicación" class="fade-in"
-                    style="width: 40px; border-radius: 50%; margin-bottom: 0px;">
-                <!--end::Brand Image-->
-                <!--begin::Brand Text-->
-                <span class="brand-text fw-light fs-5">myResultIQ 1</span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <div class="sidebar-wrapper">
-                <nav class="mt-2">
-                    <!--begin::Sidebar Menu-->
-                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
-                        data-accordion="false">
-                        <li class="nav-header">
-                            <h5>Menu Administrador</h5>
-                        </li>
+        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
 
-                        <li class="nav-item">
-                            <a href="kpi-panel-admin.html" class="nav-link active">
-                                <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Panel Administrador</p>
-                            </a>
-                        </li>
+        <script>
+            async function cargarAside() {
+                const res = await fetch('aside.html');
+                const html = await res.text();
+                document.getElementById('asideContainer').innerHTML = html;
 
-                        <li class="nav-item">
-                            <a href="kpi-dashboard-global.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Posición Global</p>
-                            </a>
-                        </li>
+                // Marcar activo según la página actual
+                const links = document.querySelectorAll('#asideContainer a');
+                links.forEach(link => {
+                    if (link.href === window.location.href) {
+                        link.classList.add('active');
+                    }
+                });
+            }
 
-                        <li class="nav-item">
-                            <a href="kpi-ponderado.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Valoración %</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="kpi-indicadores.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Indicadores</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="kpi-usuarios.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Usuarios</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="kpi-organigrama.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>Destinos</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p>----------------------</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="kpi-arbol.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle text-danger"></i>
-                                <p><i class="fas fa-sitemap text-primary"></i> Entidades-Indicadores</p>
-                            </a>
-                        </li>
-
-                    </ul>
-                    <!--end::Sidebar Menu-->
-                </nav>
-            </div>
-            <!--end::Sidebar Wrapper-->
-        </aside>
+            cargarAside();
+        </script>
         <!--end::Sidebar-->
 
         <!--begin::App Main-->

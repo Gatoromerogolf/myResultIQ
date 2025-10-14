@@ -1,0 +1,1787 @@
+<!doctype html>
+<html lang="en">
+<!--begin::Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>myResultIQ | Ind Asig</title>
+    <!--begin::Primary Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="title" content="AdminLTE v4 | Dashboard" />
+    <meta name="author" content="ColorlibHQ" />
+    <meta name="description"
+        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+    <meta name="keywords"
+        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+    <!--end::Primary Meta Tags-->
+
+    <!--begin::Fonts-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
+    <!--end::Fonts-->
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
+    <!--end::Third Party Plugin(Bootstrap Icons)-->
+
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="../css/estilos-custom.css">
+    <!--end::Required Plugin(AdminLTE)-->
+
+    <!-- apexcharts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
+
+    <!-- jsvectormap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- AdminLTE se basa en Bootstrap, así que hay que incluirlo primero:-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--  Bootstrap Icons (Para que <i class="bi bi-..."> funcione) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!--  AdminLTE CSS (Estilos del template)-->
+    <link rel="stylesheet" href="../css/adminlte.css" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+
+
+    <style>
+        :root {
+            --bg: #c75509;
+            --card: #3c0de6;
+            --muted: #01050c;
+            --accent: #2563eb;
+        }
+
+        body {
+            background: #f4f6f9;
+            font-family: Inter, ui-sans-serif, system-ui, Arial;
+            color: var(--muted);
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+        }
+
+        .card-outline-primary {
+            border-top: 3px solid var(--accent) !important;
+        }
+
+        h5 {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        /* --- Filtros globales --- */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .filters-bar select {
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+        }
+
+        .filters-bar button {
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* --- Tendencias globales --- */
+        .trend-box {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-top: 10px;
+            border-top: 1px solid #dee2e6;
+            padding-top: 10px;
+        }
+
+        .trend-item {
+            flex: 1;
+        }
+
+        .trend-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .trend-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        /* --- Barras horizontales --- */
+        .destination-row {
+            margin-bottom: 12px;
+        }
+
+        .destination-label {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .bar-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 10px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, var(--accent), #66b0ff);
+        }
+
+        /* --- Botones finales --- */
+        .actions-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .actions-bar button {
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* --- Insights automáticos --- */
+        .insight-box {
+            background: #fff;
+            border-left: 4px solid var(--accent);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 12px;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .insight-text {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        /* .card-outline {
+            border: 1px solid #0d6efd;
+            background-color: #fff;
+        } */
+
+        /* Ajuste de texto en móviles */
+        @media (max-width: 576px) {
+            #globalPercentText {
+                font-size: 1rem !important;
+            }
+
+            #ringGlobal {
+                max-width: 140px !important;
+            }
+        }
+    </style>
+</head>
+<!--end::Head-->
+
+<!--begin::Body-->
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+        <!--begin::Header-->
+        <nav class="app-header navbar navbar-expand bg-body">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Start Navbar Links-->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="bi bi-list"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
+                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
+                </ul>
+                <!--end::Start Navbar Links-->
+                <!--begin::End Navbar Links-->
+                <ul class="navbar-nav ms-auto">
+                    <!--begin::Navbar Search-->
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                            <i class="bi bi-search"></i>
+                        </a>
+                    </li> -->
+                    <!--end::Navbar Search-->
+
+                    <!--begin::Messages Dropdown Menu-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
+                            <i class="bi bi-chat-text"></i>
+                            <span class="navbar-badge badge text-bg-danger">3</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                            <a href="#" class="dropdown-item">
+                                <!--begin::Message-->
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <img src="dist/images/user1-128x128.jpg" alt="User Avatar"
+                                            class="img-size-50 rounded-circle me-3" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h3 class="dropdown-item-title">
+                                            Brad Diesel
+                                            <span class="float-end fs-7 text-danger"><i
+                                                    class="bi bi-star-fill"></i></span>
+                                        </h3>
+                                        <p class="fs-7">Call me whenever you can...</p>
+                                        <p class="fs-7 text-secondary">
+                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
+                                        </p>
+                                    </div>
+                                </div>
+                                <!--end::Message-->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <!--begin::Message-->
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <img src="dist/images/user8-128x128.jpg" alt="User Avatar"
+                                            class="img-size-50 rounded-circle me-3" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h3 class="dropdown-item-title">
+                                            John Pierce
+                                            <span class="float-end fs-7 text-secondary">
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                        </h3>
+                                        <p class="fs-7">I got your message bro</p>
+                                        <p class="fs-7 text-secondary">
+                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
+                                        </p>
+                                    </div>
+                                </div>
+                                <!--end::Message-->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <!--begin::Message-->
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <img src="dist/images/user3-128x128.jpg" alt="User Avatar"
+                                            class="img-size-50 rounded-circle me-3" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h3 class="dropdown-item-title">
+                                            Nora Silvester
+                                            <span class="float-end fs-7 text-warning">
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                        </h3>
+                                        <p class="fs-7">The subject goes here</p>
+                                        <p class="fs-7 text-secondary">
+                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
+                                        </p>
+                                    </div>
+                                </div>
+                                <!--end::Message-->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+                        </div>
+                    </li>
+                    <!--end::Messages Dropdown Menu-->
+                    <!--begin::Notifications Dropdown Menu-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
+                            <i class="bi bi-bell-fill"></i>
+                            <span class="navbar-badge badge text-bg-warning">15</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                            <span class="dropdown-item dropdown-header">15 Notifications</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-envelope me-2"></i> 4 new messages
+                                <span class="float-end text-secondary fs-7">3 mins</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-people-fill me-2"></i> 8 friend requests
+                                <span class="float-end text-secondary fs-7">12 hours</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
+                                <span class="float-end text-secondary fs-7">2 days</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
+                        </div>
+                    </li>
+                    <!--end::Notifications Dropdown Menu-->
+
+                    <!--begin::Fullscreen Toggle-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-lte-toggle="fullscreen">
+                            <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+                            <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
+                        </a>
+                    </li>
+                    <!--end::Fullscreen Toggle-->
+
+                    <!--begin::User Menu Dropdown"-->
+                    <li class="nav-item dropdown1 user-menu">
+
+                        <span class="nav-link dropdown-toggle">
+                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Daniel González
+                                    (ADM)</strong></span>
+                            <img src="/dist/images/user6-128x128.jpg" class="user-image rounded-circle shadow"
+                                style="width: 40px; height: 40px;" alt="User Image" />
+                        </span>
+                    </li>
+                    <!--end::User Menu Dropdown-->
+
+                    <li>
+                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
+                        <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt me-1"></i> Salir
+                        </a>
+                    </li>
+                    <!--end::User Menu Dropdown-->
+                </ul>
+                <!--end::End Navbar Links-->
+            </div>
+            <!--end::Container-->
+        </nav>
+        <!--end::Header-->
+
+        <!--begin::Sidebar-->
+        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
+        <script>
+            async function cargarAside() {
+                const res = await fetch('aside.html');
+                const html = await res.text();
+                document.getElementById('asideContainer').innerHTML = html;
+
+                // Marcar activo según la página actual
+                const links = document.querySelectorAll('#asideContainer a');
+                links.forEach(link => {
+                    if (link.href === window.location.href) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            cargarAside();
+        </script>
+        <!--end::Sidebar-->
+
+        <!--begin::App Main-->
+        <main class="app-main">
+            <!--begin::App Content Header-->
+
+            <body class="hold-transition layout-top-nav">
+                <div class="wrapper">
+                    <section class="content mt-4">
+                        <div class="container-fluid">
+                            <!-- === Filtros globales === -->
+                            <div class="filters-bar">
+                                <div>
+                                    <label for="filtroAnio" class="form-label mb-0 small">Año</label>
+                                    <select id="filtroAnio" class="form-select form-select-sm">
+                                        <option>2025</option>
+                                        <option>2024</option>
+                                        <option>2023</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="filtroPeriodo" class="form-label mb-0 small">Período</label>
+                                    <select id="filtroPeriodo" class="form-select form-select-sm">
+                                        <option>Octubre</option>
+                                        <option>Septiembre</option>
+                                        <option>Agosto</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="filtroSector" class="form-label mb-0 small">Sector</label>
+                                    <select id="filtroSector" class="form-select form-select-sm">
+                                        <option>Todos</option>
+                                        <option>Operaciones</option>
+                                        <option>Finanzas</option>
+                                        <option>Comercial</option>
+                                        <option>RRHH</option>
+                                    </select>
+                                </div>
+
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-sync-alt"></i> Aplicar</button>
+                            </div>
+
+                            <!-- === Cumplimiento Global + Evolución === -->
+                            <div class="row">
+                                <!-- Tarjeta Cumplimiento Global -->
+                                <div class="row">
+                                    <!-- Tarjeta Cumplimiento Global -->
+                                    <div class="col-12 col-md-6 mb-4 mt-3">
+                                        <div class="card card-primary card-outline card-shadow">
+                                            <div class="card-body">
+                                                <!-- Título alineado a la izquierda -->
+                                                <h5 class="card-title mb-4 text-start">
+                                                    🌐 Cumplimiento Global de la Organización
+                                                </h5>
+
+                                                <!-- Contenedor del ring grande centrado -->
+                                                <div class="d-flex justify-content-center my-4 w-100">
+                                                    <svg id="ringGlobal" width="300" height="300"></svg>
+                                                </div>
+
+                                                <!-- Link a vista completa alineado a la derecha -->
+                                                <div class="d-flex justify-content-end mt-3">
+                                                    <a href="kpi-dashboard-global.html"
+                                                        class="btn btn-sm btn-outline-primary">
+                                                        Ver detalle completo
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <!-- Trend box -->
+                                            <div class="trend-box d-flex justify-content-around p-3 border-top">
+                                                <div class="trend-item text-center">
+                                                    <div class="trend-value text-success">+3.2%</div>
+                                                    <div class="trend-label">vs. mes anterior</div>
+                                                </div>
+                                                <div class="trend-item text-center">
+                                                    <div class="trend-value text-primary">84%</div>
+                                                    <div class="trend-label">Promedio anual</div>
+                                                </div>
+                                                <div class="trend-item text-center">
+                                                    <div class="trend-value text-danger">–1.1%</div>
+                                                    <div class="trend-label">Desvío ponderado</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Evolución Global -->
+                                    <div class="col-12 col-md-6 mb-4 mt-3">
+                                        <div class="card card-primary card-outline card-shadow">
+                                            <div class="card-body">
+                                                <h5 class="mb-3">Evolución del Cumplimiento</h5>
+                                                <div id="chartEvolucion" style="height: 240px;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Evolución Global -->
+                                <!-- <div class="col-12 col-md-6 mb-4 mt-3">
+                                    <div class="card card-primary card-outline card-shadow">
+                                        <div class="card-body">
+                                            <h5 class="mb-3">Evolución del Cumplimiento</h5>
+                                            <div id="chartEvolucion" style="height: 240px;"></div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+
+
+
+                            <!-- <table class="table table-striped table-sm align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Área / Destino</th>
+                                        <th class="text-center">Indicadores</th>
+                                        <th class="text-center">Cumplimiento promedio</th>
+                                        <th class="text-center">En meta</th>
+                                        <th class="text-center text-danger">Críticos</th>
+                                        <th class="text-center">Última medición</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaCumplimientoDestinos"></tbody>
+                            </table> -->
+
+
+                            <div class="card card-primary card-outline col-12 mb-4 mt-3 card-shadow">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">
+                                        📍 Cumplimiento por Destino / Área
+                                    </h5>
+                                </div>
+                                <div class="row">
+                                    <!-- Spinner mientras carga -->
+                                    <div id="spinnerCumplimientoDestinos" class="text-center my-3">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Cargando...</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tabla -->
+                                    <div class="col-12 col-md-6">
+                                        <div id="tablaCumplimientoContainer" class="table-responsive px-3"
+                                            style="display:none;">
+                                            <table class="table table-sm align-middle mx-auto" style="max-width:95%;">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Destino / Área</th>
+                                                        <th class="text-center">Indicadores</th>
+                                                        <th class="text-center">Cumplimiento</th>
+                                                        <th class="text-center text-success">En Meta</th>
+                                                        <th class="text-center text-danger">Críticos</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tablaCumplimientoDestinos"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- Gráfico -->
+                                    <div class="col-12 col-md-6">
+                                        <div id="chartCumplimientoDestinos" style="height: 350px; display:none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- === Mejores y Peores Indicadores === -->
+                            <div class="row">
+                                <div class="col-md-6 mt-3">
+                                    <div class="card card-outline" style="border-top: 3px solid #28a745;">
+                                        <div class="card-body">
+                                            <!-- <h5 class="mb-3">Indicadores Destacados (≥ 90%)</h5> -->
+                                            <h5 class="mb-2 d-flex align-items-center flex-wrap" style="gap: 6px;">
+                                                <i class="fa fa-star text-warning"></i>
+                                                <label for="valorCorteDestacados"
+                                                    class="mb-0 fw-semibold text-gray-700">
+                                                    Indicadores destacados: cumplimiento mayor al:
+                                                </label>
+                                                <div class="input-group input-group-sm" style="width: 80px;">
+                                                    <input type="number" id="valorCorteDestacados" value="90" min="0"
+                                                        max="100" step="1" class="form-control text-end" style="
+                                                            border: 1px solid #dee2e6;
+                                                            border-radius: 6px;
+                                                            background-color: #f8f9fa;
+                                                            transition: all 0.2s ease;
+                                                            box-shadow: none;
+                                                            font-size: 1rem;
+                                                            font-weight: 500;
+                                                            padding: 4px 6px;
+                                                            height: auto;
+                                                        "
+                                                        onfocus="this.style.borderColor='#0d6efd'; this.style.backgroundColor='#fff';"
+                                                        onblur="this.style.borderColor='#dee2e6'; this.style.backgroundColor='#f8f9fa';" />
+                                                    <span class="input-group-text fw-semibold" style="
+                                                        background-color: #f8f9fa; 
+                                                        border: 1px solid #dee2e6;
+                                                        font-size: 1rem;
+                                                    ">%</span>
+                                                </div>
+                                            </h5>
+
+
+                                            <div class="table-responsive">
+                                                <table id="tablaDestacados"
+                                                    class="table table-sm table-borderless mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Indicador</th>
+                                                            <th>Destino</th>
+                                                            <th>Cumpl.</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbodyDestacados">
+                                                        <!-- JS llenará acá -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mt-3">
+                                    <div class="card card-outline" style="border-top: 3px solid #dc3545;">
+                                        <div class="card-body">
+
+                                            <h5 class="mb-2 d-flex align-items-center flex-wrap" style="gap: 6px;">
+                                                <i class="fa fa-exclamation-triangle text-danger"></i>
+                                                <label for="valorCorteCriticos" class="mb-0 fw-semibold text-gray-700">
+                                                    Indicadores críticos: cumplimiento menor al
+                                                </label>
+                                                <div class="input-group input-group-sm" style="width: 80px;">
+                                                    <input type="number" id="valorCorteCriticos" value="50" min="0"
+                                                        max="100" step="1" class="form-control text-end" style="
+                                                            border: 1px solid #dee2e6;
+                                                            border-radius: 6px;
+                                                            background-color: #f8f9fa;
+                                                            transition: all 0.2s ease;
+                                                            box-shadow: none;
+                                                            font-size: 1rem;
+                                                            font-weight: 500;
+                                                            padding: 4px 6px;
+                                                            height: auto;
+                                                        "
+                                                        onfocus="this.style.borderColor='#0d6efd'; this.style.backgroundColor='#fff';"
+                                                        onblur="this.style.borderColor='#dee2e6'; this.style.backgroundColor='#f8f9fa';" />
+                                                    <span class="input-group-text fw-semibold" style="
+                                                        background-color: #f8f9fa; 
+                                                        border: 1px solid #dee2e6;
+                                                        font-size: 1rem;
+                                                    ">%</span>
+                                                </div>
+                                            </h5>
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-borderless mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Indicador</th>
+                                                            <th>Destino</th>
+                                                            <th>Cumpl.</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbodyCriticos"></tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- === Sin última medición === -->
+                                <div class="col-md-6 mt-3">
+                                    <div class="card card-warning card-outline">
+                                        <div class="card-body">
+
+                                            <h5 class="mb-2 d-flex align-items-center flex-wrap" style="gap: 6px;">
+                                                <i class="fa fa-question-circle"></i>
+                                                <label for="valorCorteCriticos" class="mb-0 fw-semibold text-gray-700">
+                                                    Indicadores sin última medición informada
+                                                </label>
+                                            </h5>
+                                            <div class="table-responsive">
+                                                <table id="tablaPendientes"
+                                                    class="table table-sm table-borderless mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Indicador</th>
+                                                            <th>Destino</th>
+                                                            <th>Responsable</th>
+                                                            <th>Situación</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbodyPendientes">
+                                                        <!-- JS llenará acá -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- === Insights Automáticos === -->
+                                <div class="col-md-6 mt-3">
+                                    <div class="card card-outline card-info">
+                                        <div class="card-body">
+                                            <h5 class="mb-3">🔍 Insights Automáticos</h5>
+
+                                            <div class="insight-box">
+                                                <div class="insight-title">📈 Mejora sostenida</div>
+                                                <div class="insight-text">El cumplimiento global creció un 3.2%
+                                                    respecto
+                                                    al
+                                                    mes
+                                                    anterior, con tendencia positiva sostenida en los últimos 4
+                                                    períodos.
+                                                </div>
+                                            </div>
+
+                                            <div class="insight-box">
+                                                <div class="insight-title">⚠️ Riesgo en RRHH</div>
+                                                <div class="insight-text">El área de RRHH muestra un cumplimiento de
+                                                    apenas
+                                                    68%,
+                                                    siendo la más baja del conjunto. Se sugiere revisión de planes
+                                                    de
+                                                    acción.
+                                                </div>
+                                            </div>
+
+                                            <div class="insight-box">
+                                                <div class="insight-title">🏆 Indicador líder</div>
+                                                <div class="insight-text">El KPI "Entregas a tiempo" mantiene un 98%
+                                                    de
+                                                    cumplimiento, consolidándose como el de mejor desempeño del
+                                                    período.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- === Botones de acción === -->
+                                <div class="actions-bar">
+                                    <button class="btn btn-secondary"><i class="fas fa-file-csv"></i> Exportar
+                                        CSV</button>
+                                    <button class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i>
+                                        Descargar
+                                        PDF</button>
+                                    <button class="btn btn-primary"><i class="fas fa-sync"></i> Actualizar
+                                        Datos</button>
+                                </div>
+
+                            </div>
+                    </section>
+                </div>
+                <footer class="main-footer text-center">
+                    <strong>© 2025 - myResultIQ 1.0</strong>
+                </footer>
+        </main>
+        <!--end::App nain-->
+
+    </div>
+    <!--end::App Wrapper-->
+
+    <!--begin::Modal del usuario-->
+    <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleUsuarioLabel">Info Responsable</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="/dist/images/user1-128x128.jpg" class="rounded-circle shadow mb-3" alt="User Image" />
+                    <p class="mb-1">Gerente de Operaciones</p>
+                    <p class="mb-1">rdieguez@company.com.ar</p>
+                    <p>+54 11 452 7898</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal del usuario-->
+
+    <!-- Modal de Confirmación de Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    Esta acción cerrará tu sesión actual y volverás a la página de inicio.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('confirmLogout').addEventListener('click', function () {
+            // Limpiar lo necesario
+            sessionStorage.clear();
+            localStorage.clear(); // si usás localStorage
+
+            // Redirigir al inicio
+            window.location.href = 'index.html';
+        });
+    </script>
+
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap (bundle con Popper incluido) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script src="../js/adminlte.js"></script>
+    <!--end::Required Plugin(AdminLTE)-->
+
+    <!-- apexcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+
+    <script src="https://kit.fontawesome.com/a2e0e6ad2f.js" crossorigin="anonymous"></script>
+
+
+    <script>
+
+        async function loadGlobalCompliance() {
+            try {
+                const [sectoresRes, indicadoresRes] = await Promise.all([
+                    fetch('/api/sectores'),
+                    fetch('/api/indicadores')
+                ]);
+
+                const sectores = await sectoresRes.json();
+                const indicadores = await indicadoresRes.json();
+
+                const indicadoresConCumplimiento = indicadores.map(ind => ({
+                    ...ind,
+                    cumplimiento: calcularCumplimiento(
+                        ind.ultimo_valor,
+                        ind.unico_valor,
+                        ind.unico_acepta,
+                        ind.unico_riesgo,
+                        ind.unico_critico
+                    ),
+                    peso: Number(ind.peso_porcentual) || 0
+                }));
+
+                const orgHierarchy = buildHierarchyMinimal(sectores, indicadoresConCumplimiento);
+                const globalPercent = computeCompliance(orgHierarchy);
+
+                // Actualizar ring
+                drawRing('ringGlobal', globalPercent);
+                // Actualizar texto
+                document.getElementById('globalPercentText').innerText = globalPercent.toFixed(1) + '%';
+
+            } catch (err) {
+                console.error('Error al calcular cumplimiento global:', err);
+            }
+        }
+
+        // Funciones auxiliares
+        function buildHierarchyMinimal(sectores, indicadores) {
+            const map = {};
+            const roots = [];
+
+            sectores.forEach(s => {
+                map[s.id] = { id: s.id, weight: s.sector_porcentual ?? 100, children: [] };
+            });
+
+            sectores.forEach(s => {
+                if (s.sector_padre_id && map[s.sector_padre_id]) {
+                    map[s.sector_padre_id].children.push(map[s.id]);
+                } else {
+                    roots.push(map[s.id]);
+                }
+            });
+
+            indicadores.forEach(ind => {
+                const sector = map[ind.destino];
+                if (sector) {
+                    sector.children.push({
+                        type: 'indicator',
+                        cumplimiento: ind.cumplimiento,
+                        weight: ind.peso
+                    });
+                }
+            });
+
+            return { id: 'root', weight: 100, children: roots };
+        }
+
+        function computeCompliance(node) {
+            if (!node) return 0;
+            if (!node.children || node.children.length === 0) return node.cumplimiento ?? 0;
+
+            let total = 0, sumWeights = 0;
+            node.children.forEach(child => {
+                const childComp = computeCompliance(child) ?? 0;
+                const weight = Number(child.weight ?? 0);
+                total += childComp * weight;
+                sumWeights += weight;
+            });
+            return sumWeights > 0 ? total / sumWeights : 0;
+        }
+
+        // Función drawRing actualizada para ring grande
+        function drawRing(id, percent) {
+            const svg = document.getElementById(id);
+            const size = 300, r = 140, stroke = 24, c = 2 * Math.PI * r;
+            svg.innerHTML = '';
+
+            // Círculo de fondo
+            const bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            bg.setAttribute('cx', size / 2);
+            bg.setAttribute('cy', size / 2);
+            bg.setAttribute('r', r);
+            bg.setAttribute('fill', 'none');
+            bg.setAttribute('stroke', '#eee');
+            bg.setAttribute('stroke-width', stroke);
+            svg.appendChild(bg);
+
+            // Círculo de progreso
+            const fg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            fg.setAttribute('cx', size / 2);
+            fg.setAttribute('cy', size / 2);
+            fg.setAttribute('r', r);
+            fg.setAttribute('fill', 'none');
+            fg.setAttribute('stroke-width', stroke);
+            fg.setAttribute('stroke-linecap', 'round');
+            fg.setAttribute('stroke-dasharray', `${(percent / 100) * c} ${c}`);
+            fg.setAttribute('transform', `rotate(-90 ${size / 2} ${size / 2})`);
+            fg.setAttribute('stroke', 'url(#gradGlobal)');
+            svg.appendChild(fg);
+
+            // Gradiente
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+            grad.id = 'gradGlobal';
+            grad.setAttribute('x1', '0%'); grad.setAttribute('x2', '100%');
+            const s1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            s1.setAttribute('offset', '0%'); s1.setAttribute('stop-color', '#2563eb');
+            const s2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            s2.setAttribute('offset', '100%'); s2.setAttribute('stop-color', '#60a5fa');
+            grad.appendChild(s1); grad.appendChild(s2);
+            defs.appendChild(grad); svg.appendChild(defs);
+
+            // Texto
+            const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            txt.setAttribute('x', size / 2);
+            txt.setAttribute('y', size / 2 + 8);
+            txt.setAttribute('text-anchor', 'middle');
+            txt.setAttribute('font-size', '36');
+            txt.setAttribute('font-weight', '700');
+            txt.textContent = percent.toFixed(1) + '%';
+            svg.appendChild(txt);
+        }
+        // Reutiliza tu función de cálculo de cumplimiento
+        function calcularCumplimiento(valor, meta, acepta, riesgo, critico) {
+            if (valor === null || meta === null || meta == 0 || valor == 0) return null;
+            return (valor / meta) * 100;
+        }
+
+        async function cargarIndicadores(indicadores) {
+            const tbodyPendientes = document.getElementById('tbodyPendientes');
+            tbodyPendientes.innerHTML = '';
+            const tbodyDestacados = document.getElementById('tbodyDestacados');
+            tbodyDestacados.innerHTML = '';
+            const tbodyCriticos = document.getElementById('tbodyCriticos');
+            tbodyCriticos.innerHTML = '';
+
+            const valorCorteDestacados = Number(document.getElementById('valorCorteDestacados').value);
+            const valorCorteCriticos = Number(document.getElementById('valorCorteCriticos').value);
+
+            for (const ind of indicadores) {
+
+                // Transformamos los datos para que DataTable los entienda
+                const datosTabla = await Promise.all(indicadores.map(async (ind) => {
+                    const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
+
+                    // lee la ultima medición del indicador 
+                    const ultima = await getUltimaMedicionPorIndicador(ind.id);
+                    const sector = await obtenerSectoresPorUnidad(ind.destino);
+
+                    let fecha = '';
+                    let resultadoActualizacion = 0;
+                    let botones = '';
+                    let ultimoValorPeriodo = '';
+                    let ultimaMedicion = 0
+
+                    if (ultima) {
+                        let anio = 0;
+                        let segunda = 0;
+                        let tercera = 0;
+
+                        ultimoValorPeriodo = ultima.med_valor_periodo;  //AAAA y lo que sigue ó AAAA-MM-DD
+                        ultimaMedicion = ultima.med_valor; // valor numérico
+
+                        switch (ind.freq_medicion) {
+                            case '0201': // diaria (día hábil anterior)
+                                const partes = ultima.med_valor_periodo.split("-"); // [2025,08,04]
+                                fecha = `${partes[2]}/${partes[1]}/${partes[0]}`;   // 04/08/2025
+                                break;
+
+                            case '0202': // semanal
+                                anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
+                                fecha = "Sem. " + segunda + ' de ' + anio
+                                break;
+
+                            case '0203': // quincenal con quincenas 1-24
+                                anio = ultima.med_valor_periodo.substring(0, 4);        // AAAA
+                                let quincenaGlobal = parseInt(ultima.med_valor_periodo.substring(4, 6)); // 1 a 24
+
+                                // Determinar el mes
+                                let mesNum = Math.ceil(quincenaGlobal / 2); // 1-12
+                                let quincenaDelMes = (quincenaGlobal % 2 === 0) ? 2 : 1;
+
+                                // Array con nombres de meses abreviados
+                                const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                                let mesTexto = meses[mesNum - 1]; // restamos 1 porque el array es base 0
+
+                                // Componer fecha
+                                fecha = quincenaDelMes + 'a.' + ' Quin. de ' + mesTexto + ' de ' + anio + ' (' + quincenaGlobal + ')';
+                                break;
+
+                            case '0204': // mensual
+                                anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
+                                switch (segunda) {
+                                    case '01':
+                                        fecha = 'Enero de ' + anio;
+                                        break;
+                                    case '02':
+                                        fecha = 'Febrero de ' + anio;
+                                        break;
+                                    case '03':
+                                        fecha = 'Marzo de ' + anio;
+                                        break;
+                                    case '04':
+                                        fecha = 'Abril de ' + anio;
+                                        break;
+                                    case '05':
+                                        fecha = 'Mayo de ' + anio;
+                                        break;
+                                    case '06':
+                                        fecha = 'Junio de ' + anio;
+                                        break;
+                                    case '07':
+                                        fecha = 'Julio de ' + anio;
+                                        break;
+                                    case '08':
+                                        fecha = 'Agosto de ' + anio;
+                                        break;
+                                    case '09':
+                                        fecha = 'Setiembre de ' + anio;
+                                        break;
+                                    case '10':
+                                        fecha = 'Octubre de ' + anio;
+                                        break;
+                                    case '11':
+                                        fecha = 'Noviembre de ' + anio;
+                                        break;
+                                    case '12':
+                                        fecha = 'Diciembre de ' + anio;
+                                        break;
+                                };
+                                break;
+
+                            case '0205': // bimestral
+                                anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 1
+                                fecha = segunda + ' Bimestre de ' + ultima.med_anio;
+                                break;
+
+                            case '0206': // trimestral
+                                anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 1
+                                fecha = segunda + ' Trimestre de ' + ultima.med_anio
+                                break;
+
+                            case '0207': // cuatrimestral
+                                anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
+                                fecha = segunda + ' Cuatrimestre de ' + anio
+                                break;
+
+                            case '0208': // semestral
+                                anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
+                                fecha = segunda + ' Semestre de ' + anio
+                                break;
+
+                            case '0209': // anual
+                                fecha = 'Año ' + ultima.med_valor_periodo
+                                break;
+
+                            case '0210': // anual
+                                anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
+                                segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
+                                fecha = segunda + ' de ' + anio;
+                                break;
+                        }
+
+                        //  calcula cual debería ser la ultima fecha de medición según la fecha del día y la frecuencia de medición
+                        const freqMedi = ind.freq_medicion.substring(2, 4);
+                        const hoy = new Date();
+                        const fechaFormateada = hoy.toISOString().split('T')[0];
+                        const resultado = await calcularFechaEsperada(fechaFormateada, freqMedi);
+
+                        //  si la que debería ser no es igual a la ultima que tiene, pone marca de demorado
+                        if (resultado !== ultima.med_valor_periodo) {
+                            // Crear filas
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                        <td>${ind.nombre}</td>
+                                        <td>${sector.nombre || '-'}</td>
+                                        <td>${usuario.nombres} ${usuario.apellido} </td>
+                                        <td>Demorado</td>
+                                    `;
+                            tbodyPendientes.appendChild(tr);
+                        };
+
+                        //  calcula cumplimiento
+                        //  considera   unico_valor como meta
+                        //  toma   med_valor como valor de medición
+                        const porcentaje = (ultimaMedicion / ind.unico_valor * 100).toFixed(1);
+
+                        // Tabla destacados
+                        if (porcentaje >= valorCorteDestacados) {
+                            const trDest = document.createElement('tr');
+                            trDest.innerHTML = `
+                                <td>${ind.nombre}</td>
+                                <td>${sector?.nombre || '-'}</td>
+                                <td>${porcentaje}%</td>
+                            `;
+                            tbodyDestacados.appendChild(trDest);
+                        }
+
+                        // Tabla críticos
+                        if (porcentaje <= valorCorteCriticos) {
+                            const trCrit = document.createElement('tr');
+                            trCrit.innerHTML = `
+                                <td>${ind.nombre}</td>
+                                <td>${sector?.nombre || '-'}</td>
+                                <td>${porcentaje}%</td>
+                            `;
+                            tbodyCriticos.appendChild(trCrit);
+                        }
+                    }
+
+                    // si no tiene ninguna medición:
+                    else {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                                        <td>${ind.nombre}</td>
+                                        <td>${sector.nombre || '-'}</td>
+                                        <td>${usuario && usuario.nombres && usuario.apellidos
+                                ? `${usuario.nombres} ${usuario.apellidos}`
+                                : '-'}</td>
+                                        <td>Sin med.</td>
+                                    `;
+                        tbodyPendientes.appendChild(tr);
+                    }
+                }))
+            }
+        }
+
+
+
+
+
+        // Función para reconstruir todas las tablas
+        function reconstruirTablasXXX() {
+            const tbodyPendientes = document.getElementById('tbodyPendientes');
+            const tbodyDestacados = document.getElementById('tbodyDestacados');
+            const tbodyCriticos = document.getElementById('tbodyCriticos');
+
+            tbodyPendientes.innerHTML = '';
+            tbodyDestacados.innerHTML = '';
+            tbodyCriticos.innerHTML = '';
+
+            const valorCorteDestacados = Number(document.getElementById('valorCorteDestacados').value);
+            const valorCorteCriticos = Number(document.getElementById('valorCorteCriticos').value);
+
+            indicadoresConDatos.forEach(ind => {
+                // Pendientes
+                if (ind.ultimaMedicion === null) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                <td>${ind.nombre}</td>
+                <td>${ind.sector}</td>
+                <td>${ind.usuario}</td>
+                <td>Sin med.</td>
+            `;
+                    tbodyPendientes.appendChild(tr);
+                }
+
+                // Destacados
+                if (ind.porcentaje !== null && ind.porcentaje >= valorCorteDestacados) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                <td>${ind.nombre}</td>
+                <td>${ind.sector}</td>
+                <td>${ind.porcentaje}%</td>
+            `;
+                    tbodyDestacados.appendChild(tr);
+                }
+
+                // Críticos
+                if (ind.porcentaje !== null && ind.porcentaje <= valorCorteCriticos) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                <td>${ind.nombre}</td>
+                <td>${ind.sector}</td>
+                <td>${ind.porcentaje}%</td>
+            `;
+                    tbodyCriticos.appendChild(tr);
+                }
+            });
+        }
+
+
+        async function getUltimaMedicionPorIndicador(indicadorId) {
+            // Filtrar por el indicador
+            const mediciones = await leerMediciones();
+            const filtradas = mediciones.filter(m => m.med_indicador_id == indicadorId);
+
+            if (filtradas.length === 0) return null;
+
+            // Ver el tipo de periodo (asumo que todas las mediciones del indicador tienen el mismo)
+            const tipoPeriodo = filtradas[0].med_tipo_periodo;
+
+            if (tipoPeriodo === '0201') {
+                // Caso diario: comparar por fecha
+                return filtradas.reduce((ultima, actual) =>
+                    actual.med_valor_periodo > ultima.med_valor_periodo
+                        ? actual
+                        : ultima
+                );
+            } else {
+                // Otros casos: comparar por med_valor_periodo (aseguramos que sea número)
+                return filtradas.reduce((ultima, actual) =>
+                    Number(actual.med_valor_periodo) > Number(ultima.med_valor_periodo)
+                        ? actual
+                        : ultima
+                );
+            }
+        }
+
+
+        let medicionesGral = [];
+        async function leerMediciones() {
+            try {
+                const res = await fetch('/api/mediciones');
+                const json = await res.json();
+
+                if (Array.isArray(json)) {
+                    return json;
+                } else if (json.success) {
+                    return json.data || [];
+                } else {
+                    console.error("Error en la respuesta:", json);
+                    return [];
+                }
+            } catch (err) {
+                console.error("Error leyendo mediciones:", err);
+                return [];
+            }
+        }
+
+        async function obtenerUsuarioPorLegajo(responsable) {
+            try {
+                const response = await fetch(`/usuarios/${responsable}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn('Usuario no encontrado');
+                        return null;
+                    }
+                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
+                }
+                const usuario = await response.json();
+                return usuario;
+            } catch (err) {
+                console.error('Error en fetch:', err);
+                return null;
+            }
+        }
+
+        async function obtenerSectoresPorUnidad(unidad) {
+            try {
+                const response = await fetch(`/sectores/${unidad}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn('Sector no encontrado');
+                        return null;
+                    }
+                    throw new Error(`Error al obtener usuario: ${response.statusText}`);
+                }
+                const sector = await response.json();
+                return sector;
+            } catch (err) {
+                console.error('Error en fetch:', err);
+                return null;
+            }
+        }
+
+        function calcularFechaEsperada(fechaConsulta, tipoPeriodo) {
+            // segun la fecha del dia determina qué fecha deberia ya haber informado el usuario
+            const partes = fechaConsulta.split('-'); // "2025-09-16" → ["2025","09","16"]
+            const fecha = new Date(partes[0], partes[1] - 1, partes[2]); // año, mesIndex, día
+            let resultado;
+            let dia = fecha.getDate();
+            let mes = fecha.getMonth() + 1; // 1-12
+            let anio = fecha.getFullYear();
+
+            switch (tipoPeriodo) {
+                case '01': // diaria (día hábil anterior)
+                    const diaHabil = getDiaHabilAnterior(fecha);
+                    resultado = diaHabil.toISOString().split('T')[0]; // yyyy-mm-dd
+                    break;
+
+                case '02': // semanal
+                    // Obtener semana ISO y año ISO
+                    const { anioISO, semanaISO } = getSemanaISO(fecha);
+
+                    // Semana anterior
+                    let semanaAnterior = semanaISO - 1;
+                    let anioSemanaAnterior = anioISO;
+
+                    // Si la semana anterior cae en el año anterior
+                    if (semanaAnterior === 0) {
+                        // Última semana ISO del año anterior (52 o 53 según el año)
+                        anioSemanaAnterior = anioISO - 1;
+                        semanaAnterior = getSemanaISO(new Date(anioSemanaAnterior, 11, 31)).semanaISO;
+                    }
+
+                    // Guardar resultado en formato uniforme: "AAAA+semana"
+                    resultado = `${anioSemanaAnterior}${semanaAnterior}`;
+                    break;
+
+                case '03': // quincenal 1-24
+                    let quincenaGlobal;
+                    if (dia < 16) {
+                        // Segunda quincena del mes anterior
+                        let mesAnterior = mes - 1;
+                        let anioAnterior = anio;
+                        if (mesAnterior === 0) {
+                            mesAnterior = 12;
+                            anioAnterior -= 1;
+                        }
+                        quincenaGlobal = (mesAnterior - 1) * 2 + 2; // segunda quincena del mes anterior
+                        anio = anioAnterior;
+                    } else {
+                        // Primera quincena del mes actual
+                        quincenaGlobal = (mes - 1) * 2 + 1;
+                    }
+
+                    // Guardar resultado como AAAA + quincena en 2 dígitos
+                    resultado = `${anio}${String(quincenaGlobal).padStart(2, "0")}`;
+                    break;
+
+
+                case '04': // mensual
+                    if (mes === 1) {
+                        // si enero, el mes anterior es diciembre del año anterior
+                        resultado = `${anio - 1}12`;
+                    } else {
+                        // cualquier otro mes: calcular mes anterior
+                        let mesAnterior = mes - 1;                  // primero restamos
+                        mesAnterior = String(mesAnterior).padStart(2, "0"); // luego lo formateamos
+                        resultado = `${anio}${mesAnterior}`;
+                    }
+                    break;
+
+                case '05': // bimestral
+                    if (mes === 1 || mes === 2) {
+                        // ene-feb → año anterior + 6 (último bimestre del año anterior)
+                        resultado = `${anio - 1}6`;
+                    } else if (mes === 3 || mes === 4) {
+                        // mar-abr → año actual + 1
+                        resultado = `${anio}1`;
+                    } else if (mes === 5 || mes === 6) {
+                        // may-jun → año actual + 2
+                        resultado = `${anio}2`;
+                    } else if (mes === 7 || mes === 8) {
+                        // jul-ago → año actual + 3
+                        resultado = `${anio}3`;
+                    } else if (mes === 9 || mes === 10) {
+                        // sep-oct → año actual + 4
+                        resultado = `${anio}4`;
+                    } else if (mes === 11 || mes === 12) {
+                        // nov-dic → año actual + 5
+                        resultado = `${anio}5`;
+                    }
+                    break;
+
+                case '06': // trimestral
+                    if (mes >= 1 && mes <= 3) {
+                        // meses 1-3 → año anterior + sufijo 4
+                        resultado = `${anio - 1}4`;
+                    } else if (mes >= 4 && mes <= 6) {
+                        // meses 4-6 → año actual + sufijo 1
+                        resultado = `${anio}1`;
+                    } else if (mes >= 7 && mes <= 9) {
+                        // meses 7-9 → año actual + sufijo 2
+                        resultado = `${anio}2`;
+                    } else if (mes >= 10 && mes <= 12) {
+                        // meses 10-12 → año actual + sufijo 3
+                        resultado = `${anio}3`;
+                    }
+                    break;
+
+                case '07': // cuatrimestral
+                    if (mes >= 1 && mes <= 4) {
+                        // meses 1-4 → año anterior + sufijo 3
+                        resultado = `${anio - 1}3`;
+                    } else if (mes >= 5 && mes <= 8) {
+                        // meses 5-8 → año actual + sufijo 1
+                        resultado = `${anio}1`;
+                    } else if (mes >= 9 && mes <= 12) {
+                        // meses 9-12 → año actual + sufijo 2
+                        resultado = `${anio}2`;
+                    }
+                    break;
+
+                case '08': // semestral
+                    if (mes < 7) {
+                        // primer semestre ya pasó → apéndice 2, año anterior
+                        resultado = `${anio - 1}2`;
+                    } else {
+                        // segundo semestre → apéndice 1, año actual
+                        resultado = `${anio}1`;
+                    }
+                    break;
+
+                case '09': // anual
+                    resultado = anio - 1; // año anterior
+                    break;
+
+                default:
+                    resultado = null;
+            }
+            return resultado;
+        }
+
+        // Servicio global para textp de tabla de códigos 
+        const CodigosService = {
+            codigosMap: {},
+
+            async init() {
+                const response = await fetch('/api/codigos');
+                if (!response.ok) throw new Error('No se pudo obtener los codigos.');
+                const codigos = await response.json();
+
+                codigos.forEach(c => {
+                    this.codigosMap[c.cod_tabla] = c.cod_nombre;
+                });
+            },
+
+            getNombreCodigo(codigo) {
+                return this.codigosMap[codigo] || '-';
+            }
+        };
+
+        //  controla rango para destacados
+        document.getElementById('valorCorteDestacados').addEventListener('input', async () => {
+            await cargarTablaDestacados(); // función que recalcula y recarga la tabla
+        });
+
+
+
+
+
+
+
+
+
+
+
+        async function cargarCumplimientoPorDestino() {
+            const spinner = document.getElementById('spinnerCumplimientoDestinos');
+            const tablaContainer = document.getElementById('tablaCumplimientoContainer');
+            const chartContainer = document.getElementById('chartCumplimientoDestinos');
+            const tbody = document.getElementById('tablaCumplimientoDestinos');
+
+            spinner.style.display = 'block';
+            tablaContainer.style.display = 'none';
+            chartContainer.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/cumplimiento-por-destino');
+                const data = await res.json();
+
+                // --- Renderizar tabla ---
+                tbody.innerHTML = data.map(d => {
+                    const valor = Number(d.promedio_cumplimiento);
+                    const valorSeguro = isNaN(valor) ? 0 : valor;
+
+                    // Color para barra de progreso
+                    let color = 'text-danger';
+                    if (valorSeguro >= 90) color = 'text-success';
+                    else if (valorSeguro >= 75) color = 'text-warning';
+
+                    const barra = `
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar ${color.replace('text-', 'bg-')}" 
+                        role="progressbar" 
+                        style="width: ${valorSeguro}%;"
+                        aria-valuenow="${valorSeguro}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100">
+                    </div>
+                </div>`;
+
+                    return `
+                <tr>
+                    <td>${d.destino}</td>
+                    <td class="text-center">${d.total_indicadores}</td>
+                    <td class="text-center fw-semibold ${color}">
+                        ${valorSeguro}% ${barra}
+                    </td>
+                    <td class="text-center text-success fw-semibold">${d.en_meta}</td>
+                    <td class="text-center text-danger fw-semibold">${d.criticos}</td>
+                </tr>
+            `;
+                }).join('');
+
+                spinner.style.display = 'none';
+                tablaContainer.style.display = 'block';
+                chartContainer.style.display = 'block'; // Mostrar contenedor antes de renderizar ApexCharts
+
+                // --- Preparar datos para gráfico ---
+                const destinos = [];
+                const valores = [];
+                const colores = [];
+
+                data.forEach(d => {
+                    const valor = Number(d.promedio_cumplimiento);
+                    const valorSeguro = isNaN(valor) ? 0 : valor;
+
+                    destinos.push(d.destino);
+                    valores.push(valorSeguro);
+
+                    if (valorSeguro >= 90) colores.push('#28a745');
+                    else if (valorSeguro >= 75) colores.push('#ffc107');
+                    else colores.push('#dc3545');
+                });
+
+                // Evitar gráfico vacío
+                if (valores.length === 0) {
+                    chartContainer.innerHTML = "<p class='text-center text-muted mt-3'>No hay datos para mostrar.</p>";
+                    return;
+                }
+
+                // --- Renderizar gráfico con ApexCharts ---
+                const options = {
+                    chart: {
+                        type: 'bar',
+                        height: 350,
+                        toolbar: { show: false },
+                        animations: { enabled: true },
+                        redrawOnParentResize: true
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: true,
+                            borderRadius: 6,
+                            barHeight: '60%',
+                        }
+                    },
+                    colors: colores,
+                    dataLabels: {
+                        enabled: true,
+                        formatter: (val) => val + '%',
+                        style: { fontSize: '13px', fontWeight: 600 }
+                    },
+                    xaxis: {
+                        categories: destinos,
+                        title: { text: 'Cumplimiento (%)' },
+                        max: 100
+                    },
+                    series: [{
+                        name: 'Cumplimiento',
+                        data: valores
+                    }],
+                    tooltip: {
+                        y: { formatter: val => val + '%' }
+                    },
+                    grid: {
+                        borderColor: '#eee'
+                    }
+                };
+
+                // Forzar pequeño delay para asegurar que contenedor tiene tamaño
+                setTimeout(() => {
+                    const chart = new ApexCharts(chartContainer, options);
+                    chart.render();
+                }, 50);
+
+            } catch (error) {
+                console.error('Error cargando cumplimiento por destino:', error);
+                tbody.innerHTML = `
+            <tr><td colspan="5" class="text-center text-danger">Error al cargar los datos</td></tr>
+        `;
+                spinner.style.display = 'none';
+                tablaContainer.style.display = 'block';
+                chartContainer.style.display = 'none';
+            }
+        }
+
+
+
+
+
+
+
+    </script>
+
+
+    <script type="module">
+        import {
+            inicializarDatosGlobales,
+            getIndicadores,
+            getMediciones
+        } from './js/datosGlobales.js';
+
+        let indicadores = []; // array original
+        let indicadoresConDatos = []; // array con datos preparados
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            // 1️⃣ Inicializamos datos globales una sola vez
+            await inicializarDatosGlobales();
+            console.log("✅ Datos globales inicializados");
+
+            // 2️⃣ Recuperamos indicadores desde el módulo global
+            indicadores = getIndicadores();
+            if (!indicadores) return;
+
+            // 3️⃣ Inicializamos códigos si tienes CodigosService
+            await CodigosService.init();
+                        loadGlobalCompliance();
+
+            // 4️⃣ Preparar datos con medición, usuario y sector
+            indicadoresConDatos = await Promise.all(indicadores.map(async ind => {
+                const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
+                const ultima = await getUltimaMedicionPorIndicador(ind.id);
+                const sector = await obtenerSectoresPorUnidad(ind.destino);
+                const ultimaMedicion = ultima ? ultima.med_valor : null;
+                const porcentaje = ultimaMedicion !== null ? (ultimaMedicion / ind.unico_valor * 100).toFixed(1) : null;
+
+                return {
+                    id: ind.id,
+                    nombre: ind.nombre,
+                    sector: sector?.nombre || '-',
+                    usuario: usuario ? `${usuario.nombres} ${usuario.apellido}` : '-',
+                    ultimaMedicion,
+                    porcentaje
+                };
+            }));
+
+            // 5️⃣ Llenado inicial de tablas
+            reconstruirTablas();
+
+            // 6️⃣ Listeners para inputs de corte
+            document.getElementById('valorCorteDestacados')
+                .addEventListener('input', reconstruirTablas);
+            document.getElementById('valorCorteCriticos')
+                .addEventListener('input', reconstruirTablas);
+
+            // 7️⃣ Cumplimiento por destino y cumplimiento global
+            cargarCumplimientoPorDestino();
+
+            // 8️⃣ Inicializar tooltips
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(
+                (el) => new bootstrap.Tooltip(el)
+            );
+            console.log("✅ Tooltips inicializados:", tooltipList.length);
+        });
+
+        // ✅ Definida dentro del mismo módulo
+
+        function reconstruirTablas() {
+            const tbodyPendientes = document.getElementById('tbodyPendientes');
+            const tbodyDestacados = document.getElementById('tbodyDestacados');
+            const tbodyCriticos = document.getElementById('tbodyCriticos');
+
+            tbodyPendientes.innerHTML = '';
+            tbodyDestacados.innerHTML = '';
+            tbodyCriticos.innerHTML = '';
+
+            const valorCorteDestacados = Number(document.getElementById('valorCorteDestacados').value);
+            const valorCorteCriticos = Number(document.getElementById('valorCorteCriticos').value);
+
+            // ✅ indicadoresConDatos es visible acá porque está en el mismo scope del módulo
+            indicadoresConDatos.forEach(ind => {
+                if (ind.ultimaMedicion === null) {
+                    tbodyPendientes.innerHTML += `
+                <tr>
+                    <td>${ind.nombre}</td>
+                    <td>${ind.sector}</td>
+                    <td>${ind.usuario}</td>
+                    <td>Sin med.</td>
+                </tr>`;
+                }
+
+                if (ind.porcentaje !== null && ind.porcentaje >= valorCorteDestacados) {
+                    tbodyDestacados.innerHTML += `
+                <tr>
+                    <td>${ind.nombre}</td>
+                    <td>${ind.sector}</td>
+                    <td>${ind.porcentaje}%</td>
+                </tr>`;
+                }
+
+                if (ind.porcentaje !== null && ind.porcentaje <= valorCorteCriticos) {
+                    tbodyCriticos.innerHTML += `
+                <tr>
+                    <td>${ind.nombre}</td>
+                    <td>${ind.sector}</td>
+                    <td>${ind.porcentaje}%</td>
+                </tr>`;
+                }
+            });
+        }
+
+    </script>
+
+    <script>
+
+        // === Gráfico radial ===
+        const chartCumplimiento = new ApexCharts(document.querySelector("#chartCumplimiento"), {
+            chart: { type: 'radialBar', height: 600 },
+            series: [82],
+            colors: ['#2563eb'],
+            plotOptions: {
+                radialBar: {
+                    hollow: { size: '50%' },
+                    track: { background: '#e0e7ff' },
+                    dataLabels: {
+                        value: { fontSize: '28px', show: true },
+                        name: { show: false }
+                    }
+                }
+            }
+        });
+        chartCumplimiento.render();
+
+        // === Gráfico de línea ===
+        const chartEvolucion = new ApexCharts(document.querySelector("#chartEvolucion"), {
+            chart: { type: 'line', height: 240, toolbar: { show: false } },
+            series: [{ name: 'Cumplimiento', data: [70, 74, 79, 82, 84] }],
+            xaxis: { categories: ['Jun', 'Jul', 'Ago', 'Sep', 'Oct'] },
+            stroke: { curve: 'smooth', width: 3 },
+            colors: ['#2563eb'],
+            markers: { size: 4 },
+            grid: { borderColor: '#e9ecef' }
+        });
+        chartEvolucion.render();
+    </script>
+
+
+
+
+
+
+</body>
+
+</html>
