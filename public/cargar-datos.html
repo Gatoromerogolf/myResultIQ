@@ -323,11 +323,14 @@
                             <h5 id="titulo-frecuencia">Frecuencia de medición: <span id="valor-frecuencia"></span></h5>
 
                             <h5 id="titulo-ult-medicion" ;>
-                                Última Medición: <span id="valor-ultima-medicion"></span>
+                                Última Medición:
+                                <span id="valor-ultima-medicion"></span>
                                 <span style="margin-left: 10px;">Correspondiente a:</span>
                                 <span id="periodo-ultima-medicion"></span>
                                 <span style="margin-left: 10px;">Valor medido:</span>
                                 <span id="cantidad-ultima-medicion"></span>
+                                <span style="margin-left: 10px">Meta vigente:</span>
+                                <span id="meta-vigente"></span>
                             </h5>
 
                             <h5 id="titulo-comentarios" style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
@@ -389,7 +392,7 @@
                                         <label class="form-label"><strong>Valor medido:</strong></label>
                                         <input type="number" class="form-control" id="valor-carga" step="0.01" required>
                                     </div>
-                                    
+
                                     <div class="col-md-4">
                                         <label class="form-label"><strong>Fórmula cálculo:</strong></label>
                                         <span id="formula-calculo" class="form-control-plaintext"></span>
@@ -497,6 +500,7 @@
     <script>
 
         let tablaIndicadores; // instancia global
+        let indicadores;
 
         // const botonesSeleccionar = document.querySelectorAll('.seleccionar-btn');
         const formulario = document.getElementById('formulario-carga');
@@ -781,7 +785,6 @@
             return fechaStr; // ya está en formato yyyy-mm-dd
         }
 
-        let indicadores;
         async function cargarIndicadores() {
             try {
                 const response = await fetch('/api/indicadores');
@@ -932,7 +935,17 @@
                                     <i class="fas fa-eye fa-xs"></i>
                                 </button>
                                 <button class="btn btn-warning btn-xs btn-icon-minimal" title="Registrar" onclick="editarIndicador
-                                ('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}', '${ultimoValorPeriodo}', '${ultimaMedicion}', '${ind.formula_calculo}')">
+                                ('${ind.id}',
+                                 '${ind.codigo_id}',
+                                 '${ind.nombre}',
+                                 '${ind.unidad_medida}',
+                                 '${ind.freq_medicion}',
+                                 '${fecha}',
+                                 '${ultimoValorPeriodo}',
+                                 '${ultimaMedicion}',
+                                 '${ind.formula_calculo}',
+                                 '${ind.unico_valor}'
+                                )">
                                     <i class="fas fa-edit fa-xs"></i>
                                 </button>
                             </td>
@@ -964,7 +977,17 @@
                                 <i class="fas fa-eye fa-xs"></i>
                             </button>
                             <button class="btn btn-warning btn-xs btn-icon-minimal" title="Editar" onclick="editarIndicador
-                            ('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.unidad_medida}', '${ind.freq_medicion}', '${fecha}', '${ultimoValorPeriodo}', '${ultimaMedicion}', '${ind.formula_calculo}')">
+                                ('${ind.id}',
+                                 '${ind.codigo_id}',
+                                 '${ind.nombre}',
+                                 '${ind.unidad_medida}',
+                                 '${ind.freq_medicion}',
+                                 '${fecha}',
+                                 '${ultimoValorPeriodo}',
+                                 '${ultimaMedicion}',
+                                 '${ind.formula_calculo}',
+                                 '${ind.unico_valor}'
+                                )">
                                 <i class="fas fa-edit fa-xs"></i>
                             </button>
                         </td>
@@ -1130,15 +1153,24 @@
             const indId = document.getElementById('indicadorCodigo').value;
             const unidad = document.getElementById('unidad-carga').dataset.unidad || '';
             const frecuencia = document.getElementById('unidad-carga').dataset.frecuencia || '';
-            const valorPeriodo = document.getElementById('valor-periodo').value;
+            const valorPeriodo = document.getElementById('valor-periodo').value.trim();
             const anioPeriodo = document.getElementById('input-anio-periodo').value;
+
+            const ahora = new Date();
+            const med_fecha_registro =
+                ahora.getFullYear() + '-' +
+                String(ahora.getMonth() + 1).padStart(2, '0') + '-' +
+                String(ahora.getDate()).padStart(2, '0') + ' ' +
+                String(ahora.getHours()).padStart(2, '0') + ':' +
+                String(ahora.getMinutes()).padStart(2, '0') + ':' +
+                String(ahora.getSeconds()).padStart(2, '0');
 
             const datos = {
                 med_indicador_id: indId,
                 med_tipo_periodo: frecuencia,
                 med_valor_periodo: (frecuencia === '0201')
                     ? valorPeriodo
-                    : anioPeriodo + valorPeriodo,
+                    : anioPeriodo + valorPeriodo.toString().padStart(2, '0'),
                 med_anio: (frecuencia === '0201')
                     ? Number(valorPeriodo.substring(0, 4))  // extrae año de "AAAAMMDD"
                     : anioPeriodo,
@@ -1147,7 +1179,7 @@
                 med_unidad_medida: unidad,
                 med_legajo_resp_medicion: '1',
                 med_legajo_resp_registro: '3',
-                med_fecha_registro: new Date().toISOString().split('T')[0]
+                med_fecha_registro: med_fecha_registro
             };
 
             console.log("Datos a enviar:", datos);
@@ -1186,8 +1218,9 @@
 
 
         // ✅ 2) FUNCIÓN editarIndicador SOLO PREPARA DATOS (sin listeners)
-        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo, ultimaMedicion, formula_calculo) {
+        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo, ultimaMedicion, formula_calculo, metaVigente) {
 
+            const ultima = await getUltimaMedicionPorIndicador(indId);
             const titulo = document.getElementById('titulo-indicador');
             titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
 
@@ -1200,10 +1233,10 @@
             const spanValorMedido = document.getElementById('cantidad-ultima-medicion');
             const spanComentarios = document.getElementById('valor-comentarios');
             const spanFormulaCalculo = document.getElementById('formula-calculo');
-
-            const ultima = await getUltimaMedicionPorIndicador(indId);
+            const spanMetaVigente = document.getElementById('meta-vigente');
 
             spanFormulaCalculo.innerText = formula_calculo;
+            spanMetaVigente.innerText = metaVigente;
 
             if (ultima) {
                 const fecha = new Date(ultima.med_fecha_registro);
@@ -1234,7 +1267,7 @@
                 spanValorMedido.textContent = ultimaMedicion !== undefined
                     ? Number(ultimaMedicion).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                     : '';
-                /*                 <!-- 'es-AR' → separador de miles con punto y decimales con coma (1.234,56).
+                /* <!-- 'es-AR' → separador de miles con punto y decimales con coma (1.234,56).
                 minimumFractionDigits: 2 → asegura que siempre tenga 2 decimales.
                 maximumFractionDigits: 2 → no muestre más de 2 decimales.  */
 
@@ -1242,7 +1275,7 @@
             } else {
                 spanMedicion.textContent = "Sin mediciones registradas";
                 spanMedicion.style.color = "grey";
-                spanValorMedido.textContent = '';
+                spanValorMedido.textContent = '- - - ';
                 spanUltimoPeriodo.textContent = '- - - ';
             }
 
@@ -1306,25 +1339,6 @@
             const valorPeriodo = document.getElementById('valor-periodo');
             valorPeriodo.className = "form-control align-middle";
 
-            if (frecuencia === "0201") {
-                valorPeriodo.type = "date";
-                labelValorPeriodo.innerHTML = "<strong>Dia:</strong>";
-                valorPeriodo.value = "";
-            } else {
-                valorPeriodo.type = "number";
-                valorPeriodo.value = "";
-
-                const periodo = frecuencia.substring(2, 4);
-                const resultado = await siguientePeriodo(ultimoValorPeriodo, periodo);
-                let anioResultado = resultado.substring(0, 4);
-                let otroResultado = resultado.substring(4, 6);
-
-                document.getElementById('valor-periodo').value = otroResultado;
-                document.getElementById('valor-periodo').className = "form-control-plaintext";
-                document.getElementById('input-anio-periodo').value = anioResultado;
-                document.getElementById('input-anio-periodo').className = "form-control-plaintext";
-            }
-
             if (!ultima) {
                 if (frecuencia === "0201") {
                     valorPeriodo.type = "date";
@@ -1340,14 +1354,38 @@
                     document.getElementById('input-anio-periodo').value = '';
                     document.getElementById('input-anio-periodo').readOnly = false;
                 }
+            } else {
+                if (frecuencia === "0201") {
+                    valorPeriodo.type = "date";
+                    labelValorPeriodo.innerHTML = "<strong>Dia:</strong>";
+                    valorPeriodo.value = "";
+                } else {
+                    valorPeriodo.type = "number";
+                    valorPeriodo.value = "";
+
+                    const periodo = frecuencia.substring(2, 4);
+                    const resultado = await siguientePeriodo(ultimoValorPeriodo, periodo);
+                    console.log(`frecuencia ${frecuencia}  periodo ${periodo}`);
+                    let anioResultado = resultado.substring(0, 4);
+                    let otroResultado = resultado.substring(4, 6);
+
+                    if (!isNaN(otroResultado) && isFinite(otroResultado)) {
+                        document.getElementById('valor-periodo').value = otroResultado;
+                    } else {
+                        document.getElementById('valor-periodo').value = '';
+                        console.warn('Valor inválido en otroResultado:', otroResultado);
+                    }
+
+                    document.getElementById('valor-periodo').className = "form-control-plaintext";
+                    document.getElementById('input-anio-periodo').value = anioResultado;
+                    document.getElementById('input-anio-periodo').className = "form-control-plaintext";
+                }
             }
 
             if (frecuencia == "0210") {
                 document.getElementById('valor-periodo').className = "form-control";
                 document.getElementById('input-anio-periodo').className = "form-control";
                 document.getElementById('input-anio-periodo').readOnly = false;
-                // document.getElementById('input-anio-periodo').value = '';
-                // document.getElementById('input-anio-periodo').readOnly = false;
             }
 
             // Mostrar formulario
@@ -1531,6 +1569,7 @@
         }
 
         async function siguientePeriodo(periodoRegistrado, periodo) {
+
             let anio = parseInt(periodoRegistrado.substring(0, 4));
             let resultado = "";
 
@@ -1567,25 +1606,28 @@
                     break;
 
                 case '05': // Bimestral AAAAB (B=1-6)
-                    let b = parseInt(periodoRegistrado.substring(4, 5));
+                    let b = parseInt(periodoRegistrado.substring(4, 6));
                     b = (b === 6) ? (anio++, 1) : b + 1;
                     resultado = `${anio}${b}`;
                     break;
 
                 case '06': // Trimestral AAAAT (T=1-4)
-                    let t = parseInt(periodoRegistrado.substring(4, 5));
+
+                    let t = parseInt(periodoRegistrado.substring(4, 6));
+                    console.log (`original t :  ${t}`)
                     t = (t === 4) ? (anio++, 1) : t + 1;
                     resultado = `${anio}${t}`;
+                    console.log (`resultado ${resultado}`)
                     break;
 
                 case '07': // Cuatrimestre AAAAC (C=1-3)
-                    let c = parseInt(periodoRegistrado.substring(4, 5));
+                    let c = parseInt(periodoRegistrado.substring(4, 6));
                     c = (c === 3) ? (anio++, 1) : c + 1;
                     resultado = `${anio}${c}`;
                     break;
 
                 case '08': // Semestre AAAAS (S=1-2)
-                    let s = parseInt(periodoRegistrado.substring(4, 5));
+                    let s = parseInt(periodoRegistrado.substring(4, 6));
                     s = (s === 2) ? (anio++, 1) : s + 1;
                     resultado = `${anio}${s}`;
                     break;

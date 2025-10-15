@@ -190,6 +190,15 @@
             color: #333;
         }
 
+        .fila-indicador {
+            cursor: pointer;
+        }
+
+        .fila-indicador:hover {
+            background-color: #f0f4ff;
+        }
+
+
         /* .card-outline {
             border: 1px solid #0d6efd;
             background-color: #fff;
@@ -806,6 +815,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Detalle Indicador -->
+    <div class="modal fade" id="modalDetalleIndicador" tabindex="-1" aria-labelledby="modalDetalleIndicadorLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalDetalleIndicadorLabel">Detalle del Indicador</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Indicador:</strong> <span id="detalleNombre"></span></p>
+                    <p><strong>Sector:</strong> <span id="detalleSector"></span></p>
+                    <p><strong>Responsable:</strong> <span id="detalleUsuario"></span></p>
+                    <p><strong>Última medición:</strong> <span id="detalleUltimaMedicion"></span></p>
+                    <p><strong>Porcentaje de cumplimiento:</strong> <span id="detallePorcentaje"></span></p>
+                    <p><strong>Meta:</strong> <span id="detalleMeta"></span></p>
+                    <p><strong>Tipo de frecuencia:</strong> <span id="detalleFrecuencia"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
@@ -867,7 +900,7 @@
                 // Actualizar ring
                 drawRing('ringGlobal', globalPercent);
                 // Actualizar texto
-                document.getElementById('globalPercentText').innerText = globalPercent.toFixed(1) + '%';
+                // document.getElementById('globalPercentText').innerText = globalPercent.toFixed(1) + '%';
 
             } catch (err) {
                 console.error('Error al calcular cumplimiento global:', err);
@@ -1626,6 +1659,28 @@
             }
         }
 
+        // Escuchar clics en cualquier fila de indicador
+        document.querySelectorAll('.fila-indicador').forEach(fila => {
+            fila.addEventListener('click', e => {
+                const id = fila.getAttribute('data-id');
+                const indicador = indicadoresConDatos.find(ind => ind.id == id);
+
+                if (indicador) {
+                    // Cargar datos en el modal
+                    document.getElementById('detalleNombre').textContent = indicador.nombre;
+                    document.getElementById('detalleSector').textContent = indicador.sector;
+                    document.getElementById('detalleUsuario').textContent = indicador.usuario || '—';
+                    document.getElementById('detalleUltimaMedicion').textContent = indicador.ultimaMedicion ?? 'Sin medición';
+                    document.getElementById('detallePorcentaje').textContent = indicador.porcentaje !== null ? indicador.porcentaje + '%' : '—';
+                    document.getElementById('detalleMeta').textContent = indicador.meta ?? '—';
+                    document.getElementById('detalleFrecuencia').textContent = indicador.frecuencia ?? '—';
+
+                    // Mostrar modal (Bootstrap)
+                    const modal = new bootstrap.Modal(document.getElementById('modalDetalleIndicador'));
+                    modal.show();
+                }
+            });
+        });
 
 
 
@@ -1656,7 +1711,7 @@
 
             // 3️⃣ Inicializamos códigos si tienes CodigosService
             await CodigosService.init();
-                        loadGlobalCompliance();
+            loadGlobalCompliance();
 
             // 4️⃣ Preparar datos con medición, usuario y sector
             indicadoresConDatos = await Promise.all(indicadores.map(async ind => {
@@ -1710,9 +1765,10 @@
             const valorCorteDestacados = Number(document.getElementById('valorCorteDestacados').value);
             const valorCorteCriticos = Number(document.getElementById('valorCorteCriticos').value);
 
-            // ✅ indicadoresConDatos es visible acá porque está en el mismo scope del módulo
-            indicadoresConDatos.forEach(ind => {
-                if (ind.ultimaMedicion === null) {
+            // 🔹 Pendientes (sin medición)
+            indicadoresConDatos
+                .filter(ind => ind.ultimaMedicion === null)
+                .forEach(ind => {
                     tbodyPendientes.innerHTML += `
                 <tr>
                     <td>${ind.nombre}</td>
@@ -1720,27 +1776,35 @@
                     <td>${ind.usuario}</td>
                     <td>Sin med.</td>
                 </tr>`;
-                }
+                });
 
-                if (ind.porcentaje !== null && ind.porcentaje >= valorCorteDestacados) {
+            // 🔹 Destacados → ordenar de MAYOR a MENOR
+            indicadoresConDatos
+                .filter(ind => ind.porcentaje !== null && ind.porcentaje >= valorCorteDestacados)
+                .sort((a, b) => b.porcentaje - a.porcentaje)
+                .forEach(ind => {
                     tbodyDestacados.innerHTML += `
-                <tr>
-                    <td>${ind.nombre}</td>
-                    <td>${ind.sector}</td>
-                    <td>${ind.porcentaje}%</td>
-                </tr>`;
-                }
+                    <tr class="fila-indicador" data-id="${ind.id}">
+                        <td>${ind.nombre}</td>
+                        <td>${ind.sector}</td>
+                        <td>${ind.porcentaje}%</td>
+                    </tr>`;
+                });
 
-                if (ind.porcentaje !== null && ind.porcentaje <= valorCorteCriticos) {
-                    tbodyCriticos.innerHTML += `
-                <tr>
-                    <td>${ind.nombre}</td>
-                    <td>${ind.sector}</td>
-                    <td>${ind.porcentaje}%</td>
-                </tr>`;
-                }
-            });
+            // 🔹 Críticos → ordenar de MENOR a MAYOR
+            indicadoresConDatos
+                .filter(ind => ind.porcentaje !== null && ind.porcentaje <= valorCorteCriticos)
+                .sort((a, b) => a.porcentaje - b.porcentaje)
+                .forEach(ind => {
+                    tbodyDestacados.innerHTML += `
+                    <tr class="fila-indicador" data-id="${ind.id}">
+                        <td>${ind.nombre}</td>
+                        <td>${ind.sector}</td>
+                        <td>${ind.porcentaje}%</td>
+                    </tr>`;
+                });
         }
+
 
     </script>
 
