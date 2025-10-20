@@ -481,6 +481,13 @@
                                 </div>
 
                                 <button class="btn btn-sm btn-primary"><i class="fas fa-sync-alt"></i> Aplicar</button>
+
+                                <!-- Avatar al lado derecho -->
+                                <div class="avatar-container ms-3">
+                                    <img id="avatarAudio" src="/dist/images/avatar.png" alt="Avatar"
+                                        style="width:50px; height:50px; cursor:pointer; border-radius:50%; box-shadow:0 0 5px rgba(0,0,0,0.2);"
+                                        title="Haz clic para reproducir explicación" />
+                                </div>
                             </div>
 
                             <!-- === Cumplimiento Global + Evolución === -->
@@ -1871,7 +1878,61 @@
         chartEvolucion.render();
     </script>
 
+<script>
+    const avatarAudio = document.getElementById('avatarAudio');
 
+    const textoExplicativo = `
+        ¡Hola! Bienvenido a my result IQ la herramienta ideal para la gestión de indicadores.  Estoy aquí como tu asistente para orientarte en el mejor uso de la aplicación y lograr el mejor aprovechamiento de su potencial. En este sistema se definen usuarios habilitados y destinos, que representan áreas, unidades funcionales o procesos de la organización. A cada destino se le asignan indicadores que permiten valorar su desempeño.  Cada indicador tiene una importancia relativa dentro del destino, y la suma de todas las importancias de los indicadores de un mismo destino siempre equivale al 100%.  Del mismo modo, cuando un destino está compuesto por destinos dependientes —por ejemplo, sectores dentro de una gerencia, o gerencias dentro de una dirección—, cada uno tiene un porcentaje asociado, y la suma de todos los porcentajes de ese nivel también debe sumar 100%.  Gracias a esta estructura jerárquica, el sistema puede calcular un porcentaje de cumplimiento global de la organización, basado en el rendimiento de cada destino y la relevancia que tiene dentro de su nivel superior.  Estoy aquí para ayudarte a explorar estos conceptos y entender cómo evoluciona el comportamiento de la organización.  Aguante Juanpi!!!!!
+    `;
+
+    function obtenerVozEspañol() {
+        const voces = speechSynthesis.getVoices();
+        if (!voces.length) return null;
+        const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
+        const vozEspañol = voces.find(v => v.lang.startsWith("es"));
+        return vozGoogle || vozEspañol || voces[0];
+    }
+
+    function hablar(texto = textoExplicativo) {
+        if (!('speechSynthesis' in window)) {
+            alert('Tu navegador no soporta la función de voz.');
+            return;
+        }
+        if (speechSynthesis.speaking) return;
+
+        const utterance = new SpeechSynthesisUtterance(texto);
+        const voz = obtenerVozEspañol();
+        if (voz) utterance.voice = voz;
+        utterance.lang = "es-ES";
+        utterance.rate = 1;
+        utterance.pitch = 1.1;
+
+        // Efecto visual mientras habla
+        avatarAudio.classList.add('speaking');
+        utterance.onend = () => avatarAudio.classList.remove('speaking');
+        utterance.onerror = () => avatarAudio.classList.remove('speaking');
+
+        speechSynthesis.speak(utterance);
+    }
+
+    avatarAudio.addEventListener('click', () => hablar());
+
+    // Para asegurarnos de que se carguen las voces correctamente
+    window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
+</script>
+
+<style>
+    /* Efecto de "hablando" */
+    #avatarAudio.speaking {
+        animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(0, 123, 255, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+    }
+</style>
 
 
 

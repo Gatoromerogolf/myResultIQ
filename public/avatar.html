@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Asistente KPI - Voz Google Español</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #f7f9fb;
+            margin: 0;
+        }
+
+        .avatar-btn {
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background-image: url('dist/images/user1-128x128.jpg');
+            /* 👨 Hombre de estilo ilustrado */
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+            transition: transform 0.12s ease;
+        }
+
+        .avatar.speaking {
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 12px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+
+
+        .label {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .btn {
+            margin-top: 12px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="avatar-btn" id="avatarBtn" aria-label="Activar asistente">
+        <div class="avatar" id="avatar"></div>
+        <div class="label">Asistente KPI</div>
+    </button>
+
+    <button class="btn" id="speakBtn">Hablar</button>
+    <button class="btn" id="stopBtn" style="background:#6c757d;">Parar</button>
+
+    <script>
+        const avatar = document.getElementById('avatar');
+        const speakBtn = document.getElementById('speakBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const avatarBtn = document.getElementById('avatarBtn');
+
+        const textoBienvenida = "Hola, soy tu asistente KPI. Estoy aquí para ayudarte a navegar la aplicación y entender tus indicadores.";
+
+        // 🔊 Seleccionar voz en español, priorizando Google si está disponible
+        function obtenerVozEspañol() {
+            const voces = speechSynthesis.getVoices();
+            if (!voces.length) return null;
+
+            const vozGoogle = voces.find(v =>
+                v.name.toLowerCase().includes("google") && v.lang.startsWith("es")
+            );
+
+            const vozEspañol = voces.find(v => v.lang.startsWith("es"));
+            return vozGoogle || vozEspañol || voces[0];
+        }
+
+        function hablar(texto = textoBienvenida) {
+            if (!('speechSynthesis' in window)) {
+                alert('Tu navegador no soporta la función de voz.');
+                return;
+            }
+            if (speechSynthesis.speaking) return;
+
+            const frase = new SpeechSynthesisUtterance(texto);
+            const voz = obtenerVozEspañol();
+            if (voz) frase.voice = voz;
+            frase.lang = "es-ES";
+            frase.rate = 1;
+            frase.pitch = 1.1;
+
+            frase.onstart = () => avatar.classList.add('speaking');
+            frase.onend = () => avatar.classList.remove('speaking');
+            frase.onerror = () => avatar.classList.remove('speaking');
+
+            speechSynthesis.speak(frase);
+        }
+
+        function detener() {
+            speechSynthesis.cancel();
+            avatar.classList.remove('speaking');
+        }
+
+        window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
+
+        avatarBtn.addEventListener('click', () => hablar());
+        speakBtn.addEventListener('click', () => hablar
+        ("¡Hola! Bienvenido a my result IQ la herramienta ideal para la gestión de indicadores.  Estoy aquí como tu asistente para orientarte en el mejor uso de la aplicación y lograr el mejor aprovechamiento de su potencial. En este sistema se definen usuarios habilitados y destinos, que representan áreas, unidades funcionales o procesos de la organización. A cada destino se le asignan indicadores que permiten valorar su desempeño.  Cada indicador tiene una importancia relativa dentro del destino, y la suma de todas las importancias de los indicadores de un mismo destino siempre equivale al 100%.  Del mismo modo, cuando un destino está compuesto por destinos dependientes —por ejemplo, sectores dentro de una gerencia, o gerencias dentro de una dirección—, cada uno tiene un porcentaje asociado, y la suma de todos los porcentajes de ese nivel también debe sumar 100%.  Gracias a esta estructura jerárquica, el sistema puede calcular un porcentaje de cumplimiento global de la organización, basado en el rendimiento de cada destino y la relevancia que tiene dentro de su nivel superior.  Estoy aquí para ayudarte a explorar estos conceptos y entender cómo evoluciona el comportamiento de la organiación."));
+        stopBtn.addEventListener('click', detener);
+    </script>
+</body>
+
+</html>
