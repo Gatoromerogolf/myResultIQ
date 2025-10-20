@@ -183,7 +183,8 @@ app.put('/api/actualizar/:id', async (req, res) => {
                 formato = ?,
                 comentarios = ?,
                 peso_porcentual = ?,
-                estado = ?
+                estado = ?,
+                dimension_porcentual = ?
             WHERE id = ?`,
             [
                 data.codigo_id,
@@ -223,6 +224,7 @@ app.put('/api/actualizar/:id', async (req, res) => {
                 data.comentarios,
                 data.peso_porcentual,
                 data.estado,
+                data.dimension_porcentual,
                 id
             ]
         );
@@ -234,64 +236,75 @@ app.put('/api/actualizar/:id', async (req, res) => {
 });
 
 
-// Obtener todos los indicadores con última medición
+// Obtener todos los indicadores con última medición y descripciones asociadas
 app.get('/api/indicadores', async (req, res) => {
     try {
         const [rows] = await pool.query(`
-            WITH ultimas AS (
-                SELECT m.*,
-                       ROW_NUMBER() OVER (
-                           PARTITION BY m.med_indicador_id
-                           ORDER BY m.med_valor_periodo DESC, m.med_fecha_registro DESC
-                       ) AS rn
-                FROM mediciones m
-            )
-            SELECT 
-                i.id,
-                i.codigo_id,
-                i.nombre,
-                i.descripcion,
-                i.tipo_id,
-                i.dimension_id,
-                i.categoria_id,
-                i.criticidad_id,
-                i.responsable,
-                i.destino,
-                i.objetivo,
-                i.meta_tipo,
-                i.unico_valor,
-                i.unico_eval,
-                i.unico_acepta,
-                i.unico_riesgo,
-                i.unico_critico,
-                i.rango_desde,
-                i.rango_hasta,
-                i.rango_acepta,
-                i.rango_riesgo,
-                i.rango_critico,
-                i.tenden_tipo,
-                i.tenden_refe,
-                i.tenden_acepta,
-                i.tenden_riesgo,
-                i.tenden_critico,
-                i.fuente_datos,
-                i.formula_calculo,
-                i.unidad_medida,
-                i.freq_medicion,
-                i.tolerancia_plazo,
-                i.freq_reporte,
-                i.fecha_inicio,
-                i.formato,
-                i.comentarios,
-                i.peso_porcentual,
-                i.estado,
-                u.med_valor AS ultimo_valor,
-                u.med_fecha_registro AS fecha_ultima_medicion
-            FROM indicadores i
-            LEFT JOIN ultimas u 
-              ON u.med_indicador_id = i.id AND u.rn = 1
-            ORDER BY i.id DESC;
-        `);
+      WITH ultimas AS (
+        SELECT 
+          m.*,
+          ROW_NUMBER() OVER (
+            PARTITION BY m.med_indicador_id
+            ORDER BY m.med_valor_periodo DESC, m.med_fecha_registro DESC
+          ) AS rn
+        FROM mediciones m
+      )
+      SELECT 
+        i.id,
+        i.codigo_id,
+        i.nombre,
+        i.descripcion,
+        i.tipo_id,
+        i.dimension_id,
+        d.nombre AS dimension_nombre,          -- 🔹 Descripción de la dimensión
+        i.categoria_id,
+        c.nombre AS categoria_descripcion,     -- 🔹 Descripción de la categoría
+        i.criticidad_id,
+        cr.nombre AS criticidad_descripcion,   -- 🔹 Descripción de la criticidad
+        i.responsable,
+        i.destino,
+        i.objetivo,
+        i.meta_tipo,
+        i.unico_valor,
+        i.unico_eval,
+        i.unico_acepta,
+        i.unico_riesgo,
+        i.unico_critico,
+        i.rango_desde,
+        i.rango_hasta,
+        i.rango_acepta,
+        i.rango_riesgo,
+        i.rango_critico,
+        i.tenden_tipo,
+        i.tenden_refe,
+        i.tenden_acepta,
+        i.tenden_riesgo,
+        i.tenden_critico,
+        i.fuente_datos,
+        i.formula_calculo,
+        i.unidad_medida,
+        i.freq_medicion,
+        i.tolerancia_plazo,
+        i.freq_reporte,
+        i.fecha_inicio,
+        i.formato,
+        i.comentarios,
+        i.peso_porcentual,
+        i.estado,
+        i.dimension_porcentual,
+        u.med_valor AS ultimo_valor,
+        u.med_fecha_registro AS fecha_ultima_medicion
+      FROM indicadores i
+      LEFT JOIN ultimas u 
+        ON u.med_indicador_id = i.id AND u.rn = 1
+      LEFT JOIN dimension_indicador d 
+        ON i.dimension_id = d.id
+      LEFT JOIN categoria_indicador c 
+        ON i.categoria_id = c.id
+      LEFT JOIN criticidad_indicador cr 
+        ON i.criticidad_id = cr.id
+      ORDER BY i.id DESC;
+    `);
 
         res.json(rows);
 
@@ -300,8 +313,6 @@ app.get('/api/indicadores', async (req, res) => {
         res.status(500).json({ mensaje: "Error interno" });
     }
 });
-
-
 
 // ✅ GET para tomar un indicador por codigo_id
 app.get('/api/indicadores/:codigo', async (req, res) => {
@@ -316,11 +327,13 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
                 i.descripcion,
                 i.tipo_id,
                 i.dimension_id,
+                d.nombre AS dimension_nombre,
                 i.categoria_id,
+                c.nombre AS categoria_nombre,       -- <--- aquí estaba el error
                 i.criticidad_id,
+                cr.nombre AS criticidad_nombre,     -- si la tabla criticidad_indicador también usa "nombre"
                 i.responsable,
-                u.nombres AS responsable_nombres,
-                u.apellido AS responsable_apellido,
+                CONCAT(u.nombres, ' ', u.apellido) AS responsable_nombre,
                 i.destino,
                 s.nombre AS destino_nombre,
                 i.objetivo,
@@ -350,11 +363,16 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
                 i.formato,
                 i.comentarios,
                 i.peso_porcentual,
-                i.estado
+                i.estado,
+                i.dimension_porcentual
             FROM indicadores i
             LEFT JOIN sectores s ON i.destino = s.id
             LEFT JOIN usuarios u ON i.responsable = u.legajo
+            LEFT JOIN dimension_indicador d ON i.dimension_id = d.id
+            LEFT JOIN categoria_indicador c ON i.categoria_id = c.id
+            LEFT JOIN criticidad_indicador cr ON i.criticidad_id = cr.id
             WHERE i.codigo_id = ?
+            LIMIT 1
         `, [codigo]);
 
         if (rows.length === 0) {
@@ -367,6 +385,43 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
         res.status(500).json({ mensaje: 'Error interno' });
     }
 });
+
+
+// Actualizar los porcentajes de los indicadores
+app.put('/api/indicadores/actualizar-pesos', async (req, res) => {
+    const cambios = req.body; // Array de { id, dimension_porcentual }
+
+    if (!Array.isArray(cambios)) {
+        return res.status(400).json({ mensaje: 'Formato inválido' });
+    }
+
+    try {
+        const conn = await pool.getConnection();
+
+        // Usar transacción para actualizar todos los indicadores de una vez
+        await conn.beginTransaction();
+
+        for (const ind of cambios) {
+            await conn.query(
+                `UPDATE indicadores 
+                 SET dimension_porcentual = ? 
+                 WHERE id = ?`,
+                [ind.dimension_porcentual, ind.id]
+            );
+        }
+
+        await conn.commit();
+        conn.release();
+
+        res.json({ mensaje: 'Ponderaciones actualizadas correctamente' });
+    } catch (err) {
+        console.error('Error al actualizar ponderaciones:', err);
+        res.status(500).json({ mensaje: 'Error interno al guardar ponderaciones' });
+    }
+});
+
+
+
 
 
 // // 🚫🚫🚫POST para subir o reemplazar imagen
@@ -424,7 +479,7 @@ app.post('/api/indicadores', async (req, res) => {
         fuente_datos, formula_calculo,
         unidad_medida, frecuencia_medicion, tolerancia_plazo,
         frecuencia_reporte, fecha_inicio,
-        formato_presentacion, comentarios, porcentual, estado
+        formato_presentacion, comentarios, porcentual, estado, dimension_porcentual
     } = req.body;
 
     try {
@@ -439,8 +494,8 @@ app.post('/api/indicadores', async (req, res) => {
                 fuente_datos, formula_calculo,
                 unidad_medida, freq_medicion, tolerancia_plazo, 
                 freq_reporte, fecha_inicio,
-                formato, comentarios, peso_porcentual, estado
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                formato, comentarios, peso_porcentual, estado, dimension_porcentual
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         await pool.execute(sql, [
@@ -453,7 +508,7 @@ app.post('/api/indicadores', async (req, res) => {
             fuente_datos, formula_calculo,
             unidad_medida, frecuencia_medicion, tolerancia_plazo,
             frecuencia_reporte, fecha_inicio,
-            formato_presentacion, comentarios, porcentual, estado
+            formato_presentacion, comentarios, porcentual, estado, dimension_porcentual
         ]);
 
         res.status(201).json({ message: 'Indicador creado correctamente' });
