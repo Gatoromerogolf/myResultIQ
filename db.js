@@ -7,7 +7,8 @@ const pool = mysql.createPool({
   uri: process.env.MYSQL_URL,        // Usar la URL completa desde la variable de entorno
   waitForConnections: true,          // Esperar conexiones si todas están en uso
   connectionLimit: 10,               // Número máximo de conexiones en el pool
-  queueLimit: 0                      // Límite de la cola de solicitudes (0 = sin límite)
+  queueLimit: 0,                      // Límite de la cola de solicitudes (0 = sin límite)
+  connectTimeout: 10000 // 10 segundos
 });
 
 // Verificar la conexión inicial

@@ -1,0 +1,30 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo circular -->
+  <circle cx="100" cy="100" r="100" fill="#6366f1"/>
+  
+  <!-- Cabeza -->
+  <circle cx="100" cy="85" r="35" fill="#fbbf24"/>
+  
+  <!-- Cabello simple y neutro -->
+  <path d="M 65 75 Q 65 50 100 50 Q 135 50 135 75 Q 135 65 130 60 Q 125 55 120 55 Q 115 50 110 50 Q 105 48 100 48 Q 95 48 90 50 Q 85 50 80 55 Q 75 55 70 60 Q 65 65 65 75 Z" fill="#78350f"/>
+  
+  <!-- Ojos -->
+  <circle cx="88" cy="85" r="4" fill="#1f2937"/>
+  <circle cx="112" cy="85" r="4" fill="#1f2937"/>
+  
+  <!-- Sonrisa sutil -->
+  <path d="M 90 95 Q 100 100 110 95" stroke="#1f2937" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Cuerpo/Torso -->
+  <path d="M 70 120 L 70 160 Q 70 165 75 165 L 125 165 Q 130 165 130 160 L 130 120 Q 130 115 125 115 L 75 115 Q 70 115 70 120 Z" fill="#8b5cf6"/>
+  
+  <!-- Cuello -->
+  <rect x="90" y="115" width="20" height="10" fill="#fbbf24"/>
+  
+  <!-- Brazos -->
+  <rect x="55" y="125" width="15" height="40" rx="7" fill="#fbbf24"/>
+  <rect x="130" y="125" width="15" height="40" rx="7" fill="#fbbf24"/>
+  
+  <!-- Detalles de ropa (cuello) -->
+  <path d="M 85 120 L 100 125 L 115 120" stroke="#6d28d9" stroke-width="2" fill="none"/>
+</svg>

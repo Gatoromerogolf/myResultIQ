@@ -83,7 +83,6 @@
     <link rel="stylesheet" href="../css/adminlte.css" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
     <style>
@@ -227,12 +226,6 @@
 
         .fila-indicador:hover {
             background-color: #f0f4ff;
-        }
-
-        #chartContainer {
-            width: 100%;
-            max-width: 900px;
-            margin: 30px auto;
         }
 
 
@@ -456,64 +449,46 @@
                 <div class="wrapper">
                     <section class="content mt-4">
                         <div class="container-fluid">
-
-
-                            <!-- 🔹 Barra superior de filtros + Asistente -->
-                            <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
-
-                                <!-- 🔸 Filtros -->
-                                <div class="d-flex gap-3">
-                                    <div>
-                                        <label for="filtroAnio" class="form-label mb-0 small">Año</label>
-                                        <select id="filtroAnio" class="form-select form-select-sm">
-                                            <option>2025</option>
-                                            <option>2024</option>
-                                            <option>2023</option>
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label for="filtroPeriodo" class="form-label mb-0 small">Período</label>
-                                        <select id="filtroPeriodo" class="form-select form-select-sm">
-                                            <option>Octubre</option>
-                                            <option>Septiembre</option>
-                                            <option>Agosto</option>
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label for="filtroSector" class="form-label mb-0 small">Sector</label>
-                                        <select id="filtroSector" class="form-select form-select-sm">
-                                            <option>Todos</option>
-                                            <option>Operaciones</option>
-                                            <option>Finanzas</option>
-                                            <option>Comercial</option>
-                                            <option>RRHH</option>
-                                        </select>
-                                    </div>
-
-                                    <button class="btn btn-sm btn-primary align-self-end">
-                                        <i class="fas fa-sync-alt"></i> Aplicar
-                                    </button>
+                            <!-- === Filtros globales === -->
+                            <div class="filters-bar">
+                                <div>
+                                    <label for="filtroAnio" class="form-label mb-0 small">Año</label>
+                                    <select id="filtroAnio" class="form-select form-select-sm">
+                                        <option>2025</option>
+                                        <option>2024</option>
+                                        <option>2023</option>
+                                    </select>
                                 </div>
 
-                                <!-- 🔹 Avatar asistente alineado a la derecha -->
-                                <div class="avatar-container d-flex align-items-center gap-2 me-2">
-                                    <div style="position: relative;">
-                                        <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI"
-                                            style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
-                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
-                                            title="Haz clic para escuchar la explicación" />
-                                        <button id="btnDetenerVoz"
-                                            style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
-                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
-                                            ✕
-                                        </button>
-                                    </div>
-                                    <span class="fw-semibold text-secondary small">Tu Asistente en myResultIQ 1</span>
+                                <div>
+                                    <label for="filtroPeriodo" class="form-label mb-0 small">Período</label>
+                                    <select id="filtroPeriodo" class="form-select form-select-sm">
+                                        <option>Octubre</option>
+                                        <option>Septiembre</option>
+                                        <option>Agosto</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="filtroSector" class="form-label mb-0 small">Sector</label>
+                                    <select id="filtroSector" class="form-select form-select-sm">
+                                        <option>Todos</option>
+                                        <option>Operaciones</option>
+                                        <option>Finanzas</option>
+                                        <option>Comercial</option>
+                                        <option>RRHH</option>
+                                    </select>
+                                </div>
+
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-sync-alt"></i> Aplicar</button>
+
+                                <!-- Avatar al lado derecho -->
+                                <div class="avatar-container ms-3">
+                                    <img id="avatarAudio" src="/dist/images/avatar.png" alt="Avatar"
+                                        style="width:50px; height:50px; cursor:pointer; border-radius:50%; box-shadow:0 0 5px rgba(0,0,0,0.2);"
+                                        title="Haz clic para reproducir explicación" />
                                 </div>
                             </div>
-
 
                             <!-- === Cumplimiento Global + Evolución === -->
                             <div class="row">
@@ -569,21 +544,17 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="container mt-4">
-                                        <h3 class="text-center mb-3">📈 Evolución del Cumplimiento Global</h3>
-                                        <div id="chartContainer" style="height: 400px;">
-                                            <!-- o 500px, según lo que quieras -->
-                                            <canvas id="evolucionChart"></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="text-center mb-3">
-                                        <button id="btnActualizar" class="btn btn-outline-primary">
-                                            🔄 Actualizar gráfico
-                                        </button>
-                                    </div>
                                 </div>
 
+                                <!-- Evolución Global -->
+                                <!-- <div class="col-12 col-md-6 mb-4 mt-3">
+                                    <div class="card card-primary card-outline card-shadow">
+                                        <div class="card-body">
+                                            <h5 class="mb-3">Evolución del Cumplimiento</h5>
+                                            <div id="chartEvolucion" style="height: 240px;"></div>
+                                        </div>
+                                    </div>
+                                </div> -->
                             </div>
 
 
@@ -905,32 +876,6 @@
         </div>
     </div>
 
-    <!-- Modal Evolucion cumplimiento global -->
-    <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="detalleModalLabel">Detalle de indicadores</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Mes:</strong> <span id="detalleMes"></span></p>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Indicador</th>
-                                <th>Cumplimiento (%)</th>
-                                <th>Peso (%)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="detalleTabla"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
@@ -964,193 +909,6 @@
 
     <script>
 
-        // 🔹 Cargar los datos desde el backend
-        async function obtenerEvolucionGlobal() {
-            const res = await fetch('/api/evolucion-global');
-            if (!res.ok) throw new Error('Error obteniendo datos');
-            return await res.json();
-        }
-
-        // 🔹 Renderizar gráfico
-        async function renderizarGrafico() {
-            const data = await obtenerEvolucionGlobal();
-            console.log("📊 Datos devueltos para el gráfico:", data);
-
-            // Validar que haya datos
-            if (!Array.isArray(data) || data.length === 0) {
-                console.warn("⚠️ No hay datos para graficar.");
-                return;
-            }
-
-            // Filtrar valores válidos (cumplimiento numérico)
-            const dataFiltrada = data.filter(d => typeof d.cumplimiento === 'number' && !isNaN(d.cumplimiento));
-
-            if (dataFiltrada.length === 0) {
-                console.warn("⚠️ Ningún dato tiene cumplimiento válido.");
-                return;
-            }
-
-            // Preparar datos para Chart.js
-            const labels = dataFiltrada.map(d => d.month);
-            const valores = dataFiltrada.map(d => d.cumplimiento);
-
-            console.log("📈 Labels:", labels);
-            console.log("📉 Valores de cumplimiento:", valores);
-
-            // Obtener el canvas
-            const ctx = document.getElementById("evolucionChart");
-            if (!ctx) {
-                console.error("❌ No se encontró el elemento canvas con id 'evolucionChart'");
-                return;
-            }
-
-            // Si ya existe un gráfico previo, destruirlo antes de crear uno nuevo
-            if (window.globalChartInstance) {
-                window.globalChartInstance.destroy();
-            }
-
-            // Crear gráfico
-            //     window.globalChartInstance = new Chart(ctx, {
-            //         type: 'line',
-            //         data: {
-            //             labels: labels,
-            //             datasets: [{
-            //                 label: 'Cumplimiento Global (%)',
-            //                 data: valores,
-            //                 borderColor: 'rgb(54, 162, 235)',
-            //                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            //                 tension: 0.3,
-            //                 fill: true,
-            //                 pointRadius: 6,
-            //                 pointHoverRadius: 8,
-            //                 pointBackgroundColor: 'rgb(54, 162, 235)',
-            //                 borderWidth: 2
-            //             }]
-            //         },
-            //         options: {
-            //             responsive: true,
-            //             maintainAspectRatio: false,
-            //             scales: {
-            //                 // y: {
-            //                 //     beginAtZero: true,
-            //                 //     title: {
-            //                 //         display: true,
-            //                 //         text: '% Cumplimiento'
-            //                 //     }
-            //                 // },
-            //                 y: {
-            //                     min: 0,      // fuerza que empiece en 0
-            //                     max: 100,    // fuerza que llegue hasta 100
-            //                     title: {
-            //                         display: true,
-            //                         text: '% Cumplimiento'
-            //                     },
-            //                     ticks: {
-            //                         stepSize: 10
-            //                     }
-            //                 },
-
-            //                 x: {
-            //                     title: {
-            //                         display: true,
-            //                         text: 'Mes'
-            //                     }
-            //                 }
-            //             },
-            //             plugins: {
-            //                 tooltip: {
-            //                     callbacks: {
-            //                         label: context => `Cumplimiento: ${context.parsed.y.toFixed(2)}%`
-            //                     }
-            //                 },
-            //                 legend: {
-            //                     display: true
-            //                 }
-            //             }
-            //         }
-            //     });
-            //
-            // Crear gráfico
-            window.globalChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Cumplimiento Global (%)',
-                        data: valores,
-                        borderColor: 'rgb(54, 162, 235)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        tension: 0.3,
-                        fill: true,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        pointBackgroundColor: 'rgb(54, 162, 235)',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            min: 0,       // eje Y comienza en 0
-                            max: 100,     // eje Y llega hasta 100
-                            ticks: {
-                                stepSize: 10  // marcas cada 10%
-                            },
-                            title: {
-                                display: true,
-                                text: '% Cumplimiento'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Mes'
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: context => `Cumplimiento: ${context.parsed.y.toFixed(2)}%`
-                            }
-                        },
-                        legend: {
-                            display: true
-                        }
-                    }
-                }
-            });
-        }
-
-
-        // 🔹 Mostrar modal con detalle del mes
-        function mostrarDetalleMes(entry) {
-            document.getElementById('detalleMes').textContent = entry.month;
-            const tbody = document.getElementById('detalleTabla');
-            tbody.innerHTML = '';
-
-            entry.detalle.forEach(d => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-          <td>${d.indicador}</td>
-          <td>${d.cumplimiento}%</td>
-          <td>${d.peso}%</td>
-        `;
-                tbody.appendChild(row);
-            });
-
-            const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
-            modal.show();
-        }
-
-        // 🚀 Inicializar al cargar
-        renderizarGrafico().catch(err => {
-            console.error(err);
-            alert('No se pudo cargar la evolución global');
-        });
-
         async function loadGlobalCompliance() {
             try {
                 const [sectoresRes, indicadoresRes] = await Promise.all([
@@ -1161,26 +919,17 @@
                 const sectores = await sectoresRes.json();
                 const indicadores = await indicadoresRes.json();
 
-                const indicadoresConCumplimiento = indicadores.map(ind => {
-                    const cumplimiento = calcularCumplimiento(
+                const indicadoresConCumplimiento = indicadores.map(ind => ({
+                    ...ind,
+                    cumplimiento: calcularCumplimiento(
                         ind.ultimo_valor,
                         ind.unico_valor,
                         ind.unico_acepta,
                         ind.unico_riesgo,
                         ind.unico_critico
-                    );
-
-                    // 🔹 Mostramos solo si el cálculo es válido
-                    if (cumplimiento !== null && !isNaN(cumplimiento)) {
-                        console.log(`Indicador: ${ind.nombre}, Valor: ${ind.ultimo_valor}, Cumplimiento calculado: ${cumplimiento}`);
-                    }
-
-                    return {
-                        ...ind,
-                        cumplimiento,
-                        peso: Number(ind.peso_porcentual) || 0
-                    };
-                });
+                    ),
+                    peso: Number(ind.peso_porcentual) || 0
+                }));
 
                 const orgHierarchy = buildHierarchyMinimal(sectores, indicadoresConCumplimiento);
                 const globalPercent = computeCompliance(orgHierarchy);
@@ -1194,7 +943,6 @@
                 console.error('Error al calcular cumplimiento global:', err);
             }
         }
-
 
         // Funciones auxiliares
         function buildHierarchyMinimal(sectores, indicadores) {
@@ -1292,13 +1040,9 @@
             txt.textContent = percent.toFixed(1) + '%';
             svg.appendChild(txt);
         }
-
         // Reutiliza tu función de cálculo de cumplimiento
         function calcularCumplimiento(valor, meta, acepta, riesgo, critico) {
             if (valor === null || meta === null || meta == 0 || valor == 0) return null;
-            if (valor > 0) {
-                console.log(`valor encontrado valor ${valor} y meta ${meta}`)
-            }
             return (valor / meta) * 100;
         }
 
@@ -1508,6 +1252,9 @@
         }
 
 
+
+
+
         // Función para reconstruir todas las tablas
         function reconstruirTablasXXX() {
             const tbodyPendientes = document.getElementById('tbodyPendientes');
@@ -1558,6 +1305,7 @@
             });
         }
 
+
         async function getUltimaMedicionPorIndicador(indicadorId) {
             // Filtrar por el indicador
             const mediciones = await leerMediciones();
@@ -1584,6 +1332,7 @@
                 );
             }
         }
+
 
         let medicionesGral = [];
         async function leerMediciones() {
@@ -1805,6 +1554,13 @@
         document.getElementById('valorCorteDestacados').addEventListener('input', async () => {
             await cargarTablaDestacados(); // función que recalcula y recarga la tabla
         });
+
+
+
+
+
+
+
 
 
 
@@ -2122,109 +1878,63 @@
         chartEvolucion.render();
     </script>
 
-    <script>
-        const avatarAudio = document.getElementById('avatarAudio');
-        const btnDetener = document.getElementById('btnDetenerVoz');
+<script>
+    const avatarAudio = document.getElementById('avatarAudio');
 
-        const textoExplicativo = `
-            ¡Hola! Bienvenido a My Result IQ, la herramienta ideal para la gestión de indicadores.
-            Soy tu asistente virtual y estoy aquí para guiarte en el uso de la aplicación y ayudarte a aprovechar todo su potencial.
-            En este sistema trabajamos con dos conceptos clave: usuarios habilitados y destinos. Los destinos representan las diferentes áreas, unidades funcionales o procesos de tu organización.
-            A cada destino se le asignan indicadores que permiten medir su desempeño. Cada indicador tiene una importancia relativa dentro del destino, y la suma de todas estas importancias siempre equivale al 100%.
-            De manera similar, cuando un destino está compuesto por destinos dependientes —por ejemplo, sectores dentro de una gerencia, o gerencias dentro de una dirección— cada uno tiene un porcentaje asociado que también suma 100% en ese nivel.
-            Gracias a esta estructura jerárquica, el sistema calcula automáticamente el porcentaje de cumplimiento global de tu organización, basándose en el rendimiento de cada destino y su relevancia dentro del nivel superior.
-            Estoy aquí para ayudarte a explorar estos conceptos y entender cómo evoluciona el desempeño de tu organización.
-            ¡Comencemos!  Aguante Juanpi!!!!!
+    const textoExplicativo = `
+        ¡Hola! Bienvenido a my result IQ la herramienta ideal para la gestión de indicadores.  Estoy aquí como tu asistente para orientarte en el mejor uso de la aplicación y lograr el mejor aprovechamiento de su potencial. En este sistema se definen usuarios habilitados y destinos, que representan áreas, unidades funcionales o procesos de la organización. A cada destino se le asignan indicadores que permiten valorar su desempeño.  Cada indicador tiene una importancia relativa dentro del destino, y la suma de todas las importancias de los indicadores de un mismo destino siempre equivale al 100%.  Del mismo modo, cuando un destino está compuesto por destinos dependientes —por ejemplo, sectores dentro de una gerencia, o gerencias dentro de una dirección—, cada uno tiene un porcentaje asociado, y la suma de todos los porcentajes de ese nivel también debe sumar 100%.  Gracias a esta estructura jerárquica, el sistema puede calcular un porcentaje de cumplimiento global de la organización, basado en el rendimiento de cada destino y la relevancia que tiene dentro de su nivel superior.  Estoy aquí para ayudarte a explorar estos conceptos y entender cómo evoluciona el comportamiento de la organización.  Aguante Juanpi!!!!!
     `;
 
-        let vozSeleccionada = null;
+    function obtenerVozEspañol() {
+        const voces = speechSynthesis.getVoices();
+        if (!voces.length) return null;
+        const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
+        const vozEspañol = voces.find(v => v.lang.startsWith("es"));
+        return vozGoogle || vozEspañol || voces[0];
+    }
 
-        // 🔊 Seleccionar voz en español (prioriza Google)
-        function obtenerVozEspañol() {
-            const voces = speechSynthesis.getVoices();
-            if (!voces.length) return null;
-
-            const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
-            const vozEspañol = voces.find(v => v.lang.startsWith("es"));
-            vozSeleccionada = vozGoogle || vozEspañol || voces[0];
-            return vozSeleccionada;
+    function hablar(texto = textoExplicativo) {
+        if (!('speechSynthesis' in window)) {
+            alert('Tu navegador no soporta la función de voz.');
+            return;
         }
+        if (speechSynthesis.speaking) return;
 
-        // 🎙️ Hablar
-        function hablar(texto = textoExplicativo) {
-            if (!('speechSynthesis' in window)) {
-                alert('Tu navegador no soporta la función de voz.');
-                return;
-            }
+        const utterance = new SpeechSynthesisUtterance(texto);
+        const voz = obtenerVozEspañol();
+        if (voz) utterance.voice = voz;
+        utterance.lang = "es-ES";
+        utterance.rate = 1;
+        utterance.pitch = 1.1;
 
-            detener(); // Si ya está hablando, detener primero
+        // Efecto visual mientras habla
+        avatarAudio.classList.add('speaking');
+        utterance.onend = () => avatarAudio.classList.remove('speaking');
+        utterance.onerror = () => avatarAudio.classList.remove('speaking');
 
-            const utterance = new SpeechSynthesisUtterance(texto);
-            const voz = obtenerVozEspañol();
-            if (voz) utterance.voice = voz;
-            utterance.lang = "es-ES";
-            utterance.rate = 1;
-            utterance.pitch = 1.05;
+        speechSynthesis.speak(utterance);
+    }
 
-            // Cambiar avatar según tipo de voz
-            if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
-                avatarAudio.src = "/dist/images/avatar3.png";
-            } else {
-                avatarAudio.src = "/dist/images/avatar4.png";
-            }
+    avatarAudio.addEventListener('click', () => hablar());
 
-            // Eventos visuales
-            utterance.onstart = () => {
-                avatarAudio.classList.add('speaking');
-                btnDetener.style.display = 'block';
-            };
-            utterance.onend = () => detener();
-            utterance.onerror = () => detener();
+    // Para asegurarnos de que se carguen las voces correctamente
+    window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
+</script>
 
-            speechSynthesis.speak(utterance);
-        }
+<style>
+    /* Efecto de "hablando" */
+    #avatarAudio.speaking {
+        animation: pulse 1.2s infinite;
+    }
 
-        // 🛑 Detener voz
-        function detener() {
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel();
-            }
-            avatarAudio.classList.remove('speaking');
-            btnDetener.style.display = 'none';
-        }
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(0, 123, 255, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+    }
+</style>
 
-        // 🎧 Eventos
-        avatarAudio.addEventListener('click', () => hablar());
-        btnDetener.addEventListener('click', detener);
-        window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
-    </script>
-
-    <style>
-        /* Efecto de "hablando" */
-        #avatarAudio.speaking {
-            animation: pulse 1.2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
-            }
-
-            70% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
-            }
-
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
-            }
-        }
-    </style>
 
 
 
 </body>
-
-</html>
