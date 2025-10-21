@@ -450,7 +450,7 @@
                     <section class="content mt-4">
                         <div class="container-fluid">
                             <!-- === Filtros globales === -->
-                            <div class="filters-bar">
+                            <!--                             <div class="filters-bar">
                                 <div>
                                     <label for="filtroAnio" class="form-label mb-0 small">Año</label>
                                     <select id="filtroAnio" class="form-select form-select-sm">
@@ -482,13 +482,77 @@
 
                                 <button class="btn btn-sm btn-primary"><i class="fas fa-sync-alt"></i> Aplicar</button>
 
-                                <!-- Avatar al lado derecho -->
-                                <div class="avatar-container ms-3">
-                                    <img id="avatarAudio" src="/dist/images/avatar.png" alt="Avatar"
-                                        style="width:50px; height:50px; cursor:pointer; border-radius:50%; box-shadow:0 0 5px rgba(0,0,0,0.2);"
-                                        title="Haz clic para reproducir explicación" />
+                                < 🎧 Avatar asistente 
+                                <div class="avatar-container d-flex align-items-center gap-3">
+                                    <div style="position: relative;">
+                                        <img id="avatarAudio" src="/dist/images/avatar2.png" alt="Asistente KPI"
+                                            style="width:60px; height:60px; cursor:pointer; border-radius:50%; box-shadow:0 0 6px rgba(0,0,0,0.25);"
+                                            title="Haz clic para escuchar la explicación" />
+                                        <button id="btnDetenerVoz" style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                                    width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                            ✕
+                                        </button>
+                                    </div>
+                                    <span class="fw-semibold text-secondary">Tu Asistente KPI</span>
+                                </div>
+                            </div> -->
+
+                            <!-- 🔹 Barra superior de filtros + Asistente -->
+                            <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
+
+                                <!-- 🔸 Filtros -->
+                                <div class="d-flex gap-3">
+                                    <div>
+                                        <label for="filtroAnio" class="form-label mb-0 small">Año</label>
+                                        <select id="filtroAnio" class="form-select form-select-sm">
+                                            <option>2025</option>
+                                            <option>2024</option>
+                                            <option>2023</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label for="filtroPeriodo" class="form-label mb-0 small">Período</label>
+                                        <select id="filtroPeriodo" class="form-select form-select-sm">
+                                            <option>Octubre</option>
+                                            <option>Septiembre</option>
+                                            <option>Agosto</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label for="filtroSector" class="form-label mb-0 small">Sector</label>
+                                        <select id="filtroSector" class="form-select form-select-sm">
+                                            <option>Todos</option>
+                                            <option>Operaciones</option>
+                                            <option>Finanzas</option>
+                                            <option>Comercial</option>
+                                            <option>RRHH</option>
+                                        </select>
+                                    </div>
+
+                                    <button class="btn btn-sm btn-primary align-self-end">
+                                        <i class="fas fa-sync-alt"></i> Aplicar
+                                    </button>
+                                </div>
+
+                                <!-- 🔹 Avatar asistente alineado a la derecha -->
+                                <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                                    <div style="position: relative;">
+                                        <img id="avatarAudio" src="/dist/images/avatar5.png" alt="Asistente KPI"
+                                            style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
+                        box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                            title="Haz clic para escuchar la explicación" />
+                                        <button id="btnDetenerVoz"
+                                            style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                           width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                            ✕
+                                        </button>
+                                    </div>
+                                    <span class="fw-semibold text-secondary small">Tu Asistente KPI</span>
                                 </div>
                             </div>
+
 
                             <!-- === Cumplimiento Global + Evolución === -->
                             <div class="row">
@@ -1878,64 +1942,101 @@
         chartEvolucion.render();
     </script>
 
-<script>
-    const avatarAudio = document.getElementById('avatarAudio');
+    <script>
+        const avatarAudio = document.getElementById('avatarAudio');
+        const btnDetener = document.getElementById('btnDetenerVoz');
 
-    const textoExplicativo = `
-        ¡Hola! Bienvenido a my result IQ la herramienta ideal para la gestión de indicadores.  Estoy aquí como tu asistente para orientarte en el mejor uso de la aplicación y lograr el mejor aprovechamiento de su potencial. En este sistema se definen usuarios habilitados y destinos, que representan áreas, unidades funcionales o procesos de la organización. A cada destino se le asignan indicadores que permiten valorar su desempeño.  Cada indicador tiene una importancia relativa dentro del destino, y la suma de todas las importancias de los indicadores de un mismo destino siempre equivale al 100%.  Del mismo modo, cuando un destino está compuesto por destinos dependientes —por ejemplo, sectores dentro de una gerencia, o gerencias dentro de una dirección—, cada uno tiene un porcentaje asociado, y la suma de todos los porcentajes de ese nivel también debe sumar 100%.  Gracias a esta estructura jerárquica, el sistema puede calcular un porcentaje de cumplimiento global de la organización, basado en el rendimiento de cada destino y la relevancia que tiene dentro de su nivel superior.  Estoy aquí para ayudarte a explorar estos conceptos y entender cómo evoluciona el comportamiento de la organización.  Aguante Juanpi!!!!!
+        const textoExplicativo = `
+        ¡Hola! Bienvenido a myResultIQ, la herramienta de gestión de indicadores. 
+        Aquí podrás explorar los destinos, sus indicadores y niveles de cumplimiento.
+        Estoy aquí para guiarte en el uso del sistema y ayudarte a comprender su potencial.
     `;
 
-    function obtenerVozEspañol() {
-        const voces = speechSynthesis.getVoices();
-        if (!voces.length) return null;
-        const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
-        const vozEspañol = voces.find(v => v.lang.startsWith("es"));
-        return vozGoogle || vozEspañol || voces[0];
-    }
+        let vozSeleccionada = null;
 
-    function hablar(texto = textoExplicativo) {
-        if (!('speechSynthesis' in window)) {
-            alert('Tu navegador no soporta la función de voz.');
-            return;
+        // 🔊 Seleccionar voz en español (prioriza Google)
+        function obtenerVozEspañol() {
+            const voces = speechSynthesis.getVoices();
+            if (!voces.length) return null;
+
+            const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
+            const vozEspañol = voces.find(v => v.lang.startsWith("es"));
+            vozSeleccionada = vozGoogle || vozEspañol || voces[0];
+            return vozSeleccionada;
         }
-        if (speechSynthesis.speaking) return;
 
-        const utterance = new SpeechSynthesisUtterance(texto);
-        const voz = obtenerVozEspañol();
-        if (voz) utterance.voice = voz;
-        utterance.lang = "es-ES";
-        utterance.rate = 1;
-        utterance.pitch = 1.1;
+        // 🎙️ Hablar
+        function hablar(texto = textoExplicativo) {
+            if (!('speechSynthesis' in window)) {
+                alert('Tu navegador no soporta la función de voz.');
+                return;
+            }
 
-        // Efecto visual mientras habla
-        avatarAudio.classList.add('speaking');
-        utterance.onend = () => avatarAudio.classList.remove('speaking');
-        utterance.onerror = () => avatarAudio.classList.remove('speaking');
+            detener(); // Si ya está hablando, detener primero
 
-        speechSynthesis.speak(utterance);
-    }
+            const utterance = new SpeechSynthesisUtterance(texto);
+            const voz = obtenerVozEspañol();
+            if (voz) utterance.voice = voz;
+            utterance.lang = "es-ES";
+            utterance.rate = 1;
+            utterance.pitch = 1.05;
 
-    avatarAudio.addEventListener('click', () => hablar());
+            // Cambiar avatar según tipo de voz
+            if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
+                avatarAudio.src = "/dist/images/avatar3.png";
+            } else {
+                avatarAudio.src = "/dist/images/avatar4.png";
+            }
 
-    // Para asegurarnos de que se carguen las voces correctamente
-    window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
-</script>
+            // Eventos visuales
+            utterance.onstart = () => {
+                avatarAudio.classList.add('speaking');
+                btnDetener.style.display = 'block';
+            };
+            utterance.onend = () => detener();
+            utterance.onerror = () => detener();
 
-<style>
-    /* Efecto de "hablando" */
-    #avatarAudio.speaking {
-        animation: pulse 1.2s infinite;
-    }
+            speechSynthesis.speak(utterance);
+        }
 
-    @keyframes pulse {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5); }
-        70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(0, 123, 255, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
-    }
-</style>
+        // 🛑 Detener voz
+        function detener() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            avatarAudio.classList.remove('speaking');
+            btnDetener.style.display = 'none';
+        }
 
+        // 🎧 Eventos
+        avatarAudio.addEventListener('click', () => hablar());
+        btnDetener.addEventListener('click', detener);
+        window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
+    </script>
 
+    <style>
+        /* Efecto de "hablando" */
+        #avatarAudio.speaking {
+            animation: pulse 1.2s infinite;
+        }
 
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+    </style>
 
 </body>
 
