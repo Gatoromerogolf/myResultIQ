@@ -29,6 +29,19 @@
     .nav-item {
         margin-bottom: 0;
     }
+
+    /* --- Header y asistente --- */
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
 </style>
 
 <head>
@@ -285,15 +298,27 @@
                 <!--begin::Container-->
                 <div class="container-fluid">
 
-                    <div class="row">
-                        <div class="col-sm-6">
+                    <!-- 🔹 Barra superior de filtros + Asistente -->
+                    <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
+
+                        <!-- 🔸 Filtros -->
+                        <div class="d-flex gap-3">
                             <h3 class="mb-0">Panel Balance Scorecard</h3>
                         </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-end">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                            </ol>
+
+                        <!-- 🔹 Avatar asistente alineado a la derecha -->
+                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                            <div style="position: relative;">
+                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                    title="Haz clic para escuchar la explicación" />
+                                <button id="btnDetenerVoz"
+                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                    ✕
+                                </button>
+                            </div>
+                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
                         </div>
                     </div>
 
