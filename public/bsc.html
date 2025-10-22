@@ -374,18 +374,22 @@
                                 </div>
 
                                 <!-- Tabla resumen -->
-                                <div class="table-responsive mt-4">
-                                    <table class="table table-sm table-striped align-middle mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Dimensión</th>
-                                                <th class="text-center">Indicadores</th>
-                                                <th class="text-center">Promedio de Cumplimiento</th>
-                                                <th class="text-center">Estado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodyDimensiones"></tbody>
-                                    </table>
+                                <div class="card mt-4 shadow-sm border-0">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Dimensión</th>
+                                                        <th class="text-center">Indicadores</th>
+                                                        <th class="text-center">Promedio de Cumplimiento</th>
+                                                        <th class="text-center">Estado</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbodyDimensiones"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Contenedor para detalle de indicadores -->
@@ -415,20 +419,18 @@
                     </div>
                 </div>
                 <!--end::Row-->
-
-
             </div>
             <!--end::Container-->
-    </div>
-    <!--end::App Content-->
+            <!-- </div> -->
+            <!--end::App Content-->
 
-    <footer class="main-footer text-center">
-        <strong>© 2025 - myResultIQ 1.0</strong>
-    </footer>
-    </main>
-    <!--end::App main-->
+            <footer class="main-footer text-center">
+                <strong>© 2025 - myResultIQ 1.0</strong>
+            </footer>
+        </main>
+        <!--end::App main-->
 
-    <!--end::App nain-->
+        <!--end::App nain-->
 
     </div>
     <!--end::App Wrapper-->
@@ -663,6 +665,100 @@
 
     </script>
 
+    <script>
+        const avatarAudio = document.getElementById('avatarAudio');
+        const btnDetener = document.getElementById('btnDetenerVoz');
+
+        const textoExplicativo = `
+            ¡Hola! Soy tu asistente para que puedas obtener los mejores beneficios en el análisis de esta información del Balance Scorecard.  Algo te diré.
+            ¡Comencemos!  Aguante Juanpi!!!!!
+    `;
+
+        let vozSeleccionada = null;
+
+        // 🔊 Seleccionar voz en español (prioriza Google)
+        function obtenerVozEspañol() {
+            const voces = speechSynthesis.getVoices();
+            if (!voces.length) return null;
+
+            const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
+            const vozEspañol = voces.find(v => v.lang.startsWith("es"));
+            vozSeleccionada = vozGoogle || vozEspañol || voces[0];
+            return vozSeleccionada;
+        }
+
+        // 🎙️ Hablar
+        function hablar(texto = textoExplicativo) {
+            if (!('speechSynthesis' in window)) {
+                alert('Tu navegador no soporta la función de voz.');
+                return;
+            }
+
+            detener(); // Si ya está hablando, detener primero
+
+            const utterance = new SpeechSynthesisUtterance(texto);
+            const voz = obtenerVozEspañol();
+            if (voz) utterance.voice = voz;
+            utterance.lang = "es-ES";
+            utterance.rate = 1;
+            utterance.pitch = 1.05;
+
+            // Cambiar avatar según tipo de voz
+            // if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
+            //     avatarAudio.src = "/dist/images/avatar3.png";
+            // } else {
+            //     avatarAudio.src = "/dist/images/avatar4.png";
+            // }
+
+            // Eventos visuales
+            utterance.onstart = () => {
+                avatarAudio.classList.add('speaking');
+                btnDetener.style.display = 'block';
+            };
+            utterance.onend = () => detener();
+            utterance.onerror = () => detener();
+
+            speechSynthesis.speak(utterance);
+        }
+
+        // 🛑 Detener voz
+        function detener() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            avatarAudio.classList.remove('speaking');
+            btnDetener.style.display = 'none';
+        }
+
+        // 🎧 Eventos
+        avatarAudio.addEventListener('click', () => hablar());
+        btnDetener.addEventListener('click', detener);
+        window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
+    </script>
+
+    <style>
+        /* Efecto de "hablando" */
+        #avatarAudio.speaking {
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+    </style>
 
 
 

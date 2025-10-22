@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-    
+
 <style>
     .brand-image {
         opacity: 1 !important;
@@ -149,6 +149,18 @@
 
         .tendencia-estable {
             color: #6c757d;
+        }
+
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
         }
     </style>
 
@@ -352,15 +364,25 @@
             <div class="app-content-header">
                 <div class="container-fluid">
                     <!--begin::Row-->
-                    <div class="row">
-                        <div class="col-sm-6">
+                    <!-- 🔹 Asistente -->
+                    <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
+                        <div class="d-flex gap-3">
                             <h3 class="mb-0">Destinos</h3>
                         </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-end">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Destino</li>
-                            </ol>
+
+                        <!-- 🔹 Avatar asistente alineado a la derecha -->
+                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                            <div style="position: relative;">
+                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                    title="Haz clic para escuchar la explicación" />
+                                <button id="btnDetenerVoz"
+                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                    ✕
+                                </button>
+                            </div>
+                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
                         </div>
                     </div>
 
@@ -475,15 +497,22 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="infoModalLabel">¿Por qué definir los Destinos  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <h5 class="modal-title" id="infoModalLabel">¿Por qué definir los Destinos <button type="button"
+                            class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                        La aplicación permite definir áreas, unidades funcionales y procesos en una estructura jerárquica o de dependencia, donde cada nivel puede tener uno o varios indicadores asignados.<br><br>
-                        Cada indicador mide un aspecto específico y genera un resultado de cumplimiento respecto a su meta, pudiendo tener distinto nivel de relevancia según su participación en el objetivo del nivel al que pertenece.<br><br>
+                    La aplicación permite definir áreas, unidades funcionales y procesos en una estructura jerárquica o
+                    de dependencia, donde cada nivel puede tener uno o varios indicadores asignados.<br><br>
+                    Cada indicador mide un aspecto específico y genera un resultado de cumplimiento respecto a su meta,
+                    pudiendo tener distinto nivel de relevancia según su participación en el objetivo del nivel al que
+                    pertenece.<br><br>
 
-                        El resultado de cada nivel se calcula combinando los resultados de sus indicadores, y, asimismo,los subniveles se ponderan para obtener un valor global de desempeño en los niveles superiores.<br><br>
+                    El resultado de cada nivel se calcula combinando los resultados de sus indicadores, y, asimismo,los
+                    subniveles se ponderan para obtener un valor global de desempeño en los niveles superiores.<br><br>
 
-                        Al combinar los distintos niveles hacia los niveles superiores, se logra que, al llegar al nivel máximo definido, se obtenga un resultado general que refleje el estado global del área, unidad funcional o proceso correspondiente..<br>
+                    Al combinar los distintos niveles hacia los niveles superiores, se logra que, al llegar al nivel
+                    máximo definido, se obtenga un resultado general que refleje el estado global del área, unidad
+                    funcional o proceso correspondiente..<br>
                 </div>
                 <div class="modal-footer">
                     <!-- Botón a la izquierda con link -->
@@ -622,7 +651,7 @@
             });
         }
 
-                // 🎲🎲🎲 Actualizar alertas
+        // 🎲🎲🎲 Actualizar alertas
         function actualizarAlerta(tieneError) {
             (async () => {
                 try {
@@ -714,6 +743,102 @@
     <!-- OverlayScrollbars (opcional) -->
     <script
         src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"></script>
+
+            <script>
+        const avatarAudio = document.getElementById('avatarAudio');
+        const btnDetener = document.getElementById('btnDetenerVoz');
+
+        const textoExplicativo = `
+            ¡Hola! En esta sección se definen los destinos a los cuales se asignarán indicadores.  Como destino entederemos unidades funcionales, procesos, áreas, etc que sean pasibles de medición a través del comportamiento de determinados indicadores.      En otras secciones se informará la importancia relativa de cada destino y su incidencia en el destino al que pertenece.
+            ¡Comencemos!  Aguante Juanpi!!!!!
+    `;
+
+        let vozSeleccionada = null;
+
+        // 🔊 Seleccionar voz en español (prioriza Google)
+        function obtenerVozEspañol() {
+            const voces = speechSynthesis.getVoices();
+            if (!voces.length) return null;
+
+            const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
+            const vozEspañol = voces.find(v => v.lang.startsWith("es"));
+            vozSeleccionada = vozGoogle || vozEspañol || voces[0];
+            return vozSeleccionada;
+        }
+
+        // 🎙️ Hablar
+        function hablar(texto = textoExplicativo) {
+            if (!('speechSynthesis' in window)) {
+                alert('Tu navegador no soporta la función de voz.');
+                return;
+            }
+
+            detener(); // Si ya está hablando, detener primero
+
+            const utterance = new SpeechSynthesisUtterance(texto);
+            const voz = obtenerVozEspañol();
+            if (voz) utterance.voice = voz;
+            utterance.lang = "es-ES";
+            utterance.rate = 1;
+            utterance.pitch = 1.05;
+
+            // Cambiar avatar según tipo de voz
+            // if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
+            //     avatarAudio.src = "/dist/images/avatar3.png";
+            // } else {
+            //     avatarAudio.src = "/dist/images/avatar4.png";
+            // }
+
+            // Eventos visuales
+            utterance.onstart = () => {
+                avatarAudio.classList.add('speaking');
+                btnDetener.style.display = 'block';
+            };
+            utterance.onend = () => detener();
+            utterance.onerror = () => detener();
+
+            speechSynthesis.speak(utterance);
+        }
+
+        // 🛑 Detener voz
+        function detener() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            avatarAudio.classList.remove('speaking');
+            btnDetener.style.display = 'none';
+        }
+
+        // 🎧 Eventos
+        avatarAudio.addEventListener('click', () => hablar());
+        btnDetener.addEventListener('click', detener);
+        window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
+    </script>
+
+    <style>
+        /* Efecto de "hablando" */
+        #avatarAudio.speaking {
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+    </style>
+
 </body>
 
 </html>

@@ -29,6 +29,18 @@
     .nav-item {
         margin-bottom: 0;
     }
+
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
 </style>
 
 <head>
@@ -286,15 +298,27 @@
                 <!--begin::Container-->
                 <div class="container-fluid">
                     <!--begin::Row-->
-                    <div class="row">
-                        <div class="col-sm-6">
+                    <!-- 🔹 Barra superior de filtros + Asistente -->
+                    <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
+
+                        <!-- 🔸 Filtros -->
+                        <div class="d-flex gap-3">
                             <h3 class="mb-0">Ponderación Balance Scorecard</h3>
                         </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-end">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                            </ol>
+
+                        <!-- 🔹 Avatar asistente alineado a la derecha -->
+                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                            <div style="position: relative;">
+                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                    title="Haz clic para escuchar la explicación" />
+                                <button id="btnDetenerVoz"
+                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                    ✕
+                                </button>
+                            </div>
+                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
                         </div>
                     </div>
                     <!--end::Row-->
@@ -618,6 +642,102 @@
 
         document.addEventListener('DOMContentLoaded', cargarIndicadoresPorDimension);
     </script>
+
+        <script>
+        const avatarAudio = document.getElementById('avatarAudio');
+        const btnDetener = document.getElementById('btnDetenerVoz');
+
+        const textoExplicativo = `
+            ¡Hola! Aqui vamos a manejar información que nos permitirá definir la importancia que le asignamos a cada indicador, dentro del grupo de indicadores que forman cada dimensión.En la definición del indicador se señaló a cuál de los grupos del BSC se lo asocia.  En esta sección, corresponde determinar la importancia relativa de cada indicador dentro de la dimensión.  Todos los indicadores tienen un valor porcentual que refleja su importancia dentro del destino al que fueron asignados.
+            ¡Comencemos!  Aguante Juanpi!!!!!
+    `;
+
+        let vozSeleccionada = null;
+
+        // 🔊 Seleccionar voz en español (prioriza Google)
+        function obtenerVozEspañol() {
+            const voces = speechSynthesis.getVoices();
+            if (!voces.length) return null;
+
+            const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
+            const vozEspañol = voces.find(v => v.lang.startsWith("es"));
+            vozSeleccionada = vozGoogle || vozEspañol || voces[0];
+            return vozSeleccionada;
+        }
+
+        // 🎙️ Hablar
+        function hablar(texto = textoExplicativo) {
+            if (!('speechSynthesis' in window)) {
+                alert('Tu navegador no soporta la función de voz.');
+                return;
+            }
+
+            detener(); // Si ya está hablando, detener primero
+
+            const utterance = new SpeechSynthesisUtterance(texto);
+            const voz = obtenerVozEspañol();
+            if (voz) utterance.voice = voz;
+            utterance.lang = "es-ES";
+            utterance.rate = 1;
+            utterance.pitch = 1.05;
+
+            // Cambiar avatar según tipo de voz
+            // if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
+            //     avatarAudio.src = "/dist/images/avatar3.png";
+            // } else {
+            //     avatarAudio.src = "/dist/images/avatar4.png";
+            // }
+
+            // Eventos visuales
+            utterance.onstart = () => {
+                avatarAudio.classList.add('speaking');
+                btnDetener.style.display = 'block';
+            };
+            utterance.onend = () => detener();
+            utterance.onerror = () => detener();
+
+            speechSynthesis.speak(utterance);
+        }
+
+        // 🛑 Detener voz
+        function detener() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            avatarAudio.classList.remove('speaking');
+            btnDetener.style.display = 'none';
+        }
+
+        // 🎧 Eventos
+        avatarAudio.addEventListener('click', () => hablar());
+        btnDetener.addEventListener('click', detener);
+        window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
+    </script>
+
+    <style>
+        /* Efecto de "hablando" */
+        #avatarAudio.speaking {
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+    </style>
+
 
 
 

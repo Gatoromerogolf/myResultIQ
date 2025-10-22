@@ -480,10 +480,8 @@
             <div class="app-content-header">
                 <div class="container-fluid">
 
-                    <!-- 🔹 Barra superior de filtros + Asistente -->
+                    <!-- 🔹 Asistente -->
                     <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
-
-                        <!-- 🔸 Filtros -->
                         <div class="d-flex gap-3">
                             <h3 class="mb-0">Posición Global</h3>
                         </div>
@@ -1732,27 +1730,102 @@
             return { observaciones, recomendaciones };
         }
 
-        // function mostrarAnalisis() {
-        //     const { observaciones, recomendaciones } = generarAnalisisAutomatico();
-        //     const container = document.getElementById('analisisContainer');
-
-        //     container.innerHTML = `
-        //         <div class="col-md-6">
-        //             <h5 class="fw-semibold mb-3">🔍 Observaciones Clave:</h5>
-        //             <ul class="text-muted">
-        //                 ${observaciones.map(obs => `<li>${obs}</li>`).join('')}
-        //             </ul>
-        //         </div>
-        //         <div class="col-md-6">
-        //             <h5 class="fw-semibold mb-3">💡 Recomendaciones:</h5>
-        //             <ul class="text-muted">
-        //                 ${recomendaciones.map(rec => `<li>${rec}</li>`).join('')}
-        //             </ul>
-        //         </div>
-        //        `;
-        // }
-
     </script>
+
+        <script>
+        const avatarAudio = document.getElementById('avatarAudio');
+        const btnDetener = document.getElementById('btnDetenerVoz');
+
+        const textoExplicativo = `
+            ¡Hola! En esta sección vas a encontrar un resumen general del cumplimiento de la orgnización.  Navegando en cada recuadro, accederás a los componentes del mismo, con el pordentaje de cumplimiento de cada uno.  Cuando llegás al final, tenes un detalle del indicdador y una evolución hitórica de su comportamiento.  Siga aguantando Juanpi !!!!
+    `;
+
+        let vozSeleccionada = null;
+
+        // 🔊 Seleccionar voz en español (prioriza Google)
+        function obtenerVozEspañol() {
+            const voces = speechSynthesis.getVoices();
+            if (!voces.length) return null;
+
+            const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
+            const vozEspañol = voces.find(v => v.lang.startsWith("es"));
+            vozSeleccionada = vozGoogle || vozEspañol || voces[0];
+            return vozSeleccionada;
+        }
+
+        // 🎙️ Hablar
+        function hablar(texto = textoExplicativo) {
+            if (!('speechSynthesis' in window)) {
+                alert('Tu navegador no soporta la función de voz.');
+                return;
+            }
+
+            detener(); // Si ya está hablando, detener primero
+
+            const utterance = new SpeechSynthesisUtterance(texto);
+            const voz = obtenerVozEspañol();
+            if (voz) utterance.voice = voz;
+            utterance.lang = "es-ES";
+            utterance.rate = 1;
+            utterance.pitch = 1.05;
+
+            // Cambiar avatar según tipo de voz
+            // if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
+            //     avatarAudio.src = "/dist/images/avatar3.png";
+            // } else {
+            //     avatarAudio.src = "/dist/images/avatar4.png";
+            // }
+
+            // Eventos visuales
+            utterance.onstart = () => {
+                avatarAudio.classList.add('speaking');
+                btnDetener.style.display = 'block';
+            };
+            utterance.onend = () => detener();
+            utterance.onerror = () => detener();
+
+            speechSynthesis.speak(utterance);
+        }
+
+        // 🛑 Detener voz
+        function detener() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            avatarAudio.classList.remove('speaking');
+            btnDetener.style.display = 'none';
+        }
+
+        // 🎧 Eventos
+        avatarAudio.addEventListener('click', () => hablar());
+        btnDetener.addEventListener('click', detener);
+        window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
+    </script>
+
+    <style>
+        /* Efecto de "hablando" */
+        #avatarAudio.speaking {
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+    </style>
+
 </body>
 
 </html>

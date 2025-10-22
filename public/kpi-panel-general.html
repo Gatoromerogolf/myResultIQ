@@ -29,6 +29,11 @@
     .nav-item {
         margin-bottom: 0;
     }
+
+    .table tbody tr {
+        border-bottom: 2px solid #dee2e6;
+        /* gris bootstrap */
+    }
 </style>
 
 
@@ -993,67 +998,6 @@
             }
 
             // Crear gráfico
-            //     window.globalChartInstance = new Chart(ctx, {
-            //         type: 'line',
-            //         data: {
-            //             labels: labels,
-            //             datasets: [{
-            //                 label: 'Cumplimiento Global (%)',
-            //                 data: valores,
-            //                 borderColor: 'rgb(54, 162, 235)',
-            //                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            //                 tension: 0.3,
-            //                 fill: true,
-            //                 pointRadius: 6,
-            //                 pointHoverRadius: 8,
-            //                 pointBackgroundColor: 'rgb(54, 162, 235)',
-            //                 borderWidth: 2
-            //             }]
-            //         },
-            //         options: {
-            //             responsive: true,
-            //             maintainAspectRatio: false,
-            //             scales: {
-            //                 // y: {
-            //                 //     beginAtZero: true,
-            //                 //     title: {
-            //                 //         display: true,
-            //                 //         text: '% Cumplimiento'
-            //                 //     }
-            //                 // },
-            //                 y: {
-            //                     min: 0,      // fuerza que empiece en 0
-            //                     max: 100,    // fuerza que llegue hasta 100
-            //                     title: {
-            //                         display: true,
-            //                         text: '% Cumplimiento'
-            //                     },
-            //                     ticks: {
-            //                         stepSize: 10
-            //                     }
-            //                 },
-
-            //                 x: {
-            //                     title: {
-            //                         display: true,
-            //                         text: 'Mes'
-            //                     }
-            //                 }
-            //             },
-            //             plugins: {
-            //                 tooltip: {
-            //                     callbacks: {
-            //                         label: context => `Cumplimiento: ${context.parsed.y.toFixed(2)}%`
-            //                     }
-            //                 },
-            //                 legend: {
-            //                     display: true
-            //                 }
-            //             }
-            //         }
-            //     });
-            //
-            // Crear gráfico
             window.globalChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -1074,6 +1018,18 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    onClick: (evt, elements) => {
+                        if (elements.length > 0) {
+                            const chart = elements[0].element.$context.chart;
+                            const index = elements[0].index;
+                            const entry = dataFiltrada[index]; // obtenemos el mes correspondiente
+                            if (entry && entry.detalle && entry.detalle.length > 0) {
+                                mostrarDetalleMes(entry);
+                            } else {
+                                console.warn("ℹ️ No hay detalle disponible para este mes:", entry?.month);
+                            }
+                        }
+                    },
                     scales: {
                         y: {
                             min: 0,       // eje Y comienza en 0
@@ -1786,7 +1742,12 @@
 
         //  controla rango para destacados
         document.getElementById('valorCorteDestacados').addEventListener('input', async () => {
-            await cargarTablaDestacados(); // función que recalcula y recarga la tabla
+            await reconstruirTablas(); // función que recalcula y recarga la tabla
+        });
+
+        //         //  controla rango para destacados
+        document.getElementById('valorCorteCriticos').addEventListener('input', async () => {
+            await reconstruirTablas(); // función que recalcula y recarga la tabla
         });
 
 
@@ -1945,12 +1906,6 @@
                 }
             });
         });
-
-
-
-
-
-
     </script>
 
 
@@ -2060,7 +2015,7 @@
                 .filter(ind => ind.porcentaje !== null && ind.porcentaje <= valorCorteCriticos)
                 .sort((a, b) => a.porcentaje - b.porcentaje)
                 .forEach(ind => {
-                    tbodyDestacados.innerHTML += `
+                    tbodyCriticos.innerHTML += `
                     <tr class="fila-indicador" data-id="${ind.id}">
                         <td>${ind.nombre}</td>
                         <td>${ind.sector}</td>
@@ -2150,11 +2105,11 @@
             utterance.pitch = 1.05;
 
             // Cambiar avatar según tipo de voz
-            if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
-                avatarAudio.src = "/dist/images/avatar3.png";
-            } else {
-                avatarAudio.src = "/dist/images/avatar4.png";
-            }
+            // if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
+            //     avatarAudio.src = "/dist/images/avatar3.png";
+            // } else {
+            //     avatarAudio.src = "/dist/images/avatar4.png";
+            // }
 
             // Eventos visuales
             utterance.onstart = () => {
