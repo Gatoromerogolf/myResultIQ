@@ -330,7 +330,7 @@
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
                                     <h5 class="card-title">📈 Cumplimiento Promedio por Perspectiva. Visualización del
-                                        desempeño global según las cuatro perspectivas del sistema
+                                        desempeño global según las cuatro Perspectivas del sistema
                                         de indicadores.
                                     </h5>
                                     <div class="card-tools">
@@ -373,60 +373,66 @@
                                     </div>
                                 </div>
 
-                                <!-- Tabla resumen -->
-                                <div class="card mt-4 shadow-sm border-0">
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th>Perspectiva</th>
-                                                        <th class="text-center">Indicadores</th>
-                                                        <th class="text-center">Promedio de Cumplimiento</th>
-                                                        <th class="text-center">Estado</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tbodyDimensiones"></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                                <!-- <div class="card card-outline" style="border-top: 3px solid #28a745;"></div> -->
 
-                                <!-- Contenedor para detalle de indicadores -->
-                                <div class="card mt-4 shadow-sm border-0" id="detalleIndicadoresContainer"
-                                    style="display:none;">
-                                    <div class="card-body">
-                                        <h5 id="detalleIndicadoresTitulo"></h5>
-                                        <div class="table-responsive mt-2">
-                                            <table class="table table-striped table-bordered">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th>Indicador</th>
-                                                        <th>Responsable</th>
-                                                        <th class="text-center">Cumplimiento</th>
-                                                        <th class="text-center">Ponderación BSC</th>
-                                                        <th>Estado</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tbodyDetalleIndicadores"></tbody>
-                                            </table>
+                                <div class="row mt-4">
+                                    <!-- 🟦 Columna 1: tabla resumen -->
+                                    <div class="col-md-5">
+                                        <div class="card shadow-sm border-0 m-3">
+                                            <div class="card-body" style="border-top: 3px solid #28a745;">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Perspectiva</th>
+                                                                <th class="text-center">Indicadores</th>
+                                                                <th class="text-center">Cumplimiento</th>
+                                                                <th class="text-center">Estado</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tbodyDimensiones"></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <!-- 🟩 Columna 2: detalle de indicadores -->
+                                    <div class="col-md-7" id="detalleIndicadoresContainer" style="display:none;">
+                                        <div class="card shadow-sm border-0 m-3">
+                                            <div class="card-body" style="border-top: 3px solid #1E90FF;">
+                                                <h5 id="detalleIndicadoresTitulo"></h5>
+                                                <div class="table-responsive mt-2">
+                                                    <table class="table table-striped table-bordered">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Indicador</th>
+                                                                <th>Responsable</th>
+                                                                <th class="text-center">Cumplimiento</th>
+                                                                <th class="text-center">Peso BSC</th>
+                                                                <th>Estado</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tbodyDetalleIndicadores"></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
 
                             </div>
                         </div>
+                        <!--end::Row-->
                     </div>
-                </div>
-                <!--end::Row-->
-            </div>
-            <!--end::Container-->
-            <!-- </div> -->
-            <!--end::App Content-->
+                    <!--end::Container-->
+                    <!-- </div> -->
+                    <!--end::App Content-->
 
-            <footer class="main-footer text-center">
-                <strong>© 2025 - myResultIQ 1.0</strong>
-            </footer>
+                    <footer class="main-footer text-center">
+                        <strong>© 2025 - myResultIQ 1.0</strong>
+                    </footer>
         </main>
         <!--end::App main-->
 
@@ -642,7 +648,7 @@
             const tbody = document.getElementById("tbodyDetalleIndicadores");
             if (!contenedor || !tbody || !titulo) return;
 
-            titulo.textContent = `Indicadores de ${dimension}`;
+            titulo.textContent = `Indicadores de Perspectiva ${dimension}`;
             tbody.innerHTML = '';
 
             dimensionData.indicadores.forEach(ind => {
