@@ -170,172 +170,10 @@
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
+
+        <div id="navbarContainer"></div>
         <!--begin::Header-->
-        <nav class="app-header navbar navbar-expand bg-body">
-            <!--begin::Container-->
-            <div class="container-fluid">
-                <!--begin::Start Navbar Links-->
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
-                            <i class="bi bi-list"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
-                </ul>
-                <!--end::Start Navbar Links-->
-                <!--begin::End Navbar Links-->
-                <ul class="navbar-nav ms-auto">
-                    <!--begin::Navbar Search-->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                            <i class="bi bi-search"></i>
-                        </a>
-                    </li> -->
-                    <!--end::Navbar Search-->
 
-                    <!--begin::Messages Dropdown Menu-->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                            <i class="bi bi-chat-text"></i>
-                            <span class="navbar-badge badge text-bg-danger">3</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            <a href="#" class="dropdown-item">
-                                <!--begin::Message-->
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user1-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            Brad Diesel
-                                            <span class="float-end fs-7 text-danger"><i
-                                                    class="bi bi-star-fill"></i></span>
-                                        </h3>
-                                        <p class="fs-7">Call me whenever you can...</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                                <!--end::Message-->
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <!--begin::Message-->
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user8-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            John Pierce
-                                            <span class="float-end fs-7 text-secondary">
-                                                <i class="bi bi-star-fill"></i>
-                                            </span>
-                                        </h3>
-                                        <p class="fs-7">I got your message bro</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                                <!--end::Message-->
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <!--begin::Message-->
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user3-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            Nora Silvester
-                                            <span class="float-end fs-7 text-warning">
-                                                <i class="bi bi-star-fill"></i>
-                                            </span>
-                                        </h3>
-                                        <p class="fs-7">The subject goes here</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                                <!--end::Message-->
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                        </div>
-                    </li>
-                    <!--end::Messages Dropdown Menu-->
-                    <!--begin::Notifications Dropdown Menu-->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                            <i class="bi bi-bell-fill"></i>
-                            <span class="navbar-badge badge text-bg-warning">15</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            <span class="dropdown-item dropdown-header">15 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-envelope me-2"></i> 4 new messages
-                                <span class="float-end text-secondary fs-7">3 mins</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-people-fill me-2"></i> 8 friend requests
-                                <span class="float-end text-secondary fs-7">12 hours</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
-                                <span class="float-end text-secondary fs-7">2 days</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
-                        </div>
-                    </li>
-                    <!--end::Notifications Dropdown Menu-->
-
-                    <!--begin::Fullscreen Toggle-->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-lte-toggle="fullscreen">
-                            <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
-                            <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
-                        </a>
-                    </li>
-                    <!--end::Fullscreen Toggle-->
-
-                    <!--begin::User Menu Dropdown"-->
-                    <li class="nav-item dropdown1 user-menu">
-
-                        <span class="nav-link dropdown-toggle">
-                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Daniel González
-                                    (ADM)</strong></span>
-                            <img src="/dist/images/user6-128x128.jpg" class="user-image rounded-circle shadow"
-                                style="width: 40px; height: 40px;" alt="User Image" />
-                        </span>
-                    </li>
-                    <!--end::User Menu Dropdown-->
-
-                    <li>
-                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
-                        <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
-                            <i class="fas fa-sign-out-alt me-1"></i> Salir
-                        </a>
-                    </li>
-                    <!--end::User Menu Dropdown-->
-                </ul>
-                <!--end::End Navbar Links-->
-            </div>
-            <!--end::Container-->
-        </nav>
         <!--end::Header-->
 
         <!--begin::Sidebar-->
@@ -371,7 +209,7 @@
                         </div>
 
                         <!-- 🔹 Avatar asistente alineado a la derecha -->
-                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                        <!-- <div class="avatar-container d-flex align-items-center gap-2 me-2">
                             <div style="position: relative;">
                                 <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
                                             box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
@@ -383,7 +221,7 @@
                                 </button>
                             </div>
                             <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="mt-2 mb-2">En esta sección se definen las entidades organizativas (área, proceso o
@@ -745,65 +583,103 @@
         src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"></script>
 
     <script>
-        const avatarAudio = document.getElementById('avatarAudio');
-        const btnDetener = document.getElementById('btnDetenerVoz');
-        console.log(speechSynthesis.getVoices());
-        console.log('speechSynthesis' in window);
+        const XavatarAudio = document.getElementById('avatarAudio');
+        const XbtnDetener = document.getElementById('btnDetenerVoz');
 
-        const textoExplicativo = `
-            ¡Hola! En esta sección se definen los destinos a los que se le asignarán indicadores.  Como destino entenderemos unidades funcionales, procesos, áreas, etc que sean pasibles de medición a través del comportamiento de determinados indicadores.  En otras secciones se informará la importancia relativa de cada destino y su incidencia en el destino al que pertenece.  ¡Comencemos!  Aguante Juanpi!!!!!
-    `;
+        const XtextoExplicativo = `
+        ¡Hola! En esta sección se definen los destinos a los que se le asignarán indicadores. 
+        Como destino entenderemos unidades funcionales, procesos, áreas, etc., que sean pasibles de medición 
+        a través del comportamiento de determinados indicadores. 
+        En otras secciones se informará la importancia relativa de cada destino y su incidencia en el destino al que pertenece. 
+        ¡Comencemos! Aguante Juanpi!!!!!
+        `;
 
-        let vozSeleccionada = null;
+        let XvozSeleccionada = null;
+        let XvocesListas = false;
+
+        // 🕓 Esperar a que se carguen las voces sin provocar cancelación
+        function XcargarVoces() {
+            return new Promise(resolve => {
+                const voces = speechSynthesis.getVoices();
+                if (voces.length) {
+                    vocesListas = true;
+                    return resolve(voces);
+                }
+                speechSynthesis.onvoiceschanged = () => {
+                    const voces2 = speechSynthesis.getVoices();
+                    if (voces2.length && !vocesListas) {
+                        vocesListas = true;
+                        resolve(voces2);
+                    }
+                };
+            });
+        }
 
         // 🔊 Seleccionar voz en español (prioriza Google)
-        function obtenerVozEspañol() {
+        function XobtenerVozEspañol() {
             const voces = speechSynthesis.getVoices();
             if (!voces.length) return null;
 
             const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
             const vozEspañol = voces.find(v => v.lang.startsWith("es"));
             vozSeleccionada = vozGoogle || vozEspañol || voces[0];
+            console.log("Voz seleccionada:", vozSeleccionada?.name, vozSeleccionada?.lang);
             return vozSeleccionada;
         }
 
-        // 🎙️ Hablar
-        function hablar(texto = textoExplicativo) {
+        // 🗣️ Hablar texto (dividiendo si es largo)
+        async function Xhablar(texto = textoExplicativo) {
             if (!('speechSynthesis' in window)) {
                 alert('Tu navegador no soporta la función de voz.');
                 return;
             }
 
-            detener(); // Si ya está hablando, detener primero
+            if (!vocesListas) await cargarVoces();
 
-            const utterance = new SpeechSynthesisUtterance(texto);
-            const voz = obtenerVozEspañol();
-            if (voz) utterance.voice = voz;
-            utterance.lang = "es-ES";
-            utterance.rate = 1;
-            utterance.pitch = 1.05;
+            detener(); // asegurarse de parar lo anterior
 
-            // Cambiar avatar según tipo de voz
-            // if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
-            //     avatarAudio.src = "/dist/images/avatar3.png";
-            // } else {
-            //     avatarAudio.src = "/dist/images/avatar4.png";
-            // }
+            // Dividir texto largo
+            const frases = texto.match(/[^.!?]+[.!?]+/g) || [texto];
+            let index = 0;
 
-            // Eventos visuales
-            utterance.onstart = () => {
-                avatarAudio.classList.add('speaking');
-                btnDetener.style.display = 'block';
-            };
-            utterance.onend = () => detener();
-            utterance.onerror = () => detener();
+            function XhablarSiguiente() {
+                if (index >= frases.length) {
+                    detener();
+                    return;
+                }
 
-            speechSynthesis.speak(utterance);
+                const utterance = new SpeechSynthesisUtterance(frases[index]);
+                const voz = obtenerVozEspañol();
+                if (voz) utterance.voice = voz;
+                utterance.lang = "es-ES";
+                utterance.rate = 1;
+                utterance.pitch = 1.05;
+
+                utterance.onstart = () => {
+                    avatarAudio.classList.add('speaking');
+                    btnDetener.style.display = 'block';
+                };
+
+                utterance.onend = () => {
+                    index++;
+                    setTimeout(hablarSiguiente, 200); // pequeña pausa entre frases
+                };
+
+                utterance.onerror = (e) => {
+                    console.error("Error en TTS:", e);
+                    detener();
+                };
+
+                // Pequeño retardo para evitar 'cancel' prematuro
+                setTimeout(() => speechSynthesis.speak(utterance), 100);
+            }
+
+            hablarSiguiente();
         }
 
         // 🛑 Detener voz
-        function detener() {
-            if (speechSynthesis.speaking) {
+        function Xdetener() {
+            if (speechSynthesis.speaking || speechSynthesis.pending) {
                 speechSynthesis.cancel();
             }
             avatarAudio.classList.remove('speaking');
@@ -811,10 +687,10 @@
         }
 
         // 🎧 Eventos
-        avatarAudio.addEventListener('click', () => hablar());
-        btnDetener.addEventListener('click', detener);
-        window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
+        // avatarAudio.addEventListener('click', () => hablar());
+        // btnDetener.addEventListener('click', detener);
     </script>
+
 
     <style>
         /* Efecto de "hablando" */
@@ -839,6 +715,9 @@
             }
         }
     </style>
+
+    <script src="/dist/js/adminlte.js"></script>
+    <script src="cargarNavbar.js"></script>
 
 </body>
 
