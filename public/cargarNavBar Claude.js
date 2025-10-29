@@ -1,10 +1,12 @@
-
 async function cargarNavbar(usuario) {
     // usuario = { nombre: "Juan García", avatar: "/dist/images/avatar-user.svg" }
     const res = await fetch('navbar.html');
     let html = await res.text();
 
     document.getElementById('navbarContainer').innerHTML = html;
+
+    // 🔹 AJUSTE AUTOMÁTICO DEL CONTENIDO PRINCIPAL
+    ajustarContenidoPrincipal();
 
     // Reinyectar comportamiento AdminLTE (colapsos, dropdowns, etc.)
     if (typeof window.AdminLTE !== "undefined" && window.AdminLTE.Layout) {
@@ -19,7 +21,6 @@ async function cargarNavbar(usuario) {
     if (nombreElem) nombreElem.textContent = usuario.nombre;
     if (avatarElem) avatarElem.src = usuario.avatar;
 
-
     // --- Inicializamos eventos de audio ---
     const btnStopAudio = document.getElementById('btnStopAudio');
     const avatarAudio = document.getElementById('avatarAudio');
@@ -33,23 +34,13 @@ async function cargarNavbar(usuario) {
         indicadores: "En esta sección se administran los indicadores que permiten medir el desempeño..."
     };
 
-    // function XobtenerVozEspañol() {
-    //     const voces = speechSynthesis.getVoices();
-    //     if (!voces.length) return null;
-    //     const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
-    //     const vozEspañol = voces.find(v => v.lang.startsWith("es"));
-    //     vozSeleccionada = vozGoogle || vozEspañol || voces[0];
-    //     return vozSeleccionada;
-    // }
-
-
     function obtenerVozEspañol(callback) {
-        let voces = speechSynthesis.getVoices();
+        let voces = speechSynthesis.getVoces();
 
         // ⚠️ Si las voces no están cargadas todavía, esperamos el evento
         if (!voces.length) {
             window.speechSynthesis.onvoiceschanged = () => {
-                voces = speechSynthesis.getVoices();
+                voces = speechSynthesis.getVoces();
                 seleccionarVoz(voces, callback);
             };
         } else {
@@ -107,7 +98,7 @@ async function cargarNavbar(usuario) {
 
             // 🔸 Cancelar cualquier cola pendiente antes de iniciar
             speechSynthesis.cancel();
-            // 🕐 Pequeño delay evita el bug del “corte prematuro”
+            // 🕐 Pequeño delay evita el bug del "corte prematuro"
             setTimeout(reproducirParte, 250);
         });
     }
@@ -171,8 +162,23 @@ async function cargarNavbar(usuario) {
 
     btnStopAudio.addEventListener('click', detenerAudio);
     window.speechSynthesis.onvoiceschanged = obtenerVozEspañol;
+
+    // 🔹 Reajustar al cambiar tamaño de ventana
+    window.addEventListener('resize', ajustarContenidoPrincipal);
+}
+
+// 🔧 Función para ajustar el contenido principal según la altura del navbar
+function ajustarContenidoPrincipal() {
+    const navbar = document.querySelector('.app-header');
+    const contenidoPrincipal = document.querySelector('.content-wrapper') || 
+                               document.querySelector('main') || 
+                               document.querySelector('.app-main');
+    
+    if (navbar && contenidoPrincipal) {
+        const alturaNavbar = navbar.offsetHeight;
+        contenidoPrincipal.style.marginTop = `${alturaNavbar}px`;
+    }
 }
 
 // Ejemplo de uso
 cargarNavbar({ nombre: "Juan García", avatar: "/dist/images/user1-128x128.jpg" });
-
