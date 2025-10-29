@@ -30,17 +30,17 @@
         margin-bottom: 0;
     }
 
-            .filters-bar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            background: white;
-            border-radius: 8px;
-            padding: 10px 15px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
-        }
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
 </style>
 
 <head>
@@ -685,27 +685,28 @@
                 <div class="container-fluid">
                     <!--begin::Row-->
                     <div class="row">
-                    <!-- 🔹 Asistente -->
-                    <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
-                        <div class="d-flex gap-3">
-                            <h3 class="mb-0">Indicadores</h3>
-                        </div>
-
-                        <!-- 🔹 Avatar asistente alineado a la derecha -->
-                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
-                            <div style="position: relative;">
-                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
-                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
-                                    title="Haz clic para escuchar la explicación" />
-                                <button id="btnDetenerVoz"
-                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
-                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
-                                    ✕
-                                </button>
+                        <!-- 🔹 Asistente -->
+                        <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
+                            <div class="d-flex gap-3">
+                                <h3 class="mb-0">Indicadores</h3>
                             </div>
-                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+
+                            <!-- 🔹 Avatar asistente alineado a la derecha -->
+                            <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                                <div style="position: relative;">
+                                    <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI"
+                                        style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                        title="Haz clic para escuchar la explicación" />
+                                    <button id="btnDetenerVoz"
+                                        style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                        ✕
+                                    </button>
+                                </div>
+                                <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                            </div>
                         </div>
-                    </div>
                     </div>
                     <!--end::Row-->
                 </div>
@@ -1555,12 +1556,12 @@
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="detalleIndicadorLabel">Detalle del Indicador</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-bordered table-sm">
+                    <table class="table table-striped">
                         <tbody id="tablaDetalleIndicador">
                             <!-- Se carga dinámicamente -->
                         </tbody>
@@ -2083,7 +2084,7 @@
                             { data: 'objetivo', title: 'Objetivo' },
                             { data: 'responsable', title: 'Responsable' },
                             { data: 'frecuencia', title: 'Reporte' },
-                            { data: 'dimension', title: 'Dimensión' },
+                            { data: 'dimension', title: 'Perspectiva BSC' },
                             { data: 'estado', title: 'Est' },
                             { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
                         ],
@@ -2158,7 +2159,6 @@
                 const tabla = document.getElementById('tablaDetalleIndicador');
                 tabla.innerHTML = '';
 
-                console.log('comentarios:' + indicador.comentarios)
                 let tipoIndicador = '-';
                 switch (indicador.tipo_id) {
                     case 1:
@@ -2275,7 +2275,18 @@
                         formatoPresentacion = 'Dashboard';
                         break;
                 }
-                console.log("Valor actual de unico_acepta:", indicador.unico_acepta);
+                let usuario = obtenerNombreResponsable(indicador.responsable);
+
+                function obtenerNombreResponsable(legajo) {
+                    const usuario = activos.find(u => String(u.legajo) == String(legajo));
+                    return usuario ? `${usuario.apellido}, ${usuario.nombres}` : 'Sin asignar';
+                }
+
+                const estadosMap = {
+                    1: 'Vigente',
+                    2: 'Suspendido',
+                    3: 'Cancelado'
+                };
 
                 // --- Campos comunes a todos los indicadores
                 const campos = {
@@ -2284,16 +2295,17 @@
                     "Descripción": indicador.descripcion || '-',
                     "Objetivo": indicador.objetivo || '-',
                     "Destino": `${indicador.destino || '-'} - ${indicador.destino_nombre || ''}`,
-                    "Responsable": indicador.responsable
-                        ? `${indicador.responsable} - ${indicador.responsable_nombres || ''} ${indicador.responsable_apellido || ''}`
-                        : '-',
+                    // "Responsable": indicador.responsable
+                    //     ? `${indicador.responsable} - ${indicador.responsable_nombres || ''} ${indicador.responsable_apellido || ''}`
+                    //     : '-',
+                    "Responsable": `${indicador.responsable} - ${usuario}`,
 
                     // 👇 agrego un marcador
                     "__sep1__": null,
 
                     "Tipo": `${indicador.tipo_id} - ${tipoIndicador}` || '-',
-                    "Dimensión": `${indicador.dimension_id} - ${dimensionIndicador}` || '-',
-                    "Categoría": `${indicador.categoria_id} - ${categoria_indicador}` || '-',
+                    "Perspectiva (BSC)": `${indicador.dimension_id} - ${dimensionIndicador}` || '-',
+                    // "Categoría": `${indicador.categoria_id} - ${categoria_indicador}` || '-',
                     "Criticidad": `${indicador.criticidad_id} - ${criticidad_indicador}` || '-',
 
                     // 👇 agrego un marcador
@@ -2307,9 +2319,9 @@
                     Object.assign(campos, {
                         "Valor Meta": indicador.unico_valor || '-',
                         "Método de evaluación": `${indicador.unico_eval} - ${tipoEvaluacion}` || '-',
-                        "Márgen de Aceptación": `${Number(indicador.unico_acepta).toFixed(2)} %`,
-                        "Márgen de Riesgo": `${Number(indicador.unico_riesgo).toFixed(2)} %`,
-                        "Márgen Crítico": `${Number(indicador.unico_critico).toFixed(2)} %`,
+                        // "Márgen de Aceptación": `${Number(indicador.unico_acepta).toFixed(2)} %`,
+                        // "Márgen de Riesgo": `${Number(indicador.unico_riesgo).toFixed(2)} %`,
+                        // "Márgen Crítico": `${Number(indicador.unico_critico).toFixed(2)} %`,
                         // 👇 agrego un marcador
                         "__sep3__": null,
                     });
@@ -2317,9 +2329,9 @@
                     Object.assign(campos, {
                         "Rango Desde": indicador.rango_desde || '-',
                         "Rango Hasta": indicador.rango_hasta || '-',
-                        "Márgen de Aceptación": indicador.rango_acepta || '-',
-                        "Margen de Riesgo": indicador.rango_riesgo || '-',
-                        "Margen Crítico": indicador.rango_critico || '-',
+                        // "Márgen de Aceptación": indicador.rango_acepta || '-',
+                        // "Margen de Riesgo": indicador.rango_riesgo || '-',
+                        // "Margen Crítico": indicador.rango_critico || '-',
                         // 👇 agrego un marcador
                         "__sep4__": null,
                     });
@@ -2327,9 +2339,9 @@
                     Object.assign(campos, {
                         "Tendencia Tipo": tipoTendencia || '-',
                         "Tendencia Referencia": indicador.tenden_refe || '-',
-                        "Margen de Aceptación": indicador.tenden_acepta || '-',
-                        "Margen de Riesgo": indicador.tenden_riesgo || '-',
-                        "Margen Crítico": indicador.tenden_critico || '-',
+                        // "Margen de Aceptación": indicador.tenden_acepta || '-',
+                        // "Margen de Riesgo": indicador.tenden_riesgo || '-',
+                        // "Margen Crítico": indicador.tenden_critico || '-',
                         // 👇 agrego un marcador
                         "__sep5__": null,
                     });
@@ -2342,18 +2354,18 @@
                     "Fórmula de Cálculo": indicador.formula_calculo || '-',
                     "Unidad de Medida": CodigosService.getNombreCodigo(indicador.unidad_medida),
                     "Frecuencia de Medición": CodigosService.getNombreCodigo(indicador.freq_medicion),
-                    "Demora admitida": indicador.tolerancia_plazo || '-',
+                    // "Demora admitida": indicador.tolerancia_plazo || '-',
                     "Fecha de Inicio": indicador.fecha_inicio
                         ? new Date(indicador.fecha_inicio).toLocaleDateString('es-AR')
                         : '-',
 
 
 
-                    "Estado": indicador.estado || '-',
+                    "Estado": estadosMap[indicador.estado] || '-',
                     "__sep6__": null,
-                    "Frecuencia de Reporte": CodigosService.getNombreCodigo(indicador.freq_reporte),
+                    // "Frecuencia de Reporte": CodigosService.getNombreCodigo(indicador.freq_reporte),
 
-                    "Formato de Presentación": `${indicador.formato} - ${formatoPresentacion}` || '-',
+                    // "Formato de Presentación": `${indicador.formato} - ${formatoPresentacion}` || '-',
                     "Comentarios": indicador.comentarios || '-'
                 });
 
@@ -2389,28 +2401,6 @@
             } catch (error) {
                 console.error('Error al obtener el detalle:', error);
                 alert('No se pudo obtener el detalle del indicador.');
-            }
-        }
-
-        async function cargarResponsables() {
-            const select = document.getElementById('responsable');
-            try {
-                const response = await fetch('/usuarios');
-                if (!response.ok) throw new Error('No se pudieron obtener los usuarios');
-                const usuarios = await response.json();
-
-                // Filtrar solo activos (opcional)
-                const activos = usuarios.filter(u => u.estado === 'activo');
-
-                activos.forEach(u => {
-                    const option = document.createElement('option');
-                    option.value = u.legajo; // este será el valor enviado al backend
-                    option.textContent = `${u.apellido}, ${u.nombres}`; // lo que se muestra al usuario
-                    select.appendChild(option);
-                });
-
-            } catch (error) {
-                console.error(error);
             }
         }
 
@@ -2534,6 +2524,29 @@
 
     <script>
 
+        let activos = []
+        async function cargarResponsables() {
+            const select = document.getElementById('responsable');
+            try {
+                const response = await fetch('/usuarios');
+                if (!response.ok) throw new Error('No se pudieron obtener los usuarios');
+                const usuarios = await response.json();
+
+                // Filtrar solo activos (opcional)
+                activos = usuarios.filter(u => u.estado === 'activo');
+
+                activos.forEach(u => {
+                    const option = document.createElement('option');
+                    option.value = u.legajo; // este será el valor enviado al backend
+                    option.textContent = `${u.apellido}, ${u.nombres}`; // lo que se muestra al usuario
+                    select.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
         // Servicio global para textp de tabla de códigos 
         const CodigosService = {
             codigosMap: {},
@@ -2556,7 +2569,7 @@
         document.addEventListener("DOMContentLoaded", async () => {
             // 1. Cargar indicadores y responsables
             cargarIndicadores();
-            cargarResponsables();
+            await cargarResponsables();
 
             // 2. Inicializa CodigosService
             await CodigosService.init();

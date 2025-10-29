@@ -362,8 +362,11 @@
                                 <span id="meta-vigente"></span>
                             </h5>
 
-                            <h5 id="titulo-comentarios" style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                            <h5 id="titulo-comentarios">
                                 Comentarios: <span id="valor-comentarios"></span>
+                            </h5>
+                            <h5 id="titulo-plan-accion" style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                                Plan de Acción: <span id="valor-plan-accion"></span>
                             </h5>
 
                             <h5>Registre nueva medición:</h5>
@@ -430,6 +433,10 @@
                                     <div class="col-md-12 mt-2">
                                         <label>Comentarios:</label>
                                         <input type="text" class="form-control" id="comentario-carga">
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <label>Plan de Acción:</label>
+                                        <input type="text" class="form-control" id="plan-accion-carga">
                                     </div>
                                 </div>
 
@@ -1205,6 +1212,7 @@
                     : anioPeriodo,
                 med_valor: parseFloat(document.getElementById('valor-carga').value),
                 med_comentarios: document.getElementById('comentario-carga').value.trim(),
+                med_plan_accion: document.getElementById('plan-accion-carga').value.trim(),
                 med_unidad_medida: unidad,
                 med_legajo_resp_medicion: '1',
                 med_legajo_resp_registro: '3',
@@ -1261,6 +1269,7 @@
             const spanUltimoPeriodo = document.getElementById('periodo-ultima-medicion');
             const spanValorMedido = document.getElementById('cantidad-ultima-medicion');
             const spanComentarios = document.getElementById('valor-comentarios');
+            const spanPlanAccion = document.getElementById('valor-plan-accion');
             const spanFormulaCalculo = document.getElementById('formula-calculo');
             const spanMetaVigente = document.getElementById('meta-vigente');
 
@@ -1643,10 +1652,10 @@
                 case '06': // Trimestral AAAAT (T=1-4)
 
                     let t = parseInt(periodoRegistrado.substring(4, 6));
-                    console.log (`original t :  ${t}`)
+                    console.log(`original t :  ${t}`)
                     t = (t === 4) ? (anio++, 1) : t + 1;
                     resultado = `${anio}${t}`;
-                    console.log (`resultado ${resultado}`)
+                    console.log(`resultado ${resultado}`)
                     break;
 
                 case '07': // Cuatrimestre AAAAC (C=1-3)

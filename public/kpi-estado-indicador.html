@@ -1399,9 +1399,11 @@
             ];
 
             const container = document.getElementById('kpiCards');
+            container.className = "row gx-3 gy-3 p-3";
+            // gx = gap horizontal, gy = gap vertical, p = padding interno
             container.innerHTML = kpis.map(kpi => `
-                    <div class="col-md-6 col-lg-3 mb-3 ml-3">
-                        <div class="card kpi-card h-100" style="border-left: 4px solid ${kpi.color}">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card kpi-card h-100" style="border-left: 4px solid ${kpi.color}; margin: 5px;">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
@@ -1553,7 +1555,7 @@
         }
     </script>
 
-        <script>
+    <script>
         const avatarAudio = document.getElementById('avatarAudio');
         const btnDetener = document.getElementById('btnDetenerVoz');
 
