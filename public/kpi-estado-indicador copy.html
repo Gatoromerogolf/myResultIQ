@@ -1184,6 +1184,12 @@
 
                 console.table(result);
 
+                // const chartContainer = document.querySelector('#sales-chart');
+                // if (!chartContainer) {
+                //     console.error('Contenedor #sales-chart no encontrado');
+                //     return;
+                // }
+
                 if (!result.success || !Array.isArray(result.data) || result.data.length === 0) {
                     if (window.salesChart) {
                         try { await window.salesChart.destroy(); } catch (e) { }
@@ -1272,9 +1278,6 @@
                     window.salesChart.updateOptions({ chart: { type: 'bar' } });
                 };
 
-                // ☎️ calcula Tendencia
-                const resultado = evaluarTendenciaIndicador(valores);
-
                 // ✅ generar tarjetas KPI dinámicas
 
                 const valorActual = valores[valores.length - 1];
@@ -1294,11 +1297,7 @@
                     promedio6: (valores.slice(-6).reduce((a, b) => a + b, 0) / Math.min(6, valores.length)).toFixed(1),
                     rangoMeses: "Últimas 6 mediciones",
                     mejorMesValor: mejorMes,
-                    mejorMesNombre: periodos[valores.indexOf(mejorMes)],
-                    tendencia: resultado.tendencia,
-                    variacion: ` Variación: ${resultado.variacion} | Pendiente: ${resultado.pendiente}`,
-                    iconoTendencia: resultado.icono,
-                    colorTendencia: resultado.color
+                    mejorMesNombre: periodos[valores.indexOf(mejorMes)]
                 });
 
                 const primerValor = valores[0];
@@ -1363,62 +1362,6 @@
             }
         }
 
-        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
-        /**
-         * @param {number[]} mediciones - Array con los valores del indicador (orden cronológico)
-         * @param {number} umbral - Umbral de variación (%) para considerar "estable" (default = 2)
-         * @returns {object} { tendencia, variacion, pendiente, color, icono }
-         */
-        function evaluarTendenciaIndicador(mediciones, umbral = 2) {
-            if (!Array.isArray(mediciones) || mediciones.length < 2) {
-                return {
-                    tendencia: "datos insuficientes",
-                    variacion: 0,
-                    pendiente: 0,
-                    color: "gray",
-                    icono: "⚪"
-                };
-            }
-
-            const n = mediciones.length;
-            const x = Array.from({ length: n }, (_, i) => i + 1);
-            const y = mediciones;
-
-            const meanX = x.reduce((a, b) => a + b, 0) / n;
-            const meanY = y.reduce((a, b) => a + b, 0) / n;
-
-            let num = 0, den = 0;
-            for (let i = 0; i < n; i++) {
-                num += (x[i] - meanX) * (y[i] - meanY);
-                den += (x[i] - meanX) ** 2;
-            }
-            const pendiente = num / den;
-            const variacion = ((y[n - 1] - y[0]) / y[0]) * 100;
-
-            let tendencia, color, icono;
-            if (variacion > umbral && pendiente > 0) {
-                tendencia = "En alza";
-                color = "#28a745"; // verde
-                icono = "📈";
-            } else if (variacion < -umbral && pendiente < 0) {
-                tendencia = "En baja";
-                color = "#dc3545"; // rojo
-                icono = "📉";
-            } else {
-                tendencia = "Estable";
-                color = "#ffc107"; // amarillo
-                icono = "➖";
-            }
-
-            return {
-                tendencia,
-                variacion: Number(variacion.toFixed(2)),
-                pendiente: Number(pendiente.toFixed(3)),
-                color,
-                icono
-            };
-        }
-
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function crearKPICards(datos) {
@@ -1450,13 +1393,6 @@
                     subtitulo: datos.mejorMesNombre ?? '',
                     color: '#0dcaf0',
                     icono: '🏆'
-                },
-                {
-                    titulo: 'Tendencia',
-                    valor: `${datos.tendencia}`,
-                    subtitulo: datos.variacion,
-                    color: datos.colorTendencia,
-                    icono: datos.iconoTendencia
                 }
             ];
 

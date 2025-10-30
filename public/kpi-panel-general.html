@@ -519,73 +519,75 @@
 
 
                             <!-- === Cumplimiento Global + Evolución === -->
+                            <!-- <div class="row"> -->
+                            <!-- Tarjeta Cumplimiento Global -->
                             <div class="row">
                                 <!-- Tarjeta Cumplimiento Global -->
-                                <div class="row">
-                                    <!-- Tarjeta Cumplimiento Global -->
-                                    <div class="col-12 col-md-6 mb-4 mt-3">
-                                        <div class="card card-primary card-outline card-shadow">
-                                            <div class="card-body">
-                                                <!-- Título alineado a la izquierda -->
-                                                <h5 class="card-title mb-4 text-start">
-                                                    🌐 Cumplimiento Global de la Organización
-                                                </h5>
+                                <div class="col-12 col-md-4 mb-4 mt-3">
+                                    <div class="card card-primary card-outline card-shadow">
+                                        <div class="card-body">
+                                            <!-- Título alineado a la izquierda -->
+                                            <h5 class="card-title mb-4 text-start">
+                                                🌐 Cumplimiento Global de la Organización
+                                            </h5>
 
-                                                <!-- Contenedor del ring grande centrado -->
-                                                <div class="d-flex justify-content-center my-4 w-100">
-                                                    <svg id="ringGlobal" width="300" height="300"></svg>
-                                                </div>
-
-                                                <!-- Link a vista completa alineado a la derecha -->
-                                                <div class="d-flex justify-content-end mt-3">
-                                                    <a href="kpi-dashboard-global.html"
-                                                        class="btn btn-sm btn-outline-primary">
-                                                        Ver detalle completo
-                                                    </a>
-                                                </div>
+                                            <!-- Contenedor del ring grande centrado -->
+                                            <div class="d-flex justify-content-center my-4 w-100">
+                                                <svg id="ringGlobal" width="300" height="300"></svg>
                                             </div>
 
-                                            <!-- Trend box -->
-                                            <div class="trend-box d-flex justify-content-around p-3 border-top">
-                                                <div class="trend-item text-center">
-                                                    <div class="trend-value text-success">+3.2%</div>
-                                                    <div class="trend-label">vs. mes anterior</div>
-                                                </div>
-                                                <div class="trend-item text-center">
-                                                    <div class="trend-value text-primary">84%</div>
-                                                    <div class="trend-label">Promedio anual</div>
-                                                </div>
-                                                <div class="trend-item text-center">
-                                                    <div class="trend-value text-danger">–1.1%</div>
-                                                    <div class="trend-label">Desvío ponderado</div>
-                                                </div>
+                                            <!-- Link a vista completa alineado a la derecha -->
+                                            <div class="d-flex justify-content-end mt-3">
+                                                <a href="kpi-dashboard-global.html"
+                                                    class="btn btn-sm btn-outline-primary">
+                                                    Ver detalle completo
+                                                </a>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Evolución Global -->
-                                    <div class="col-12 col-md-6 mb-4 mt-3">
-                                        <div class="card card-primary card-outline card-shadow">
-                                            <div class="card-body">
-                                                <h5 class="mb-3">Evolución del Cumplimiento</h5>
-                                                <div id="chartEvolucion" style="height: 240px;"></div>
+                                        <!-- Trend box -->
+                                        <div class="trend-box d-flex justify-content-around p-3 border-top">
+                                            <div class="trend-item text-center">
+                                                <div class="trend-value text-success">+3.2%</div>
+                                                <div class="trend-label">vs. mes anterior</div>
+                                            </div>
+                                            <div class="trend-item text-center">
+                                                <div class="trend-value text-primary">84%</div>
+                                                <div class="trend-label">Promedio anual</div>
+                                            </div>
+                                            <div class="trend-item text-center">
+                                                <div class="trend-value text-danger">–1.1%</div>
+                                                <div class="trend-label">Desvío ponderado</div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="container mt-4">
-                                        <h3 class="text-center mb-3">📈 Evolución del Cumplimiento Global</h3>
-                                        <div id="chartContainer" style="height: 400px;">
-                                            <!-- o 500px, según lo que quieras -->
-                                            <canvas id="evolucionChart"></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="text-center mb-3">
-                                        <button id="btnActualizar" class="btn btn-outline-primary">
-                                            🔄 Actualizar gráfico
-                                        </button>
                                     </div>
                                 </div>
+
+                                <div class="col-12 col-md-8 mb-4 mt-3">
+                                    <div class="card card-primary card-outline card-shadow">
+                                        <!-- <div class="container mt-4"> -->
+                                        <div class="card-body">
+                                            <h5 class="card-title mb-4 text-start">
+                                                📈 Evolución del Cumplimiento Global de la Organización
+                                            </h5>
+                                            <div id="chartContainer" style="height: 400px;">
+                                                <!-- o 500px, según lo que quieras -->
+                                                <canvas id="evolucionChart"></canvas>
+                                            </div>
+                                        </div>
+                                        <div class="text-center mb-3">
+                                            <button id="btnActualizar" class="btn btn-outline-primary">
+                                                🔄 Actualizar gráfico
+                                            </button>
+                                        </div>
+                                        <script>document.getElementById("btnActualizar").addEventListener("click", () => {
+                                                location.reload(); // 🔁 recarga completa
+                                            });
+                                        </script>
+
+                                    </div>
+                                </div>
+                                <!-- </div> -->
                             </div>
 
 
@@ -746,10 +748,11 @@
                                                     Indicadores sin última medición informada
                                                 </label>
                                             </h5>
-                                            <div class="table-responsive">
+                                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
                                                 <table id="tablaPendientes"
                                                     class="table table-sm table-borderless mb-0">
-                                                    <thead>
+                                                    <thead class="table-light"
+                                                        style="position: sticky; top: 0; z-index: 1;">
                                                         <tr>
                                                             <th>Indicador</th>
                                                             <th>Destino</th>
@@ -891,7 +894,31 @@
         </div>
     </div>
 
-
+    <!-- ✅ Modal de detalles con gráfico -->
+    <div class="modal fade" id="indicadorModal" tabindex="-1" aria-labelledby="indicadorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="indicadorModalLabel">Detalles del Indicador</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <p><strong>Nombre:</strong> <span id="modalNombre"></span></p>
+                        <p><strong>Sector:</strong> <span id="modalSector"></span></p>
+                        <p><strong>Usuario:</strong> <span id="modalUsuario"></span></p>
+                        <p><strong>Última medición:</strong> <span id="modalMedicion"></span></p>
+                    </div>
+                    <hr>
+                    <h6 class="text-muted mb-3">Evolución de las mediciones</h6>
+                    <canvas id="graficoIndicador" height="150"></canvas>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Evolucion cumplimiento global -->
     <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
@@ -1064,7 +1091,7 @@
         }
 
 
-        // 🔹 Mostrar modal con detalle del mes
+        // 🔹 Mostrar modal con detalle del mes marcado en evolución global
         function mostrarDetalleMes(entry) {
             document.getElementById('detalleMes').textContent = entry.month;
             const tbody = document.getElementById('detalleTabla');
@@ -1111,7 +1138,7 @@
 
                     // 🔹 Mostramos solo si el cálculo es válido
                     if (cumplimiento !== null && !isNaN(cumplimiento)) {
-                        console.log(`Indicador: ${ind.nombre}, Valor: ${ind.ultimo_valor}, Cumplimiento calculado: ${cumplimiento}`);
+                        // console.log(`Indicador: ${ind.nombre}, Valor: ${ind.ultimo_valor}, Cumplimiento calculado: ${cumplimiento}`);
                     }
 
                     return {
@@ -1236,7 +1263,7 @@
         function calcularCumplimiento(valor, meta, acepta, riesgo, critico) {
             if (valor === null || meta === null || meta == 0 || valor == 0) return null;
             if (valor > 0) {
-                console.log(`valor encontrado valor ${valor} y meta ${meta}`)
+                // console.log(`valor encontrado valor ${valor} y meta ${meta}`)
             }
             return (valor / meta) * 100;
         }
@@ -1446,77 +1473,30 @@
             }
         }
 
-
-        // Función para reconstruir todas las tablas
-        function reconstruirTablasXXX() {
-            const tbodyPendientes = document.getElementById('tbodyPendientes');
-            const tbodyDestacados = document.getElementById('tbodyDestacados');
-            const tbodyCriticos = document.getElementById('tbodyCriticos');
-
-            tbodyPendientes.innerHTML = '';
-            tbodyDestacados.innerHTML = '';
-            tbodyCriticos.innerHTML = '';
-
-            const valorCorteDestacados = Number(document.getElementById('valorCorteDestacados').value);
-            const valorCorteCriticos = Number(document.getElementById('valorCorteCriticos').value);
-
-            indicadoresConDatos.forEach(ind => {
-                // Pendientes
-                if (ind.ultimaMedicion === null) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>
-                            <a href="#" class="link-indicador" data-id="${ind.id}">
-                                ${ind.nombre}
-                            </a>
-                        </td>
-                        <td>${ind.sector}</td>
-                        <td>${ind.usuario}</td>
-                        <td>Sin med.</td>
-                    `;
-                    tbodyPendientes.appendChild(tr);
-                }
-
-                // Destacados
-                if (ind.porcentaje !== null && ind.porcentaje >= valorCorteDestacados) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>
-                            <a href="#" class="link-indicador" data-id="${ind.id}">
-                                ${ind.nombre}
-                            </a>
-                        </td>
-                        <td>${ind.sector}</td>
-                        <td>${ind.porcentaje}%</td>
-                   `;
-                    tbodyDestacados.appendChild(tr);
-                }
-
-                // Críticos
-                if (ind.porcentaje !== null && ind.porcentaje <= valorCorteCriticos) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>
-                            <a href="#" class="link-indicador" data-id="${ind.id}">
-                                ${ind.nombre}
-                            </a>
-                        </td>
-                        <td>${ind.sector}</td>
-                        <td>${ind.porcentaje}%</td>
-                    `;
-                    tbodyCriticos.appendChild(tr);
-                }
-            });
-        }
-
-
         // ✅ Función común para manejar clics
         function handleClickIndicador(e) {
             const link = e.target.closest('.link-indicador');
             if (link) {
                 e.preventDefault();
-                const idIndicador = link.dataset.id;
-                mostrarEvolucionIndicador(idIndicador);
+                const idIndicador = Number(link.dataset.id);
+
+                // Obtenemos las mediciones globales desde el módulo
+                const mediciones = getMediciones();
+                console.table(mediciones)
+
+                // Filtramos solo las del indicador clickeado
+                const medicionesIndicador = mediciones.data.filter(m => m.med_indicador_id == idIndicador);
+
+                if (!medicionesIndicador.length) {
+                    alert("⚠️ No hay mediciones para este indicador.");
+                    return;
+                }
+
+                // Extraemos los datos para el gráfico
+                const labels = medicionesIndicador.map(m => m.med_valor_periodo);
+                const valores = medicionesIndicador.map(m => parseFloat(m.med_valor) || 0);
+
+                mostrarEvolucionIndicador(idIndicador, labels, valores);
             }
         }
 
@@ -1528,9 +1508,69 @@
             }
         });
 
+
+        let chartInstance = null;
+
         // ✅ Ejemplo de función de acción
-        function mostrarEvolucionIndicador(id) {
-            alert(`📊 Mostrar evolución del indicador con ID: ${id}`);
+        function mostrarEvolucionIndicador(id, labels, valores) {
+
+            indicador = window.indicadores.find(i => i.id == id);
+            document.getElementById('modalNombre').textContent = indicador.nombre;
+            document.getElementById('modalSector').textContent = indicador.sector;
+            document.getElementById('modalUsuario').textContent = indicador.usuario;
+            document.getElementById('modalMedicion').textContent = indicador.ultimaMedicion ?? 'Sin medición';
+
+            // Destruir gráfico anterior si existe
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('indicadorModal'));
+            modal.show();
+
+            // ✅ Esperar a que el modal esté visible para dibujar el gráfico
+            const modalEl = document.getElementById('indicadorModal');
+            modalEl.addEventListener('shown.bs.modal', () => {
+                const ctx = document.getElementById('graficoIndicador').getContext('2d');
+
+                const data = valores;
+
+                console.log(`valores ${valores} y labels ${labels}`)
+
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Cumplimiento (%)',
+                            data,
+                            fill: false,
+                            tension: 0.3,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            borderColor: '#007bff',
+                            pointBackgroundColor: '#007bff',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'category', // ⚠️ importante si usás strings no fechas
+                                title: {
+                                    display: true,
+                                    text: 'Periodo'
+                                }
+                            },
+                            y: {
+                                min: 0,
+                                title: { display: true, text: '% de Cumplimiento' }
+                            }
+                        }
+                    }
+                });
+            }, { once: true });
             // Acá podrías abrir un modal o mostrar un gráfico dinámico
         }
 
@@ -1951,6 +1991,8 @@
             getMediciones
         } from './js/datosGlobales.js';
 
+        window.getMediciones = getMediciones; // 👈 la expone globalmente
+
         let indicadores = []; // array original
         let indicadoresConDatos = []; // array con datos preparados
 
@@ -1962,6 +2004,7 @@
             // 2️⃣ Recuperamos indicadores desde el módulo global
             indicadores = getIndicadores();
             if (!indicadores) return;
+            window.indicadores = indicadores; // la convierte en global
 
             // 3️⃣ Inicializamos códigos si tienes CodigosService
             await CodigosService.init();
@@ -1995,7 +2038,7 @@
                 .addEventListener('input', reconstruirTablas);
 
             // 7️⃣ Cumplimiento por destino y cumplimiento global
-            cargarCumplimientoPorDestino();
+            // cargarCumplimientoPorDestino();
 
             // 8️⃣ Inicializar tooltips
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -2011,6 +2054,7 @@
             const tbodyPendientes = document.getElementById('tbodyPendientes');
             const tbodyDestacados = document.getElementById('tbodyDestacados');
             const tbodyCriticos = document.getElementById('tbodyCriticos');
+            let chartInstance = null;
 
             tbodyPendientes.innerHTML = '';
             tbodyDestacados.innerHTML = '';
@@ -2038,11 +2082,14 @@
                 .sort((a, b) => b.porcentaje - a.porcentaje)
                 .forEach(ind => {
                     tbodyDestacados.innerHTML += `
-                    <tr class="fila-indicador" data-id="${ind.id}">
-                        <td>${ind.nombre}</td>
+                        <td>
+                            <a href="#" class="link-indicador text-decoration-none fw-semibold" data-id="${ind.id}">
+                                ${ind.nombre}
+                            </a>
+                        </td>
                         <td>${ind.sector}</td>
                         <td>${ind.porcentaje}%</td>
-                    </tr>`;
+                   `;
                 });
 
             // 🔹 Críticos → ordenar de MENOR a MAYOR
@@ -2051,11 +2098,14 @@
                 .sort((a, b) => a.porcentaje - b.porcentaje)
                 .forEach(ind => {
                     tbodyCriticos.innerHTML += `
-                    <tr class="fila-indicador" data-id="${ind.id}">
-                        <td>${ind.nombre}</td>
+                        <td>
+                            <a href="#" class="link-indicador text-decoration-none fw-semibold" data-id="${ind.id}">
+                                ${ind.nombre}
+                            </a>
+                        </td>
                         <td>${ind.sector}</td>
                         <td>${ind.porcentaje}%</td>
-                    </tr>`;
+                   `;
                 });
         }
 
