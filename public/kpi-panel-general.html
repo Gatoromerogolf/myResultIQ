@@ -639,7 +639,7 @@
                                                 <i class="fa fa-star text-warning"></i>
                                                 <label for="valorCorteDestacados"
                                                     class="mb-0 fw-semibold text-gray-700">
-                                                    Indicadores destacados: cumplimiento mayor al:
+                                                    Destacados: cumplimiento mayor al:
                                                 </label>
                                                 <div class="input-group input-group-sm" style="width: 80px;">
                                                     <input type="number" id="valorCorteDestacados" value="90" min="0"
@@ -691,7 +691,7 @@
                                             <h5 class="mb-2 d-flex align-items-center flex-wrap" style="gap: 6px;">
                                                 <i class="fa fa-exclamation-triangle text-danger"></i>
                                                 <label for="valorCorteCriticos" class="mb-0 fw-semibold text-gray-700">
-                                                    Indicadores críticos: cumplimiento menor al
+                                                    Críticos: cumplimiento menor al
                                                 </label>
                                                 <div class="input-group input-group-sm" style="width: 80px;">
                                                     <input type="number" id="valorCorteCriticos" value="50" min="0"
@@ -890,6 +890,8 @@
             </div>
         </div>
     </div>
+
+
 
     <!-- Modal Evolucion cumplimiento global -->
     <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
@@ -1463,11 +1465,15 @@
                 if (ind.ultimaMedicion === null) {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                <td>${ind.nombre}</td>
-                <td>${ind.sector}</td>
-                <td>${ind.usuario}</td>
-                <td>Sin med.</td>
-            `;
+                        <td>
+                            <a href="#" class="link-indicador" data-id="${ind.id}">
+                                ${ind.nombre}
+                            </a>
+                        </td>
+                        <td>${ind.sector}</td>
+                        <td>${ind.usuario}</td>
+                        <td>Sin med.</td>
+                    `;
                     tbodyPendientes.appendChild(tr);
                 }
 
@@ -1475,10 +1481,14 @@
                 if (ind.porcentaje !== null && ind.porcentaje >= valorCorteDestacados) {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                <td>${ind.nombre}</td>
-                <td>${ind.sector}</td>
-                <td>${ind.porcentaje}%</td>
-            `;
+                        <td>
+                            <a href="#" class="link-indicador" data-id="${ind.id}">
+                                ${ind.nombre}
+                            </a>
+                        </td>
+                        <td>${ind.sector}</td>
+                        <td>${ind.porcentaje}%</td>
+                   `;
                     tbodyDestacados.appendChild(tr);
                 }
 
@@ -1486,13 +1496,42 @@
                 if (ind.porcentaje !== null && ind.porcentaje <= valorCorteCriticos) {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                <td>${ind.nombre}</td>
-                <td>${ind.sector}</td>
-                <td>${ind.porcentaje}%</td>
-            `;
+                        <td>
+                            <a href="#" class="link-indicador" data-id="${ind.id}">
+                                ${ind.nombre}
+                            </a>
+                        </td>
+                        <td>${ind.sector}</td>
+                        <td>${ind.porcentaje}%</td>
+                    `;
                     tbodyCriticos.appendChild(tr);
                 }
             });
+        }
+
+
+        // ✅ Función común para manejar clics
+        function handleClickIndicador(e) {
+            const link = e.target.closest('.link-indicador');
+            if (link) {
+                e.preventDefault();
+                const idIndicador = link.dataset.id;
+                mostrarEvolucionIndicador(idIndicador);
+            }
+        }
+
+        // ✅ Asociar el evento a las tres tablas
+        ['tbodyPendientes', 'tbodyDestacados', 'tbodyCriticos'].forEach(id => {
+            const tbody = document.getElementById(id);
+            if (tbody) {
+                tbody.addEventListener('click', handleClickIndicador);
+            }
+        });
+
+        // ✅ Ejemplo de función de acción
+        function mostrarEvolucionIndicador(id) {
+            alert(`📊 Mostrar evolución del indicador con ID: ${id}`);
+            // Acá podrías abrir un modal o mostrar un gráfico dinámico
         }
 
         async function getUltimaMedicionPorIndicador(indicadorId) {
@@ -1747,8 +1786,6 @@
         document.getElementById('valorCorteCriticos').addEventListener('input', async () => {
             await reconstruirTablas(); // función que recalcula y recarga la tabla
         });
-
-
 
 
         async function cargarCumplimientoPorDestino() {

@@ -1190,7 +1190,6 @@
                 //     return;
                 // }
 
-
                 if (!result.success || !Array.isArray(result.data) || result.data.length === 0) {
                     if (window.salesChart) {
                         try { await window.salesChart.destroy(); } catch (e) { }
@@ -1251,7 +1250,6 @@
                         ]
                     }
                 };
-
 
                 if (window.salesChart) {
                     try { await window.salesChart.destroy(); } catch (err) { console.warn('Error al destruir gráfico previo:', err); }

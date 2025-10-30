@@ -1448,54 +1448,54 @@
 
 
         // Función para reconstruir todas las tablas
-        function reconstruirTablasXXX() {
-            const tbodyPendientes = document.getElementById('tbodyPendientes');
-            const tbodyDestacados = document.getElementById('tbodyDestacados');
-            const tbodyCriticos = document.getElementById('tbodyCriticos');
+        // function reconstruirTablasXXX() {
+        //     const tbodyPendientes = document.getElementById('tbodyPendientes');
+        //     const tbodyDestacados = document.getElementById('tbodyDestacados');
+        //     const tbodyCriticos = document.getElementById('tbodyCriticos');
 
-            tbodyPendientes.innerHTML = '';
-            tbodyDestacados.innerHTML = '';
-            tbodyCriticos.innerHTML = '';
+        //     tbodyPendientes.innerHTML = '';
+        //     tbodyDestacados.innerHTML = '';
+        //     tbodyCriticos.innerHTML = '';
 
-            const valorCorteDestacados = Number(document.getElementById('valorCorteDestacados').value);
-            const valorCorteCriticos = Number(document.getElementById('valorCorteCriticos').value);
+        //     const valorCorteDestacados = Number(document.getElementById('valorCorteDestacados').value);
+        //     const valorCorteCriticos = Number(document.getElementById('valorCorteCriticos').value);
 
-            indicadoresConDatos.forEach(ind => {
-                // Pendientes
-                if (ind.ultimaMedicion === null) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                <td>${ind.nombre}</td>
-                <td>${ind.sector}</td>
-                <td>${ind.usuario}</td>
-                <td>Sin med.</td>
-            `;
-                    tbodyPendientes.appendChild(tr);
-                }
+        //     indicadoresConDatos.forEach(ind => {
+        //         // Pendientes
+        //         if (ind.ultimaMedicion === null) {
+        //             const tr = document.createElement('tr');
+        //             tr.innerHTML = `
+        //         <td>${ind.nombre}</td>
+        //         <td>${ind.sector}</td>
+        //         <td>${ind.usuario}</td>
+        //         <td>Sin med.</td>
+        //     `;
+        //             tbodyPendientes.appendChild(tr);
+        //         }
 
-                // Destacados
-                if (ind.porcentaje !== null && ind.porcentaje >= valorCorteDestacados) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                <td>${ind.nombre}</td>
-                <td>${ind.sector}</td>
-                <td>${ind.porcentaje}%</td>
-            `;
-                    tbodyDestacados.appendChild(tr);
-                }
+        //         // Destacados
+        //         if (ind.porcentaje !== null && ind.porcentaje >= valorCorteDestacados) {
+        //             const tr = document.createElement('tr');
+        //             tr.innerHTML = `
+        //         <td>${ind.nombre}</td>
+        //         <td>${ind.sector}</td>
+        //         <td>${ind.porcentaje}%</td>
+        //     `;
+        //             tbodyDestacados.appendChild(tr);
+        //         }
 
-                // Críticos
-                if (ind.porcentaje !== null && ind.porcentaje <= valorCorteCriticos) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                <td>${ind.nombre}</td>
-                <td>${ind.sector}</td>
-                <td>${ind.porcentaje}%</td>
-            `;
-                    tbodyCriticos.appendChild(tr);
-                }
-            });
-        }
+        //         // Críticos
+        //         if (ind.porcentaje !== null && ind.porcentaje <= valorCorteCriticos) {
+        //             const tr = document.createElement('tr');
+        //             tr.innerHTML = `
+        //         <td>${ind.nombre}</td>
+        //         <td>${ind.sector}</td>
+        //         <td>${ind.porcentaje}%</td>
+        //     `;
+        //             tbodyCriticos.appendChild(tr);
+        //         }
+        //     });
+        // }
 
         async function getUltimaMedicionPorIndicador(indicadorId) {
             // Filtrar por el indicador
