@@ -633,7 +633,7 @@
 
                             <!-- === Mejores y Peores Indicadores === -->
                             <div class="row">
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-11 mt-3">
                                     <div class="card card-outline" style="border-top: 3px solid #28a745;">
                                         <div class="card-body">
                                             <!-- <h5 class="mb-3">Indicadores Destacados (≥ 90%)</h5> -->
@@ -675,6 +675,10 @@
                                                             <th>Indicador</th>
                                                             <th>Destino</th>
                                                             <th>Cumpl.</th>
+                                                            <th>Tendencia</th>
+                                                            <th>Variación</th>
+                                                            <th>Pendiente</th>
+                                                            <th>Grafica</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="tbodyDestacados">
@@ -686,7 +690,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-11 mt-3">
                                     <div class="card card-outline" style="border-top: 3px solid #dc3545;">
                                         <div class="card-body">
 
@@ -724,6 +728,10 @@
                                                             <th>Indicador</th>
                                                             <th>Destino</th>
                                                             <th>Cumpl.</th>
+                                                            <th>Tendencia</th>
+                                                            <th>Variación</th>
+                                                            <th>Pendiente</th>
+                                                            <th>Grafica</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="tbodyCriticos"></tbody>
@@ -1090,7 +1098,6 @@
             });
         }
 
-
         // 🔹 Mostrar modal con detalle del mes marcado en evolución global
         function mostrarDetalleMes(entry) {
             document.getElementById('detalleMes').textContent = entry.month;
@@ -1160,7 +1167,6 @@
                 console.error('Error al calcular cumplimiento global:', err);
             }
         }
-
 
         // Funciones auxiliares
         function buildHierarchyMinimal(sectores, indicadores) {
@@ -1496,6 +1502,9 @@
                 const labels = medicionesIndicador.map(m => m.med_valor_periodo);
                 const valores = medicionesIndicador.map(m => parseFloat(m.med_valor) || 0);
 
+                // Calcula tendencia
+                const resultado = evaluarTendenciaIndicador(valores);
+
                 mostrarEvolucionIndicador(idIndicador, labels, valores);
             }
         }
@@ -1508,6 +1517,63 @@
             }
         });
 
+        /**
+  * Evalúa la tendencia de un indicador en base a sus mediciones
+  * y devuelve datos útiles para visualización en dashboard.
+  *
+  * @param {number[]} mediciones - Array con los valores del indicador (orden cronológico)
+  * @param {number} umbral - Umbral de variación (%) para considerar "estable" (default = 2)
+  * @returns {object} { tendencia, variacion, pendiente, color, icono }
+  */
+        function evaluarTendenciaIndicador(mediciones, umbral = 2) {
+            if (!Array.isArray(mediciones) || mediciones.length < 2) {
+                return {
+                    tendencia: "datos insuficientes",
+                    variacion: 0,
+                    pendiente: 0,
+                    color: "gray",
+                    icono: "⚪"
+                };
+            }
+
+            const n = mediciones.length;
+            const x = Array.from({ length: n }, (_, i) => i + 1);
+            const y = mediciones;
+
+            const meanX = x.reduce((a, b) => a + b, 0) / n;
+            const meanY = y.reduce((a, b) => a + b, 0) / n;
+
+            let num = 0, den = 0;
+            for (let i = 0; i < n; i++) {
+                num += (x[i] - meanX) * (y[i] - meanY);
+                den += (x[i] - meanX) ** 2;
+            }
+            const pendiente = num / den;
+            const variacion = ((y[n - 1] - y[0]) / y[0]) * 100;
+
+            let tendencia, color, icono;
+            if (variacion > umbral && pendiente > 0) {
+                tendencia = "En alza";
+                color = "#28a745"; // verde
+                icono = "📈";
+            } else if (variacion < -umbral && pendiente < 0) {
+                tendencia = "En baja";
+                color = "#dc3545"; // rojo
+                icono = "📉";
+            } else {
+                tendencia = "Estable";
+                color = "#ffc107"; // amarillo
+                icono = "➖";
+            }
+
+            return {
+                tendencia,
+                variacion: variacion.toFixed(2),
+                pendiente: pendiente.toFixed(3),
+                color,
+                icono
+            };
+        }
 
         let chartInstance = null;
 
@@ -1827,7 +1893,6 @@
             await reconstruirTablas(); // función que recalcula y recarga la tabla
         });
 
-
         async function cargarCumplimientoPorDestino() {
             const spinner = document.getElementById('spinnerCumplimientoDestinos');
             const tablaContainer = document.getElementById('tablaCumplimientoContainer');
@@ -2018,13 +2083,20 @@
                 const ultimaMedicion = ultima ? ultima.med_valor : null;
                 const porcentaje = ultimaMedicion !== null ? (ultimaMedicion / ind.unico_valor * 100).toFixed(1) : null;
 
+                const mediciones = getMediciones();
+                const medicionesIndicador = mediciones.data.filter(m => m.med_indicador_id == ind.id);
+                const valores = medicionesIndicador.map(m => parseFloat(m.med_valor) || 0);
+                // Calcula tendencia
+                const resultado = evaluarTendenciaIndicador(valores);
+
                 return {
                     id: ind.id,
                     nombre: ind.nombre,
                     sector: sector?.nombre || '-',
                     usuario: usuario ? `${usuario.nombres} ${usuario.apellido}` : '-',
                     ultimaMedicion,
-                    porcentaje
+                    porcentaje,
+                    resultado
                 };
             }));
 
@@ -2089,6 +2161,10 @@
                         </td>
                         <td>${ind.sector}</td>
                         <td>${ind.porcentaje}%</td>
+                        <td style="color: ${ind.resultado.color}">${ind.resultado.tendencia}</td>
+                        <td class="text-end">${ind.resultado.variacion}%</td>
+                        <td class="text-end">${ind.resultado.pendiente}</td>
+                        <td>${ind.resultado.icono}</td>
                    `;
                 });
 
@@ -2105,6 +2181,10 @@
                         </td>
                         <td>${ind.sector}</td>
                         <td>${ind.porcentaje}%</td>
+                        <td style="color: ${ind.resultado.color}">${ind.resultado.tendencia}</td>
+                        <td class="text-end">${ind.resultado.variacion}%</td>
+                        <td class="text-end">${ind.resultado.pendiente}</td>
+                        <td>${ind.resultado.icono}</td>
                    `;
                 });
         }
