@@ -1518,9 +1518,6 @@
         });
 
         /**
-  * Evalúa la tendencia de un indicador en base a sus mediciones
-  * y devuelve datos útiles para visualización en dashboard.
-  *
   * @param {number[]} mediciones - Array con los valores del indicador (orden cronológico)
   * @param {number} umbral - Umbral de variación (%) para considerar "estable" (default = 2)
   * @returns {object} { tendencia, variacion, pendiente, color, icono }
@@ -2110,7 +2107,7 @@
                 .addEventListener('input', reconstruirTablas);
 
             // 7️⃣ Cumplimiento por destino y cumplimiento global
-            // cargarCumplimientoPorDestino();
+            cargarCumplimientoPorDestino();
 
             // 8️⃣ Inicializar tooltips
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');

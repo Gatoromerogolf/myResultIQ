@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Guía rápida - Font Awesome (Iconos comunes)</title>
+  <!-- Font Awesome CDN (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 20px; background:#f7f8fa; color:#222 }
+    h1 { font-size: 20px; margin-bottom: 12px }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap:12px }
+    .card { background:white; border-radius:8px; padding:12px; box-shadow:0 1px 4px rgba(20,20,30,0.06); display:flex; gap:12px; align-items:center }
+    .ico { font-size:22px; width:36px; text-align:center }
+    .meta { font-size:13px }
+    .clase { font-family: monospace; font-size:12px; color:#444 }
+    .note { margin-top:14px; font-size:13px; color:#555 }
+    .search { margin-bottom:12px; padding:8px 10px; width:100%; border-radius:8px; border:1px solid #e0e3e8 }
+  </style>
+</head>
+<body>
+  <h1>Guía rápida — iconos Font Awesome comunes para dashboards</h1>
+
+  <input id="q" class="search" placeholder="Buscar (ej: user, chart, config)..." />
+
+  <div id="grid" class="grid">
+    <!-- General / Navegación -->
+    <div class="card" data-tags="home dashboard">
+      <div class="ico"><i class="fas fa-home"></i></div>
+      <div class="meta"><strong>Home</strong><div class="clase">fas fa-home</div></div>
+    </div>
+
+    <div class="card" data-tags="dashboard tachometer">
+      <div class="ico"><i class="fas fa-tachometer-alt"></i></div>
+      <div class="meta"><strong>Tablero</strong><div class="clase">fas fa-tachometer-alt</div></div>
+    </div>
+
+    <div class="card" data-tags="folder modules">
+      <div class="ico"><i class="fas fa-folder"></i></div>
+      <div class="meta"><strong>Carpeta</strong><div class="clase">fas fa-folder</div></div>
+    </div>
+
+    <div class="card" data-tags="sitemap estructura">
+      <div class="ico"><i class="fas fa-sitemap text-primary"></i></div>
+      <div class="meta"><strong>Sitemap / Estructura</strong><div class="clase">fas fa-sitemap</div></div>
+    </div>
+
+    <!-- Usuarios -->
+    <div class="card" data-tags="user usuario">
+      <div class="ico"><i class="fas fa-user"></i></div>
+      <div class="meta"><strong>Usuario</strong><div class="clase">fas fa-user</div></div>
+    </div>
+
+    <div class="card" data-tags="users grupo">
+      <div class="ico"><i class="fas fa-users"></i></div>
+      <div class="meta"><strong>Usuarios / Grupos</strong><div class="clase">fas fa-users</div></div>
+    </div>
+
+    <div class="card" data-tags="admin user-tie">
+      <div class="ico"><i class="fas fa-user-tie"></i></div>
+      <div class="meta"><strong>Admin</strong><div class="clase">fas fa-user-tie</div></div>
+    </div>
+
+    <div class="card" data-tags="user-cog configuración-usuario">
+      <div class="ico"><i class="fas fa-user-cog"></i></div>
+      <div class="meta"><strong>Config. de usuario</strong><div class="clase">fas fa-user-cog</div></div>
+    </div>
+
+    <!-- Indicadores / Datos -->
+    <div class="card" data-tags="chart line grafico">
+      <div class="ico"><i class="fas fa-chart-line"></i></div>
+      <div class="meta"><strong>Gráfico (línea)</strong><div class="clase">fas fa-chart-line</div></div>
+    </div>
+
+    <div class="card" data-tags="chart area grafico">
+      <div class="ico"><i class="fas fa-chart-area"></i></div>
+      <div class="meta"><strong>Área</strong><div class="clase">fas fa-chart-area</div></div>
+    </div>
+
+    <div class="card" data-tags="chart bar barras">
+      <div class="ico"><i class="fas fa-chart-bar"></i></div>
+      <div class="meta"><strong>Barras</strong><div class="clase">fas fa-chart-bar</div></div>
+    </div>
+
+    <div class="card" data-tags="percentage porcentaje">
+      <div class="ico"><i class="fas fa-percentage"></i></div>
+      <div class="meta"><strong>Porcentaje</strong><div class="clase">fas fa-percentage</div></div>
+    </div>
+
+    <div class="card" data-tags="calendar fecha periodo">
+      <div class="ico"><i class="fas fa-calendar-alt"></i></div>
+      <div class="meta"><strong>Calendario / Período</strong><div class="clase">fas fa-calendar-alt</div></div>
+    </div>
+
+    <div class="card" data-tags="stopwatch tiempo medir">
+      <div class="ico"><i class="fas fa-stopwatch"></i></div>
+      <div class="meta"><strong>Cronómetro</strong><div class="clase">fas fa-stopwatch</div></div>
+    </div>
+
+    <!-- Documentos / reportes -->
+    <div class="card" data-tags="file documento">
+      <div class="ico"><i class="fas fa-file-alt"></i></div>
+      <div class="meta"><strong>Documento</strong><div class="clase">fas fa-file-alt</div></div>
+    </div>
+
+    <div class="card" data-tags="upload subir">
+      <div class="ico"><i class="fas fa-upload"></i></div>
+      <div class="meta"><strong>Subir</strong><div class="clase">fas fa-upload</div></div>
+    </div>
+
+    <div class="card" data-tags="download bajar">
+      <div class="ico"><i class="fas fa-download"></i></div>
+      <div class="meta"><strong>Descargar</strong><div class="clase">fas fa-download</div></div>
+    </div>
+
+    <div class="card" data-tags="print imprimir">
+      <div class="ico"><i class="fas fa-print"></i></div>
+      <div class="meta"><strong>Imprimir</strong><div class="clase">fas fa-print</div></div>
+    </div>
+
+    <!-- Configuración / Sistema -->
+    <div class="card" data-tags="config configuracion cog">
+      <div class="ico"><i class="fas fa-cog"></i></div>
+      <div class="meta"><strong>Configuración</strong><div class="clase">fas fa-cog</div></div>
+    </div>
+
+    <div class="card" data-tags="tools herramientas">
+      <div class="ico"><i class="fas fa-tools"></i></div>
+      <div class="meta"><strong>Herramientas</strong><div class="clase">fas fa-tools</div></div>
+    </div>
+
+    <div class="card" data-tags="sliders ajustes filtros">
+      <div class="ico"><i class="fas fa-sliders-h"></i></div>
+      <div class="meta"><strong>Ajustes</strong><div class="clase">fas fa-sliders-h</div></div>
+    </div>
+
+    <!-- Alertas / estados -->
+    <div class="card" data-tags="alert warning">
+      <div class="ico"><i class="fas fa-exclamation-triangle"></i></div>
+      <div class="meta"><strong>Alerta</strong><div class="clase">fas fa-exclamation-triangle</div></div>
+    </div>
+
+    <div class="card" data-tags="check ok aprobado">
+      <div class="ico"><i class="fas fa-check-circle"></i></div>
+      <div class="meta"><strong>Aprobado</strong><div class="clase">fas fa-check-circle</div></div>
+    </div>
+
+    <div class="card" data-tags="error times rechazo">
+      <div class="ico"><i class="fas fa-times-circle"></i></div>
+      <div class="meta"><strong>Error</strong><div class="clase">fas fa-times-circle</div></div>
+    </div>
+
+    <div class="card" data-tags="bell notificacion">
+      <div class="ico"><i class="fas fa-bell"></i></div>
+      <div class="meta"><strong>Notificaciones</strong><div class="clase">fas fa-bell</div></div>
+    </div>
+
+    <!-- Comunicación -->
+    <div class="card" data-tags="comment mensaje">
+      <div class="ico"><i class="fas fa-comment"></i></div>
+      <div class="meta"><strong>Comentario</strong><div class="clase">fas fa-comment</div></div>
+    </div>
+
+    <div class="card" data-tags="search buscar">
+      <div class="ico"><i class="fas fa-search"></i></div>
+      <div class="meta"><strong>Buscar</strong><div class="clase">fas fa-search</div></div>
+    </div>
+
+    <div class="card" data-tags="list listado">
+      <div class="ico"><i class="fas fa-list"></i></div>
+      <div class="meta"><strong>Listado</strong><div class="clase">fas fa-list</div></div>
+    </div>
+
+    <!-- Flechas / navegación secundaria -->
+    <div class="card" data-tags="arrow back">
+      <div class="ico"><i class="fas fa-arrow-left"></i></div>
+      <div class="meta"><strong>Atrás</strong><div class="clase">fas fa-arrow-left</div></div>
+    </div>
+
+    <div class="card" data-tags="arrow forward">
+      <div class="ico"><i class="fas fa-arrow-right"></i></div>
+      <div class="meta"><strong>Adelante</strong><div class="clase">fas fa-arrow-right</div></div>
+    </div>
+
+  </div>
+
+  <div class="note">Copia y pega las clases en tus etiquetas <code>&lt;i class="..."&gt;&lt;/i&gt;</code>. Si usás la versión Pro de Font Awesome necesitarás cambiar el prefijo (ej. <code>fal</code>, <code>fad</code>) y/o incluir la librería correspondiente.</div>
+
+  <script>
+    // búsqueda simple por tags o texto
+    const q = document.getElementById('q');
+    const cards = Array.from(document.querySelectorAll('#grid .card'));
+    q.addEventListener('input', ()=>{
+      const v = q.value.trim().toLowerCase();
+      cards.forEach(c=>{
+        const tags = c.getAttribute('data-tags') || '';
+        const text = c.innerText.toLowerCase();
+        const ok = v === '' || tags.includes(v) || text.includes(v);
+        c.style.display = ok ? 'flex' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
