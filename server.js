@@ -600,11 +600,24 @@ app.get('/api/cumplimiento-por-destino', async (req, res) => {
                 FROM mediciones m
             )
             SELECT 
-                s.nombre AS destino,       -- nombre legible del sector
+                s.nombre AS destino,
                 COUNT(i.id) AS total_indicadores,
-                ROUND(AVG(m.med_valor), 2) AS promedio_cumplimiento,
-                SUM(CASE WHEN m.med_valor >= i.objetivo THEN 1 ELSE 0 END) AS en_meta,
-                SUM(CASE WHEN m.med_valor < i.objetivo * 0.8 THEN 1 ELSE 0 END) AS criticos,
+                
+                -- ✅ Cumplimiento ponderado por el peso del indicador
+                ROUND(SUM((m.med_valor / NULLIF(m.med_meta, 0)) * 100 * (i.peso_porcentual / 100)), 2) AS promedio_cumplimiento,
+                
+                -- ✅ Indicadores en meta (>= 90%)
+                SUM(CASE
+                        WHEN (m.med_valor / NULLIF(m.med_meta, 0)) * 100 >= 90
+                        THEN 1 ELSE 0
+                    END) AS en_meta,
+
+                -- ✅ Indicadores críticos (< 70%)
+                SUM(CASE
+                        WHEN (m.med_valor / NULLIF(m.med_meta, 0)) * 100 < 70
+                        THEN 1 ELSE 0
+                    END) AS criticos,
+
                 MAX(m.med_valor_periodo) AS ultima_medicion
             FROM indicadores i
             LEFT JOIN sectores s ON s.id = i.destino
@@ -622,9 +635,120 @@ app.get('/api/cumplimiento-por-destino', async (req, res) => {
 
 
 
+/* 
+            WITH ultimas AS (
+                SELECT 
+                    m.*,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY m.med_indicador_id
+                        ORDER BY m.med_valor_periodo DESC
+                    ) AS rn
+                FROM mediciones m
+            )
+
+Esto crea una CTE (Common Table Expression), una especie de tabla temporal llamada ultimas.
+Qué hace:
+Toma todas las mediciones (mediciones m).
+Usa la función de ventana ROW_NUMBER() para numerar las mediciones de cada indicador (PARTITION BY m.med_indicador_id).
+El orden es descendente por período (ORDER BY m.med_valor_periodo DESC), o sea, la última medición de cada indicador recibe rn = 1.
+👉 En resumen:
+ultimas contiene todas las mediciones, pero ahora sabemos cuál es la más reciente (rn = 1) para cada indicador.
+*/
+
+/*
+            SELECT 
+                s.nombre AS destino,       -- nombre legible del sector
+                COUNT(i.id) AS total_indicadores,
+                ROUND(AVG(m.med_valor), 2) AS promedio_cumplimiento,
+                SUM(CASE WHEN m.med_valor >= i.objetivo THEN 1 ELSE 0 END) AS en_meta,
+                SUM(CASE WHEN m.med_valor < i.objetivo * 0.8 THEN 1 ELSE 0 END) AS criticos,
+                MAX(m.med_valor_periodo) AS ultima_medicion
+            FROM indicadores i
+            LEFT JOIN sectores s ON s.id = i.destino
+            LEFT JOIN ultimas m ON m.med_indicador_id = i.id AND m.rn = 1
+            GROUP BY s.nombre
+            ORDER BY promedio_cumplimiento DESC;
 
 
+            🔗 Relaciones
 
+🎈indicadores i: tabla principal (cada indicador pertenece a un destino y tiene un objetivo).
+
+🎈sectores s: se une para obtener el nombre del destino (s.nombre).
+
+🎈ultimas m: se une para traer la última medición del indicador (m.rn = 1).
+
+El LEFT JOIN garantiza que, aunque un indicador no tenga mediciones aún, igual se muestre (con valores nulos).
+
+📊 Cálculos de las columnas
+Campo	Descripción
+s.nombre AS destino:  	Nombre del sector/destino.
+COUNT(i.id) AS total_indicadores: 	Cuántos indicadores tiene el destino.
+ROUND(AVG(m.med_valor), 2) AS promedio_cumplimiento: 	Promedio de los valores medidos (cumplimiento promedio).
+SUM(CASE WHEN m.med_valor >= i.objetivo THEN 1 ELSE 0 END): 	Cantidad de indicadores en meta (cumplen o superan el objetivo).
+SUM(CASE WHEN m.med_valor < i.objetivo * 0.8 THEN 1 ELSE 0 END): 	Cantidad de indicadores críticos (menos del 80% del objetivo).
+MAX(m.med_valor_periodo): 	Último período medido, solo como referencia.
+🧠 Agrupamiento y orden
+GROUP BY s.nombre
+ORDER BY promedio_cumplimiento DESC
+
+Agrupa por sector (destino).
+Ordena los resultados de mayor a menor promedio de cumplimiento, para ver qué sector está mejor posicionado.
+
+*/
+
+// ✅ Evolución del cumplimiento promedio por área (últimos 6 períodos)
+app.get('/api/evolucion-area/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // 1️⃣ Últimos 6 períodos con al menos una medición
+        const [periodosRows] = await pool.query(`
+            SELECT DISTINCT m.med_valor_periodo
+            FROM mediciones m
+            JOIN indicadores i ON m.med_indicador_id = i.id
+            WHERE i.destino = ?
+            ORDER BY m.med_valor_periodo DESC
+            LIMIT 6
+        `, [id]);
+
+        const periodos = periodosRows.map(r => r.med_valor_periodo).reverse(); // más antiguo → más reciente
+
+        if (periodos.length === 0) return res.json([]);
+
+        // 2️⃣ Cumplimiento ponderado por período
+        const data = [];
+
+        for (const periodo of periodos) {
+            const [rows] = await pool.query(`
+                SELECT 
+                    ROUND(SUM((m.med_valor / NULLIF(m.med_meta, 0)) * 100 * (i.peso_porcentual / 100)), 2) AS cumplimiento
+                FROM indicadores i
+                LEFT JOIN mediciones m 
+                    ON m.med_indicador_id = i.id AND m.med_valor_periodo = ?
+                WHERE i.destino = ?
+            `, [periodo, id]);
+
+            data.push({
+                periodo_real: periodo,
+                cumplimiento: rows[0].cumplimiento || 0
+            });
+        }
+
+        res.json(data);
+
+    } catch (error) {
+        console.error('Error obteniendo evolución del área:', error);
+        res.status(500).json({ error: 'Error al obtener evolución del área' });
+    }
+});
+
+/*
+🔹 Notas importantes
+periodo ahora siempre existe para los últimos 6 med_valor_periodo que tienen al menos una medición.
+Si para un período no hay medición, el cumplimiento será 0.
+Eje X del gráfico sigue siendo 1..6 (más antiguo → más reciente).
+*/
 
 
 
@@ -1300,7 +1424,7 @@ app.post('/api/mediciones', async (req, res) => {
 
         // Grabar medición
         const [result] = await pool.query(
-            'INSERT INTO mediciones (med_indicador_id, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro, med_plan_accion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO mediciones (med_indicador_id, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_meta, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro, med_plan_accion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [med_indicador_id, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro, med_plan_accion]
         );
 
@@ -1354,8 +1478,6 @@ app.get('/api/evolucion-global', async (req, res) => {
         function calcularCumplimiento(indicador, valor) {
             const val = parseFloat(valor);
             const obj = parseFloat(indicador.objetivo);
-
-            console.log (`valores recibidos para calcular val ${val} y obj ${obj}`)
 
             if (!isFinite(val) || !isFinite(obj) || obj === 0) return 0;
             return (val / obj) * 100;
@@ -1488,7 +1610,6 @@ app.get('/api/evolucion-global', async (req, res) => {
                 const medicion = meds[0] || ultimoValor[ind.id];
                 if (!medicion) continue;
 
-                console.log (`valor de ind  ${ind}, medicion.med_valor ${medicion.med_valor}`)
                 const cumplimiento = calcularCumplimiento(ind, medicion.med_valor);
                 if (!isFinite(cumplimiento)) continue;
 

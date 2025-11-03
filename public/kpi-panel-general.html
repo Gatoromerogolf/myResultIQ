@@ -617,12 +617,31 @@
                                                         <th class="text-center">Cumplimiento</th>
                                                         <th class="text-center text-success">En Meta</th>
                                                         <th class="text-center text-danger">Críticos</th>
+                                                        <th class="text-center">Evolución</th> <!-- Nueva columna -->
                                                     </tr>
                                                 </thead>
                                                 <tbody id="tablaCumplimientoDestinos"></tbody>
                                             </table>
                                         </div>
                                     </div>
+
+                                    <!-- Modal para el gráfico -->
+                                    <!-- Modal para evolución del área -->
+                                    <div class="modal fade" id="modalEvolucionArea" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Evolución del área</h5>
+                                                    <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <canvas id="graficoEvolucionArea"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
 
                                     <!-- Gráfico -->
                                     <div class="col-12 col-md-6">
@@ -1890,7 +1909,7 @@
             await reconstruirTablas(); // función que recalcula y recarga la tabla
         });
 
-        async function cargarCumplimientoPorDestino() {
+        async function XXXcargarCumplimientoPorDestino() {
             const spinner = document.getElementById('spinnerCumplimientoDestinos');
             const tablaContainer = document.getElementById('tablaCumplimientoContainer');
             const chartContainer = document.getElementById('chartCumplimientoDestinos');
@@ -2020,6 +2039,270 @@
                 chartContainer.style.display = 'none';
             }
         }
+
+
+        async function YYYcargarCumplimientoPorDestino() {
+            const spinner = document.getElementById('spinnerCumplimientoDestinos');
+            const tablaContainer = document.getElementById('tablaCumplimientoContainer');
+            const chartContainer = document.getElementById('chartCumplimientoDestinos');
+            const tbody = document.getElementById('tablaCumplimientoDestinos');
+
+            spinner.style.display = 'block';
+            tablaContainer.style.display = 'none';
+            chartContainer.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/cumplimiento-por-destino');
+                const data = await res.json();
+
+                // --- Renderizar tabla ---
+                tbody.innerHTML = data.map(d => {
+                    const valor = Number(d.promedio_cumplimiento);
+                    const valorSeguro = isNaN(valor) ? 0 : valor;
+
+                    // Color para barra de progreso
+                    let color = 'text-danger';
+                    if (valorSeguro >= 90) color = 'text-success';
+                    else if (valorSeguro >= 75) color = 'text-warning';
+
+                    const barra = `
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar ${color.replace('text-', 'bg-')}" 
+                        role="progressbar" 
+                        style="width: ${valorSeguro}%;"
+                        aria-valuenow="${valorSeguro}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100">
+                    </div>
+                </div>`;
+
+                    // Nueva columna con ícono de evolución
+                    return `
+                <tr>
+                    <td>${d.destino}</td>
+                    <td class="text-center">${d.total_indicadores}</td>
+                    <td class="text-center fw-semibold ${color}">
+                        ${valorSeguro}% ${barra}
+                    </td>
+                    <td class="text-center text-success fw-semibold">${d.en_meta}</td>
+                    <td class="text-center text-danger fw-semibold">${d.criticos}</td>
+                    <td class="text-center">
+                        <i class="fa-solid fa-chart-line text-primary"
+                           role="button"
+                           style="cursor:pointer"
+                           title="Ver evolución"
+                           data-id="${d.id_destino}"
+                           data-nombre="${d.destino}">
+                        </i>
+                    </td>
+                </tr>`;
+                }).join('');
+
+                spinner.style.display = 'none';
+                tablaContainer.style.display = 'block';
+                chartContainer.style.display = 'block';
+
+                // --- Renderizar gráfico de barras (ApexCharts) ---
+                const destinos = data.map(d => d.destino);
+                const valores = data.map(d => Number(d.promedio_cumplimiento) || 0);
+                const colores = valores.map(v => v >= 90 ? '#28a745' : v >= 75 ? '#ffc107' : '#dc3545');
+
+                if (valores.length === 0) {
+                    chartContainer.innerHTML = "<p class='text-center text-muted mt-3'>No hay datos para mostrar.</p>";
+                    return;
+                }
+
+                const options = {
+                    chart: { type: 'bar', height: 350, toolbar: { show: false }, animations: { enabled: true } },
+                    plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '60%' } },
+                    colors: colores,
+                    dataLabels: { enabled: true, formatter: val => val + '%', style: { fontSize: '13px', fontWeight: 600 } },
+                    xaxis: { categories: destinos, title: { text: 'Cumplimiento (%)' }, max: 100 },
+                    series: [{ name: 'Cumplimiento', data: valores }],
+                    tooltip: { y: { formatter: val => val + '%' } },
+                    grid: { borderColor: '#eee' }
+                };
+
+                setTimeout(() => {
+                    const chart = new ApexCharts(chartContainer, options);
+                    chart.render();
+                }, 50);
+
+            } catch (error) {
+                console.error('Error cargando cumplimiento por destino:', error);
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar los datos</td></tr>`;
+                spinner.style.display = 'none';
+                tablaContainer.style.display = 'block';
+                chartContainer.style.display = 'none';
+            }
+        }
+
+
+
+        async function cargarCumplimientoPorDestino() {
+            const spinner = document.getElementById('spinnerCumplimientoDestinos');
+            const tablaContainer = document.getElementById('tablaCumplimientoContainer');
+            const chartContainer = document.getElementById('chartCumplimientoDestinos');
+            const tbody = document.getElementById('tablaCumplimientoDestinos');
+
+            spinner.style.display = 'block';
+            tablaContainer.style.display = 'none';
+            chartContainer.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/cumplimiento-por-destino');
+                const data = await res.json();
+
+                // --- Renderizar tabla con ícono de evolución ---
+                tbody.innerHTML = data.map(d => {
+                    const valor = Number(d.promedio_cumplimiento);
+                    const valorSeguro = isNaN(valor) ? 0 : valor;
+
+                    let color = 'text-danger';
+                    if (valorSeguro >= 90) color = 'text-success';
+                    else if (valorSeguro >= 75) color = 'text-warning';
+
+                    const barra = `
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar ${color.replace('text-', 'bg-')}" 
+                        role="progressbar" 
+                        style="width: ${valorSeguro}%;"
+                        aria-valuenow="${valorSeguro}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100">
+                    </div>
+                </div>`;
+
+                    // ✅ Aquí agregamos el ícono de Evolución
+                    return `
+                <tr>
+                    <td>${d.destino}</td>
+                    <td class="text-center">${d.total_indicadores}</td>
+                    <td class="text-center fw-semibold ${color}">
+                        ${valorSeguro}% ${barra}
+                    </td>
+                    <td class="text-center text-success fw-semibold">${d.en_meta}</td>
+                    <td class="text-center text-danger fw-semibold">${d.criticos}</td>
+                    <td class="text-center">
+                        <i class="fa-solid fa-chart-line text-primary"
+                           role="button"
+                           style="cursor:pointer"
+                           title="Ver evolución últimas 6 mediciones"
+                           data-id="${d.id_destino}"
+                           data-nombre="${d.destino}">
+                        </i>
+                    </td>
+                </tr>`;
+                }).join('');
+
+                spinner.style.display = 'none';
+                tablaContainer.style.display = 'block';
+                chartContainer.style.display = 'block';
+
+                // --- Gráfico horizontal ApexCharts (igual que antes) ---
+                const destinos = data.map(d => d.destino);
+                const valores = data.map(d => Number(d.promedio_cumplimiento) || 0);
+                const colores = valores.map(v => v >= 90 ? '#28a745' : v >= 75 ? '#ffc107' : '#dc3545');
+
+                if (valores.length === 0) {
+                    chartContainer.innerHTML = "<p class='text-center text-muted mt-3'>No hay datos para mostrar.</p>";
+                    return;
+                }
+
+                const options = {
+                    chart: { type: 'bar', height: 350, toolbar: { show: false }, animations: { enabled: true } },
+                    plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '60%' } },
+                    colors: colores,
+                    dataLabels: { enabled: true, formatter: val => val + '%', style: { fontSize: '13px', fontWeight: 600 } },
+                    xaxis: { categories: destinos, title: { text: 'Cumplimiento (%)' }, max: 100 },
+                    series: [{ name: 'Cumplimiento', data: valores }],
+                    tooltip: { y: { formatter: val => val + '%' } },
+                    grid: { borderColor: '#eee' }
+                };
+
+                setTimeout(() => {
+                    const chart = new ApexCharts(chartContainer, options);
+                    chart.render();
+                }, 50);
+
+            } catch (error) {
+                console.error('Error cargando cumplimiento por destino:', error);
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar los datos</td></tr>`;
+                spinner.style.display = 'none';
+                tablaContainer.style.display = 'block';
+                chartContainer.style.display = 'none';
+            }
+        }
+
+        // --- Modal y gráfico de evolución ---
+        let chartEvolucion = null;
+
+        document.getElementById('tablaCumplimientoDestinos').addEventListener('click', async (e) => {
+            const icono = e.target.closest('.fa-chart-line');
+            if (!icono) return;
+
+            const idDestino = icono.dataset.id;
+            const nombreDestino = icono.dataset.nombre;
+
+            try {
+                const res = await fetch(`/api/evolucion-area/${idDestino}`);
+                const datos = await res.json();
+
+                if (!datos || datos.length === 0) {
+                    alert('No hay datos de evolución para esta área.');
+                    return;
+                }
+
+                // Eje X: 1..6, pero tooltip mostrará el valor real de med_valor_periodo
+                const periodosX = datos.map((d, idx) => idx + 1);
+                const periodosTooltip = datos.map(d => d.periodo_real);
+                const valores = datos.map(d => d.cumplimiento);
+
+                if (chartEvolucion) chartEvolucion.destroy();
+
+                const ctx = document.getElementById('graficoEvolucionArea');
+                chartEvolucion = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: periodosX,
+                        datasets: [{
+                            label: `Cumplimiento promedio - ${nombreDestino}`,
+                            data: valores,
+                            borderWidth: 2,
+                            borderColor: '#0d6efd',
+                            tension: 0.3,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            title: { display: true, text: 'Evolución del cumplimiento global del área' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        const idx = context.dataIndex;
+                                        return `Cumplimiento: ${context.parsed.y}% (Periodo: ${periodosTooltip[idx]})`;
+                                    }
+                                }
+                            },
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, max: 100, title: { display: true, text: 'Cumplimiento (%)' } },
+                            x: { title: { display: true, text: 'Período (1=más antiguo, 6=último)' } }
+                        }
+                    }
+                });
+
+                const modal = new bootstrap.Modal(document.getElementById('modalEvolucionArea'));
+                modal.show();
+
+            } catch (err) {
+                console.error('Error cargando evolución del área:', err);
+                alert('No se pudo cargar la evolución del área.');
+            }
+        });
+
 
         // Escuchar clics en cualquier fila de indicador
         document.querySelectorAll('.fila-indicador').forEach(fila => {
@@ -2186,7 +2469,6 @@
                 });
         }
 
-
     </script>
 
     <script>
@@ -2210,16 +2492,16 @@
         // chartCumplimiento.render();
 
         // === Gráfico de línea ===
-        const chartEvolucion = new ApexCharts(document.querySelector("#chartEvolucion"), {
-            chart: { type: 'line', height: 240, toolbar: { show: false } },
-            series: [{ name: 'Cumplimiento', data: [70, 74, 79, 82, 84] }],
-            xaxis: { categories: ['Jun', 'Jul', 'Ago', 'Sep', 'Oct'] },
-            stroke: { curve: 'smooth', width: 3 },
-            colors: ['#2563eb'],
-            markers: { size: 4 },
-            grid: { borderColor: '#e9ecef' }
-        });
-        chartEvolucion.render();
+        // const chartEvolucion = new ApexCharts(document.querySelector("#chartEvolucion"), {
+        //     chart: { type: 'line', height: 240, toolbar: { show: false } },
+        //     series: [{ name: 'Cumplimiento', data: [70, 74, 79, 82, 84] }],
+        //     xaxis: { categories: ['Jun', 'Jul', 'Ago', 'Sep', 'Oct'] },
+        //     stroke: { curve: 'smooth', width: 3 },
+        //     colors: ['#2563eb'],
+        //     markers: { size: 4 },
+        //     grid: { borderColor: '#e9ecef' }
+        // });
+        // chartEvolucion.render();
     </script>
 
     <script>
