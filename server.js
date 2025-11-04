@@ -600,6 +600,7 @@ app.get('/api/cumplimiento-por-destino', async (req, res) => {
                 FROM mediciones m
             )
             SELECT 
+                s.id AS id_destino,              -- ✅ Agregado: código del destino                
                 s.nombre AS destino,
                 COUNT(i.id) AS total_indicadores,
                 
@@ -622,7 +623,7 @@ app.get('/api/cumplimiento-por-destino', async (req, res) => {
             FROM indicadores i
             LEFT JOIN sectores s ON s.id = i.destino
             LEFT JOIN ultimas m ON m.med_indicador_id = i.id AND m.rn = 1
-            GROUP BY s.nombre
+            GROUP BY s.id, s.nombre
             ORDER BY promedio_cumplimiento DESC;
         `);
 
@@ -1437,23 +1438,15 @@ app.post('/api/mediciones', async (req, res) => {
 
 
 
-/* 
-🔍 Qué hace este código
+/* 🔍 Qué hace este código
 
 1.Lee todas las mediciones con su indicador asociado.
-
 2.Interpreta med_valor_periodo correctamente según el tipo, de diaria a anual.
-
 3.Expande cada medición a todos los meses que cubre (ej. bimestral → 2 meses).
-
 4.Construye el eje temporal mensual completo.
-
 5.Aplica carry-forward (si un indicador no tiene medición nueva, mantiene la última).
-
 6.Calcula el cumplimiento ponderado por peso_porcentual.
-
 7.Devuelve la serie completa, con el detalle por indicador en cada mes. */
-
 
 app.get('/api/evolucion-global', async (req, res) => {
     try {
@@ -1469,7 +1462,8 @@ app.get('/api/evolucion-global', async (req, res) => {
         i.objetivo,
         i.meta_tipo,
         i.unico_valor,
-        i.peso_porcentual
+        i.peso_porcentual,
+        i.destino
       FROM mediciones m
       JOIN indicadores i ON i.id = m.med_indicador_id
     `);
@@ -1589,7 +1583,8 @@ app.get('/api/evolucion-global', async (req, res) => {
                 objetivo: parseFloat(r.unico_valor) || 0, // <-- usar unico_valor
                 meta_tipo: r.meta_tipo,
                 unico_valor: r.unico_valor,
-                peso_porcentual: Number(r.peso_porcentual) || 0
+                peso_porcentual: Number(r.peso_porcentual) || 0,
+                destino: r.destino
             }])).values()
         );
 
@@ -1620,14 +1615,15 @@ app.get('/api/evolucion-global', async (req, res) => {
                 detalle.push({
                     indicador: ind.nombre,
                     cumplimiento: parseFloat(cumplimiento.toFixed(2)),
-                    peso: ind.peso_porcentual
+                    peso: ind.peso_porcentual,
+                    destino: ind.destino
                 });
             }
 
             serie.push({
                 month,
                 cumplimiento: pesoTotal > 0 ? parseFloat((suma / pesoTotal).toFixed(2)) : 0,
-                detalle
+                detalle 
             });
         }
 
@@ -1661,6 +1657,169 @@ app.get('/api/evolucion-global', async (req, res) => {
 ] */
 
 
+app.get('ZZZ/api/evolucion-global', async (req, res) => {
+    try {
+        const destinoFiltrado = req.query.destino ? Number(req.query.destino) : null;
+
+        const [rows] = await pool.query(`
+            SELECT 
+                m.med_indicador_id,
+                m.med_tipo_periodo,
+                m.med_valor_periodo,
+                m.med_valor,
+                m.med_fecha_registro,
+                i.id AS indicador_id,
+                i.nombre,
+                i.objetivo,
+                i.meta_tipo,
+                i.unico_valor,
+                i.peso_porcentual,
+                i.destino
+            FROM mediciones m
+            JOIN indicadores i ON i.id = m.med_indicador_id
+            ${destinoFiltrado ? 'WHERE i.destino = ?' : ''}
+        `, destinoFiltrado ? [destinoFiltrado] : []);
+
+        if (!rows.length) return res.json([]);
+
+        // --- Funciones auxiliares ---
+        function calcularCumplimiento(indicador, valor) {
+            const val = parseFloat(valor);
+            const obj = parseFloat(indicador.objetivo);
+            if (!isFinite(val) || !isFinite(obj) || obj === 0) return 0;
+            return (val / obj) * 100;
+        }
+
+        function getMeasurementDate(med) {
+            const tipo = med.med_tipo_periodo.slice(2);
+            const val = med.med_valor_periodo?.toString() || '';
+            const year = parseInt(val.substring(0, 4));
+            if (!year || isNaN(year)) return null;
+            try {
+                switch (tipo) {
+                    case '01': return new Date(val);
+                    case '02': { const week = parseInt(val.substring(4)) || 1; return new Date(year, 0, 1 + (week - 1) * 7); }
+                    case '03': { const quin = parseInt(val.substring(4)) || 1; const month = Math.floor((quin - 1) / 2); const half = quin % 2 === 1 ? 1 : 16; return new Date(year, month, half); }
+                    case '04': { const month = parseInt(val.substring(4, 6)) - 1; return new Date(year, month, 1); }
+                    case '05': { const bim = parseInt(val.substring(4)) || 1; const month = (bim - 1) * 2; return new Date(year, month, 1); }
+                    case '06': { const tri = parseInt(val.substring(4)) || 1; const month = (tri - 1) * 3; return new Date(year, month, 1); }
+                    case '07': { const cua = parseInt(val.substring(4)) || 1; const month = (cua - 1) * 4; return new Date(year, month, 1); }
+                    case '08': { const sem = parseInt(val.substring(4)) || 1; const month = (sem - 1) * 6; return new Date(year, month, 1); }
+                    case '09': return new Date(year, 0, 1);
+                    case '10': { const month = parseInt(val.substring(4, 6)) - 1; return new Date(year, month, 1); }
+                    default: return med.med_fecha_registro ? new Date(med.med_fecha_registro) : null;
+                }
+            } catch {
+                return null;
+            }
+        }
+
+        function monthsCovered(tipo) {
+            const map = { '01': 1, '02': 1, '03': 1, '04': 1, '05': 2, '06': 3, '07': 4, '08': 6, '09': 12, '10': 1 };
+            return map[tipo.slice(2)] || 1;
+        }
+
+        function expandMeasurementToMonths(med) {
+            const start = getMeasurementDate(med);
+            const dur = monthsCovered(med.med_tipo_periodo);
+            if (!start) return [];
+            const months = [];
+            for (let i = 0; i < dur; i++) {
+                const m = new Date(start);
+                m.setMonth(start.getMonth() + i);
+                months.push(m.toISOString().slice(0, 7)); // YYYY-MM
+            }
+            return months;
+        }
+
+        // --- Función principal para calcular evolución mensual ---
+        function calcularSerieMensual(rows) {
+            const fechas = rows.map(getMeasurementDate).filter(Boolean);
+            if (!fechas.length) return [];
+
+            const min = new Date(Math.min(...fechas));
+            const max = new Date(Math.max(...fechas));
+            const allMonths = [];
+            const current = new Date(min);
+            while (current <= max) {
+                allMonths.push(current.toISOString().slice(0, 7));
+                current.setMonth(current.getMonth() + 1);
+            }
+
+            const indicadores = Array.from(
+                new Map(rows.map(r => [r.indicador_id, {
+                    id: r.indicador_id,
+                    nombre: r.nombre,
+                    objetivo: parseFloat(r.unico_valor) || 0,
+                    meta_tipo: r.meta_tipo,
+                    unico_valor: r.unico_valor,
+                    peso_porcentual: Number(r.peso_porcentual) || 0
+                }])).values()
+            );
+
+            const ultimoValor = {};
+            const serie = [];
+
+            for (const month of allMonths) {
+                let suma = 0;
+                let pesoTotal = 0;
+                const detalle = [];
+
+                for (const ind of indicadores) {
+                    const meds = rows
+                        .filter(m => m.med_indicador_id === ind.id && isFinite(parseFloat(m.med_valor)))
+                        .filter(m => expandMeasurementToMonths(m).includes(month))
+                        .sort((a, b) => new Date(b.med_fecha_registro) - new Date(a.med_fecha_registro));
+
+                    const medicion = meds[0] || ultimoValor[ind.id];
+                    if (!medicion) continue;
+
+                    const cumplimiento = calcularCumplimiento(ind, medicion.med_valor);
+                    if (!isFinite(cumplimiento)) continue;
+
+                    suma += cumplimiento * ind.peso_porcentual;
+                    pesoTotal += ind.peso_porcentual;
+
+                    ultimoValor[ind.id] = medicion;
+                    detalle.push({
+                        indicador: ind.nombre,
+                        cumplimiento: parseFloat(cumplimiento.toFixed(2)),
+                        peso: ind.peso_porcentual
+                    });
+                }
+
+                serie.push({
+                    month,
+                    cumplimiento: pesoTotal > 0 ? parseFloat((suma / pesoTotal).toFixed(2)) : 0,
+                    detalle
+                });
+            }
+
+            return serie;
+        }
+
+        // --- Procesamiento por destino ---
+        const destinos = Array.from(new Set(rows.map(r => r.destino)));
+        const resultados = [];
+
+        for (const dest of destinos) {
+            const rowsDestino = rows.filter(r => r.destino === dest);
+            const serie = calcularSerieMensual(rowsDestino);
+            resultados.push({ destino: dest, serie });
+        }
+
+        // Si se solicitó un destino específico, devolvemos solo ese
+        if (destinoFiltrado) {
+            return res.json(resultados.find(r => r.destino === destinoFiltrado) || { destino: destinoFiltrado, serie: [] });
+        }
+
+        res.json(resultados);
+
+    } catch (err) {
+        console.error('❌ Error calculando evolución global:', err);
+        res.status(500).json({ error: 'Error al calcular evolución global' });
+    }
+});
 
 
 

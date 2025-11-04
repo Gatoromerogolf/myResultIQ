@@ -100,13 +100,9 @@
 <!--begin::Body-->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <!--begin::App Wrapper-->
     <div class="app-wrapper">
-        <!--begin::Header-->
-        <nav class="app-header navbar navbar-expand bg-body">
-            <!--begin::Container-->
+<!--         <nav class="app-header navbar navbar-expand bg-body">
             <div class="container-fluid">
-                <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
@@ -114,20 +110,9 @@
                         </a>
                     </li>
                     <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
                 </ul>
-                <!--end::Start Navbar Links-->
-                <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
-                    <!--begin::Navbar Search-->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                            <i class="bi bi-search"></i>
-                        </a>
-                    </li> -->
-                    <!--end::Navbar Search-->
 
-                    <!--begin::Messages Dropdown Menu-->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-bs-toggle="dropdown" href="#">
                             <i class="bi bi-chat-text"></i>
@@ -135,7 +120,6 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <a href="#" class="dropdown-item">
-                                <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
                                         <img src="dist/images/user1-128x128.jpg" alt="User Avatar"
@@ -153,11 +137,9 @@
                                         </p>
                                     </div>
                                 </div>
-                                <!--end::Message-->
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item">
-                                <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
                                         <img src="dist/images/user8-128x128.jpg" alt="User Avatar"
@@ -176,11 +158,9 @@
                                         </p>
                                     </div>
                                 </div>
-                                <!--end::Message-->
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item">
-                                <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
                                         <img src="dist/images/user3-128x128.jpg" alt="User Avatar"
@@ -199,14 +179,11 @@
                                         </p>
                                     </div>
                                 </div>
-                                <!--end::Message-->
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
                         </div>
                     </li>
-                    <!--end::Messages Dropdown Menu-->
-                    <!--begin::Notifications Dropdown Menu-->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-bs-toggle="dropdown" href="#">
                             <i class="bi bi-bell-fill"></i>
@@ -233,7 +210,54 @@
                             <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
                         </div>
                     </li>
-                    <!--end::Notifications Dropdown Menu-->
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-lte-toggle="fullscreen">
+                            <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+                            <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
+                        </a>
+                    </li>
+
+                    <li class="nav-item dropdown1 user-menu">
+
+                        <span class="nav-link dropdown-toggle">
+                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Daniel González
+                                    (ADM)</strong></span>
+                            <img src="/dist/images/user6-128x128.jpg" class="user-image rounded-circle shadow"
+                                style="width: 40px; height: 40px;" alt="User Image" />
+                        </span>
+                    </li>
+
+                    <li>
+                        <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt me-1"></i> Salir
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav> -->
+
+        <nav class="app-header navbar navbar-expand bg-body">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Start Navbar Links-->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="bi bi-list"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-md-block">
+                        <a href="#" id="btnReactivarIntro" class="nav-link"
+                            title="Volver a escuchar la introducción general">
+                            <i class="bi bi-soundwave me-1"></i> Reproducir introducción
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
+                </ul>
+                <!--end::Start Navbar Links-->
+                <!--begin::End Navbar Links-->
+                <ul class="navbar-nav ms-auto">
 
                     <!--begin::Fullscreen Toggle-->
                     <li class="nav-item">
@@ -268,7 +292,6 @@
             </div>
             <!--end::Container-->
         </nav>
-        <!--end::Header-->
 
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
@@ -296,6 +319,7 @@
             <!--begin::App Content Header-->
             <div class="app-content-header">
                 <!--begin::Container-->
+                
                 <div class="container-fluid">
 
                     <!-- 🔹 Barra superior de filtros + Asistente -->
@@ -433,6 +457,8 @@
                     <footer class="main-footer text-center">
                         <strong>© 2025 - myResultIQ 1.0</strong>
                     </footer>
+                </div>
+            </div>
         </main>
         <!--end::App main-->
 

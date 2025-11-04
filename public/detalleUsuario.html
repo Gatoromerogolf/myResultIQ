@@ -11,6 +11,29 @@
         border-radius: 6px;
         object-fit: contain;
     }
+        .app-sidebar {
+        height: 100vh;
+        /* que ocupe toda la altura de la ventana */
+        overflow-y: auto;
+        /* permite scroll vertical */
+        overflow-x: hidden;
+        /* evita scroll horizontal */
+    }
+
+    .nav-item .nav-link {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .nav-item {
+        margin-bottom: 0;
+    }
+
+    .table tbody tr {
+        border-bottom: 2px solid #dee2e6;
+        /* gris bootstrap */
+    }
 </style>
 
 <head>
@@ -263,7 +286,7 @@
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Información a incluir para el usuario</h3>
+                            <h3 class="mb-0">Puntos de revisión - desarrollo</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
@@ -773,7 +796,6 @@ Debería poder verse una unica curva que represente el total de mediciones solic
     </script>
     <!--end::OverlayScrollbars Configure-->
 
-
     <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
@@ -905,7 +927,7 @@ Debería poder verse una unica curva que represente el total de mediciones solic
                         enabled: true,
                     },
                 },
-                colors: ['var(--bs-primary)'],
+                colors: ['var(--bs-primary-danger)'],
                 stroke: {
                     width: 2,
                 },
