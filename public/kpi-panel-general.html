@@ -272,7 +272,8 @@
                 <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"
+                            title="Oculta el menu de la izquierda ampliando la pantalla central">
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
@@ -463,7 +464,7 @@
                                 <!-- <div class="container mt-4"> -->
                                 <div class="card-body">
                                     <h5 class="card-title mb-4 text-start">
-                                        📈 Evolución del Cumplimiento Global de la Organización
+                                        📈 Evolución del Cumplimiento Global
                                     </h5>
                                     <div id="chartContainer" style="height: 400px;">
                                         <!-- o 500px, según lo que quieras -->
@@ -487,211 +488,134 @@
 
 
                     <div class="card card-primary card-outline col-12 mb-4 mt-3 card-shadow">
-                        <div class="card-body">
+                        <div class="card-header">
                             <h5 class="card-title mb-3">
-                                📍 Cumplimiento por Destino / Área
+                                📍 Cumplimiento por Destino
                             </h5>
-                        </div>
-                        <div class="row">
-                            <!-- Spinner mientras carga -->
-                            <div id="spinnerCumplimientoDestinos" class="text-center my-3">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Cargando...</span>
-                                </div>
-                            </div>
-
-                            <!-- Tabla -->
-                            <div class="col-12 col-md-6">
-                                <div id="tablaCumplimientoContainer" class="table-responsive px-3"
-                                    style="display:none;">
-                                    <table class="table table-sm align-middle mx-auto" style="max-width:95%;">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Destino / Área</th>
-                                                <th class="text-center">Indicadores</th>
-                                                <th class="text-center">Cumplimiento</th>
-                                                <th class="text-center text-success">En Meta</th>
-                                                <th class="text-center text-danger">Críticos</th>
-                                                <th class="text-center">Evolución</th> <!-- Nueva columna -->
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tablaCumplimientoDestinos"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Modal para el gráfico -->
-                            <!-- Modal para evolución del área -->
-                            <div class="modal fade" id="modalEvolucionArea" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Evolución del área</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <canvas id="graficoEvolucionArea"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <!-- Gráfico -->
-                            <div class="col-12 col-md-6">
-                                <div id="chartCumplimientoDestinos" style="height: 350px; display:none;"></div>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                </button>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row" id="grafico-evolucion" style="display: none;">
-                        <div class="col-md-12">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5 class="card-title">Reporte de Evolución del Destino / Area</h5>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                        </button>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-tool dropdown-toggle"
-                                                data-bs-toggle="dropdown">
-                                                <i class="bi bi-wrench"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end" role="menu">
-                                                <a href="#" class="dropdown-item">Action</a>
-                                                <a href="#" class="dropdown-item">Another action</a>
-                                                <a href="#" class="dropdown-item"> Something else here </a>
-                                                <a class="dropdown-divider"></a>
-                                                <a href="#" class="dropdown-item">Separated link</a>
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body">
-                                    <!--begin::Row-->
-                                    <div class="row">
-                                        <!--Evolución ultimo semestre - SALES-CHART-->
-                                        <div class="col-md-8">
-                                            <p class="text-center">
-                                                <strong>Evolución del % de cumplimiento</strong>
-                                            </p>
-                                            <canvas id="sales-chart" style="height: 200px;"></canvas>
-                                        </div>
-                                        <!-- /.col -->
-
-                                        <!--Cumplimiento de objetivos-->
-                                        <div class="col-md-4">
-                                            <p class="text-center"><strong>Cumplimiento de
-                                                    Objetivos</strong></p>
-                                            <div class="progress-group">
-                                                Margen de Ganancia Bruta
-                                                <span class="float-end"><b>160</b>/200</span>
-                                                <div class="progress progress-sm">
-                                                    <div class="progress-bar text-bg-success" style="width: 80%"></div>
-                                                </div>
-                                            </div>
-                                            <!-- <div class="progress-group">
-                                                Satisfacción del Cliente
-                                                <span class="float-end"><b>310</b>/400</span>
-                                                <div class="progress progress-sm">
-                                                    <div class="progress-bar text-bg-primary" style="width: 75%"></div>
-                                                </div>
-                                            </div> -->
-                                            <!-- <div class="progress-group">
-                                                <span class="progress-text">Tiempo de procesamiento</span>
-                                                <span class="float-end"><b>480</b>/800</span>
-                                                <div class="progress progress-sm">
-                                                    <div class="progress-bar text-bg-danger" style="width: 60%"></div>
-                                                </div>
-                                            </div>
-                                            <div class="progress-group">
-                                                Send Inquiries
-                                                <span class="float-end"><b>250</b>/500</span>
-                                                <div class="progress progress-sm">
-                                                    <div class="progress-bar text-bg-warning" style="width: 50%"></div>
-                                                </div>
-                                            </div> -->
-                                            <!-- /.progress-group -->
-                                        </div>
-                                        <!-- /.col -->
-                                    </div>
-                                    <!--end::Row-->
-                                </div>
-
-                                <!-- ./card-body -->
-                                <div class="card-footer">
-                                    <!--begin::Row-->
-                                    <div class="row">
-                                        <div class="col-md-3 col-6">
-                                            <div class="text-center border-end">
-                                                <span class="text-success">
-                                                    <i class="bi bi-caret-up-fill"></i> 17%
-                                                </span>
-                                                <h5 class="fw-bold mb-0">$35,210.43</h5>
-                                                <span class="text-uppercase">TOTAL REVENUE</span>
-                                            </div>
-                                        </div>
-                                        <!-- /.col -->
-                                        <div class="col-md-3 col-6">
-                                            <div class="text-center border-end">
-                                                <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 0%
-                                                </span>
-                                                <h5 class="fw-bold mb-0">$10,390.90</h5>
-                                                <span class="text-uppercase">TOTAL COST</span>
-                                            </div>
-                                        </div>
-                                        <!-- /.col -->
-                                        <div class="col-md-3 col-6">
-                                            <div class="text-center border-end">
-                                                <span class="text-success">
-                                                    <i class="bi bi-caret-up-fill"></i> 20%
-                                                </span>
-                                                <h5 class="fw-bold mb-0">$24,813.53</h5>
-                                                <span class="text-uppercase">TOTAL PROFIT</span>
-                                            </div>
-                                        </div>
-                                        <!-- /.col -->
-                                        <div class="col-md-3 col-6">
-                                            <div class="text-center">
-                                                <span class="text-danger">
-                                                    <i class="bi bi-caret-down-fill"></i> 18%
-                                                </span>
-                                                <h5 class="fw-bold mb-0">1200</h5>
-                                                <span class="text-uppercase">GOAL COMPLETIONS</span>
-                                            </div>
-                                        </div>
-                                        <!-- </div> -->
-                                        <!--end::Row-->
-                                    </div>
-                                    <!-- /.card-footer -->
-                                </div>
-                                <!-- /.card -->
+                        <!-- Spinner mientras carga -->
+                        <div id="spinnerCumplimientoDestinos" class="text-center my-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
                             </div>
-                            <!-- /.col -->
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Tabla -->
+                                <div class="col-6 col-md-5 card-body me-md-1">
+                                    <div id="tablaCumplimientoContainer" class="table-responsive px-3"
+                                        style="display:none;">
+                                        <table
+                                            class="table table-sm table-striped table-hover table-bordered rounded-5 shadow-sm align-middle mx-auto"
+                                            style="max-width:95%;">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Destino</th>
+                                                    <th class="text-center">Indicadores</th>
+                                                    <th class="text-center">Cumplimiento</th>
+                                                    <th class="text-center text-success">En Meta</th>
+                                                    <th class="text-center text-danger">Críticos</th>
+                                                    <th class="text-center">Evolución</th> <!-- Nueva columna -->
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tablaCumplimientoDestinos"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="col-6 col-md-6 mt-3" style="margin-right: 5px;">
+                                    <div id="grafico-evolucion" style="display: none;">
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h5 class="card-title">Evolución del destino</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <!-- <div class="row"> -->
+                                                <div class="col-md-12">
+                                                    <div id="chartEvolucionArea"></div>
+                                                </div>
+                                                <!-- </div> -->
+                                            </div>
+
+                                            <!-- ./card-body -->
+                                            <div class="card-footer">
+                                                <!--begin::Row-->
+                                                <div class="row">
+                                                    <div class="col-md-3 col-6">
+                                                        <div class="text-center border-end">
+                                                            <span class="text-success">
+                                                                <i class="bi bi-caret-up-fill"></i> 17%
+                                                            </span>
+                                                            <h5 class="fw-bold mb-0">$99.999,99</h5>
+                                                            <span class="text-uppercase"> XXXX</span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.col -->
+                                                    <div class="col-md-3 col-6">
+                                                        <div class="text-center border-end">
+                                                            <span class="text-info"> <i
+                                                                    class="bi bi-caret-left-fill"></i>
+                                                                0%
+                                                            </span>
+                                                            <h5 class="fw-bold mb-0">$55.555.00</h5>
+                                                            <span class="text-uppercase">YYYY</span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.col -->
+                                                    <div class="col-md-3 col-6">
+                                                        <div class="text-center border-end">
+                                                            <span class="text-success">
+                                                                <i class="bi bi-caret-up-fill"></i> 20%
+                                                            </span>
+                                                            <h5 class="fw-bold mb-0">$33.333,33</h5>
+                                                            <span class="text-uppercase">ZZZZ</span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.col -->
+                                                    <div class="col-md-3 col-6">
+                                                        <div class="text-center">
+                                                            <span class="text-danger">
+                                                                <i class="bi bi-caret-down-fill"></i> 18%
+                                                            </span>
+                                                            <h5 class="fw-bold mb-0">1200</h5>
+                                                            <span class="text-uppercase">MMMMM</span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- </div> -->
+                                                    <!--end::Row-->
+                                                </div>
+                                                <!-- /.card-footer -->
+                                            </div>
+                                            <!-- /.card -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
 
                     <!-- === Mejores y Peores Indicadores === -->
-                    <div class="row">
-                        <div class="col-md-11 mt-3">
-                            <div class="card card-outline" style="border-top: 3px solid #28a745;">
-                                <div class="card-body">
-                                    <!-- <h5 class="mb-3">Indicadores Destacados (≥ 90%)</h5> -->
-                                    <h5 class="mb-2 d-flex align-items-center flex-wrap" style="gap: 6px;">
-                                        <i class="fa fa-star text-warning"></i>
-                                        <label for="valorCorteDestacados" class="mb-0 fw-semibold text-gray-700">
-                                            Destacados: cumplimiento mayor al:
-                                        </label>
-                                        <div class="input-group input-group-sm" style="width: 80px;">
-                                            <input type="number" id="valorCorteDestacados" value="90" min="0" max="100"
-                                                step="1" class="form-control text-end" style="
+
+                    <div class="card card-success card-outline col-12 mt-3 mb-4 card-shadow">
+                        <div class="card-header">
+                            <!-- <h5 class="d-flex align-items-center flex-wrap" style="gap: 6px;"> -->
+                            <h5 class="card-title mb-3 d-flex align-items-center flex-wrap" style="gap: 6px;">
+                                <i class="fa fa-star text-warning"></i>
+                                <label for="valorCorteDestacados" class="mb-0 fw-semibold text-gray-700">
+                                    Destacados: cumplimiento mayor al:
+                                </label>
+                                <div class="input-group input-group-sm" style="width: 80px;">
+                                    <input type="number" id="valorCorteDestacados" value="90" min="0" max="100" step="1"
+                                        class="form-control text-end" style="
                                                             border: 1px solid #dee2e6;
                                                             border-radius: 6px;
                                                             background-color: #f8f9fa;
@@ -702,92 +626,104 @@
                                                             padding: 4px 6px;
                                                             height: auto;
                                                         "
-                                                onfocus="this.style.borderColor='#0d6efd'; this.style.backgroundColor='#fff';"
-                                                onblur="this.style.borderColor='#dee2e6'; this.style.backgroundColor='#f8f9fa';" />
-                                            <span class="input-group-text fw-semibold" style="
+                                        onfocus="this.style.borderColor='#0d6efd'; this.style.backgroundColor='#fff';"
+                                        onblur="this.style.borderColor='#dee2e6'; this.style.backgroundColor='#f8f9fa';" />
+                                    <span class="input-group-text fw-semibold" style="
                                                         background-color: #f8f9fa; 
                                                         border: 1px solid #dee2e6;
                                                         font-size: 1rem;
                                                     ">%</span>
-                                        </div>
-                                    </h5>
-
-
-                                    <div class="table-responsive">
-                                        <table id="tablaDestacados" class="table table-sm table-borderless mb-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Indicador</th>
-                                                    <th>Destino</th>
-                                                    <th>Cumpl.</th>
-                                                    <th>Tendencia</th>
-                                                    <th>Variación</th>
-                                                    <th>Pendiente</th>
-                                                    <th>Grafica</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="tbodyDestacados">
-                                                <!-- JS llenará acá -->
-                                            </tbody>
-                                        </table>
-                                    </div>
                                 </div>
+                            </h5>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                </button>
                             </div>
                         </div>
 
-                        <div class="col-md-11 mt-3">
-                            <div class="card card-outline" style="border-top: 3px solid #dc3545;">
-                                <div class="card-body">
-
-                                    <h5 class="mb-2 d-flex align-items-center flex-wrap" style="gap: 6px;">
-                                        <i class="fa fa-exclamation-triangle text-danger"></i>
-                                        <label for="valorCorteCriticos" class="mb-0 fw-semibold text-gray-700">
-                                            Críticos: cumplimiento menor al
-                                        </label>
-                                        <div class="input-group input-group-sm" style="width: 80px;">
-                                            <input type="number" id="valorCorteCriticos" value="50" min="0" max="100"
-                                                step="1" class="form-control text-end" style="
-                                                            border: 1px solid #dee2e6;
-                                                            border-radius: 6px;
-                                                            background-color: #f8f9fa;
-                                                            transition: all 0.2s ease;
-                                                            box-shadow: none;
-                                                            font-size: 1rem;
-                                                            font-weight: 500;
-                                                            padding: 4px 6px;
-                                                            height: auto;
-                                                        "
-                                                onfocus="this.style.borderColor='#0d6efd'; this.style.backgroundColor='#fff';"
-                                                onblur="this.style.borderColor='#dee2e6'; this.style.backgroundColor='#f8f9fa';" />
-                                            <span class="input-group-text fw-semibold" style="
-                                                        background-color: #f8f9fa; 
-                                                        border: 1px solid #dee2e6;
-                                                        font-size: 1rem;
-                                                    ">%</span>
-                                        </div>
-                                    </h5>
-                                    <div class="table-responsive">
-                                        <table class="table table-sm table-borderless mb-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Indicador</th>
-                                                    <th>Destino</th>
-                                                    <th>Cumpl.</th>
-                                                    <th>Tendencia</th>
-                                                    <th>Variación</th>
-                                                    <th>Pendiente</th>
-                                                    <th>Grafica</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="tbodyCriticos"></tbody>
-                                        </table>
-                                    </div>
-
-                                </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="tablaDestacados" class="table table-sm table-borderless mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Indicador</th>
+                                            <th>Destino</th>
+                                            <th>Cumpl.</th>
+                                            <th>Tendencia</th>
+                                            <th>Variación</th>
+                                            <th>Pendiente</th>
+                                            <th>Grafica</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyDestacados">
+                                        <!-- JS llenará acá -->
+                                    </tbody>
+                                </table>
                             </div>
-
                         </div>
                     </div>
+
+                    <div class="card card-danger card-outline col-12 mt-3 mb-4 card-shadow">
+                        <div class="card-header">
+                            <h5 class="card-title mb-3 d-flex align-items-center flex-wrap" style="gap: 6px;">
+                                <i class="fa fa-star text-warning"></i>
+                                <label for="valorCorteCriticos" class="mb-0 fw-semibold text-gray-700">
+                                    Críticos: cumplimiento menor al
+                                </label>
+                                <div class="input-group input-group-sm" style="width: 80px;">
+                                    <input type="number" id="valorCorteCriticos" value="50" min="0" max="100" step="1"
+                                        class="form-control text-end" style="
+                                                            border: 1px solid #dee2e6;
+                                                            border-radius: 6px;
+                                                            background-color: #f8f9fa;
+                                                            transition: all 0.2s ease;
+                                                            box-shadow: none;
+                                                            font-size: 1rem;
+                                                            font-weight: 500;
+                                                            padding: 4px 6px;
+                                                            height: auto;
+                                                        "
+                                        onfocus="this.style.borderColor='#0d6efd'; this.style.backgroundColor='#fff';"
+                                        onblur="this.style.borderColor='#dee2e6'; this.style.backgroundColor='#f8f9fa';" />
+                                    <span class="input-group-text fw-semibold" style="
+                                                        background-color: #f8f9fa; 
+                                                        border: 1px solid #dee2e6;
+                                                        font-size: 1rem;
+                                                    ">%</span>
+                                </div>
+                            </h5>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-borderless mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Indicador</th>
+                                            <th>Destino</th>
+                                            <th>Cumpl.</th>
+                                            <th>Tendencia</th>
+                                            <th>Variación</th>
+                                            <th>Pendiente</th>
+                                            <th>Grafica</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyCriticos"></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <!-- </div> -->
 
                     <div class="row">
                         <!-- === Sin última medición === -->
@@ -864,19 +800,20 @@
                         <div class="actions-bar">
                             <button class="btn btn-secondary"><i class="fas fa-file-csv"></i> Exportar
                                 CSV</button>
-                            <button class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i>
-                                Descargar
-                                PDF</button>
-                            <button class="btn btn-primary"><i class="fas fa-sync"></i> Actualizar
+                            <button id="btnDescargarPDF" class="btn btn-outline-primary">
+                                <i class="fas fa-file-pdf"></i> Descargar PDF
+                            </button>
+                            <button class="btn btn-primary" onclick="location.reload();"><i class="fas fa-sync"></i>
+                                Actualizar
                                 Datos</button>
                         </div>
 
                     </div>
                     <!-- </section> -->
-                </div>
-                <footer class="main-footer text-center">
-                    <strong>© 2025 - myResultIQ 1.0</strong>
-                </footer>
+                    <!-- </div> -->
+                    <footer class="main-footer text-center">
+                        <strong>© 2025 - myResultIQ 1.0</strong>
+                    </footer>
         </main>
         <!--end::App nain-->
 
@@ -1939,12 +1876,16 @@
         async function cargarCumplimientoPorDestino() {
             const spinner = document.getElementById('spinnerCumplimientoDestinos');
             const tablaContainer = document.getElementById('tablaCumplimientoContainer');
-            const chartContainer = document.getElementById('chartCumplimientoDestinos');
+            // const chartContainer = document.getElementById('chartCumplimientoDestinos');
             const tbody = document.getElementById('tablaCumplimientoDestinos');
 
             spinner.style.display = 'block';
+            // 🔹 y ahora activás el botón que oculta el sidebar
+            const botonSidebar = document.querySelector('[data-lte-toggle="sidebar"]');
+            if (botonSidebar) botonSidebar.click();
+
             tablaContainer.style.display = 'none';
-            chartContainer.style.display = 'none';
+            // chartContainer.style.display = 'none';
 
             try {
                 const res = await fetch('/api/cumplimiento-por-destino');
@@ -1982,13 +1923,14 @@
                             <td class="text-center text-success fw-semibold">${d.en_meta}</td>
                             <td class="text-center text-danger fw-semibold">${d.criticos}</td>
                             <td class="text-center">
-                                <i class="fa-solid fa-chart-line text-primary"
-                                role="button"
-                                style="cursor:pointer"
-                                title="Ver evolución últimas 6 mediciones"
-                                data-id="${d.id_destino}"
-                                data-nombre="${d.destino}">
-                                </i>
+                                <span class="text-primary fw-semibold"
+                                    role="button"
+                                    style="cursor:pointer"
+                                    title="Ver evolución del destino"
+                                    data-id="${d.id_destino}"
+                                    data-nombre="${d.destino}">
+                                    Ver
+                                </span>
                             </td>
                         </tr>`;
                 }).join('');
@@ -2008,7 +1950,7 @@
                 }
 
                 const options = {
-                    chart: { type: 'bar', height: 350, toolbar: { show: false }, animations: { enabled: true } },
+                    chart: { type: 'bar', height: 450, toolbar: { show: false }, animations: { enabled: true } },
                     plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '60%' } },
                     colors: colores,
                     dataLabels: { enabled: true, formatter: val => val + '%', style: { fontSize: '13px', fontWeight: 600 } },
@@ -2018,14 +1960,14 @@
                     grid: { borderColor: '#eee' }
                 };
 
-                setTimeout(() => {
-                    const chart = new ApexCharts(chartContainer, options);
-                    chart.render();
-                }, 50);
+                // setTimeout(() => {
+                //     const chart = new ApexCharts(chartContainer, options);
+                //     chart.render();
+                // }, 50);
 
                 // Delegación de eventos para los íconos de evolución
                 document.getElementById('tablaCumplimientoDestinos').addEventListener('click', async (e) => {
-                    const icono = e.target.closest('.fa-chart-line');
+                    const icono = e.target.closest('[data-id]');
                     if (!icono) return;
 
                     const idDestino = Number(icono.dataset.id);
@@ -2297,113 +2239,10 @@
 
     <script>
 
-        let chartEvolucionArea = null;
+        // let chartEvolucionArea = null;
+        // let chartBarrasArea = null;
 
-        async function XXXmostrarEvolucionPorArea(idDestino, nombreDestino) {
-            const contenedor = document.getElementById('grafico-evolucion');
-            const canvas = document.getElementById('sales-chart');
-
-            // 🔹 Mostrar el contenedor si estaba oculto
-            contenedor.style.display = 'block';
-
-            // 🔹 Mostrar nombre del destino (si hay un encabezado dinámico)
-            const titulo = document.querySelector('#grafico-evolucion .card-title');
-            if (titulo) titulo.textContent = `Evolución del destino: ${nombreDestino}`;
-
-            try {
-                const res = await fetch(`/api/evolucion-global?destino=${idDestino}`);
-                const data = await res.json();
-
-                alert(`va a mostrar idDestino ${idDestino} - ${nombreDestino}`);
-
-                if (!data || !data.serie || data.serie.length === 0) {
-                    console.warn('No hay datos de evolución para el destino', idDestino);
-                    canvas.innerHTML = '<p class="text-center text-muted">Sin datos disponibles</p>';
-                    return;
-                }
-
-                const serie = data.serie;
-
-                // 🔹 Determinar todas las etiquetas (meses)
-                const labels = serie.map(s => s.month);
-
-                // 🔹 Extraer indicadores únicos desde los detalles
-                const indicadores = new Set();
-                serie.forEach(mes => mes.detalle.forEach(d => indicadores.add(d.indicador)));
-
-                // 🔹 Crear un dataset por indicador
-                const datasets = Array.from(indicadores).map(indicador => {
-                    const data = serie.map(mes => {
-                        const det = mes.detalle.find(d => d.indicador === indicador);
-                        return det ? det.cumplimiento : null;
-                    });
-
-                    const color = getRandomColor();
-
-                    return {
-                        label: indicador,
-                        data,
-                        fill: false,
-                        borderColor: color,
-                        backgroundColor: color,
-                        tension: 0.25,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    };
-                });
-
-                // 🔹 Destruir gráfico anterior si existe
-                if (chartEvolucionArea) chartEvolucionArea.destroy();
-
-                // 🔹 Crear nuevo gráfico
-                const ctx = canvas.getContext('2d');
-                chartEvolucionArea = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels,
-                        datasets
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: `Cumplimiento de Indicadores - ${nombreDestino}`,
-                                font: { size: 16 }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: (context) => {
-                                        const value = context.parsed.y;
-                                        return `${context.dataset.label}: ${value?.toFixed(1)}%`;
-                                    }
-                                }
-                            },
-                            legend: {
-                                position: 'bottom',
-                                labels: { boxWidth: 12 }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                title: { display: true, text: 'Cumplimiento (%)' },
-                                min: 0,
-                                max: 120,
-                                ticks: { stepSize: 20 }
-                            },
-                            x: {
-                                title: { display: true, text: 'Periodo (mes)' }
-                            }
-                        }
-                    }
-                });
-
-            } catch (err) {
-                console.error('❌ Error al mostrar evolución por área:', err);
-            }
-        }
-
-        function mostrarEvolucionPorArea(idDestino, nombreDestino) {
+        function XXXmostrarEvolucionPorArea(idDestino, nombreDestino) {
             if (!evolucionGlobal.length) {
                 console.warn("⚠️ No hay datos globales cargados aún.");
                 return;
@@ -2427,7 +2266,6 @@
                 window.chartEvolucion.destroy();
             }
 
-            // const ctx = document.getElementById('graficoEvolucion').getContext('2d');
             const ctx = document.getElementById('sales-chart').getContext('2d');
             window.chartEvolucion = new Chart(ctx, {
                 type: 'line',
@@ -2446,6 +2284,179 @@
             });
         }
 
+
+        let chartEvolucionArea = null;
+        let chartBarrasArea = null;
+
+        function mostrarEvolucionPorArea(idDestino, nombreDestino) {
+            if (!evolucionGlobal || !evolucionGlobal.length) {
+                console.warn("⚠️ No hay datos globales cargados aún.");
+                return;
+            }
+
+            // 🔹 Obtener datos del destino seleccionado
+            const { labels, indicadoresMap, resumenActual } = obtenerSeriesPorDestino(evolucionGlobal, idDestino);
+
+            // ─────────────────────────────────────────────
+            // 📈 GRÁFICO DE LÍNEAS – EVOLUCIÓN TEMPORAL
+            // ─────────────────────────────────────────────
+            const seriesLineas = Object.keys(indicadoresMap).map(indicador => ({
+                name: indicador,
+                data: indicadoresMap[indicador]
+            }));
+
+            const colores = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6610f2', '#20c997'];
+
+            const opcionesEvolucion = {
+                chart: {
+                    type: 'line',
+                    height: 420,
+                    toolbar: {
+                        show: true,
+                        tools: {
+                            download: true,
+                            selection: true,
+                            zoom: true,
+                            zoomin: true,
+                            zoomout: true,
+                            pan: true,
+                            reset: true
+                        },
+                        export: {
+                            csv: { filename: `Evolucion_${nombreDestino}` },
+                            svg: { filename: `Evolucion_${nombreDestino}` },
+                            png: { filename: `Evolucion_${nombreDestino}` }
+                        }
+                    },
+                    zoom: { enabled: true, type: 'x' },
+                    animations: { enabled: true, easing: 'easeinout', speed: 600 }
+                },
+                // title: {
+                //     text: `Evolución del cumplimiento - ${nombreDestino}`,
+                //     align: 'center'
+                // },
+                stroke: { curve: 'smooth', width: 2 },
+                series: seriesLineas,
+                colors: colores,
+                dataLabels: { enabled: false },
+                xaxis: {
+                    categories: labels,
+                    title: { text: 'Período' },
+                    labels: { rotate: -45 }
+                },
+                yaxis: {
+                    min: 0, max: 100, tickAmount: 5,
+                    title: { text: '% de Cumplimiento' }
+                },
+                legend: { position: 'bottom' },
+                tooltip: {
+                    shared: true,
+                    y: { formatter: val => `${val.toFixed(1)}%` }
+                },
+                grid: { borderColor: '#e0e0e0', strokeDashArray: 4 }
+            };
+
+            if (chartEvolucionArea) chartEvolucionArea.destroy();
+            chartEvolucionArea = new ApexCharts(document.querySelector("#chartEvolucionArea"), opcionesEvolucion);
+            chartEvolucionArea.render();
+
+            // ─────────────────────────────────────────────
+            // 📊 GRÁFICO DE BARRAS – CUMPLIMIENTO ACTUAL (valor/meta)
+            // ─────────────────────────────────────────────
+            const indicadores = Object.keys(indicadoresMap);
+
+            // 🔹 Valores actuales: último dato de cada indicador
+            const valoresActuales = indicadores.map(ind => {
+                const data = indicadoresMap[ind];
+                return data[data.length - 1]; // último valor medido
+            });
+
+            // 🔹 Metas (si no las tenés en tu backend, podés ajustarlo aquí)
+            const metas = indicadores.map(() => 200); // ejemplo: meta general 200
+            // Podés reemplazar esto por metas reales, por ejemplo desde resumenActual[ind].meta
+
+            // 🔹 Cálculo del % de cumplimiento
+            const porcentajes = indicadores.map((_, i) => (valoresActuales[i] / metas[i]) * 100);
+
+            const opcionesBarras = {
+                chart: {
+                    type: 'bar',
+                    height: 420,
+                    toolbar: {
+                        show: true,
+                        tools: {
+                            download: true,
+                            selection: false,
+                            zoom: false,
+                            zoomin: false,
+                            zoomout: false,
+                            pan: false,
+                            reset: false
+                        },
+                        export: {
+                            csv: { filename: `Cumplimiento_${nombreDestino}` },
+                            svg: { filename: `Cumplimiento_${nombreDestino}` },
+                            png: { filename: `Cumplimiento_${nombreDestino}` }
+                        }
+                    }
+                },
+                // title: {
+                //     text: `Cumplimiento actual por indicador - ${nombreDestino}`,
+                //     align: 'center'
+                // },
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        borderRadius: 5,
+                        dataLabels: { position: 'right' }
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: (val, opts) => {
+                        const i = opts.dataPointIndex;
+                        return `${valoresActuales[i]} / ${metas[i]} (${porcentajes[i].toFixed(1)}%)`;
+                    },
+                    style: { colors: ['#000'], fontSize: '13px' },
+                    offsetX: 10
+                },
+                series: [{
+                    name: 'Cumplimiento actual',
+                    data: porcentajes
+                }],
+                xaxis: {
+                    categories: indicadores,
+                    max: 100,
+                    title: { text: '% de Cumplimiento' },
+                    labels: { formatter: val => `${val}%` }
+                },
+                colors: ['#28a745'],
+                grid: { borderColor: '#ddd', strokeDashArray: 4 },
+                legend: { show: false },
+                tooltip: {
+                    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                        const ind = indicadores[dataPointIndex];
+                        const actual = valoresActuales[dataPointIndex];
+                        const meta = metas[dataPointIndex];
+                        const pct = porcentajes[dataPointIndex].toFixed(1);
+                        return `
+                <div style="padding:6px;">
+                    <strong>${ind}</strong><br>
+                    Valor: ${actual}<br>
+                    Meta: ${meta}<br>
+                    Cumplimiento: ${pct}%
+                </div>
+            `;
+                    }
+                }
+            };
+
+            // 🔄 Destruir gráfico previo si existe
+            // if (chartBarrasArea) chartBarrasArea.destroy();
+            // chartBarrasArea = new ApexCharts(document.querySelector("#chartBarrasArea"), opcionesBarras);
+            // chartBarrasArea.render();
+
+        }
 
         function obtenerSeriesPorDestino(data, idDestino) {
             const labels = data.map(d => d.month);
@@ -2477,39 +2488,81 @@
 
     </script>
 
-
+    <!-- Librería jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
+        document.getElementById('btnDescargarPDF').addEventListener('click', async () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-        // === Gráfico radial ===
-        // const chartCumplimiento = new ApexCharts(document.querySelector("#chartCumplimiento"), {
-        //     chart: { type: 'radialBar', height: 600 },
-        //     series: [82],
-        //     colors: ['#2563eb'],
-        //     plotOptions: {
-        //         radialBar: {
-        //             hollow: { size: '50%' },
-        //             track: { background: '#e0e7ff' },
-        //             dataLabels: {
-        //                 value: { fontSize: '28px', show: true },
-        //                 name: { show: false }
-        //             }
-        //         }
-        //     }
-        // });
-        // chartCumplimiento.render();
+            // 📅 Fecha actual
+            const fecha = new Date();
+            const fechaFormateada = fecha.toLocaleDateString('es-AR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
 
-        // === Gráfico de línea ===
-        // const chartEvolucion = new ApexCharts(document.querySelector("#chartEvolucion"), {
-        //     chart: { type: 'line', height: 240, toolbar: { show: false } },
-        //     series: [{ name: 'Cumplimiento', data: [70, 74, 79, 82, 84] }],
-        //     xaxis: { categories: ['Jun', 'Jul', 'Ago', 'Sep', 'Oct'] },
-        //     stroke: { curve: 'smooth', width: 3 },
-        //     colors: ['#2563eb'],
-        //     markers: { size: 4 },
-        //     grid: { borderColor: '#e9ecef' }
-        // });
-        // chartEvolucion.render();
+            // 🏢 Logo institucional (opcional)
+            const logoUrl = "dist/images/leon.png"; // reemplazá con tu logo
+            const logoWidth = 40;
+            const logoHeight = 20;
+
+            // Insertar logo
+            try {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.src = logoUrl;
+                await new Promise(resolve => img.onload = resolve);
+                doc.addImage(img, 'PNG', 15, 10, logoWidth, logoHeight);
+            } catch (error) {
+                console.warn('No se pudo cargar el logo:', error);
+            }
+
+            // 🧾 Título y fecha
+            doc.setFontSize(18);
+            doc.text('Reporte de Evolución del Cumplimiento Global', 60, 20);
+            doc.setFontSize(12);
+            doc.text(`Fecha de generación: ${fechaFormateada}`, 60, 28);
+
+            // 🔹 Texto introductorio
+            doc.setFontSize(12);
+            const texto = [
+                'Este informe presenta la evolución mensual del cumplimiento global de los indicadores PKI.',
+                'El análisis permite visualizar tendencias, identificar mejoras y detectar áreas críticas.',
+                '',
+                'En la siguiente página se muestra el gráfico correspondiente al período analizado.'
+            ];
+            doc.text(texto, 20, 60, { maxWidth: 170, align: 'justify' });
+
+            // ➕ Nueva página para el gráfico
+            doc.addPage();
+
+            // 📊 Capturar gráfico Chart.js
+            const canvas = document.getElementById('evolucionChart');
+            if (!canvas) {
+                alert("⚠️ No se encontró el gráfico para exportar.");
+                return;
+            }
+
+            // Esperar un momento para asegurar que esté renderizado
+            await new Promise(r => setTimeout(r, 300));
+
+            const imgData = canvas.toDataURL('image/png', 1.0);
+
+            // 🖼️ Ajustar y centrar el gráfico
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const imgWidth = pageWidth - 30; // márgenes
+            const imgHeight = (canvas.height / canvas.width) * imgWidth;
+            const yPos = (pageHeight - imgHeight) / 2;
+
+            doc.addImage(imgData, 'PNG', 15, yPos, imgWidth, imgHeight);
+
+            // 💾 Guardar el archivo
+            doc.save(`Evolucion_Cumplimiento_Global_${fecha.toISOString().slice(0, 10)}.pdf`);
+        });
     </script>
 
     <script>
