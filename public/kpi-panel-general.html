@@ -429,9 +429,14 @@
                                     </h5>
 
                                     <!-- Contenedor del ring grande centrado -->
-                                    <div class="d-flex justify-content-center my-4 w-100">
+                                    <!-- <div class="d-flex justify-content-center my-4 w-100">
                                         <svg id="ringGlobal" width="300" height="300"></svg>
+                                    </div> -->
+                                    <div class="d-flex justify-content-center my-4 w-100">
+                                        <svg id="ringGlobal" viewBox="0 0 300 300"
+                                            style="width:100%; max-width:300px; height:auto;"></svg>
                                     </div>
+
 
                                     <!-- Link a vista completa alineado a la derecha -->
                                     <div class="d-flex justify-content-end mt-3">
@@ -992,7 +997,7 @@
             document.getElementById('vsMesAnterior').textContent = (resumen.diferencia >= 0 ? '+' : '') + resumen.diferencia + '%';
             document.getElementById('promHistorico').textContent = resumen.promedioHistorico + '%';
             document.getElementById('promAnual').textContent = resumen.promedioAnual + '%';
-            document.getElementById('tendencia').textContent = (resumen.tendencia >= 0 ? '+' : '') + resumen.tendencia + '%';   
+            document.getElementById('tendencia').textContent = (resumen.tendencia >= 0 ? '+' : '') + resumen.tendencia + '%';
             console.log(resumen);
 
             // Validar que haya datos
