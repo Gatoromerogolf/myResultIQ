@@ -596,30 +596,27 @@
                                                     <div class="progress-bar text-bg-success" style="width: 80%"></div>
                                                 </div>
                                             </div>
-                                            <!-- /.progress-group -->
-                                            <div class="progress-group">
+                                            <!-- <div class="progress-group">
                                                 Satisfacción del Cliente
                                                 <span class="float-end"><b>310</b>/400</span>
                                                 <div class="progress progress-sm">
                                                     <div class="progress-bar text-bg-primary" style="width: 75%"></div>
                                                 </div>
-                                            </div>
-                                            <!-- /.progress-group -->
-                                            <div class="progress-group">
+                                            </div> -->
+                                            <!-- <div class="progress-group">
                                                 <span class="progress-text">Tiempo de procesamiento</span>
                                                 <span class="float-end"><b>480</b>/800</span>
                                                 <div class="progress progress-sm">
                                                     <div class="progress-bar text-bg-danger" style="width: 60%"></div>
                                                 </div>
                                             </div>
-                                            <!-- /.progress-group -->
                                             <div class="progress-group">
                                                 Send Inquiries
                                                 <span class="float-end"><b>250</b>/500</span>
                                                 <div class="progress progress-sm">
                                                     <div class="progress-bar text-bg-warning" style="width: 50%"></div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <!-- /.progress-group -->
                                         </div>
                                         <!-- /.col -->
@@ -1047,7 +1044,6 @@
         async function renderizarGrafico() {
             const data = await obtenerEvolucionGlobal();
             evolucionGlobal = data; // ✅ guardamos todo el dataset
-            console.log("📊 Datos devueltos para el gráfico:", data);
 
             // Validar que haya datos
             if (!Array.isArray(data) || data.length === 0) {
@@ -1953,7 +1949,7 @@
             try {
                 const res = await fetch('/api/cumplimiento-por-destino');
                 const data = await res.json();
-                console.log (data)
+                console.log(data)
 
                 // --- Renderizar tabla con ícono de evolución ---
                 tbody.innerHTML = data.map(d => {
@@ -2027,25 +2023,6 @@
                     chart.render();
                 }, 50);
 
-                // --- Agregar listener para mostrar gráfico de evolución ---
-                // tbody.querySelectorAll('.fa-chart-line').forEach(icon => {
-                //     icon.addEventListener('click', (e) => {
-                //         const idDestino = e.target.dataset.id;
-                //         const nombreDestino = e.target.dataset.nombre;
-
-                //         // Mostrar el contenedor del gráfico
-                //         const graficoEvolucion = document.getElementById('grafico-evolucion');
-                //         graficoEvolucion.style.display = 'block';
-
-                //         // (Opcional) Mostrar el nombre del destino en el título si lo tenés
-                //         const titulo = graficoEvolucion.querySelector('.card-title');
-                //         if (titulo) titulo.textContent = `Reporte de evolución - ${nombreDestino}`;
-
-                //         // (Opcional) Llamar a la función que dibuja el gráfico
-                //         // mostrarEvolucionPorArea(idDestino);
-                //     });
-                // });
-
                 // Delegación de eventos para los íconos de evolución
                 document.getElementById('tablaCumplimientoDestinos').addEventListener('click', async (e) => {
                     const icono = e.target.closest('.fa-chart-line');
@@ -2058,12 +2035,14 @@
 
                     // 🔹 Mostrar el contenedor del gráfico
                     const graficoContainer = document.getElementById('grafico-evolucion');
+                    // 🔹 Mostrar nombre del destino (si hay un encabezado dinámico)
+                    const titulo = document.querySelector('#grafico-evolucion .card-title');
+                    if (titulo) titulo.textContent = `Evolución del destino: ${nombreDestino}`;
                     graficoContainer.style.display = 'block';
 
                     // 🔹 Generar gráfico específico
                     mostrarEvolucionPorArea(idDestino, nombreDestino);
                 });
-
 
 
             } catch (error) {
@@ -2078,75 +2057,74 @@
         // --- Modal y gráfico de evolución ---
         let chartEvolucion = null;
 
-        document.getElementById('tablaCumplimientoDestinos').addEventListener('click', async (e) => {
-            const icono = e.target.closest('.fa-chart-line');
-            if (!icono) return;
+        // document.getElementById('tablaCumplimientoDestinos').addEventListener('click', async (e) => {
+        //     const icono = e.target.closest('.fa-chart-line');
+        //     if (!icono) return;
 
-            const idDestino = icono.dataset.id;
-            const nombreDestino = icono.dataset.nombre;
+        //     const idDestino = icono.dataset.id;
+        //     const nombreDestino = icono.dataset.nombre;
 
-            mostrarEvolucionPorArea(idDestino, nombreDestino);
+        //     mostrarEvolucionPorArea(idDestino, nombreDestino);
 
-            try {
-                const res = await fetch(`/api/evolucion-area/${idDestino}`);
-                const datos = await res.json();
+        //     try {
+        //         const res = await fetch(`/api/evolucion-area/${idDestino}`);
+        //         const datos = await res.json();
 
-                if (!datos || datos.length === 0) {
-                    alert('No hay datos de evolución para esta área.');
-                    return;
-                }
+        //         if (!datos || datos.length === 0) {
+        //             alert('No hay datos de evolución para esta área.');
+        //             return;
+        //         }
 
-                // Eje X: 1..6, pero tooltip mostrará el valor real de med_valor_periodo
-                const periodosX = datos.map((d, idx) => idx + 1);
-                const periodosTooltip = datos.map(d => d.periodo_real);
-                const valores = datos.map(d => d.cumplimiento);
+        //         const periodosX = datos.map((d, idx) => idx + 1);
+        //         const periodosTooltip = datos.map(d => d.periodo_real);
+        //         const valores = datos.map(d => d.cumplimiento);
 
-                if (chartEvolucion) chartEvolucion.destroy();
+        //         if (chartEvolucion) chartEvolucion.destroy();
 
-                const ctx = document.getElementById('graficoEvolucionArea');
-                chartEvolucion = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: periodosX,
-                        datasets: [{
-                            label: `Cumplimiento promedio - ${nombreDestino}`,
-                            data: valores,
-                            borderWidth: 2,
-                            borderColor: '#0d6efd',
-                            tension: 0.3,
-                            fill: false
-                        }]
-                    },
-                    options: {
-                        plugins: {
-                            title: { display: true, text: 'Evolución del cumplimiento global del área' },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        const idx = context.dataIndex;
-                                        return `Cumplimiento: ${context.parsed.y}% (Periodo: ${periodosTooltip[idx]})`;
-                                    }
-                                }
-                            },
-                            legend: { display: false }
-                        },
-                        scales: {
-                            y: { beginAtZero: true, max: 100, title: { display: true, text: 'Cumplimiento (%)' } },
-                            x: { title: { display: true, text: 'Período (1=más antiguo, 6=último)' } }
-                        }
-                    }
-                });
+        //         const ctx = document.getElementById('graficoEvolucionArea');
+        //         chartEvolucion = new Chart(ctx, {
+        //             type: 'line',
+        //             data: {
+        //                 labels: periodosX,
+        //                 datasets: [{
+        //                     label: `Cumplimiento promedio - ${nombreDestino}`,
+        //                     data: valores,
+        //                     borderWidth: 2,
+        //                     borderColor: '#0d6efd',
+        //                     tension: 0.3,
+        //                     fill: false
+        //                 }]
+        //             },
+        //             options: {
+        //                 plugins: {
+        //                     title: { display: true, text: 'Evolución del cumplimiento global del área' },
+        //                     tooltip: {
+        //                         callbacks: {
+        //                             label: function (context) {
+        //                                 const idx = context.dataIndex;
+        //                                 return `Cumplimiento: ${context.parsed.y}% (Periodo: ${periodosTooltip[idx]})`;
+        //                             }
+        //                         }
+        //                     },
+        //                     legend: { display: false }
+        //                 },
+        //                 scales: {
+        //                     y: { beginAtZero: true, max: 100, title: { display: true, text: 'Cumplimiento (%)' } },
+        //                     x: { title: { display: true, text: 'Período (1=más antiguo, 6=último)' } }
+        //                 }
+        //             }
+        //         });
 
-                const modal = new bootstrap.Modal(document.getElementById('modalEvolucionArea'));
-                modal.show();
-
+        //         const modal = new bootstrap.Modal(document.getElementById('modalEvolucionArea'));
+        //         modal.show();
 
 
-            } catch (err) {
-                console.error('Error cargando evolución del área:', err);
-                alert('No se pudo cargar la evolución del área.');
-            }
-        });
+
+        //     } catch (err) {
+        //         console.error('Error cargando evolución del área:', err);
+        //         alert('No se pudo cargar la evolución del área.');
+        //     }
+        // });
 
 
         // Escuchar clics en cualquier fila de indicador
@@ -2449,7 +2427,8 @@
                 window.chartEvolucion.destroy();
             }
 
-            const ctx = document.getElementById('graficoEvolucion').getContext('2d');
+            // const ctx = document.getElementById('graficoEvolucion').getContext('2d');
+            const ctx = document.getElementById('sales-chart').getContext('2d');
             window.chartEvolucion = new Chart(ctx, {
                 type: 'line',
                 data: { labels, datasets },
