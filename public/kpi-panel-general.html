@@ -444,16 +444,20 @@
                                 <!-- Trend box -->
                                 <div class="trend-box d-flex justify-content-around p-3 border-top">
                                     <div class="trend-item text-center">
-                                        <div class="trend-value text-success">+3.2%</div>
+                                        <div class="trend-value text-success" id="vsMesAnterior">+3.2%</div>
                                         <div class="trend-label">vs. mes anterior</div>
                                     </div>
                                     <div class="trend-item text-center">
-                                        <div class="trend-value text-primary">84%</div>
+                                        <div class="trend-value text-primary" id="promHistorico">84%</div>
+                                        <div class="trend-label">Promedio histórico</div>
+                                    </div>
+                                    <div class="trend-item text-center">
+                                        <div class="trend-value text-primary" id="promAnual">84%</div>
                                         <div class="trend-label">Promedio anual</div>
                                     </div>
                                     <div class="trend-item text-center">
-                                        <div class="trend-value text-danger">–1.1%</div>
-                                        <div class="trend-label">Desvío ponderado</div>
+                                        <div class="trend-value text-danger" id="tendencia">–1.1%</div>
+                                        <div class="trend-label">Tendencia</div>
                                     </div>
                                 </div>
                             </div>
@@ -650,6 +654,7 @@
                                         <tr>
                                             <th>Indicador</th>
                                             <th>Destino</th>
+                                            <th>Responsable</th>
                                             <th>Cumpl.</th>
                                             <th>Tendencia</th>
                                             <th>Variación</th>
@@ -668,7 +673,7 @@
                     <div class="card card-danger card-outline col-12 mt-3 mb-4 card-shadow">
                         <div class="card-header">
                             <h5 class="card-title mb-3 d-flex align-items-center flex-wrap" style="gap: 6px;">
-                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-arrow-down text-danger"></i>
                                 <label for="valorCorteCriticos" class="mb-0 fw-semibold text-gray-700">
                                     Críticos: cumplimiento menor al
                                 </label>
@@ -708,6 +713,7 @@
                                         <tr>
                                             <th>Indicador</th>
                                             <th>Destino</th>
+                                            <th>Responsable</th>
                                             <th>Cumpl.</th>
                                             <th>Tendencia</th>
                                             <th>Variación</th>
@@ -798,8 +804,8 @@
 
                         <!-- === Botones de acción === -->
                         <div class="actions-bar">
-                            <button class="btn btn-secondary"><i class="fas fa-file-csv"></i> Exportar
-                                CSV</button>
+                            <!-- <button class="btn btn-secondary"><i class="fas fa-file-csv"></i> Exportar
+                                CSV</button> -->
                             <button id="btnDescargarPDF" class="btn btn-outline-primary">
                                 <i class="fas fa-file-pdf"></i> Descargar PDF
                             </button>
@@ -972,7 +978,7 @@
             const res = await fetch('/api/evolucion-global');
             if (!res.ok) throw new Error('Error obteniendo datos');
             const data = await res.json();
-            console.log(JSON.stringify(data, null, 2));
+            // console.log(JSON.stringify(data, null, 2));
             return data
         }
 
@@ -981,6 +987,13 @@
         async function renderizarGrafico() {
             const data = await obtenerEvolucionGlobal();
             evolucionGlobal = data; // ✅ guardamos todo el dataset
+
+            const resumen = analizarEvolucionGlobal(evolucionGlobal);
+            document.getElementById('vsMesAnterior').textContent = (resumen.diferencia >= 0 ? '+' : '') + resumen.diferencia + '%';
+            document.getElementById('promHistorico').textContent = resumen.promedioHistorico + '%';
+            document.getElementById('promAnual').textContent = resumen.promedioAnual + '%';
+            document.getElementById('tendencia').textContent = (resumen.tendencia >= 0 ? '+' : '') + resumen.tendencia + '%';   
+            console.log(resumen);
 
             // Validar que haya datos
             if (!Array.isArray(data) || data.length === 0) {
@@ -1080,6 +1093,56 @@
                 }
             });
         }
+
+        function analizarEvolucionGlobal(evolucionGlobal) {
+            if (!Array.isArray(evolucionGlobal) || evolucionGlobal.length === 0) {
+                return {
+                    diferencia: 0,
+                    promedioHistorico: 0,
+                    promedioAnual: 0,
+                    tendencia: 'Sin datos'
+                };
+            }
+
+            // Ordenar por fecha (por si no viene ordenado)
+            const serie = [...evolucionGlobal].sort((a, b) => a.month.localeCompare(b.month));
+
+            // 🔸 a) Diferencia entre la última y la anteúltima medición
+            const ult = serie[serie.length - 1]?.cumplimiento || 0;
+            const penult = serie[serie.length - 2]?.cumplimiento || 0;
+            const diferencia = parseFloat((ult - penult).toFixed(2));
+
+            // 🔸 b) Promedio histórico
+            const promedioHistorico = parseFloat(
+                (serie.reduce((acc, d) => acc + d.cumplimiento, 0) / serie.length).toFixed(2)
+            );
+
+            // 🔸 c) Promedio anual (últimos 12 meses)
+            const ultimos12 = serie.slice(-12);
+            const promedioAnual = parseFloat(
+                (ultimos12.reduce((acc, d) => acc + d.cumplimiento, 0) / ultimos12.length).toFixed(2)
+            );
+
+            // 🔸 d) Tendencia (creciente / decreciente / estable)
+            let tendencia = 'Estable';
+            if (serie.length >= 3) {
+                // calculamos pendiente de una regresión lineal simple
+                const n = serie.length;
+                const x = serie.map((_, i) => i + 1);
+                const y = serie.map(d => d.cumplimiento);
+                const xMean = x.reduce((a, b) => a + b) / n;
+                const yMean = y.reduce((a, b) => a + b) / n;
+                const num = x.reduce((sum, xi, i) => sum + (xi - xMean) * (y[i] - yMean), 0);
+                const den = x.reduce((sum, xi) => sum + (xi - xMean) ** 2, 0);
+                const pendiente = num / den;
+
+                if (pendiente > 0.2) tendencia = 'Creciente';
+                else if (pendiente < -0.2) tendencia = 'Decreciente';
+            }
+
+            return { diferencia, promedioHistorico, promedioAnual, tendencia };
+        }
+
 
         // 🔹 Mostrar modal con detalle del mes marcado en evolución global
         function mostrarDetalleMes(entry) {
@@ -1428,6 +1491,9 @@
                             trDest.innerHTML = `
                                 <td>${ind.nombre}</td>
                                 <td>${sector?.nombre || '-'}</td>
+                                <td>${usuario && usuario.nombres && usuario.apellidos
+                                    ? `${usuario.nombres} ${usuario.apellidos}`
+                                    : '-'}</td> 
                                 <td>${porcentaje}%</td>
                             `;
                             tbodyDestacados.appendChild(trDest);
@@ -1439,6 +1505,9 @@
                             trCrit.innerHTML = `
                                 <td>${ind.nombre}</td>
                                 <td>${sector?.nombre || '-'}</td>
+                                <td>${usuario && usuario.nombres && usuario.apellidos
+                                    ? `${usuario.nombres} ${usuario.apellidos}`
+                                    : '-'}</td> 
                                 <td>${porcentaje}%</td>
                             `;
                             tbodyCriticos.appendChild(trCrit);
@@ -2205,6 +2274,7 @@
                             </a>
                         </td>
                         <td>${ind.sector}</td>
+                        <td>${ind.usuario}</td>
                         <td>${ind.porcentaje}%</td>
                         <td style="color: ${ind.resultado.color}">${ind.resultado.tendencia}</td>
                         <td class="text-end">${ind.resultado.variacion}%</td>
@@ -2224,7 +2294,8 @@
                                 ${ind.nombre}
                             </a>
                         </td>
-                        <td>${ind.sector}</td>
+                        <td>${ind.sector}</td>usuario && ind.usuario.nombres && ind.usua
+                        <td>${ind.usuario}</td>
                         <td>${ind.porcentaje}%</td>
                         <td style="color: ${ind.resultado.color}">${ind.resultado.tendencia}</td>
                         <td class="text-end">${ind.resultado.variacion}%</td>
@@ -2491,77 +2562,124 @@
     <!-- Librería jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+    <!-- Spinner / Modal flotante -->
+    <div id="spinnerOverlay" style="
+  display:none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  font-size: 1.2rem;
+">
+        <div class="spinner-border text-light mb-3" role="status">
+            <span class="visually-hidden">Generando PDF...</span>
+        </div>
+        <span id="spinnerText">Generando informe PDF, por favor espere...</span>
+    </div>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <script>
         document.getElementById('btnDescargarPDF').addEventListener('click', async () => {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            const spinner = document.getElementById('spinnerOverlay');
+            const spinnerText = document.getElementById('spinnerText');
 
-            // 📅 Fecha actual
-            const fecha = new Date();
-            const fechaFormateada = fecha.toLocaleDateString('es-AR', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric'
-            });
-
-            // 🏢 Logo institucional (opcional)
-            const logoUrl = "dist/images/leon.png"; // reemplazá con tu logo
-            const logoWidth = 40;
-            const logoHeight = 20;
-
-            // Insertar logo
             try {
-                const img = new Image();
-                img.crossOrigin = 'anonymous';
-                img.src = logoUrl;
-                await new Promise(resolve => img.onload = resolve);
-                doc.addImage(img, 'PNG', 15, 10, logoWidth, logoHeight);
+                // Mostrar el spinner
+                spinner.style.display = 'flex';
+                spinnerText.textContent = 'Generando informe PDF, por favor espere...';
+
+                const fecha = new Date();
+                const fechaISO = fecha.toISOString().slice(0, 10);
+                const nombreArchivo = `Evolucion_Cumplimiento_Global_${fechaISO}.pdf`;
+
+                // 📈 Datos del gráfico
+                const chart = window.globalChartInstance;
+                if (!chart) {
+                    alert('⚠️ No se encontró el gráfico de evolución global.');
+                    spinner.style.display = 'none';
+                    return;
+                }
+
+                const valores = chart.data.datasets[0].data;
+                const labels = chart.data.labels;
+                const promedio = (valores.reduce((a, b) => a + b, 0) / valores.length).toFixed(2);
+                const ultimoValor = valores[valores.length - 1];
+                const ultimoMes = labels[labels.length - 1];
+
+                const doc = new jsPDF();
+
+                // 🏢 Logo (opcional)
+                const logoUrl = 'dist/images/leon2.png';
+                try {
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    img.src = logoUrl;
+                    await new Promise(resolve => img.onload = resolve);
+                    doc.addImage(img, 'PNG', 15, 10, 40, 20);
+                } catch (err) {
+                    console.warn('No se pudo cargar el logo:', err);
+                }
+
+                // 🧾 Encabezado
+                doc.setFontSize(18);
+                doc.text('Reporte de Evolución del Cumplimiento Global', 60, 20);
+                doc.setFontSize(12);
+                doc.text(`Fecha de generación: ${fecha.toLocaleDateString('es-AR')}`, 60, 28);
+
+                // 📊 Resumen numérico
+                doc.setFontSize(14);
+                doc.text('Resumen de datos:', 20, 50);
+                doc.setFontSize(12);
+                doc.text(`• Promedio general de cumplimiento: ${promedio}%`, 25, 60);
+                doc.text(`• Último valor (${ultimoMes}): ${ultimoValor}%`, 25, 68);
+                doc.text('', 20, 75);
+
+                // 📝 Texto descriptivo
+                const texto = [
+                    'Este informe refleja la evolución mensual del cumplimiento global de los indicadores PKI.',
+                    'El gráfico en la página siguiente permite analizar las tendencias, avances y áreas que requieren atención.',
+                    '',
+                    'El cumplimiento promedio se calcula como la media de todos los meses registrados, mientras que el último valor corresponde al mes más reciente disponible.'
+                ];
+                doc.text(texto, 20, 85, { maxWidth: 170, align: 'justify' });
+
+                // ➕ Página 2: gráfico
+                doc.addPage();
+                const canvas = document.getElementById('evolucionChart');
+                await new Promise(r => setTimeout(r, 300)); // asegurar render completo
+
+                const imgData = canvas.toDataURL('image/png', 1.0);
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const imgWidth = pageWidth - 30;
+                const imgHeight = (canvas.height / canvas.width) * imgWidth;
+                const yPos = (pageHeight - imgHeight) / 2;
+
+                doc.addImage(imgData, 'PNG', 15, yPos, imgWidth, imgHeight);
+
+                // 💾 Descargar
+                doc.save(nombreArchivo);
+
+                // 🟢 Mostrar mensaje final
+                spinnerText.textContent = `✅ Informe generado correctamente. 
+    El archivo se descargó como: ${nombreArchivo}`;
+
+                // Ocultar el spinner luego de unos segundos
+                setTimeout(() => spinner.style.display = 'none', 2500);
+
             } catch (error) {
-                console.warn('No se pudo cargar el logo:', error);
+                console.error(error);
+                alert('❌ Error al generar el informe.');
+                spinner.style.display = 'none';
             }
-
-            // 🧾 Título y fecha
-            doc.setFontSize(18);
-            doc.text('Reporte de Evolución del Cumplimiento Global', 60, 20);
-            doc.setFontSize(12);
-            doc.text(`Fecha de generación: ${fechaFormateada}`, 60, 28);
-
-            // 🔹 Texto introductorio
-            doc.setFontSize(12);
-            const texto = [
-                'Este informe presenta la evolución mensual del cumplimiento global de los indicadores PKI.',
-                'El análisis permite visualizar tendencias, identificar mejoras y detectar áreas críticas.',
-                '',
-                'En la siguiente página se muestra el gráfico correspondiente al período analizado.'
-            ];
-            doc.text(texto, 20, 60, { maxWidth: 170, align: 'justify' });
-
-            // ➕ Nueva página para el gráfico
-            doc.addPage();
-
-            // 📊 Capturar gráfico Chart.js
-            const canvas = document.getElementById('evolucionChart');
-            if (!canvas) {
-                alert("⚠️ No se encontró el gráfico para exportar.");
-                return;
-            }
-
-            // Esperar un momento para asegurar que esté renderizado
-            await new Promise(r => setTimeout(r, 300));
-
-            const imgData = canvas.toDataURL('image/png', 1.0);
-
-            // 🖼️ Ajustar y centrar el gráfico
-            const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
-            const imgWidth = pageWidth - 30; // márgenes
-            const imgHeight = (canvas.height / canvas.width) * imgWidth;
-            const yPos = (pageHeight - imgHeight) / 2;
-
-            doc.addImage(imgData, 'PNG', 15, yPos, imgWidth, imgHeight);
-
-            // 💾 Guardar el archivo
-            doc.save(`Evolucion_Cumplimiento_Global_${fecha.toISOString().slice(0, 10)}.pdf`);
         });
     </script>
 
