@@ -387,10 +387,8 @@
                                     <div class="col-md-2">
                                         <label for="texto-período" class="form-label"><strong>Período medido:</strong>
                                             <i class="fas fa-info-circle info-icon" data-bs-toggle="tooltip"
-                                                data-bs-html="true" data-bs-custom-class="dark-tooltip" title="Identificación del período al que corresponde la medición.<br><br>
-                                                • <b>Diaria: </b> Dia evaluado<br><br>
-                                                • <b>Semanal: </b> Número de semana en el año (1 a 52)<br><br>
-                                                • <b>Quincenal: </b> N° de 1 a 24 a razón de dos quincenas por mes)<br>Ejemplo: 2da de agosto = 16 (7 x 2 + 2)<br><br>
+                                                data-bs-html="true" data-bs-custom-class="dark-tooltip"
+                                                title="Identificación del período al que corresponde la medición.<br><br>
                                                 • <b>Mensual: </b> Número de mes en el año (1 a 12)<br><br>
                                                 • <b>Bimestral: </b> Número de bimestre en el año (1 a 6)<br><br>
                                                 • <b>Trimestral: </b> Número de trimestre en el año (1 a 4)<br><br>
@@ -398,11 +396,16 @@
                                                 • <b>Semestral: </b> Número de semestre en el año (1 o 2)<br><br>
                                                 • <b>Anual: </b> Año evaluado<br><br>">
                                             </i>
+                                            <!--Eliminado de las opciones: 
+                                                • <b>Diaria: </b> Dia evaluado<br><br>
+                                                • <b>Semanal: </b> Número de semana en el año (1 a 52)<br><br>
+                                                • <b>Quincenal: </b> N° de 1 a 24 a razón de dos quincenas por mes)<br>Ejemplo: 2da de agosto = 16 (7 x 2 + 2)<br><br>
+                                            -->
                                         </label>
                                         <span id="texto-periodo" class="form-control-plaintext"></span>
                                     </div>
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-1">
                                         <label id="label-valor-periodo" for="label-valor-periodo" class="form-label">
                                             <strong>Valor período:</strong>
                                         </label>
@@ -423,6 +426,11 @@
                                     <div class="col-md-2">
                                         <label class="form-label"><strong>Valor medido:</strong></label>
                                         <input type="number" class="form-control" id="valor-carga" step="0.01" required>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="form-label"><strong>Meta actual:</strong></label>
+                                        <span id="valor-meta-carga" class="form-control-plaintext"></span>
                                     </div>
 
                                     <div class="col-md-4">
@@ -878,42 +886,18 @@
                                 anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
                                 segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
                                 switch (segunda) {
-                                    case '01':
-                                        fecha = 'Enero de ' + anio;
-                                        break;
-                                    case '02':
-                                        fecha = 'Febrero de ' + anio;
-                                        break;
-                                    case '03':
-                                        fecha = 'Marzo de ' + anio;
-                                        break;
-                                    case '04':
-                                        fecha = 'Abril de ' + anio;
-                                        break;
-                                    case '05':
-                                        fecha = 'Mayo de ' + anio;
-                                        break;
-                                    case '06':
-                                        fecha = 'Junio de ' + anio;
-                                        break;
-                                    case '07':
-                                        fecha = 'Julio de ' + anio;
-                                        break;
-                                    case '08':
-                                        fecha = 'Agosto de ' + anio;
-                                        break;
-                                    case '09':
-                                        fecha = 'Setiembre de ' + anio;
-                                        break;
-                                    case '10':
-                                        fecha = 'Octubre de ' + anio;
-                                        break;
-                                    case '11':
-                                        fecha = 'Noviembre de ' + anio;
-                                        break;
-                                    case '12':
-                                        fecha = 'Diciembre de ' + anio;
-                                        break;
+                                    case '01': fecha = 'Enero de ' + anio; break;
+                                    case '02': fecha = 'Febrero de ' + anio; break;
+                                    case '03': fecha = 'Marzo de ' + anio; break;
+                                    case '04': fecha = 'Abril de ' + anio; break;
+                                    case '05': fecha = 'Mayo de ' + anio; break;
+                                    case '06': fecha = 'Junio de ' + anio; break;
+                                    case '07': fecha = 'Julio de ' + anio; break;
+                                    case '08': fecha = 'Agosto de ' + anio; break;
+                                    case '09': fecha = 'Setiembre de ' + anio; break;
+                                    case '10': fecha = 'Octubre de ' + anio; break;
+                                    case '11': fecha = 'Noviembre de ' + anio; break;
+                                    case '12': fecha = 'Diciembre de ' + anio; break;   
                                 };
                                 break;
 
@@ -1211,12 +1195,13 @@
                     ? Number(valorPeriodo.substring(0, 4))  // extrae año de "AAAAMMDD"
                     : anioPeriodo,
                 med_valor: parseFloat(document.getElementById('valor-carga').value),
+                med_meta: parseFloat(document.getElementById('valor-meta-carga').value),
                 med_comentarios: document.getElementById('comentario-carga').value.trim(),
-                med_plan_accion: document.getElementById('plan-accion-carga').value.trim(),
                 med_unidad_medida: unidad,
                 med_legajo_resp_medicion: '1',
                 med_legajo_resp_registro: '3',
-                med_fecha_registro: med_fecha_registro
+                med_fecha_registro: med_fecha_registro,
+                med_plan_accion: document.getElementById('plan-accion-carga').value.trim()
             };
 
             console.log("Datos a enviar:", datos);
@@ -1258,6 +1243,7 @@
         async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo, ultimaMedicion, formula_calculo, metaVigente) {
 
             const ultima = await getUltimaMedicionPorIndicador(indId);
+            console.table (ultima)
             const titulo = document.getElementById('titulo-indicador');
             titulo.innerText = `Indicador: ${codigo} - ${nombre}`;
 
@@ -1272,9 +1258,10 @@
             const spanPlanAccion = document.getElementById('valor-plan-accion');
             const spanFormulaCalculo = document.getElementById('formula-calculo');
             const spanMetaVigente = document.getElementById('meta-vigente');
+            const spanMetaCarga = document.getElementById('valor-meta-carga');
 
             spanFormulaCalculo.innerText = formula_calculo;
-            spanMetaVigente.innerText = metaVigente;
+            spanMetaCarga.innerText = metaVigente || '-';
 
             if (ultima) {
                 const fecha = new Date(ultima.med_fecha_registro);
@@ -1282,6 +1269,7 @@
                 spanMedicion.textContent = fechaFormateada;
                 spanMedicion.style.color = "red";
                 spanComentarios.textContent = ultima.med_comentarios || '-';
+                spanMetaVigente.innerText = ultima.med_meta;
 
                 if (ultima.med_tipo_periodo == '0201') {
                     // diaria
@@ -1315,6 +1303,7 @@
                 spanMedicion.style.color = "grey";
                 spanValorMedido.textContent = '- - - ';
                 spanUltimoPeriodo.textContent = '- - - ';
+                spanMetaVigente.innerText = '- - - ';
             }
 
             // Guardar id y extras en hidden/dataset para usarlos en el submit
@@ -1350,19 +1339,19 @@
                     break;
                 case '0205':
                     textoPeriodo.textContent = "Bimestre (1 a 6):";
-                    labelValorPeriodo.innerHTML = "<strong>N° Bimestre:</strong>";
+                    labelValorPeriodo.innerHTML = "<strong>N° Bim.:</strong>";
                     break;
                 case '0206':
                     textoPeriodo.textContent = "Trimestre (1 a 4)";
-                    labelValorPeriodo.innerHTML = "<strong>N° Trimestre:</strong>";
+                    labelValorPeriodo.innerHTML = "<strong>N° Trim.:</strong>";
                     break;
                 case '0207':
                     textoPeriodo.textContent = "Cuatrim.(1 a 3):";
-                    labelValorPeriodo.innerHTML = "<strong>N° Cuatrim.:</strong>";
+                    labelValorPeriodo.innerHTML = "<strong>N° Cuatr.:</strong>";
                     break;
                 case '0208':
                     textoPeriodo.textContent = "Semestre (1 ó 2)";
-                    labelValorPeriodo.innerHTML = "<strong>N° Semestre:</strong>";
+                    labelValorPeriodo.innerHTML = "<strong>N° Sem.:</strong>";
                     break;
                 case '0209':
                     textoPeriodo.textContent = "Año (AAAA):";
@@ -1452,20 +1441,6 @@
             }
         }
 
-        async function getUltimaMedicionPorIndicadorZZZ(indicadorId) {
-            // Filtrar por el indicador
-            const mediciones = await leerMediciones();
-            const filtradas = mediciones.filter(m => m.med_indicador_id == indicadorId);
-            // Si no hay ninguna, devolvemos null
-            if (filtradas.length === 0) return null;
-
-            // Buscar la más reciente comparando fechas
-            return filtradas.reduce((ultima, actual) => {
-                return new Date(actual.med_fecha_medicion) > new Date(ultima.med_fecha_medicion)
-                    ? actual
-                    : ultima;
-            });
-        }
 
         function calcularFechaEsperada(fechaConsulta, tipoPeriodo) {
             // segun la fecha del dia determina qué fecha deberia ya haber informado el usuario

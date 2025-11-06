@@ -397,27 +397,26 @@ app.put('/api/indicadores/actualizar-pesos', async (req, res) => {
 
     try {
         const conn = await pool.getConnection();
-
-        // Usar transacción para actualizar todos los indicadores de una vez
         await conn.beginTransaction();
 
         for (const ind of cambios) {
             await conn.query(
                 `UPDATE indicadores 
-                 SET dimension_porcentual = ? 
-                 WHERE id = ?`,
+             SET dimension_porcentual = ? 
+             WHERE id = ?`,
                 [ind.dimension_porcentual, ind.id]
             );
         }
 
         await conn.commit();
-        conn.release();
-
         res.json({ mensaje: 'Ponderaciones actualizadas correctamente' });
     } catch (err) {
         console.error('Error al actualizar ponderaciones:', err);
         res.status(500).json({ mensaje: 'Error interno al guardar ponderaciones' });
+    } finally {
+        if (conn) conn.release();
     }
+
 });
 
 
@@ -1393,7 +1392,19 @@ app.get('/api/mediciones/:idIndicador', async (req, res) => {
 // // 🚫🚫🚫 Grabar una medicion
 app.post('/api/mediciones', async (req, res) => {
     try {
-        const { med_indicador_id, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro, med_plan_accion } = req.body;
+        const {
+            med_indicador_id,
+            med_tipo_periodo,
+            med_valor_periodo,
+            med_anio,
+            med_valor,
+            med_meta,
+            med_comentarios,
+            med_unidad_medida,
+            med_legajo_resp_medicion,
+            med_legajo_resp_registro,
+            med_fecha_registro,
+            med_plan_accion } = req.body;
 
         // Validar datos
         const errores = [];
@@ -1425,9 +1436,38 @@ app.post('/api/mediciones', async (req, res) => {
 
         // Grabar medición
         const [result] = await pool.query(
-            'INSERT INTO mediciones (med_indicador_id, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_meta, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro, med_plan_accion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [med_indicador_id, med_tipo_periodo, med_valor_periodo, med_anio, med_valor, med_comentarios, med_unidad_medida, med_legajo_resp_medicion, med_legajo_resp_registro, med_fecha_registro, med_plan_accion]
+        `
+        INSERT INTO mediciones (
+            med_indicador_id,
+            med_tipo_periodo,
+            med_valor_periodo,
+            med_anio,
+            med_valor,
+            med_meta,
+            med_comentarios,
+            med_unidad_medida,
+            med_legajo_resp_medicion,
+            med_legajo_resp_registro,
+            med_fecha_registro,
+            med_plan_accion
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `,
+        [
+            med_indicador_id,
+            med_tipo_periodo,
+            med_valor_periodo,
+            med_anio,
+            med_valor,
+            med_meta,
+            med_comentarios,
+            med_unidad_medida,
+            med_legajo_resp_medicion,
+            med_legajo_resp_registro,
+            med_fecha_registro,
+            med_plan_accion
+        ]
         );
+
 
         res.status(201).json({ ok: true, id: result.insertId });
     } catch (err) {
@@ -1623,7 +1663,7 @@ app.get('/api/evolucion-global', async (req, res) => {
             serie.push({
                 month,
                 cumplimiento: pesoTotal > 0 ? parseFloat((suma / pesoTotal).toFixed(2)) : 0,
-                detalle 
+                detalle
             });
         }
 
