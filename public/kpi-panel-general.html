@@ -356,9 +356,8 @@
 
                     <!-- 🔹 Barra superior de filtros + Asistente -->
                     <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
-
                         <!-- 🔸 Filtros -->
-                        <!--                                 <div class="d-flex gap-3">
+                        <!-- <div class="d-flex gap-3">
                                     <div>
                                         <label for="filtroAnio" class="form-label mb-0 small">Año</label>
                                         <select id="filtroAnio" class="form-select form-select-sm">
@@ -414,30 +413,20 @@
                         </div>
                     </div>
 
-
                     <!-- === Cumplimiento Global + Evolución === -->
-                    <!-- <div class="row"> -->
                     <!-- Tarjeta Cumplimiento Global -->
                     <div class="row">
                         <!-- Tarjeta Cumplimiento Global -->
                         <div class="col-12 col-md-4 mb-4 mt-3">
                             <div class="card card-primary card-outline card-shadow">
                                 <div class="card-body">
-                                    <!-- Título alineado a la izquierda -->
                                     <h5 class="card-title mb-4 text-start">
                                         🌐 Cumplimiento Global de la Organización
                                     </h5>
-
-                                    <!-- Contenedor del ring grande centrado -->
-                                    <!-- <div class="d-flex justify-content-center my-4 w-100">
-                                        <svg id="ringGlobal" width="300" height="300"></svg>
-                                    </div> -->
                                     <div class="d-flex justify-content-center my-4 w-100">
                                         <svg id="ringGlobal" viewBox="0 0 300 300"
                                             style="width:100%; max-width:300px; height:auto;"></svg>
                                     </div>
-
-
                                     <!-- Link a vista completa alineado a la derecha -->
                                     <div class="d-flex justify-content-end mt-3">
                                         <a href="kpi-dashboard-global.html" class="btn btn-sm btn-outline-primary">
@@ -468,15 +457,14 @@
                             </div>
                         </div>
 
+                        <!-- Tarjeta Evolución del Cumplimiento Global -->
                         <div class="col-12 col-md-8 mb-4 mt-3">
                             <div class="card card-primary card-outline card-shadow">
-                                <!-- <div class="container mt-4"> -->
                                 <div class="card-body">
                                     <h5 class="card-title mb-4 text-start">
                                         📈 Evolución del Cumplimiento Global
                                     </h5>
                                     <div id="chartContainer" style="height: 400px;">
-                                        <!-- o 500px, según lo que quieras -->
                                         <canvas id="evolucionChart"></canvas>
                                     </div>
                                 </div>
@@ -489,13 +477,11 @@
                                         location.reload(); // 🔁 recarga completa
                                     });
                                 </script>
-
                             </div>
                         </div>
-                        <!-- </div> -->
                     </div>
 
-
+                    <!-- Cumplimiento por Destino -->
                     <div class="card card-primary card-outline col-12 mb-4 mt-3 card-shadow">
                         <div class="card-header">
                             <h5 class="card-title mb-3">
@@ -612,9 +598,168 @@
                         </div>
                     </div>
 
+                    <!-- Resumen de Indicadores-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-primary card-outline mt-3 mb-4 card-shadow" id="cardResumen">
+                                <!-- =============================== -->
+                                <!-- 📊 PANEL RESUMEN DE INDICADORES -->
+                                <!-- =============================== -->
+                                <div id="panelIndicadoresResumen"
+                                    class="card-header d-flex justify-content-between align-items-center flex-wrap"
+                                    style="display:none;">
+                                    <h5 class="card-title mb-3">📌 Resumen de Indicadores</h5>
+                                    <div class="card-tools ms-auto">
+                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <!-- 🔹 Barra de filtros -->
+                                    <div class="d-flex flex-wrap mb-3 gap-2 align-items-end">
+                                        <div>
+                                            <label class="form-label mb-1">Destino</label>
+                                            <select id="filtroSector" class="form-select form-select-sm">
+                                                <option value="">Todos</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label mb-1">Responsable</label>
+                                            <select id="filtroResponsable" class="form-select form-select-sm">
+                                                <option value="">Todos</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label mb-1">Indicador</label>
+                                            <select id="filtroIndicador" class="form-select form-select-sm">
+                                                <option value="">Todos</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label mb-1">Cumplimiento</label>
+                                            <select id="filtroCumplimiento" class="form-select form-select-sm">
+                                                <option value="">Todos</option>
+                                                <option value="alto">Alto (&gt;= 90%)</option>
+                                                <option value="medio">Medio (60–89%)</option>
+                                                <option value="bajo">Bajo (&lt; 60%)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="flex-grow-1">
+                                            <label class="form-label mb-1">Buscar</label>
+                                            <input id="filtroTexto" type="text" class="form-control form-control-sm"
+                                                placeholder="Nombre o descripción...">
+                                        </div>
+
+                                        <button class="btn btn-primary btn-sm"
+                                            onclick="aplicarFiltrosIndicadores()">Filtrar</button>
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="resetFiltrosIndicadores()">Limpiar</button>
+                                    </div>
+
+
+                                    <!-- 🔹 Contenedor de tarjetas y spinner -->
+                                    <div id="listaIndicadoresResumen" class="row position-relative"
+                                        style="min-height: 50px;">
+                                        <!-- Spinner inicial -->
+                                        <div id="spinnerCarga" class="text-center my-5" style="display: block;">
+                                            <div class="spinner-border text-primary" role="status"></div>
+                                            <p id="spinnerTexto" class="mt-2" style="color: blue;">Cargando
+                                                indicadores...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <section class="content mt-3" id="grafico-evolucion-indicador" style="display: none;">
+                        <div class="container-fluid">
+                            <div class="card card-primary card-outline">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card mb-4">
+                                                <div
+                                                    class="card-header d-flex justify-content-between align-items-start flex-wrap">
+                                                    <div class="d-flex flex-column">
+                                                        <h5 class="card-title mb-2">📊 Reporte de Evolución</h5>
+
+                                                        <p class="mb-1"><strong>Indicador:</strong> <span
+                                                                id="indNombre"></span>
+                                                        </p>
+                                                        <p class="mb-1"><strong>Objetivo:</strong> <span
+                                                                id="objetivoGraf"></span></p>
+                                                        <p class="mb-1"><strong>Descripción:</strong> <span
+                                                                id="descripcionGraf"></span>
+                                                        </p>
+                                                        <p class="mb-0"><strong>Meta:</strong> <span
+                                                                id="metaGraf"></span>
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-tools d-flex align-items-start ms-auto">
+
+                                                    </div>
+                                                </div>
+
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <!--begin::Row-->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <p class="text-center">
+                                                                <strong>Evolución histórica</strong>
+                                                            </p>
+                                                            <div>
+                                                                <button id="btnLine"
+                                                                    class="btn btn-sm btn-primary">Línea</button>
+                                                                <button id="btnArea"
+                                                                    class="btn btn-sm btn-success">Área</button>
+                                                                <button id="btnBar"
+                                                                    class="btn btn-sm btn-warning">Barra</button>
+                                                            </div>
+                                                            <div id="sales-chart"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 🔽 KPIs al pie -->
+                                                <div class="row mt-4" id="kpiCards"></div>
+
+                                            </div>
+                                            <!-- /.col -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="content mt-3" id="analisis-automatico" style="display: none;">
+                        <div class="container-fluid">
+                            <div class="card card-primary card-outline">
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="bg-white rounded shadow-sm p-4">
+                                            <h4 class="fw-bold mb-3">📋 Destacados </h4>
+                                            <div class="row" id="analisisContainer"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
                     <!-- === Mejores y Peores Indicadores === -->
 
+                    <!-- === Destacados === -->
                     <div class="card card-success card-outline col-12 mt-3 mb-4 card-shadow">
                         <div class="card-header">
                             <!-- <h5 class="d-flex align-items-center flex-wrap" style="gap: 6px;"> -->
@@ -676,6 +821,7 @@
                         </div>
                     </div>
 
+                    <!-- === Críticos === -->
                     <div class="card card-danger card-outline col-12 mt-3 mb-4 card-shadow">
                         <div class="card-header">
                             <h5 class="card-title mb-3 d-flex align-items-center flex-wrap" style="gap: 6px;">
@@ -737,7 +883,9 @@
                     </div>
                     <!-- </div> -->
 
+                    <!-- === Final de página ===  -->
                     <div class="row">
+
                         <!-- === Sin última medición === -->
                         <div class="col-md-6 mt-3">
                             <div class="card card-warning card-outline">
@@ -821,14 +969,13 @@
                         </div>
 
                     </div>
-                    <!-- </section> -->
-                    <!-- </div> -->
+
                     <footer class="main-footer text-center">
                         <strong>© 2025 - myResultIQ 1.0</strong>
                     </footer>
+                </div>
+            </div>
         </main>
-        <!--end::App nain-->
-
     </div>
     <!--end::App Wrapper-->
 
@@ -992,7 +1139,6 @@
             document.getElementById('promHistorico').textContent = resumen.promedioHistorico + '%';
             document.getElementById('promAnual').textContent = resumen.promedioAnual + '%';
             document.getElementById('tendencia').textContent = (resumen.tendencia >= 0 ? '+' : '') + resumen.tendencia + '%';
-            console.log(resumen);
 
             // Validar que haya datos
             if (!Array.isArray(data) || data.length === 0) {
@@ -1011,9 +1157,6 @@
             // Preparar datos para Chart.js
             const labels = dataFiltrada.map(d => d.month);
             const valores = dataFiltrada.map(d => d.cumplimiento);
-
-            console.log("📈 Labels:", labels);
-            console.log("📉 Valores de cumplimiento:", valores);
 
             // Obtener el canvas
             const ctx = document.getElementById("evolucionChart");
@@ -1968,7 +2111,6 @@
             try {
                 const res = await fetch('/api/cumplimiento-por-destino');
                 const data = await res.json();
-                console.log(data)
 
                 // --- Renderizar tabla con ícono de evolución ---
                 tbody.innerHTML = data.map(d => {
@@ -2074,6 +2216,1009 @@
             }
         }
 
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        async function mostrarPanelIndicadoresResumen() {
+            try {
+                document.getElementById('panelIndicadoresResumen').style.display = 'block';
+                if (document.getElementById('tablaIndicadoresContainer'))
+                    document.getElementById('tablaIndicadoresContainer').style.display = 'none';
+                if (document.getElementById('posicionGlobalContainer'))
+                    document.getElementById('posicionGlobalContainer').style.display = 'none';
+
+                const contenedor = document.getElementById('listaIndicadoresResumen');
+                const spinner = document.getElementById('spinnerCarga');
+                const spinnerTexto = document.getElementById('spinnerTexto');
+
+                // 🔹 Limpiar contenedor y MOSTRAR spinner (sin await todavía)
+                contenedor.innerHTML = '';
+                spinner.style.display = 'block';
+                spinnerTexto.textContent = 'Cargando indicadores...';
+
+                // 🔹 Cargar indicadores
+                const response = await fetch('/api/indicadores');
+                const indicadores = await response.json();
+                indicadoresGlobal = indicadores;
+
+                spinnerTexto.textContent = 'Preparando filtros...';
+
+                // 🔹 Cargar filtros de forma PARALELA
+                await cargarOpcionesFiltros(indicadores);
+
+                contenedor.innerHTML = `
+                <div class="mensaje-filtros-sutil">
+                    <div class="text-center texto-principal">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Seleccionar los filtros y presionar <b>Filtrar</b> para ver los resultados
+                    </div>
+                </div>
+            `;
+
+
+            } catch (err) {
+                console.error('Error cargando resumen de indicadores:', err);
+                document.getElementById('listaIndicadoresResumen').innerHTML = `
+                <div class="mensaje-filtros-sutil">
+                    <div class="text-center texto-principal">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Seleccionar los filtros y presionar <b>Filtrar</b> para ver los resultados
+                    </div>
+                </div>
+            `;
+            } finally {
+                // Usar setTimeout para asegurar que se ejecute después de renderizar
+                setTimeout(() => {
+                    const spinner = document.getElementById('spinnerCarga');
+                    if (spinner) {
+                        spinner.style.display = 'none';
+                    }
+                }, 0);
+            }
+        }
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        async function cargarOpcionesFiltros(indicadores) {
+            const selectSector = document.getElementById('filtroSector');
+            const selectResponsable = document.getElementById('filtroResponsable');
+            const selectIndicador = document.getElementById('filtroIndicador');
+
+            selectSector.innerHTML = '<option value="">Todos</option>';
+            selectResponsable.innerHTML = '<option value="">Todos</option>';
+            selectIndicador.innerHTML = '<option value="">Todos</option>';
+
+            const sectorMap = new Map();
+            const responsableMap = new Map();
+
+            // 🔹 Recolectar claves únicas
+            for (const ind of indicadores) {
+                const claveSector = normalizeKey(ind.destino);
+                if (claveSector && !sectorMap.has(claveSector)) {
+                    sectorMap.set(claveSector, { raw: ind.destino, label: null });
+                }
+
+                const claveResp = normalizeKey(ind.responsable);
+                if (claveResp && !responsableMap.has(claveResp)) {
+                    responsableMap.set(claveResp, { raw: ind.responsable, label: null });
+                }
+
+                // Indicadores (no necesitan llamada API)
+                const optI = document.createElement('option');
+                optI.value = ind.codigo_id || '';
+                optI.textContent = `${ind.nombre || ''} (${ind.codigo_id || ''})`;
+                selectIndicador.appendChild(optI);
+            }
+
+            // 🚀 OPTIMIZACIÓN: Cargar TODOS los sectores en PARALELO
+            const promesasSectores = Array.from(sectorMap.entries()).map(async ([clave, entry]) => {
+                const sectorObj = await obtenerSectorConCache(entry.raw);
+                const label = sectorObj?.nombre || sectorObj?.name || String(entry.raw || clave) || clave;
+                entry.label = label;
+            });
+
+            // 🚀 OPTIMIZACIÓN: Cargar TODOS los responsables en PARALELO
+            const promesasResponsables = Array.from(responsableMap.entries()).map(async ([clave, entry]) => {
+                const usuario = await obtenerUsuarioConCache(entry.raw);
+                const label = usuario?.nombres || usuario?.nombre
+                    ? `${usuario.nombres || usuario.nombre} ${usuario.apellido || ''}`.trim()
+                    : String(entry.raw || clave);
+                entry.label = label;
+            });
+
+            // 🚀 Esperar TODAS las peticiones en paralelo
+            await Promise.all([...promesasSectores, ...promesasResponsables]);
+
+            // 🔹 Añadir opciones a los selects
+            for (const [clave, entry] of sectorMap.entries()) {
+                const opt = document.createElement('option');
+                opt.value = clave;
+                opt.textContent = entry.label || clave;
+                selectSector.appendChild(opt);
+            }
+
+            for (const [clave, entry] of responsableMap.entries()) {
+                const opt = document.createElement('option');
+                opt.value = clave;
+                opt.textContent = entry.label || clave;
+                selectResponsable.appendChild(opt);
+            }
+        }
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        function normalizeKey(v) {
+            if (v === null || v === undefined) return '';
+            if (typeof v === 'object') {
+                try {
+                    if (v.id !== undefined) return String(v.id).trim();
+                    if (v.codigo !== undefined) return String(v.codigo).trim();
+                    if (v._id !== undefined) return String(v._id).trim();
+                    if (v.nombre !== undefined) return String(v.nombre).trim();
+                    return JSON.stringify(v);
+                } catch (e) {
+                    return String(v);
+                }
+            }
+            return String(v).trim();
+        }
+
+        let cacheSectores = new Map(); // Cache para sectores
+        let cacheUsuarios = new Map(); // Cache para usuarios
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        async function obtenerSectorConCache(destino) {
+            const key = normalizeKey(destino);
+            if (!key) return null;
+
+            if (cacheSectores.has(key)) {
+                return cacheSectores.get(key);
+            }
+
+            try {
+                const sector = await obtenerSectoresPorUnidad(destino);
+                cacheSectores.set(key, sector);
+                return sector;
+            } catch (e) {
+                cacheSectores.set(key, null);
+                return null;
+            }
+        }
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        async function obtenerUsuarioConCache(legajo) {
+            const key = normalizeKey(legajo);
+            if (!key) return null;
+
+            if (cacheUsuarios.has(key)) {
+                return cacheUsuarios.get(key);
+            }
+
+            try {
+                const usuario = await obtenerUsuarioPorLegajo(legajo);
+                cacheUsuarios.set(key, usuario);
+                return usuario;
+            } catch (e) {
+                cacheUsuarios.set(key, null);
+                return null;
+            }
+        }
+
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔        
+        async function aplicarFiltrosIndicadores() {
+            const contenedor = document.getElementById('listaIndicadoresResumen');
+            const spinner = document.getElementById('spinnerCarga');
+            const spinnerTexto = document.getElementById('spinnerTexto');
+
+            // 1️⃣ Mostrar spinner
+            if (spinner) {
+                spinner.style.display = 'block';
+                spinnerTexto.textContent = 'Filtrando indicadores...';
+            }
+            if (contenedor) contenedor.innerHTML = '';
+
+            // 2️⃣ Dejar que el navegador pinte
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            const sectorSel = document.getElementById('filtroSector').value;
+            const responsableSel = document.getElementById('filtroResponsable').value;
+            const indicadorSel = document.getElementById('filtroIndicador').value;
+            const cumplimiento = document.getElementById('filtroCumplimiento').value;
+            const texto = document.getElementById('filtroTexto').value.toLowerCase();
+
+            try {
+                // 3️⃣ Preparar indicadores NO preparados EN PARALELO
+                const pendientes = indicadoresGlobal
+                    .filter(ind => !ind._preparado)
+                    .map(async ind => {
+                        ind._destinoKey = normalizeKey(ind.destino);
+                        ind._responsableKey = normalizeKey(ind.responsable);
+
+                        const [usuario, sector, cumplimientoInfo] = await Promise.all([
+                            obtenerUsuarioConCache(ind.responsable),
+                            obtenerSectorConCache(ind.destino),
+                            obtenerCumplimientoIndicador(ind.codigo_id).catch(() => ({ porcentaje: 0 }))
+                        ]);
+
+                        ind._usuario = usuario;
+                        ind._sector = sector;
+                        ind._cumplimiento = cumplimientoInfo;
+                        ind._preparado = true;
+                    });
+
+                if (pendientes.length > 0) {
+                    await Promise.all(pendientes);
+                }
+
+                // 4️⃣ Filtrar indicadores
+                const filtrados = indicadoresGlobal.filter(ind => {
+                    if (sectorSel && ind._destinoKey !== sectorSel) return false;
+                    if (responsableSel && ind._responsableKey !== responsableSel) return false;
+                    if (indicadorSel && indicadorSel !== '' && (ind.codigo_id || '') !== indicadorSel) return false;
+
+                    if (cumplimiento) {
+                        const p = (ind._cumplimiento?.porcentaje ?? 0);
+                        if (cumplimiento === 'alto' && p < 90) return false;
+                        if (cumplimiento === 'medio' && (p < 60 || p >= 90)) return false;
+                        if (cumplimiento === 'bajo' && p >= 60) return false;
+                    }
+
+                    if (texto) {
+                        const nombre = (ind.nombre || '').toLowerCase();
+                        const desc = (ind.descripcion || '').toLowerCase();
+                        if (!nombre.includes(texto) && !desc.includes(texto)) return false;
+                    }
+
+                    return true;
+                });
+
+                // 5️⃣ Renderizar tarjetas
+                renderIndicadoresFiltrados(filtrados);
+
+            } catch (err) {
+                console.error('Error aplicando filtros:', err);
+                contenedor.innerHTML = `
+            <div class="alert alert-danger w-100 text-center my-4">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Ocurrió un error al filtrar los indicadores.
+            </div>`;
+            } finally {
+                // 6️⃣ Ocultar spinner
+                if (spinner) spinner.style.display = 'none';
+                if (contenedor) contenedor.style.display = 'flex';
+            }
+        }
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        function resetFiltrosIndicadores() {
+            document.getElementById('filtroSector').value = '';
+            document.getElementById('filtroResponsable').value = '';
+            document.getElementById('filtroIndicador').value = '';
+            document.getElementById('filtroCumplimiento').value = '';
+            document.getElementById('filtroTexto').value = '';
+
+            const contenedor = document.getElementById('listaIndicadoresResumen');
+
+            contenedor.innerHTML = `
+                <div class="mensaje-filtros-sutil">
+                    <div class="text-center texto-principal">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Seleccionar los filtros y presionar <b>Filtrar</b> para ver los resultados
+                    </div>
+                </div>
+            `;
+        }
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔        
+        async function obtenerCumplimientoIndicador(codigo) {
+            try {
+                const res = await fetch(`/api/indicadores/${codigo}/cumplimiento`);
+                if (!res.ok) throw new Error('Error en la respuesta del servidor');
+
+                const data = await res.json();
+                return data; // <-- devolvemos todo el objeto
+            } catch (err) {
+                console.error('Error obteniendo cumplimiento del indicador:', err);
+                return {
+                    porcentaje: 0,
+                    objetivo: null,
+                    meta_tipo: null,
+                    unico_valor: null,
+                    rango_desde: null,
+                    rango_hasta: null,
+                    id: null
+                };
+            }
+        }
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        async function renderIndicadoresFiltrados(lista = indicadoresGlobal) {
+            const contenedor = document.getElementById('listaIndicadoresResumen');
+            contenedor.innerHTML = '';
+
+            if (!lista || lista.length === 0) {
+                contenedor.innerHTML = `
+            <div class="alert alert-warning w-100 text-center my-4">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                No se encontraron indicadores con esos filtros.
+            </div>`;
+                return;
+            }
+
+            for (const ind of lista) {
+                // aseguramos datos auxiliares
+                const usuario = ind._usuario || await obtenerUsuarioPorLegajo(ind.responsable).catch(() => null);
+                const sectores = ind._sector || await obtenerSectoresPorUnidad(ind.destino).catch(() => null);
+                const info = ind._cumplimiento || await obtenerCumplimientoIndicador(ind.codigo_id).catch(() => ({ porcentaje: 0 }));
+
+                // cache
+                ind._usuario = usuario;
+                ind._sector = sectores;
+                ind._cumplimiento = info;
+                ind._destinoKey = ind._destinoKey || normalizeKey(ind.destino);
+
+                const porcentaje = (info && typeof info.porcentaje === 'number') ? info.porcentaje : 0;
+                const color = getColorPorCumplimiento(porcentaje);
+
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-lg-4 mb-3';
+                card.innerHTML = `
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="fw-bold mb-1">${ind.nombre}</h6>
+                                    <small class="text-muted">${ind.codigo_id} · ${sectores?.nombre || sectores?.name || ''}</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-circle me-1"
+                                        style="background-color:${color}; width:18px; height:18px;"
+                                        title="Cumplimiento: ${porcentaje.toFixed(1)}%">
+                                    </span>
+                                    <small>${porcentaje.toFixed(1)}%</small>
+                                    <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
+                                            onclick="verDetalleIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.objetivo}', '${ind.descripcion}')">
+                                        <i class="fas fa-chart-line text-primary"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="mt-2 mb-1"><strong>Objetivo:</strong> ${ind.objetivo}</p>
+                            <p class="mb-1"><strong>Responsable:</strong> ${usuario?.nombres || usuario?.nombre || ''} ${usuario?.apellido || ''}</p>
+                            <p class="mb-0"><small class="text-muted">${ind.descripcion || ''}</small></p>
+                        </div>
+                    </div>
+                `;
+                contenedor.appendChild(card);
+            }
+        }
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        function getColorPorCumplimiento(cumplimiento) {
+            if (cumplimiento >= 90) return '#28a745'; // verde
+            if (cumplimiento >= 70) return '#ffc107'; // amarillo
+            if (cumplimiento >= 50) return '#3B83BD'; // azul
+            return '#dc3545'; // rojo
+        }
+
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        function verDetalleIndicador(key_id, nombre, meta, objetivo, descripcion) {
+            // Guardar en sessionStorage
+            sessionStorage.setItem('indicador_seleccionado', key_id);
+            document.getElementById('grafico-evolucion-indicador').style.display = 'block';
+
+            // Llama a la función que renderiza el gráfico
+
+            renderIndicadorChart(key_id, nombre, meta, objetivo, descripcion)
+
+        }
+
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        async function renderIndicadorChart(idIndicador, nombre, meta, objetivo, descripcion) {
+
+            const chartContainer = document.querySelector('#sales-chart');
+            if (!chartContainer) {
+                console.error('Contenedor #sales-chart no encontrado');
+                return;
+            }
+            const kpiContainer = document.getElementById('kpiCards'); // Ajusta según tu HTML
+            const analisisContainer = document.getElementById('analisisContainer');
+            const analisisAuto = document.getElementById('analisis-automatico');
+            if (window.salesChart) {
+                try { await window.salesChart.destroy(); } catch (e) { console.warn('Error destruyendo gráfico previo:', e); }
+                window.salesChart = null;
+            }
+            if (chartContainer) chartContainer.innerHTML = '';
+            if (kpiContainer) kpiContainer.innerHTML = '';
+            if (analisisContainer) analisisContainer.innerHTML = '';
+            if (analisisAuto) analisisAuto.style.display = 'none';
+
+            // 🔹 Mostrar spinner mientras carga
+            if (chartContainer) {
+                chartContainer.innerHTML = `
+                    <div id="spinnerCargaGrafico" class="text-center my-3">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">Cargando gráfico...</p>
+                    </div>
+                `;
+            }
+
+            try {
+
+                const response = await fetch(`/api/mediciones/${idIndicador}`);
+                const result = await response.json();
+
+                if (!result.success || !Array.isArray(result.data) || result.data.length === 0) {
+                    if (window.salesChart) {
+                        try { await window.salesChart.destroy(); } catch (e) { }
+                        window.salesChart = null;
+                    }
+                    chartContainer.innerHTML = '<p class="text-center">Sin datos</p>';
+                    return;
+                }
+
+                const valores = result.data.map(d => parseFloat(d.med_valor) || 0);
+                const periodos = result.data.map(d => {
+                    const str = String(d.med_valor_periodo);
+                    const year = str.slice(0, 4);
+                    const sufijo = str.slice(4);
+                    return `${year}-${sufijo}`;
+                });
+
+                const options = {
+                    chart: {
+                        type: 'area',
+                        height: 350,
+                        toolbar: {
+                            show: true,
+                            tools: {
+                                pan: false,
+                                zoom: true,
+                                zoomin: true,
+                                zoomout: true,
+                                reset: true,
+                                download: true,
+                                selection: true
+                            }
+                        }
+                    },
+                    series: [{ name: 'Valor', data: valores }],
+                    xaxis: { categories: periodos },
+                    stroke: { curve: 'smooth' },
+                    tooltip: { enabled: true },
+                    colors: ['#0d6efd'],
+                    dataLabels: { enabled: false },
+
+                    // 👇 NUEVO BLOQUE: línea de meta / objetivo
+                    annotations: {
+                        yaxis: [
+                            {
+                                y: meta, // ← tu variable con el valor objetivo
+                                borderColor: '#FF0000',
+                                strokeDashArray: 4,
+                                label: {
+                                    borderColor: '#FF0000',
+                                    style: {
+                                        color: '#fff',
+                                        background: '#FF0000'
+                                    },
+                                    text: `Meta: ${meta}`
+                                }
+                            }
+                        ]
+                    }
+                };
+
+                if (window.salesChart) {
+                    try { await window.salesChart.destroy(); } catch (err) { console.warn('Error al destruir gráfico previo:', err); }
+                    window.salesChart = null;
+                }
+                document.getElementById('indNombre').textContent = nombre;
+                document.getElementById('objetivoGraf').textContent = objetivo;
+                document.getElementById('descripcionGraf').textContent = descripcion;
+                document.getElementById('metaGraf').textContent = meta;
+                chartContainer.innerHTML = "";
+                await new Promise(resolve => setTimeout(resolve, 50));
+
+                window.salesChart = new ApexCharts(chartContainer, options);
+                await window.salesChart.render();
+                // Scroll hacia el gráfico
+                chartContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // 🔄 Botones para cambiar tipo de gráfico
+                document.getElementById('btnLine').onclick = () => {
+                    window.salesChart.updateOptions({ chart: { type: 'line' } });
+                };
+                document.getElementById('btnArea').onclick = () => {
+                    window.salesChart.updateOptions({ chart: { type: 'area' } });
+                };
+                document.getElementById('btnBar').onclick = () => {
+                    window.salesChart.updateOptions({ chart: { type: 'bar' } });
+                };
+
+                // ☎️ calcula Tendencia
+                const resultado = evaluarTendenciaIndicador(valores);
+
+                // ✅ generar tarjetas KPI dinámicas
+
+                const valorActual = valores[valores.length - 1];
+                const valorAnterior = valores[valores.length - 2];
+                const promedio = Math.round(valores.reduce((a, b) => a + b, 0) / valores.length);
+                const mejorMes = Math.max(...valores);
+                const cambio = Math.round(((valorActual - valorAnterior) / valorAnterior) * 100);
+                const cumplimiento = Math.round((valorActual / meta) * 100);
+
+                crearKPICards({
+                    valorActual: valorActual,
+                    cambio: valores.length > 1
+                        ? ((valorActual - valorAnterior) / valorAnterior * 100).toFixed(1)
+                        : 0,
+                    cumplimiento: cumplimiento,
+                    meta: meta,
+                    promedio6: (valores.slice(-6).reduce((a, b) => a + b, 0) / Math.min(6, valores.length)).toFixed(1),
+                    rangoMeses: "Últimas 6 mediciones",
+                    mejorMesValor: mejorMes,
+                    mejorMesNombre: periodos[valores.indexOf(mejorMes)],
+                    tendencia: resultado.tendencia,
+                    variacion: ` Variación: ${resultado.variacion} | Pendiente: ${resultado.pendiente}`,
+                    iconoTendencia: resultado.icono,
+                    colorTendencia: resultado.color
+                });
+
+                const primerValor = valores[0];
+                const ultimoValor = valorActual;
+                const crecimientoTotal = Math.round(((ultimoValor - primerValor) / primerValor) * 100);
+                const brechaPromedio = Math.round(promedio - meta);
+                const mejorIndice = valores.indexOf(mejorMes);
+                const peorValor = Math.min(...valores);
+                const peorIndice = valores.indexOf(peorValor);
+
+                // console.log('Datos para análisis:', {
+                //     valores,
+                //     periodos,
+                //     meta,
+                //     primerValor,
+                //     ultimoValor,
+                //     valorAnterior,
+                //     crecimientoTotal,
+                //     brechaPromedio,
+                //     mejorIndice,
+                //     mejorMes,
+                //     peorValor,
+                //     peorIndice,
+                //     promedio,
+                //     cumplimiento
+                // });
+
+                const { observaciones, recomendaciones } = generarAnalisisAutomatico(
+                    valores,
+                    periodos,
+                    meta,
+                    primerValor,
+                    ultimoValor,
+                    valorAnterior,
+                    crecimientoTotal,
+                    brechaPromedio,
+                    mejorIndice,
+                    mejorMes,
+                    peorValor,
+                    peorIndice
+                );
+                const container = document.getElementById('analisisContainer');
+                document.getElementById('analisis-automatico').style.display = 'block';
+
+                container.innerHTML = `
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold mb-3">🔍 Observaciones:</h5>
+                            <ul class="text-muted">
+                                ${observaciones.map(obs => `<li>${obs}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-semibold mb-3">💡 Recomendaciones:</h5>
+                            <ul class="text-muted">
+                                ${recomendaciones.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+
+            } catch (error) {
+                console.error('Error renderizando gráfico del indicador:', error);
+            }
+        }
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        /**
+         * @param {number[]} mediciones - Array con los valores del indicador (orden cronológico)
+         * @param {number} umbral - Umbral de variación (%) para considerar "estable" (default = 2)
+         * @returns {object} { tendencia, variacion, pendiente, color, icono }
+         */
+        function evaluarTendenciaIndicador(mediciones, umbral = 2) {
+            if (!Array.isArray(mediciones) || mediciones.length < 2) {
+                return {
+                    tendencia: "datos insuficientes",
+                    variacion: 0,
+                    pendiente: 0,
+                    color: "gray",
+                    icono: "⚪"
+                };
+            }
+
+            const n = mediciones.length;
+            const x = Array.from({ length: n }, (_, i) => i + 1);
+            const y = mediciones;
+
+            const meanX = x.reduce((a, b) => a + b, 0) / n;
+            const meanY = y.reduce((a, b) => a + b, 0) / n;
+
+            let num = 0, den = 0;
+            for (let i = 0; i < n; i++) {
+                num += (x[i] - meanX) * (y[i] - meanY);
+                den += (x[i] - meanX) ** 2;
+            }
+            const pendiente = num / den;
+            const variacion = ((y[n - 1] - y[0]) / y[0]) * 100;
+
+            let tendencia, color, icono;
+            if (variacion > umbral && pendiente > 0) {
+                tendencia = "En alza";
+                color = "#28a745"; // verde
+                icono = "📈";
+            } else if (variacion < -umbral && pendiente < 0) {
+                tendencia = "En baja";
+                color = "#dc3545"; // rojo
+                icono = "📉";
+            } else {
+                tendencia = "Estable";
+                color = "#ffc107"; // amarillo
+                icono = "➖";
+            }
+
+            return {
+                tendencia,
+                variacion: Number(variacion.toFixed(2)),
+                pendiente: Number(pendiente.toFixed(3)),
+                color,
+                icono
+            };
+        }
+
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        function crearKPICards(datos) {
+            const kpis = [
+                {
+                    titulo: 'Valor Actual',
+                    valor: `${datos.valorActual ?? '-'}`,
+                    subtitulo: `${datos.cambio >= 0 ? '↗️' : '↘️'} ${datos.cambio >= 0 ? '+' : ''}${datos.cambio}% vs medición anterior`,
+                    color: datos.cambio >= 0 ? '#198754' : '#dc3545',
+                    icono: '💰'
+                },
+                {
+                    titulo: 'Cumplimiento Meta',
+                    valor: `${datos.cumplimiento ?? '-'}%`,
+                    subtitulo: `Meta: ${datos.meta ?? '-'}`,
+                    color: datos.cumplimiento >= 100 ? '#198754' : '#ffc107',
+                    icono: '🎯'
+                },
+                {
+                    titulo: 'Promedio',
+                    valor: `${datos.promedio6 ?? '-'}`,
+                    subtitulo: datos.rangoMeses ?? '',
+                    color: '#6c757d',
+                    icono: '📊'
+                },
+                {
+                    titulo: 'Mejor Resultado',
+                    valor: `${datos.mejorMesValor ?? '-'}`,
+                    subtitulo: datos.mejorMesNombre ?? '',
+                    color: '#0dcaf0',
+                    icono: '🏆'
+                },
+                {
+                    titulo: 'Tendencia',
+                    valor: `${datos.tendencia}`,
+                    subtitulo: datos.variacion,
+                    color: datos.colorTendencia,
+                    icono: datos.iconoTendencia
+                }
+            ];
+
+            const container = document.getElementById('kpiCards');
+            container.className = "row gx-3 gy-3 p-3";
+            // gx = gap horizontal, gy = gap vertical, p = padding interno
+            container.innerHTML = kpis.map(kpi => `
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card kpi-card h-100" style="border-left: 4px solid ${kpi.color}; margin: 5px;">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <p class="text-muted small mb-1">${kpi.titulo}</p>
+                                        <h2 class="kpi-value mb-1" style="color: ${kpi.color}">${kpi.valor}</h2>
+                                        <p class="text-muted small mb-0">${kpi.subtitulo}</p>
+                                    </div>
+                                    <span style="font-size: 2rem;">${kpi.icono}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        function XXXgenerarAnalisisAutomatico(
+            valores,
+            periodos,
+            meta,
+            primerValor,
+            ultimoValor,
+            valorAnterior,
+            crecimientoTotal,
+            brechaPromedio,
+            mejorIndice,
+            mejorMes,
+            peorValor,
+            peorIndice,
+            promedio,
+            cumplimiento
+        ) {
+            const observaciones = [];
+            const recomendaciones = [];
+
+            console.log('Generando análisis automático con:', {
+                valores,
+                periodos,
+                meta,
+                primerValor,
+                ultimoValor,
+                valorAnterior,
+                crecimientoTotal,
+                brechaPromedio,
+                mejorIndice,
+                mejorMes,
+                peorValor,
+                peorIndice,
+                promedio,
+                cumplimiento
+            });
+
+            if (crecimientoTotal > 0) {
+                observaciones.push(`Crecimiento positivo del ${crecimientoTotal}% en el período analizado`);
+            } else if (crecimientoTotal < 0) {
+                observaciones.push(`Decrecimiento del ${Math.abs(crecimientoTotal)}% en el período analizado`);
+            }
+
+            observaciones.push(`Mejor resultado en ${periodos[mejorIndice]}: ${mejorMes}`);
+            observaciones.push(`Valor más bajo en ${periodos[peorIndice]}: ${peorValor}`);
+
+            if (brechaPromedio < 0) {
+                observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)}`);
+            } else {
+                observaciones.push(`Superó la meta en promedio por ${brechaPromedio}`);
+            }
+
+            let mesesConsecutivos = 0;
+            for (let i = 1; i < valores.length; i++) {
+                if (valores[i] > valores[i - 1]) {
+                    mesesConsecutivos++;
+                } else {
+                    break;
+                }
+            }
+            if (mesesConsecutivos >= 2) {
+                observaciones.push(`Crecimiento sostenido durante ${mesesConsecutivos + 1} meses consecutivos`);
+            }
+
+            if (ultimoValor < valorAnterior) {
+                const caida = Math.round(((ultimoValor - valorAnterior) / valorAnterior) * 100);
+                observaciones.push(`Caída del ${Math.abs(caida)}% en el último mes`);
+            }
+
+            if (mejorIndice < valores.length - 1) {
+                recomendaciones.push(`Analizar factores de éxito de ${periodos[mejorIndice]} para replicarlos`);
+            }
+
+            if (ultimoValor < meta) {
+                const necesario = Math.round(((meta - ultimoValor) / ultimoValor) * 100);
+                recomendaciones.push(`Requiere incremento del ${necesario}% para alcanzar la meta`);
+            }
+
+            if (ultimoValor > valorAnterior) {
+                recomendaciones.push('Mantener las estrategias del último mes que generaron recuperación');
+            } else if (ultimoValor < valorAnterior) {
+                recomendaciones.push('Investigar causas de la caída reciente y tomar acciones correctivas');
+            }
+
+            // const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+            // const desviacion = Math.sqrt(varianza);
+            // if (desviacion > promedio * 0.2) {
+            //     recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
+            // }
+
+            // const tendenciaReciente = valores.slice(-3);
+            // const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
+            // if (crecimientoReciente) {
+            //     recomendaciones.push('Tendencia positiva en últimos meses - continuar con estrategia actual');
+            // }
+
+            // Recomendaciones
+            if (valores && valores.length > 0) {
+                const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+                const desviacion = Math.sqrt(varianza);
+                if (desviacion > promedio * 0.2) {
+                    recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
+                }
+                const tendenciaReciente = valores.slice(-3);
+                const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
+                if (crecimientoReciente) recomendaciones.push('Tendencia positiva en últimos meses - continuar con estrategia actual');
+            }
+
+            if (cumplimiento < 70) {
+                recomendaciones.push('Revisar si la meta es realista o si se requieren recursos adicionales');
+            }
+
+            return { observaciones, recomendaciones };
+        }
+
+        // 📊🤖 Generador de análisis automático de cumplimiento
+        function generarAnalisisAutomatico(
+            valores,
+            periodos,
+            meta,
+            primerValor,
+            ultimoValor,
+            valorAnterior,
+            crecimientoTotal,
+            brechaPromedio,
+            mejorIndice,
+            mejorValor,
+            peorValor,
+            peorIndice,
+            promedio,
+            cumplimiento
+        ) {
+            const observaciones = [];
+            const recomendaciones = [];
+
+            // 🔍 Debug opcional
+            console.log('🔎 Generando análisis automático con:', {
+                valores,
+                periodos,
+                meta,
+                primerValor,
+                ultimoValor,
+                valorAnterior,
+                crecimientoTotal,
+                brechaPromedio,
+                mejorIndice,
+                mejorValor,
+                peorValor,
+                peorIndice,
+                promedio,
+                cumplimiento
+            });
+
+            // ==========================
+            // 📈 CONCLUSIONES / OBSERVACIONES
+            // ==========================
+
+            if (crecimientoTotal > 0) {
+                observaciones.push(`Crecimiento positivo del ${crecimientoTotal}% en el período analizado`);
+            } else if (crecimientoTotal < 0) {
+                observaciones.push(`Decrecimiento del ${Math.abs(crecimientoTotal)}% en el período analizado`);
+            }
+
+            if (periodos && periodos.length > 0) {
+                if (mejorIndice >= 0 && mejorIndice < periodos.length) {
+                    observaciones.push(`Mejor resultado en ${periodos[mejorIndice]}: ${mejorValor}`);
+                }
+                if (peorIndice >= 0 && peorIndice < periodos.length) {
+                    observaciones.push(`Valor más bajo en ${periodos[peorIndice]}: ${peorValor}`);
+                }
+            }
+
+            if (brechaPromedio < 0) {
+                observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)} por debajo`);
+            } else {
+                observaciones.push(`Superó la meta en promedio por ${brechaPromedio}`);
+            }
+
+            // Tendencia sostenida de crecimiento
+            let mesesCrecimiento = 0;
+            for (let i = 1; i < valores.length; i++) {
+                if (valores[i] > valores[i - 1]) {
+                    mesesCrecimiento++;
+                } else break;
+            }
+            if (mesesCrecimiento >= 2) {
+                observaciones.push(`Crecimiento sostenido durante ${mesesCrecimiento + 1} períodos consecutivos`);
+            }
+
+            // Variación del último mes
+            if (ultimoValor < valorAnterior) {
+                const caida = Math.round(((ultimoValor - valorAnterior) / valorAnterior) * 100);
+                observaciones.push(`Caída del ${Math.abs(caida)}% en el último período`);
+            } else if (ultimoValor > valorAnterior) {
+                const subida = Math.round(((ultimoValor - valorAnterior) / valorAnterior) * 100);
+                observaciones.push(`Subida del ${subida}% en el último período`);
+            }
+
+            // Variabilidad
+            const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+            const desviacion = Math.sqrt(varianza);
+            if (desviacion > promedio * 0.2) {
+                observaciones.push('El indicador presenta alta variabilidad en el período analizado');
+            } else if (desviacion < promedio * 0.05) {
+                observaciones.push('El indicador se mantuvo estable durante el período');
+            }
+
+            // ==========================
+            // 💡 RECOMENDACIONES
+            // ==========================
+
+            // 1️⃣ Replicar buenas prácticas del mejor mes
+            if (mejorIndice < valores.length - 1) {
+                recomendaciones.push(`Analizar factores de éxito de ${periodos[mejorIndice]} para replicarlos`);
+            }
+
+            // 2️⃣ Meta no alcanzada
+            if (ultimoValor < meta) {
+                const necesario = Math.round(((meta - ultimoValor) / ultimoValor) * 100);
+                recomendaciones.push(`Requiere incremento del ${necesario}% para alcanzar la meta`);
+            }
+
+            // 3️⃣ Comportamiento reciente
+            if (ultimoValor > valorAnterior) {
+                recomendaciones.push('Mantener las estrategias recientes que impulsaron la mejora');
+            } else if (ultimoValor < valorAnterior) {
+                recomendaciones.push('Investigar causas de la caída reciente y tomar acciones correctivas');
+            }
+
+            // 4️⃣ Variabilidad alta
+            if (desviacion > promedio * 0.2) {
+                recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos o revisar factores externos');
+            }
+
+            // 5️⃣ Tendencia reciente positiva
+            const tendenciaReciente = valores.slice(-3);
+            const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
+            if (crecimientoReciente) {
+                recomendaciones.push('Tendencia positiva en los últimos meses - continuar con la estrategia actual');
+            }
+
+            // 6️⃣ Meta difícil de alcanzar
+            const periodosBajos = valores.filter(v => v < meta * 0.7).length;
+            if (cumplimiento < 70 && periodosBajos >= 3) {
+                recomendaciones.push('El cumplimiento ha sido bajo durante varios períodos - revisar si la meta es alcanzable en condiciones normales');
+            }
+
+            // 7️⃣ Meta demasiado baja
+            const periodosAltos = valores.filter(v => v > meta * 1.1).length;
+            if (periodosAltos >= 3) {
+                recomendaciones.push('El indicador supera la meta en varios períodos consecutivos - evaluar si la meta está subestimada');
+            }
+
+            // 8️⃣ Estancamiento o falta de progreso
+            const sinCambio = valores.every(v => Math.abs(v - promedio) < promedio * 0.02);
+            if (sinCambio) {
+                recomendaciones.push('El indicador muestra estancamiento - revisar estrategias o reasignar recursos');
+            }
+
+            // 9️⃣ Buen desempeño sostenido
+            if (cumplimiento >= 90 && desviacion < promedio * 0.1) {
+                recomendaciones.push('Buen desempeño y estabilidad - mantener consistencia en las acciones implementadas');
+            }
+
+            // 🔟 Datos escasos o irregulares
+            if (valores.length < 3) {
+                recomendaciones.push('Pocos períodos medidos - se recomienda incrementar la frecuencia de medición para mayor precisión');
+            }
+
+            return { observaciones, recomendaciones };
+        }
+
+
+
         // --- Modal y gráfico de evolución ---
         let chartEvolucion = null;
 
@@ -2172,6 +3317,9 @@
                 (el) => new bootstrap.Tooltip(el)
             );
             console.log("✅ Tooltips inicializados:", tooltipList.length);
+
+            // 9️⃣ Llena los filtros para indicadores
+            mostrarPanelIndicadoresResumen();
         });
 
         // ✅ reconstruirTablas
@@ -2815,8 +3963,8 @@
             }
         });
 
-
     </script>
+
 </body>
 
 </html>

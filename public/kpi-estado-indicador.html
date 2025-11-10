@@ -201,6 +201,32 @@
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             margin-bottom: 20px;
         }
+
+        /* 🔸 Quita el contenido visual y bordes cuando la card está colapsada */
+        .card.collapsed-card .card-body {
+            display: none !important;
+        }
+
+        /* 🔸 Quita bordes y sombras del contenedor colapsado */
+        .card.collapsed-card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* 🔸 Ajuste visual opcional del header */
+        .card.collapsed-card .card-header {
+            border-bottom: none !important;
+        }
+
+        /* Mantener la línea azul superior aun cuando se colapsa */
+        .card.card-primary.card-outline>.card-header {
+            border-top: 3px solid var(--bs-primary) !important;
+        }
+
+        /* Evita que el colapso elimine el borde */
+        .card.card-primary.card-outline.collapsed-card>.card-header {
+            border-top: 3px solid var(--bs-primary) !important;
+        }
     </style>
 
 </head>
@@ -319,188 +345,167 @@
 
                     <!--begin::Row-->
                     <div class="row">
-                        <!-- Start col -->
                         <div class="col-md-12">
-                            <!--begin::Latest Order Widget-->
-
-                            <div class="card card-primary card-outline">
-                                <div class="card-header">
-
-                                    <!-- =============================== -->
-                                    <!-- 📊 PANEL RESUMEN DE INDICADORES -->
-                                    <!-- =============================== -->
-                                    <div id="panelIndicadoresResumen" style="display:none;">
-                                        <h4 class="mb-3">Resumen de Indicadores</h4>
-
-                                        <!-- 🔹 Barra de filtros -->
-                                        <div class="d-flex flex-wrap mb-3 gap-2 align-items-end">
-                                            <div>
-                                                <label class="form-label mb-1">Sector</label>
-                                                <select id="filtroSector" class="form-select form-select-sm">
-                                                    <option value="">Todos</option>
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label class="form-label mb-1">Responsable</label>
-                                                <select id="filtroResponsable" class="form-select form-select-sm">
-                                                    <option value="">Todos</option>
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label class="form-label mb-1">Indicador</label>
-                                                <select id="filtroIndicador" class="form-select form-select-sm">
-                                                    <option value="">Todos</option>
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label class="form-label mb-1">Cumplimiento</label>
-                                                <select id="filtroCumplimiento" class="form-select form-select-sm">
-                                                    <option value="">Todos</option>
-                                                    <option value="alto">Alto (&gt;= 90%)</option>
-                                                    <option value="medio">Medio (60–89%)</option>
-                                                    <option value="bajo">Bajo (&lt; 60%)</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="flex-grow-1">
-                                                <label class="form-label mb-1">Buscar</label>
-                                                <input id="filtroTexto" type="text" class="form-control form-control-sm"
-                                                    placeholder="Nombre o descripción...">
-                                            </div>
-
-                                            <button class="btn btn-primary btn-sm"
-                                                onclick="aplicarFiltrosIndicadores()">Filtrar</button>
-                                            <button class="btn btn-secondary btn-sm"
-                                                onclick="resetFiltrosIndicadores()">Limpiar</button>
-                                        </div>
-
-                                        <!-- 🔹 Contenedor de tarjetas y spinner -->
-                                        <div id="listaIndicadoresResumen" class="row position-relative"
-                                            style="min-height: 150px;">
-                                            <!-- Spinner inicial -->
-                                            <div id="spinnerCarga" class="text-center my-5" style="display: block;">
-                                                <div class="spinner-border text-primary" role="status"></div>
-                                                <p id="spinnerTexto" class="mt-2" style="color: blue;">Cargando
-                                                    indicadores...</p>
-                                            </div>
-                                        </div>
+                            <div class="card card-primary card-outline mt-3 mb-4 card-shadow" id="cardResumen">
+                                <!-- =============================== -->
+                                <!-- 📊 PANEL RESUMEN DE INDICADORES -->
+                                <!-- =============================== -->
+                                <div id="panelIndicadoresResumen"
+                                    class="card-header d-flex justify-content-between align-items-center flex-wrap"
+                                    style="display:none;">
+                                    <h4 class="mb-3">Resumen de Indicadores</h4>
+                                    <div class="card-tools ms-auto">
+                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                        </button>
                                     </div>
                                 </div>
 
+                                <div class="card-body">
+                                    <!-- 🔹 Barra de filtros -->
+                                    <div class="d-flex flex-wrap mb-3 gap-2 align-items-end">
+                                        <div>
+                                            <label class="form-label mb-1">Destino</label>
+                                            <select id="filtroSector" class="form-select form-select-sm">
+                                                <option value="">Todos</option>
+                                            </select>
+                                        </div>
 
+                                        <div>
+                                            <label class="form-label mb-1">Responsable</label>
+                                            <select id="filtroResponsable" class="form-select form-select-sm">
+                                                <option value="">Todos</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label mb-1">Indicador</label>
+                                            <select id="filtroIndicador" class="form-select form-select-sm">
+                                                <option value="">Todos</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label mb-1">Cumplimiento</label>
+                                            <select id="filtroCumplimiento" class="form-select form-select-sm">
+                                                <option value="">Todos</option>
+                                                <option value="alto">Alto (&gt;= 90%)</option>
+                                                <option value="medio">Medio (60–89%)</option>
+                                                <option value="bajo">Bajo (&lt; 60%)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="flex-grow-1">
+                                            <label class="form-label mb-1">Buscar</label>
+                                            <input id="filtroTexto" type="text" class="form-control form-control-sm"
+                                                placeholder="Nombre o descripción...">
+                                        </div>
+
+                                        <button class="btn btn-primary btn-sm"
+                                            onclick="aplicarFiltrosIndicadores()">Filtrar</button>
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="resetFiltrosIndicadores()">Limpiar</button>
+                                    </div>
+
+
+                                    <!-- 🔹 Contenedor de tarjetas y spinner -->
+                                    <div id="listaIndicadoresResumen" class="row position-relative"
+                                        style="min-height: 50px;">
+                                        <!-- Spinner inicial -->
+                                        <div id="spinnerCarga" class="text-center my-5" style="display: block;">
+                                            <div class="spinner-border text-primary" role="status"></div>
+                                            <p id="spinnerTexto" class="mt-2" style="color: blue;">Cargando
+                                                indicadores...</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- /.col -->
                         </div>
-                        <!--end::Row-->
                     </div>
-                    <!--end::Container-->
                 </div>
-                <!--end::App Content-->
+            </div>
+            <!--end::App Content-->
 
-                <section class="content mt-3" id="grafico-evolucion" style="display: none;">
-                    <div class="container-fluid">
-                        <div class="card card-primary card-outline">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card mb-4">
-                                            <div
-                                                class="card-header d-flex justify-content-between align-items-start flex-wrap">
-                                                <div class="d-flex flex-column">
-                                                    <h5 class="card-title mb-2">📊 Reporte de Evolución</h5>
+            <section class="content mt-3" id="grafico-evolucion" style="display: none;">
+                <div class="container-fluid">
+                    <div class="card card-primary card-outline">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card mb-4">
+                                        <div
+                                            class="card-header d-flex justify-content-between align-items-start flex-wrap">
+                                            <div class="d-flex flex-column">
+                                                <h5 class="card-title mb-2">📊 Reporte de Evolución</h5>
 
-                                                    <p class="mb-1"><strong>Indicador:</strong> <span
-                                                            id="indNombre"></span></p>
-                                                    <p class="mb-1"><strong>Objetivo:</strong> <span
-                                                            id="objetivoGraf"></span></p>
-                                                    <p class="mb-1"><strong>Descripción:</strong> <span
-                                                            id="descripcionGraf"></span></p>
-                                                    <p class="mb-0"><strong>Meta:</strong> <span id="metaGraf"></span>
-                                                    </p>
-                                                </div>
-
-                                                <div class="card-tools d-flex align-items-start ms-auto">
-                                                    <!-- <button type="button" class="btn btn-tool"
-                                                        data-lte-toggle="card-collapse">
-                                                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                                    </button> -->
-
-                                                    <!-- <div class="btn-group">
-                                                        <button type="button" class="btn btn-tool dropdown-toggle"
-                                                            data-bs-toggle="dropdown">
-                                                            <i class="bi bi-wrench"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu dropdown-menu-end" role="menu">
-                                                            <a href="#" class="dropdown-item">Acción</a>
-                                                            <a href="#" class="dropdown-item">Otra acción</a>
-                                                            <a href="#" class="dropdown-item">Algo más aquí</a>
-                                                            <div class="dropdown-divider"></div>
-                                                            <a href="#" class="dropdown-item">Enlace separado</a>
-                                                        </div>
-                                                    </div> -->
-<!-- 
-                                                    <button type="button" class="btn btn-tool"
-                                                        data-lte-toggle="card-remove">
-                                                        <i class="bi bi-x-lg"></i>
-                                                    </button> -->
-                                                </div>
+                                                <p class="mb-1"><strong>Indicador:</strong> <span id="indNombre"></span>
+                                                </p>
+                                                <p class="mb-1"><strong>Objetivo:</strong> <span
+                                                        id="objetivoGraf"></span></p>
+                                                <p class="mb-1"><strong>Descripción:</strong> <span
+                                                        id="descripcionGraf"></span>
+                                                </p>
+                                                <p class="mb-0"><strong>Meta:</strong> <span id="metaGraf"></span>
+                                                </p>
                                             </div>
 
-                                            <!-- /.card-header -->
-                                            <div class="card-body">
-                                                <!--begin::Row-->
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <p class="text-center">
-                                                            <strong>Evolución histórica</strong>
-                                                        </p>
-                                                        <div>
-                                                            <button id="btnLine"
-                                                                class="btn btn-sm btn-primary">Línea</button>
-                                                            <button id="btnArea"
-                                                                class="btn btn-sm btn-success">Área</button>
-                                                            <button id="btnBar"
-                                                                class="btn btn-sm btn-warning">Barra</button>
-                                                        </div>
-                                                        <div id="sales-chart"></div>
-                                                    </div>
-                                                </div>
+                                            <div class="card-tools d-flex align-items-start ms-auto">
+
                                             </div>
-
-                                            <!-- 🔽 KPIs al pie -->
-                                            <div class="row mt-4" id="kpiCards"></div>
-
                                         </div>
-                                        <!-- /.col -->
+
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                            <!--begin::Row-->
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p class="text-center">
+                                                        <strong>Evolución histórica</strong>
+                                                    </p>
+                                                    <div>
+                                                        <button id="btnLine"
+                                                            class="btn btn-sm btn-primary">Línea</button>
+                                                        <button id="btnArea"
+                                                            class="btn btn-sm btn-success">Área</button>
+                                                        <button id="btnBar"
+                                                            class="btn btn-sm btn-warning">Barra</button>
+                                                    </div>
+                                                    <div id="sales-chart"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 🔽 KPIs al pie -->
+                                        <div class="row mt-4" id="kpiCards"></div>
+
                                     </div>
+                                    <!-- /.col -->
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <section class="content mt-3" id="analisis-automatico" style="display: none;">
-                    <div class="container-fluid">
-                        <div class="card card-primary card-outline">
-                            <div class="row mt-4">
-                                <div class="col-12">
-                                    <div class="bg-white rounded shadow-sm p-4">
-                                        <h4 class="fw-bold mb-3">📋 Destacados </h4>
-                                        <div class="row" id="analisisContainer"></div>
-                                    </div>
+            <section class="content mt-3" id="analisis-automatico" style="display: none;">
+                <div class="container-fluid">
+                    <div class="card card-primary card-outline">
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="bg-white rounded shadow-sm p-4">
+                                    <h4 class="fw-bold mb-3">📋 Destacados </h4>
+                                    <div class="row" id="analisisContainer"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <footer class="main-footer text-center">
-                    <strong>© 2025 - myResultIQ 1.0</strong>
-                </footer>
+            <footer class="main-footer text-center">
+                <strong>© 2025 - myResultIQ 1.0</strong>
+            </footer>
         </main>
         <!--end::App nain-->
 
@@ -610,29 +615,26 @@
                 // 🔹 Cargar filtros de forma PARALELA
                 await cargarOpcionesFiltros(indicadores);
 
-                // 🔹 Mostrar mensaje de instrucción (OPCIÓN 1: Moderna)
                 contenedor.innerHTML = `
-                    <div class="mensaje-filtros text-center">
-                        <div class="texto-principal">
-                            <i class="fas fa-filter me-2"></i>
-                            Seleccionar filtros y click en <b>Filtrar</b>
-                        </div>
-                        <div class="texto-secundario mt-2">
-                            <i class="fas fa-lightbulb me-1"></i>
-                            Combinando múltiples filtros se refina la búsqueda
-                        </div>
+                <div class="mensaje-filtros-sutil">
+                    <div class="text-center texto-principal">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Seleccionar los filtros y presionar <b>Filtrar</b> para ver los resultados
                     </div>
-                `;
+                </div>
+            `;
+
 
             } catch (err) {
                 console.error('Error cargando resumen de indicadores:', err);
                 document.getElementById('listaIndicadoresResumen').innerHTML = `
-                        <div class="alert alert-info w-75 text-center mx-auto my-1 py-0 mb-0">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Seleccioná un filtro y presioná <b>Filtrar</b> para ver los resultados.
-                        </div>
-
-        `;
+                <div class="mensaje-filtros-sutil">
+                    <div class="text-center texto-principal">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Seleccionar los filtros y presionar <b>Filtrar</b> para ver los resultados
+                    </div>
+                </div>
+            `;
             } finally {
                 // Usar setTimeout para asegurar que se ejecute después de renderizar
                 setTimeout(() => {
@@ -643,7 +645,6 @@
                 }, 0);
             }
         }
-
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function normalizeKey(v) {
@@ -661,7 +662,6 @@
             }
             return String(v).trim();
         }
-
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function obtenerSectorConCache(destino) {
@@ -682,7 +682,6 @@
             }
         }
 
-
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function obtenerUsuarioConCache(legajo) {
             const key = normalizeKey(legajo);
@@ -701,7 +700,6 @@
                 return null;
             }
         }
-
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function cargarOpcionesFiltros(indicadores) {
@@ -769,7 +767,6 @@
                 selectResponsable.appendChild(opt);
             }
         }
-
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔        
         async function aplicarFiltrosIndicadores() {
@@ -856,7 +853,6 @@
             }
         }
 
-
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function resetFiltrosIndicadores() {
             document.getElementById('filtroSector').value = '';
@@ -866,33 +862,16 @@
             document.getElementById('filtroTexto').value = '';
 
             const contenedor = document.getElementById('listaIndicadoresResumen');
-            /*
-            contenedor.innerHTML = `
-                <div class="mensaje-filtros text-center">
-                    <div class="texto-principal">
-                        <i class="fas fa-filter me-2"></i>
-                        Seleccioná un filtro y presioná <b>Filtrar</b>
-                    </div>
-                    <div class="texto-secundario mt-2">
-                        <i class="fas fa-lightbulb me-1"></i>
-                        Podés combinar múltiples filtros para refinar tu búsqueda
-                    </div>
-                </div>
-            `;
-            */
-
-            // OPCIÓN 2: Sutil (comentá la opción 1 y descomentá esta)
 
             contenedor.innerHTML = `
                 <div class="mensaje-filtros-sutil">
                     <div class="text-center texto-principal">
                         <i class="fas fa-info-circle me-2"></i>
-                        Seleccioná un filtro y presioná <b>Filtrar</b> para ver los resultados
+                        Seleccionar los filtros y presionar <b>Filtrar</b> para ver los resultados
                     </div>
                 </div>
             `;
         }
-
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function renderIndicadoresFiltrados(lista = indicadoresGlobal) {
@@ -955,7 +934,6 @@
             }
         }
 
-
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function getColorPorCumplimiento(cumplimiento) {
             if (cumplimiento >= 90) return '#28a745'; // verde
@@ -963,7 +941,6 @@
             if (cumplimiento >= 50) return '#3B83BD'; // azul
             return '#dc3545'; // rojo
         }
-
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔        
         async function obtenerCumplimientoIndicador(codigo) {
@@ -1366,7 +1343,7 @@
 
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
-        function generarAnalisisAutomatico(
+        function XXXgenerarAnalisisAutomatico(
             valores,
             periodos,
             meta,
@@ -1480,6 +1457,163 @@
             return { observaciones, recomendaciones };
         }
 
+        // 📊🤖 Generador de análisis automático de cumplimiento
+        function generarAnalisisAutomatico(
+            valores,
+            periodos,
+            meta,
+            primerValor,
+            ultimoValor,
+            valorAnterior,
+            crecimientoTotal,
+            brechaPromedio,
+            mejorIndice,
+            mejorValor,
+            peorValor,
+            peorIndice,
+            promedio,
+            cumplimiento
+        ) {
+            const observaciones = [];
+            const recomendaciones = [];
+
+            // 🔍 Debug opcional
+            console.log('🔎 Generando análisis automático con:', {
+                valores,
+                periodos,
+                meta,
+                primerValor,
+                ultimoValor,
+                valorAnterior,
+                crecimientoTotal,
+                brechaPromedio,
+                mejorIndice,
+                mejorValor,
+                peorValor,
+                peorIndice,
+                promedio,
+                cumplimiento
+            });
+
+            // ==========================
+            // 📈 CONCLUSIONES / OBSERVACIONES
+            // ==========================
+
+            if (crecimientoTotal > 0) {
+                observaciones.push(`Crecimiento positivo del ${crecimientoTotal}% en el período analizado`);
+            } else if (crecimientoTotal < 0) {
+                observaciones.push(`Decrecimiento del ${Math.abs(crecimientoTotal)}% en el período analizado`);
+            }
+
+            if (periodos && periodos.length > 0) {
+                if (mejorIndice >= 0 && mejorIndice < periodos.length) {
+                    observaciones.push(`Mejor resultado en ${periodos[mejorIndice]}: ${mejorValor}`);
+                }
+                if (peorIndice >= 0 && peorIndice < periodos.length) {
+                    observaciones.push(`Valor más bajo en ${periodos[peorIndice]}: ${peorValor}`);
+                }
+            }
+
+            if (brechaPromedio < 0) {
+                observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)} por debajo`);
+            } else {
+                observaciones.push(`Superó la meta en promedio por ${brechaPromedio}`);
+            }
+
+            // Tendencia sostenida de crecimiento
+            let mesesCrecimiento = 0;
+            for (let i = 1; i < valores.length; i++) {
+                if (valores[i] > valores[i - 1]) {
+                    mesesCrecimiento++;
+                } else break;
+            }
+            if (mesesCrecimiento >= 2) {
+                observaciones.push(`Crecimiento sostenido durante ${mesesCrecimiento + 1} períodos consecutivos`);
+            }
+
+            // Variación del último mes
+            if (ultimoValor < valorAnterior) {
+                const caida = Math.round(((ultimoValor - valorAnterior) / valorAnterior) * 100);
+                observaciones.push(`Caída del ${Math.abs(caida)}% en el último período`);
+            } else if (ultimoValor > valorAnterior) {
+                const subida = Math.round(((ultimoValor - valorAnterior) / valorAnterior) * 100);
+                observaciones.push(`Subida del ${subida}% en el último período`);
+            }
+
+            // Variabilidad
+            const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+            const desviacion = Math.sqrt(varianza);
+            if (desviacion > promedio * 0.2) {
+                observaciones.push('El indicador presenta alta variabilidad en el período analizado');
+            } else if (desviacion < promedio * 0.05) {
+                observaciones.push('El indicador se mantuvo estable durante el período');
+            }
+
+            // ==========================
+            // 💡 RECOMENDACIONES
+            // ==========================
+
+            // 1️⃣ Replicar buenas prácticas del mejor mes
+            if (mejorIndice < valores.length - 1) {
+                recomendaciones.push(`Analizar factores de éxito de ${periodos[mejorIndice]} para replicarlos`);
+            }
+
+            // 2️⃣ Meta no alcanzada
+            if (ultimoValor < meta) {
+                const necesario = Math.round(((meta - ultimoValor) / ultimoValor) * 100);
+                recomendaciones.push(`Requiere incremento del ${necesario}% para alcanzar la meta`);
+            }
+
+            // 3️⃣ Comportamiento reciente
+            if (ultimoValor > valorAnterior) {
+                recomendaciones.push('Mantener las estrategias recientes que impulsaron la mejora');
+            } else if (ultimoValor < valorAnterior) {
+                recomendaciones.push('Investigar causas de la caída reciente y tomar acciones correctivas');
+            }
+
+            // 4️⃣ Variabilidad alta
+            if (desviacion > promedio * 0.2) {
+                recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos o revisar factores externos');
+            }
+
+            // 5️⃣ Tendencia reciente positiva
+            const tendenciaReciente = valores.slice(-3);
+            const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
+            if (crecimientoReciente) {
+                recomendaciones.push('Tendencia positiva en los últimos meses - continuar con la estrategia actual');
+            }
+
+            // 6️⃣ Meta difícil de alcanzar
+            const periodosBajos = valores.filter(v => v < meta * 0.7).length;
+            if (cumplimiento < 70 && periodosBajos >= 3) {
+                recomendaciones.push('El cumplimiento ha sido bajo durante varios períodos - revisar si la meta es alcanzable en condiciones normales');
+            }
+
+            // 7️⃣ Meta demasiado baja
+            const periodosAltos = valores.filter(v => v > meta * 1.1).length;
+            if (periodosAltos >= 3) {
+                recomendaciones.push('El indicador supera la meta en varios períodos consecutivos - evaluar si la meta está subestimada');
+            }
+
+            // 8️⃣ Estancamiento o falta de progreso
+            const sinCambio = valores.every(v => Math.abs(v - promedio) < promedio * 0.02);
+            if (sinCambio) {
+                recomendaciones.push('El indicador muestra estancamiento - revisar estrategias o reasignar recursos');
+            }
+
+            // 9️⃣ Buen desempeño sostenido
+            if (cumplimiento >= 90 && desviacion < promedio * 0.1) {
+                recomendaciones.push('Buen desempeño y estabilidad - mantener consistencia en las acciones implementadas');
+            }
+
+            // 🔟 Datos escasos o irregulares
+            if (valores.length < 3) {
+                recomendaciones.push('Pocos períodos medidos - se recomienda incrementar la frecuencia de medición para mayor precisión');
+            }
+
+            return { observaciones, recomendaciones };
+        }
+
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         document.addEventListener('DOMContentLoaded', function () {
@@ -1498,6 +1632,7 @@
             renderIndicadorChart(key_id, nombre, meta, objetivo, descripcion)
 
         }
+
     </script>
 
     <script>

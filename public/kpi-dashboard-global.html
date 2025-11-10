@@ -574,7 +574,7 @@
 
                                                 <div class="card-header">
                                                     <h5 class="card-title">Reporte de Evolución</h5>
-                                                    <div class="card-tools">
+                                                    <!-- <div class="card-tools">
                                                         <button type="button" class="btn btn-tool"
                                                             data-lte-toggle="card-collapse">
                                                             <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -598,7 +598,7 @@
                                                             data-lte-toggle="card-remove">
                                                             <i class="bi bi-x-lg"></i>
                                                         </button>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
 
 
@@ -1299,6 +1299,56 @@
             }
         }
 
+        function evaluarTendenciaIndicador(mediciones, umbral = 2) {
+            if (!Array.isArray(mediciones) || mediciones.length < 2) {
+                return {
+                    tendencia: "datos insuficientes",
+                    variacion: 0,
+                    pendiente: 0,
+                    color: "gray",
+                    icono: "⚪"
+                };
+            }
+
+            const n = mediciones.length;
+            const x = Array.from({ length: n }, (_, i) => i + 1);
+            const y = mediciones;
+
+            const meanX = x.reduce((a, b) => a + b, 0) / n;
+            const meanY = y.reduce((a, b) => a + b, 0) / n;
+
+            let num = 0, den = 0;
+            for (let i = 0; i < n; i++) {
+                num += (x[i] - meanX) * (y[i] - meanY);
+                den += (x[i] - meanX) ** 2;
+            }
+            const pendiente = num / den;
+            const variacion = ((y[n - 1] - y[0]) / y[0]) * 100;
+
+            let tendencia, color, icono;
+            if (variacion > umbral && pendiente > 0) {
+                tendencia = "En alza";
+                color = "#28a745"; // verde
+                icono = "📈";
+            } else if (variacion < -umbral && pendiente < 0) {
+                tendencia = "En baja";
+                color = "#dc3545"; // rojo
+                icono = "📉";
+            } else {
+                tendencia = "Estable";
+                color = "#ffc107"; // amarillo
+                icono = "➖";
+            }
+
+            return {
+                tendencia,
+                variacion: Number(variacion.toFixed(2)),
+                pendiente: Number(pendiente.toFixed(3)),
+                color,
+                icono
+            };
+        }
+
         function crearKPICards(datos) {
             const kpis = [
                 {
@@ -1328,10 +1378,18 @@
                     subtitulo: datos.mejorMesNombre ?? '',
                     color: '#0dcaf0',
                     icono: '🏆'
+                },
+                {
+                    titulo: 'Tendencia',
+                    valor: `${datos.tendencia}`,
+                    subtitulo: datos.variacion,
+                    color: datos.colorTendencia,
+                    icono: datos.iconoTendencia
                 }
             ];
 
             const container = document.getElementById('kpiCards');
+            container.className = "row gx-3 gy-3 p-3";
             container.innerHTML = kpis.map(kpi => `
                     <div class="col-md-6 col-lg-3 mb-3 ml-3">
                         <div class="card kpi-card h-100" style="border-left: 4px solid ${kpi.color}">
@@ -1495,6 +1553,25 @@
                     colors: ['#0d6efd'],
                     // title: { text: 'Evolución histórica', align: 'left' },
                     dataLabels: { enabled: false },
+
+                    // 👇 NUEVO BLOQUE: línea de meta / objetivo
+                    annotations: {
+                        yaxis: [
+                            {
+                                y: meta, // ← tu variable con el valor objetivo
+                                borderColor: '#FF0000',
+                                strokeDashArray: 4,
+                                label: {
+                                    borderColor: '#FF0000',
+                                    style: {
+                                        color: '#fff',
+                                        background: '#FF0000'
+                                    },
+                                    text: `Meta: ${meta}`
+                                }
+                            }
+                        ]
+                    }
                 };
 
                 if (window.salesChart) {
@@ -1519,6 +1596,9 @@
                     window.salesChart.updateOptions({ chart: { type: 'bar' } });
                 };
 
+                // ☎️ calcula Tendencia
+                const resultado = evaluarTendenciaIndicador(valores);
+
                 // ✅ generar tarjetas KPI dinámicas
 
                 const valorActual = valores[valores.length - 1];
@@ -1538,7 +1618,11 @@
                     promedio6: (valores.slice(-6).reduce((a, b) => a + b, 0) / Math.min(6, valores.length)).toFixed(1),
                     rangoMeses: "Últimas 6 mediciones",
                     mejorMesValor: mejorMes,
-                    mejorMesNombre: periodos[valores.indexOf(mejorMes)]
+                    mejorMesNombre: periodos[valores.indexOf(mejorMes)],
+                    tendencia: resultado.tendencia,
+                    variacion: ` Variación: ${resultado.variacion} | Pendiente: ${resultado.pendiente}`,
+                    iconoTendencia: resultado.icono,
+                    colorTendencia: resultado.color
                 });
 
                 const primerValor = valores[0];
