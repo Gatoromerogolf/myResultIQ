@@ -315,7 +315,7 @@ app.get('/api/indicadores', async (req, res) => {
 });
 
 // ✅ GET para tomar un indicador por codigo_id
-app.get('/api/indicadores/:codigo', async (req, res) => {
+app.get('/api/XXXindicadores/:codigo', async (req, res) => {
     const { codigo } = req.params;
 
     try {
@@ -383,6 +383,88 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
     } catch (err) {
         console.error('Error al obtener indicador:', err);
         res.status(500).json({ mensaje: 'Error interno' });
+    }
+});
+
+
+// ✅ GET para tomar un indicador por codigo_id (con foto y responsable)
+app.get('/api/indicadores/:codigo', async (req, res) => {
+    const { codigo } = req.params;
+
+    try {
+        const [rows] = await pool.query(`
+            SELECT 
+                i.id,
+                i.codigo_id,
+                i.nombre,
+                i.descripcion,
+                i.tipo_id,
+                i.dimension_id,
+                d.nombre AS dimension_nombre,
+                i.categoria_id,
+                c.nombre AS categoria_nombre,
+                i.criticidad_id,
+                cr.nombre AS criticidad_nombre,
+                i.responsable,
+                CONCAT(u.nombres, ' ', u.apellido) AS responsable_nombre,
+                u.foto AS responsable_foto,             -- 👈 se agrega la foto del usuario
+                i.destino,
+                s.nombre AS destino_nombre,
+                i.objetivo,
+                i.meta_tipo,
+                i.unico_valor,
+                i.unico_eval,
+                i.unico_acepta,
+                i.unico_riesgo,
+                i.unico_critico,
+                i.rango_desde,
+                i.rango_hasta,
+                i.rango_acepta,
+                i.rango_riesgo,
+                i.rango_critico,
+                i.tenden_tipo,
+                i.tenden_refe,
+                i.tenden_acepta,
+                i.tenden_riesgo,
+                i.tenden_critico,
+                i.fuente_datos,
+                i.formula_calculo,
+                i.unidad_medida,
+                i.freq_medicion,
+                i.tolerancia_plazo,
+                i.freq_reporte,
+                i.fecha_inicio,
+                i.formato,
+                i.comentarios,
+                i.peso_porcentual,
+                i.estado,
+                i.dimension_porcentual
+            FROM indicadores i
+            LEFT JOIN sectores s ON i.destino = s.id
+            LEFT JOIN usuarios u ON i.responsable = u.legajo
+            LEFT JOIN dimension_indicador d ON i.dimension_id = d.id
+            LEFT JOIN categoria_indicador c ON i.categoria_id = c.id
+            LEFT JOIN criticidad_indicador cr ON i.criticidad_id = cr.id
+            WHERE i.codigo_id = ?
+            LIMIT 1
+        `, [codigo]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ mensaje: 'Indicador no encontrado' });
+        }
+
+        const indicador = rows[0];
+
+        // 🧠 Si tiene foto BLOB, convertirla a base64 para enviar al frontend
+        if (indicador.responsable_foto) {
+            indicador.responsable_foto = `data:image/jpeg;base64,${indicador.responsable_foto.toString('base64')}`;
+        }
+
+        res.json(indicador);
+
+    } catch (err) {
+        console.error('Error al obtener indicador:', err);
+        res.status(500).json({ mensaje: 'Error interno al obtener indicador.' });
     }
 });
 

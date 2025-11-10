@@ -407,8 +407,6 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card mb-4">
-
-
                                             <div
                                                 class="card-header d-flex justify-content-between align-items-start flex-wrap">
                                                 <div class="d-flex flex-column">
@@ -424,15 +422,14 @@
                                                     </p>
                                                 </div>
 
-
                                                 <div class="card-tools d-flex align-items-start ms-auto">
-                                                    <button type="button" class="btn btn-tool"
+                                                    <!-- <button type="button" class="btn btn-tool"
                                                         data-lte-toggle="card-collapse">
                                                         <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
                                                         <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                                    </button>
+                                                    </button> -->
 
-                                                    <div class="btn-group">
+                                                    <!-- <div class="btn-group">
                                                         <button type="button" class="btn btn-tool dropdown-toggle"
                                                             data-bs-toggle="dropdown">
                                                             <i class="bi bi-wrench"></i>
@@ -444,12 +441,12 @@
                                                             <div class="dropdown-divider"></div>
                                                             <a href="#" class="dropdown-item">Enlace separado</a>
                                                         </div>
-                                                    </div>
-
+                                                    </div> -->
+<!-- 
                                                     <button type="button" class="btn btn-tool"
                                                         data-lte-toggle="card-remove">
                                                         <i class="bi bi-x-lg"></i>
-                                                    </button>
+                                                    </button> -->
                                                 </div>
                                             </div>
 
@@ -457,7 +454,6 @@
                                             <div class="card-body">
                                                 <!--begin::Row-->
                                                 <div class="row">
-
                                                     <div class="col-md-12">
                                                         <p class="text-center">
                                                             <strong>Evolución histórica</strong>
@@ -564,7 +560,6 @@
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
 
     <!-- Bootstrap (bundle con Popper incluido) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -573,13 +568,11 @@
 
     <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)-->
 
 
     <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-    <!-- ChartJS -->
 
     <!-- =============================== -->
     <!-- ⚙️ SCRIPTS DE FUNCIONALIDAD -->
@@ -1545,13 +1538,6 @@
             utterance.rate = 1;
             utterance.pitch = 1.05;
 
-            // Cambiar avatar según tipo de voz
-            // if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
-            //     avatarAudio.src = "/dist/images/avatar3.png";
-            // } else {
-            //     avatarAudio.src = "/dist/images/avatar4.png";
-            // }
-
             // Eventos visuales
             utterance.onstart = () => {
                 avatarAudio.classList.add('speaking');
@@ -1601,7 +1587,6 @@
             }
         }
     </style>
-
 
 </body>
 

@@ -895,31 +895,31 @@
         }
 
         // // 🚫🚫🚫  CodigosService
-        const CodigosService = {
-            // Servicio global para texto de tabla de códigos 
-            codigosMap: {},
+        // const CodigosService = {
+        //     // Servicio global para texto de tabla de códigos 
+        //     codigosMap: {},
 
-            async init() {
-                const response = await fetch('/api/codigos');
-                if (!response.ok) throw new Error('No se pudo obtener los codigos.');
-                const codigos = await response.json();
+        //     async init() {
+        //         const response = await fetch('/api/codigos');
+        //         if (!response.ok) throw new Error('No se pudo obtener los codigos.');
+        //         const codigos = await response.json();
 
-                codigos.forEach(c => {
-                    this.codigosMap[c.cod_tabla] = c.cod_nombre;
-                });
-            },
+        //         codigos.forEach(c => {
+        //             this.codigosMap[c.cod_tabla] = c.cod_nombre;
+        //         });
+        //     },
 
-            getNombreCodigo(codigo) {
-                return this.codigosMap[codigo] || '-';
-            }
-        };
+        //     getNombreCodigo(codigo) {
+        //         return this.codigosMap[codigo] || '-';
+        //     }
+        // };
 
         // // 🚫🚫🚫  loadData
         async function loadData() {
             //fetch inicial
             try {
                 // Inicializar códigos ANTES de usar
-                await CodigosService.init();
+                // await CodigosService.init();
 
                 const [sectoresRes, indicadoresRes] = await Promise.all([
                     fetch('/api/sectores'),
@@ -1039,7 +1039,7 @@
                             </div>
 
                             <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
-                                <span><strong>Cumplimiento: </strong>${cumplimiento}%</span>
+                                <span><strong>Cumplimiento: </strong>${cumplimiento.toFixed(2)}%</span>
                                 <div style="flex:1; height:12px; background:#eee; border-radius:6px; overflow:hidden;">
                                     <div style="width:${cumplimiento}%; background:${color}; height:100%;"></div>
                                 </div>
@@ -1058,7 +1058,7 @@
                             </div>
                         `;
                 } else {
-                    nodeDescEl.innerText = `${(node.children || []).length} hijos`;
+                    nodeDescEl.innerText = `${(node.children || []).length} dependientes`;
                 }
             }
 
@@ -1097,6 +1097,7 @@
             const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text'); txt.setAttribute('x', 60); txt.setAttribute('y', 68); txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-size', '18'); txt.setAttribute('font-weight', '700'); txt.textContent = percent.toFixed(1) + '%'; svg.appendChild(txt);
         }
 
+        // // 🚫🚫🚫  actualizarLeyenda
         function actualizarLeyenda(node) {
             const leyendaDiv = document.getElementById('leyendaCumplimiento');
             if (!leyendaDiv) return;
@@ -1111,7 +1112,6 @@
         `;
             }
         }
-
 
         // // 🚫🚫🚫  renderBreadcrumb
         function renderBreadcrumb() {
@@ -1254,20 +1254,7 @@
                         </div>
                     </div>
 
-                    <!-- Modal Detalle -->
-                    <div class="modal fade" id="modalDetalle" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Detalle del Indicador</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body" id="modalDetalleBody">
-                            <!-- Se llena dinámicamente -->
-                        </div>
-                        </div>
-                    </div>
-                    </div>
+
 
                     <!-- Modal Evolución -->
                     <div class="modal fade" id="modalEvolucion" tabindex="-1">
@@ -1286,19 +1273,21 @@
                 `;
 
                 // Eventos botón modal Mas detalles
-                document.getElementById('btnDetalle').onclick = () => {
-                    document.getElementById('modalDetalleBody').innerHTML = `
-                        <p><strong>Código:</strong> ${codigo} (${key_id})</p>
-                        <p><strong>Descripción:</strong> ${descripcion}</p>
-                        <p><strong>Objetivo:</strong> ${objetivo}${unidad}</p>
-                        <p><strong>Fuente de datos:</strong> ${fuente_datos}</p>
-                        <p><strong>Forma de cálculo:</strong> ${formula_calculo}</p>
-                        <p><strong>Frecuencia de medición:</strong> ${freq_medicion}</p>
-                        <p><strong>Peso relativo:</strong> ${peso}%</p>
-                        <p><strong>Responsable:</strong> ${responsable}</p>
-                    `;
-                    new bootstrap.Modal(document.getElementById('modalDetalle')).show();
-                };
+                // document.getElementById('btnDetalle').onclick = () => {
+                //     document.getElementById('modalDetalleBody').innerHTML = `
+                //         <p><strong>Código:</strong> ${codigo} (${key_id})</p>
+                //         <p><strong>Descripción:</strong> ${descripcion}</p>
+                //         <p><strong>Objetivo:</strong> ${objetivo}${unidad}</p>
+                //         <p><strong>Fuente de datos:</strong> ${fuente_datos}</p>
+                //         <p><strong>Forma de cálculo:</strong> ${formula_calculo}</p>
+                //         <p><strong>Frecuencia de medición:</strong> ${freq_medicion}</p>
+                //         <p><strong>Peso relativo:</strong> ${peso}%</p>
+                //         <p><strong>Responsable:</strong> ${responsable}</p>
+                //     `;
+                //     new bootstrap.Modal(document.getElementById('modalDetalle')).show();
+                // };
+
+                document.getElementById('btnDetalle').onclick = () => verDetalleIndicador(codigo);
 
                 // Evento botón evolución
                 document.getElementById('btnEvolucion').onclick = async () => {
@@ -1823,6 +1812,19 @@
             }
         }
     </style>
+
+    <div id="contenedorModal"></div>
+
+    <script>
+        // Cargar el modal común al iniciar la página
+        fetch('/modal-indicador.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModal').innerHTML = html;
+            });
+    </script>
+
+    <script src="/modal-indicador.js"></script>
 
 </body>
 

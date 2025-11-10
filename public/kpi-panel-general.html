@@ -513,6 +513,7 @@
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Cargando...</span>
                             </div>
+                            <div class="mt-2 fw-semibold text-secondary">Cargando...</div>
                         </div>
 
                         <div class="card-body">
@@ -527,7 +528,7 @@
                                             <thead class="table-light">
                                                 <tr>
                                                     <th>Destino</th>
-                                                    <th class="text-center">Indicadores</th>
+                                                    <th class="text-center">KPI's</th>
                                                     <th class="text-center">Cumplimiento</th>
                                                     <th class="text-center text-success">En Meta</th>
                                                     <th class="text-center text-danger">Críticos</th>
@@ -557,7 +558,7 @@
                                             <div class="card-footer">
                                                 <!--begin::Row-->
                                                 <div class="row">
-                                                    <div class="col-md-3 col-6">
+                                                    <!-- <div class="col-md-3 col-6">
                                                         <div class="text-center border-end">
                                                             <span class="text-success">
                                                                 <i class="bi bi-caret-up-fill"></i> 17%
@@ -565,9 +566,9 @@
                                                             <h5 class="fw-bold mb-0">$99.999,99</h5>
                                                             <span class="text-uppercase"> XXXX</span>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <!-- /.col -->
-                                                    <div class="col-md-3 col-6">
+                                                    <!-- <div class="col-md-3 col-6">
                                                         <div class="text-center border-end">
                                                             <span class="text-info"> <i
                                                                     class="bi bi-caret-left-fill"></i>
@@ -576,9 +577,9 @@
                                                             <h5 class="fw-bold mb-0">$55.555.00</h5>
                                                             <span class="text-uppercase">YYYY</span>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <!-- /.col -->
-                                                    <div class="col-md-3 col-6">
+                                                    <!-- <div class="col-md-3 col-6">
                                                         <div class="text-center border-end">
                                                             <span class="text-success">
                                                                 <i class="bi bi-caret-up-fill"></i> 20%
@@ -586,9 +587,9 @@
                                                             <h5 class="fw-bold mb-0">$33.333,33</h5>
                                                             <span class="text-uppercase">ZZZZ</span>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <!-- /.col -->
-                                                    <div class="col-md-3 col-6">
+                                                    <!-- <div class="col-md-3 col-6">
                                                         <div class="text-center">
                                                             <span class="text-danger">
                                                                 <i class="bi bi-caret-down-fill"></i> 18%
@@ -596,7 +597,7 @@
                                                             <h5 class="fw-bold mb-0">1200</h5>
                                                             <span class="text-uppercase">MMMMM</span>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <!-- </div> -->
                                                     <!--end::Row-->
                                                 </div>
@@ -956,29 +957,23 @@
         });
     </script>
 
-
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
 
-    <!-- Bootstrap (bundle con Popper incluido) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
     <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)-->
 
-    <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
 
-    <!-- <script src="https://kit.fontawesome.com/a2e0e6ad2f.js" crossorigin="anonymous"></script> -->
-
-
     <script>
 
-        // 🔹 Cargar los datos desde el backend
+        let evolucionGlobal = []; // 🔹 Variable global en memoria
+
+        // 📌📌 obtenerEvolucionGlobal() // 🔹 Cargar los datos desde el backend
         async function obtenerEvolucionGlobal() {
             const res = await fetch('/api/evolucion-global');
             if (!res.ok) throw new Error('Error obteniendo datos');
@@ -987,8 +982,7 @@
             return data
         }
 
-        let evolucionGlobal = []; // 🔹 Variable global en memoria
-        // 🔹 Renderizar gráfico
+        // 📌📌 renderizarGrafico() 🔹 Renderizar gráfico
         async function renderizarGrafico() {
             const data = await obtenerEvolucionGlobal();
             evolucionGlobal = data; // ✅ guardamos todo el dataset
@@ -1099,6 +1093,7 @@
             });
         }
 
+        // 📌📌 analizarEvolucionGlobal(evolucionGlobal)
         function analizarEvolucionGlobal(evolucionGlobal) {
             if (!Array.isArray(evolucionGlobal) || evolucionGlobal.length === 0) {
                 return {
@@ -1148,8 +1143,7 @@
             return { diferencia, promedioHistorico, promedioAnual, tendencia };
         }
 
-
-        // 🔹 Mostrar modal con detalle del mes marcado en evolución global
+        // 📌📌 mostrarDetalleMes(entry)   // 🔹 Mostrar modal con detalle del mes marcado en evolución global
         function mostrarDetalleMes(entry) {
             document.getElementById('detalleMes').textContent = entry.month;
             const tbody = document.getElementById('detalleTabla');
@@ -1175,6 +1169,7 @@
             alert('No se pudo cargar la evolución global');
         });
 
+        // 📌📌 loadGlobalCompliance()
         async function loadGlobalCompliance() {
             try {
                 const [sectoresRes, indicadoresRes] = await Promise.all([
@@ -1219,7 +1214,7 @@
             }
         }
 
-        // Funciones auxiliares
+        // 📌📌 buildHierarchyMinimal(sectores, indicadores)   // Funciones auxiliares
         function buildHierarchyMinimal(sectores, indicadores) {
             const map = {};
             const roots = [];
@@ -1250,6 +1245,7 @@
             return { id: 'root', weight: 100, children: roots };
         }
 
+        // 📌📌 computeCompliance(node)        // Funciones auxiliares
         function computeCompliance(node) {
             if (!node) return 0;
             if (!node.children || node.children.length === 0) return node.cumplimiento ?? 0;
@@ -1264,7 +1260,7 @@
             return sumWeights > 0 ? total / sumWeights : 0;
         }
 
-        // Función drawRing actualizada para ring grande
+        // 📌📌 drawRing(id, percent)        // Funciones auxiliares
         function drawRing(id, percent) {
             const svg = document.getElementById(id);
             const size = 300, r = 140, stroke = 24, c = 2 * Math.PI * r;
@@ -1316,7 +1312,7 @@
             svg.appendChild(txt);
         }
 
-        // Reutiliza tu función de cálculo de cumplimiento
+        // 📌📌 calcularCumplimiento(valor, meta, acepta, riesgo, critico) - // Reutiliza tu función de cálculo de cumplimiento      
         function calcularCumplimiento(valor, meta, acepta, riesgo, critico) {
             if (valor === null || meta === null || meta == 0 || valor == 0) return null;
             if (valor > 0) {
@@ -1325,6 +1321,7 @@
             return (valor / meta) * 100;
         }
 
+        // 📌📌 cargarIndicadores(indicadores)    // Funciones auxiliares
         async function cargarIndicadores(indicadores) {
             const tbodyPendientes = document.getElementById('tbodyPendientes');
             tbodyPendientes.innerHTML = '';
@@ -1536,7 +1533,7 @@
             }
         }
 
-        // ✅ Función común para manejar clics
+        // 📌📌 handleClickIndicador(e)  //  Función común para manejar clics
         function handleClickIndicador(e) {
             const link = e.target.closest('.link-indicador');
             if (link) {
@@ -1574,6 +1571,8 @@
             }
         });
 
+
+        // 📌📌 evaluarTendenciaIndicador(mediciones, umbral = 2)    
         /**
   * @param {number[]} mediciones - Array con los valores del indicador (orden cronológico)
   * @param {number} umbral - Umbral de variación (%) para considerar "estable" (default = 2)
@@ -1631,9 +1630,8 @@
 
         let chartInstance = null;
 
-        // ✅ Ejemplo de función de acción
+        // 📌📌 mostrarEvolucionIndicador(id, labels, valores)   // ✅ Ejemplo de función de acción
         function mostrarEvolucionIndicador(id, labels, valores) {
-
             indicador = window.indicadores.find(i => i.id == id);
             document.getElementById('modalNombre').textContent = indicador.nombre;
             document.getElementById('modalSector').textContent = indicador.sector;
@@ -1694,6 +1692,7 @@
             // Acá podrías abrir un modal o mostrar un gráfico dinámico
         }
 
+        // 📌📌 getUltimaMedicionPorIndicador(indicadorId)
         async function getUltimaMedicionPorIndicador(indicadorId) {
             // Filtrar por el indicador
             const mediciones = await leerMediciones();
@@ -1721,6 +1720,7 @@
             }
         }
 
+        // 📌📌 leerMediciones
         let medicionesGral = [];
         async function leerMediciones() {
             try {
@@ -1741,6 +1741,7 @@
             }
         }
 
+        // 📌📌 obtenerUsuarioPorLegajo(responsable)
         async function obtenerUsuarioPorLegajo(responsable) {
             try {
                 const response = await fetch(`/usuarios/${responsable}`);
@@ -1760,6 +1761,7 @@
             }
         }
 
+        // 📌📌 obtenerSectoresPorUnidad(unidad)
         async function obtenerSectoresPorUnidad(unidad) {
             try {
                 const response = await fetch(`/sectores/${unidad}`);
@@ -1779,6 +1781,7 @@
             }
         }
 
+        // 📌📌 calcularFechaEsperada(fechaConsulta, tipoPeriodo)
         function calcularFechaEsperada(fechaConsulta, tipoPeriodo) {
             // segun la fecha del dia determina qué fecha deberia ya haber informado el usuario
             const partes = fechaConsulta.split('-'); // "2025-09-16" → ["2025","09","16"]
@@ -1918,7 +1921,8 @@
             return resultado;
         }
 
-        // Servicio global para textp de tabla de códigos 
+
+        // 📌📌 CodigosService // Servicio global para textp de tabla de códigos 
         const CodigosService = {
             codigosMap: {},
 
@@ -1937,20 +1941,21 @@
             }
         };
 
-        //  controla rango para destacados
+        // 📌📌 valorCorteDestacados
         document.getElementById('valorCorteDestacados').addEventListener('input', async () => {
             await reconstruirTablas(); // función que recalcula y recarga la tabla
         });
 
-        //         //  controla rango para destacados
+
+        // 📌📌 valorCorteCriticos
         document.getElementById('valorCorteCriticos').addEventListener('input', async () => {
             await reconstruirTablas(); // función que recalcula y recarga la tabla
         });
 
+        // 📌📌 cargarCumplimientoPorDestino()
         async function cargarCumplimientoPorDestino() {
             const spinner = document.getElementById('spinnerCumplimientoDestinos');
             const tablaContainer = document.getElementById('tablaCumplimientoContainer');
-            // const chartContainer = document.getElementById('chartCumplimientoDestinos');
             const tbody = document.getElementById('tablaCumplimientoDestinos');
 
             spinner.style.display = 'block';
@@ -1959,7 +1964,6 @@
             if (botonSidebar) botonSidebar.click();
 
             tablaContainer.style.display = 'none';
-            // chartContainer.style.display = 'none';
 
             try {
                 const res = await fetch('/api/cumplimiento-por-destino');
@@ -1972,8 +1976,8 @@
                     const valorSeguro = isNaN(valor) ? 0 : valor;
 
                     let color = 'text-danger';
-                    if (valorSeguro >= 90) color = 'text-success';
-                    else if (valorSeguro >= 75) color = 'text-warning';
+                    if (valorSeguro >= 80) color = 'text-success';
+                    else if (valorSeguro >= 50) color = 'text-warning';
 
                     const barra = `
                         <div class="progress" style="height: 8px;">
@@ -2014,25 +2018,25 @@
                 chartContainer.style.display = 'block';
 
                 // --- Gráfico horizontal ApexCharts (igual que antes) ---
-                const destinos = data.map(d => d.destino);
-                const valores = data.map(d => Number(d.promedio_cumplimiento) || 0);
-                const colores = valores.map(v => v >= 90 ? '#28a745' : v >= 75 ? '#ffc107' : '#dc3545');
+                // const destinos = data.map(d => d.destino);
+                // const valores = data.map(d => Number(d.promedio_cumplimiento) || 0);
+                // const colores = valores.map(v => v >= 90 ? '#28a745' : v >= 75 ? '#ffc107' : '#dc3545');
 
-                if (valores.length === 0) {
-                    chartContainer.innerHTML = "<p class='text-center text-muted mt-3'>No hay datos para mostrar.</p>";
-                    return;
-                }
+                // if (valores.length === 0) {
+                //     chartContainer.innerHTML = "<p class='text-center text-muted mt-3'>No hay datos para mostrar.</p>";
+                //     return;
+                // }
 
-                const options = {
-                    chart: { type: 'bar', height: 450, toolbar: { show: false }, animations: { enabled: true } },
-                    plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '60%' } },
-                    colors: colores,
-                    dataLabels: { enabled: true, formatter: val => val + '%', style: { fontSize: '13px', fontWeight: 600 } },
-                    xaxis: { categories: destinos, title: { text: 'Cumplimiento (%)' }, max: 100 },
-                    series: [{ name: 'Cumplimiento', data: valores }],
-                    tooltip: { y: { formatter: val => val + '%' } },
-                    grid: { borderColor: '#eee' }
-                };
+                // const options = {
+                //     chart: { type: 'bar', height: 450, toolbar: { show: false }, animations: { enabled: true } },
+                //     plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '60%' } },
+                //     colors: colores,
+                //     dataLabels: { enabled: true, formatter: val => val + '%', style: { fontSize: '13px', fontWeight: 600 } },
+                //     xaxis: { categories: destinos, title: { text: 'Cumplimiento (%)' }, max: 100 },
+                //     series: [{ name: 'Cumplimiento', data: valores }],
+                //     tooltip: { y: { formatter: val => val + '%' } },
+                //     grid: { borderColor: '#eee' }
+                // };
 
                 // setTimeout(() => {
                 //     const chart = new ApexCharts(chartContainer, options);
@@ -2073,75 +2077,6 @@
         // --- Modal y gráfico de evolución ---
         let chartEvolucion = null;
 
-        // document.getElementById('tablaCumplimientoDestinos').addEventListener('click', async (e) => {
-        //     const icono = e.target.closest('.fa-chart-line');
-        //     if (!icono) return;
-
-        //     const idDestino = icono.dataset.id;
-        //     const nombreDestino = icono.dataset.nombre;
-
-        //     mostrarEvolucionPorArea(idDestino, nombreDestino);
-
-        //     try {
-        //         const res = await fetch(`/api/evolucion-area/${idDestino}`);
-        //         const datos = await res.json();
-
-        //         if (!datos || datos.length === 0) {
-        //             alert('No hay datos de evolución para esta área.');
-        //             return;
-        //         }
-
-        //         const periodosX = datos.map((d, idx) => idx + 1);
-        //         const periodosTooltip = datos.map(d => d.periodo_real);
-        //         const valores = datos.map(d => d.cumplimiento);
-
-        //         if (chartEvolucion) chartEvolucion.destroy();
-
-        //         const ctx = document.getElementById('graficoEvolucionArea');
-        //         chartEvolucion = new Chart(ctx, {
-        //             type: 'line',
-        //             data: {
-        //                 labels: periodosX,
-        //                 datasets: [{
-        //                     label: `Cumplimiento promedio - ${nombreDestino}`,
-        //                     data: valores,
-        //                     borderWidth: 2,
-        //                     borderColor: '#0d6efd',
-        //                     tension: 0.3,
-        //                     fill: false
-        //                 }]
-        //             },
-        //             options: {
-        //                 plugins: {
-        //                     title: { display: true, text: 'Evolución del cumplimiento global del área' },
-        //                     tooltip: {
-        //                         callbacks: {
-        //                             label: function (context) {
-        //                                 const idx = context.dataIndex;
-        //                                 return `Cumplimiento: ${context.parsed.y}% (Periodo: ${periodosTooltip[idx]})`;
-        //                             }
-        //                         }
-        //                     },
-        //                     legend: { display: false }
-        //                 },
-        //                 scales: {
-        //                     y: { beginAtZero: true, max: 100, title: { display: true, text: 'Cumplimiento (%)' } },
-        //                     x: { title: { display: true, text: 'Período (1=más antiguo, 6=último)' } }
-        //                 }
-        //             }
-        //         });
-
-        //         const modal = new bootstrap.Modal(document.getElementById('modalEvolucionArea'));
-        //         modal.show();
-
-
-
-        //     } catch (err) {
-        //         console.error('Error cargando evolución del área:', err);
-        //         alert('No se pudo cargar la evolución del área.');
-        //     }
-        // });
-
 
         // Escuchar clics en cualquier fila de indicador
         document.querySelectorAll('.fila-indicador').forEach(fila => {
@@ -2167,7 +2102,7 @@
         });
     </script>
 
-
+    // 📌📌 module
     <script type="module">
         import {
             inicializarDatosGlobales,
@@ -2181,20 +2116,20 @@
         let indicadoresConDatos = []; // array con datos preparados
 
         document.addEventListener("DOMContentLoaded", async () => {
-            // 1️⃣ Inicializamos datos globales una sola vez
+            // 1️⃣ Inicializ datos globales una sola vez
             await inicializarDatosGlobales();
             console.log("✅ Datos globales inicializados");
 
-            // 2️⃣ Recuperamos indicadores desde el módulo global
+            // 2️⃣ Recupera indicadores desde el módulo global
             indicadores = getIndicadores();
             if (!indicadores) return;
             window.indicadores = indicadores; // la convierte en global
 
-            // 3️⃣ Inicializamos códigos si tienes CodigosService
+            // 3️⃣ Inicializa CodigosService si existe
             await CodigosService.init();
             loadGlobalCompliance();
 
-            // 4️⃣ Preparar datos con medición, usuario y sector
+            // 4️⃣ Prepara datos con medición, usuario y sector
             indicadoresConDatos = await Promise.all(indicadores.map(async ind => {
                 const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
                 const ultima = await getUltimaMedicionPorIndicador(ind.id);
@@ -2239,8 +2174,7 @@
             console.log("✅ Tooltips inicializados:", tooltipList.length);
         });
 
-        // ✅ Definida dentro del mismo módulo
-
+        // ✅ reconstruirTablas
         function reconstruirTablas() {
             const tbodyPendientes = document.getElementById('tbodyPendientes');
             const tbodyDestacados = document.getElementById('tbodyDestacados');
@@ -2282,8 +2216,16 @@
                         <td>${ind.usuario}</td>
                         <td>${ind.porcentaje}%</td>
                         <td style="color: ${ind.resultado.color}">${ind.resultado.tendencia}</td>
-                        <td class="text-end">${ind.resultado.variacion}%</td>
-                        <td class="text-end">${ind.resultado.pendiente}</td>
+                        <td class="text-center" style="font-family: monospace; width: 90px">
+                        <span style="display:inline-block;">
+                            ${ind.resultado.variacion}
+                        </span>%
+                        </td>
+                        <td class="text-center" style="font-family: monospace; width: 90px">
+                        <span style="display:inline-block;">
+                            ${ind.resultado.pendiente}
+                        </span>
+                            </td>
                         <td>${ind.resultado.icono}</td>
                    `;
                 });
@@ -2299,7 +2241,7 @@
                                 ${ind.nombre}
                             </a>
                         </td>
-                        <td>${ind.sector}</td>usuario && ind.usuario.nombres && ind.usua
+                        <td>${ind.sector}</td>
                         <td>${ind.usuario}</td>
                         <td>${ind.porcentaje}%</td>
                         <td style="color: ${ind.resultado.color}">${ind.resultado.tendencia}</td>
@@ -2309,58 +2251,10 @@
                    `;
                 });
         }
-
     </script>
 
-
     <script>
-
-        // let chartEvolucionArea = null;
-        // let chartBarrasArea = null;
-
-        function XXXmostrarEvolucionPorArea(idDestino, nombreDestino) {
-            if (!evolucionGlobal.length) {
-                console.warn("⚠️ No hay datos globales cargados aún.");
-                return;
-            }
-
-            // 🔹 Obtener datos filtrados del destino
-            const { labels, indicadoresMap } = obtenerSeriesPorDestino(evolucionGlobal, idDestino);
-
-            // 🔹 Crear datasets para Chart.js
-            const colores = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6610f2', '#20c997'];
-            const datasets = Object.keys(indicadoresMap).map((indicador, i) => ({
-                label: indicador,
-                data: indicadoresMap[indicador],
-                borderColor: colores[i % colores.length],
-                fill: false,
-                tension: 0.25
-            }));
-
-            // 🔹 Destruir gráfico previo si existe
-            if (window.chartEvolucion) {
-                window.chartEvolucion.destroy();
-            }
-
-            const ctx = document.getElementById('sales-chart').getContext('2d');
-            window.chartEvolucion = new Chart(ctx, {
-                type: 'line',
-                data: { labels, datasets },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        title: { display: true, text: `Evolución del cumplimiento - ${nombreDestino}` }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, max: 100, title: { display: true, text: '%' } },
-                        x: { title: { display: true, text: 'Período' } }
-                    }
-                }
-            });
-        }
-
-
+        // 📌📌 mostrarEvolucionPorArea(idDestino, nombreDestino)
         let chartEvolucionArea = null;
         let chartBarrasArea = null;
 
@@ -2534,11 +2428,21 @@
 
         }
 
+
+        // 📌📌 obtenerSeriesPorDestino(data, idDestino)
         function obtenerSeriesPorDestino(data, idDestino) {
-            const labels = data.map(d => d.month);
+            // Filtrar solo los períodos donde el destino tiene datos
+            const dataFiltrada = data.filter(item =>
+                item.detalle.some(d => d.destino === idDestino)
+            );
+
+            // Generar labels solo con esos períodos
+            const labels = dataFiltrada.map(d => d.month);
+
             const indicadoresMap = {};
 
-            data.forEach(item => {
+            // Recorrer los datos filtrados
+            dataFiltrada.forEach(item => {
                 item.detalle
                     .filter(d => d.destino === idDestino)
                     .forEach(d => {
@@ -2548,12 +2452,12 @@
                         indicadoresMap[d.indicador].push(d.cumplimiento);
                     });
             });
-
+            console.log(`labels  ${labels.length}`, labels);
+            console.log(`indicadoresMap  ${Object.keys(indicadoresMap).length}`, indicadoresMap);
             return { labels, indicadoresMap };
         }
 
-
-        // 🎨 Función auxiliar para colores aleatorios suaves
+        // 📌📌 Función auxiliar para colores aleatorios suaves
         function getRandomColor() {
             const colors = [
                 '#3b82f6', '#10b981', '#f59e0b', '#ef4444',
@@ -2569,18 +2473,18 @@
 
     <!-- Spinner / Modal flotante -->
     <div id="spinnerOverlay" style="
-  display:none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.5);
-  z-index: 2000;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: white;
-  font-size: 1.2rem;
-">
+                display:none;
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background-color: rgba(0,0,0,0.5);
+                z-index: 2000;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                color: white;
+                font-size: 1.2rem;
+                ">
         <div class="spinner-border text-light mb-3" role="status">
             <span class="visually-hidden">Generando PDF...</span>
         </div>
@@ -2591,6 +2495,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
+
+        // 📌📌 Armado del PDF
         document.getElementById('btnDescargarPDF').addEventListener('click', async () => {
             const { jsPDF } = window.jspdf;
             const spinner = document.getElementById('spinnerOverlay');
