@@ -672,70 +672,68 @@
                                         <div class="container-fluid">
                                             <div class="card card-primary card-outline">
                                                 <!-- <div class="row"> -->
-                                                    <!-- <div class="col-md-12">
+                                                <!-- <div class="col-md-12">
                                                         <div class="card mb-4"> -->
 
-                                                            <!-- Grafico indicador -->
-                                                            <div
-                                                                class="card-header d-flex justify-content-between align-items-start flex-wrap">
-                                                                <div class="d-flex flex-column">
-                                                                    <!-- <h5 class="card-title mb-2">📊 Reporte de Evolución
+                                                <!-- Grafico indicador -->
+                                                <div
+                                                    class="card-header d-flex justify-content-between align-items-start flex-wrap">
+                                                    <div class="d-flex flex-column">
+                                                        <!-- <h5 class="card-title mb-2">📊 Reporte de Evolución
                                                                     </h5> -->
-                                                                    <h4 class="mb-1"><strong>Indicador:</strong> <span
-                                                                            id="indNombre"></span></h4>
-                                                                    <p class="mb-1"><strong>Descripción:</strong> <span
-                                                                            id="descripcionGraf"></span></p>
-                                                                    <p class="mb-0"><strong>Meta:</strong> <span
-                                                                            id="metaGraf"></span></p>
-                                                                </div>
-                                                                <!-- <div
+                                                        <h4 class="mb-1"><strong>Indicador:</strong> <span
+                                                                id="indNombre"></span></h4>
+                                                        <p class="mb-1"><strong>Descripción:</strong> <span
+                                                                id="descripcionGraf"></span></p>
+                                                        <p class="mb-0"><strong>Meta:</strong> <span
+                                                                id="metaGraf"></span></p>
+                                                    </div>
+                                                    <!-- <div
                                                                     class="card-tools d-flex align-items-start ms-auto">
                                                                 </div> -->
+                                                </div>
+
+                                                <div class="card-body">
+                                                    <!--begin::Row-->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <p class="text-center">
+                                                                <strong>Evolución histórica</strong>
+                                                            </p>
+                                                            <div>
+                                                                <button id="btnLine"
+                                                                    class="btn btn-sm btn-primary">Línea</button>
+                                                                <button id="btnArea"
+                                                                    class="btn btn-sm btn-success">Área</button>
+                                                                <button id="btnBar"
+                                                                    class="btn btn-sm btn-warning">Barra</button>
                                                             </div>
+                                                            <div id="sales-chart"></div>
+                                                        </div>
+                                                    </div>
 
-                                                            <div class="card-body">
-                                                                <!--begin::Row-->
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <p class="text-center">
-                                                                            <strong>Evolución histórica</strong>
-                                                                        </p>
-                                                                        <div>
-                                                                            <button id="btnLine"
-                                                                                class="btn btn-sm btn-primary">Línea</button>
-                                                                            <button id="btnArea"
-                                                                                class="btn btn-sm btn-success">Área</button>
-                                                                            <button id="btnBar"
-                                                                                class="btn btn-sm btn-warning">Barra</button>
-                                                                        </div>
-                                                                        <div id="sales-chart"></div>
-                                                                    </div>
-                                                                </div>
+                                                    <!-- 🔽 KPIs al pie -->
+                                                    <div class="content mt-4" id="kpiCards">
+                                                    </div>
 
-                                                                <!-- 🔽 KPIs al pie -->
-                                                                <div class="content mt-4" id="kpiCards">
-                                                                </div>
-
-                                                                <div class="content mt-3" id="analisis-automatico"
-                                                                    style="display: none;">
-                                                                    <div class="card card-secondary card-outline">
-                                                                        <div class="row mt-2">
-                                                                            <div class="col-12">
-                                                                                <div
-                                                                                    class="bg-white rounded shadow-sm p-4">
-                                                                                    <h4 class="fw-bold mb-3">📋
-                                                                                        Conclusiones</h4>
-                                                                                    <div class="row"
-                                                                                        id="analisisContainer">
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                                    <div class="content mt-3" id="analisis-automatico"
+                                                        style="display: none;">
+                                                        <div class="card card-secondary card-outline">
+                                                            <div class="row mt-2">
+                                                                <div class="col-12">
+                                                                    <div class="bg-white rounded shadow-sm p-4">
+                                                                        <h4 class="fw-bold mb-3">📋
+                                                                            Conclusiones</h4>
+                                                                        <div class="row" id="analisisContainer">
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
-                                                        <!-- </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <!-- </div>
                                                     </div> -->
                                                 <!-- </div> -->
                                             </div>
@@ -2628,7 +2626,7 @@
 
                                         <!-- 🗃️ Mediciones -->
                                         <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
-                                            onclick="abrirModalMediciones('${ind.id}')">
+                                            onclick="mostrarModalMediciones('${ind.id}')">
                                             <i class="fas fa-database text-success"></i>
                                         </button>
                                     </div>
@@ -4067,15 +4065,27 @@
     </script>
 
     <div id="contenedorModal"></div>
+    <div id="contenedorModalMediciones"></div>
+
     <script>
-        // Cargar el modal común al iniciar la página
+        // Cargar modal de indicadores
         fetch('/modal-indicador.html')
             .then(res => res.text())
             .then(html => {
                 document.getElementById('contenedorModal').innerHTML = html;
             });
+
+        // Cargar modal de mediciones
+        fetch('/modal-mediciones.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalMediciones').innerHTML = html;
+            });
     </script>
+
+    <!-- Scripts asociados -->
     <script src="/modal-indicador.js"></script>
+    <script src="/modal-mediciones.js"></script>
 
 </body>
 

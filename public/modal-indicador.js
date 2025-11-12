@@ -44,11 +44,10 @@ async function verDetalleIndicador(codigo) {
         if (contenedorResponsable) {
             contenedorResponsable.innerHTML = `
                 <div class="d-flex align-items-center gap-3 border-bottom pb-2 mb-3">
-                    ${
-                        indicador.responsable_foto
-                            ? `<img src="${indicador.responsable_foto}" class="rounded-circle border" width="70" height="70" alt="Foto del responsable">`
-                            : `<i class="fa fa-user-circle fa-4x text-secondary"></i>`
-                    }
+                    ${indicador.responsable_foto
+                    ? `<img src="${indicador.responsable_foto}" class="rounded-circle border" width="70" height="70" alt="Foto del responsable">`
+                    : `<i class="fa fa-user-circle fa-4x text-secondary"></i>`
+                }
                     <div>
                         <small class="text-muted">Responsable</small>
                         <h6 class="mb-0">${indicador.responsable_nombre || 'Sin asignar'}</h6>
@@ -117,11 +116,10 @@ async function verDetalleIndicador(codigo) {
             "Fórmula de Cálculo": indicador.formula_calculo || '-',
             // "Unidad de Medida": CodigosService.getNombreCodigo(indicador.unidad_medida),
             "Frecuencia de Medición": CodigosService.getNombreCodigo(indicador.freq_medicion),
-            "Fecha de Inicio": `${
-                indicador.fecha_inicio
-                    ? new Date(indicador.fecha_inicio).toLocaleDateString('es-AR')
-                    : '-'
-            } - ${estados[indicador.estado] || '-'}`,
+            "Fecha de Inicio": `${indicador.fecha_inicio
+                ? new Date(indicador.fecha_inicio).toLocaleDateString('es-AR')
+                : '-'
+                } - ${estados[indicador.estado] || '-'}`,
 
             "__sep6__": null,
             "Comentarios": indicador.comentarios || '-'
@@ -159,3 +157,7 @@ async function verDetalleIndicador(codigo) {
         alert('No se pudo obtener el detalle del indicador.');
     }
 }
+
+
+
+
