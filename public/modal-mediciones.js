@@ -1,24 +1,25 @@
 
-let modalMediciones = null;
+// let modalMediciones = null;
 
-document.addEventListener('DOMContentLoaded', () => {
-    const modalEl = document.getElementById('modalMediciones');
-    if (modalEl) {
-        modalMediciones = new bootstrap.Modal(modalEl);
-    }
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     const modalEl = document.getElementById('modalMediciones');
+//     if (modalEl) {
+//         modalMediciones = new bootstrap.Modal(modalEl);
+//     }
+// });
 
-async function mostrarModalMediciones(ind) {
+async function mostrarModalMediciones(ind, codigo, nombre) {
     // Completa datos del indicador
-    document.getElementById('med-codigo').textContent = ind.id || '-';
-    document.getElementById('med-nombre').textContent = ind.nombre || '-';
+    document.getElementById('med-codigo').textContent = codigo || '-';
+    document.getElementById('med-nombre').textContent = nombre || '-';
 
     const tbody = document.getElementById('tablaMediciones');
     tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">Cargando datos...</td></tr>`;
 
     try {
         // Llamada a la API (ajustá la ruta según tu backend)
-        const res = await fetch(`/api/mediciones/${ind.id}`);
+        console.log (`id para mandar  ${ind}`)
+        const res = await fetch(`/api/mediciones/${ind}`);
         if (!res.ok) throw new Error('Error al obtener mediciones');
         const result = await res.json();
         const mediciones = result.data || [];
@@ -32,13 +33,22 @@ async function mostrarModalMediciones(ind) {
             mediciones.forEach(m => {
                 const fila = `
                     <tr>
-                        <td class="text-center">${m.med_periodo || '-'}</td>
+                        <td class="text-center">${m.med_valor_periodo || '-'}</td>
                         <td class="text-center">${m.med_valor ?? '-'}</td>
                         <td class="text-center">${m.med_meta ?? '-'}</td>
                         <td>${m.med_comentarios || ''}</td>
                         <td>${m.med_plan_accion || ''}</td>
-                        <td class="text-center">${m.med_legajo_resp_medicion || '-'}</td>
-                        <td class="text-center">${m.med_legajo_resp_registro || '-'}</td>
+                        <!-- 👇 Muestra nombres en lugar de legajos -->
+                        <td class="text-center">
+                            ${m.responsable_medicion 
+                                ? `${m.responsable_medicion} (${m.med_legajo_resp_medicion})` 
+                                : (m.med_legajo_resp_medicion || '-')}
+                        </td>
+                        <td class="text-center">
+                            ${m.responsable_registro 
+                                ? `${m.responsable_registro} (${m.med_legajo_resp_registro})` 
+                                : (m.med_legajo_resp_registro || '-')}
+                        </td>
                         <td class="text-center">${m.med_fecha_registro
                         ? new Date(m.med_fecha_registro).toLocaleDateString('es-AR')
                         : '-'}</td>
@@ -53,5 +63,10 @@ async function mostrarModalMediciones(ind) {
     }
 
     // Muestra el modal
-    if (modalMediciones) modalMediciones.show();
+    // console.log('llego antes de mostrar el modal')
+    // if (modalMediciones) modalMediciones.show();
+    
+        // === Mostrar modal ===
+        const modal = new bootstrap.Modal(document.getElementById('modalMediciones'));
+        modal.show();
 }

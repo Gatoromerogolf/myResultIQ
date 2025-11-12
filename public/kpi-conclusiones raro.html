@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="es">
+<!--begin::Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>myResultIQ | Ind Asig</title>
+    <!--begin::Primary Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- CSS de AdminLTE y dependencias -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+
+
+
+    <meta name="title" content="AdminLTE v4 | Dashboard" />
+    <meta name="author" content="ColorlibHQ" />
+    <meta name="description"
+        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+    <meta name="keywords"
+        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+    <!--end::Primary Meta Tags-->
+
+    <!--begin::Fonts-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
+
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
+
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="../css/estilos-custom.css">
+
+    <!-- apexcharts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
+
+    <!-- jsvectormap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- AdminLTE se basa en Bootstrap, así que hay que incluirlo primero:-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--  Bootstrap Icons (Para que <i class="bi bi-..."> funcione) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!--  AdminLTE CSS (Estilos del template)-->
+    <link rel="stylesheet" href="../css/adminlte.css" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+
+    <style>
+        .card-shadow {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        .section-title {
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .list-group-item strong {
+            color: #007bff;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .trend-positive {
+            color: #28a745;
+        }
+
+        .trend-negative {
+            color: #dc3545;
+        }
+
+        .trend-neutral {
+            color: #6c757d;
+        }
+
+        .subtle {
+            color: #888;
+        }
+    </style>
+</head>
+<!--end::Head-->
+<!--begin::Body-->
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+        <!--begin::Header-->
+        <nav class="app-header navbar navbar-expand bg-body">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Start Navbar Links-->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="bi bi-list"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
+                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
+                </ul>
+                <!--end::Start Navbar Links-->
+                <!--begin::End Navbar Links-->
+                <ul class="navbar-nav ms-auto">
+                    <!--begin::Navbar Search-->
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                            <i class="bi bi-search"></i>
+                        </a>
+                    </li> -->
+                    <!--end::Navbar Search-->
+
+                    <!--begin::Messages Dropdown Menu-->
+
+                    <!--end::Notifications Dropdown Menu-->
+
+                    <!--begin::Fullscreen Toggle-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-lte-toggle="fullscreen">
+                            <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+                            <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
+                        </a>
+                    </li>
+                    <!--end::Fullscreen Toggle-->
+
+                    <!--begin::User Menu Dropdown"-->
+                    <li class="nav-item dropdown1 user-menu">
+
+                        <span class="nav-link dropdown-toggle">
+                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Daniel González
+                                    (ADM)</strong></span>
+                            <img src="/dist/images/user6-128x128.jpg" class="user-image rounded-circle shadow"
+                                style="width: 40px; height: 40px;" alt="User Image" />
+                        </span>
+                    </li>
+                    <!--end::User Menu Dropdown-->
+
+                    <li>
+                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
+                        <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt me-1"></i> Salir
+                        </a>
+                    </li>
+                    <!--end::User Menu Dropdown-->
+                </ul>
+                <!--end::End Navbar Links-->
+            </div>
+            <!--end::Container-->
+        </nav>
+        <!--end::Header-->
+
+        <!--begin::Sidebar-->
+        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
+        <script>
+            async function cargarAside() {
+                const res = await fetch('aside.html');
+                const html = await res.text();
+                document.getElementById('asideContainer').innerHTML = html;
+
+                // Marcar activo según la página actual
+                const links = document.querySelectorAll('#asideContainer a');
+                links.forEach(link => {
+                    if (link.href === window.location.href) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            cargarAside();
+        </script>
+        <!--end::Sidebar-->
+
+        <!--begin::App Main-->
+        <main class="app-main">
+            <!-- Contenedor principal -->
+            <div class="content-wrapper">
+                <section class="content p-4">
+
+                    <!DOCTYPE html>
+                    <html lang="es">
+
+                    <head>
+                        <meta charset="UTF-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <title>Conclusiones Generales - KPIs</title>
+
+                        <!-- Estilos base -->
+                        <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css" />
+                        <link rel="stylesheet" href="dist/css/adminlte.min.css" />
+                        <link rel="stylesheet" href="dist/css/custom.css" />
+
+                        <style>
+                            .card-shadow {
+                                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                                border-radius: 12px;
+                            }
+
+                            .section-title {
+                                font-weight: 600;
+                                font-size: 1.3rem;
+                                margin-bottom: 1rem;
+                            }
+
+                            .list-group-item strong {
+                                color: #007bff;
+                            }
+
+                            .metric-value {
+                                font-size: 1.2rem;
+                                font-weight: 600;
+                            }
+
+                            .trend-positive {
+                                color: #28a745;
+                            }
+
+                            .trend-negative {
+                                color: #dc3545;
+                            }
+
+                            .trend-neutral {
+                                color: #6c757d;
+                            }
+
+                            .subtle {
+                                color: #888;
+                            }
+                        </style>
+                    </head>
+
+                    <body class="hold-transition layout-top-nav">
+                        <div class="wrapper">
+                            <div class="content-wrapper">
+                                <section class="content-header">
+                                    <div class="container-fluid">
+                                        <h1 class="mb-3">
+                                            📊 Conclusiones Generales del Desempeño Organizacional
+                                        </h1>
+                                    </div>
+                                </section>
+
+                                <section class="content">
+                                    <div class="container-fluid">
+
+                                        <!-- 🧠 NARRATIVA GLOBAL -->
+                                        <div class="card card-primary card-outline card-shadow mb-4">
+                                            <div class="card-body">
+                                                <h5 class="section-title">Resumen Ejecutivo</h5>
+                                                <div id="narrativaGeneral" class="lead"></div>
+
+                                                <hr />
+                                                <div id="evolucionGlobal" class="mt-3"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 🏢 ANÁLISIS POR DESTINO -->
+                                        <div class="card card-outline card-shadow mb-4">
+                                            <div class="card-header bg-light">
+                                                <h5 class="section-title">
+                                                    🏢 Desempeño por Destino / Unidad Funcional
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <ul id="listaDestinos" class="list-group list-group-flush"></ul>
+                                            </div>
+                                        </div>
+
+                                        <!-- 🧩 OBSERVACIONES ADICIONALES -->
+                                        <div class="card card-outline card-shadow">
+                                            <div class="card-header bg-light">
+                                                <h5 class="section-title">🧩 Observaciones Adicionales</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="observacionesGenerales"></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+                    <!-- 🧩 Sub-secciones analíticas -->
+                    <div id="seccionesAnalisis">
+
+                        <div class="section-title"><i class="fas fa-signal"></i> Evolución global</div>
+                        <div id="evolucionGlobal" class="resumen-block"></div>
+
+                        <div class="section-title"><i class="fas fa-database"></i> Cobertura de mediciones
+                        </div>
+                        <div id="coberturaMediciones" class="resumen-block"></div>
+
+                        <div class="section-title"><i class="fas fa-users"></i> Desempeño por destino</div>
+                        <div id="desempenoDestinos" class="resumen-block"></div>
+
+                        <div class="section-title"><i class="fas fa-sync-alt"></i> Evolución por destino
+                        </div>
+                        <div id="evolucionDestinos" class="resumen-block"></div>
+
+                        <div class="section-title"><i class="fas fa-bell"></i> Alertas y recomendaciones
+                        </div>
+                        <div id="alertasRecomendaciones" class="resumen-block"></div>
+
+                    </div>
+
+            </div>
+    </div>
+
+    <!-- 📤 Botón exportar a PDF -->
+    <div class="text-right mt-3">
+        <button id="btnExportarPDF" class="btn btn-outline-success">
+            <i class="fas fa-file-pdf"></i> Exportar conclusiones a PDF
+        </button>
+    </div>
+
+    </div>
+    </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer text-center">
+        <strong>© 2025 - myResultIQ 1.0</strong>
+    </footer>
+
+    </div>
+    <!-- CSS de AdminLTE y dependencias -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    </main>
+    <!--end::App nain-->
+
+    </div>
+    <!--end::App Wrapper-->
+
+    <!--begin::Modal del usuario-->
+    <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleUsuarioLabel">Info Responsable</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="/dist/images/user1-128x128.jpg" class="rounded-circle shadow mb-3" alt="User Image" />
+                    <p class="mb-1">Gerente de Operaciones</p>
+                    <p class="mb-1">rdieguez@company.com.ar</p>
+                    <p>+54 11 452 7898</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal del usuario-->
+
+    <!-- Modal de Confirmación de Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    Esta acción cerrará tu sesión actual y volverás a la página de inicio.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('confirmLogout').addEventListener('click', function () {
+            // Limpiar lo necesario
+            sessionStorage.clear();
+            localStorage.clear(); // si usás localStorage
+
+            // Redirigir al inicio
+            window.location.href = 'index.html';
+        });
+    </script>
+
+    <!--begin::Script-->
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+
+    <!-- Bootstrap (bundle con Popper incluido) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <!-- <script src="../../dist/js/adminlte.js"></script> -->
+    <script src="../js/adminlte.js"></script>
+    <!--end::Required Plugin(AdminLTE)-->
+
+    <!-- OPTIONAL SCRIPTS -->
+    <!-- sortablejs -->
+
+
+    <!-- apexcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+    <!-- ChartJS -->
+
+  <script>
+    async function mostrarConclusiones() {
+      try {
+        const [globalRes, destinosRes] = await Promise.all([
+          fetch("/api/cumplimiento-global"),
+          fetch("/api/cumplimiento-por-destino")
+        ]);
+
+        const globalData = await globalRes.json();
+        const destinos = await destinosRes.json();
+
+        if (!Array.isArray(destinos)) throw new Error("El resultado de destinos no es iterable");
+
+        // ==========================
+        // 🧠 1. Narrativa Global
+        // ==========================
+        const variacionMensual = parseFloat(globalData.variacionMensual || 0).toFixed(2);
+        const promedioHistorico = parseFloat(globalData.promedioHistorico || 0).toFixed(2);
+        const promedioAnual = parseFloat(globalData.promedioAnual || 0).toFixed(2);
+        const cumplimientoGlobal = parseFloat(globalData.cumplimientoGlobal || 0).toFixed(2);
+        const tendencia = parseFloat(globalData.tendencia || 0).toFixed(2);
+        const cobertura = parseFloat(globalData.cobertura || 0).toFixed(2);
+
+        const narrativa = `
+          El cumplimiento global de la organización se mantiene
+          <strong>${variacionMensual > 0 ? 'en alza' : variacionMensual < 0 ? 'ligeramente descendente' : 'estable'}</strong>,
+          con una variación mensual de <strong>${variacionMensual}%</strong>.
+          El promedio histórico alcanza <strong>${promedioHistorico}%</strong>, mientras que el promedio anual es de
+          <strong>${promedioAnual}%</strong>.
+          Actualmente el nivel de cumplimiento global se sitúa en <strong>${cumplimientoGlobal}%</strong>,
+          evidenciando una <strong>${tendencia > 0 ? 'tendencia ascendente' : tendencia < 0 ? 'tendencia a la baja' : 'estabilidad general'}</strong>.
+          La cobertura de mediciones llega al <strong>${cobertura}%</strong> de los destinos,
+          lo cual refleja un seguimiento ${cobertura > 95 ? 'óptimo' : cobertura > 80 ? 'satisfactorio' : 'insuficiente'}.
+        `;
+        document.getElementById("narrativaGeneral").innerHTML = narrativa;
+
+        document.getElementById("evolucionGlobal").innerHTML = `
+          Variación mensual: <strong>${variacionMensual}%</strong><br>
+          Promedio histórico: <strong>${promedioHistorico}%</strong><br>
+          Promedio anual: <strong>${promedioAnual}%</strong><br>
+          Tendencia: <strong class="${tendencia > 0 ? 'trend-positive' : tendencia < 0 ? 'trend-negative' : 'trend-neutral'}">${tendencia}%</strong>
+        `;
+
+        // ==========================
+        // 🏢 2. Análisis por Destino
+        // ==========================
+        const lista = document.getElementById("listaDestinos");
+        lista.innerHTML = "";
+
+        const totalDestinos = destinos.length;
+        const sinMediciones = destinos.filter(d => !d.promedio_cumplimiento).length;
+
+        destinos.forEach((d, index) => {
+          const cumplimiento = parseFloat(d.promedio_cumplimiento || 0).toFixed(2);
+          const estado = cumplimiento >= 90
+            ? "Excelente"
+            : cumplimiento >= 75
+              ? "Satisfactorio"
+              : "Crítico";
+
+          const icon =
+            estado === "Excelente"
+              ? "fa-arrow-up text-success"
+              : estado === "Satisfactorio"
+                ? "fa-minus text-warning"
+                : "fa-arrow-down text-danger";
+
+          const item = document.createElement("li");
+          item.className = "list-group-item d-flex justify-content-between align-items-center";
+          item.innerHTML = `
+            <div>
+              <strong>${index + 1}. ${d.destino}</strong>
+              <div class="subtle">
+                ${d.en_meta} en meta • ${d.criticos} críticos
+              </div>
+            </div>
+            <div>
+              <i class="fas ${icon} mr-2"></i>
+              <span class="metric-value">${cumplimiento}%</span>
+            </div>
+          `;
+          lista.appendChild(item);
+        });
+
+        // ==========================
+        // 📊 3. Observaciones Generales
+        // ==========================
+        const maximo = destinos.reduce((max, d) =>
+          (d.promedio_cumplimiento || 0) > (max.promedio_cumplimiento || 0) ? d : max, destinos[0]);
+        const minimo = destinos.reduce((min, d) =>
+          (d.promedio_cumplimiento || 0) < (min.promedio_cumplimiento || 0) ? d : min, destinos[0]);
+
+        const dispersión = (maximo.promedio_cumplimiento - minimo.promedio_cumplimiento).toFixed(2);
+
+        const observaciones = `
+          <p>En el análisis global de los destinos, se observa una <strong>dispersión de ${dispersión}%</strong> entre el mejor y el peor desempeño.</p>
+          <p>El destino con mayor cumplimiento es <strong>${maximo.destino}</strong> (${maximo.promedio_cumplimiento.toFixed(2)}%), mientras que el menor se registra en <strong>${minimo.destino}</strong> (${minimo.promedio_cumplimiento.toFixed(2)}%).</p>
+          <p>Se detectaron <strong>${sinMediciones}</strong> destinos sin mediciones recientes, lo que podría afectar la precisión del promedio general.</p>
+          <p>En conjunto, los resultados reflejan una organización con desempeño ${cumplimientoGlobal >= 85 ? 'muy sólido' : cumplimientoGlobal >= 70 ? 'moderado pero estable' : 'con áreas críticas que requieren atención inmediata'}.</p>
+        `;
+        document.getElementById("observacionesGenerales").innerHTML = observaciones;
+
+      } catch (err) {
+        console.error("Error mostrando conclusiones:", err);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", mostrarConclusiones);
+  </script>
+
+
+<script src="/conclusiones-generales.js"></script>
+
+</body>
+<!--end::Body-->
+
+</html>

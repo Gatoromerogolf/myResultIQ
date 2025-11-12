@@ -952,6 +952,9 @@
 
                                 <!-- === Botones de acción === -->
                                 <div class="actions-bar">
+                                    <a href="kpi-conclusiones.html" class="btn btn-outline-primary">
+                                        <i class="fas fa-chart-line"></i> Ver conclusiones generales
+                                    </a>
                                     <!-- <button class="btn btn-secondary"><i class="fas fa-file-csv"></i> Exportar
                                 CSV</button> -->
                                     <button id="btnDescargarPDF" class="btn btn-outline-primary">
@@ -1229,7 +1232,29 @@
                     }
                 }
             });
+
+            actualizarResumenGlobal();
         }
+
+        // 📌📌 actualizarResumenGlobal
+        function actualizarResumenGlobal() {
+            const vsMesAnterior = parseFloat(document.getElementById('vsMesAnterior').textContent) || 0;
+            const promHistorico = parseFloat(document.getElementById('promHistorico').textContent) || 0;
+            const promAnual = parseFloat(document.getElementById('promAnual').textContent) || 0;
+            const tendencia = document.getElementById('tendencia').textContent.trim();
+            const cumplimiento = window.valorCumplimientoGlobal || 0; // el valor actual del ring
+
+            const resumenGlobal = {
+                variacion: vsMesAnterior,
+                promHistorico,
+                promAnual,
+                tendencia,
+                cumplimiento
+            };
+            localStorage.setItem('resumenGlobal', JSON.stringify(resumenGlobal));
+            console.log (resumenGlobal)
+        }
+
 
         // 📌📌 analizarEvolucionGlobal(evolucionGlobal)
         function analizarEvolucionGlobal(evolucionGlobal) {
@@ -2163,32 +2188,6 @@
                 tablaContainer.style.display = 'block';
                 chartContainer.style.display = 'block';
 
-                // --- Gráfico horizontal ApexCharts (igual que antes) ---
-                // const destinos = data.map(d => d.destino);
-                // const valores = data.map(d => Number(d.promedio_cumplimiento) || 0);
-                // const colores = valores.map(v => v >= 90 ? '#28a745' : v >= 75 ? '#ffc107' : '#dc3545');
-
-                // if (valores.length === 0) {
-                //     chartContainer.innerHTML = "<p class='text-center text-muted mt-3'>No hay datos para mostrar.</p>";
-                //     return;
-                // }
-
-                // const options = {
-                //     chart: { type: 'bar', height: 450, toolbar: { show: false }, animations: { enabled: true } },
-                //     plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '60%' } },
-                //     colors: colores,
-                //     dataLabels: { enabled: true, formatter: val => val + '%', style: { fontSize: '13px', fontWeight: 600 } },
-                //     xaxis: { categories: destinos, title: { text: 'Cumplimiento (%)' }, max: 100 },
-                //     series: [{ name: 'Cumplimiento', data: valores }],
-                //     tooltip: { y: { formatter: val => val + '%' } },
-                //     grid: { borderColor: '#eee' }
-                // };
-
-                // setTimeout(() => {
-                //     const chart = new ApexCharts(chartContainer, options);
-                //     chart.render();
-                // }, 50);
-
                 // Delegación de eventos para los íconos de evolución
                 document.getElementById('tablaCumplimientoDestinos').addEventListener('click', async (e) => {
                     const icono = e.target.closest('[data-id]');
@@ -2281,7 +2280,7 @@
         }
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
-        async function cargarOpcionesFiltros(indicadores) {
+        async function XXXcargarOpcionesFiltros(indicadores) {
             const selectSector = document.getElementById('filtroSector');
             const selectResponsable = document.getElementById('filtroResponsable');
             const selectIndicador = document.getElementById('filtroIndicador');
@@ -2346,6 +2345,89 @@
                 selectResponsable.appendChild(opt);
             }
         }
+
+        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
+        async function cargarOpcionesFiltros(indicadores) {
+            const selectSector = document.getElementById('filtroSector');
+            const selectResponsable = document.getElementById('filtroResponsable');
+            const selectIndicador = document.getElementById('filtroIndicador');
+
+            // Limpiar selects
+            selectSector.innerHTML = '<option value="">Todos</option>';
+            selectResponsable.innerHTML = '<option value="">Todos</option>';
+            selectIndicador.innerHTML = '<option value="">Todos</option>';
+
+            const sectorMap = new Map();
+            const responsableMap = new Map();
+
+            // 🔹 Recolectar claves únicas
+            for (const ind of indicadores) {
+                const claveSector = normalizeKey(ind.destino);
+                if (claveSector && !sectorMap.has(claveSector)) {
+                    sectorMap.set(claveSector, { raw: ind.destino, label: null });
+                }
+
+                const claveResp = normalizeKey(ind.responsable);
+                if (claveResp && !responsableMap.has(claveResp)) {
+                    responsableMap.set(claveResp, { raw: ind.responsable, label: null });
+                }
+            }
+
+            // 🚀 OPTIMIZACIÓN: Cargar todos los sectores y responsables en paralelo
+            const promesasSectores = Array.from(sectorMap.entries()).map(async ([clave, entry]) => {
+                const sectorObj = await obtenerSectorConCache(entry.raw);
+                entry.label = sectorObj?.nombre || sectorObj?.name || String(entry.raw || clave) || clave;
+            });
+
+            const promesasResponsables = Array.from(responsableMap.entries()).map(async ([clave, entry]) => {
+                const usuario = await obtenerUsuarioConCache(entry.raw);
+                const label = usuario?.nombres || usuario?.nombre
+                    ? `${usuario.nombres || usuario.nombre} ${usuario.apellido || ''}`.trim()
+                    : String(entry.raw || clave);
+                entry.label = label;
+            });
+
+            await Promise.all([...promesasSectores, ...promesasResponsables]);
+
+            // 🔹 Ordenar alfabeticamente (ignorando acentos y mayúsculas)
+            const collator = new Intl.Collator('es', { sensitivity: 'base' });
+
+            const sectoresOrdenados = Array.from(sectorMap.entries())
+                .sort((a, b) => collator.compare(a[1].label || a[0], b[1].label || b[0]));
+
+            const responsablesOrdenados = Array.from(responsableMap.entries())
+                .sort((a, b) => collator.compare(a[1].label || a[0], b[1].label || b[0]));
+
+            const indicadoresOrdenados = [...indicadores].sort((a, b) =>
+                collator.compare(a.nombre || '', b.nombre || '')
+            );
+
+            // 🔹 Agregar sectores
+            for (const [clave, entry] of sectoresOrdenados) {
+                const opt = document.createElement('option');
+                opt.value = clave;
+                opt.textContent = entry.label || clave;
+                selectSector.appendChild(opt);
+            }
+
+            // 🔹 Agregar responsables
+            for (const [clave, entry] of responsablesOrdenados) {
+                const opt = document.createElement('option');
+                opt.value = clave;
+                opt.textContent = entry.label || clave;
+                selectResponsable.appendChild(opt);
+            }
+
+            // 🔹 Agregar indicadores (ordenados por nombre)
+            for (const ind of indicadoresOrdenados) {
+                const opt = document.createElement('option');
+                opt.value = ind.codigo_id || '';
+                opt.textContent = `${ind.nombre || ''} (${ind.codigo_id || ''})`;
+                selectIndicador.appendChild(opt);
+            }
+        }
+
+
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function normalizeKey(v) {
@@ -2626,7 +2708,7 @@
 
                                         <!-- 🗃️ Mediciones -->
                                         <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
-                                            onclick="mostrarModalMediciones('${ind.id}')">
+                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' )">
                                             <i class="fas fa-database text-success"></i>
                                         </button>
                                     </div>
@@ -3313,8 +3395,8 @@
         });
     </script>
 
-    // 📌📌 module
-    <script type="module">
+
+    <script type="module">     // 📌📌 module
         import {
             inicializarDatosGlobales,
             getIndicadores,
@@ -3744,13 +3826,109 @@
     <script>
 
         // 📌📌 Armado del PDF
+        // document.getElementById('btnDescargarPDF').addEventListener('click', async () => {
+        //     const { jsPDF } = window.jspdf;
+        //     const spinner = document.getElementById('spinnerOverlay');
+        //     const spinnerText = document.getElementById('spinnerText');
+
+        //     try {
+        //         // Mostrar el spinner
+        //         spinner.style.display = 'flex';
+        //         spinnerText.textContent = 'Generando informe PDF, por favor espere...';
+
+        //         const fecha = new Date();
+        //         const fechaISO = fecha.toISOString().slice(0, 10);
+        //         const nombreArchivo = `Evolucion_Cumplimiento_Global_${fechaISO}.pdf`;
+
+        //         // 📈 Datos del gráfico
+        //         const chart = window.globalChartInstance;
+        //         if (!chart) {
+        //             alert('⚠️ No se encontró el gráfico de evolución global.');
+        //             spinner.style.display = 'none';
+        //             return;
+        //         }
+
+        //         const valores = chart.data.datasets[0].data;
+        //         const labels = chart.data.labels;
+        //         const promedio = (valores.reduce((a, b) => a + b, 0) / valores.length).toFixed(2);
+        //         const ultimoValor = valores[valores.length - 1];
+        //         const ultimoMes = labels[labels.length - 1];
+
+        //         const doc = new jsPDF();
+
+        //         // 🏢 Logo (opcional)
+        //         const logoUrl = 'dist/images/leon2.png';
+        //         try {
+        //             const img = new Image();
+        //             img.crossOrigin = 'anonymous';
+        //             img.src = logoUrl;
+        //             await new Promise(resolve => img.onload = resolve);
+        //             doc.addImage(img, 'PNG', 15, 10, 40, 20);
+        //         } catch (err) {
+        //             console.warn('No se pudo cargar el logo:', err);
+        //         }
+
+        //         // 🧾 Encabezado
+        //         doc.setFontSize(18);
+        //         doc.text('Reporte de Evolución del Cumplimiento Global', 60, 20);
+        //         doc.setFontSize(12);
+        //         doc.text(`Fecha de generación: ${fecha.toLocaleDateString('es-AR')}`, 60, 28);
+
+        //         // 📊 Resumen numérico
+        //         doc.setFontSize(14);
+        //         doc.text('Resumen de datos:', 20, 50);
+        //         doc.setFontSize(12);
+        //         doc.text(`• Promedio general de cumplimiento: ${promedio}%`, 25, 60);
+        //         doc.text(`• Último valor (${ultimoMes}): ${ultimoValor}%`, 25, 68);
+        //         doc.text('', 20, 75);
+
+        //         // 📝 Texto descriptivo
+        //         const texto = [
+        //             'Este informe refleja la evolución mensual del cumplimiento global de los indicadores PKI.',
+        //             'El gráfico en la página siguiente permite analizar las tendencias, avances y áreas que requieren atención.',
+        //             '',
+        //             'El cumplimiento promedio se calcula como la media de todos los meses registrados, mientras que el último valor corresponde al mes más reciente disponible.'
+        //         ];
+        //         doc.text(texto, 20, 85, { maxWidth: 170, align: 'justify' });
+
+        //         // ➕ Página 2: gráfico
+        //         doc.addPage();
+        //         const canvas = document.getElementById('evolucionChart');
+        //         await new Promise(r => setTimeout(r, 300)); // asegurar render completo
+
+        //         const imgData = canvas.toDataURL('image/png', 1.0);
+        //         const pageWidth = doc.internal.pageSize.getWidth();
+        //         const pageHeight = doc.internal.pageSize.getHeight();
+        //         const imgWidth = pageWidth - 30;
+        //         const imgHeight = (canvas.height / canvas.width) * imgWidth;
+        //         const yPos = (pageHeight - imgHeight) / 2;
+
+        //         doc.addImage(imgData, 'PNG', 15, yPos, imgWidth, imgHeight);
+
+        //         // 💾 Descargar
+        //         doc.save(nombreArchivo);
+
+        //         // 🟢 Mostrar mensaje final
+        //         spinnerText.textContent = `✅ Informe generado correctamente. 
+        //                     El archivo se descargó como: ${nombreArchivo}`;
+
+        //         // Ocultar el spinner luego de unos segundos
+        //         setTimeout(() => spinner.style.display = 'none', 2500);
+
+        //     } catch (error) {
+        //         console.error(error);
+        //         alert('❌ Error al generar el informe.');
+        //         spinner.style.display = 'none';
+        //     }
+        // });
+
         document.getElementById('btnDescargarPDF').addEventListener('click', async () => {
             const { jsPDF } = window.jspdf;
             const spinner = document.getElementById('spinnerOverlay');
             const spinnerText = document.getElementById('spinnerText');
 
             try {
-                // Mostrar el spinner
+                // Mostrar spinner
                 spinner.style.display = 'flex';
                 spinnerText.textContent = 'Generando informe PDF, por favor espere...';
 
@@ -3758,7 +3936,58 @@
                 const fechaISO = fecha.toISOString().slice(0, 10);
                 const nombreArchivo = `Evolucion_Cumplimiento_Global_${fechaISO}.pdf`;
 
-                // 📈 Datos del gráfico
+                // =========================
+                // 🧩 Función modular: Encabezado + Pie
+                // =========================
+                const agregarEncabezadoYPie = (doc, titulo, numeroPagina) => {
+                    const pageWidth = doc.internal.pageSize.getWidth();
+                    const pageHeight = doc.internal.pageSize.getHeight();
+
+                    // Encabezado
+                    doc.setFontSize(16);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(titulo, pageWidth / 2, 20, { align: 'center' });
+
+                    // Pie
+                    doc.setFontSize(10);
+                    doc.setTextColor(120);
+                    doc.text(
+                        `Informe PKI - Página ${numeroPagina}`,
+                        pageWidth / 2,
+                        pageHeight - 15,
+                        { align: 'center' }
+                    );
+
+                    // Restaurar color
+                    doc.setTextColor(0, 0, 0);
+                };
+
+                // =========================
+                // 📄 Crear documento
+                // =========================
+                const doc = new jsPDF();
+
+                // 🏢 Logo
+                const logoUrl = 'dist/images/leon2.png';
+                try {
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    img.src = logoUrl;
+                    await new Promise(resolve => (img.onload = resolve));
+                    doc.addImage(img, 'PNG', 15, 10, 40, 20);
+                } catch (err) {
+                    console.warn('No se pudo cargar el logo:', err);
+                }
+
+                // =========================
+                // 🧾 Página 1: Resumen general
+                // =========================
+                agregarEncabezadoYPie(doc, 'Reporte de Evolución del Cumplimiento Global', 1);
+
+                const fechaStr = fecha.toLocaleDateString('es-AR');
+                doc.setFontSize(12);
+                doc.text(`Fecha de generación: ${fechaStr}`, 60, 35);
+
                 const chart = window.globalChartInstance;
                 if (!chart) {
                     alert('⚠️ No se encontró el gráfico de evolución global.');
@@ -3772,45 +4001,27 @@
                 const ultimoValor = valores[valores.length - 1];
                 const ultimoMes = labels[labels.length - 1];
 
-                const doc = new jsPDF();
-
-                // 🏢 Logo (opcional)
-                const logoUrl = 'dist/images/leon2.png';
-                try {
-                    const img = new Image();
-                    img.crossOrigin = 'anonymous';
-                    img.src = logoUrl;
-                    await new Promise(resolve => img.onload = resolve);
-                    doc.addImage(img, 'PNG', 15, 10, 40, 20);
-                } catch (err) {
-                    console.warn('No se pudo cargar el logo:', err);
-                }
-
-                // 🧾 Encabezado
-                doc.setFontSize(18);
-                doc.text('Reporte de Evolución del Cumplimiento Global', 60, 20);
-                doc.setFontSize(12);
-                doc.text(`Fecha de generación: ${fecha.toLocaleDateString('es-AR')}`, 60, 28);
-
-                // 📊 Resumen numérico
+                // Texto resumen
                 doc.setFontSize(14);
-                doc.text('Resumen de datos:', 20, 50);
+                doc.text('Resumen de datos:', 20, 55);
                 doc.setFontSize(12);
-                doc.text(`• Promedio general de cumplimiento: ${promedio}%`, 25, 60);
-                doc.text(`• Último valor (${ultimoMes}): ${ultimoValor}%`, 25, 68);
-                doc.text('', 20, 75);
+                doc.text(`• Promedio general de cumplimiento: ${promedio}%`, 25, 65);
+                doc.text(`• Último valor (${ultimoMes}): ${ultimoValor}%`, 25, 73);
 
-                // 📝 Texto descriptivo
                 const texto = [
                     'Este informe refleja la evolución mensual del cumplimiento global de los indicadores PKI.',
-                    'El gráfico en la página siguiente permite analizar las tendencias, avances y áreas que requieren atención.',
+                    'El gráfico de la página siguiente permite analizar las tendencias, avances y áreas que requieren atención.',
                     '',
                     'El cumplimiento promedio se calcula como la media de todos los meses registrados, mientras que el último valor corresponde al mes más reciente disponible.'
                 ];
-                doc.text(texto, 20, 85, { maxWidth: 170, align: 'justify' });
+                doc.text(texto, 20, 90, { maxWidth: 170, align: 'justify' });
 
-                // ➕ Página 2: gráfico
+                // =========================
+                // 📊 Página 2: Gráfico de evolución (canvas)
+                // =========================
                 doc.addPage();
+                agregarEncabezadoYPie(doc, 'Gráfico de Evolución Global', 2);
+
                 const canvas = document.getElementById('evolucionChart');
                 await new Promise(r => setTimeout(r, 300)); // asegurar render completo
 
@@ -3823,22 +4034,80 @@
 
                 doc.addImage(imgData, 'PNG', 15, yPos, imgWidth, imgHeight);
 
-                // 💾 Descargar
+                // =========================
+                // 🌐 Página 3: Ring Global + tendencias
+                // =========================
+                doc.addPage();
+                agregarEncabezadoYPie(doc, 'Cumplimiento Global de la Organización', 3);
+
+                // Obtener datos del DOM
+                const ringSvg = document.getElementById('ringGlobal');
+                const vsMesAnterior = document.getElementById('vsMesAnterior')?.textContent || '-';
+                const promHistorico = document.getElementById('promHistorico')?.textContent || '-';
+                const promAnual = document.getElementById('promAnual')?.textContent || '-';
+                const tendencia = document.getElementById('tendencia')?.textContent || '-';
+
+                // Convertir el SVG en PNG válido
+                const svgData = new XMLSerializer().serializeToString(ringSvg);
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const svgUrl = URL.createObjectURL(svgBlob);
+                const svgImg = new Image();
+                svgImg.src = svgUrl;
+                await new Promise(resolve => (svgImg.onload = resolve));
+
+                const canvasTmp = document.createElement('canvas');
+                canvasTmp.width = 1000;
+                canvasTmp.height = 1000;
+
+                const ctx = canvasTmp.getContext('2d');
+                ctx.drawImage(svgImg, 0, 0, canvasTmp.width, canvasTmp.height);
+                const pngData = canvasTmp.toDataURL('image/png');
+
+                // Centrar imagen
+                const imgMaxWidth = pageWidth * 0.7;
+                const imgHeightRing = imgMaxWidth;
+                const imgX = (pageWidth - imgMaxWidth) / 2;
+                const imgY = 50;
+
+                doc.addImage(pngData, 'PNG', imgX, imgY, imgMaxWidth, imgHeightRing);
+
+                // Cuadro de datos debajo del gráfico
+                const yBase = imgY + imgHeightRing + 25;
+                const lineSpacing = 10;
+
+                doc.setFillColor(245, 245, 245);
+                doc.roundedRect(40, yBase - 10, pageWidth - 80, 55, 3, 3, 'F');
+                doc.setTextColor(40, 40, 40);
+                doc.setFontSize(12);
+                doc.text(`• vs. Mes Anterior: ${vsMesAnterior}`, 50, yBase + 5);
+                doc.text(`• Promedio Histórico: ${promHistorico}`, 50, yBase + 5 + lineSpacing);
+                doc.text(`• Promedio Anual: ${promAnual}`, 50, yBase + 5 + lineSpacing * 2);
+                doc.text(`• Tendencia: ${tendencia}`, 50, yBase + 5 + lineSpacing * 3);
+
+                // =========================
+                // 💾 Descargar PDF
+                // =========================
                 doc.save(nombreArchivo);
 
-                // 🟢 Mostrar mensaje final
-                spinnerText.textContent = `✅ Informe generado correctamente. 
-    El archivo se descargó como: ${nombreArchivo}`;
-
-                // Ocultar el spinner luego de unos segundos
-                setTimeout(() => spinner.style.display = 'none', 2500);
-
+                spinnerText.textContent = `✅ Informe generado correctamente.
+El archivo se descargó como: ${nombreArchivo}`;
+                setTimeout(() => (spinner.style.display = 'none'), 2500);
             } catch (error) {
                 console.error(error);
                 alert('❌ Error al generar el informe.');
                 spinner.style.display = 'none';
             }
         });
+
+        /*
+        🧩 Cómo extender con nuevas secciones
+        Si después querés agregar más páginas (por ejemplo, un gráfico por sector o KPI), solo tenés que usar esta plantilla modular:
+        doc.addPage();
+        agregarEncabezadoYPie(doc, 'Título de la nueva sección', numeroPagina);
+        // ... contenido nuevo (texto, imagen o gráfico) */
+
+
+
     </script>
 
     <script>

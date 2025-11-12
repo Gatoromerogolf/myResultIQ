@@ -1446,14 +1446,14 @@ app.get('/api/mediciones', async (req, res) => {
 });
 
 // ✅ Obtener todas las mediciones de un indicador en particular
-app.get('/api/mediciones/:idIndicador', async (req, res) => {
+app.get('/api/XXXmediciones/:idIndicador', async (req, res) => {
     const { idIndicador } = req.params;
 
     console.log("ID Indicador recibido en backend:", idIndicador);
 
     try {
         const [rows] = await pool.query(
-            `SELECT med_valor, med_valor_periodo, med_fecha_registro 
+            `SELECT med_valor, med_valor_periodo, med_fecha_registro, med_meta, med_comentarios, med_plan_accion
              FROM mediciones 
              WHERE med_indicador_id = ? 
              ORDER BY med_valor_periodo ASC`,
@@ -1470,6 +1470,48 @@ app.get('/api/mediciones/:idIndicador', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error interno del servidor' });
     }
 });
+
+app.get('/api/mediciones/:idIndicador', async (req, res) => {
+    const { idIndicador } = req.params;
+
+    console.log("ID Indicador recibido en backend:", idIndicador);
+
+    try {
+        const [rows] = await pool.query(
+            `SELECT 
+                m.med_valor,
+                m.med_valor_periodo,
+                m.med_fecha_registro,
+                m.med_meta,
+                m.med_comentarios,
+                m.med_plan_accion,
+                m.med_legajo_resp_medicion,
+                m.med_legajo_resp_registro,
+
+                -- 👇 Join para obtener nombres de responsables
+                CONCAT(u1.nombres, ' ', u1.apellido) AS responsable_medicion,
+                CONCAT(u2.nombres, ' ', u2.apellido) AS responsable_registro
+
+             FROM mediciones m
+             LEFT JOIN usuarios u1 ON m.med_legajo_resp_medicion = u1.legajo
+             LEFT JOIN usuarios u2 ON m.med_legajo_resp_registro = u2.legajo
+
+             WHERE m.med_indicador_id = ?
+             ORDER BY m.med_valor_periodo ASC`,
+            [idIndicador]
+        );
+
+        res.json({
+            success: true,
+            total: rows.length,
+            data: rows
+        });
+    } catch (err) {
+        console.error('Error al obtener mediciones por indicador:', err);
+        res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+});
+
 
 // // 🚫🚫🚫 Grabar una medicion
 app.post('/api/mediciones', async (req, res) => {
