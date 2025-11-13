@@ -1,53 +1,77 @@
 // 📄 conclusiones-generales.js
 document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        // === 1️⃣ Obtener datos de cumplimiento por destino ===
-        const res = await fetch('/api/cumplimiento-por-destino');
-        const data = await res.json();
+  try {
+    // === 1️⃣ Obtener datos de cumplimiento por destino ===
+    const res = await fetch('/api/cumplimiento-por-destino');
+    const data = await res.json();
 
-        // Validar formato de datos
-        const destinos = Array.isArray(data) ? data : [];
+    // Validar formato de datos
+    const destinos = Array.isArray(data) ? data : [];
 
-        // Normalizar valores numéricos
-        const procesados = destinos.map(d => ({
-            ...d,
-            promedio_cumplimiento: Number(d.promedio_cumplimiento) || 0,
-            en_meta: Number(d.en_meta) || 0,
-            criticos: Number(d.criticos) || 0,
-            total_indicadores: Number(d.total_indicadores) || 0,
-        }));
+    // Normalizar valores numéricos
+    const procesados = destinos.map(d => ({
+      ...d,
+      promedio_cumplimiento: Number(d.promedio_cumplimiento) || 0,
+      en_meta: Number(d.en_meta) || 0,
+      criticos: Number(d.criticos) || 0,
+      total_indicadores: Number(d.total_indicadores) || 0,
+    }));
 
-        // === 2️⃣ Obtener los datos globales desde el dashboard principal ===
-        const dataGlobal = obtenerDatosGlobalesDesdeDashboard();
+    // === 2️⃣ Calcular campos adicionales para la narrativa global ===
+    // Total de destinos con indicadores
+    const totalDestinos = procesados.length;
 
-        // === 3️⃣ Mostrar narrativa y conclusiones ===
-        mostrarNarrativaGlobal(dataGlobal);
-        mostrarConclusiones(procesados);
+    // Total de indicadores sumando los que tiene cada destino
+    const totalIndicadores = procesados.reduce(
+      (acc, d) => acc + (d.total_indicadores || 0),
+      0
+    );
 
-    } catch (error) {
-        console.error('Error cargando conclusiones:', error);
-        const contenedor = document.getElementById('narrativaGeneral');
-        if (contenedor)
-            contenedor.innerHTML = `<div class="alert alert-danger">Error al generar las conclusiones.</div>`;
-    }
+    // Estimación de cuántos indicadores tienen mediciones (en base a destinos con datos válidos)
+    const indicadoresConMedicion = procesados.filter(
+      d => d.promedio_cumplimiento > 0
+    ).reduce(
+      (acc, d) => acc + (d.total_indicadores || 0),
+      0
+    );
+
+    // === 3️⃣ Obtener los datos globales desde el dashboard principal ===
+    const dataGlobal = obtenerDatosGlobalesDesdeDashboard();
+
+    // Incorporar los nuevos campos al objeto global
+    dataGlobal.totalDestinos = totalDestinos;
+    dataGlobal.totalIndicadores = totalIndicadores;
+    dataGlobal.indicadoresConMedicion = indicadoresConMedicion;
+
+    // === 4️⃣ Mostrar narrativa y conclusiones ===
+    mostrarNarrativaGlobal(dataGlobal);
+    mostrarConclusiones(procesados);
+
+  } catch (error) {
+    console.error('Error cargando conclusiones:', error);
+    const contenedor = document.getElementById('narrativaGeneral');
+    if (contenedor)
+      contenedor.innerHTML = `<div class="alert alert-danger">Error al generar las conclusiones.</div>`;
+  }
 });
+
 
 /**
  * 🧩 Extrae los valores globales del dashboard principal
  */
 function obtenerDatosGlobalesDesdeDashboard() {
-    const data = JSON.parse(localStorage.getItem('resumenGlobal') || '{}');
+  const data = JSON.parse(localStorage.getItem('resumenGlobal') || '{}');
 
-    return {
-        variacionMensual: parseFloat(data.variacion) || 0,
-        promedioHistorico: parseFloat(data.promHistorico) || 0,
-        promedioAnual: parseFloat(data.promAnual) || 0,
-        tendencia: parseFloat(
-            (data.tendencia || '').replace('%', '').replace('+', '').replace('–', '-')
-        ) || 0,
-        cumplimientoGlobal: parseFloat(data.cumplimiento) || 0,
-        cobertura: 100 // 🔸 Se puede reemplazar por cálculo real si lo tenés
-    };
+  return {
+    variacionMensual: parseFloat(data.variacion) || 0,
+    promedioHistorico: parseFloat(data.promHistorico) || 0,
+    promedioAnual: parseFloat(data.promAnual) || 0,
+    tendencia: parseFloat(
+      (data.tendencia || '').replace('%', '').replace('+', '').replace('–', '-')
+    ) || 0,
+    cumplimientoGlobal: parseFloat(data.cumplimiento) || 0,
+    cobertura: 100 // 🔸 Se puede reemplazar por cálculo real si lo tenés
+  };
 }
 
 
@@ -55,71 +79,80 @@ function obtenerDatosGlobalesDesdeDashboard() {
  * 🧠 Genera narrativa textual del rendimiento global
  */
 function mostrarNarrativaGlobal(data) {
-    // --- Análisis automático de desempeño ---
-    let interpretacion = '';
-    const varMes = data.variacionMensual;
-    const tendencia = data.tendencia;
-    const promedio = data.cumplimientoGlobal;
+  // --- Análisis automático de desempeño ---
+  let interpretacion = '';
+  const varMes = data.variacionMensual;
+  const tendencia = data.tendencia;
+  const promedio = data.cumplimientoGlobal;
 
-    if (varMes > 3 && tendencia > 0) {
-        interpretacion = 'La organización muestra una mejora sostenida, con resultados en ascenso y una tendencia positiva en la mayoría de los destinos.';
-    } else if (varMes > 0 && tendencia >= 0) {
-        interpretacion = 'Se observa un leve crecimiento respecto al mes anterior, consolidando un rendimiento estable y controlado.';
-    } else if (varMes < 0 && tendencia < 0) {
-        interpretacion = 'Los valores reflejan una tendencia descendente, lo que sugiere la necesidad de acciones correctivas y mayor seguimiento.';
-    } else if (promedio >= 80) {
-        interpretacion = 'El nivel de cumplimiento global se mantiene alto, con un desempeño general satisfactorio y áreas puntuales de mejora.';
-    } else if (promedio < 60) {
-        interpretacion = 'El cumplimiento global se encuentra por debajo de los niveles esperados, siendo recomendable revisar la planificación de los objetivos y la carga de mediciones.';
-    } else {
-        interpretacion = 'El desempeño general es estable, sin variaciones significativas, pero con oportunidades de mejora en los destinos con menor cumplimiento.';
-    }
+  if (varMes > 3 && tendencia > 0) {
+    interpretacion = 'La organización muestra una mejora sostenida, con resultados en ascenso y una tendencia positiva en la mayoría de los destinos.';
+  } else if (varMes > 0 && tendencia >= 0) {
+    interpretacion = 'Se observa un leve crecimiento respecto al mes anterior, consolidando un rendimiento estable y controlado.';
+  } else if (varMes < 0 && tendencia < 0) {
+    interpretacion = 'Los valores reflejan una tendencia descendente, lo que sugiere la necesidad de acciones correctivas y mayor seguimiento.';
+  } else if (promedio >= 80) {
+    interpretacion = 'El nivel de cumplimiento global se mantiene alto, con un desempeño general satisfactorio y áreas puntuales de mejora.';
+  } else if (promedio < 60) {
+    interpretacion = 'El cumplimiento global se encuentra por debajo de los niveles esperados, siendo recomendable revisar la planificación de los objetivos y la carga de mediciones.';
+  } else {
+    interpretacion = 'El desempeño general es estable, sin variaciones significativas, pero con oportunidades de mejora en los destinos con menor cumplimiento.';
+  }
 
-    // --- Narrativa base ---
-    const narrativa = `
-      <p>
-        El cumplimiento global de la organización se mantiene
-        <strong>${data.variacionMensual > 0 ? 'en alza' :
-        data.variacionMensual < 0 ? 'ligeramente descendente' : 'estable'}</strong>,
-        con una variación de <strong>${data.variacionMensual}%</strong> respecto al mes anterior.
-        El promedio histórico se ubica en <strong>${data.promedioHistorico}%</strong>,
-        el promedio anual en <strong>${data.promedioAnual}%</strong> y el cumplimiento actual alcanza
-        <strong>${data.cumplimientoGlobal}%</strong>.
-        La cobertura de mediciones alcanza el <strong>${data.cobertura}%</strong> de los destinos,
-        reflejando un seguimiento 
-        ${data.cobertura > 95 ? 'óptimo' : data.cobertura > 80 ? 'satisfactorio' : 'insuficiente'}.
-      </p>
-      <p class="mt-3"><em>${interpretacion}</em></p>
-    `;
+  // --- Narrativa base con contexto ---
+  const narrativa = `
+  <p>
+    El análisis del cumplimiento global se realizó considerando un total de 
+    <strong>${data.totalDestinos}</strong> destinos y 
+    <strong>${data.totalIndicadores}</strong> indicadores activos. 
+    ${data.indicadoresConMedicion === data.totalIndicadores
+      ? 'Todos los indicadores cuentan con mediciones registradas para la fecha de corte,'
+      : `Del total, <strong>${data.indicadoresConMedicion}</strong> indicadores (${Math.round((data.indicadoresConMedicion / data.totalIndicadores) * 100)}%) disponen de mediciones actualizadas,`}
+    lo que permite una evaluación ${data.indicadoresConMedicion === data.totalIndicadores ? 'completa' : 'parcial pero representativa'} del desempeño institucional.
+  </p>
+  <p>
+    El cumplimiento global de la organización se mantiene
+    <strong>${data.variacionMensual > 0 ? 'en alza' :
+      data.variacionMensual < 0 ? 'ligeramente descendente' : 'estable'}</strong>,
+    con una variación de <strong>${data.variacionMensual}%</strong> respecto al mes anterior.
+    El promedio histórico se ubica en <strong>${data.promedioHistorico}%</strong>,
+    el promedio anual en <strong>${data.promedioAnual}%</strong> y el cumplimiento actual alcanza
+    <strong>${data.cumplimientoGlobal}%</strong>.
+    La cobertura de mediciones alcanza el <strong>${data.cobertura}%</strong> de los destinos,
+    reflejando un seguimiento 
+    ${data.cobertura > 95 ? 'óptimo' : data.cobertura > 80 ? 'satisfactorio' : 'insuficiente'}.
+  </p>
+  <p class="mt-3"><em>${interpretacion}</em></p>
+`;
 
-    const contenedor = document.getElementById('narrativaGeneral');
-    if (contenedor) contenedor.innerHTML = narrativa;
+  const contenedor = document.getElementById('narrativaGeneral');
+  if (contenedor) contenedor.innerHTML = narrativa;
 }
 
 /**
  * 📊 Muestra las conclusiones generales y por destino
  */
 function mostrarConclusiones(destinos) {
-    if (!Array.isArray(destinos) || destinos.length === 0) {
-        document.getElementById('bloqueConclusiones').innerHTML =
-            '<div class="alert alert-warning">No hay datos suficientes para generar conclusiones.</div>';
-        return;
-    }
+  if (!Array.isArray(destinos) || destinos.length === 0) {
+    document.getElementById('bloqueConclusiones').innerHTML =
+      '<div class="alert alert-warning">No hay datos suficientes para generar conclusiones.</div>';
+    return;
+  }
 
-    // Calcular métricas generales
-    const promedioGlobal = (
-        destinos.reduce((acc, d) => acc + d.promedio_cumplimiento, 0) / destinos.length
-    ).toFixed(2);
+  // Calcular métricas generales
+  const promedioGlobal = (
+    destinos.reduce((acc, d) => acc + d.promedio_cumplimiento, 0) / destinos.length
+  ).toFixed(2);
 
-    const enMetaTotal = destinos.reduce((acc, d) => acc + d.en_meta, 0);
-    const criticosTotal = destinos.reduce((acc, d) => acc + d.criticos, 0);
-    const totalIndicadores = destinos.reduce((acc, d) => acc + d.total_indicadores, 0);
+  const enMetaTotal = destinos.reduce((acc, d) => acc + d.en_meta, 0);
+  const criticosTotal = destinos.reduce((acc, d) => acc + d.criticos, 0);
+  const totalIndicadores = destinos.reduce((acc, d) => acc + d.total_indicadores, 0);
 
-    const mejor = destinos[0];
-    const peor = destinos[destinos.length - 1];
+  const mejor = destinos[0];
+  const peor = destinos[destinos.length - 1];
 
-    // --- Texto resumen ---
-    const resumen = `
+  // --- Texto resumen ---
+  const resumen = `
       <h5>📈 Resumen general</h5>
       <ul>
         <li>Promedio global de cumplimiento: <strong>${promedioGlobal}%</strong></li>
@@ -137,9 +170,9 @@ function mostrarConclusiones(destinos) {
       </p>
     `;
 
-    // --- Tabla por destino ---
-    const listaDestinos = destinos
-        .map((d) => `
+  // --- Tabla por destino ---
+  const listaDestinos = destinos
+    .map((d) => `
           <tr>
             <td>${d.destino}</td>
             <td class="text-center">${d.total_indicadores}</td>
@@ -148,9 +181,9 @@ function mostrarConclusiones(destinos) {
             <td class="text-center text-danger">${d.criticos}</td>
           </tr>
         `)
-        .join('');
+    .join('');
 
-    const tabla = `
+  const tabla = `
       <h5 class="mt-4">🏢 Cumplimiento por Destino</h5>
       <div class="table-responsive">
         <table class="table table-striped align-middle">
@@ -168,6 +201,6 @@ function mostrarConclusiones(destinos) {
       </div>
     `;
 
-    const contenedor = document.getElementById('bloqueConclusiones');
-    if (contenedor) contenedor.innerHTML = resumen + tabla;
+  const contenedor = document.getElementById('bloqueConclusiones');
+  if (contenedor) contenedor.innerHTML = resumen + tabla;
 }

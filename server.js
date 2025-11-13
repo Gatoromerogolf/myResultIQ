@@ -449,8 +449,12 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
             LIMIT 1
         `, [codigo]);
 
+        // 🔹 Si no se encontró el indicador
         if (rows.length === 0) {
-            return res.status(404).json({ mensaje: 'Indicador no encontrado' });
+            return res.status(404).json({
+                ok: false,
+                mensaje: 'Indicador no encontrado',
+            });
         }
 
         const indicador = rows[0];
@@ -460,11 +464,48 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
             indicador.responsable_foto = `data:image/jpeg;base64,${indicador.responsable_foto.toString('base64')}`;
         }
 
-        res.json(indicador);
+        // 🔹 Enviar respuesta consistente
+        res.status(200).json({
+            ok: true,
+            data: indicador,
+        });
 
     } catch (err) {
-        console.error('Error al obtener indicador:', err);
-        res.status(500).json({ mensaje: 'Error interno al obtener indicador.' });
+        console.error('❌ Error al obtener indicador:', err);
+        res.status(500).json({
+            ok: false,
+            mensaje: 'Error interno al obtener indicador.',
+            error: err.message,
+        });
+    }
+});
+
+
+// ✅ GET: todos los indicadores de un destino (por ID)
+app.get('/api/indicadores/destino/:idDestino', async (req, res) => {
+    const { idDestino } = req.params;
+
+    try {
+        const [rows] = await pool.query(`
+      SELECT 
+        i.id,
+        i.codigo_id,
+        i.nombre,
+        i.objetivo,
+        i.peso_porcentual
+      FROM indicadores i
+      WHERE i.destino = ?
+      ORDER BY i.peso_porcentual DESC
+    `, [idDestino]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ ok: false, mensaje: 'No hay indicadores para este destino' });
+        }
+
+        res.status(200).json({ ok: true, data: rows });
+    } catch (err) {
+        console.error('Error al obtener indicadores por destino:', err);
+        res.status(500).json({ ok: false, mensaje: 'Error interno al obtener indicadores' });
     }
 });
 
@@ -1560,7 +1601,7 @@ app.post('/api/mediciones', async (req, res) => {
 
         // Grabar medición
         const [result] = await pool.query(
-        `
+            `
         INSERT INTO mediciones (
             med_indicador_id,
             med_tipo_periodo,
@@ -1576,20 +1617,20 @@ app.post('/api/mediciones', async (req, res) => {
             med_plan_accion
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
-        [
-            med_indicador_id,
-            med_tipo_periodo,
-            med_valor_periodo,
-            med_anio,
-            med_valor,
-            med_meta,
-            med_comentarios,
-            med_unidad_medida,
-            med_legajo_resp_medicion,
-            med_legajo_resp_registro,
-            med_fecha_registro,
-            med_plan_accion
-        ]
+            [
+                med_indicador_id,
+                med_tipo_periodo,
+                med_valor_periodo,
+                med_anio,
+                med_valor,
+                med_meta,
+                med_comentarios,
+                med_unidad_medida,
+                med_legajo_resp_medicion,
+                med_legajo_resp_registro,
+                med_fecha_registro,
+                med_plan_accion
+            ]
         );
 
 
