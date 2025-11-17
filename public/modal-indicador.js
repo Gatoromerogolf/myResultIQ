@@ -31,11 +31,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // === Función principal del modal ===
 async function verDetalleIndicador(codigo) {
+
     try {
         const response = await fetch(`/api/indicadores/${codigo}`);
-        if (!response.ok) throw new Error('No se pudo obtener el indicador.');
+        if (!response.ok) {
+            throw new Error('No se pudo obtener el indicador.')
+        };
 
-        const indicador = await response.json();
+        const body = await response.json();
+        const indicador = body.data;  // 👈 EXTRAER EL INDICADOR REAL
+
         const tabla = document.getElementById('tablaDetalleIndicador');
         tabla.innerHTML = '';
 

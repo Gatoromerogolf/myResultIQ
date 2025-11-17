@@ -61,10 +61,6 @@ async function mostrarModalMediciones(ind, codigo, nombre) {
         console.error(err);
         tbody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error al cargar mediciones</td></tr>`;
     }
-
-    // Muestra el modal
-    // console.log('llego antes de mostrar el modal')
-    // if (modalMediciones) modalMediciones.show();
     
         // === Mostrar modal ===
         const modal = new bootstrap.Modal(document.getElementById('modalMediciones'));

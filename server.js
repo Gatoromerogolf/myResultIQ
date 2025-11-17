@@ -492,6 +492,7 @@ app.get('/api/indicadores/destino/:idDestino', async (req, res) => {
         i.codigo_id,
         i.nombre,
         i.objetivo,
+        i.unico_valor,
         i.peso_porcentual
       FROM indicadores i
       WHERE i.destino = ?

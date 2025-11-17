@@ -358,35 +358,35 @@
                     <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
                         <!-- 🔸 Filtros -->
                         <div class="d-flex gap-3">
-                                    <div>
-                                        <label for="filtroAnio" class="form-label mb-0 small">Año</label>
-                                        <select id="filtroAnio" class="form-select form-select-sm">
-                                            <option>2025</option>
-                                            <option>2024</option>
-                                            <option>2023</option>
-                                        </select>
-                                    </div>
+                            <div>
+                                <label for="filtroAnio" class="form-label mb-0 small">Año</label>
+                                <select id="filtroAnio" class="form-select form-select-sm">
+                                    <option>2025</option>
+                                    <option>2024</option>
+                                    <option>2023</option>
+                                </select>
+                            </div>
 
-                                    <div>
-                                        <label for="filtroPeriodo" class="form-label mb-0 small">Período</label>
-                                        <select id="filtroPeriodo" class="form-select form-select-sm">
-                                            <option>Octubre</option>
-                                            <option>Septiembre</option>
-                                            <option>Agosto</option>
-                                        </select>
-                                    </div>
+                            <div>
+                                <label for="filtroPeriodo" class="form-label mb-0 small">Período</label>
+                                <select id="filtroPeriodo" class="form-select form-select-sm">
+                                    <option>Octubre</option>
+                                    <option>Septiembre</option>
+                                    <option>Agosto</option>
+                                </select>
+                            </div>
 
-                                    <div>
-                                        <label for="filtroSector" class="form-label mb-0 small">Sector</label>
-                                        <select id="filtroSector" class="form-select form-select-sm">
-                                            <option>Todos</option>
-                                        </select>
-                                    </div>
+                            <div>
+                                <label for="filtroSector" class="form-label mb-0 small">Sector</label>
+                                <select id="filtroSector" class="form-select form-select-sm">
+                                    <option>Todos</option>
+                                </select>
+                            </div>
 
-                                    <button class="btn btn-sm btn-primary align-self-end">
-                                        <i class="fas fa-sync-alt"></i> Aplicar
-                                    </button>
-                                </div>
+                            <button class="btn btn-sm btn-primary align-self-end">
+                                <i class="fas fa-sync-alt"></i> Aplicar
+                            </button>
+                        </div>
 
                         <!-- 🔸 Filtros -->
                         <div class="d-flex gap-3">
@@ -606,7 +606,12 @@
                                                     <tr>
                                                         <th>Indicador</th>
                                                         <th>Objetivo</th>
+                                                        <th>Meta</th>
+                                                        <th>Un Med</th>
+                                                        <th>Ult Valor</th>
+                                                        <th>Cumpl (%)</th>
                                                         <th>Peso (%)</th>
+                                                        <th>Tenden.</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody></tbody>
@@ -1100,6 +1105,7 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th>Destino</th>
                                 <th>Indicador</th>
                                 <th>Cumplimiento (%)</th>
                                 <th>Peso (%)</th>
@@ -1331,25 +1337,66 @@
             return { diferencia, promedioHistorico, promedioAnual, tendencia };
         }
 
+
         // 📌📌 mostrarDetalleMes(entry)   // 🔹 Mostrar modal con detalle del mes marcado en evolución global
         function mostrarDetalleMes(entry) {
             document.getElementById('detalleMes').textContent = entry.month;
             const tbody = document.getElementById('detalleTabla');
             tbody.innerHTML = '';
 
-            entry.detalle.forEach(d => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-          <td>${d.indicador}</td>
-          <td>${d.cumplimiento}%</td>
-          <td>${d.peso}%</td>
-        `;
-                tbody.appendChild(row);
+            if (!entry || !Array.isArray(entry.detalle)) {
+                console.warn("detalleMes: entry.detalle no es un array");
+                return;
+            }
+
+            // 1️⃣ Ordenar por número de destino
+            const detallesOrdenados = [...entry.detalle].sort((a, b) => {
+                return Number(a.destino) - Number(b.destino);
             });
 
+            // 2️⃣ Agrupar por destino (número)
+            const grupos = detallesOrdenados.reduce((acc, d) => {
+                const key = Number(d.destino);
+                if (!acc[key]) acc[key] = [];
+                acc[key].push(d);
+                return acc;
+            }, {});
+
+            // 3️⃣ Renderizar
+            Object.keys(grupos).forEach(destinoId => {
+
+                const destinoNum = Number(destinoId);
+                const nombreDestino = window.destinosMap[destinoNum] || `Destino ${destinoNum}`;
+
+                // Encabezado del grupo
+                const headerRow = document.createElement('tr');
+                headerRow.innerHTML = `
+                    <td colspan="4" class="fw-bold bg-light" style="border-top:2px solid #999;">
+                        ${nombreDestino}
+                    </td>
+                `;
+                tbody.appendChild(headerRow);
+
+                // Filas del grupo
+                grupos[destinoId].forEach(d => {
+                    const cumplimiento = Number(d.cumplimiento).toFixed(2);
+                    const peso = Number(d.peso).toFixed(2); // si también lo querés con dos decimales
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                <td></td>
+                <td>${d.indicador}</td>
+                <td>${cumplimiento}%</td>
+                <td>${d.peso}%</td>
+            `;
+                    tbody.appendChild(row);
+                });
+            });
+
+            // Mostrar modal
             const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
             modal.show();
         }
+
 
         // 🚀 Inicializar al cargar
         renderizarGrafico().catch(err => {
@@ -2150,7 +2197,7 @@
         });
 
         // 📌📌 cargarCumplimientoPorDestino()
-        async function cargarCumplimientoPorDestino() {
+        async function XXXcargarCumplimientoPorDestino() {
             const spinner = document.getElementById('spinnerCumplimientoDestinos');
             const tablaContainer = document.getElementById('tablaCumplimientoContainer');
             const tbody = document.getElementById('tablaCumplimientoDestinos');
@@ -2249,7 +2296,7 @@
 
 
         // 📌📌 mostrarIndicadoresPorDestino
-        async function mostrarIndicadoresPorDestino(idDestino, nombreDestino) {
+        async function XXXmostrarIndicadoresPorDestino(idDestino, nombreDestino) {
             try {
                 const res = await fetch(`/api/indicadores/destino/${idDestino}`);
                 if (!res.ok) throw new Error('Error al obtener indicadores');
@@ -2273,6 +2320,7 @@
                                 <tr>
                                     <td>${ind.nombre || '-'}</td>
                                     <td>${ind.objetivo || '-'}</td>
+                                    <td>${ind.unico_valor || '-'}</td>
                                     <td>${ind.peso_porcentual ? ind.peso_porcentual + '%' : '-'}</td>
                                 </tr>
                                 `;
@@ -2343,72 +2391,6 @@
             }
         }
 
-        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
-        async function XXXcargarOpcionesFiltros(indicadores) {
-            const selectSector = document.getElementById('filtroSector');
-            const selectResponsable = document.getElementById('filtroResponsable');
-            const selectIndicador = document.getElementById('filtroIndicador');
-
-            selectSector.innerHTML = '<option value="">Todos</option>';
-            selectResponsable.innerHTML = '<option value="">Todos</option>';
-            selectIndicador.innerHTML = '<option value="">Todos</option>';
-
-            const sectorMap = new Map();
-            const responsableMap = new Map();
-
-            // 🔹 Recolectar claves únicas
-            for (const ind of indicadores) {
-                const claveSector = normalizeKey(ind.destino);
-                if (claveSector && !sectorMap.has(claveSector)) {
-                    sectorMap.set(claveSector, { raw: ind.destino, label: null });
-                }
-
-                const claveResp = normalizeKey(ind.responsable);
-                if (claveResp && !responsableMap.has(claveResp)) {
-                    responsableMap.set(claveResp, { raw: ind.responsable, label: null });
-                }
-
-                // Indicadores (no necesitan llamada API)
-                const optI = document.createElement('option');
-                optI.value = ind.codigo_id || '';
-                optI.textContent = `${ind.nombre || ''} (${ind.codigo_id || ''})`;
-                selectIndicador.appendChild(optI);
-            }
-
-            // 🚀 OPTIMIZACIÓN: Cargar TODOS los sectores en PARALELO
-            const promesasSectores = Array.from(sectorMap.entries()).map(async ([clave, entry]) => {
-                const sectorObj = await obtenerSectorConCache(entry.raw);
-                const label = sectorObj?.nombre || sectorObj?.name || String(entry.raw || clave) || clave;
-                entry.label = label;
-            });
-
-            // 🚀 OPTIMIZACIÓN: Cargar TODOS los responsables en PARALELO
-            const promesasResponsables = Array.from(responsableMap.entries()).map(async ([clave, entry]) => {
-                const usuario = await obtenerUsuarioConCache(entry.raw);
-                const label = usuario?.nombres || usuario?.nombre
-                    ? `${usuario.nombres || usuario.nombre} ${usuario.apellido || ''}`.trim()
-                    : String(entry.raw || clave);
-                entry.label = label;
-            });
-
-            // 🚀 Esperar TODAS las peticiones en paralelo
-            await Promise.all([...promesasSectores, ...promesasResponsables]);
-
-            // 🔹 Añadir opciones a los selects
-            for (const [clave, entry] of sectorMap.entries()) {
-                const opt = document.createElement('option');
-                opt.value = clave;
-                opt.textContent = entry.label || clave;
-                selectSector.appendChild(opt);
-            }
-
-            for (const [clave, entry] of responsableMap.entries()) {
-                const opt = document.createElement('option');
-                opt.value = clave;
-                opt.textContent = entry.label || clave;
-                selectResponsable.appendChild(opt);
-            }
-        }
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function cargarOpcionesFiltros(indicadores) {
@@ -2490,7 +2472,6 @@
                 selectIndicador.appendChild(opt);
             }
         }
-
 
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
@@ -2712,32 +2693,6 @@
 
                 const card = document.createElement('div');
                 card.className = 'col-md-6 col-lg-4 mb-3';
-                // card.innerHTML = `
-                //     <div class="card shadow-sm h-100">
-                //         <div class="card-body">
-                //             <div class="d-flex justify-content-between align-items-start">
-                //                 <div>
-                //                     <h6 class="fw-bold mb-1">${ind.nombre}</h6>
-                //                     <small class="text-muted">${ind.codigo_id} · ${sectores?.nombre || sectores?.name || ''}</small>
-                //                 </div>
-                //                 <div class="d-flex align-items-center">
-                //                     <span class="badge rounded-circle me-1"
-                //                         style="background-color:${color}; width:18px; height:18px;"
-                //                         title="Cumplimiento: ${porcentaje.toFixed(1)}%">
-                //                     </span>
-                //                     <small>${porcentaje.toFixed(1)}%</small>
-                //                     <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
-                //                             onclick="verDetalleIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.objetivo}', '${ind.descripcion}')">
-                //                         <i class="fas fa-chart-line text-primary"></i>
-                //                     </button>
-                //                 </div>
-                //             </div>
-                //             <p class="mt-2 mb-1"><strong>Objetivo:</strong> ${ind.objetivo}</p>
-                //             <p class="mb-1"><strong>Responsable:</strong> ${usuario?.nombres || usuario?.nombre || ''} ${usuario?.apellido || ''}</p>
-                //             <p class="mb-0"><small class="text-muted">${ind.descripcion || ''}</small></p>
-                //         </div>
-                //     </div>
-                // `;
                 card.innerHTML = `
                         <div class="card shadow-sm h-100">
                             <div class="card-body">
@@ -3468,18 +3423,29 @@
         import {
             inicializarDatosGlobales,
             getIndicadores,
-            getMediciones
+            getMediciones,
+            getSectores
         } from './js/datosGlobales.js';
 
         window.getMediciones = getMediciones; // 👈 la expone globalmente
+        window.getSectores = getSectores;
 
         let indicadores = []; // array original
         let indicadoresConDatos = []; // array con datos preparados
+        window.destinosMap = {};
 
         document.addEventListener("DOMContentLoaded", async () => {
             // 1️⃣ Inicializ datos globales una sola vez
             await inicializarDatosGlobales();
             console.log("✅ Datos globales inicializados");
+            const sectoresData = getSectores();   // cuerpo real de la respuesta
+            // const destinosMap = {};
+
+            sectoresData.forEach(sec => {
+                // Asegurarnos de usar número como clave
+                const idNum = Number(sec.id);
+                window.destinosMap[idNum] = sec.nombre;
+            });
 
             // 2️⃣ Recupera indicadores desde el módulo global
             indicadores = getIndicadores();
@@ -3508,7 +3474,11 @@
 
                 return {
                     id: ind.id,
+                    codigo_id: ind.codigo_id,
                     nombre: ind.nombre,
+                    destino: ind.destino,
+                    objetivo: ind.objetivo,
+                    descripcion: ind.descripcion,
                     sector: sector?.nombre || '-',
                     usuario: usuario ? `${usuario.nombres} ${usuario.apellido}` : '-',
                     ultimaMedicion,
@@ -3517,7 +3487,8 @@
                     unidad_desc: unidad || '',          // descripción
                     ultima_medicion: ultimaMedicion,
                     porcentaje,
-                    resultado
+                    resultado,
+                    peso: ind.peso_porcentual
                 };
             }));
 
@@ -3608,6 +3579,27 @@
                         </span>
                             </td>
 
+                                                               <!-- 📊 Sección de iconos de acción -->
+                                    <td>
+                                        <!-- 📈 Ver evolución -->
+                                        <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
+                                            onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                            <i class="fas fa-chart-line text-primary"></i>
+                                        </button>
+
+                                        <!-- ℹ️ Detalle del indicador -->
+                                        <button type="button" class="btn btn-link p-0 ms-2" title="Ver detalle del indicador"
+                                            onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                            <i class="fas fa-info-circle text-secondary"></i>
+                                        </button>
+
+                                        <!-- 🗃️ Mediciones -->
+                                        <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
+                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' )">
+                                            <i class="fas fa-database text-success"></i>
+                                        </button>
+                                        </td>
+
                    `;
                 });
 
@@ -3645,9 +3637,188 @@
                         </span>
                             </td>
 
+
+                                                               <!-- 📊 Sección de iconos de acción -->
+                                    <td>
+                                        <!-- 📈 Ver evolución -->
+                                        <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
+                                            onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                            <i class="fas fa-chart-line text-primary"></i>
+                                        </button>
+
+                                        <!-- ℹ️ Detalle del indicador -->
+                                        <button type="button" class="btn btn-link p-0 ms-2" title="Ver detalle del indicador"
+                                            onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                            <i class="fas fa-info-circle text-secondary"></i>
+                                        </button>
+
+                                        <!-- 🗃️ Mediciones -->
+                                        <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
+                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' )">
+                                            <i class="fas fa-database text-success"></i>
+                                        </button>
+                                        </td>
+
                    `;
                 });
         }
+
+        async function cargarCumplimientoPorDestino() {
+            const spinner = document.getElementById('spinnerCumplimientoDestinos');
+            const tablaContainer = document.getElementById('tablaCumplimientoContainer');
+            const tbody = document.getElementById('tablaCumplimientoDestinos');
+
+            spinner.style.display = 'block';
+            // 🔹 y ahora activás el botón que oculta el sidebar
+            const botonSidebar = document.querySelector('[data-lte-toggle="sidebar"]');
+            if (botonSidebar) botonSidebar.click();
+
+            tablaContainer.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/cumplimiento-por-destino');
+                const data = await res.json();
+
+                // --- Renderizar tabla con ícono de evolución ---
+                tbody.innerHTML = data.map(d => {
+                    const valor = Number(d.promedio_cumplimiento);
+                    const valorSeguro = isNaN(valor) ? 0 : valor;
+
+                    let color = 'text-danger';
+                    if (valorSeguro >= 80) color = 'text-success';
+                    else if (valorSeguro >= 50) color = 'text-warning';
+
+                    const barra = `
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar ${color.replace('text-', 'bg-')}" 
+                                role="progressbar" 
+                                style="width: ${valorSeguro}%;"
+                                aria-valuenow="${valorSeguro}" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100">
+                            </div>
+                        </div>`;
+
+                    // ✅ Aquí agregamos el ícono de Evolución
+                    return `
+                        <tr>
+                            <td>${d.destino}</td>
+                            <td class="text-center">${d.total_indicadores}</td>
+                            <td class="text-center fw-semibold ${color}">
+                                ${valorSeguro}% ${barra}
+                            </td>
+                            <td class="text-center text-success fw-semibold">${d.en_meta}</td>
+                            <td class="text-center text-danger fw-semibold">${d.criticos}</td>
+                            <td class="text-center">
+                                <span class="text-primary fw-semibold"
+                                    role="button"
+                                    style="cursor:pointer"
+                                    title="Ver evolución del destino"
+                                    data-id="${d.id_destino}"
+                                    data-nombre="${d.destino}">
+                                    Ver
+                                </span>
+                            </td>
+                        </tr>`;
+                }).join('');
+
+                spinner.style.display = 'none';
+                tablaContainer.style.display = 'block';
+                chartContainer.style.display = 'block';
+
+                // Delegación de eventos para los íconos de evolución
+                document.getElementById('tablaCumplimientoDestinos').addEventListener('click', async (e) => {
+                    const icono = e.target.closest('[data-id]');
+                    if (!icono) return;
+
+                    const idDestino = Number(icono.dataset.id);
+                    const nombreDestino = icono.dataset.nombre;
+
+                    console.log(`📈 Clic en evolución del destino: ${nombreDestino} (ID: ${idDestino})`);
+
+                    // 🔹 Mostrar el contenedor del gráfico
+                    const graficoContainer = document.getElementById('grafico-evolucion');
+                    // 🔹 Mostrar nombre del destino (si hay un encabezado dinámico)
+                    const titulo = document.querySelector('#grafico-evolucion .card-title');
+                    if (titulo) titulo.textContent = `Evolución del destino: ${nombreDestino}`;
+                    graficoContainer.style.display = 'block';
+
+                    // 🔹 Generar gráfico específico
+                    mostrarEvolucionPorArea(idDestino, nombreDestino);
+
+                    // 🔹 Obtener y mostrar indicadores del destino
+                    await mostrarIndicadoresPorDestino(idDestino, nombreDestino);
+                });
+
+
+            } catch (error) {
+                console.error('Error cargando cumplimiento por destino:', error);
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar los datos</td></tr>`;
+                spinner.style.display = 'none';
+                tablaContainer.style.display = 'block';
+                chartContainer.style.display = 'none';
+            }
+        }
+
+        // 📌📌 mostrarIndicadoresPorDestino
+        async function mostrarIndicadoresPorDestino(idDestino, nombreDestino) {
+            try {
+                const indicadores = indicadoresConDatos.filter(ind => ind.destino == idDestino);
+                const tituloDestino = document.getElementById('nombreDestino');
+                const contenedor = document.getElementById('indicadores-destino');
+                const tbody = contenedor.querySelector('tbody');
+                tbody.innerHTML = ''; // limpiar
+                tituloDestino.textContent = nombreDestino;
+
+                if (indicadores.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted">No hay indicadores registrados para este destino.</td></tr>`;
+                } else {
+                    indicadores.forEach(ind => {
+                        if (ind.resultado.tendencia == "En alza")  ind.resultado.color = '#28a745'; // verde
+                        if (ind.resultado.tendencia == "Estable")  ind.resultado.color = '#ffc107'; // amarillo
+                        if (ind.resultado.tendencia == "En baja")  ind.resultado.color = '#dc3545'; // rojo
+                        tbody.innerHTML += `
+                                <tr>
+                                    <td>${ind.nombre || '-'}</td>
+                                    <td>${ind.objetivo || '-'}</td>
+                                    <td>${ind.unico_valor || '-'}</td>
+                                    <td>${ind.unidad_desc || '-'}</td>
+                                    <td>${ind.ultimaMedicion || '-'}</td>
+                                    <td>${ind.porcentaje || '-'}</td>
+                                    <td>${ind.peso || '-'}</td>
+                                    <td style="color: ${ind.resultado.color}">${ind.resultado.tendencia || '-'}</td> 
+                                    <!-- 📊 Sección de iconos de acción -->
+                                    <td>
+                                        <!-- 📈 Ver evolución -->
+                                        <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
+                                            onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                            <i class="fas fa-chart-line text-primary"></i>
+                                        </button>
+
+                                        <!-- ℹ️ Detalle del indicador -->
+                                        <button type="button" class="btn btn-link p-0 ms-2" title="Ver detalle del indicador"
+                                            onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                            <i class="fas fa-info-circle text-secondary"></i>
+                                        </button>
+
+                                        <!-- 🗃️ Mediciones -->
+                                        <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
+                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' )">
+                                            <i class="fas fa-database text-success"></i>
+                                        </button>
+                                        </td>
+                                </tr>
+                                `;
+                    });
+                }
+                contenedor.style.display = 'block';
+            } catch (error) {
+                console.error('Error cargando indicadores del destino:', error);
+            }
+        }
+
+
+
     </script>
 
     <script>
