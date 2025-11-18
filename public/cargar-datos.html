@@ -314,6 +314,22 @@
                             </div>
                         </div>
 
+                        <!-- Spinner mientras carga -->
+                        <div id="spinnerCumplimientoDestinos" class="text-center my-3">
+                            <div class="spinner-grow text-primary" role="status"></div>
+                            <div class="mt-2 fw-semibold text-secondary">Cargando...</div>
+                            <!-- <div id="overlaySpinner"
+                                class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex flex-column justify-content-center align-items-center">
+
+                                <div class="spinner-border text-primary"></div>
+                                <div class="mt-2 fw-semibold text-secondary">Cargando...</div>
+                            </div>
+                            <div class="icon-spinner"> -->
+                            <!-- <i class="bi bi-arrow-repeat"></i>
+                                <span class="spinner-text">Cargando...</span>
+                            </div> -->
+                        </div>
+
                         <div class="table-responsive m-4">
                             <table id="tablaIndicadores" class="table table-striped table-bordered table-sm">
                                 <!-- </table> -->
@@ -366,24 +382,6 @@
             });
         </script>
 
-        <div class="modal fade" id="modalDetalleIndicador" tabindex="-1" aria-labelledby="detalleIndicadorLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="detalleIndicadorLabel">Detalle del Indicador</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table table-bordered table-sm">
-                            <tbody id="tablaDetalleIndicador">
-                                <!-- Se carga dinámicamente -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -398,7 +396,6 @@
         // 📌📌 iniciarPagina()            
         async function iniciarPagina() {
 
-            await CodigosService.init();   // 🔹 primero inicializo los códigos
             await cargarIndicadores();     // 🔹 después cargo los indicadores
 
             medicionesGral = await leerMediciones();  // 2. Leer mediciones
@@ -413,6 +410,8 @@
 
         // 📌📌 cargarIndicadores()
         async function cargarIndicadores() {
+            const spinner = document.getElementById('spinnerCumplimientoDestinos');
+            spinner.style.display = 'block';
             try {
                 const response = await fetch('/api/indicadores');
                 indicadores = await response.json();
@@ -512,7 +511,7 @@
                                 fecha = 'Año ' + ultima.med_valor_periodo
                                 break;
 
-                            case '0210': // anual
+                            case '0210': // ocasional
                                 anio = ultima.med_valor_periodo.substring(0, 4);  // primeros 4
                                 segunda = ultima.med_valor_periodo.substring(4, 6);  // siguientes 2
                                 fecha = segunda + ' de ' + anio;
@@ -645,6 +644,8 @@
                     tablaIndicadores.clear().rows.add(datosTabla).draw();
                 }
 
+                spinner.style.display = 'none';
+
                 // Mostrar total y empty state
                 const totalBadge = document.getElementById('totalIndicadores');
                 const emptyState = document.getElementById('emptyState');
@@ -660,246 +661,6 @@
             } catch (error) {
                 console.error('Error cargando indicadores:', error);
                 alert('No se pudieron cargar los indicadores.');
-            }
-        }
-
-        // 📌📌 verDetalleIndicador(codigo)
-        async function verDetalleIndicador(codigo) {
-            try {
-                const response = await fetch(`/api/indicadores/${codigo}`);
-                if (!response.ok) throw new Error('No se pudo obtener el indicador.');
-
-                const indicador = await response.json();
-                const tabla = document.getElementById('tablaDetalleIndicador');
-                tabla.innerHTML = '';
-
-                console.log('comentarios:' + indicador.comentarios)
-                let tipoIndicador = '-';
-                switch (indicador.tipo_id) {
-                    case 1:
-                        tipoIndicador = 'Estratégico';
-                        break;
-                    case 2:
-                        tipoIndicador = 'Táctico';
-                        break;
-                    case 3:
-                        tipoIndicador = 'Operativo';
-                        break;
-                }
-
-                let dimensionIndicador = '-';
-                switch (indicador.dimension_id) {
-                    case 1:
-                        dimensionIndicador = 'Financiera';
-                        break;
-                    case 2:
-                        dimensionIndicador = 'Clientes';
-                        break;
-                    case 3:
-                        dimensionIndicador = 'Procesos';
-                        break;
-                    case 4:
-                        dimensionIndicador = 'Capital Humano';
-                        break;
-                }
-
-                let categoria_indicador = '-';
-                switch (indicador.categoria_id) {
-                    case 1:
-                        categoria_indicador = 'Eficiencia';
-                        break;
-                    case 2:
-                        categoria_indicador = 'Eficacia';
-                        break;
-                    case 3:
-                        categoria_indicador = 'Calidad';
-                        break;
-                    case 4:
-                        categoria_indicador = 'Productividad';
-                        break;
-                }
-
-
-                let criticidad_indicador = '-';
-                switch (indicador.criticidad_id) {
-                    case 1:
-                        criticidad_indicador = 'Alta';
-                        break;
-                    case 2:
-                        criticidad_indicador = 'Media';
-                        break;
-                    case 3:
-                        criticidad_indicador = 'Baja';
-                        break;
-                }
-
-                let tipoMetaTexto = '-';
-                switch (indicador.meta_tipo) {
-                    case 1:
-                        tipoMetaTexto = 'Valor único';
-                        break;
-                    case 2:
-                        tipoMetaTexto = 'Rango de valores';
-                        break;
-                    case 3:
-                        tipoMetaTexto = 'Tendencia';
-                        break;
-                }
-
-                let tipoTendencia = '-';
-                switch (indicador.tenden_tipo) {
-                    case 1:
-                        tipoTendencia = 'Creciente';
-                        break;
-                    case 2:
-                        tipoTendencia = 'Decreciente';
-                        break;
-                    case 3:
-                        tipoTendencia = 'Estable';
-                        break;
-                }
-
-                let tipoEvaluacion = '-';
-                switch (indicador.unico_eval) {
-                    case 1:
-                        tipoEvaluacion = 'Superable positiva - Más es mejor';
-                        break;
-                    case 2:
-                        tipoEvaluacion = 'Límite máximo - No debe superarse';
-                        break;
-                    case 3:
-                        tipoEvaluacion = 'Tolerancia simétrica - Penaliza desviaciones';
-                        break;
-                    case 4:
-                        tipoEvaluacion = 'Menor es mejor - Más es negativo - Distancia creciente es mejor';
-                        break;
-                    case 5:
-                        tipoEvaluacion = 'Valor exacto - Cero tolerancia';
-                        break;
-                }
-
-                let formatoPresentacion = '-';
-                switch (indicador.formato) {
-                    case 1:
-                        formatoPresentacion = 'Tabla';
-                        break;
-                    case 2:
-                        formatoPresentacion = 'Grafico';
-                        break;
-                    case 3:
-                        formatoPresentacion = 'Dashboard';
-                        break;
-                }
-                console.log("Valor actual de unico_acepta:", indicador.unico_acepta);
-
-                // --- Campos comunes a todos los indicadores
-                const campos = {
-                    "Código": indicador.codigo_id,
-                    "Nombre": indicador.nombre,
-                    "Descripción": indicador.descripcion || '-',
-                    "Objetivo": indicador.objetivo || '-',
-                    "Destino": `${indicador.destino || '-'} - ${indicador.destino_nombre || ''}`,
-                    "Responsable": indicador.responsable
-                        ? `${indicador.responsable} - ${indicador.responsable_nombres || ''} ${indicador.responsable_apellido || ''}`
-                        : '-',
-
-                    // 👇 agrego un marcador
-                    "__sep1__": null,
-
-                    "Tipo": `${indicador.tipo_id} - ${tipoIndicador}` || '-',
-                    "Dimensión": `${indicador.dimension_id} - ${dimensionIndicador}` || '-',
-                    "Categoría": `${indicador.categoria_id} - ${categoria_indicador}` || '-',
-                    "Criticidad": `${indicador.criticidad_id} - ${criticidad_indicador}` || '-',
-
-                    // 👇 agrego un marcador
-                    "__sep2__": null,
-
-                    "Tipo de Meta": `${indicador.meta_tipo} - ${tipoMetaTexto}` || '-',
-                }
-
-                // --- Agregar campos según el tipo de meta
-                if (indicador.meta_tipo === 1) {
-                    Object.assign(campos, {
-                        "Valor Meta": indicador.unico_valor || '-',
-                        "Método de evaluación": `${indicador.unico_eval} - ${tipoEvaluacion}` || '-',
-                        "Márgen de Aceptación": `${Number(indicador.unico_acepta).toFixed(2)} %`,
-                        "Márgen de Riesgo": `${Number(indicador.unico_riesgo).toFixed(2)} %`,
-                        "Márgen Crítico": `${Number(indicador.unico_critico).toFixed(2)} %`,
-                        // 👇 agrego un marcador
-                        "__sep3__": null,
-                    });
-                } else if (indicador.meta_tipo === 2) {
-                    Object.assign(campos, {
-                        "Rango Desde": indicador.rango_desde || '-',
-                        "Rango Hasta": indicador.rango_hasta || '-',
-                        "Márgen de Aceptación": indicador.rango_acepta || '-',
-                        "Margen de Riesgo": indicador.rango_riesgo || '-',
-                        "Margen Crítico": indicador.rango_critico || '-',
-                        // 👇 agrego un marcador
-                        "__sep4__": null,
-                    });
-                } else if (indicador.meta_tipo === 3) {
-                    Object.assign(campos, {
-                        "Tendencia Tipo": tipoTendencia || '-',
-                        "Tendencia Referencia": indicador.tenden_refe || '-',
-                        "Margen de Aceptación": indicador.tenden_acepta || '-',
-                        "Margen de Riesgo": indicador.tenden_riesgo || '-',
-                        "Margen Crítico": indicador.tenden_critico || '-',
-                        // 👇 agrego un marcador
-                        "__sep5__": null,
-                    });
-                }
-
-                // --- Otros campos comunes
-                Object.assign(campos, {
-
-                    "Fuente de Datos": indicador.fuente_datos || '-',
-                    "Fórmula de Cálculo": indicador.formula_calculo || '-',
-                    "Unidad de Medida": CodigosService.getNombreCodigo(indicador.unidad_medida),
-                    "Frecuencia de Medición": CodigosService.getNombreCodigo(indicador.freq_medicion),
-                    "Tolerancia de Plazo": CodigosService.getNombreCodigo(indicador.tolerancia_plazo),
-                    "Tolerancia Q": indicador.tolerancia_q || '-',
-                    "__sep6__": null,
-                    "Frecuencia de Reporte": CodigosService.getNombreCodigo(indicador.freq_reporte),
-                    "Fecha de Inicio": indicador.fecha_inicio
-                        ? new Date(indicador.fecha_inicio).toLocaleDateString('es-AR')
-                        : '-',
-                    "Formato de Presentación": `${indicador.formato} - ${formatoPresentacion}` || '-',
-                    "Comentarios": indicador.comentarios || '-'
-                });
-
-                for (const [campo, valor] of Object.entries(campos)) {
-
-                    if (campo.startsWith("__sep")) {
-                        // insertar fila separadora
-                        const sepRow = document.createElement('tr');
-                        const sepCell = document.createElement('td');
-                        sepCell.colSpan = 2;
-                        sepCell.innerHTML = "&nbsp;"; // espacio en blanco
-                        sepRow.appendChild(sepCell);
-                        tabla.appendChild(sepRow);
-                        continue; // pasar al siguiente campo
-                    }
-                    const fila = document.createElement('tr');
-
-                    const th = document.createElement('th');
-                    th.textContent = campo;
-                    th.style.width = '200px'; // ancho fijo
-                    th.style.textAlign = 'left'; // opcional, alinear texto a la izquierda
-
-                    const td = document.createElement('td');
-                    td.textContent = valor;  // <-- seguro, no interpreta HTML
-                    fila.appendChild(th);
-                    fila.appendChild(td);
-                    tabla.appendChild(fila);
-                }
-
-                const modal = new bootstrap.Modal(document.getElementById('modalDetalleIndicador'));
-                modal.show();
-
-            } catch (error) {
-                console.error('Error al obtener el detalle:', error);
-                alert('No se pudo obtener el detalle del indicador.');
             }
         }
 
@@ -941,7 +702,7 @@
 
             // Tomar valores desde hidden y campos del form
             const indId = document.getElementById('indicadorCodigo').value;
-            
+
             const unidad = document.getElementById('unidad-carga').dataset.unidad || '';
             const frecuencia = document.getElementById('unidad-carga').dataset.frecuencia || '';
             const valorPeriodo = document.getElementById('valor-periodo').value.trim();
@@ -1283,61 +1044,61 @@
                 case '05': // bimestral
                     if (mes === 1 || mes === 2) {
                         // ene-feb → año anterior + 6 (último bimestre del año anterior)
-                        resultado = `${anio - 1}6`;
+                        resultado = `${anio - 1}06`;
                     } else if (mes === 3 || mes === 4) {
                         // mar-abr → año actual + 1
-                        resultado = `${anio}1`;
+                        resultado = `${anio}01`;
                     } else if (mes === 5 || mes === 6) {
                         // may-jun → año actual + 2
-                        resultado = `${anio}2`;
+                        resultado = `${anio}02`;
                     } else if (mes === 7 || mes === 8) {
                         // jul-ago → año actual + 3
-                        resultado = `${anio}3`;
+                        resultado = `${anio}03`;
                     } else if (mes === 9 || mes === 10) {
                         // sep-oct → año actual + 4
-                        resultado = `${anio}4`;
+                        resultado = `${anio}04`;
                     } else if (mes === 11 || mes === 12) {
                         // nov-dic → año actual + 5
-                        resultado = `${anio}5`;
+                        resultado = `${anio}05`;
                     }
                     break;
 
                 case '06': // trimestral
                     if (mes >= 1 && mes <= 3) {
                         // meses 1-3 → año anterior + sufijo 4
-                        resultado = `${anio - 1}4`;
+                        resultado = `${anio - 1}04`;
                     } else if (mes >= 4 && mes <= 6) {
                         // meses 4-6 → año actual + sufijo 1
-                        resultado = `${anio}1`;
+                        resultado = `${anio}01`;
                     } else if (mes >= 7 && mes <= 9) {
                         // meses 7-9 → año actual + sufijo 2
-                        resultado = `${anio}2`;
+                        resultado = `${anio}02`;
                     } else if (mes >= 10 && mes <= 12) {
                         // meses 10-12 → año actual + sufijo 3
-                        resultado = `${anio}3`;
+                        resultado = `${anio}03`;
                     }
                     break;
 
                 case '07': // cuatrimestral
                     if (mes >= 1 && mes <= 4) {
                         // meses 1-4 → año anterior + sufijo 3
-                        resultado = `${anio - 1}3`;
+                        resultado = `${anio - 1}03`;
                     } else if (mes >= 5 && mes <= 8) {
                         // meses 5-8 → año actual + sufijo 1
-                        resultado = `${anio}1`;
+                        resultado = `${anio}01`;
                     } else if (mes >= 9 && mes <= 12) {
                         // meses 9-12 → año actual + sufijo 2
-                        resultado = `${anio}2`;
+                        resultado = `${anio}02`;
                     }
                     break;
 
                 case '08': // semestral
                     if (mes < 7) {
                         // primer semestre ya pasó → apéndice 2, año anterior
-                        resultado = `${anio - 1}2`;
+                        resultado = `${anio - 1}02`;
                     } else {
                         // segundo semestre → apéndice 1, año actual
-                        resultado = `${anio}1`;
+                        resultado = `${anio}01`;
                     }
                     break;
 
@@ -1622,23 +1383,23 @@
         }
 
         // 📌📌 CodigosService - Servicio global para texto de tabla de códigos
-        const CodigosService = {
-            codigosMap: {},
+        // const CodigosService = {
+        //     codigosMap: {},
 
-            async init() {
-                const response = await fetch('/api/codigos');
-                if (!response.ok) throw new Error('No se pudo obtener los codigos.');
-                const codigos = await response.json();
+        //     async init() {
+        //         const response = await fetch('/api/codigos');
+        //         if (!response.ok) throw new Error('No se pudo obtener los codigos.');
+        //         const codigos = await response.json();
 
-                codigos.forEach(c => {
-                    this.codigosMap[c.cod_tabla] = c.cod_nombre;
-                });
-            },
+        //         codigos.forEach(c => {
+        //             this.codigosMap[c.cod_tabla] = c.cod_nombre;
+        //         });
+        //     },
 
-            getNombreCodigo(codigo) {
-                return this.codigosMap[codigo] || '-';
-            }
-        };
+        //     getNombreCodigo(codigo) {
+        //         return this.codigosMap[codigo] || '-';
+        //     }
+        // };
 
         // 📌📌 cancelarBtn.addEventListener('click'
         cancelarBtn.addEventListener('click', () => {
@@ -1670,6 +1431,30 @@
         crossorigin="anonymous"></script>
 
     <script src="../js/adminlte.min.js"></script>
+
+    <div id="contenedorModal"></div>
+    <div id="contenedorModalMediciones"></div>
+
+    <script>
+        // Cargar modal de indicadores
+        fetch('/modal-indicador.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModal').innerHTML = html;
+            });
+
+        // Cargar modal de mediciones
+        fetch('/modal-mediciones.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalMediciones').innerHTML = html;
+            });
+    </script>
+
+    <!-- Scripts asociados -->
+    <script src="/modal-indicador.js"></script>
+    <script src="/modal-mediciones.js"></script>
+
 </body>
 
 </html>

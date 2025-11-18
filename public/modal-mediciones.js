@@ -1,13 +1,4 @@
 
-// let modalMediciones = null;
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     const modalEl = document.getElementById('modalMediciones');
-//     if (modalEl) {
-//         modalMediciones = new bootstrap.Modal(modalEl);
-//     }
-// });
-
 async function mostrarModalMediciones(ind, codigo, nombre) {
     // Completa datos del indicador
     document.getElementById('med-codigo').textContent = codigo || '-';
@@ -30,6 +21,9 @@ async function mostrarModalMediciones(ind, codigo, nombre) {
         if (mediciones.length === 0) {
             tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">No hay mediciones registradas</td></tr>`;
         } else {
+            // 👇 ORDENAR POR PERÍODO DESCENDENTE
+            mediciones.sort((a, b) => Number(b.med_valor_periodo) - Number(a.med_valor_periodo));
+
             mediciones.forEach(m => {
                 const fila = `
                     <tr>
