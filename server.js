@@ -1491,8 +1491,6 @@ app.get('/api/mediciones', async (req, res) => {
 app.get('/api/XXXmediciones/:idIndicador', async (req, res) => {
     const { idIndicador } = req.params;
 
-    console.log("ID Indicador recibido en backend:", idIndicador);
-
     try {
         const [rows] = await pool.query(
             `SELECT med_valor, med_valor_periodo, med_fecha_registro, med_meta, med_comentarios, med_plan_accion

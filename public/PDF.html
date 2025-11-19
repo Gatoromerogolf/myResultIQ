@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación de riesgos</title>
+    <script src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
+    <link href="../estilos/estiloEncuestas.css" rel="stylesheet">
+    <!-- <link href="css/st-gobCorpo.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Abel&family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Courgette&family=Gupter:wght@400;500;700&family=PT+Sans+Narrow:wght@400;700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
+    <style>
+        .google-loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            height: 100px;
+            margin-top: 20px;
+        }
+
+        .dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            animation: bounce 1.2s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) {
+            background-color: #4285F4;
+            /* Azul Google */
+            animation-delay: 0s;
+        }
+
+        .dot:nth-child(2) {
+            background-color: #EA4335;
+            /* Rojo Google */
+            animation-delay: 0.15s;
+        }
+
+        .dot:nth-child(3) {
+            background-color: #FBBC05;
+            /* Amarillo Google */
+            animation-delay: 0.3s;
+        }
+
+        .dot:nth-child(4) {
+            background-color: #34A853;
+            /* Verde Google */
+            animation-delay: 0.45s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .loader-text {
+            margin-top: 10px;
+            font-size: 18px;
+            text-align: center;
+            font-family: "Abel";
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="survey-container">
+        <section class="main">
+            <section class="gobCorpo">
+                <div class="header-container">
+                    <div class="header-center">
+                        <div id="nombreEmpresa" class="company-name"></div>
+                        <div id="nombreUsuario" class="user-name"></div>
+                    </div>
+                    <div class="nav-iconsxx">
+                        <h4>Autoevaluación de la calidad del manejo de la empresa</h4>
+                    </div>
+                    <div class="nav-iconsxx">
+                    </div>
+                </div>
+                <hr>
+
+                <form id="formularioFinal" style="display: block;">
+                    <div class="center-container">
+                        <h4 class="tituloSeccion"><a href="Menu-A.html">Generación del informe con recomendaciones</a>
+                        </h4>
+                    </div>
+
+                    <!-- <p>Este proceso crea el documento
+                        <span style="text-align: center; font-size: 22px; font-weight: bold;"> Informe HexaRCi.pdf
+                        </span>
+                        que se descargará automáticamente. Aguarde, por favor...
+                    </p> -->
+
+                    <div style="text-align: center; font-size: 18px;">
+                        <p>Este proceso crea el siguiente documento:</p>
+                        <hr style="width: 60%; margin: 10px auto;">
+                        <p style="font-size: 22px; font-weight: bold;">Informe HexaRCi.pdf</p>
+                        <hr style="width: 60%; margin: 10px auto;">
+                        <p>que se descargará automáticamente. Aguarde, por favor...</p>
+                    </div>
+
+
+                    <div id="loader" class="loader-container" style="display: block;">
+                        <div class="google-loader">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                        <div class="loader-text">Generando documento...</div>
+                    </div>
+                </form>
+
+                <form id="formularioSaludo" style="display: none;">
+                    <div class="center-container">
+                        <h4 class="tituloSeccion"><a href="Menu-A.html">Generación del informe con recomendaciones</a>
+                        </h4>
+                    </div>
+                    <br><br>
+                    <div style="text-align: center;">
+                        <span style="font-size: 22px; font-weight: bold;">El documento ha sido creado</span>
+                    </div>
+
+                </form>
+
+            </section>
+        </section>
+    </div>
+</body>
+
+
+<!-- https://claude.ai/chat/da1b05d0-f15d-487d-bd62-f4f05b81c356
+https://claude.ai/login?returnTo=%2F%3F
+El tamaño de una hoja A4 es de 210 x 297 milímetros, es decir, 21 centímetros de ancho por 29,7 centímetros de largo.  -->
+
+<script>
+
+    const apellidouser = localStorage.getItem("apellido");
+    const nombreUser = localStorage.getItem("nombre");
+    const apenom = nombreUser + ' ' + apellidouser;
+    const empresa = localStorage.getItem("empresa");
+    const CUIT = localStorage.getItem("CUIT");
+    document.getElementById("nombreEmpresa").textContent = empresa;
+    document.getElementById("nombreUsuario").textContent = apenom;
+    const idioma = localStorage.getItem("idioma");
+
+    let max = 90;
+    let numPagina = 0;
+
+    let var1, var2, var3, va4, var5, var6 = 0;
+
+    const textoTipificacion = localStorage.getItem("textoTipificacion");
+    const tipificacion = localStorage.getItem("tipificacion");
+
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     document.getElementById("boton-generar-pdf").addEventListener("click", generarPDF);
+    // });
+
+
+    //  🏀  da fornmato a la fecha de aceptacion del acuerdo  🏀
+
+    function formatearFechaConMes(fechaStr) {
+        if (!fechaStr) return "";
+
+        const fecha = new Date(fechaStr);
+
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        const anio = fecha.getFullYear();
+
+        const meses = [
+            "enero", "febrero", "marzo", "abril", "mayo", "junio",
+            "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+        ];
+        const mesNombre = meses[fecha.getMonth()]; // getMonth() da de 0 a 11
+
+        return `${dia} de ${mesNombre} de ${anio}`;
+    }
+
+    // Leer la fecha guardada
+    const fechaAceptacion = localStorage.getItem("aceptacion");
+    const fechaFormateada = formatearFechaConMes(fechaAceptacion);
+
+    //   Aceptacion: 2025-04-10T03:00:00.000Zformateada 10T03:00:00.000Z - 04 - 2025
+
+    // Mostrarla en el HTML
+    // document.getElementById("campo-fecha").textContent = fechaFormateada;
+
+    // 🥎  FIN da fornmato a la fecha de aceptacion del acuerdo  🥎
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Mostramos el loader (ya está visible por defecto, pero por si acaso)
+        document.getElementById("loader").style.display = "block";
+
+        // Esperamos 200 ms antes de empezar para que el loader se pinte
+        setTimeout(() => {
+            iniciarGeneracion();
+        }, 200);
+    });
+
+    async function iniciarGeneracion() {
+        try {
+            // Aguardamos un poco para que el texto "Generando informe..." aparezca
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // Ahora llamamos a la función que empieza el trabajo pesado
+            await generarPDF();
+
+            // Ocultamos el loader si querés
+            document.getElementById("loader").style.display = "none";
+        } catch (error) {
+            console.error("Error al generar el PDF:", error);
+        }
+    }
+
+    async function generarPDF() {
+
+        // textoCheck = await leeTextoCheck();
+        // textoRespuestas = await leeTextoRespuestas();
+        let textoCheck;
+        let textoRespuestas;
+
+        const opciones = {
+            margin: 0,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        // Crear un elemento temporal para construir el contenido HTML
+        const contenido = document.createElement('div');
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Caratula
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::        
+
+        const primeraPagina = document.createElement('div');
+        primeraPagina.style.width = 'calc(100% - 20mm)'; // Ancho ajustado para márgenes
+        primeraPagina.style.height = '277mm'; // Altura A4 menos márgenes
+        primeraPagina.style.margin = '10mm';
+        // primeraPagina.style.borderRadius = '5mm';
+        primeraPagina.style.border = '1px solid #000';
+        primeraPagina.style.borderRadius = '3mm';
+        // primeraPagina.style.backgroundImage = 'url("../img/imagenEdificios.webp")';
+        primeraPagina.style.backgroundImage = 'url("../dist/images/Fondomy.pnga_hexarci.jpeg")';
+        primeraPagina.style.backgroundSize = 'contain';
+        primeraPagina.style.backgroundPosition = 'center';
+        primeraPagina.style.pageBreakAfter = 'always';
+
+        const segundaLeyenda = document.createElement('h2');
+        segundaLeyenda.innerHTML = empresa;
+        segundaLeyenda.style.textAlign = 'center';
+        segundaLeyenda.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        segundaLeyenda.style.fontSize = '35pt';
+        segundaLeyenda.style.color = 'black';
+        segundaLeyenda.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5), -2px -2px 4px rgba(255, 255, 255, 0.3)';
+        segundaLeyenda.style.marginTop = '550px'; // Ajusta según necesites
+        primeraPagina.appendChild(segundaLeyenda);
+
+        contenido.appendChild(primeraPagina);
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Confidencialidad y uso restrigido
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::        
+
+        const confidencialidad = crearPaginaConMarco();
+
+        const tituloConfiden = document.createElement('h2');
+        tituloConfiden.textContent = 'Nota de Confidencialidad y Uso Restringido';
+        tituloConfiden.style.textAlign = 'center';
+        tituloConfiden.style.color = 'green';
+        tituloConfiden.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        confidencialidad.appendChild(tituloConfiden);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '12pt';
+        parrafo.style.lineHeight = '1.5';
+        parrafo.style.fontStyle = 'normal'; // Agregar estilo itálico
+        parrafo.style.marginTop = '5mm';
+        parrafo.innerHTML = "El presente informe ha sido elaborado por BDT Advisory LLC en el marco del Sistema HexaRCi, conforme a los términos establecidos en la Propuesta de Servicios Profesionales suscripta con <strong>" + empresa + "</strong>, aceptada con fecha " + fechaFormateada + ".<br><br>Su contenido está destinado exclusivamente al uso interno de <strong>" + empresa + "</strong> y no podrá ser reproducido, divulgado ni distribuido —total o parcialmente— fuera de <strong>" + empresa + "</strong>, sin la autorización previa y por escrito de BDT Advisory LLC.<br><br>Los términos de confidencialidad que rigen este informe han sido establecidos en el acuerdo de confidencialidad firmado con fecha " + fechaFormateada + " entre <strong> " + empresa + "</strong> y BDT Advisory LLC.<br><br>Cualquier uso no autorizado del presente documento será considerado una infracción a dicho acuerdo, así como a los derechos de propiedad intelectual de BDT Advisory LLC."
+        confidencialidad.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "<strong>Introducción.</strong><br><br>El producto de la aplicación por parte de <strong> " + empresa + "</strong> del Sistema HexaRCi, que se encuentra  materializada en los Niveles de Cumplimiento por factor, la Representación Gráfica, el Diagnóstico y las Oportunidades de Mejora son el resultado de: <br><br>1.	la autoevaluación de los distintos factores del Sistema HexaRCi efectuada por ejecutivos de <strong>" + empresa + "</strong> y<br><br> 2. de los parámetros, algoritmos, tablas y valores contenidos en el software del Sistema HexaRCi. El software del Sistema HexaRCi ha sido aceptado por <strong>" + empresa + "</strong> al haber firmado la propuesta de BDT Advisory LLC de fecha " + fechaFormateada + ".";
+
+        confidencialidad.appendChild(parrafo);
+
+        contenido.appendChild(confidencialidad)
+        console.log("pagina. Nota Confidencialidad")
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Añadir Contenido - Indice)
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        const paginaIndice = crearPaginaConMarco();
+
+        const tituloIndice = document.createElement('h2');
+        tituloIndice.textContent = 'Contenido';
+        tituloIndice.style.textAlign = 'center';
+        tituloIndice.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        paginaIndice.appendChild(tituloIndice);
+
+        parrafo = document.createElement('p');
+        // parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        // parrafo.style.lineHeight = '1.5';
+        // parrafo.style.fontStyle = 'normal'; // Agregar estilo itálico
+        parrafo.style.marginTop = '25mm';
+        parrafo.style.marginLeft = '40mm';
+        parrafo.innerHTML = "1. El modelo HexaRC<br><br>2. El Sistema HewxaRCi y <strong>" + empresa + "</strong>.<br><br>3. Niveles de Cumplimiento por factor<br><br>4. Diagnóstico<br><br>5.  Representación Gráfica<br><br>6. Oportunidades de Mejora por factor"
+        paginaIndice.appendChild(parrafo);
+
+        contenido.appendChild(paginaIndice);
+        console.log("pagina. Contenido")
+
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ El Modelo HexaRC
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        const terceraPagina = crearPaginaConMarco();
+
+        const tituloTercera = document.createElement('p');
+        tituloTercera.innerHTML = "1. El Modelo HexaRC";
+        // tituloTercera.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        tituloTercera.style.fontSize = '16pt';
+        tituloTercera.style.fontWeight = 'bold';
+        tituloTercera.style.textAlign = 'left';
+        tituloTercera.style.marginTop = '5mm';
+        terceraPagina.appendChild(tituloTercera);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '12pt';
+        parrafo.style.lineHeight = '1.5';
+        parrafo.innerHTML = "HexaRC es un Modelo creado por BDT Advisory para mejorar el desempeño y la competitividad de las compañías  basado en el hecho de que una rentabilidad superior y una optimización de la competitividad se logran optimizando el manejo de los riesgos del negocio.<br><br>La inversión es el punto de partida de toda actividad empresarial e implica asumir esos riesgos. Al invertir, las empresas enfrentan incertidumbres que pueden representar tanto oportunidades de ganancia como amenazas de pérdida.<br><br>La clave del éxito radica en gestionar los riesgos de manera integral y holística, maximizando el potencial de ganancias sin descuidar la importancia de minimizar posibles pérdidas. <br><br>Una gestión de riesgos holística abarca la identificación, evaluación y mitigación de riesgos estratégicos, financieros, operativos, reputacional y regulatorios, permitiendo transformar amenazas en impulsores del crecimiento y aprovechar al máximo las oportunidades emergentes.<br><br>Este enfoque integral asegura que los distintos riesgos estén interconectados y se gestionen de manera coordinada, fortaleciendo competitividad de la empresa. <br><br>Así, la adecuada gestión de riesgos permite obtener beneficios de manera consistente convirtiéndose en un factor clave para el éxito de la empresa. <br><br>Con esta visión fue concebido el Modelo HexaRC.";
+        terceraPagina.appendChild(parrafo);
+
+        contenido.appendChild(terceraPagina);
+        console.log("pagina. El Modelo HexaRC")
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ El Sistema  HexaRCi
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        let paginaHexa = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "2. El Sistema HexaRCi y " + empresa + ".";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '5mm';
+        paginaHexa.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "La versión del Modelo HexaRC denominada Sistema HexaRCi se encuentra materializada en el Software que <strong>" + empresa + "</strong> ha adoptado y sus resultados son el objeto de este Informe.<br><br>El proceso de autoevaluación del Sistema HexaRCi fue completado por el personal de la empresa que asumió la responsabilidad de evaluar cada  declaración. Las conclusiones presentadas en este Informe reflejan  la perspectiva y el análisis realizados, cuya validez y precisión dependieron directamente del grado de objetividad y certeza con el que se respondió a cada  declaración.";
+        paginaHexa.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "<strong>Alcance de la Autoevaluación.</strong><br><br>El proceso de autoevaluación comprendió las respuestas a cuatro factores de riesgo  y dos factores temporales, proporcionando una visión integral de la situación de la empresa,<br><br><strong>Factores de Riesgo Auto-Evaluados.</strong><br>";
+        paginaHexa.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        // parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "1. <strong>Manejo de los Riesgos del Gobierno Corporativo.</strong> Representa el conjunto de procesos, principios y valores que rigen la forma en que una organización es estrategizada, administrada, controlada y transparentada. Las fallas en el sistema de Gobierno pueden conducir a la disfuncionalidad de los procesos. El sistema de gobierno corporativo impacta en el Apetito de Riesgo y su calidad operativa-funcional determina el manejo de los riesgos de mercado y de los procesos.";
+        paginaHexa.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        // parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "2. <strong>Manejo del Apetito de Riesgo.</strong> Representa la cantidad de riesgo que la empresa está dispuesta a 'tomar'. Un Apetito de Riesgo alto puede llevar al crecimiento y a utilidades, pero puede llevar también a enfrentar pérdidas importantes. Un Apetito de Riesgo bajo puede llevar a perder posiciones competitivas o a la inmovilidad. El objetivo es tener un Apetito de Riesgo adecuado en relación con las necesidades competitivas y la cultura de la empresa.";
+        paginaHexa.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        // parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "3. <strong>Manejo de los Riesgos de Mercado.</strong> Se refieren a las amenazas o peligros debido a factores externos y que pueden tener un impacto negativo en los objetivos y resultados deseados. Los riesgos del mercado son parte del sistema estratégico/táctico de la compañía y, conjuntamente con los riesgos de los procesos y el apetito de riesgo constituyen los riesgos que tiene que manejar el Sistema de Gobierno Corporativo.";
+        paginaHexa.appendChild(parrafo);
+
+        contenido.appendChild(paginaHexa);
+
+        paginaHexa = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        // parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "4. <strong>Manejo de los Riesgos de los Procesos.</strong> Comprenden las secuencias de actividades interrelacionadas que se llevan a cabo para alcanzar los objetivos de la empresa. Incluyen conceptualmente: Procesos de Gestión, Procesos Operativos y Procesos de Soporte. La identificación, modelado y mejora continua de estos procesos son elementos clave para aumentar la eficiencia, la calidad y la competitividad de la empresa. El objetivo es tener procesos sólidos que minimicen la posibilidad de incurrir en pérdidas por mal manejo de los mismos.";
+        paginaHexa.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "<strong>Factores temporales.</strong>";
+        paginaHexa.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "5. <strong>Manejo de los Riesgos de la Situación Financiera.</strong><br><br> Se refiere a la posibilidad de que la empresa experimente dificultades para cumplir con sus obligaciones financieras a corto, mediano o largo plazo. Esto puede manifestarse a través de problemas de liquidez, endeudamiento excesivo, incapacidad para generar flujo de efectivo suficiente, o una estructura de capital inadecuada. El manejo de este riesgo implica la implementación de estrategias y controles para asegurar la solidez financiera de la organización, incluyendo la gestión eficiente del capital de trabajo, el monitoreo constante de los indicadores financieros clave, y la planificación financiera a largo plazo.";
+        paginaHexa.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "6. <strong>Manejo de los Riesgos de la Generación de Resultados.</strong><br><br>Se relaciona con la incertidumbre sobre la capacidad de la empresa para alcanzar sus objetivos de rentabilidad y crecimiento. Esto puede ser influenciado por factores internos como la eficiencia operativa, la gestión de costos, la innovación y la calidad de los productos o servicios, así como por factores externos como la competencia, las condiciones económicas, los cambios regulatorios y las tendencias del mercado. El manejo de este riesgo implica establecer metas claras y medibles, monitorear el desempeño en relación con estas metas, analizar las desviaciones y tomar acciones correctivas, así como adaptarse proactivamente a los cambios del entorno para asegurar la sostenibilidad y el crecimiento del negocio.";
+        paginaHexa.appendChild(parrafo);
+
+        contenido.appendChild(paginaHexa);
+        console.log(`pagina. El Sistema HexaRCi y ${empresa}`)
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Cumplimiento por factor  ⛔
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        otraPagina = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "3. Niveles de cumplimiento por factor";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '5mm';
+        otraPagina.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "Con base en las respuestas proporcionadas, se determinó el grado de cumplimiento expresado como un porcentaje respecto a una calificación Óptima contenida en el Sistema HexaRCi para cada factor de riesgo y temporales, lo cual se presenta en el siguiente cuadro <br><br>Cuadro General:<br><br>";
+        otraPagina.appendChild(parrafo);
+
+        // crea la tabla de totales por capitulo
+        // capitulos = await leeCapitulos();
+        let capitulos;
+        // totalCapitulos = await obtenerTotalCapitulos(CUIT);
+        let totalCapitulos;
+
+        // Crear la tabla si no existe
+        let tabla = document.createElement("table");
+        tabla.style.width = "90%";
+        tabla.style.borderCollapse = "collapse";
+
+        // Agregar encabezado (opcional)
+        let encabezado = document.createElement("tr");
+        encabezado.innerHTML = `
+                <th style="text-align: center; padding: 5px;">#</th>
+                <th style="text-align: left; padding: 25px;">Factor</th>
+                <th style="text-align: center; padding: 5px;">%</th>
+            `;
+        tabla.appendChild(encabezado);
+
+        // Llenar la tabla con datos
+        // for (const capitulo of totalCapitulos) {
+        // totalCapitulos.forEach((capitulo, index) => {
+        //     const capituloNombre = capitulos.find(c => c.letra === capitulo.capitulo)?.nombre || 'Nombre no encontrado';
+
+        //     const fila = document.createElement("tr");
+        //     fila.classList.add("situacion2");
+
+        //     fila.innerHTML = `
+        //             <td style="padding: 5px;">${capitulo.capitulo}</td>
+        //             <td style="text-align: left; padding: 15px; font-size: 18px">${capituloNombre}</td>
+        //             <td style="text-align: center; padding: 5px;">${capitulo.porcentaje}</td>
+        //         `;
+
+        //     tabla.appendChild(fila);
+
+        //     // Asignar valores a variables según el índice
+        //     switch (index) {
+        //         case 0: var1 = capitulo.porcentaje; break;
+        //         case 1: var2 = capitulo.porcentaje; break;
+        //         case 2: var3 = capitulo.porcentaje; break;
+        //         case 3: var4 = capitulo.porcentaje; break;
+        //         case 4: var5 = capitulo.porcentaje; break;
+        //         case 5: var6 = capitulo.porcentaje; break;
+        //     }
+        // });
+
+        // Finalmente, agregar la tabla a la página
+        otraPagina.appendChild(tabla);
+
+        contenido.appendChild(otraPagina);
+        console.log("pagina. Cumplimiento por factor")
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔  Añadir Gobierno Corporativo  ⛔
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        otraPagina = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "3.1. Manejo de los Riesgos de Gobierno Corporativo";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '5mm';
+        otraPagina.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "Se han formulado <strong>84 declaraciones</strong>, distribuidas en 15 secciones temáticas, con el propósito de evaluar su nivel de implementación, cumplimiento o adhesión dentro de la organización.  El resultado de esta evaluación se presenta en el porcentaje alcanzado.";
+        otraPagina.appendChild(parrafo);
+
+        // Crear la tabla
+
+        // crea la tabla de totales por capitulo
+        capitulo = "A";
+        // secciones = await leerSecciones(idioma, capitulo);
+        // respuestas = await leerRespuestas(CUIT, capitulo);
+        let secciones;
+        let respuestas;
+
+        // Crear la tabla si no existe
+        tabla = document.createElement("table");
+        tabla.style.width = "90%";
+        tabla.style.borderCollapse = "collapse";
+
+        // Agregar encabezado (opcional)
+        encabezado = document.createElement("tr");
+        encabezado.innerHTML = `
+                <th style="text-align: center; padding: 5px;">#</th>
+                <th style="text-align: left; padding: 15px;">Sección</th>
+                <th style="text-align: center; padding: 5px;">%</th>
+            `;
+        tabla.appendChild(encabezado);
+
+        // Llenar la tabla con datos
+        // for (const secc of secciones.records) {
+        //     const porceCumpli = respuestas.records.find(c => c.seccion === secc.seccion)?.porcentaje || 999;
+
+        //     const fila = document.createElement("tr");
+        //     fila.classList.add("situacion2");
+
+        //     fila.innerHTML = `
+        //             <td style="padding: 10px;">${secc.seccionromano}</td>
+        //             <td style="text-align: left; padding: 10px; font-size: 18px">${secc.descripcion}</td>
+        //             <td style="text-align: center; padding: 10px;">${porceCumpli}</td>
+        //         `;
+
+        //     tabla.appendChild(fila);
+        // }
+
+        // Finalmente, agregar la tabla a la página
+        otraPagina.appendChild(tabla);
+
+        contenido.appendChild(otraPagina);
+
+        console.log("pagina. Gob Corporativo")
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Añadir  Apetito de riesgo  ⛔
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        otraPagina = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "3.2. Manejo del Apetito de Riesgo";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '5mm';
+        otraPagina.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "Se han propuesto <strong>71 declaraciones</strong>, distribuidas en 4 secciones temáticas, con el propósito de evaluar su nivel de implementación, cumplimiento o adhesión dentro de la organización.  El resultado de esta evaluación se presenta en el porcentaje alcanzado.";
+        otraPagina.appendChild(parrafo);
+
+        // crea la tabla de totales por capitulo
+        capitulo = "B";
+        // secciones = await leerSecciones(idioma, capitulo);
+        // respuestas = await leerRespuestas(CUIT, capitulo);
+
+
+        // Crear la tabla si no existe
+        tabla = document.createElement("table");
+        tabla.style.width = "90%";
+        tabla.style.borderCollapse = "collapse";
+
+        // Agregar encabezado (opcional)
+        encabezado = document.createElement("tr");
+        encabezado.innerHTML = `
+                <th style="text-align: center; padding: 5px;">#</th>
+                <th style="text-align: left; padding: 15px;">Sección</th>
+                <th style="text-align: center; padding: 5px;">%</th>
+            `;
+        tabla.appendChild(encabezado);
+
+        // Llenar la tabla con datos
+        // for (const secc of secciones.records) {
+        //     // const porceCumpli = respuestas.records.find(c => c.seccion === secc.seccion)?.porcentaje || 999;
+
+        //     // const fila = document.createElement("tr");
+        //     // fila.classList.add("situacion2");
+
+        //     // fila.innerHTML = `
+        //     //         <td style="padding: 10px;">${secc.seccionromano}</td>
+        //     //         <td style="text-align: left; padding: 10px; font-size: 18px">${secc.descripcion}</td>
+        //     //         <td style="text-align: center; padding: 10px;">${porceCumpli}</td>
+        //     //     `;
+        //     // tabla.appendChild(fila);
+        // }
+
+        otraPagina.appendChild(tabla);
+        contenido.appendChild(otraPagina);
+
+        console.log("pagina. Apetito de Riesgo")
+
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔  Añadir  -  Riesgos de mercado  ⛔
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        otraPagina = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "3.3. Manejo de los Riesgos de Mercado";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '5mm';
+        otraPagina.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "Se han propuesto <strong>43 declaraciones</strong>, para evaluar su nivel de implementación, cumplimiento o adhesión dentro de la organización.  El resultado de esta evaluación se presenta en el porcentaje alcanzado.";
+        otraPagina.appendChild(parrafo);
+
+
+        // :::::::::::::::::::::::::::::::::::::::::::::::
+        //                          recuperarRespuestas
+        // :::::::::::::::::::::::::::::::::::::::::::::::
+
+        // respuestas = await obtenerRespuestas(CUIT, "C");
+        // const respondidosSegundaParte = respuestas[0].respuesta[14];
+        // const ctddRespondidos = respondidosSegundaParte.length
+        // const puntosTotales = respuestas[0].score;
+        let respondidosSegundaParte;
+        let ctddRespondidos;
+        let puntosTotales;
+
+
+        // :::::::::::::::::::::::::::::::::::::::::::::::
+        //                          obtenerRespuestas
+        // :::::::::::::::::::::::::::::::::::::::::::::::
+        async function obtenerRespuestas(CUIT, capitulo) {
+            // leo las respuestas del CUIT para el capítulo
+            try {
+            //     const response = await fetch(
+            //         `/busca-respuesta-capitulo?CUIT=${CUIT}&capitulo=${capitulo}`
+            //     );
+            //     if (response.ok) {
+            //         const result = await response.json();
+            //         return result.records || []; // Devuelve los registros o un arreglo vacío
+            //     } else {
+            //         console.error(
+            //             `Sin respuesta para capitulo ${capitulo} en obtenerRespuestas`
+            //         );
+            //     }
+            } catch (error) {
+                // console.error(
+                //     "Error al realizar la solicitud en obtenerRespuestas:",
+                //     error
+                // );
+            }
+            return [];
+        }
+
+        // Crear la tabla si no existe
+        tabla = document.createElement("table");
+        tabla.style.width = "90%";
+        tabla.style.borderCollapse = "collapse";
+
+        // Agregar encabezado (opcional)
+        encabezado = document.createElement("tr");
+        encabezado.innerHTML = `
+                <th style="text-align: center; padding: 5px;">#</th>
+                <th style="text-align: left; padding: 15px;">Sección</th>
+                <th style="text-align: center; padding: 5px;">%</th>
+            `;
+        tabla.appendChild(encabezado);
+
+        // Llenar la tabla con datos
+        // let porceCumpli = ((puntosTotales - (10 * ctddRespondidos)) / ((respuestas[0].maximo) - 290)) * 100;
+        // porceCumpli = parseFloat(porceCumpli.toFixed(2));
+        let porceCumpli;
+
+        let fila = document.createElement("tr");
+        fila.classList.add("situacion2");
+
+        fila.innerHTML = `
+                    <td style="padding: 10px;">I</td>
+                    <td style="text-align: left; padding: 10px; font-size: 18px">Análisis FODA y evaluación de riesgos</td>
+                    <td style="text-align: center; padding: 10px;">${porceCumpli}</td>
+                `;
+        tabla.appendChild(fila);
+
+        porceCumpli = ((10 * ctddRespondidos) / 290 * 100);
+        porceCumpli = parseFloat(porceCumpli.toFixed(2));
+
+        fila = document.createElement("tr");
+        fila.classList.add("situacion2");
+
+        fila.innerHTML = `
+                    <td style="padding: 10px;">II</td>
+                    <td style="text-align: left; padding: 10px; font-size: 18px">Planificación estratégica</td>
+                    <td style="text-align: center; padding: 10px;">${porceCumpli}</td>
+                `;
+        tabla.appendChild(fila);
+
+        otraPagina.appendChild(tabla);
+
+        contenido.appendChild(otraPagina);
+
+        console.log("pagina. Riesgos de Mercado")
+
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Añadir -  Riesgos de procesos
+        // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        otraPagina = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "3.4. Manejo de los Riesgos de los Procesos";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '3mm';
+        otraPagina.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "Se han formulado <strong>276 declaraciones</strong>, distribuidas en 20 secciones temáticas, con el propósito de evaluar su nivel de implementación, cumplimiento o adhesión dentro de la organización.  El resultado de esta evaluación se presenta en el porcentaje alcanzado.";
+        otraPagina.appendChild(parrafo);
+
+
+        // crea la tabla de totales por capitulo
+        capitulo = "D";
+        // secciones = await leerSecciones(idioma, capitulo);
+        // respuestas = await leerRespuestas(CUIT, capitulo);
+
+
+        // Crear la tabla si no existe
+        tabla = document.createElement("table");
+        tabla.style.width = "90%";
+        tabla.style.borderCollapse = "collapse";
+
+        // Agregar encabezado (opcional)
+        encabezado = document.createElement("tr");
+        encabezado.innerHTML = `
+                <th style="text-align: center; padding: 5px;">#</th>
+                <th style="text-align: left; padding: 15px;">Sección</th>
+                <th style="text-align: center; padding: 5px;">%</th>
+            `;
+        tabla.appendChild(encabezado);
+
+        // Llenar la tabla con datos
+        // for (const secc of secciones.records) {
+        //     const porceCumpli = respuestas.records.find(c => c.seccion === secc.seccion)?.porcentaje || 999;
+        //     if (porceCumpli === 999) { continue };
+        //     const fila = document.createElement("tr");
+        //     fila.classList.add("situacion2");
+
+        //     // const color = porceCumpli < 60.0 ? 'red' : 'black'; // Podés elegir otro color si querés
+        //     const color = 'black'; // Podés elegir otro color si querés
+
+        //     fila.innerHTML = `
+        //         <td style="height: 10px; padding: 0px 5px; font-size: 17px; line-height: 1.9;">${secc.seccionromano}</td>
+        //         <td style="text-align: left; font-size: 16px; padding: 0px 5px; line-height: 1.9; color: ${color};">${secc.descripcion}</td>
+        //         <td style="text-align: center; font-size: 16px; padding: 0px 5px; line-height: 1.9; color: ${color};">${porceCumpli}</td>
+        //     `;
+        //     tabla.appendChild(fila);
+        // }
+
+        otraPagina.appendChild(tabla);
+        contenido.appendChild(otraPagina);
+
+        console.log("pagina. Riesgos de Procesos")
+
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Añadir FINANCIERO ⛔
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        otraPagina = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "3.5.  Situación Financiera";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '5mm';
+        otraPagina.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "Se han formulado 10 declaraciones, con el propósito de evaluar la siuación financiera de la empresa.  El resultado de esta evaluación se presenta en las cifras obtenidas.";
+        otraPagina.appendChild(parrafo);
+
+        // Crear la tabla 
+        tabla = document.createElement("table");
+        tabla.style.width = "90%";
+        tabla.style.borderCollapse = "collapse";
+
+        // Agregar encabezado 
+        encabezado = document.createElement("tr");
+        encabezado.innerHTML = `
+                <th style="text-align: center; padding: 5px;">Indicador</th>
+                <th style="text-align: left; padding: 15px;">Resultado</th>
+                <th style="text-align: center; padding: 5px;">Calificación</th>
+            `;
+        tabla.appendChild(encabezado);
+
+        // Llenar la tabla con datos
+        fila = document.createElement("tr");
+        fila.classList.add("situacion2");
+
+        // 🔔 copia rutina de ME-1  🔔
+        respuestas = [];
+        capitulo = "E";
+        // const CUIT = localStorage.getItem("CUIT");
+        let datoParaMirar;
+        let maximo = 200;
+        let puntaje = 0;
+        let totalScore = 0;
+        let porcientoFormateado = 0;
+
+        async function iniciarProceso() {
+            try {
+                respuestas = await leerRespuestas(CUIT, capitulo);
+                datoParaMirar = respuestas.records[0];
+
+                await realizaCalculos(datoParaMirar);
+            }
+            catch (error) {
+                console.error("Error en la función autoinvocada:", error);
+            }
+        };
+
+        // await iniciarProceso();
+
+        async function leerRespuestas(CUIT, capitulo) {
+            try {
+                const response = await fetch(
+                    `/busca-respuesta-capitulo?CUIT=${CUIT}&capitulo=${capitulo}`
+                );
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.exists) {
+                        return { exists: true, records: result.records };
+                    }
+                } else {
+                    console.error(`Sin respuesta para lectura seccion en capitulo ${capitulo} en buscaRespuesta`);
+                }
+            } catch (error) {
+                console.error("Error al realizar la solicitud en buscaRespuesta:", error);
+            }
+            return { exists: false };
+        }
+
+        async function realizaCalculos() {
+            totalScore = 0;
+            let puntos = 0;
+            let texto;
+
+            let primero = (datoParaMirar.respuesta[0] / datoParaMirar.respuesta[1]).toFixed(2);
+            if (primero > 1) {
+                texto = "Muy bueno";
+                puntos = 20;
+            } else if (primero == 1) {
+                texto = "Bueno";
+                puntos = 15;
+            } else if (primero > 0, 5 && primero < 1) {
+                texto = "Malo";
+                puntos = 10;
+            } else {
+                texto = "Muy malo";
+                puntos = 5;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">1. Capital de trabajo</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = datoParaMirar.respuesta[2];
+            compara = (datoParaMirar.respuesta[14] / datoParaMirar.respuesta[8] * 100).toFixed(2);
+            if (primero > compara) {
+                texto = "Muy bueno";
+                puntos = 20;
+            } else if (primero > 0 && primero <= compara) {
+                texto = "Bueno";
+                puntos = 15;
+            } else if (primero == 0) {
+                texto = "Malo";
+                puntos = 10;
+            } else {
+                texto = "Muy malo";
+                puntos = 5;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">2. Flujo de fondos derivados de las operaciones</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = (datoParaMirar.respuesta[3] / datoParaMirar.respuesta[4]).toFixed(2);
+            if (primero > 2) {
+                texto = "Muy bueno";
+                puntos = 16;
+            } else if (primero > 1 && primero <= 2) {
+                texto = "Bueno";
+                puntos = 12;
+            } else if (primero > 0, 5 && primero <= 1) {
+                texto = "Malo";
+                puntos = 8;
+            } else {
+                texto = "Muy malo";
+                puntos = 4;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">3. Índice de cobertura de intereses</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = datoParaMirar.respuesta[5] + datoParaMirar.respuesta[6];
+            if (primero < 70) {
+                texto = "Muy bueno";
+                puntos = 24;
+            } else if (primero >= 70 && primero < 140) {
+                texto = "Bueno";
+                puntos = 18;
+            } else if (primero >= 140 && primero < 210) {
+                texto = "Malo";
+                puntos = 12;
+            } else {
+                texto = "Muy malo";
+                puntos = 6;
+            }
+            totalScore += puntos
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">4. Ciclo de conversión de caja</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = ((datoParaMirar.respuesta[7] / datoParaMirar.respuesta[8]) * 360).toFixed(2);
+            if (primero < 30) {
+                texto = "Muy bueno";
+                puntos = 24;
+            } else if (primero >= 30 && primero < 60) {
+                texto = "Bueno";
+                puntos = 18;
+            } else if (primero >= 60 && primero < 90) {
+                texto = "Malo";
+                puntos = 12;
+            } else {
+                texto = "Muy malo";
+                puntos = 6;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">5. Días de venta en la calle</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = ((datoParaMirar.respuesta[9] / datoParaMirar.respuesta[10]) * 360).toFixed(2);
+            if (primero > 90) {
+                texto = "Muy bueno";
+                puntos = 24;
+            } else if (primero > 60 && primero <= 90) {
+                texto = "Bueno";
+                puntos = 18;
+            } else if (primero > 30 && primero <= 60) {
+                texto = "Malo";
+                puntos = 12;
+            } else {
+                texto = "Muy malo";
+                puntos = 6;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">6. Días de deuda en la calle</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = ((datoParaMirar.respuesta[11] / datoParaMirar.respuesta[12]) * 360).toFixed(2);
+            if (primero < 40) {
+                texto = "Muy bueno";
+                puntos = 16;
+            } else if (primero >= 40 && primero < 80) {
+                texto = "Bueno";
+                puntos = 12;
+            } else if (primero >= 80 && primero < 120) {
+                texto = "Malo";
+                puntos = 8;
+            } else {
+                texto = "Muy malo";
+                puntos = 4;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">7. Rotación de inventarios</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = ((datoParaMirar.respuesta[1] / datoParaMirar.respuesta[13]) * 100).toFixed(2);
+            if (primero < 100) {
+                texto = "Muy bueno";
+                puntos = 16;
+            } else if (primero >= 100 && primero < 150) {
+                texto = "Bueno";
+                puntos = 12;
+            } else if (primero >= 150 && primero < 200) {
+                texto = "Malo";
+                puntos = 8;
+            } else {
+                texto = "Muy malo";
+                puntos = 4;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">8. Índice Deuda/Capital</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = ((datoParaMirar.respuesta[0] / datoParaMirar.respuesta[1]) * 100).toFixed(2);
+            if (primero > 150) {
+                texto = "Muy bueno";
+                puntos = 24;
+            } else if (primero <= 150 && primero > 0) {
+                texto = "Bueno";
+                puntos = 18;
+            } else if (primero == 0) {
+                texto = "Malo";
+                puntos = 12;
+            } else {
+                texto = "Muy malo";
+                puntos = 6;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">9. Liquidez</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = (((datoParaMirar.respuesta[0] - datoParaMirar.respuesta[11]) / datoParaMirar.respuesta[1]) * 100).toFixed(2);
+            if (primero > 120) {
+                texto = "Muy bueno";
+                puntos = 16;
+            } else if (primero >= 0 && primero <= 120) {
+                texto = "Bueno";
+                puntos = 12;
+            } else if (primero == 0) {
+                texto = "Malo";
+                puntos = 8;
+            } else {
+                texto = "Muy malo";
+                puntos = 4;
+            }
+            totalScore += puntos;
+            // document.getElementById("liquidezSeca-Sco").textContent = puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">10. Liquidez seca</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            otraPagina.appendChild(tabla);
+            contenido.appendChild(otraPagina);
+
+        }
+        console.log("pagina. Situación Financiera")
+
+        // otraPagina.appendChild(tabla);
+        // contenido.appendChild(otraPagina);
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Añadir GENERACION DE RESULTADOS  ⛔
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        otraPagina = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "3.6.  Generación de Resultados";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '5mm';
+        otraPagina.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.4';
+        parrafo.innerHTML = "Se han formulado 8 declaraciones, con el propósito de evaluar los resultados de la empresa. El resultado de esta evaluación se presenta en las cifras obtenidas";
+        otraPagina.appendChild(parrafo);
+
+        // Crear la tabla si no existe
+        tabla = document.createElement("table");
+        tabla.style.width = "90%";
+        tabla.style.borderCollapse = "collapse";
+
+        // Agregar encabezado (opcional)
+        encabezado = document.createElement("tr");
+        encabezado.innerHTML = `
+                <th style="text-align: center; padding: 5px;">Indicador</th>
+                <th style="text-align: left; padding: 15px;">Resultado</th>
+                <th style="text-align: center; padding: 5px;">Calificación</th>
+            `;
+        tabla.appendChild(encabezado);
+
+        otraPagina.appendChild(tabla);
+        contenido.appendChild(otraPagina);
+
+        fila = document.createElement("tr");
+        fila.classList.add("situacion2");
+
+        // Llenar la tabla con datos
+
+        // 🔔 copia rutina de MF-1  🔔
+        respuestas = [];
+        capitulo = "F";
+        // const CUIT = localStorage.getItem("CUIT");
+        datoParaMirar = [];
+        maximo = 220;
+        puntaje = 0;
+        totalScore = 0;
+        porcientoFormateado = 0;
+
+        async function iniciarProcesoResultados() {
+            try {
+                respuestas = await leerRespuestas(CUIT, "E");
+                datoParaMirar = respuestas.records[0];
+
+                respuestasF = await leerRespuestas(CUIT, "F")
+                datoParaMirarF = respuestasF.records[0];
+
+                await realizaCalculosResultados(datoParaMirar, datoParaMirarF);
+            }
+            catch (error) {
+                console.error("Error en la función autoinvocada:", error);
+            }
+        };
+
+        // await iniciarProcesoResultados();
+
+        async function realizaCalculosResultados(datoParaMirar, datoParaMirarF) {
+            totalScore = 0;
+            let puntos = 0;
+            let texto;
+
+            let primero = ((datoParaMirarF.respuesta[0] - datoParaMirarF.respuesta[1]) / datoParaMirarF.respuesta[1] * 100).toFixed(2);
+            if (primero > 80) {
+                texto = "Alto";
+                puntos = 30;
+            } else if (primero > 0 && primero <= 80) {
+                texto = "Medio Alto";
+                puntos = 23;
+            } else if (primero == 0) {
+                texto = "Medio Bajo";
+                puntos = 15;
+            } else {
+                texto = "Bajo";
+                puntos = 8;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">1. Evolución de los ingresos</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            if (primero > 60) {
+                texto = "Alto";
+                puntos = 20;
+            } else if (primero > 0 && primero <= 60) {
+                texto = "Medio Alto";
+                puntos = 15;
+            } else if (primero == 0) {
+                texto = "Medio Bajo";
+                puntos = 10;
+            } else {
+                texto = "Bajo";
+                puntos = 5;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">2. Margen bruto</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = ((datoParaMirarF.respuesta[3] / datoParaMirar.respuesta[8]) * 100).toFixed(2);
+            if (primero > 30) {
+                texto = "Alto";
+                puntos = 40;
+            } else if (primero > 0 && primero <= 30) {
+                texto = "Medio Alto";
+                puntos = 30;
+            } else if (primero == 0) {
+                texto = "Medio Bajo";
+                puntos = 20;
+            } else {
+                texto = "Bajo";
+                puntos = 10;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">3. Margen neto</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = ((datoParaMirar.respuesta[14] / datoParaMirar.respuesta[8]) * 100).toFixed(2);
+            if (primero > 40) {
+                texto = "Alto";
+                puntos = 40;
+            } else if (primero > 0 && primero <= 40) {
+                texto = "Medio Alto";
+                puntos = 30;
+            } else if (primero == 0) {
+                texto = "Medio Bajo";
+                puntos = 20;
+            } else {
+                texto = "Bajo";
+                puntos = 10;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">4. Utilidad antes de intereses, impuestos, depreciación y amortización (EBITDA)</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = ((datoParaMirarF.respuesta[3] / datoParaMirar.respuesta[13]) * 100).toFixed(2);
+            if (primero > 20) {
+                texto = "Alto";
+                puntos = 30;
+            } else if (primero > 0 && primero <= 20) {
+                texto = "Medio Alto";
+                puntos = 23;
+            } else if (primero == 0) {
+                texto = "Medio Bajo";
+                puntos = 15;
+            } else {
+                texto = "Bajo";
+                puntos = 8;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">5. Rendimiento sobre el Capital (ROE)</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            primero = ((datoParaMirarF.respuesta[3] / datoParaMirar.respuesta[0]) * 100).toFixed(2);
+            if (primero > 40) {
+                texto = "Alto";
+                puntos = 20;
+            } else if (primero > 0 && primero <= 40) {
+                texto = "Medio Alto";
+                puntos = 15;
+            } else if (primero == 0) {
+                texto = "Medio Bajo";
+                puntos = 10;
+            } else {
+                texto = "Bajo";
+                puntos = 5;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">6. Rendimiento sobre los Activos (ROA)</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            primero = ((datoParaMirarF.respuesta[3] / datoParaMirarF.respuesta[0] * 100).toFixed(2));
+            if (primero > 40) {
+                texto = "Alto";
+                puntos = 20;
+            } else if (primero > 0 && primero <= 40) {
+                texto = "Medio Alto";
+                puntos = 15;
+            } else if (primero == 0) {
+                texto = "Medio Bajo";
+                puntos = 10;
+            } else {
+                texto = "Bajo";
+                puntos = 5;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">7. Rendimiento sobre las Ventas (ROA)</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            fila = document.createElement("tr");
+            fila.classList.add("situacion2");
+            primero = ((datoParaMirarF.respuesta[4] / datoParaMirar.respuesta[8]) * 100).toFixed(2);
+            if (primero > 20) {
+                texto = "Alto";
+                puntos = 20;
+            } else if (primero > 0 && primero <= 20) {
+                texto = "Medio Alto";
+                puntos = 15;
+            } else if (primero == 0) {
+                texto = "Medio Bajo";
+                puntos = 10;
+            } else {
+                texto = "Bajo";
+                puntos = 5;
+            }
+            totalScore += puntos;
+            fila.innerHTML = `
+                    <td style="text-align: left; padding: 10px; font-size: 18px">8. Resultados extraordinarios</td>
+                    <td style="text-align: center; padding: 10px;">${primero}</td>
+                    <td style="text-align: center; padding: 10px;">${texto}</td>
+                `;
+            tabla.appendChild(fila);
+
+            otraPagina.appendChild(tabla);
+            contenido.appendChild(otraPagina);
+        }
+
+        // otraPagina.appendChild(tabla);
+        // contenido.appendChild(otraPagina);
+
+        console.log("pagina. Generación de Resultados")
+
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Añadir pagina de DIAGNOSTICO ⛔
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        const cuartaPagina = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "4. Diagnóstico";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '5mm';
+        cuartaPagina.appendChild(parrafo);
+
+        parrafo2 = document.createElement('p');
+        parrafo2.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo2.style.fontSize = '13pt';
+        parrafo2.style.lineHeight = '1.5';
+        parrafo2.style.fontStyle = 'normal'; // Agregar estilo itálico
+        parrafo2.innerHTML = "De acuerdo con la información cargada por <strong><span class='company-name' style='font-size: 16px'>" + empresa + "</span></strong> y a los parámetros del Modelo HexaRCi, la compañía <strong><span class='company-name' style='font-size: 16px'>" + empresa + " </span></strong> es una compañía calificada preliminarmente como tipo:"
+        cuartaPagina.appendChild(parrafo2);
+
+        const resultado = document.createElement('p');
+        resultado.innerHTML = tipificacion;
+        resultado.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        resultado.style.fontSize = '16pt';
+        resultado.style.fontWeight = 'bold';
+        resultado.style.textAlign = 'center';
+        resultado.style.marginTop = '7mm';
+        cuartaPagina.appendChild(resultado);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.5';
+        parrafo.innerHTML = "<strong><span class='company-name' style='font-size: 16px'>" + empresa + "</span></strong>" + textoTipificacion;
+        cuartaPagina.appendChild(parrafo);
+
+        contenido.appendChild(cuartaPagina);
+
+        console.log("pagina. Diagnóstico")
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Añadir la quinta página dibujo hexagono ⛔
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+        const quintaPagina = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "5. Representación gráfica";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '5mm';
+        quintaPagina.appendChild(parrafo);
+
+        function crearContenidoPDF() {
+
+            // Crear canvas para el hexágono
+            const hexagonoCanvas = document.createElement('canvas');
+            hexagonoCanvas.id = 'hexagonoPDF';
+            hexagonoCanvas.width = 600;
+            hexagonoCanvas.height = 600;
+            hexagonoCanvas.style.maxWidth = '100%';
+            hexagonoCanvas.style.height = 'auto';
+
+            // Contexto del canvas
+            const ctx = hexagonoCanvas.getContext('2d');
+
+            // Variables para el hexágono
+            // const var1 = 59.91, var2 = 89.50, var3 = 59.09, var4 = 72.64, var5 = 63.00, var6 = 41.36;
+            // const variablesHexagono = [var1, var2, var3, var4, var5, var6];
+            const variablesHexagono = [];
+
+            const rotulosHexagono = [
+                'Gobierno Corporativo',
+                'Apetito Riesgo',
+                'Riesgos Mercado',
+                'Riesgos Procesos',
+                'Situación Financiera',
+                'Generación Resultados'
+            ];
+
+            const centerX = hexagonoCanvas.width / 2;
+            const centerY = hexagonoCanvas.height / 2;
+            const radioMax = 190;
+            const radio90 = radioMax * 0.9;
+            const radio70 = radioMax * 0.7;
+            const radio50 = radioMax * 0.5;
+
+            ctx.clearRect(0, 0, hexagonoCanvas.width, hexagonoCanvas.height);
+
+            // Dibujar hexágonos de fondo
+            function dibujarHexagonoFondo(radio, color, strokeColor) {
+                ctx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    const angulo = (i * Math.PI) / 3;
+                    const x = centerX + radio * Math.cos(angulo);
+                    const y = centerY + radio * Math.sin(angulo);
+
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                ctx.closePath();
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.strokeStyle = strokeColor;
+                ctx.stroke();
+            }
+
+            // Dibujar hexágonos de fondo
+            dibujarHexagonoFondo(radioMax, 'rgba(173, 216, 230, 0.7)', 'black');
+            dibujarHexagonoFondo(radio90, 'rgba(0, 255, 0, 0.7)', 'green');
+            dibujarHexagonoFondo(radio70, 'rgba(255, 255, 0, 0.7)', 'yellow');
+            dibujarHexagonoFondo(radio50, 'rgba(255, 0, 0, 0.9)', 'red');
+
+            // Dibujar líneas desde el centro
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angulo = (i * Math.PI) / 3;
+                const x = centerX + radioMax * Math.cos(angulo);
+                const y = centerY + radioMax * Math.sin(angulo);
+
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = 'gray';
+            ctx.stroke();
+
+            // Dibujar área de variables
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angulo = (i * Math.PI) / 3;
+                const porcentaje = variablesHexagono[i] / 100;
+                const radio = radioMax * porcentaje;
+                const x = centerX + radio * Math.cos(angulo);
+                const y = centerY + radio * Math.sin(angulo);
+
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(0, 150, 255, 0.7)';
+            ctx.fill();
+            ctx.strokeStyle = 'blue';
+            ctx.stroke();
+
+            // Agregar valores de variables
+            ctx.font = '15px Arial, strong';
+            ctx.fillStyle = 'black';
+            variablesHexagono.forEach((valor, i) => {
+                const angulo = (i * Math.PI) / 3;
+                const porcentaje = valor / 100;
+                const radioTexto = radioMax * porcentaje * 0.9;
+                const xTexto = centerX + radioTexto * Math.cos(angulo);
+                const yTexto = centerY + radioTexto * Math.sin(angulo);
+                ctx.fillText(`${valor}%`, xTexto - 15, yTexto + 5);
+            });
+
+            // Agregar rótulos
+            ctx.font = '15px Arial, strong';
+            ctx.fillStyle = 'black';
+            rotulosHexagono.forEach((rotulo, i) => {
+                const angulo = (i * Math.PI) / 3;
+                const xRotulo = centerX + (radioMax + 20) * Math.cos(angulo);
+                const yRotulo = centerY + (radioMax + 20) * Math.sin(angulo);
+                const palabras = rotulo.split(' ');
+
+                if (i === 3) {
+                    ctx.fillText(palabras[0], xRotulo - 45, yRotulo - 5);
+                    ctx.fillText(palabras[1], xRotulo - 45, yRotulo + 14);
+                } else {
+                    ctx.fillText(palabras[0], xRotulo - 18, yRotulo - 5);
+                    ctx.fillText(palabras[1], xRotulo - 18, yRotulo + 14);
+                }
+            });
+
+            // Contenedor para la imagen del canvas
+            const canvasContainer = document.createElement('div');
+            canvasContainer.style.width = '100%';
+            canvasContainer.style.display = 'flex';
+            canvasContainer.style.justifyContent = 'center';
+            canvasContainer.style.marginTop = '20px';
+
+            // Convertir canvas a imagen
+            const imagenHexagono = document.createElement('img');
+            imagenHexagono.src = hexagonoCanvas.toDataURL('image/png');
+            imagenHexagono.style.maxWidth = '100%';
+            imagenHexagono.style.height = 'auto';
+
+            canvasContainer.appendChild(imagenHexagono);
+            quintaPagina.appendChild(canvasContainer);
+            // contenido.appendChild(quintaPagina);
+
+            return contenido;
+        }
+
+        crearContenidoPDF();
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.5';
+        parrafo.innerHTML = "Si cada factor alcanzare el 100% se conformaría un 'Hexágono perfecto' y de esa manera <strong><span class='company-name' style='font-size: 16px'> " + empresa + "</span></strong> se constituiría en una empresa competitiva de acuerdo con el Modelo HexaRCi.<br><br>Consecuentemente se debe construir una estrategia de mejora adaptada a las características y particularidades de <strong><span class='company-name' style='font-size: 16px'> " + empresa + "</span></strong>, de forma que mediante un proceso de mejora continua en el manejo de los riesgos se la prepare para ir alcanzando el 'Hexágono Perfecto'";
+        quintaPagina.appendChild(parrafo);
+
+        contenido.appendChild(quintaPagina);
+        console.log("pagina. Hexágono")
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Añadir la sexta pagina presenta mejoras ⛔
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        const sextaPagina = crearPaginaConMarco();
+
+        parrafo = document.createElement('p');
+        parrafo.innerHTML = "6. Oportunidades de mejora para " + empresa + ".";
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '16pt';
+        parrafo.style.fontWeight = 'bold';
+        parrafo.style.textAlign = 'left';
+        parrafo.style.marginTop = '5mm';
+        sextaPagina.appendChild(parrafo);
+
+        parrafo = document.createElement('p');
+        parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        parrafo.style.fontSize = '13pt';
+        parrafo.style.lineHeight = '1.5';
+        parrafo.innerHTML = "El análisis realizado a través del Sistema HEXARCi mediante la valoración otorgada a cada declaración, ha permitido identificar diversas oportunidades de mejora.<br><br>Mediante la implantación de dichas oportunidades se logrará reducir la brecha entre la situación actual de <strong><span class='company-name' style='font-size: 16px'>" + empresa + "</span></strong> y el estado ideal, mejorando en el futuro su  desempeño económico-financiero y su competitividad.";
+        sextaPagina.appendChild(parrafo);
+
+        contenido.appendChild(sextaPagina);
+
+        console.log("pagina. Recomendaciones")
+
+
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        // ⛔ Añadir paginas con mejoras ⛔
+        // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+        // capitulos = await leeCapitulos();
+
+        let alturaMaxima = 40;
+        // let alturaActual = 0;
+
+        // for (const capitulo of capitulos) {
+
+        //     //  ⛔ interrumpe el proceso ⛔
+        //     // break;
+
+        //     if (capitulo.letra == "E" || capitulo.letra == "F") {
+        //         continue;
+        //     }
+
+        //     let alturaActual = 0;
+
+        //     matrizPreguntas = await recuperarPreguntas(capitulo.letra);
+
+        //     let mejorasPagina = crearPaginaConMarco();
+
+        //     parrafo = document.createElement('p');
+        //     parrafo.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+        //     parrafo.style.fontSize = '16pt';
+        //     parrafo.style.fontWeight = 'bold';
+        //     parrafo.style.textAlign = 'center';
+        //     parrafo.style.marginTop = '5mm';
+        //     parrafo.innerHTML = `Factor: ${capitulo.nombre}`;  // Crear el título del capítulo :::::::::::
+        //     mejorasPagina.appendChild(parrafo);
+
+        //     parrafo = document.createElement('p');
+        //     parrafo.style.marginTop = '15px';
+        //     parrafo.style.fontSize = '13pt';
+        //     parrafo.innerHTML = 'Las declaraciones presentadas a continuación han sido informadas como incumplidas o no cumplidas satisfactoriamente: ';
+        //     mejorasPagina.appendChild(parrafo);
+
+        //     // Busca las respuestas de ese capítulo
+        //     const data = await buscaRespuesta(CUIT, capitulo.letra);
+        //     const respuestas = data.respuestas || []; // Si no hay respuestas, asigna un array vacío
+
+        //     // Crear el encabezado (seccion):::::::::::::::::::::::::::
+        //     for (const respuesta of respuestas) {
+        //         if (respuesta.porcentaje > max) { // descarta capitulo
+        //             continue;
+        //         }
+
+        //         const existeTipo = matrizPreguntas.some(
+        //             (p) =>
+        //                 p.Capitulo == respuesta.capitulo &&
+        //                 p.Seccion == respuesta.seccion &&
+        //                 (p.tipo == 1 || p.tipo == 52)
+        //         );
+
+        //         if (!existeTipo) { // No hay 1 o 52 en matrizPreguntas para seccion
+        //             continue; // Salta a la siguiente iteración del bucle
+        //         }
+
+        //         const indice = respuesta.seccion;
+        //         const descripcion = await obtenerNombreSeccion(
+        //             indice,
+        //             idioma,
+        //             capitulo.letra
+        //         );
+
+        //         const descripcionElemento = document.createElement('div');
+        //         descripcionElemento.style.fontSize = "15px";
+        //         descripcionElemento.style.borderRadius = "8px";
+        //         descripcionElemento.style.marginTop = "15px"; // Agrega espacio arriba
+        //         descripcionElemento.style.padding = "10px"; // Espacio interno entre el borde y el texto
+
+        //         if (capitulo.letra == "A") {
+        //             descripcionElemento.style.backgroundColor = "#FAF0E6";
+        //         }
+        //         if (capitulo.letra == "B") {
+        //             descripcionElemento.style.backgroundColor = "#F0E68C";
+        //         }
+        //         if (capitulo.letra == "C") {
+        //             descripcionElemento.style.backgroundColor = "#D3D3D3";
+        //         }
+        //         if (capitulo.letra == "D") {
+        //             descripcionElemento.style.backgroundColor = "#F0F8FF";
+        //         }
+        //         descripcionElemento.innerHTML = "[ " + respuesta.porcentaje + " % ]  -  Sección: " + respuesta.seccion + ". " + descripcion;
+        //         mejorasPagina.appendChild(descripcionElemento);
+
+        //         // Obtener la altura real del elemento después de agregarlo al DOM
+        //         // let alturaElemento = descripcionElemento.offsetHeight;
+        //         // console.log(`altura titulo ${alturaElemento}`)
+        //         // alturaActual += alturaElemento;
+
+        //         alturaActual += 3;
+        //         // alturaActual = 0;
+
+        //         // Crear el cuerpo de la tabla::::::::::::::::::::::::::::::
+        //         let info = respuesta.seccion;
+        //         let preguntasSeccion = matrizPreguntas.filter( //  Filtra las preguntas para la seccion seleccionada
+        //             (pregunta) => pregunta.Seccion == info
+        //         );
+
+        //         // itera por todas las preguntas filtradas
+        //         for (const pregunta of preguntasSeccion) {
+        //             let filaSeccion = document.createElement("tr");
+        //             filaSeccion.classList.add("situacion2");
+
+        //             let filaRespuesta = document.createElement("div");
+        //             filaRespuesta.classList.add("situacion2");
+
+        //             let renglon = document.createElement("div");
+        //             renglon.textContent = pregunta.Numero + " - " + pregunta.Descrip;
+        //             renglon.style.marginLeft = "15px"; // Agrega espacio 
+        //             renglon.style.marginTop = "5px"; // Agrega espacio 
+        //             filaRespuesta.appendChild(renglon);
+
+        //             poneRespuesta(respuesta, pregunta).then((texto) => {
+        //                 if (
+        //                     (pregunta.tipo == "52" && (texto == "No efectivo" || texto == "Poco efectivo")) ||
+        //                     (pregunta.tipo == "1" && texto == "NO")) {
+        //                     mejorasPagina.appendChild(filaRespuesta);
+
+        //                     const textoCompleto = renglon.textContent || renglon.innerText;
+        //                     const lineasEstimadas = estimarLineasPorCaracteres(textoCompleto, 80);
+        //                     alturaActual += lineasEstimadas;
+        //                 }
+
+        //                 function estimarLineasPorCaracteres(texto, caracteresPromedioPorLinea) {
+        //                     const textoPlano = texto.replace(/<[^>]*>/g, '');
+        //                     return Math.ceil(textoPlano.length / caracteresPromedioPorLinea);
+        //                 }
+
+        //                 // Si la altura acumulada excede el límite, crear nueva hoja
+        //                 if (alturaActual >= alturaMaxima) {
+        //                     mejorasPagina = crearPaginaConMarco();
+        //                     alturaActual = 0; // Reiniciar el contador de altura
+        //                 };
+        //             })
+        //             contenido.appendChild(mejorasPagina);
+        //         }
+        //     }
+        // }
+        // console.log("pagina. Fin del Informe")
+
+        // Generar PDF directamente
+        await html2pdf().from(contenido).set(opciones).save("Informe HexaRCi.pdf")
+            .catch(error => {
+                console.error("Error generando PDF:", error);
+            });
+
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("formularioFinal").style.display = "none";
+        document.getElementById("formularioSaludo").style.display = "block";
+    }
+
+    // ⚽ Crea pagina con marco ⚽⚽⚽⚽⚽⚽⚽⚽⚽⚽⚽⚽⚽⚽
+
+    function crearPaginaConMarco(textoLateral, numeroPagina, marcaElemento, clienteElemento) {
+        const pagina = document.createElement('div');
+        pagina.style.padding = '10mm';
+        pagina.style.margin = '10mm';
+        pagina.style.border = '2px solid #007BFF'; // #1E90FF (azul dodger) #007BFF (azul bootstrap) #3399FF (azul claro)
+        pagina.style.boxShadow = '0 0 10mm rgba(0,0,0,0.1)'; // Sombra suave
+        pagina.style.minHeight = '240mm';
+        pagina.style.borderRadius = '5mm';
+        pagina.style.position = 'relative'; // Para posicionar elementos internos
+        pagina.style.pageBreakAfter = 'always'; // Salto de página después
+        numPagina++;
+        numeroPagina = numPagina;
+        marcaElemento = "BDT Advisory";
+        clienteElemento = empresa;
+        textoLateral = "Autoevaluación"
+        // Si se proporciona texto lateral
+        if (textoLateral) {
+            const textoLateralElemento = document.createElement('div');
+            textoLateralElemento.textContent = textoLateral;
+            textoLateralElemento.style.position = 'absolute';
+            textoLateralElemento.style.left = '85%'; // centrado horizontalmente
+            textoLateralElemento.style.top = '-3%'; // centrado verticalmente
+            textoLateralElemento.style.transform = 'translateX(-50%, -50%)';
+            textoLateralElemento.style.transformOrigin = 'left center';
+            // textoLateralElemento.style.bottom = '-200px'; // Ajusta este valor según necesites
+            textoLateralElemento.style.whiteSpace = 'nowrap';
+            textoLateralElemento.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+            textoLateralElemento.style.fontSize = '10pt';
+            textoLateralElemento.style.color = '#666'; // Color gris para mayor visibilidad
+            // textoLateralElemento.style.opacity = '0.8'; // Semi-transparente
+
+            pagina.appendChild(textoLateralElemento);
+        }
+
+        // Número de página
+        if (numeroPagina !== undefined) {
+            const paginaNumero = document.createElement('div');
+            paginaNumero.textContent = `Página ${numeroPagina}`;
+            paginaNumero.style.position = 'absolute';
+            paginaNumero.style.left = '50%';
+            paginaNumero.style.transform = 'translateX(-50%)';
+            paginaNumero.style.bottom = '-20px'; // Ajusta según necesites
+            paginaNumero.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+            paginaNumero.style.fontSize = '10pt';
+            paginaNumero.style.color = '#666';
+
+            pagina.appendChild(paginaNumero);
+
+        }
+        //  marca BDT Advisory
+        if (marcaElemento !== undefined) {
+            const marca = document.createElement('div');
+            marca.textContent = marcaElemento;
+            marca.style.position = 'absolute';
+            marca.style.left = '10%';
+            marca.style.transform = 'translateX(-50%)';
+            marca.style.bottom = '-20px'; // Ajusta según necesites
+            marca.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+            marca.style.fontSize = '10pt';
+            marca.style.color = '#666';
+
+            pagina.appendChild(marca);
+        }
+
+        if (clienteElemento !== undefined) {
+            const cliente = document.createElement('div');
+            cliente.textContent = clienteElemento;
+            cliente.style.position = 'absolute';
+            cliente.style.top = '-3%'; // centrado verticalmente
+            cliente.style.left = '10%';
+            cliente.style.transform = 'translateX(-50%)';
+            cliente.style.bottom = '-20px'; // Ajusta según necesites
+            cliente.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
+            cliente.style.fontSize = '10pt';
+            cliente.style.color = '#666';
+
+            pagina.appendChild(cliente);
+        }
+
+        return pagina;
+    }
+    // ⚽⚽⚽
+
+
+    /* ----------------------------------------- */
+    /*           lee Capitulos
+    /* ----------------------------------------- */
+    async function leeCapitulos() {
+        try {
+            const respuesta = await fetch(`/capitulos?idioma=${idioma}`);
+            if (respuesta.ok) {
+                const capitulos = await respuesta.json();
+                return capitulos;
+            } else {
+                console.error("Error al obtener los datos");
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud:", error);
+        }
+        return false;
+    }
+
+    // -----------------------------------------
+    //   recuperarPreguntas          
+    /* ----------------------------------------- */
+    async function recuperarPreguntas(capitulo) {
+        try {
+            let url = "/preguntas";
+            if (capitulo !== null) {
+                url += `?capitulo=${encodeURIComponent(capitulo)}`;
+            }
+
+            const response = await fetch(url);
+            if (response.ok) {
+                const result = await response.json(); // Procesa la respuesta como JSON
+                // console.log("termino lectura preguntas");
+                return Array.isArray(result) ? result : []; // Asegura devolver un arreglo
+            } else {
+                console.error("Error al obtener las preguntas:", response.statusText);
+                return [];
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud:", error);
+            return [];
+        }
+    }
+
+    /* -----------------------------------------
+    //     buscaRespuesta    
+    /* ----------------------------------------- */
+    async function buscaRespuesta(CUIT, capitulo) {
+        try {
+            const response = await fetch(
+                `/busca-respuesta-capitulo-ordenado?CUIT=${CUIT}&capitulo=${capitulo}`
+            );
+            if (!response.ok) {
+                throw new Error("Respuesta no OK de buscaRespuesta");
+            }
+
+            const resultado = await response.json();
+            return { exists: resultado.exists, respuestas: resultado.records || [] };
+        } catch (error) {
+            console.error("Error al realizar la solicitud en buscaRespuesta:", error);
+            return { exists: false, respuestas: [] };
+        }
+    }
+
+    /* -----------------------------------------
+    obtenerNombreSeccion
+    /* ----------------------------------------- */
+    async function obtenerNombreSeccion(indice, idioma, capitulo) {
+        try {
+            const response = await fetch(
+                `/secciones?indice=${indice}&idioma=${idioma}&capitulo=${capitulo}`
+            );
+            if (!response.ok) {
+                throw new Error(`Error en la solicitud: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            if (data.length > 0) {
+                return data[0].descripcion;
+            } else {
+                return "Descripción no disponible";
+            }
+        } catch (error) {
+            console.error(
+                `para leer indice ${indice}, idioma ${idioma}, capitulo ${capitulo}`
+            );
+            console.error("Error al obtener la descripción:", error);
+            return "Descripción no disponible";
+        }
+    }
+
+    /* -----------------------------------------
+    poneRespuesta
+    /* ----------------------------------------- */
+    async function poneRespuesta(respuesta, pregunta) {
+        // recupera la respuesta segun el numero de pregunta....;
+        const registroRespuestasSeccion = respuesta; //es el arreglo de respuestas para todas las preguntas de la seccion)
+        let arrayRespuestas = registroRespuestasSeccion.respuesta;
+
+        valorRespuesta = arrayRespuestas[pregunta.Numero - 1]; // resta 1 por la posición 0
+
+        // segun el tipo de respuesta (en pregunta.tipo) se convierte para mostrar
+        // tipo 1:  1: si,  2: no
+        if (pregunta.tipo == 1) {
+            if (valorRespuesta == 1) {
+                return "SI";
+            } else {
+                return "NO";
+            }
+        }
+
+        if (pregunta.tipo == 3) {
+            return valorRespuesta;
+        }
+
+        if (pregunta.tipo == 51) {
+            const registroTextoRespuestas = textoRespuestas.find(
+                (item) => item.pregunta == pregunta.tipo
+            );
+            return registroTextoRespuestas.textos[valorRespuesta - 1];
+        }
+
+        if (pregunta.tipo > 50) {
+            try {
+                const registroTextoRespuestas = textoRespuestas.find(
+                    (registro) => registro.pregunta === pregunta.tipo
+                );
+                if (!registroTextoRespuestas) {
+                    console.error(
+                        `No se encontró un registro con pregunta igual a ${pregunta.tipo}`
+                    );
+                }
+                valorRespuesta = arrayRespuestas[pregunta.Numero - 1]; // resta 1 por la posición 0
+                if (valorRespuesta == "9") {
+                    return "No aplica";
+                } else {
+                    const texto = registroTextoRespuestas.textos[valorRespuesta - 1];
+                    return texto;
+                }
+            } catch (error) {
+                console.error("Error procesando bloque para pregunta.tipo > 50:", error);
+            }
+        }
+
+        if (pregunta.tipo > 40 && pregunta.tipo < 50) {
+            let indicesCheck = 0;
+            const registroTextoCheck = textoCheck.find(
+                (item) => item.pregunta == pregunta.tipo
+            );
+            if (!registroTextoCheck) {
+                console.log(
+                    "No se encontró ninguna fila con la pregunta:",
+                    pregunta.tipo
+                );
+                return;
+            }
+            valorRespuesta = arrayRespuestas[pregunta.Numero - 1]; // resta 1 por la posición 0
+            const valoresTextoCheck = registroTextoCheck.textos;
+            // console.log(`registro Respuestas seccion  ${registroRespuestasSeccion.respuesta}`);
+            if (pregunta.tipo == 42 || pregunta.tipo == 43) {
+                arrayRespuestas = registroRespuestasSeccion.respuesta;
+            } else {
+                arrayRespuestas = registroRespuestasSeccion.respuesta[6];
+            }
+            // console.log(`array rsepuestas  ${arrayRespuestas}`)
+            let conjunto = "";
+            arrayRespuestas.forEach((indice, i) => {
+                const texto = valoresTextoCheck[indice - 1]; // Obtener el texto correspondiente al índice
+                if (i > 0) {
+                    conjunto += ", "; // Agregar una coma y un espacio antes de cada texto (excepto el primero)
+                }
+                conjunto += texto;
+            });
+            return conjunto;
+        }
+    }
+
+    /* -----------------------------------------
+    leeTextoCheck          
+    /* ----------------------------------------- */
+    async function leeTextoCheck() {
+        try {
+            const response = await fetch("/textocheck");
+            if (response.ok) {
+                const result = await response.json();
+                return Array.isArray(result) ? result : []; // Asegura devolver un arreglo
+            } else {
+                console.error("Error al obtener las preguntas:", response.statusText);
+                return [];
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud:", error);
+            return [];
+        }
+    }
+
+    /* -----------------------------------------
+    leeTextoRespuestas         
+    /* ----------------------------------------- */
+    async function leeTextoRespuestas() {
+        try {
+            const response = await fetch("/textorespuestas");
+            if (response.ok) {
+                const result = await response.json();
+                // console.log("Datos recibidos de /textorespuestas:", result); // Verifica la estructura aquí
+                return Array.isArray(result) ? result : []; // Asegura devolver un arreglo
+            } else {
+                console.error("Error al obtener las preguntas:", response.statusText);
+                return [];
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud:", error);
+            return [];
+        }
+    }
+
+
+    // :::::::::::::::::::::::::::::::::::::::::::::::
+    //                                  leeCapitulos
+    // :::::::::::::::::::::::::::::::::::::::::::::::
+    async function leeCapitulos() {
+        try {
+            const respuesta = await fetch(`/capitulos?idioma=${idioma}`);
+            if (respuesta.ok) {
+                const capitulos = await respuesta.json();
+                return capitulos;
+            } else {
+                console.error("Error al obtener los datos");
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud:", error);
+        }
+        return false;
+    }
+
+    // :::::::::::::::::::::::::::::::::::::::::::::::
+    //                          obtenerTotalCapitulos
+    // :::::::::::::::::::::::::::::::::::::::::::::::
+    async function obtenerTotalCapitulos(CUIT) {
+        try {
+            const response = await fetch(`/totalCapitulos?CUIT=${CUIT}`);
+            if (response.ok) {
+                const data = await response.json();
+                return data; // Devuelve los datos obtenidos si la respuesta es exitosa
+            } else {
+                console.error(
+                    "Error en la respuesta:",
+                    response.status,
+                    response.statusText
+                );
+                return null;
+            }
+        } catch (error) {
+            console.error("Error en la solicitud:", error);
+            return null;
+        }
+    }
+
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //                  leerSecciones
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    async function leerSecciones(idioma, capitulo) {
+        try {
+            const response = await fetch(`/secciones?idioma=${idioma}&capitulo=${capitulo}`);
+            if (response.ok) {
+                const seccionRec = await response.json(); //registro seccion recibido en formato JSON
+                return { exists: true, records: seccionRec };
+            } else {
+                console.error("Error al obtener los datos");
+                return [];
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud:", error);
+        }
+        return false;
+    }
+
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //             leerRespuestas
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    async function leerRespuestas(CUIT, capitulo) {
+        try {
+            // console.time("Tiempo de busca Respuesta cuit, capit");
+            const response = await fetch(
+                `/busca-respuesta-capitulo?CUIT=${CUIT}&capitulo=${capitulo}`
+            );
+            if (response.ok) {
+                const result = await response.json();
+                if (result.exists) {
+                    return { exists: true, records: result.records };
+                }
+            } else {
+                console.error(`Sin respuesta para lectura seccion en capitulo ${capitulo} en buscaRespuesta`);
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud en buscaRespuesta:", error);
+        }
+        return { exists: false };
+    }
+
+
+
+</script>
+
+</html>
