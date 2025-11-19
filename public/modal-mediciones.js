@@ -1,8 +1,10 @@
 
-async function mostrarModalMediciones(ind, codigo, nombre) {
+async function mostrarModalMediciones(ind, codigo, nombre, frecuencia) {
     // Completa datos del indicador
     document.getElementById('med-codigo').textContent = codigo || '-';
     document.getElementById('med-nombre').textContent = nombre || '-';
+    const freq_medicion = CodigosService.getNombreCodigo(frecuencia);
+    document.getElementById('med-freq').textContent = freq_medicion || '-';
 
     const tbody = document.getElementById('tablaMediciones');
     tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">Cargando datos...</td></tr>`;

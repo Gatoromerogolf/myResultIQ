@@ -411,7 +411,9 @@
 
 
 
-                    <div id="alertaCondicional" class="card border-warning mb-3 col-md-12 mt-4 d-flex align-items-center" style="display: none;">
+                    <div id="alertaCondicional"
+                        class="card border-warning mb-3 col-md-12 mt-4 d-flex align-items-center"
+                        style="display: none;">
                         <div class="row g-0 align-items-center">
                             <div class="col-auto p-4">
                                 <div class="d-flex align-items-center">
@@ -436,33 +438,36 @@
                         </div>
                     </div>
 
-                       <!-- Modal de Información para revisar Valoración % -->
-    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="infoModalLabel">¿Por qué aparece esta advertencia?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    Esta advertencia aparece porque alguna modificación en los destinos o indicadores (agregado, eliminación o modificación de valores), ha
-                    provocado que la valoración porcentual no totalice el 100% por nivel.<br>
-                    Podés consultar los indicadores afectados en el detalle.
-                </div>
-                <div class="modal-footer">
-                    <!-- Botón a la izquierda con link -->
-                    <a href="kpi-ponderado.html" class="btn btn-primary">
-                        Ir a Valoración %
-                    </a>
+                    <!-- Modal de Información para revisar Valoración % -->
+                    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="infoModalLabel">¿Por qué aparece esta advertencia?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Cerrar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Esta advertencia señala que alguna modificación en los destinos o indicadores
+                                    (agregado, eliminación o modificación de valores), ha
+                                    provocado que la valoración porcentual no totalice el 100% por nivel.<br>
+                                    Se pueden consultar los indicadores afectados en el detalle, en el siguiente botón.
+                                </div>
+                                <div class="modal-footer">
+                                    <!-- Botón a la izquierda con link -->
+                                    <a href="kpi-ponderado.html" class="btn btn-primary">
+                                        Ir a Valoración %
+                                    </a>
 
-                    <!-- Botón de cerrar a la derecha -->
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cerrar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+                                    <!-- Botón de cerrar a la derecha -->
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Cerrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
 
 
@@ -967,7 +972,7 @@
                                             <h5 class="mb-2 d-flex align-items-center flex-wrap" style="gap: 6px;">
                                                 <i class="fa fa-question-circle"></i>
                                                 <label for="valorCorteCriticos" class="mb-0 fw-semibold text-gray-700">
-                                                    Indicadores sin última medición informada
+                                                    Indicadores sin medición informada
                                                 </label>
                                             </h5>
                                             <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
@@ -2782,7 +2787,7 @@
 
                                         <!-- 🗃️ Mediciones -->
                                         <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
-                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' )">
+                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}')">
                                             <i class="fas fa-database text-success"></i>
                                         </button>
                                     </div>
@@ -3520,13 +3525,17 @@
                 const ultima = await getUltimaMedicionPorIndicador(ind.id);
                 const siguienteMedicion = getSiguienteMedicion(ultima, ind.freq_medicion);
                 let vigencia;
-                if (periodo > siguienteMedicion) {
-                    vigencia = "Demorado";
-                } else if (periodo < siguienteMedicion) {
-                    vigencia = "ok";
+                if (ind.freq_medicion == '0210') { // si es eventual, siempre ok
+                    vigencia = "ok"
                 } else {
-                    vigencia = "Al día";   // si son iguales, opcional
-                }
+                    if (periodo > siguienteMedicion) {
+                        vigencia = "Demorado";
+                    } else if (periodo < siguienteMedicion) {
+                        vigencia = "ok";
+                    } else {
+                        vigencia = "Al día";   // si son iguales, opcional
+                    }
+                };
                 const sector = await obtenerSectoresPorUnidad(ind.destino);
                 const ultimaMedicion = ultima ? ultima.med_valor : null;
                 const porcentaje = ultimaMedicion !== null ? (ultimaMedicion / ind.unico_valor * 100).toFixed(1) : null;
@@ -3553,6 +3562,7 @@
                     unidad_medida: ind.unidad_medida,   // código
                     unidad_desc: unidad || '',          // descripción
                     ultima_medicion: ultimaMedicion,
+                    freq_medicion: ind.freq_medicion,
                     porcentaje,
                     resultado,
                     peso: ind.peso_porcentual,
@@ -3681,7 +3691,7 @@
 
                             <!-- 🗃️ Mediciones -->
                             <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
-                                onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' )">
+                                onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}')">
                                 <i class="fas fa-database text-success"></i>
                             </button>
                         </td>
@@ -3743,7 +3753,7 @@
 
                             <!-- 🗃️ Mediciones -->
                             <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
-                                onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' )">
+                                onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' , '${ind.freq_medicion}')">
                                 <i class="fas fa-database text-success"></i>
                             </button>
                         </td>
@@ -3891,7 +3901,7 @@
 
                                         <!-- 🗃️ Mediciones -->
                                         <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
-                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' )">
+                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}')">
                                             <i class="fas fa-database text-success"></i>
                                         </button>
                                         </td>
@@ -4159,47 +4169,71 @@
                         if (nm > 12) { nm = 1; ny = year + 1; }
                         return `${ny}${String(nm).padStart(2, '0')}`;
                     }
-                    case '05': { // bimestral (1..6) -> AAAAB
+                    case '05': { // bimestral (1..6) -> AAAABB
                         const s = String(ultimaMed.med_valor_periodo);
                         const year = parseInt(s.slice(0, 4), 10);
                         const b = parseInt(s.slice(4), 10);
-                        let nb = b + 1;
+                        // let nb = b + 1;
+                        // let ny = year;
+                        // if (nb > 6) { nb = 1; ny = year + 1; }
+                        // return `${ny}${nb}`;
+                        // lleva la expresión al numero de mes
+                        // bimestre 1 = cubre hasta el mes 2
+                        // bimestre 2 = cubre hasta el mes 4
+                        // sigte al 2 = 3 => mes 6:  AAAA06 Si estoy en AAAA07 esta demorado.
+                        // o sea si actual > proxima => demorado
+                        let nb = (b + 1) * 2;  // calcula siguiente bimestre y lo lleva al mes
                         let ny = year;
-                        if (nb > 6) { nb = 1; ny = year + 1; }
+                        if (nb > 12) { nb = 2; ny = year + 1; }
                         return `${ny}${nb}`;
                     }
                     case '06': { // trimestral (1..4)
                         const s = String(ultimaMed.med_valor_periodo);
                         const year = parseInt(s.slice(0, 4), 10);
                         const t = parseInt(s.slice(4), 10);
-                        let nt = t + 1;
+                        // let nt = t + 1;
+                        // let ny = year;
+                        // if (nt > 4) { nt = 1; ny = year + 1; }
+                        // return `${ny}${nt}`;
+                        let nt = (t + 1) * 3;
                         let ny = year;
-                        if (nt > 4) { nt = 1; ny = year + 1; }
+                        if (nt > 12) { nt = 3; ny = year + 1; }
                         return `${ny}${nt}`;
                     }
                     case '07': { // cuatrimestral (1..3)
                         const s = String(ultimaMed.med_valor_periodo);
                         const year = parseInt(s.slice(0, 4), 10);
                         const c = parseInt(s.slice(4), 10);
-                        let nc = c + 1;
+                        // let nc = c + 1;
+                        // let ny = year;
+                        // if (nc > 3) { nc = 1; ny = year + 1; }
+                        // return `${ny}${nc}`;
+                        let nc = (c + 1) * 4;
                         let ny = year;
-                        if (nc > 3) { nc = 1; ny = year + 1; }
+                        if (nc > 12) { nc = 4; ny = year + 1; }
                         return `${ny}${nc}`;
                     }
                     case '08': { // semestral (1..2)
                         const s = String(ultimaMed.med_valor_periodo);
                         const year = parseInt(s.slice(0, 4), 10);
                         const sem = parseInt(s.slice(4), 10);
-                        let nsem = sem + 1;
+                        // let nsem = sem + 1;
+                        // let ny = year;
+                        // if (nsem > 2) { nsem = 1; ny = year + 1; }
+                        // return `${ny}${nsem}`;
+                        let nsem = (sem + 1) * 6;
                         let ny = year;
-                        if (nsem > 2) { nsem = 1; ny = year + 1; }
+                        if (nsem > 12) { nsem = 6; ny = year + 1; }
                         return `${ny}${nsem}`;
                     }
-                    case '09':
-                    case '10': { // anual -> siguiente año
+                    case '09': { // anual -> siguiente año
                         const s = String(ultimaMed.med_valor_periodo);
                         const year = parseInt(s.slice(0, 4), 10);
                         return String(year + 1);
+                    }
+                    case '10': {
+                        const s = String(ultimaMed.med_valor_periodo);
+                        return `${s}`;
                     }
                     default:
                         return null;
