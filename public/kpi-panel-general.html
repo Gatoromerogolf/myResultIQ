@@ -409,31 +409,29 @@
                         </div>
                     </div>
 
-
-
-                    <div id="alertaCondicional"
+                    <!-- <div id="alertaCondicional"
                         class="card border-warning mb-3 col-md-12 mt-4 d-flex align-items-center"
                         style="display: none;">
-                        <div class="row g-0 align-items-center">
-                            <div class="col-auto p-4">
-                                <div class="d-flex align-items-center">
+                        <div class="row g-0 align-items-center"> -->
+                    <div id="alertaCondicional" class="card border-warning mb-3 col-md-12 mt-4" style="display:none;">
+                        <div class="d-flex align-items-center justify-content-center p-4">
+                            <div class="d-flex align-items-center">
 
-                                    <!-- Imagen -->
-                                    <img src="https://cdn-icons-png.flaticon.com/512/463/463612.png" alt="Alerta"
-                                        style="width: 40px; height: 40px;" class="me-3">
+                                <!-- Imagen -->
+                                <img src="https://cdn-icons-png.flaticon.com/512/463/463612.png" alt="Alerta"
+                                    style="width: 40px; height: 40px;" class="me-3">
 
-                                    <!-- Texto -->
-                                    <div class="card-body p-0">
-                                        <p class="card-text mb-0">
-                                            <a href="kpi-ponderado.html" class="nav-link d-inline">
-                                                Revisar <strong>Valoración %</strong> por entidad y/o indicador.
-                                            </a>
-                                            <i class="bi bi-info-circle-fill text-primary ms-2" role="button"
-                                                data-bs-toggle="modal" data-bs-target="#infoModal"></i>
-                                        </p>
-                                    </div>
-
+                                <!-- Texto -->
+                                <div class="card-body p-0">
+                                    <p class="card-text mb-0">
+                                        <a href="kpi-ponderado.html" class="nav-link d-inline">
+                                            Revisar <strong>Valoración %</strong> por entidad y/o indicador.
+                                        </a>
+                                        <i class="bi bi-info-circle-fill text-primary ms-2" role="button"
+                                            data-bs-toggle="modal" data-bs-target="#infoModal"></i>
+                                    </p>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -774,7 +772,8 @@
                                                         <p class="mb-1"><strong>Descripción:</strong> <span
                                                                 id="descripcionGraf"></span></p>
                                                         <p class="mb-0"><strong>Meta:</strong> <span
-                                                                id="metaGraf"></span></p>
+                                                                id="metaGraf"></span>
+                                                        </p>
                                                     </div>
                                                     <!-- <div
                                                                     class="card-tools d-flex align-items-start ms-auto">
@@ -3599,10 +3598,14 @@
             fetch(API_URL)
                 .then(response => response.json())
                 .then(data => {
+                    console.log("DATA RECIBIDA:", data);
                     if (data.success && data.valor == 1) {
+                        console.log("🟢 Valor = 1 → mostrar alerta");
                         document.getElementById('alertaCondicional').style.display = 'block';
                     } else {
+                        console.log("🔵 Valor distinto de 1 → ocultar alerta");
                         document.getElementById('alertaCondicional').style.display = 'none';
+
                     }
                 })
                 .catch(error => {
