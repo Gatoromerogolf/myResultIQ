@@ -55,90 +55,152 @@
 
     /* Estilos de página (cada .page será una hoja A4 cuando se exporte a PDF) */
     .page {
-      background: white;
-      /* hoja */
       width: 210mm;
-      /* A4 */
-      min-height: 297mm;
-      /* A4 */
-      margin: 0 auto 12px auto;
-      padding: 25mm 18mm 18mm 18mm;
-      /* top right bottom left */
+      height: 297mm;
+      /* Fijar exactamente una A4 */
+      background: white;
+      margin: 0;
       position: relative;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
       overflow: hidden;
+      /* evita cortes extra */
     }
 
-    /* Encabezado y pie fijos en cada .page (se renderizan con cada hoja) */
-    .page .header {
+    /* MARCO INTERNO */
+    .marco {
+      border: 2px solid #007BFF;
+      border-radius: 5mm;
+      padding: 12mm;
+      margin: 20mm 12mm 20mm 12mm;
+      /* margen interno superior / inferior */
+      height: calc(297mm - 40mm);
+      /* altura real útil */
+      box-sizing: border-box;
+    }
+
+    /* Contenido */
+    .content {
+      overflow: hidden;
+      /* evita “spill” */
+    }
+
+    .marco,
+    .content,
+    table,
+    h2,
+    p {
+      page-break-inside: avoid;
+    }
+
+    /* Header / Footer */
+    .header {
       position: absolute;
-      top: 12mm;
-      left: 18mm;
-      right: 18mm;
-      height: 14mm;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 6px;
+      top: 5mm;
+      left: 10mm;
+      right: 10mm;
+      text-align: center;
     }
 
-    .page .footer {
+    .footer {
+      position: absolute;
+      bottom: 5mm;
+      left: 10mm;
+      right: 10mm;
+      text-align: center;
+    }
+
+    /* === PORTADA PREMIUM === */
+    .cover-page {
+      padding: 0 !important;
+      position: relative;
+      overflow: hidden;
+      background-size: cover !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Overlay degradado premium */
+    .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,
+          rgba(0, 0, 0, 0.65) 0%,
+          rgba(0, 0, 0, 0.30) 40%,
+          rgba(0, 0, 0, 0.55) 100%);
+      z-index: 1;
+    }
+
+    /* Contenedor central */
+    .cover-content {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40mm 25mm 30mm 25mm;
+      text-align: center;
+    }
+
+    /* Logo */
+    .cover-logocomun {
+      width: 25mm;
+      opacity: 0.95;
+      margin-bottom: 20mm;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cover-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 30mm;
+      /* si querés ajustarlo */
+      opacity: 0.95;
+    }
+
+    /* Títulos */
+    .cover-title {
+      font-size: 34pt;
+      font-weight: 700;
+      margin-bottom: 10mm;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.55);
+    }
+
+    .cover-subtitle {
+      font-size: 20pt;
+      font-weight: 500;
+      margin-bottom: 3mm;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.45);
+    }
+
+    /* RESUMEN EJECUTIVO */
+    .cover-resumen {
+      margin-top: 18mm;
+      font-size: 14pt;
+      font-weight: 300;
+      line-height: 1.55;
+      text-align: justify;
+      padding: 0 5mm;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Pie */
+    .cover-bottom {
       position: absolute;
       bottom: 12mm;
-      left: 18mm;
-      right: 18mm;
-      height: 14mm;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      border-top: 1px solid #eee;
-      padding-top: 6px;
-    }
-
-    /* Contenido principal (entre header y footer) */
-    .content {
-      padding-top: 28mm;
-      padding-bottom: 22mm
-    }
-
-    /* Portada */
-    .cover-hero {
-      height: 140mm;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
+      left: 0;
+      width: 100%;
       text-align: center;
-      padding: 24px;
-      border-radius: 6px;
-      background: linear-gradient(180deg, rgba(31, 120, 255, 0.06), rgba(31, 120, 255, 0.02));
-    }
-
-    .cover-hero img {
-      max-width: 60%;
-      height: auto;
-      opacity: 0.95
-    }
-
-    .cover-title {
-      font-family: 'Montserrat';
-      font-size: 28px;
-      margin-top: 18px
-    }
-
-    .cover-sub {
-      font-size: 14px;
-      color: #666;
-      margin-top: 8px
-    }
-
-    .cover-meta {
-      margin-top: 22px;
-      font-size: 12px;
-      color: #444
+      font-size: 12pt;
+      opacity: 0.85;
+      z-index: 3;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.55);
     }
 
     h2.section-title {
@@ -247,7 +309,7 @@
     // Datos de ejemplo (luego los reemplazás por tus datos reales)
     empresa = "SEDRONAR";
     const ejemplo = {
-      titulo: 'Informe de Indicadores - myResultIQ',
+      titulo: 'Informe de Indicadores',
       subtitulo: 'Gestión, seguimiento y análisis de métricas organizacionales',
       fecha: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }),
       autor: 'Área de Gestión de Indicadores',
@@ -281,99 +343,160 @@
       const page = document.createElement('section');
       page.className = 'page';
 
-      // header
-      const header = document.createElement('div'); header.className = 'header';
+      // Header (fuera del marco)
+      const header = document.createElement('div');
+      header.className = 'header';
       header.innerHTML = `<div>${ejemplo.titulo}</div><div>${ejemplo.fecha}</div>`;
       page.appendChild(header);
 
-      // footer
-      const footer = document.createElement('div'); footer.className = 'footer';
-      footer.innerHTML = `<div>Generado por: ${ejemplo.autor}</div><div class="page-number">Página</div>`;
-      page.appendChild(footer);
+      // Marco interno
+      const marco = document.createElement('div');
+      marco.className = 'marco';
+      page.appendChild(marco);
 
-      // content
-      const content = document.createElement('div'); content.className = 'content';
-      page.appendChild(content);
+      // Contenido dentro del marco
+      const content = document.createElement('div');
+      content.className = 'content';
+      marco.appendChild(content);
+
+      // Footer (fuera del marco)
+      const footer = document.createElement('div');
+      footer.className = 'footer';
+      footer.innerHTML = `
+    <div>Generado por: ${ejemplo.autor}</div>
+    <div class="page-number">Página</div>
+  `;
+      page.appendChild(footer);
 
       return { page, content };
     }
 
     function buildCover() {
-      const { page, content } = createPage();
-      page.querySelector('.header').style.display = 'none';
-      page.querySelector('.footer').style.display = 'none';
+      const page = document.createElement('section');
+      page.className = 'page cover-page';
 
-      const cover = document.createElement('div');
+      // === Fondo de barras diagonales modernas ===
+      page.style.background = `
+      repeating-linear-gradient(
+        -45deg,
+        #0a2850 0,
+        #0a2850 12mm,
+        #123d80 12mm,
+        #123d80 24mm
+      )
+  `;
+      page.style.backgroundSize = "cover";
 
-      cover.className = 'cover-hero';
-      const primeraPagina = document.createElement('div');
-      primeraPagina.style.width = 'calc(100% - 20mm)'; // Ancho ajustado para márgenes
-      primeraPagina.style.height = '277mm'; // Altura A4 menos márgenes
-      primeraPagina.style.margin = '10mm';
-      // primeraPagina.style.borderRadius = '5mm';
-      primeraPagina.style.border = '1px solid #000';
-      primeraPagina.style.borderRadius = '3mm';
-      // primeraPagina.style.backgroundImage = 'url("../img/imagenEdificios.webp")';
-      primeraPagina.style.backgroundImage = 'url("../dist/images/Fondomy.png")';
-      primeraPagina.style.backgroundSize = 'contain';
-      primeraPagina.style.backgroundPosition = 'center';
-      primeraPagina.style.pageBreakAfter = 'always';
+      // Overlay premium
+      const overlay = document.createElement('div');
+      overlay.className = 'cover-overlay';
+      page.appendChild(overlay);
 
-      const segundaLeyenda = document.createElement('h2');
-      segundaLeyenda.innerHTML = empresa;
-      segundaLeyenda.style.textAlign = 'center';
-      segundaLeyenda.style.fontFamily = 'Abel, Helvetica, Arial, sans-serif';
-      segundaLeyenda.style.fontSize = '35pt';
-      segundaLeyenda.style.color = 'black';
-      segundaLeyenda.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5), -2px -2px 4px rgba(255, 255, 255, 0.3)';
-      segundaLeyenda.style.marginTop = '550px'; // Ajusta según necesites
-      primeraPagina.appendChild(segundaLeyenda);
-      cover.appendChild(primeraPagina);
+      // Contenido central
+      const content = document.createElement('div');
+      content.className = 'cover-content';
 
-      // contenido.appendChild(primeraPagina);
+      // Logo
+      const logo = document.createElement('img');
+      logo.className = 'cover-logo';
+      logo.src = "../dist/images/leon.png";
+      // content.appendChild(logo);
+      page.appendChild(logo);  // ⬅️ importante: no va dentro de cover-content
 
-      // === Fondo dinámico ===
-      // cover.style.width = "100%";
-      // cover.style.height = "100%";  // ocupa toda la hoja A4
-      // cover.style.minHeight = "1300px"; // altura estándar A4 a 96dpi
-      // cover.style.minWidth = "794px";   // ancho estándar A4 a 96dpi
+      // Título principal
+      const title = document.createElement('div');
+      title.className = 'cover-title';
+      title.textContent = ejemplo.titulo;
+      content.appendChild(title);
 
-      // cover.style.backgroundImage = "url('/dist/images/Fondomy.png')";
-      // cover.style.backgroundSize = "cover";
-      // cover.style.backgroundPosition = "center";
-      // cover.style.backgroundPositionX = "100%";
-      // cover.style.backgroundRepeat = "no-repeat";
+      // Subtítulo
+      const subtitle = document.createElement('div');
+      subtitle.className = 'cover-subtitle';
+      subtitle.textContent = ejemplo.subtitulo;
+      content.appendChild(subtitle);
 
-      // cover.style.padding = "80px";   // margen interior para que el texto no toque bordes
-      // cover.style.display = "flex";
-      // cover.style.flexDirection = "column";
-      // cover.style.justifyContent = "center";
-      // cover.style.alignItems = "center";
+      // Resumen ejecutivo
+      const resumen = document.createElement('div');
+      resumen.className = 'cover-resumen';
+      resumen.textContent =
+        "Este informe resume los principales indicadores estratégicos, " +
+        "identifica variaciones críticas y presenta una visión analítica " +
+        "general del desempeño institucional durante el período evaluado. <br>" +
+        "<br><br>" +
+        "Los datos presentados han sido procesados con la plataforma <strong>myResultIQ</strong>, asegurando precisión y trazabilidad en cada etapa del análisis.";
+      content.appendChild(resumen);
 
-      // cover.style.padding = "120px 40px";    // para centrar mejor el contenido
-      // cover.style.textAlign = "center";      // centrar texto
-      // cover.style.color = "#003366";         // buen contraste
-      // cover.style.position = "relative";
+      page.appendChild(content);
 
-      // (opcional) Overlay para mejorar legibilidad
+      // Pie inferior
+      const bottom = document.createElement('div');
+      bottom.className = 'cover-bottom';
+      bottom.textContent = `Generado el ${ejemplo.fecha}`;
+      page.appendChild(bottom);
 
+      documento.appendChild(page);
+    }
 
-  //     cover.innerHTML = `
-  //   <div style="
-  //     position:absolute;
-  //     inset:0;
-  //     background:rgba(255,255,255,0.65);
-  //     backdrop-filter: blur(3px);
-  //   "></div>
+    function buildCover2() {
+      const page = document.createElement('section');
+      page.className = 'page cover-page';
 
-  //   <div style="position:relative; z-index:2;">
-  //     <div class="cover-title">${ejemplo.titulo}</div>
-  //     <div class="cover-sub">${ejemplo.subtitulo}</div>
-  //     <div class="cover-meta">${ejemplo.fecha} — ${ejemplo.autor}</div>
-  //   </div>
-  // `;
+      // === Fondo completo ===
+      page.style.backgroundImage = 'url("../dist/images/Fondomy.png")';
 
-      content.appendChild(cover);
+      // Overlay premium (oscurece apenas para mejorar el contraste del texto)
+      const overlay = document.createElement('div');
+      overlay.className = 'cover-overlay';
+      page.appendChild(overlay);
+
+      // Contenedor central
+      const content = document.createElement('div');
+      content.className = 'cover-content';
+
+      // Logo
+      const logo = document.createElement('img');
+      logo.className = 'cover-logo';
+      logo.src = "../dist/images/leon.png";
+      content.appendChild(logo);
+
+      // Título
+      const title = document.createElement('div');
+      title.className = 'cover-title';
+      title.textContent = "Informe Ejecutivo de Indicadores de Gestión";
+      content.appendChild(title);
+
+      // Subtítulo
+      const subtitle = document.createElement('div');
+      subtitle.className = 'cover-subtitle';
+      subtitle.textContent = "1. Resumen Ejecutivo";
+      content.appendChild(subtitle);
+
+      const subtitle2 = document.createElement('div');
+      subtitle2.className = 'cover-subtitle';
+      subtitle2.textContent =
+        "Este informe presenta una visión general del desempeño global de la organización, destacando los principales indicadores del período y las variaciones más relevantes.";
+      content.appendChild(subtitle2);
+
+      // === RESUMEN EJECUTIVO ===
+      const resumen = document.createElement('div');
+      resumen.className = 'cover-resumen';
+      resumen.innerHTML = `
+    <strong>1.1 Objetivos:</strong><br>
+    • Evaluar el cumplimiento de los KPIs<br>
+    • Analizar tendencias mensuales y anuales<br>
+    • Identificar áreas de mejora operativa<br><br>
+    Los datos presentados han sido procesados con la plataforma <strong>myResultIQ</strong>, asegurando precisión y trazabilidad en cada etapa del análisis.
+  `;
+      content.appendChild(resumen);
+
+      page.appendChild(content);
+
+      // Pie inferior
+      const bottom = document.createElement('div');
+      bottom.className = 'cover-bottom';
+      bottom.textContent = `Versión ${ejemplo.version} · Generado el ${ejemplo.fecha}`;
+      page.appendChild(bottom);
+
       documento.appendChild(page);
     }
 
@@ -476,6 +599,7 @@
     function buildDocument() {
       clearDocument();
       buildCover();
+      buildCover2();
       buildTOC();
       buildResumen();
       buildIndicadoresGlobales();
@@ -491,17 +615,27 @@
 
       // Opciones de html2pdf
       const opt = {
-        margin: [18, 12, 18, 12], // mm [top, left, bottom, right]
+        margin: 0,
         filename: `Informe_myResultIQ_${new Date().toISOString().slice(0, 10)}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
+        html2canvas: {
+          scale: 1.9,
+          useCORS: true,
+          letterRendering: true
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
+        pagebreak: { mode: ['css'] }
       };
+
 
       // html2pdf requiere que el nodo esté en el DOM en algunos navegadores; lo insertamos oculto temporalmente
       const holder = document.createElement('div'); holder.style.position = 'fixed'; holder.style.left = '-9999px'; holder.style.top = '-9999px'; holder.appendChild(node);
       document.body.appendChild(holder);
+
+      node.querySelectorAll('.page').forEach(p => {
+        p.style.boxShadow = 'none';
+      });
+
       try {
         await html2pdf().set(opt).from(node).save();
       } catch (e) {

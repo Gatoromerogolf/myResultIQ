@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carátula Informe</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
+            color: white;
+            height: 297mm;
+            width: 210mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 60px 40px 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo-space {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        h1 {
+            font-size: 42px;
+            margin: 0 0 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 24px;
+            margin: 0;
+            font-weight: 300;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px 60px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            border-left: 5px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section h2 {
+            margin: 0 0 15px;
+            font-size: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #e0e7ff;
+        }
+        
+        .section p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.7;
+            text-align: justify;
+            opacity: 0.95;
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px 60px;
+            text-align: center;
+        }
+        
+        .platform-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 15px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .platform-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .platform-logo {
+            font-size: 18px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .logo-image {
+            height: 60px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+        
+        .date {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+        
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-space">IQ</div>
+        <h1>Informe Ejecutivo</h1>
+        <p class="subtitle">Indicadores de Gestión</p>
+    </div>
+    
+    <div class="content">
+        <div class="section">
+            <h2>📊 Objetivo del Informe</h2>
+            <p>
+                El presente documento tiene como finalidad proporcionar una visión integral y consolidada 
+                del desempeño organizacional a través del análisis de los indicadores clave de gestión (KPIs). 
+                Este informe ejecutivo sintetiza la información del dashboard interactivo en un formato 
+                estructurado, facilitando la toma de decisiones estratégicas basadas en datos cuantitativos 
+                y cualitativos del período analizado.
+            </p>
+        </div>
+        
+        <div class="section">
+            <h2>📋 Alcance y Contenido</h2>
+            <p>
+                Este reporte presenta el resultado del procesamiento sistemático de los indicadores de gestión, 
+                incluyendo métricas de rendimiento, análisis comparativos, tendencias temporales y evaluación 
+                del cumplimiento de objetivos estratégicos. La información aquí consolidada permite realizar 
+                un seguimiento efectivo de las operaciones y evaluar el progreso hacia las metas establecidas.
+            </p>
+        </div>
+        
+        <div class="section">
+            <h2>🎯 Destinatarios</h2>
+            <p>
+                Dirigido a la alta dirección, gerencias de área y stakeholders clave que requieren información 
+                oportuna y precisa para la evaluación del desempeño organizacional y la planificación estratégica.
+            </p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="platform-info">
+            <div class="platform-text">
+                <span>Generado con</span>
+                <div class="platform-logo">myResultIQ</div>
+            </div>
+            <img src="/dist/images/leon.png" alt="Logo" class="logo-image">
+        </div>
+        <div class="divider"></div>
+        <div class="date">
+            <script>
+                document.write(new Date().toLocaleDateString('es-ES', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                }));
+            </script>
+        </div>
+    </div>
+</body>
+</html>
