@@ -203,6 +203,142 @@
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.55);
     }
 
+
+
+    .cover2-page {
+      padding: 0 !important;
+      position: relative;
+      overflow: hidden;
+      background-size: cover !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+      color: rgb(65, 138, 247);
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Overlay degradado premium */
+    .cover2-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,
+          rgba(0, 0, 0, 0.65) 0%,
+          rgba(0, 0, 0, 0.30) 40%,
+          rgba(0, 0, 0, 0.55) 100%);
+      z-index: 1;
+    }
+
+    /* Contenedor central */
+    .cover2-content {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40mm 25mm 30mm 25mm;
+      text-align: center;
+    }
+
+    /* Logo */
+    .cover2-logocomun {
+      width: 25mm;
+      opacity: 0.95;
+      margin-bottom: 20mm;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cover2-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 30mm;
+      /* si querés ajustarlo */
+      opacity: 0.95;
+    }
+
+    /* Títulos */
+    .cover2-title {
+      font-size: 30pt;
+      font-weight: 500;
+      position: absolute;
+      top: 95mm;
+      /* distancia desde arriba */
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+    .cover2-subtitle1 {
+      font-size: 20pt;
+      font-weight: 500;
+      position: absolute;
+      top: 70mm;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+    .cover2-subtitle2 {
+      font-size: 14pt;
+      font-weight: 400;
+      position: absolute;
+      top: 90mm;
+      left: 40mm;
+      right: 40mm;
+      text-align: justify;
+    }
+
+    .cover2-piemyResult {
+      font-size: 12pt;
+      font-weight: 400;
+      position: absolute;
+      top: 220mm;
+      left: 30mm;
+      right: 30mm;
+      text-align: justify;
+    }
+
+    /* RESUMEN EJECUTIVO */
+    .cover2-resumen {
+      margin-top: 18mm;
+      font-size: 14pt;
+      font-weight: 300;
+      line-height: 1.55;
+      text-align: justify;
+      padding: 0 5mm;
+      position: absolute;
+      top: 170mm;
+      /* text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); */
+    }
+
+    /* Pie */
+    .cover2-bottom {
+      position: absolute;
+      bottom: 12mm;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 12pt;
+      opacity: 0.85;
+      z-index: 3;
+      /* text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.55); */
+    }
+
+    .cover2-piemyResult {
+      font-size: 12pt;
+      margin-top: 10mm;
+      text-align: center;
+    }
+
+    .logo-image {
+      width: 20mm;
+      margin-top: 5mm;
+      opacity: 0.9;
+    }
+
     h2.section-title {
       font-family: 'Montserrat';
       font-size: 18px;
@@ -439,62 +575,61 @@
 
     function buildCover2() {
       const page = document.createElement('section');
-      page.className = 'page cover-page';
+      page.className = 'page cover2-page';
 
       // === Fondo completo ===
-      page.style.backgroundImage = 'url("../dist/images/Fondomy.png")';
+      // page.style.backgroundImage = 'url("../dist/images/Fondomy.png")';
+      page.style.backgroundImage = 'url("../dist/images/PortadaAzulBlanca.png")';
 
       // Overlay premium (oscurece apenas para mejorar el contraste del texto)
-      const overlay = document.createElement('div');
-      overlay.className = 'cover-overlay';
-      page.appendChild(overlay);
+      // const overlay = document.createElement('div');
+      // overlay.className = 'cover-overlay';
+      // page.appendChild(overlay);
 
       // Contenedor central
       const content = document.createElement('div');
-      content.className = 'cover-content';
+      content.className = 'cover2-content';
 
       // Logo
       const logo = document.createElement('img');
-      logo.className = 'cover-logo';
+      logo.className = 'cover2-logo';
       logo.src = "../dist/images/leon.png";
       content.appendChild(logo);
 
       // Título
       const title = document.createElement('div');
-      title.className = 'cover-title';
-      title.textContent = "Informe Ejecutivo de Indicadores de Gestión";
+      title.className = 'cover2-title';
+      title.textContent = "Indicadores de Gestión"
       content.appendChild(title);
 
       // Subtítulo
       const subtitle = document.createElement('div');
-      subtitle.className = 'cover-subtitle';
-      subtitle.textContent = "1. Resumen Ejecutivo";
+      subtitle.className = 'cover2-subtitle1';
+      subtitle.textContent = "Informe Ejecutivo";
       content.appendChild(subtitle);
 
       const subtitle2 = document.createElement('div');
-      subtitle2.className = 'cover-subtitle';
+      subtitle2.className = 'cover2-subtitle2';
       subtitle2.textContent =
-        "Este informe presenta una visión general del desempeño global de la organización, destacando los principales indicadores del período y las variaciones más relevantes.";
+        "El presente documento tiene como finalidad proporcionar una visión integral y consolidada del desempeño organizacional a través del análisis de los indicadores clave de gestión (KPIs). Este informe ejecutivo sintetiza la información del dashboard interactivo en un formato estructurado, facilitando la toma de decisiones estratégicas basadas en datos cuantitativos y cualitativos del período analizado.";
       content.appendChild(subtitle2);
 
-      // === RESUMEN EJECUTIVO ===
-      const resumen = document.createElement('div');
-      resumen.className = 'cover-resumen';
-      resumen.innerHTML = `
-    <strong>1.1 Objetivos:</strong><br>
-    • Evaluar el cumplimiento de los KPIs<br>
-    • Analizar tendencias mensuales y anuales<br>
-    • Identificar áreas de mejora operativa<br><br>
-    Los datos presentados han sido procesados con la plataforma <strong>myResultIQ</strong>, asegurando precisión y trazabilidad en cada etapa del análisis.
-  `;
-      content.appendChild(resumen);
+      const piemyResult = document.createElement('div');
+      piemyResult.className = 'cover2-piemyResult';
+      piemyResult.innerHTML = `
+          Los datos de este informe han sido procesados con la plataforma <strong>myResultIQ</strong>,
+          asegurando precisión y trazabilidad en cada etapa del análisis.
+          <br><br>
+          <img src="/dist/images/leon.png" class="logo-image" alt="Logo">
+        `;
+      content.appendChild(piemyResult);
 
       page.appendChild(content);
 
       // Pie inferior
       const bottom = document.createElement('div');
-      bottom.className = 'cover-bottom';
-      bottom.textContent = `Versión ${ejemplo.version} · Generado el ${ejemplo.fecha}`;
+      bottom.className = 'cover2-bottom';
+      bottom.textContent = `· Generado: ${ejemplo.fecha}`;
       page.appendChild(bottom);
 
       documento.appendChild(page);
@@ -512,7 +647,38 @@
         const li = document.createElement('li'); li.textContent = `${i + 1}. ${e}`;
         ul.appendChild(li);
       });
+
       content.appendChild(ul);
+
+      const subtitle2 = document.createElement('div');
+      subtitle2.className = 'cover2-subtitle2';
+      subtitle2.innerHTML =
+        "El presente documento tiene como finalidad proporcionar una visión integral y consolidada del desempeño organizacional a través del análisis de los indicadores clave de gestión (KPIs).<br><br> Este informe ejecutivo sintetiza la información del dashboard interactivo en un formato estructurado, facilitando la toma de decisiones estratégicas basadas en datos cuantitativos y cualitativos del período analizado.<br><br>Este informe resume los principales indicadores estratégicos, identifica variaciones críticas y presenta una visión analítica general del desempeño institucional durante el período evaluado. ";
+      content.appendChild(subtitle2);
+
+
+      const piemyResult = document.createElement('div');
+      piemyResult.className = 'cover2-piemyResult';
+      piemyResult.innerHTML = `
+          Los datos de este informe han sido procesados con la plataforma <strong>myResultIQ</strong>,
+          asegurando precisión y trazabilidad en cada etapa del análisis.
+          <br><br>
+          <img src="/dist/images/leon.png" class="logo-image" alt="Logo">
+        `;
+      content.appendChild(piemyResult);
+
+      // === RESUMEN EJECUTIVO ===
+      const resumen = document.createElement('div');
+      resumen.className = 'cover2-resumen';
+      resumen.innerHTML = `
+        <strong>1.1 Objetivos:</strong><br>
+        • Evaluar el cumplimiento de los KPIs<br>
+        • Analizar tendencias mensuales y anuales<br>
+        • Identificar áreas de mejora operativa<br><br>
+      `;
+      content.appendChild(resumen);
+
+
       documento.appendChild(page);
     }
 
