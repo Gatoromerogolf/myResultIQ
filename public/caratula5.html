@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carátula A4</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Roboto", sans-serif;
+      background: #ccc; /* gris suave para distinguir el A4 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* ---- Hoja A4 exacta ---- */
+    .a4 {
+      width: 794px;
+      height: 1123px;
+      background: white;
+      position: relative;
+      box-shadow: 0 0 12px rgba(0,0,0,0.25);
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ---- Contenido central ---- */
+    .cover-content {
+      text-align: center;
+      margin-top: 80px;  /* Levantamos el bloque */
+      width: 100%;
+    }
+
+    .company-name {
+      font-size: 38px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .separator {
+      width: 65%;
+      height: 3px;
+      background: #444;
+      border-radius: 3px;
+      margin: 0 auto 35px auto;
+    }
+
+    .main-title {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 24px;
+      font-weight: 400;
+      margin-bottom: 40px;
+    }
+
+    .date-label {
+      font-size: 20px;
+      margin-bottom: 5px;
+      margin-top: 15px;
+    }
+
+    .date-value {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .separator-small {
+      width: 40%;
+      height: 2px;
+      background: #777;
+      border-radius: 2px;
+      margin: 12px auto 0 auto;
+    }
+
+    /* ---- Rectángulo inferior con imagen ---- */
+    .rectangle-bg {
+      width: 100%;
+      height: 220px;
+      background-image: url("../dist/images/Fondomy.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: 18px;
+      margin-top: auto;       /* lo empuja al fondo */
+      margin-bottom: 20px;    /* separación inferior */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="a4">
+
+    <div class="cover-content">
+      <div class="company-name" id="empresa">Nombre de la Empresa</div>
+      <div class="separator"></div>
+
+      <div class="main-title">Informe Ejecutivo</div>
+      <div class="subtitle">Indicadores de Gestión</div>
+
+      <div class="date-label">Fecha de confección</div>
+      <div class="date-value" id="fecha"></div>
+      <div class="separator-small"></div>
+    </div>
+
+    <!-- Rectángulo con fondo -->
+    <div class="rectangle-bg"></div>
+
+  </div>
+
+  <script>
+    // Fecha dinámica
+    const hoy = new Date();
+    const fechaFormateada = hoy.toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+    document.getElementById("fecha").textContent = fechaFormateada;
+
+    // Empresa dinámica (ejemplo)
+    document.getElementById("empresa").textContent = "Mi Empresa S.A.";
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Carátula Informe</title>
+
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* VARIABLES */
+        :root {
+            --color-overlay: rgba(0, 0, 0, 0.55);
+            --color-white: #ffffff;
+            --font-title: 'Montserrat', sans-serif;
+            --font-body: 'Roboto', sans-serif;
+        }
+
+        /* HOJA */
+        .page {
+            position: relative;
+            width: 794px;
+            height: 1123px;
+            background-image: url('/dist/images/Fondomy.png');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        /* OVERLAY OSCURO */
+        .cover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-overlay);
+            z-index: 1;
+        }
+
+        /* CONTENIDO INTERNO */
+        .cover-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* DISTRIBUCIÓN PERFECTA */
+            height: 100%;
+            padding: 60px;
+        }
+
+        /* EMPRESA (HEADER) */
+        .cover-header {
+            font-family: var(--font-title);
+            font-size: 28px;
+            color: var(--color-white);
+            font-weight: 700;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* LÍNEA BAJO EMPRESA */
+        .cover-separator {
+            width: 60%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.7);
+            margin: 20px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        /* TÍTULO */
+        .cover-title {
+            margin-top: 60px;
+            text-align: center;
+            color: var(--color-white);
+            font-family: var(--font-title);
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* SUBTÍTULO */
+        .cover-subtitle {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--color-white);
+            font-family: var(--font-title);
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        /* LÍNEA ANTES DE LA FECHA */
+        .cover-separator-footer {
+            width: 40%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            margin: 40px 0 10px auto;
+            border-radius: 2px;
+        }
+
+        /* FECHA */
+        .cover-footer {
+            text-align: right;
+            font-family: var(--font-body);
+            color: var(--color-white);
+            font-size: 18px;
+            padding-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="contenedorPaginas"></div>
+
+    <script>
+        function buildCaratula({
+            empresa = "Nombre de la Empresa",
+            titulo = "Informe Ejecutivo",
+            subtitulo = "Indicadores de Gestión",
+            fecha = ""
+        } = {}) {
+
+            const page = document.createElement("section");
+            page.className = "page";
+
+            /* OVERLAY */
+            const overlay = document.createElement("div");
+            overlay.className = "cover-overlay";
+            page.appendChild(overlay);
+
+            /* CONTENIDO */
+            const content = document.createElement("div");
+            content.className = "cover-content";
+
+            /* EMPRESA */
+            const header = document.createElement("div");
+            header.className = "cover-header";
+            header.textContent = empresa;
+            content.appendChild(header);
+
+            /* SEPARADOR */
+            const sep1 = document.createElement("div");
+            sep1.className = "cover-separator";
+            content.appendChild(sep1);
+
+            /* TÍTULO */
+            const title = document.createElement("div");
+            title.className = "cover-title";
+            title.textContent = titulo;
+            content.appendChild(title);
+
+            /* SUBTÍTULO */
+            const subtitle = document.createElement("div");
+            subtitle.className = "cover-subtitle";
+            subtitle.textContent = subtitulo;
+            content.appendChild(subtitle);
+
+            /* SEPARADOR ANTES DEL FOOTER */
+            const sep2 = document.createElement("div");
+            sep2.className = "cover-separator-footer";
+            content.appendChild(sep2);
+
+            /* FECHA */
+            const footer = document.createElement("div");
+            footer.className = "cover-footer";
+            footer.textContent = fecha || new Date().toLocaleDateString();
+            content.appendChild(footer);
+
+            page.appendChild(content);
+            return page;
+        }
+
+        /* EJEMPLO DE USO */
+        const caratula = buildCaratula({
+            empresa: "myResultIQ",
+            titulo: "Informe Ejecutivo",
+            subtitulo: "Indicadores de Gestión",
+            fecha: "Noviembre 2025"
+        });
+
+        document.querySelector("#contenedorPaginas").appendChild(caratula);
+    </script>
+
+</body>
+
+</html>
