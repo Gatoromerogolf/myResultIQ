@@ -133,6 +133,10 @@ function mostrarNarrativaGlobal(data) {
  * 📊 Muestra las conclusiones generales y por destino
  */
 function mostrarConclusiones(destinos) {
+  console.log("Destinos procesados:", destinos);
+  // console.log("Procesados:", procesados);
+  // console.log("Length:", procesados.length);
+  alert('llego a mostrar conclusiones generales');
   if (!Array.isArray(destinos) || destinos.length === 0) {
     document.getElementById('bloqueConclusiones').innerHTML =
       '<div class="alert alert-warning">No hay datos suficientes para generar conclusiones.</div>';
@@ -202,5 +206,6 @@ function mostrarConclusiones(destinos) {
     `;
 
   const contenedor = document.getElementById('bloqueConclusiones');
+  console.log("Contenedor:", contenedor);
   if (contenedor) contenedor.innerHTML = resumen + tabla;
 }

@@ -274,31 +274,32 @@
             <div class="content-wrapper">
                 <section class="content p-4">
                     <div class="container-fluid">
-                                            <!--begin::Row-->
-                    <!-- 🔹 Barra superior de filtros + Asistente -->
-                    <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
+                        <!--begin::Row-->
+                        <!-- 🔹 Barra superior de filtros + Asistente -->
+                        <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
 
-                        <!-- 🔸 Filtros -->
-                        <div class="d-flex gap-3">
-                            <h3 class="mb-0">Conclusiones generales
-                        </div>
-
-                        <!-- 🔹 Avatar asistente alineado a la derecha -->
-                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
-                            <div style="position: relative;">
-                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
-                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
-                                    title="Haz clic para escuchar la explicación" />
-                                <button id="btnDetenerVoz"
-                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
-                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
-                                    ✕
-                                </button>
+                            <!-- 🔸 Filtros -->
+                            <div class="d-flex gap-3">
+                                <h3 class="mb-0">Conclusiones generales
                             </div>
-                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+
+                            <!-- 🔹 Avatar asistente alineado a la derecha -->
+                            <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                                <div style="position: relative;">
+                                    <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI"
+                                        style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                        title="Haz clic para escuchar la explicación" />
+                                    <button id="btnDetenerVoz"
+                                        style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                        ✕
+                                    </button>
+                                </div>
+                                <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                            </div>
                         </div>
-                    </div>
-                    <!--end::Row-->
+                        <!--end::Row-->
                         <div class="card card-primary card-outline card-shadow">
                             <div class="card-header">
                                 <h3 class="card-title">
@@ -311,6 +312,9 @@
                                 <div id="narrativaGeneral" class="mb-4">
                                     <p>Cargando conclusiones generales...</p>
                                 </div>
+
+                                <div id="bloqueConclusiones" class="my-4"></div>
+
 
                                 <div class="card card-outline card-info mb-4">
                                     <div class="card-header">
@@ -426,7 +430,6 @@
         });
     </script>
 
-    <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
@@ -439,10 +442,6 @@
 
     <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)-->
-
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
 
 
     <!-- apexcharts -->
