@@ -396,6 +396,11 @@
       padding: 12px;
       border-radius: 8px;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      /* apila label arriba y valor abajo */
+      align-items: center;
+      /* centra horizontalmente */
     }
 
     .metric .label {
@@ -719,7 +724,7 @@
       const p1 = document.createElement('div');
       p1.className = 'cover2-intro';
       p1.innerHTML = `
-            <br><br>Estos mecanismos aseguran la trazabilidad, la transparencia analítica y la confiabilidad del sistema de medición, permitiendo construir conclusiones sólidas y comparables en el tiempo.</p>
+            <p>Estos mecanismos aseguran la trazabilidad, la transparencia analítica y la confiabilidad del sistema de medición, permitiendo construir conclusiones sólidas y comparables en el tiempo.</p>
 
             <h4> Evolución y Mejora Continua</h4>
 
@@ -748,7 +753,7 @@
             <br> <br>
               <img src="/dist/images/leon.png" class="logo-image" alt="Logo">
                 `;
-      content1.appendChild(piemyResult);
+      page1.appendChild(piemyResult);
 
       documento.appendChild(page1);
     }
@@ -771,136 +776,118 @@
       documento.appendChild(page);
     }
 
-    function XXXbuildResumen() {
+
+    async function buildResumen() {
       const { page, content } = createPage();
-      const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'Resumen Ejecutivo';
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Resumen Ejecutivo';
       content.appendChild(h);
 
-      const valGlobales = localStorage.getItem('resumenGlobal');
-      const resumenGlobal = JSON.parse(valGlobales);
+      //       const valGlobales = localStorage.getItem('resumenGlobal');
+      //       const resumenGlobal = JSON.parse(valGlobales);
 
-      const metrics = document.createElement('div');
-      metrics.className = 'metrics';
-      const m1 = document.createElement('div');
-      m1.className = 'metric';
-      m1.innerHTML = `<div class="label">Promedio Anual</div><div class="value">${resumenGlobal.promAnual}</div>`;
+      //       const metrics = document.createElement('div');
+      //       metrics.className = 'metrics';
 
-      const m2 = document.createElement('div');
-      m2.className = 'metric';
-      m2.innerHTML = `<div class="label">Promedio Histórico</div><div class="value">${resumenGlobal.promHistorico}</div>`;
+      //       const m1 = document.createElement('div');
+      //       m1.className = 'metric';
+      //       m1.innerHTML = `<div class="label">Promedio Anual</div><div class="value">${resumenGlobal.promAnual}</div>`;
 
-      const m3 = document.createElement('div');
-      m3.className = 'metric';
-      let valor = Number(resumenGlobal.variacion) || 0;  // aseguramos número
-      let color = "black";
-      let textoValor = "";
+      //       const m2 = document.createElement('div');
+      //       m2.className = 'metric';
+      //       m2.innerHTML = `<div class="label">Promedio Histórico</div><div class="value">${resumenGlobal.promHistorico}</div>`;
 
-      // Determinar signo y color
-      if (valor > 0) {
-        textoValor = `+${valor}`;
-        color = "blue";
-      } else if (valor < 0) {
-        textoValor = `${valor}`; // ya incluye el signo "-"
-        color = "red";
-      } else {
-        textoValor = "0";
-        color = "gray"; // opcional
-      }
-      m3.innerHTML = `
-          <div class="label">Δ vs mes anterior</div>
-          <div class="value" style="color:${color}; font-weight:600;">
-              ${textoValor}
-          </div>
-      `;
+      //       const m3 = document.createElement('div');
+      //       m3.className = 'metric';
+      //       let valor = Number(resumenGlobal.variacion) || 0;
+      //       let color = "black";
+      //       let textoValor = "";
+      //       if (valor > 0) { textoValor = `+${valor}`; color = "blue"; }
+      //       else if (valor < 0) { textoValor = `${valor}`; color = "red"; }
+      //       else { textoValor = "0"; color = "gray"; }
 
-      const m4 = document.createElement('div');
-      m4.className = 'metric';
+      //       m3.innerHTML = `<div class="label">Δ vs mes anterior</div>
+      //                      <div class="value" style="color:${color}; font-weight:600;">
+      //                         ${textoValor}
+      //                      </div>`;
 
-      let tendencia = (resumenGlobal.tendencia || "");
-      let colorTendencia = "black";
-      let icono = "";
+      //       const m4 = document.createElement('div');
+      //       m4.className = 'metric';
+      //       let tendencia = (resumenGlobal.tendencia || "");
+      //       let colorTendencia = "black";
+      //       let icono = "";
+      //       if (tendencia === "Creciente%") { colorTendencia = "#007bff"; icono = "🔼"; }
+      //       else if (tendencia === "Decreciente%") { colorTendencia = "#d9534f"; icono = "🔽"; }
+      //       else if (tendencia === "Estable%") { colorTendencia = "#555"; icono = "➖"; }
 
-      // Definir ícono y color según tendencia
-      if (tendencia === "Creciente%") {
-        colorTendencia = "#007bff";  // azul Bootstrap
-        icono = "🔼";                // flecha arriba
-      }
-      else if (tendencia === "Decreciente%") {
-        colorTendencia = "#d9534f";  // rojo Bootstrap
-        icono = "🔽";                // flecha abajo
-      }
-      else if (tendencia === "Estable%") {
-        colorTendencia = "#555";     // gris/negro
-        icono = "➖";                // línea horizontal
-      }
+      //       const textoTendencia = tendencia.charAt(0).toUpperCase() + tendencia.slice(1);
+      //       m4.innerHTML = `<div class="label">Tendencia</div>
+      //                     <div class="value" style="color:${colorTendencia}; font-weight:600; display:flex; align-items:center; gap:6px;">
+      //                         <span>${icono}</span>
+      //                         <span>${textoTendencia}</span>
+      //                     </div>`;
 
-      // Capitalizar la palabra para mostrarla bien
-      const textoTendencia = tendencia.charAt(0).toUpperCase() + tendencia.slice(1);
+      //       metrics.appendChild(m1);
+      //       metrics.appendChild(m2);
+      //       metrics.appendChild(m3);
+      //       metrics.appendChild(m4);
+      //       content.appendChild(metrics);
 
-      m4.innerHTML = `
-    <div class="label">Tendencia</div>
-    <div class="value" style="color:${colorTendencia}; font-weight:600; display:flex; align-items:center; gap:6px;">
-        <span>${icono}</span>
-        <span>${textoTendencia}</span>
-    </div>
-`;
+      // // -----------------------
+      // // Gráfico estilo premium
+      // // -----------------------
+      // const graf = document.createElement('div');
+      // graf.style.marginTop = '20px';
+      // graf.style.display = 'flex';
+      // graf.style.justifyContent = 'center';
 
-      metrics.appendChild(m1);
-      metrics.appendChild(m2)
-      metrics.appendChild(m3);
-      metrics.appendChild(m4);
-      content.appendChild(metrics);
+      // // Recuperamos el PNG generado
+      // const pngBase64 = localStorage.getItem("ringGlobalPNG");
 
-      // ejemplo de grafico simple (placeholder)
-      const graf = document.createElement('div');
-      graf.style.marginTop = '12px';
+      // // Valor real del ring (puede venir de resumenGlobal.globalPercent o calculado previamente)
+      // const valorRing = resumenGlobal.globalPercent || 0;
 
-      // Recuperar el SVG del ring guardado
-      const ringSVG = localStorage.getItem('ringGlobalSVG');
-      if (ringSVG) {
+      // if (pngBase64) {
+      //     graf.innerHTML = `
+      //         <div style="
+      //             width:180px;
+      //             height:180px;
+      //             border-radius:50%;
+      //             background:#fff;
+      //             box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      //             display:flex;
+      //             flex-direction:column;
+      //             align-items:center;
+      //             justify-content:center;
+      //             position:relative;
+      //         ">
+      //             <img src="${pngBase64}" style="width:140px; height:140px; border-radius:50%;">
+      //             <div style="
+      //                 position:absolute;
+      //                 font-size:1.5em;
+      //                 font-weight:700;
+      //                 color:#007bff;
+      //             ">
 
-        // Remover width y height del SVG original
-        let ringReducido = ringSVG
-          .replace(/width="[^"]+"/g, '')
-          .replace(/height="[^"]+"/g, '');
+      //             </div>
+      //         </div>
+      //     `;
+      // } else {
+      //     graf.innerHTML = `
+      //         <div style="height:180px; width:180px; border:1px dashed #ddd; border-radius:50%;
+      //                     display:flex; align-items:center; justify-content:center; color:#999;
+      //                     box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+      //             [Gráfico no disponible]
+      //         </div>
+      //     `;
+      // }
 
-        // Aumentar grosor de la línea (anillo + barra)
-        // Cambia todos los stroke-width existentes por uno nuevo
-        ringReducido = ringReducido.replace(/stroke-width="[^"]+"/g, 'stroke-width="12"');
+      // content.appendChild(graf);
 
-        // Si el SVG no tiene stroke-width, agregamos uno a cada circle
-        ringReducido = ringReducido.replace(
-          /<circle([^>]+)>/g,
-          '<circle$1 stroke-width="12">'
-        );
-
-        // Asegurar que el SVG escale al contenedor
-        ringReducido = ringReducido.replace(
-          /<svg/,
-          '<svg style="width:100%; height:100%;"'
-        );
-
-        graf.innerHTML = `
-    <div style="display:flex; align-items:center; justify-content:center;">
-        <div style="width:150px; height:150px; display:flex;">
-            ${ringReducido}
-        </div>
-    </div>
-  `;
-
-      } else {
-        graf.innerHTML = `
-    <div style="height:140px; border:1px dashed #ddd; border-radius:6px;
-                display:flex; align-items:center; justify-content:center; color:#999;">
-        [Gráfico no disponible]
-    </div>
-  `;
-      }
-
-
-
-      content.appendChild(graf);
-
+      // -----------------------
+      // Texto descriptivo
+      // -----------------------
       const p = document.createElement('p');
 
       const cantSectores = localStorage.getItem('cantSectores');
@@ -919,39 +906,163 @@
         `Este informe Ejecutivo resume las conclusiones de las mediciones registradas en el período comenzado el <strong>99/99/99</strong> y finalizado el <strong>99/99/99</strong>.<br><br>` +
         `Durante este período se han realizado y registrado un total de <strong>${cantMediciones}</strong> mediciones.<br><br>`;
 
-      // ----------------------------
-      // 🔍 Agregar lógica condicional
-      // ----------------------------
-
-      if (cantDemorados == 0 && cantPendientes == 0) {
-        texto +=
-          `Todos los indicadores fueron medidos con la frecuencia establecida y no hay mediciones pendientes para el período definido en este informe.<br><br>`;
+      if (cantDemorados === 0 && cantPendientes === 0) {
+        texto += `Todos los indicadores fueron medidos con la frecuencia establecida y no hay mediciones pendientes para el período definido en este informe.<br><br>`;
       } else {
         const cantAlDia = cantActivos - (cantDemorados + cantPendientes);
-
-        texto +=
-          `Solo <strong>${cantAlDia}</strong> indicadores tienen todas sus mediciones informadas en fecha, ` +
+        texto += `Solo <strong>${cantAlDia}</strong> indicadores tienen todas sus mediciones informadas en fecha, ` +
           `mientras que <strong>${cantActivos - cantAlDia}</strong> presentan mediciones pendientes o fuera de término.<br><br>` +
           `Debido a la ausencia de información completa, los resultados y conclusiones de este informe podrían presentar ` +
           `variaciones respecto de la situación real. La falta de mediciones vigentes puede generar desviaciones en los ` +
           `promedios, tendencias y porcentajes de cumplimiento, por lo que las interpretaciones deben realizarse con ` +
           `precaución.<br><br>`;
-
       }
 
       p.innerHTML = texto;
-
       content.appendChild(p);
+
+
+      //       const metrics = document.createElement('div');
+      //       metrics.className = 'metrics';
+
+      //       const m1 = document.createElement('div');
+      //       m1.className = 'metric';
+      //       m1.innerHTML = `<div class="label">Promedio Anual</div><div class="value">${resumenGlobal.promAnual}</div>`;
+
+      //       const m2 = document.createElement('div');
+      //       m2.className = 'metric';
+      //       m2.innerHTML = `<div class="label">Promedio Histórico</div><div class="value">${resumenGlobal.promHistorico}</div>`;
+
+      //       const m3 = document.createElement('div');
+      //       m3.className = 'metric';
+      //       let valor = Number(resumenGlobal.variacion) || 0;
+      //       let color = "black";
+      //       let textoValor = "";
+      //       if (valor > 0) { textoValor = `+${valor}`; color = "blue"; }
+      //       else if (valor < 0) { textoValor = `${valor}`; color = "red"; }
+      //       else { textoValor = "0"; color = "gray"; }
+
+      //       m3.innerHTML = `<div class="label">Δ vs mes anterior</div>
+      //                      <div class="value" style="color:${color}; font-weight:600;">
+      //                         ${textoValor}
+      //                      </div>`;
+
+      //       const m4 = document.createElement('div');
+      //       m4.className = 'metric';
+      //       let tendencia = (resumenGlobal.tendencia || "");
+      //       let colorTendencia = "black";
+      //       let icono = "";
+      //       if (tendencia === "Creciente%") { colorTendencia = "#007bff"; icono = "🔼"; }
+      //       else if (tendencia === "Decreciente%") { colorTendencia = "#d9534f"; icono = "🔽"; }
+      //       else if (tendencia === "Estable%") { colorTendencia = "#555"; icono = "➖"; }
+
+      //       const textoTendencia = tendencia.charAt(0).toUpperCase() + tendencia.slice(1);
+      //       m4.innerHTML = `<div class="label">Tendencia</div>
+      //                     <div class="value" style="color:${colorTendencia}; font-weight:600; display:flex; align-items:center; gap:6px;">
+      //                         <span>${icono}</span>
+      //                         <span>${textoTendencia}</span>
+      //                     </div>`;
+
+      //       metrics.appendChild(m1);
+      //       metrics.appendChild(m2);
+      //       metrics.appendChild(m3);
+      //       metrics.appendChild(m4);
+      //       content.appendChild(metrics);
+
+
+      const metrics = document.createElement('div');
+      metrics.className = 'metrics';
+
+      const m1 = document.createElement('div');
+      m1.className = 'metric';
+      m1.innerHTML = `<div class="label">Destinos totales</div><div class="value"> ${cantSectores}</div>`;
+
+      const m2 = document.createElement('div');
+      m2.className = 'metric';
+      m2.innerHTML = `<div class="label">Dest.c/Indicadores</div><div class="value">${cantDestinos}</div>`;
+
+
+      const m3 = document.createElement('div');
+      m3.className = 'metric';
+      m3.innerHTML = `<div class="label">Total Indicadores</div><div class="value">${cantActivos}</div>`;
+
+      const m4 = document.createElement('div');
+      m4.className = 'metric';
+      m4.innerHTML = `<div class="label">Total Mediciones</div><div class="value">${cantMediciones}</div>`;
+
+      const m5 = document.createElement('div');
+      m5.className = 'metric';
+      m5.innerHTML = `<div class="label">Total Mediciones</div><div class="value">${cantMediciones}</div>`;
+
+      metrics.appendChild(m1);
+      metrics.appendChild(m2);
+      metrics.appendChild(m3);
+      metrics.appendChild(m4);
+      metrics.appendChild(m5);
+      content.appendChild(metrics);
+
+
+
+
+
+
+
+
+
 
       documento.appendChild(page);
     }
 
-    async function buildResumen() {
+
+    function svgToPng(svgElement, width = 300, height = 300) {
+      return new Promise(resolve => {
+        const svgData = new XMLSerializer().serializeToString(svgElement);
+        const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+        const url = URL.createObjectURL(svgBlob);
+
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          URL.revokeObjectURL(url);
+          resolve(canvas.toDataURL("image/png"));
+        };
+
+        img.src = url;
+      });
+    }
+
+
+
+    function buildIndicadoresGlobales() {
       const { page, content } = createPage();
+
+      // --- TÍTULO DE SECCIÓN ---
       const h = document.createElement('h2');
       h.className = 'section-title';
-      h.textContent = 'Resumen Ejecutivo';
+      h.textContent = 'Indicadores Globales';
       content.appendChild(h);
+
+      // --- TABLA DE EJEMPLO ---
+      const table = document.createElement('table');
+      table.innerHTML = `
+          <thead>
+            <tr>
+              <th>Indicador</th><th>Meta</th><th>Valor</th><th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Ventas mensuales</td><td>100k</td><td>92k</td><td>AMARILLO</td></tr>
+            <tr><td>Tasa de conversión</td><td>2.5%</td><td>3.1%</td><td>VERDE</td></tr>
+          </tbody>
+        `;
+      content.appendChild(table);
+
 
       const valGlobales = localStorage.getItem('resumenGlobal');
       const resumenGlobal = JSON.parse(valGlobales);
@@ -1003,22 +1114,22 @@
       metrics.appendChild(m4);
       content.appendChild(metrics);
 
-// -----------------------
-// Gráfico estilo premium
-// -----------------------
-const graf = document.createElement('div');
-graf.style.marginTop = '20px';
-graf.style.display = 'flex';
-graf.style.justifyContent = 'center';
+      // -----------------------
+      // Gráfico estilo premium
+      // -----------------------
+      const graf = document.createElement('div');
+      graf.style.marginTop = '20px';
+      graf.style.display = 'flex';
+      graf.style.justifyContent = 'center';
 
-// Recuperamos el PNG generado
-const pngBase64 = localStorage.getItem("ringGlobalPNG");
+      // Recuperamos el PNG generado
+      const pngBase64 = localStorage.getItem("ringGlobalPNG");
 
-// Valor real del ring (puede venir de resumenGlobal.globalPercent o calculado previamente)
-const valorRing = resumenGlobal.globalPercent || 0;
+      // Valor real del ring (puede venir de resumenGlobal.globalPercent o calculado previamente)
+      const valorRing = resumenGlobal.globalPercent || 0;
 
-if (pngBase64) {
-    graf.innerHTML = `
+      if (pngBase64) {
+        graf.innerHTML = `
         <div style="
             width:180px;
             height:180px;
@@ -1042,106 +1153,32 @@ if (pngBase64) {
             </div>
         </div>
     `;
-} else {
-    graf.innerHTML = `
+      } else {
+        graf.innerHTML = `
         <div style="height:180px; width:180px; border:1px dashed #ddd; border-radius:50%;
                     display:flex; align-items:center; justify-content:center; color:#999;
                     box-shadow:0 4px 12px rgba(0,0,0,0.05);">
             [Gráfico no disponible]
         </div>
     `;
-}
-
-content.appendChild(graf);
-
-      // -----------------------
-      // Texto descriptivo
-      // -----------------------
-      const p = document.createElement('p');
-
-      const cantSectores = localStorage.getItem('cantSectores');
-      const cantActivos = localStorage.getItem('cantIndicadoresActivos');
-      const cantDestinos = localStorage.getItem('destinosMedidos');
-      const cantMediciones = localStorage.getItem('totalMediciones');
-      const cantAlDia = Number(localStorage.getItem('cantOk'));
-      const cantDemorados = Number(localStorage.getItem('cantDemorados'));
-      const cantPendientes = Number(localStorage.getItem('cantnoInformados'));
-
-      let texto =
-        `Se han declarado un total de <strong> ${cantSectores}</strong> destinos, de los cuales <strong> ${cantDestinos}</strong> tienen indicadores asignados.<br><br>` +
-        `Cada destino posee un peso que representa su importancia estratégica dentro de la organización, definido en función del rol que cumple en la cadena de valor. Estos destinos pueden contar, o no, con indicadores propios asignados.<br><br>` +
-        `Se han definido un total de <strong>${cantActivos}</strong> indicadores activos.<br><br>` +
-        `Los indicadores están asociados a destinos específicos, los cuales a su vez pueden depender jerárquicamente de otros. El cálculo del cumplimiento global se realiza de manera ascendente: primero se determina el cumplimiento de cada indicador, luego el del destino correspondiente y, finalmente, se consolida el resultado hacia los niveles superiores.<br><br>De esta forma, el cumplimiento global expresa el desempeño integral de la organización, ponderado según la relevancia de cada destino dentro de la estructura.<br><br>` +
-        `Este informe Ejecutivo resume las conclusiones de las mediciones registradas en el período comenzado el <strong>99/99/99</strong> y finalizado el <strong>99/99/99</strong>.<br><br>` +
-        `Durante este período se han realizado y registrado un total de <strong>${cantMediciones}</strong> mediciones.<br><br>`;
-
-      if (cantDemorados === 0 && cantPendientes === 0) {
-        texto += `Todos los indicadores fueron medidos con la frecuencia establecida y no hay mediciones pendientes para el período definido en este informe.<br><br>`;
-      } else {
-        const cantAlDia = cantActivos - (cantDemorados + cantPendientes);
-        texto += `Solo <strong>${cantAlDia}</strong> indicadores tienen todas sus mediciones informadas en fecha, ` +
-          `mientras que <strong>${cantActivos - cantAlDia}</strong> presentan mediciones pendientes o fuera de término.<br><br>` +
-          `Debido a la ausencia de información completa, los resultados y conclusiones de este informe podrían presentar ` +
-          `variaciones respecto de la situación real. La falta de mediciones vigentes puede generar desviaciones en los ` +
-          `promedios, tendencias y porcentajes de cumplimiento, por lo que las interpretaciones deben realizarse con ` +
-          `precaución.<br><br>`;
       }
 
-      p.innerHTML = texto;
-      content.appendChild(p);
-
-      documento.appendChild(page);
-    }
-
-
-    function svgToPng(svgElement, width = 300, height = 300) {
-      return new Promise(resolve => {
-        const svgData = new XMLSerializer().serializeToString(svgElement);
-        const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-        const url = URL.createObjectURL(svgBlob);
-
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, width, height);
-
-          URL.revokeObjectURL(url);
-          resolve(canvas.toDataURL("image/png"));
-        };
-
-        img.src = url;
-      });
-    }
+      content.appendChild(graf);
 
 
 
-    function buildIndicadoresGlobales() {
-      const { page, content } = createPage();
 
-      // --- TÍTULO DE SECCIÓN ---
-      const h = document.createElement('h2');
-      h.className = 'section-title';
-      h.textContent = 'Indicadores Globales';
-      content.appendChild(h);
 
-      // --- TABLA DE EJEMPLO ---
-      const table = document.createElement('table');
-      table.innerHTML = `
-    <thead>
-      <tr>
-        <th>Indicador</th><th>Meta</th><th>Valor</th><th>Estado</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>Ventas mensuales</td><td>100k</td><td>92k</td><td>AMARILLO</td></tr>
-      <tr><td>Tasa de conversión</td><td>2.5%</td><td>3.1%</td><td>VERDE</td></tr>
-    </tbody>
-  `;
-      content.appendChild(table);
+
+
+
+
+
+
+
+
+
+
 
       // --- RECUPERAR GRÁFICO ---
       const imagenGrafico = localStorage.getItem("graficoCumplimientoGlobal");
@@ -1164,14 +1201,14 @@ content.appendChild(graf);
       card.appendChild(tituloGraf);
 
       // --- CONTENEDOR DEL GRÁFICO ---
-      const graf = document.createElement("div");
-      graf.style.display = "flex";
-      graf.style.alignItems = "center";
-      graf.style.justifyContent = "center";
-      graf.style.padding = "10px 0";
+      const graf2 = document.createElement("div");
+      graf2.style.display = "flex";
+      graf2.style.alignItems = "center";
+      graf2.style.justifyContent = "center";
+      graf2.style.padding = "10px 0";
 
       if (imagenGrafico) {
-        graf.innerHTML = `
+        graf2.innerHTML = `
       <img src="${imagenGrafico}" 
            style="
              width: 520px; 
@@ -1183,7 +1220,7 @@ content.appendChild(graf);
            ">
     `;
       } else {
-        graf.innerHTML = `
+        graf2.innerHTML = `
       <div style="
         width: 520px; height: 220px;
         border: 1px dashed #bbb; 
@@ -1199,7 +1236,7 @@ content.appendChild(graf);
     `;
       }
 
-      card.appendChild(graf);
+      card.appendChild(graf2);
 
       // --- PIE DE GRÁFICO ---
       const nota = document.createElement("div");
@@ -1217,6 +1254,8 @@ content.appendChild(graf);
       // Agregar página final al documento
       documento.appendChild(page);
     }
+
+
 
     function buildSectores() {
       ejemplo.sectores.forEach(sec => {
