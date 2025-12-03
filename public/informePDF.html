@@ -260,25 +260,60 @@
     }
 
     /* Títulos */
-    .cover2-title {
-      font-size: 30pt;
+    .cover2-empresa {
+      font-size: 35pt;
       font-weight: 500;
+      color: #333333;
       position: absolute;
-      top: 95mm;
+      top: 80mm;
       /* distancia desde arriba */
       left: 0;
       right: 0;
       text-align: center;
     }
 
-    .cover2-subtitle1 {
-      font-size: 20pt;
+    /* Títulos */
+    .cover2-infoeje {
+      font-size: 24pt;
       font-weight: 500;
       position: absolute;
-      top: 70mm;
+      top: 110mm;
+      /* distancia desde arriba */
       left: 0;
       right: 0;
       text-align: center;
+    }
+
+    .cover2-indiGes {
+      font-size: 40pt;
+      font-weight: 600;
+      color: #333333;
+      position: absolute;
+      top: 130mm;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+    .cover2-seguimiento {
+      font-size: 20pt;
+      font-weight: 500;
+      position: absolute;
+      top: 160mm;
+      width: 80%;
+      /* left: 20px;
+      right: 20px; */
+      text-align: center;
+    }
+
+    .cover2-intro {
+      font-size: 14pt;
+      font-weight: 400;
+      /* position: absolute;
+      top: 90mm;
+      left: 40mm;
+      right: 40mm; */
+      text-align: justify;
     }
 
     .cover2-subtitle2 {
@@ -318,7 +353,7 @@
     .cover2-bottom {
       position: absolute;
       bottom: 12mm;
-      left: 0;
+      left: 40px;
       width: 100%;
       text-align: center;
       font-size: 12pt;
@@ -346,31 +381,51 @@
       color: var(--azul)
     }
 
-    /* Tarjetas de métricas */
+    /* Contenedor de las métricas: 4 columnas fijas */
     .metrics {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
-      flex-wrap: wrap
+      width: 100%;
     }
 
+    /* Tarjetas */
     .metric {
-      flex: 1 1 180px;
       background: #fff;
       border: 1px solid #eee;
       padding: 12px;
       border-radius: 8px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03)
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      /* apila label arriba y valor abajo */
+      align-items: center;
+      /* centra horizontalmente */
     }
 
     .metric .label {
       font-size: 12px;
-      color: #666
+      color: #666;
     }
 
     .metric .value {
       font-size: 22px;
       font-weight: 600;
-      margin-top: 6px
+      margin-top: 6px;
+    }
+
+    /* 📱 RESPONSIVE: en pantallas pequeñas pasa a 2x2 */
+    @media (max-width: 768px) {
+      .metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* 📱 Extra chico: 1 por línea */
+    @media (max-width: 450px) {
+      .metrics {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* Tabla simple */
@@ -408,6 +463,16 @@
     .toc-list li {
       padding: 6px 0;
       border-bottom: 1px dashed #eee
+    }
+
+    .separator {
+      width: 65%;
+      height: 3px;
+      background: #444;
+      border-radius: 3px;
+      margin: 0 auto 35px auto;
+      position: absolute;
+      top: 100mm;
     }
 
     /* Responsive preview scaling */
@@ -454,6 +519,7 @@
         promedioHistorico: '78.4',
         deltaMes: '+3.2%'
       },
+
       sectores: [
         {
           id: 1, nombre: 'Comercial', indicadores: [
@@ -581,58 +647,115 @@
       // page.style.backgroundImage = 'url("../dist/images/Fondomy.png")';
       page.style.backgroundImage = 'url("../dist/images/PortadaAzulBlanca.png")';
 
-      // Overlay premium (oscurece apenas para mejorar el contraste del texto)
-      // const overlay = document.createElement('div');
-      // overlay.className = 'cover-overlay';
-      // page.appendChild(overlay);
-
       // Contenedor central
       const content = document.createElement('div');
       content.className = 'cover2-content';
 
-      // Logo
-      const logo = document.createElement('img');
-      logo.className = 'cover2-logo';
-      logo.src = "../dist/images/leon.png";
-      content.appendChild(logo);
+      // Empresa
+      const subtitle = document.createElement('div');
+      subtitle.className = 'cover2-empresa';
+      subtitle.textContent = "SEDRONAR";
+      content.appendChild(subtitle);
+
+      //Informe Ejecutivo
+      const infoEje = document.createElement('div');
+      infoEje.className = 'cover2-infoeje';
+      infoEje.textContent = "Informe Ejecutivo";
+      content.appendChild(infoEje);
+
+      //Indicadores de Gestión
+      const indiGes = document.createElement('div');
+      indiGes.className = 'cover2-indiGes';
+      indiGes.textContent = "Indicadores de Gestión";
+      content.appendChild(indiGes);
+
 
       // Título
       const title = document.createElement('div');
-      title.className = 'cover2-title';
-      title.textContent = "Indicadores de Gestión"
+      title.className = 'cover2-seguimiento';
+      title.textContent = "Seguimiento y análisis de métricas organizacionales.";
       content.appendChild(title);
 
-      // Subtítulo
-      const subtitle = document.createElement('div');
-      subtitle.className = 'cover2-subtitle1';
-      subtitle.textContent = "Informe Ejecutivo";
-      content.appendChild(subtitle);
-
-      const subtitle2 = document.createElement('div');
-      subtitle2.className = 'cover2-subtitle2';
-      subtitle2.textContent =
-        "El presente documento tiene como finalidad proporcionar una visión integral y consolidada del desempeño organizacional a través del análisis de los indicadores clave de gestión (KPIs). Este informe ejecutivo sintetiza la información del dashboard interactivo en un formato estructurado, facilitando la toma de decisiones estratégicas basadas en datos cuantitativos y cualitativos del período analizado.";
-      content.appendChild(subtitle2);
-
-      const piemyResult = document.createElement('div');
-      piemyResult.className = 'cover2-piemyResult';
-      piemyResult.innerHTML = `
-          Los datos de este informe han sido procesados con la plataforma <strong>myResultIQ</strong>,
-          asegurando precisión y trazabilidad en cada etapa del análisis.
-          <br><br>
-          <img src="/dist/images/leon.png" class="logo-image" alt="Logo">
-        `;
-      content.appendChild(piemyResult);
-
-      page.appendChild(content);
 
       // Pie inferior
       const bottom = document.createElement('div');
       bottom.className = 'cover2-bottom';
-      bottom.textContent = `· Generado: ${ejemplo.fecha}`;
-      page.appendChild(bottom);
+      bottom.textContent = `${ejemplo.fecha}`;
+      content.appendChild(bottom);
+
+      page.appendChild(content);
 
       documento.appendChild(page);
+    }
+
+    function buildIntrooverview() {
+      const { page, content } = createPage();
+      const h = document.createElement('h1');
+      h.className = 'section-title';
+      h.textContent = 'Marco Introductorio y Visión General';
+      content.appendChild(h);
+
+      const p = document.createElement('p');
+      p.className = 'cover2-intro';
+      p.innerHTML = `
+
+          <h4>Introducción y Visión General</h4>
+
+          <p>El presente informe tiene por finalidad ofrecer una visión integral y consolidada del desempeño organizacional mediante el análisis de los indicadores clave de gestión (KPIs). Se presenta una síntesis estructurada de la información disponible en el dashboard interactivo, con el propósito de facilitar la toma de decisiones estratégicas basadas en datos cuantitativos y cualitativos correspondientes al período evaluado.</p>
+
+          <h4>Destinatarios</h4>
+          Este documento está dirigido a la Alta Dirección, gerencias de área y demás actores estratégicos que requieren información precisa, actualizada y confiable para evaluar el desempeño institucional, monitorear avances y orientar la planificación estratégica..
+
+          <h4>Propósito y Alcance</h4>
+
+          <p>El informe resume los principales indicadores estratégicos, analiza su evolución, identifica desviaciones relevantes y evalúa el nivel de cumplimiento respecto de los objetivos establecidos. Además, integra tendencias, comparaciones interperíodos y observaciones contextuales que permiten interpretar el comportamiento de los indicadores.<br><br>El objetivo central es transformar los datos en insights accionables que apoyen la gestión, la toma de decisiones y el mejoramiento continuo de los procesos institucionales.</p>
+
+          <h4>Calidad y Precisión de los Datos</h4>
+          <p>La validez de los resultados presentados depende directamente de la calidad de los datos utilizados. Por ello, se destaca la importancia de los procesos de verificación, consistencia y validación aplicados durante cada etapa de recolección, procesamiento y consolidación.`
+
+
+      content.appendChild(p);
+      documento.appendChild(page);
+
+      // Crear segunda hoja
+      const { page: page1, content: content1 } = createPage();
+
+      // Primer bloque
+      const p1 = document.createElement('div');
+      p1.className = 'cover2-intro';
+      p1.innerHTML = `
+            <p>Estos mecanismos aseguran la trazabilidad, la transparencia analítica y la confiabilidad del sistema de medición, permitiendo construir conclusiones sólidas y comparables en el tiempo.</p>
+
+            <h4> Evolución y Mejora Continua</h4>
+
+            <p>El sistema de indicadores que sustenta este informe es dinámico y evolutivo. La incorporación progresiva de nuevos KPIs, así como la actualización y el refinamiento de los existentes, permitirá avanzar hacia un monitoreo más detallado y granular del desempeño institucional.<br><br>Esta ampliación gradual responde al nivel de madurez de los procesos internos y a las necesidades estratégicas detectadas, contribuyendo a una comprensión cada vez más precisa de los factores que influyen en los resultados organizacionales.</p>
+
+            <h4> Estructura del Informe</h4>
+
+            <p>El documento se organiza en secciones temáticas que agrupan indicadores relacionados. Para cada uno se presentan:<br>
+              <ul>
+                <li>Valores actuales</li>
+                <li>Tendencias históricas</li>
+                <li>Comparaciones con períodos anteriores</li>
+                <li>Análisis de brechas respecto de metas establecidas</li>
+                <li>Observaciones cualitativas y factores contextuales relevantes</li>
+              </ul>
+
+            Esta estructura favorece tanto una lectura integral del desempeño global como la consulta segmentada por área o línea estratégica, según las necesidades del usuario.</p>`;
+
+      content1.appendChild(p1);
+
+      const piemyResult = document.createElement('div');
+      piemyResult.className = 'cover2-piemyResult';
+      piemyResult.innerHTML = `
+            Los datos de este informe han sido procesados con la plataforma <strong> myResultIQ</strong>,
+            asegurando precisión y trazabilidad en cada etapa del análisis.
+            <br> <br>
+              <img src="/dist/images/leon.png" class="logo-image" alt="Logo">
+                `;
+      page1.appendChild(piemyResult);
+
+      documento.appendChild(page1);
     }
 
     function buildTOC() {
@@ -650,74 +773,478 @@
 
       content.appendChild(ul);
 
-      const subtitle2 = document.createElement('div');
-      subtitle2.className = 'cover2-subtitle2';
-      subtitle2.innerHTML =
-        "El presente documento tiene como finalidad proporcionar una visión integral y consolidada del desempeño organizacional a través del análisis de los indicadores clave de gestión (KPIs).<br><br> Este informe ejecutivo sintetiza la información del dashboard interactivo en un formato estructurado, facilitando la toma de decisiones estratégicas basadas en datos cuantitativos y cualitativos del período analizado.<br><br>Este informe resume los principales indicadores estratégicos, identifica variaciones críticas y presenta una visión analítica general del desempeño institucional durante el período evaluado. ";
-      content.appendChild(subtitle2);
-
-
-      const piemyResult = document.createElement('div');
-      piemyResult.className = 'cover2-piemyResult';
-      piemyResult.innerHTML = `
-          Los datos de este informe han sido procesados con la plataforma <strong>myResultIQ</strong>,
-          asegurando precisión y trazabilidad en cada etapa del análisis.
-          <br><br>
-          <img src="/dist/images/leon.png" class="logo-image" alt="Logo">
-        `;
-      content.appendChild(piemyResult);
-
-      // === RESUMEN EJECUTIVO ===
-      const resumen = document.createElement('div');
-      resumen.className = 'cover2-resumen';
-      resumen.innerHTML = `
-        <strong>1.1 Objetivos:</strong><br>
-        • Evaluar el cumplimiento de los KPIs<br>
-        • Analizar tendencias mensuales y anuales<br>
-        • Identificar áreas de mejora operativa<br><br>
-      `;
-      content.appendChild(resumen);
-
-
       documento.appendChild(page);
     }
 
-    function buildResumen() {
+
+    async function buildResumen() {
       const { page, content } = createPage();
-      const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'Resumen Ejecutivo';
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Resumen Ejecutivo';
       content.appendChild(h);
 
-      const metrics = document.createElement('div'); metrics.className = 'metrics';
-      const m1 = document.createElement('div'); m1.className = 'metric'; m1.innerHTML = `<div class="label">Cumplimiento global</div><div class="value">${ejemplo.resumen.cumplimientoGlobal}</div>`;
-      const m2 = document.createElement('div'); m2.className = 'metric'; m2.innerHTML = `<div class="label">Promedio histórico</div><div class="value">${ejemplo.resumen.promedioHistorico}</div>`;
-      const m3 = document.createElement('div'); m3.className = 'metric'; m3.innerHTML = `<div class="label">Δ vs mes anterior</div><div class="value">${ejemplo.resumen.deltaMes}</div>`;
-      metrics.appendChild(m1); metrics.appendChild(m2); metrics.appendChild(m3);
+      //       const valGlobales = localStorage.getItem('resumenGlobal');
+      //       const resumenGlobal = JSON.parse(valGlobales);
+
+      //       const metrics = document.createElement('div');
+      //       metrics.className = 'metrics';
+
+      //       const m1 = document.createElement('div');
+      //       m1.className = 'metric';
+      //       m1.innerHTML = `<div class="label">Promedio Anual</div><div class="value">${resumenGlobal.promAnual}</div>`;
+
+      //       const m2 = document.createElement('div');
+      //       m2.className = 'metric';
+      //       m2.innerHTML = `<div class="label">Promedio Histórico</div><div class="value">${resumenGlobal.promHistorico}</div>`;
+
+      //       const m3 = document.createElement('div');
+      //       m3.className = 'metric';
+      //       let valor = Number(resumenGlobal.variacion) || 0;
+      //       let color = "black";
+      //       let textoValor = "";
+      //       if (valor > 0) { textoValor = `+${valor}`; color = "blue"; }
+      //       else if (valor < 0) { textoValor = `${valor}`; color = "red"; }
+      //       else { textoValor = "0"; color = "gray"; }
+
+      //       m3.innerHTML = `<div class="label">Δ vs mes anterior</div>
+      //                      <div class="value" style="color:${color}; font-weight:600;">
+      //                         ${textoValor}
+      //                      </div>`;
+
+      //       const m4 = document.createElement('div');
+      //       m4.className = 'metric';
+      //       let tendencia = (resumenGlobal.tendencia || "");
+      //       let colorTendencia = "black";
+      //       let icono = "";
+      //       if (tendencia === "Creciente%") { colorTendencia = "#007bff"; icono = "🔼"; }
+      //       else if (tendencia === "Decreciente%") { colorTendencia = "#d9534f"; icono = "🔽"; }
+      //       else if (tendencia === "Estable%") { colorTendencia = "#555"; icono = "➖"; }
+
+      //       const textoTendencia = tendencia.charAt(0).toUpperCase() + tendencia.slice(1);
+      //       m4.innerHTML = `<div class="label">Tendencia</div>
+      //                     <div class="value" style="color:${colorTendencia}; font-weight:600; display:flex; align-items:center; gap:6px;">
+      //                         <span>${icono}</span>
+      //                         <span>${textoTendencia}</span>
+      //                     </div>`;
+
+      //       metrics.appendChild(m1);
+      //       metrics.appendChild(m2);
+      //       metrics.appendChild(m3);
+      //       metrics.appendChild(m4);
+      //       content.appendChild(metrics);
+
+      // // -----------------------
+      // // Gráfico estilo premium
+      // // -----------------------
+      // const graf = document.createElement('div');
+      // graf.style.marginTop = '20px';
+      // graf.style.display = 'flex';
+      // graf.style.justifyContent = 'center';
+
+      // // Recuperamos el PNG generado
+      // const pngBase64 = localStorage.getItem("ringGlobalPNG");
+
+      // // Valor real del ring (puede venir de resumenGlobal.globalPercent o calculado previamente)
+      // const valorRing = resumenGlobal.globalPercent || 0;
+
+      // if (pngBase64) {
+      //     graf.innerHTML = `
+      //         <div style="
+      //             width:180px;
+      //             height:180px;
+      //             border-radius:50%;
+      //             background:#fff;
+      //             box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      //             display:flex;
+      //             flex-direction:column;
+      //             align-items:center;
+      //             justify-content:center;
+      //             position:relative;
+      //         ">
+      //             <img src="${pngBase64}" style="width:140px; height:140px; border-radius:50%;">
+      //             <div style="
+      //                 position:absolute;
+      //                 font-size:1.5em;
+      //                 font-weight:700;
+      //                 color:#007bff;
+      //             ">
+
+      //             </div>
+      //         </div>
+      //     `;
+      // } else {
+      //     graf.innerHTML = `
+      //         <div style="height:180px; width:180px; border:1px dashed #ddd; border-radius:50%;
+      //                     display:flex; align-items:center; justify-content:center; color:#999;
+      //                     box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+      //             [Gráfico no disponible]
+      //         </div>
+      //     `;
+      // }
+
+      // content.appendChild(graf);
+
+      // -----------------------
+      // Texto descriptivo
+      // -----------------------
+      const p = document.createElement('p');
+
+      const cantSectores = localStorage.getItem('cantSectores');
+      const cantActivos = localStorage.getItem('cantIndicadoresActivos');
+      const cantDestinos = localStorage.getItem('destinosMedidos');
+      const cantMediciones = localStorage.getItem('totalMediciones');
+      const cantAlDia = Number(localStorage.getItem('cantOk'));
+      const cantDemorados = Number(localStorage.getItem('cantDemorados'));
+      const cantPendientes = Number(localStorage.getItem('cantnoInformados'));
+
+      let texto =
+        `Se han declarado un total de <strong> ${cantSectores}</strong> destinos, de los cuales <strong> ${cantDestinos}</strong> tienen indicadores asignados.<br><br>` +
+        `Cada destino posee un peso que representa su importancia estratégica dentro de la organización, definido en función del rol que cumple en la cadena de valor. Estos destinos pueden contar, o no, con indicadores propios asignados.<br><br>` +
+        `Se han definido un total de <strong>${cantActivos}</strong> indicadores activos.<br><br>` +
+        `Los indicadores están asociados a destinos específicos, los cuales a su vez pueden depender jerárquicamente de otros. El cálculo del cumplimiento global se realiza de manera ascendente: primero se determina el cumplimiento de cada indicador, luego el del destino correspondiente y, finalmente, se consolida el resultado hacia los niveles superiores.<br><br>De esta forma, el cumplimiento global expresa el desempeño integral de la organización, ponderado según la relevancia de cada destino dentro de la estructura.<br><br>` +
+        `Este informe Ejecutivo resume las conclusiones de las mediciones registradas en el período comenzado el <strong>99/99/99</strong> y finalizado el <strong>99/99/99</strong>.<br><br>` +
+        `Durante este período se han realizado y registrado un total de <strong>${cantMediciones}</strong> mediciones.<br><br>`;
+
+      if (cantDemorados === 0 && cantPendientes === 0) {
+        texto += `Todos los indicadores fueron medidos con la frecuencia establecida y no hay mediciones pendientes para el período definido en este informe.<br><br>`;
+      } else {
+        const cantAlDia = cantActivos - (cantDemorados + cantPendientes);
+        texto += `Solo <strong>${cantAlDia}</strong> indicadores tienen todas sus mediciones informadas en fecha, ` +
+          `mientras que <strong>${cantActivos - cantAlDia}</strong> presentan mediciones pendientes o fuera de término.<br><br>` +
+          `Debido a la ausencia de información completa, los resultados y conclusiones de este informe podrían presentar ` +
+          `variaciones respecto de la situación real. La falta de mediciones vigentes puede generar desviaciones en los ` +
+          `promedios, tendencias y porcentajes de cumplimiento, por lo que las interpretaciones deben realizarse con ` +
+          `precaución.<br><br>`;
+      }
+
+      p.innerHTML = texto;
+      content.appendChild(p);
+
+
+      //       const metrics = document.createElement('div');
+      //       metrics.className = 'metrics';
+
+      //       const m1 = document.createElement('div');
+      //       m1.className = 'metric';
+      //       m1.innerHTML = `<div class="label">Promedio Anual</div><div class="value">${resumenGlobal.promAnual}</div>`;
+
+      //       const m2 = document.createElement('div');
+      //       m2.className = 'metric';
+      //       m2.innerHTML = `<div class="label">Promedio Histórico</div><div class="value">${resumenGlobal.promHistorico}</div>`;
+
+      //       const m3 = document.createElement('div');
+      //       m3.className = 'metric';
+      //       let valor = Number(resumenGlobal.variacion) || 0;
+      //       let color = "black";
+      //       let textoValor = "";
+      //       if (valor > 0) { textoValor = `+${valor}`; color = "blue"; }
+      //       else if (valor < 0) { textoValor = `${valor}`; color = "red"; }
+      //       else { textoValor = "0"; color = "gray"; }
+
+      //       m3.innerHTML = `<div class="label">Δ vs mes anterior</div>
+      //                      <div class="value" style="color:${color}; font-weight:600;">
+      //                         ${textoValor}
+      //                      </div>`;
+
+      //       const m4 = document.createElement('div');
+      //       m4.className = 'metric';
+      //       let tendencia = (resumenGlobal.tendencia || "");
+      //       let colorTendencia = "black";
+      //       let icono = "";
+      //       if (tendencia === "Creciente%") { colorTendencia = "#007bff"; icono = "🔼"; }
+      //       else if (tendencia === "Decreciente%") { colorTendencia = "#d9534f"; icono = "🔽"; }
+      //       else if (tendencia === "Estable%") { colorTendencia = "#555"; icono = "➖"; }
+
+      //       const textoTendencia = tendencia.charAt(0).toUpperCase() + tendencia.slice(1);
+      //       m4.innerHTML = `<div class="label">Tendencia</div>
+      //                     <div class="value" style="color:${colorTendencia}; font-weight:600; display:flex; align-items:center; gap:6px;">
+      //                         <span>${icono}</span>
+      //                         <span>${textoTendencia}</span>
+      //                     </div>`;
+
+      //       metrics.appendChild(m1);
+      //       metrics.appendChild(m2);
+      //       metrics.appendChild(m3);
+      //       metrics.appendChild(m4);
+      //       content.appendChild(metrics);
+
+
+      const metrics = document.createElement('div');
+      metrics.className = 'metrics';
+
+      const m1 = document.createElement('div');
+      m1.className = 'metric';
+      m1.innerHTML = `<div class="label">Destinos totales</div><div class="value"> ${cantSectores}</div>`;
+
+      const m2 = document.createElement('div');
+      m2.className = 'metric';
+      m2.innerHTML = `<div class="label">Dest.c/Indicadores</div><div class="value">${cantDestinos}</div>`;
+
+
+      const m3 = document.createElement('div');
+      m3.className = 'metric';
+      m3.innerHTML = `<div class="label">Total Indicadores</div><div class="value">${cantActivos}</div>`;
+
+      const m4 = document.createElement('div');
+      m4.className = 'metric';
+      m4.innerHTML = `<div class="label">Total Mediciones</div><div class="value">${cantMediciones}</div>`;
+
+      const m5 = document.createElement('div');
+      m5.className = 'metric';
+      m5.innerHTML = `<div class="label">Total Mediciones</div><div class="value">${cantMediciones}</div>`;
+
+      metrics.appendChild(m1);
+      metrics.appendChild(m2);
+      metrics.appendChild(m3);
+      metrics.appendChild(m4);
+      metrics.appendChild(m5);
       content.appendChild(metrics);
 
-      // ejemplo de grafico simple (placeholder)
-      const graf = document.createElement('div'); graf.style.marginTop = '12px'; graf.innerHTML = '<div style="height:140px;border:1px dashed #ddd;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#999">[Gráfico aquí]</div>';
-      content.appendChild(graf);
+
+
+
+
+
+
+
+
 
       documento.appendChild(page);
     }
+
+
+    function svgToPng(svgElement, width = 300, height = 300) {
+      return new Promise(resolve => {
+        const svgData = new XMLSerializer().serializeToString(svgElement);
+        const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+        const url = URL.createObjectURL(svgBlob);
+
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          URL.revokeObjectURL(url);
+          resolve(canvas.toDataURL("image/png"));
+        };
+
+        img.src = url;
+      });
+    }
+
+
 
     function buildIndicadoresGlobales() {
       const { page, content } = createPage();
-      const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'Indicadores Globales';
+
+      // --- TÍTULO DE SECCIÓN ---
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Indicadores Globales';
       content.appendChild(h);
 
-      // tabla de ejemplo
-      const table = document.createElement('table');
-      table.innerHTML = `
-        <thead><tr><th>Indicador</th><th>Meta</th><th>Valor</th><th>Estado</th></tr></thead>
-        <tbody>
-          <tr><td>Ventas mensuales</td><td>100k</td><td>92k</td><td>AMARILLO</td></tr>
-          <tr><td>Tasa de conversión</td><td>2.5%</td><td>3.1%</td><td>VERDE</td></tr>
-        </tbody>
-      `;
-      content.appendChild(table);
+      // --- TABLA DE EJEMPLO ---
+      // const table = document.createElement('table');
+      // table.innerHTML = `
+      //     <thead>
+      //       <tr>
+      //         <th>Indicador</th><th>Meta</th><th>Valor</th><th>Estado</th>
+      //       </tr>
+      //     </thead>
+      //     <tbody>
+      //       <tr><td>Ventas mensuales</td><td>100k</td><td>92k</td><td>AMARILLO</td></tr>
+      //       <tr><td>Tasa de conversión</td><td>2.5%</td><td>3.1%</td><td>VERDE</td></tr>
+      //     </tbody>
+      //   `;
+      // content.appendChild(table);
+
+
+      const valGlobales = localStorage.getItem('resumenGlobal');
+      const resumenGlobal = JSON.parse(valGlobales);
+
+      const metrics = document.createElement('div');
+      metrics.className = 'metrics';
+
+      const m1 = document.createElement('div');
+      m1.className = 'metric';
+      m1.innerHTML = `<div class="label">Promedio Anual</div><div class="value">${resumenGlobal.promAnual}</div>`;
+
+      const m2 = document.createElement('div');
+      m2.className = 'metric';
+      m2.innerHTML = `<div class="label">Promedio Histórico</div><div class="value">${resumenGlobal.promHistorico}</div>`;
+
+      const m3 = document.createElement('div');
+      m3.className = 'metric';
+      let valor = Number(resumenGlobal.variacion) || 0;
+      let color = "black";
+      let textoValor = "";
+      if (valor > 0) { textoValor = `+${valor}`; color = "blue"; }
+      else if (valor < 0) { textoValor = `${valor}`; color = "red"; }
+      else { textoValor = "0"; color = "gray"; }
+
+      m3.innerHTML = `<div class="label">Δ vs mes anterior</div>
+                     <div class="value" style="color:${color}; font-weight:600;">
+                        ${textoValor}
+                     </div>`;
+
+      const m4 = document.createElement('div');
+      m4.className = 'metric';
+      let tendencia = (resumenGlobal.tendencia || "");
+      let colorTendencia = "black";
+      let icono = "";
+      if (tendencia === "Creciente%") { colorTendencia = "#007bff"; icono = "🔼"; }
+      else if (tendencia === "Decreciente%") { colorTendencia = "#d9534f"; icono = "🔽"; }
+      else if (tendencia === "Estable%") { colorTendencia = "#555"; icono = "➖"; }
+
+      const textoTendencia = tendencia.charAt(0).toUpperCase() + tendencia.slice(1);
+      m4.innerHTML = `<div class="label">Tendencia</div>
+                    <div class="value" style="color:${colorTendencia}; font-weight:600; display:flex; align-items:center; gap:6px;">
+                        <span>${icono}</span>
+                        <span>${textoTendencia}</span>
+                    </div>`;
+
+      metrics.appendChild(m1);
+      metrics.appendChild(m2);
+      metrics.appendChild(m3);
+      metrics.appendChild(m4);
+      content.appendChild(metrics);
+
+      // -----------------------
+      // Gráfico estilo premium
+      // -----------------------
+      const graf = document.createElement('div');
+      graf.style.marginTop = '20px';
+      graf.style.display = 'flex';
+      graf.style.justifyContent = 'center';
+
+      // Recuperamos el PNG generado
+      const pngBase64 = localStorage.getItem("ringGlobalPNG");
+      if (pngBase64 !== null) {
+        console.log("EXISTE en localStorage");
+      } else {console.log ('esta vacio')}
+
+      // Valor real del ring (puede venir de resumenGlobal.globalPercent o calculado previamente)
+      const valorRing = resumenGlobal.globalPercent || 0;
+
+      if (pngBase64) {
+        graf.innerHTML = `
+        <div style="
+            width:180px;
+            height:180px;
+            border-radius:50%;
+            background:#fff;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            position:relative;
+        ">
+            <img src="${pngBase64}" style="width:140px; height:140px; border-radius:50%;">
+            <div style="
+                position:absolute;
+                font-size:1.5em;
+                font-weight:700;
+                color:#007bff;
+            ">
+
+            </div>
+        </div>
+    `;
+      } else {
+        graf.innerHTML = `
+        <div style="height:180px; width:180px; border:1px dashed #ddd; border-radius:50%;
+                    display:flex; align-items:center; justify-content:center; color:#999;
+                    box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+            [Gráfico no disponible]
+        </div>
+    `;
+      }
+
+      content.appendChild(graf);
+
+
+      // --- RECUPERAR GRÁFICO ---
+      const imagenGrafico = localStorage.getItem("graficoCumplimientoGlobal");
+
+      // --- CARD CONTENEDOR ELEGANTE ---
+      const card = document.createElement("div");
+      card.style.marginTop = "25px";
+      card.style.padding = "20px";
+      card.style.border = "1px solid #e0e0e0";
+      card.style.borderRadius = "10px";
+      card.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
+      card.style.background = "#fff";
+
+      // --- TÍTULO DEL GRÁFICO ---
+      const tituloGraf = document.createElement("h3");
+      tituloGraf.textContent = "Evolución del Cumplimiento Global";
+      tituloGraf.style.fontSize = "18px";
+      tituloGraf.style.marginBottom = "15px";
+      tituloGraf.style.color = "#333";
+      card.appendChild(tituloGraf);
+
+      // --- CONTENEDOR DEL GRÁFICO ---
+      const graf2 = document.createElement("div");
+      graf2.style.display = "flex";
+      graf2.style.alignItems = "center";
+      graf2.style.justifyContent = "center";
+      graf2.style.padding = "10px 0";
+
+      if (imagenGrafico) {
+        graf2.innerHTML = `
+      <img src="${imagenGrafico}" 
+           style="
+             width: 520px; 
+             max-width: 100%;
+             border-radius: 6px;
+             border: 1px solid #ddd;
+             padding: 6px;
+             background: #fafafa;
+           ">
+    `;
+      } else {
+        graf2.innerHTML = `
+      <div style="
+        width: 520px; height: 220px;
+        border: 1px dashed #bbb; 
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+        background: #fafafa;
+      ">
+        [Gráfico no disponible]
+      </div>
+    `;
+      }
+
+      card.appendChild(graf2);
+
+      // --- PIE DE GRÁFICO ---
+      const nota = document.createElement("div");
+      nota.style.marginTop = "10px";
+      nota.style.fontSize = "12px";
+      nota.style.color = "#666";
+      nota.style.textAlign = "center";
+      nota.innerHTML =
+        "Este gráfico representa la evolución mensual del porcentaje de cumplimiento consolidado en toda la organización.";
+      card.appendChild(nota);
+
+      // Insertar card en el contenido
+      content.appendChild(card);
+
+      // Agregar página final al documento
       documento.appendChild(page);
     }
+
+
 
     function buildSectores() {
       ejemplo.sectores.forEach(sec => {
@@ -764,8 +1291,9 @@
     // Build completo
     function buildDocument() {
       clearDocument();
-      buildCover();
+      // buildCover();
       buildCover2();
+      buildIntrooverview();
       buildTOC();
       buildResumen();
       buildIndicadoresGlobales();

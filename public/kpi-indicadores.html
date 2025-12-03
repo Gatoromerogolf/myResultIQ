@@ -757,12 +757,10 @@
                                         </div>
                                         <!--end::Empty State-->
                                     </div>
-                                    <!--end::Body-->
 
                                     <!--begin::Footer-->
                                     <div class="card-footer">
                                         <button class="btn btn-primary" onclick="agregarIndicador()">
-                                            <!-- <button type="submit" class="btn btn-primary"> -->
                                             <i class="fas fa-plus me-2"></i>
                                             Agregar Nuevo Indicador
                                         </button>
@@ -771,18 +769,11 @@
                                             Exportar Lista
                                         </button>
                                     </div>
-                                    <!--end::Footer-->
                                 </div>
-                                <!--end::Lista Indicadores-->
                             </div>
-                            <!--end::Col-->
                         </div>
-                        <!--end::Row-->
                     </div>
-                    <!--end::Container-->
                 </div>
-                <!--end::App Content-->
-
 
                 <!--begin::App Main Carga-->
                 <div class="app-main" id="appMainCarga" style="display: none">
@@ -803,29 +794,20 @@
                                     </ol>
                                 </div>
                             </div>
-                            <!--end::Row-->
                         </div>
-                        <!--end::Container-->
                     </div>
-                    <!--end::App Content Header-->
 
                     <!--begin::App Content-->
                     <div class="app-content mt-2">
-                        <!--begin::Container-->
                         <div class="container-fluid">
-                            <!--begin::Row-->
-
                             <div class="row g-4">
-                                <!--begin::Col-->
                                 <div class="col-12">
                                     <div class="callout callout-info">
                                         Complete todos los campos obligatorios marcados con (*) para crear un nuevo
                                         indicador.
                                     </div>
                                 </div>
-                                <!--end::Col-->
 
-                                <!--begin::Col-->
                                 <div class="col-12">
                                     <!--begin::Form Carga Indicadores-->
                                     <div class="card card-primary card-outline mb-4">
@@ -1325,9 +1307,8 @@
 
                                                     <!--begin::Unidad de Medida-->
                                                     <div class="col-md-2">
-                                                        <label for="unidad_medida" class="form-label"><strong>Unidad
-                                                                de Medida
-                                                                *</strong></label>
+                                                        <label for="unidad_medida" class="form-label"><strong>Unidad de
+                                                                Medida *</strong></label>
                                                         <select class="form-select" id="unidad_medida"
                                                             name="unidad_medida" required>
                                                             <option selected disabled value="">Seleccione...
@@ -1354,9 +1335,9 @@
                                                             name="freq_medicion" required>
                                                             <option selected disabled value="">Seleccione...
                                                             </option>
-                                                            <option value="0201">Diaria</option>
+                                                            <!-- <option value="0201">Diaria</option>
                                                             <option value="0202">Semanal</option>
-                                                            <option value="0203">Quincenal</option>
+                                                            <option value="0203">Quincenal</option> -->
                                                             <option value="0204">Mensual</option>
                                                             <option value="0205">Bimensual</option>
                                                             <option value="0206">Trimestral</option>
@@ -1419,9 +1400,9 @@
                                                             name="freq_reporte" required>
                                                             <option selected disabled value="">Seleccione
                                                                 periodicidad...</option>
-                                                            <option value="0201">Diaria</option>
+                                                            <!-- <option value="0201">Diaria</option>
                                                             <option value="0202">Semanal</option>
-                                                            <option value="0203">Quincenal</option>
+                                                            <option value="0203">Quincenal</option> -->
                                                             <option value="0204">Mensual</option>
                                                             <option value="0205">Bimensual</option>
                                                             <option value="0206">Trimestral</option>
@@ -1453,7 +1434,6 @@
                                                         <div class="invalid-feedback">Debe seleccionar al menos un
                                                             formato de presentación.</div>
                                                     </div>
-                                                    <!--end::Formato de Presentación-->
 
                                                     <!--begin::Estado-->
                                                     <div class="col-md-2">
@@ -1465,12 +1445,9 @@
                                                             <option value="1">Vigente</option>
                                                             <option value="2">Suspendido</option>
                                                             <option value="3">Anulado</option>
-
                                                         </select>
-                                                        <div class="invalid-feedback">El estado es
-                                                            obligatorio.</div>
+                                                        <div class="invalid-feedback">El estado es obligatorio.</div>
                                                     </div>
-                                                    <!--end::Unidad de Medida-->
 
                                                     <!--begin::Comentarios-->
                                                     <div class="col-12">
@@ -1480,13 +1457,10 @@
                                                             name="comentarios" rows="3"
                                                             placeholder="Comentarios adicionales sobre el indicador"></textarea>
                                                     </div>
-                                                    <!--end::Comentarios-->
 
                                                 </div>
-                                                <!--end::Row-->
                                             </div>
-                                            <!--end::Body-->
-                                            <!--begin::Footer-->
+
                                             <div class="card-footer">
                                                 <button class="btn btn-primary" type="submit">Guardar Indicador</button>
                                                 <button class="btn btn-secondary ms-2" type="button"
@@ -1494,27 +1468,16 @@
                                                 <button class="btn btn-outline-secondary float-end" type="button"
                                                     onclick="window.location.href = 'kpi-indicadores.html'">Cancelar</button>
                                             </div>
-                                            <!--end::Footer-->
+
                                         </form>
-                                        <!--end::Form-->
-
                                     </div>
-                                    <!--end::Form Carga Indicadores-->
                                 </div>
-                                <!--end::Col-->
-
                             </div>
-                            <!--end::Row-->
                         </div>
-                        <!--end::Container-->
                     </div>
-                    <!--end::App Content-->
                 </div>
-                <!--end::AppMainCarga-->
-                <!--end::App Content Header-->
         </main>
     </div>
-
     <!--end::App Main-->
 
     <!-- Modal de Confirmación de Logout -->
@@ -1546,25 +1509,6 @@
             window.location.href = 'index.html';
         });
     </script>
-    <!-- Final del Modal de Confirmación de Logout -->
-
-    <!-- <div class="modal fade" id="modalDetalleIndicador" tabindex="-1" aria-labelledby="detalleIndicadorLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="detalleIndicadorLabel">Detalle del Indicador</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-striped">
-                        <tbody id="tablaDetalleIndicador">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div> -->
 
     <!--begin::JavaScript-->
     <script>
@@ -1612,15 +1556,6 @@
                         return;
                     }
 
-                    // si se da de alta como vigente, tiene que tener primera medición mayor a cero.
-                    // const medicionInicial = document.getElementById('med_inicial').value;
-                    // const estado = document.getElementById('estado').value;
-                    // alert(`medición inicial: ${medicionInicial} - estado: ${estado}`);
-                    // if (estado == 1 && medicionInicial <= 0) {
-                    //     alert('La primera medición debe ser mayor a cero si el indicador está vigente.');
-                    //     return;
-                    // }
-
                     // === Validación HTML5 / Bootstrap ===
                     if (!form.checkValidity()) {
                         form.classList.add('was-validated');
@@ -1653,10 +1588,8 @@
                             tablaContainer.style.display = 'block';
                         }
 
-                        // Refrescar la tabla (si existe la función)
-                        if (typeof cargarIndicadores === 'function') {
-                            cargarIndicadores();
-                        }
+                        cargarIndicadores();
+
                     } else {
                         // Fracaso: mostramos validación/alert y mantenemos el form visible
                         form.classList.add('was-validated');
@@ -1803,12 +1736,6 @@
                     result.success = !!response.ok;
                 }
 
-                // 👇 Ahora sí, después del insert exitoso
-                // if (method === 'POST' && result.success && result.id) {
-                //     indicadorData.id = result.id;   // guardás el id generado
-                //     await crearMedicion(indicadorData);
-                // }
-
                 // Devolver el objeto result para que el caller decida la UI
                 return result;
 
@@ -1905,11 +1832,15 @@
 
         // Cargar un indicador en el formulario para editar
         async function editarIndicador(codigo) {
+            console.log(`busca indicador: ${codigo}`)
             try {
                 const response = await fetch(`/api/indicadores/${codigo}`);
                 if (!response.ok) throw new Error('No se pudo obtener el indicador.');
 
-                const indicador = await response.json();
+                const respuesta = await response.json();
+                const indicador = respuesta.data;
+                console.log("RAW recibido desde backend:", indicador);
+                console.table(`Indicador leído: ${indicador.codigo_id}`)
                 console.log("Indicador cargado para edición:", indicador.id);
 
                 const form = document.getElementById('indicadorForm');
@@ -2026,22 +1957,28 @@
                 const indicadores = await response.json();
 
                 // Transformamos los datos para que DataTable los entienda
-                const datosTabla = await Promise.all(indicadores.map(async (ind) => {
-                    const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
-                    const sectores = await obtenerSectoresPorUnidad(ind.destino);
-                    xestado = ind.estado == 1 ? 'V' : (ind.estado == 2 ? 'S' : 'A');
+                const datosTabla = await Promise.all
+                    (indicadores.map(async (ind) => {
+                        const [usuario, sector] = await Promise.all([
+                            obtenerUsuarioPorLegajo(ind.responsable),
+                            obtenerSectoresPorUnidad(ind.destino)
+                        ]);
 
-                    return {
-                        codigo: ind.codigo_id,
-                        nombre: ind.nombre,
-                        dimension: `<span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">${getClaseDimension(ind.dimension_id)}</span>`,
-                        descripcion: ind.descripcion,
-                        sectores: sectores.nombre,
-                        responsable: `${usuario.nombres} ${usuario.apellido}`,
-                        objetivo: ind.objetivo,
-                        frecuencia: CodigosService.getNombreCodigo(ind.freq_reporte),
-                        estado: xestado,
-                        acciones: `
+                        const xestado = { 1: "V", 2: "S", 0: "A" }[ind.estado] || "A";
+
+                        return {
+                            codigo: ind.codigo_id,
+                            nombre: ind.nombre,
+                            dimension: `<span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">${getClaseDimension(ind.dimension_id)}</span>`,
+                            descripcion: ind.descripcion,
+                            sectores: sector?.nombre ?? "—",
+                            responsable: usuario
+                                ? `${usuario.nombres} ${usuario.apellido}`
+                                : "Sin asignar",
+                            objetivo: ind.objetivo,
+                            frecuencia: CodigosService.getNombreCodigo(ind.freq_medicion),
+                            estado: xestado,
+                            acciones: `
                         <td class="icon-only-actions">
                             <button class="btn btn-primary btn-xs" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
                                 <i class="fas fa-eye fa-xs"></i>
@@ -2054,8 +1991,8 @@
                             </button>
                         </td>
                         `
-                    };
-                }));
+                        };
+                    }));
 
                 // Inicializar tabla la primera vez
                 if (!tablaIndicadores) {
@@ -2068,7 +2005,7 @@
                             { data: 'descripcion', title: 'Descripción' },
                             { data: 'objetivo', title: 'Objetivo' },
                             { data: 'responsable', title: 'Responsable' },
-                            { data: 'frecuencia', title: 'Reporte' },
+                            { data: 'frecuencia', title: 'Medición' },
                             { data: 'dimension', title: 'Perspectiva BSC' },
                             { data: 'estado', title: 'Est' },
                             { data: 'acciones', title: 'Acciones', orderable: false, searchable: false }
@@ -2080,7 +2017,7 @@
                             { width: "150px", targets: 3 },  // descripcion
                             { width: "150px", targets: 4 },   // objetivo
                             { width: "60px", targets: 5 },  // responsable
-                            { width: "30px", targets: 6 },   // reporte
+                            { width: "30px", targets: 6 },   // medición
                             { width: "30px", targets: 7 },   // dimension
                             { width: "20px", targets: 8 },   // estado
                             { width: "25px", targets: 9 },   // acciones
@@ -2111,7 +2048,7 @@
 
             } catch (error) {
                 console.error('Error cargando indicadores:', error);
-                alert('No se pudieron cargar los indicadores.');
+                alert('No se pudieron cargar indicadores.');
             }
         }
 
@@ -2133,260 +2070,6 @@
             alert('Exportando lista de indicadores...');
             // Aquí iría la lógica para exportar (CSV, Excel, etc.)
             console.log('Exportar indicadores');
-        }
-
-        async function XXXverDetalleIndicador(codigo) {
-            try {
-                const response = await fetch(`/api/indicadores/${codigo}`);
-                if (!response.ok) throw new Error('No se pudo obtener el indicador.');
-
-                const indicador = await response.json();
-                const tabla = document.getElementById('tablaDetalleIndicador');
-                tabla.innerHTML = '';
-
-                let tipoIndicador = '-';
-                switch (indicador.tipo_id) {
-                    case 1:
-                        tipoIndicador = 'Estratégico';
-                        break;
-                    case 2:
-                        tipoIndicador = 'Táctico';
-                        break;
-                    case 3:
-                        tipoIndicador = 'Operativo';
-                        break;
-                }
-
-                let dimensionIndicador = '-';
-                switch (indicador.dimension_id) {
-                    case 1:
-                        dimensionIndicador = 'Financiera';
-                        break;
-                    case 2:
-                        dimensionIndicador = 'Clientes';
-                        break;
-                    case 3:
-                        dimensionIndicador = 'Procesos';
-                        break;
-                    case 4:
-                        dimensionIndicador = 'Capital Humano';
-                        break;
-                }
-
-                let categoria_indicador = '-';
-                switch (indicador.categoria_id) {
-                    case 1:
-                        categoria_indicador = 'Eficiencia';
-                        break;
-                    case 2:
-                        categoria_indicador = 'Eficacia';
-                        break;
-                    case 3:
-                        categoria_indicador = 'Calidad';
-                        break;
-                    case 4:
-                        categoria_indicador = 'Productividad';
-                        break;
-                }
-
-
-                let criticidad_indicador = '-';
-                switch (indicador.criticidad_id) {
-                    case 1:
-                        criticidad_indicador = 'Alta';
-                        break;
-                    case 2:
-                        criticidad_indicador = 'Media';
-                        break;
-                    case 3:
-                        criticidad_indicador = 'Baja';
-                        break;
-                }
-
-                let tipoMetaTexto = '-';
-                switch (indicador.meta_tipo) {
-                    case 1:
-                        tipoMetaTexto = 'Valor único';
-                        break;
-                    case 2:
-                        tipoMetaTexto = 'Rango de valores';
-                        break;
-                    case 3:
-                        tipoMetaTexto = 'Tendencia';
-                        break;
-                }
-
-                let tipoTendencia = '-';
-                switch (indicador.tenden_tipo) {
-                    case 1:
-                        tipoTendencia = 'Creciente';
-                        break;
-                    case 2:
-                        tipoTendencia = 'Decreciente';
-                        break;
-                    case 3:
-                        tipoTendencia = 'Estable';
-                        break;
-                }
-
-                let tipoEvaluacion = '-';
-                switch (indicador.unico_eval) {
-                    case 1:
-                        tipoEvaluacion = 'Superable positiva - Más es mejor';
-                        break;
-                    case 2:
-                        tipoEvaluacion = 'Límite máximo - No debe superarse';
-                        break;
-                    case 3:
-                        tipoEvaluacion = 'Tolerancia simétrica - Penaliza desviaciones';
-                        break;
-                    case 4:
-                        tipoEvaluacion = 'Menor es mejor - Más es negativo - Distancia creciente es mejor';
-                        break;
-                    case 5:
-                        tipoEvaluacion = 'Valor exacto - Cero tolerancia';
-                        break;
-                }
-
-                let formatoPresentacion = '-';
-                switch (indicador.formato) {
-                    case 1:
-                        formatoPresentacion = 'Tabla';
-                        break;
-                    case 2:
-                        formatoPresentacion = 'Grafico';
-                        break;
-                    case 3:
-                        formatoPresentacion = 'Dashboard';
-                        break;
-                }
-                let usuario = obtenerNombreResponsable(indicador.responsable);
-
-                function obtenerNombreResponsable(legajo) {
-                    const usuario = activos.find(u => String(u.legajo) == String(legajo));
-                    return usuario ? `${usuario.apellido}, ${usuario.nombres}` : 'Sin asignar';
-                }
-
-                const estadosMap = {
-                    1: 'Vigente',
-                    2: 'Suspendido',
-                    3: 'Cancelado'
-                };
-
-                // --- Campos comunes a todos los indicadores
-                const campos = {
-                    "Código": indicador.codigo_id,
-                    "Nombre": indicador.nombre,
-                    "Descripción": indicador.descripcion || '-',
-                    "Objetivo": indicador.objetivo || '-',
-                    "Destino": `${indicador.destino || '-'} - ${indicador.destino_nombre || ''}`,
-                    // "Responsable": indicador.responsable
-                    //     ? `${indicador.responsable} - ${indicador.responsable_nombres || ''} ${indicador.responsable_apellido || ''}`
-                    //     : '-',
-                    "Responsable": `${indicador.responsable} - ${usuario}`,
-
-                    // 👇 agrego un marcador
-                    "__sep1__": null,
-
-                    "Tipo": `${indicador.tipo_id} - ${tipoIndicador}` || '-',
-                    "Perspectiva (BSC)": `${indicador.dimension_id} - ${dimensionIndicador}` || '-',
-                    // "Categoría": `${indicador.categoria_id} - ${categoria_indicador}` || '-',
-                    "Criticidad": `${indicador.criticidad_id} - ${criticidad_indicador}` || '-',
-
-                    // 👇 agrego un marcador
-                    "__sep2__": null,
-
-                    "Tipo de Meta": `${indicador.meta_tipo} - ${tipoMetaTexto}` || '-',
-                }
-
-                // --- Agregar campos según el tipo de meta
-                if (indicador.meta_tipo === 1) {
-                    Object.assign(campos, {
-                        "Valor Meta": indicador.unico_valor || '-',
-                        "Método de evaluación": `${indicador.unico_eval} - ${tipoEvaluacion}` || '-',
-                        // "Márgen de Aceptación": `${Number(indicador.unico_acepta).toFixed(2)} %`,
-                        // "Márgen de Riesgo": `${Number(indicador.unico_riesgo).toFixed(2)} %`,
-                        // "Márgen Crítico": `${Number(indicador.unico_critico).toFixed(2)} %`,
-                        // 👇 agrego un marcador
-                        "__sep3__": null,
-                    });
-                } else if (indicador.meta_tipo === 2) {
-                    Object.assign(campos, {
-                        "Rango Desde": indicador.rango_desde || '-',
-                        "Rango Hasta": indicador.rango_hasta || '-',
-                        // "Márgen de Aceptación": indicador.rango_acepta || '-',
-                        // "Margen de Riesgo": indicador.rango_riesgo || '-',
-                        // "Margen Crítico": indicador.rango_critico || '-',
-                        // 👇 agrego un marcador
-                        "__sep4__": null,
-                    });
-                } else if (indicador.meta_tipo === 3) {
-                    Object.assign(campos, {
-                        "Tendencia Tipo": tipoTendencia || '-',
-                        "Tendencia Referencia": indicador.tenden_refe || '-',
-                        // "Margen de Aceptación": indicador.tenden_acepta || '-',
-                        // "Margen de Riesgo": indicador.tenden_riesgo || '-',
-                        // "Margen Crítico": indicador.tenden_critico || '-',
-                        // 👇 agrego un marcador
-                        "__sep5__": null,
-                    });
-                }
-
-                // --- Otros campos comunes
-                Object.assign(campos, {
-
-                    "Fuente de Datos": indicador.fuente_datos || '-',
-                    "Fórmula de Cálculo": indicador.formula_calculo || '-',
-                    "Unidad de Medida": CodigosService.getNombreCodigo(indicador.unidad_medida),
-                    "Frecuencia de Medición": CodigosService.getNombreCodigo(indicador.freq_medicion),
-                    // "Demora admitida": indicador.tolerancia_plazo || '-',
-                    "Fecha de Inicio": indicador.fecha_inicio
-                        ? new Date(indicador.fecha_inicio).toLocaleDateString('es-AR')
-                        : '-',
-
-
-
-                    "Estado": estadosMap[indicador.estado] || '-',
-                    "__sep6__": null,
-                    // "Frecuencia de Reporte": CodigosService.getNombreCodigo(indicador.freq_reporte),
-
-                    // "Formato de Presentación": `${indicador.formato} - ${formatoPresentacion}` || '-',
-                    "Comentarios": indicador.comentarios || '-'
-                });
-
-                for (const [campo, valor] of Object.entries(campos)) {
-
-                    if (campo.startsWith("__sep")) {
-                        // insertar fila separadora
-                        const sepRow = document.createElement('tr');
-                        const sepCell = document.createElement('td');
-                        sepCell.colSpan = 2;
-                        sepCell.innerHTML = "&nbsp;"; // espacio en blanco
-                        sepRow.appendChild(sepCell);
-                        tabla.appendChild(sepRow);
-                        continue; // pasar al siguiente campo
-                    }
-                    const fila = document.createElement('tr');
-
-                    const th = document.createElement('th');
-                    th.textContent = campo;
-                    th.style.width = '200px'; // ancho fijo
-                    th.style.textAlign = 'left'; // opcional, alinear texto a la izquierda
-
-                    const td = document.createElement('td');
-                    td.textContent = valor;  // <-- seguro, no interpreta HTML
-                    fila.appendChild(th);
-                    fila.appendChild(td);
-                    tabla.appendChild(fila);
-                }
-
-                const modal = new bootstrap.Modal(document.getElementById('modalDetalleIndicador'));
-                modal.show();
-
-            } catch (error) {
-                console.error('Error al obtener el detalle:', error);
-                alert('No se pudo obtener el detalle del indicador.');
-            }
         }
 
         function llenarSelectUnidades(sectores) {
@@ -2452,7 +2135,7 @@
             }
         }
 
-        async function obtenerUsuarioPorLegajo(responsable) {
+        async function XXXobtenerUsuarioPorLegajo(responsable) {
             try {
                 const response = await fetch(`/usuarios/${responsable}`);
 
@@ -2471,7 +2154,7 @@
             }
         }
 
-        async function obtenerSectoresPorUnidad(unidad) {
+        async function XXXobtenerSectoresPorUnidad(unidad) {
             try {
                 const response = await fetch(`/sectores/${unidad}`);
 
@@ -2486,6 +2169,39 @@
                 return sector;
             } catch (err) {
                 console.error('Error en fetch:', err);
+                return null;
+            }
+        }
+
+        const obtenerUsuarioPorLegajo = (legajo) =>
+            fetchJSON(`/usuarios/${legajo}`);
+
+        const obtenerSectoresPorUnidad = (unidad) =>
+            fetchJSON(`/sectores/${unidad}`);
+
+        const cache = new Map();
+
+        async function fetchJSON(url) {
+            if (cache.has(url)) return cache.get(url);
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn(`Recurso no encontrado en ${url}`);
+                        cache.set(url, null);
+                        return null;
+                    }
+                    throw new Error(`Error HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                cache.set(url, data);
+                return data;
+            } catch (err) {
+                console.error(`Error en fetch ${url}:`, err);
+                cache.set(url, null);
                 return null;
             }
         }
@@ -2505,7 +2221,7 @@
     <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
 
-        <!-- jQuery -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- DataTables CSS -->
@@ -2514,9 +2230,7 @@
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-
     <script>
-
         let activos = []
         async function cargarResponsables() {
             const select = document.getElementById('responsable');
@@ -2525,8 +2239,7 @@
                 if (!response.ok) throw new Error('No se pudieron obtener los usuarios');
                 const usuarios = await response.json();
 
-                // Filtrar solo activos (opcional)
-                activos = usuarios.filter(u => u.estado === 'activo');
+                activos = usuarios.filter(u => u.estado === 'activo'); // Filtrar solo activos (opcional)
 
                 activos.forEach(u => {
                     const option = document.createElement('option');
@@ -2540,32 +2253,10 @@
             }
         }
 
-        // Servicio global para textp de tabla de códigos 
-        // const CodigosService = {
-        //     codigosMap: {},
-
-        //     async init() {
-        //         const response = await fetch('/api/codigos');
-        //         if (!response.ok) throw new Error('No se pudo obtener los codigos.');
-        //         const codigos = await response.json();
-
-        //         codigos.forEach(c => {
-        //             this.codigosMap[c.cod_tabla] = c.cod_nombre;
-        //         });
-        //     },
-
-        //     getNombreCodigo(codigo) {
-        //         return this.codigosMap[codigo] || '-';
-        //     }
-        // };
-
         document.addEventListener("DOMContentLoaded", async () => {
             // 1. Cargar indicadores y responsables
             cargarIndicadores();
             await cargarResponsables();
-
-            // 2. Inicializa CodigosService
-            // await CodigosService.init();
 
             // 3. Llenar sectores
             const API_SECTORES = "/api/sectores"; // Reemplazá con la ruta real
@@ -2682,7 +2373,7 @@
     </style>
 
 
-   <div id="contenedorModal"></div>
+    <div id="contenedorModal"></div>
     <div id="contenedorModalMediciones"></div>
 
     <script>

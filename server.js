@@ -1652,7 +1652,386 @@ app.post('/api/mediciones', async (req, res) => {
 6.Calcula el cumplimiento ponderado por peso_porcentual.
 7.Devuelve la serie completa, con el detalle por indicador en cada mes. */
 
+
 app.get('/api/evolucion-global', async (req, res) => {
+    try {
+
+        // 1) Traemos las mediciones + info del indicador
+        const [rows] = await pool.query(`
+            SELECT 
+                m.med_indicador_id,
+                m.med_tipo_periodo,
+                m.med_valor_periodo,
+                m.med_fecha_registro,
+                m.med_cumplimiento,
+                m.med_porcen_global,
+
+                i.id AS indicador_id,
+                i.nombre,
+                i.destino
+            FROM mediciones m
+            JOIN indicadores i ON i.id = m.med_indicador_id
+        `);
+
+        if (!rows.length) return res.json([]);
+
+        // --------------------------------------------------------
+        // 2) Funciones auxiliares
+        // --------------------------------------------------------
+
+        // 🔹 Determinar fecha base según tipo de período
+        function getMeasurementDate(med) {
+            const tipo = med.med_tipo_periodo.slice(2);
+            const val = med.med_valor_periodo?.toString() || "";
+
+            const year = parseInt(val.substring(0, 4));
+            if (!year || isNaN(year)) return null;
+
+            try {
+                switch (tipo) {
+                    case '01': return new Date(val); // diaria
+                    case '02': { const week = parseInt(val.substring(4)) || 1; return new Date(year, 0, 1 + (week - 1) * 7); }
+                    case '03': { const q = parseInt(val.substring(4)) || 1; const m = Math.floor((q - 1) / 2); const d = q % 2 === 1 ? 1 : 16; return new Date(year, m, d); }
+                    case '04': { const m = parseInt(val.substring(4, 6)) - 1; return new Date(year, m, 1); }
+                    case '05': return new Date(year, (parseInt(val.substring(4)) - 1) * 2, 1);
+                    case '06': return new Date(year, (parseInt(val.substring(4)) - 1) * 3, 1);
+                    case '07': return new Date(year, (parseInt(val.substring(4)) - 1) * 4, 1);
+                    case '08': return new Date(year, (parseInt(val.substring(4)) - 1) * 6, 1);
+                    case '09': return new Date(year, 0, 1); // anual
+                    case '10': return new Date(year, parseInt(val.substring(4, 6)) - 1, 1);
+                    default:
+                        return med.med_fecha_registro ? new Date(med.med_fecha_registro) : null;
+                }
+            } catch {
+                return null;
+            }
+        }
+
+        // 🔹 Meses cubiertos según tipo de período
+        function monthsCovered(tipo) {
+            const map = {
+                '01': 1, '02': 1, '03': 1, '04': 1,
+                '05': 2, '06': 3, '07': 4,
+                '08': 6, '09': 12, '10': 1
+            };
+            return map[tipo.slice(2)] || 1;
+        }
+
+        // 🔹 Expandir medición a todos los meses que cubre
+        function expandMeasurementToMonths(med) {
+            const start = getMeasurementDate(med);
+            const dur = monthsCovered(med.med_tipo_periodo);
+            if (!start) return [];
+
+            const months = [];
+            for (let i = 0; i < dur; i++) {
+                const d = new Date(start);
+                d.setMonth(start.getMonth() + i);
+                months.push(d.toISOString().slice(0, 7));
+            }
+            return months;
+        }
+
+        // --------------------------------------------------------
+        // 3) Construcción del eje de meses (min → max)
+        // --------------------------------------------------------
+
+        const fechas = rows.map(getMeasurementDate).filter(Boolean);
+
+        const min = new Date(Math.min(...fechas));
+        const max = new Date(Math.max(...fechas));
+
+        const allMonths = [];
+        const cur = new Date(min);
+
+        while (cur <= max) {
+            allMonths.push(cur.toISOString().slice(0, 7));
+            cur.setMonth(cur.getMonth() + 1);
+        }
+
+        // --------------------------------------------------------
+        // 4) Lista de indicadores únicos
+        // --------------------------------------------------------
+
+        const indicadores = Array.from(
+            new Map(
+                rows.map(r => [
+                    r.indicador_id,
+                    {
+                        id: r.indicador_id,
+                        nombre: r.nombre,
+                        destino: r.destino
+                    }
+                ])
+            ).values()
+        );
+
+        const ultimoValor = {};
+        const serie = [];
+
+        // --------------------------------------------------------
+        // 5) Calcular cumplimiento global mensual (⚠️ AHORA PONDERADO CORRECTAMENTE)
+        // --------------------------------------------------------
+
+        for (const month of allMonths) {
+            let cumplimientoGlobalMes = 0; // <- suma ponderada (NO promedio)
+            const detalle = [];
+
+            for (const ind of indicadores) {
+
+                // Mediciones del indicador
+                const meds = rows
+                    .filter(m => m.med_indicador_id === ind.id)
+                    .filter(m => expandMeasurementToMonths(m).includes(month))
+                    .sort((a, b) => new Date(b.med_fecha_registro) - new Date(a.med_fecha_registro));
+
+                const medicion = meds[0] || ultimoValor[ind.id];
+                if (!medicion) continue;
+
+                const cumplimiento = parseFloat(medicion.med_cumplimiento) || 0;
+                const peso = parseFloat(medicion.med_porcen_global) || 0;
+
+                // ✔️ NUEVO: suma ponderada
+                cumplimientoGlobalMes += cumplimiento * (peso / 100);
+
+                ultimoValor[ind.id] = medicion;
+
+                detalle.push({
+                    indicador: ind.nombre,
+                    cumplimiento: parseFloat(cumplimiento.toFixed(2)),
+                    peso,
+                    destino: ind.destino
+                });
+            }
+
+            serie.push({
+                month,
+                cumplimiento: parseFloat(cumplimientoGlobalMes.toFixed(2)), // ✔️ ya no se divide
+                detalle
+            });
+        }
+
+        res.json(serie);
+
+    } catch (err) {
+        console.error("❌ Error calculando evolución global:", err);
+        res.status(500).json({ error: "Error al calcular evolución global" });
+    }
+});
+
+
+
+app.get('/api/MMMMMevolucion-global', async (req, res) => {
+    try {
+
+        // 1) Traemos las mediciones + info del indicador
+        const [rows] = await pool.query(`
+            SELECT 
+                m.med_indicador_id,
+                m.med_tipo_periodo,
+                m.med_valor_periodo,
+                m.med_fecha_registro,
+                m.med_cumplimiento,
+                m.med_porcen_global,
+
+                i.id AS indicador_id,
+                i.nombre,
+                i.destino
+            FROM mediciones m
+            JOIN indicadores i ON i.id = m.med_indicador_id
+        `);
+
+        if (!rows.length) return res.json([]);
+
+        // --------------------------------------------------------
+        // 2) Funciones auxiliares
+        // --------------------------------------------------------
+
+        // 🔹 Determinar fecha base según tipo de período
+        function getMeasurementDate(med) {
+            const tipo = med.med_tipo_periodo.slice(2);
+            const val = med.med_valor_periodo?.toString() || "";
+
+            const year = parseInt(val.substring(0, 4));
+            if (!year || isNaN(year)) return null;
+
+            try {
+                switch (tipo) {
+                    case '01': // diaria
+                        return new Date(val);
+
+                    case '02': { // semanal
+                        const week = parseInt(val.substring(4)) || 1;
+                        return new Date(year, 0, 1 + (week - 1) * 7);
+                    }
+
+                    case '03': { // quincenal
+                        const quin = parseInt(val.substring(4)) || 1;
+                        const month = Math.floor((quin - 1) / 2);
+                        const day = quin % 2 === 1 ? 1 : 16;
+                        return new Date(year, month, day);
+                    }
+
+                    case '04': { // mensual
+                        const month = parseInt(val.substring(4, 6)) - 1;
+                        return new Date(year, month, 1);
+                    }
+
+                    case '05': { // bimestral
+                        const bim = parseInt(val.substring(4)) || 1;
+                        return new Date(year, (bim - 1) * 2, 1);
+                    }
+
+                    case '06': { // trimestral
+                        const tri = parseInt(val.substring(4)) || 1;
+                        return new Date(year, (tri - 1) * 3, 1);
+                    }
+
+                    case '07': { // cuatrimestral
+                        const cua = parseInt(val.substring(4)) || 1;
+                        return new Date(year, (cua - 1) * 4, 1);
+                    }
+
+                    case '08': { // semestral
+                        const sem = parseInt(val.substring(4)) || 1;
+                        return new Date(year, (sem - 1) * 6, 1);
+                    }
+
+                    case '09': // anual
+                        return new Date(year, 0, 1);
+
+                    case '10': { // eventual (mes exacto)
+                        const month = parseInt(val.substring(4, 6)) - 1;
+                        return new Date(year, month, 1);
+                    }
+
+                    default:
+                        return med.med_fecha_registro ? new Date(med.med_fecha_registro) : null;
+                }
+            } catch {
+                return null;
+            }
+        }
+
+        // 🔹 Meses cubiertos por cada tipo de período
+        function monthsCovered(tipo) {
+            const map = {
+                '01': 1, '02': 1, '03': 1, '04': 1,
+                '05': 2, '06': 3, '07': 4, '08': 6,
+                '09': 12, '10': 1
+            };
+            return map[tipo.slice(2)] || 1;
+        }
+
+        // 🔹 Expande medición a todos los meses que cubre
+        function expandMeasurementToMonths(med) {
+            const start = getMeasurementDate(med);
+            const dur = monthsCovered(med.med_tipo_periodo);
+            if (!start) return [];
+
+            const months = [];
+            for (let i = 0; i < dur; i++) {
+                const d = new Date(start);
+                d.setMonth(start.getMonth() + i);
+                months.push(d.toISOString().slice(0, 7));
+            }
+            return months;
+        }
+
+        // --------------------------------------------------------
+        // 3) Construcción del eje de meses (min → max)
+        // --------------------------------------------------------
+
+        const fechas = rows.map(getMeasurementDate).filter(Boolean);
+
+        const min = new Date(Math.min(...fechas));
+        const max = new Date(Math.max(...fechas));
+
+        const allMonths = [];
+        const cur = new Date(min);
+
+        while (cur <= max) {
+            allMonths.push(cur.toISOString().slice(0, 7));
+            cur.setMonth(cur.getMonth() + 1);
+        }
+
+        // --------------------------------------------------------
+        // 4) Lista de indicadores únicos
+        // --------------------------------------------------------
+
+        const indicadores = Array.from(
+            new Map(
+                rows.map(r => [
+                    r.indicador_id,
+                    {
+                        id: r.indicador_id,
+                        nombre: r.nombre,
+                        destino: r.destino
+                    }
+                ])
+            ).values()
+        );
+
+        // Último valor conocido para carry-forward
+        const ultimoValor = {};
+
+        const serie = [];
+
+        // --------------------------------------------------------
+        // 5) Cálculo mensual usando med_cumplimiento y med_porcen_global
+        // --------------------------------------------------------
+
+        for (const month of allMonths) {
+            let suma = 0;
+            let pesoTotal = 0;
+            const detalle = [];
+
+            for (const ind of indicadores) {
+
+                // Todas las mediciones del indicador
+                const meds = rows
+                    .filter(m => m.med_indicador_id === ind.id)
+                    .filter(m => expandMeasurementToMonths(m).includes(month))
+                    .sort((a, b) => new Date(b.med_fecha_registro) - new Date(a.med_fecha_registro));
+
+                const medicion = meds[0] || ultimoValor[ind.id];
+                if (!medicion) continue;
+
+                const cumplimiento = parseFloat(medicion.med_cumplimiento) || 0;
+                const peso = parseFloat(medicion.med_porcen_global) || 0;
+
+                if (peso > 0) {
+                    suma += cumplimiento * peso;
+                    pesoTotal += peso;
+                }
+
+                ultimoValor[ind.id] = medicion;
+
+                detalle.push({
+                    indicador: ind.nombre,
+                    cumplimiento: parseFloat(cumplimiento.toFixed(2)),
+                    peso,
+                    destino: ind.destino
+                });
+            }
+
+            serie.push({
+                month,
+                cumplimiento: pesoTotal > 0 ? parseFloat((suma / pesoTotal).toFixed(2)) : 0,
+                detalle
+            });
+        }
+
+        res.json(serie);
+
+    } catch (err) {
+        console.error("❌ Error calculando evolución global:", err);
+        res.status(500).json({ error: "Error al calcular evolución global" });
+    }
+});
+
+
+app.get('/api/XXXXXevolucion-global', async (req, res) => {
     try {
         const [rows] = await pool.query(`
       SELECT 
@@ -1778,6 +2157,7 @@ app.get('/api/evolucion-global', async (req, res) => {
             allMonths.push(current.toISOString().slice(0, 7));
             current.setMonth(current.getMonth() + 1);
         }
+        console.log('🗓️ Rango de meses:', allMonths);
 
         // 🔹 Agrupar indicadores únicos
         const indicadores = Array.from(

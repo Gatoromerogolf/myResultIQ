@@ -110,6 +110,8 @@
             gap: 0.1rem;
             flex-wrap: wrap;
             line-height: 1;
+            font-size: 0.95rem;
+            /* un poquito más grande */
             /* reduce la altura de línea */
         }
 
@@ -181,7 +183,7 @@
 
         /* 🎨 Estilo link para indicadores */
         .link-indicador {
-            color: #449df1;
+            color: #135694;
             /* Naranja */
             font-weight: 500;
             /* Un poquito más grueso */
@@ -209,7 +211,92 @@
             padding: 10px 15px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             margin-bottom: 20px;
-        }        
+        }
+
+        /* .badge-big {
+            font-size: 0.9rem !important;
+            padding: 0.4em 0.55em !important;
+        }
+
+        .badge-big i {
+            font-size: 1.05rem;
+            margin-left: 4px;
+        } */
+
+        .badge-global-min {
+            background: #5b58fa !important;
+            font-size: 0.9rem !important;
+            padding: 0.35em 0.55em !important;
+            font-weight: 500;
+            border-radius: 0.35rem;
+            margin-right: 4px;      /* separa el globo del texto */
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);  /* sombra leve estilo dashboard */
+        }
+
+        .badge-global-min i {
+            font-size: 1.1rem;
+            margin-left: 4px;
+        }
+
+        /* .badge-global-bold {
+            background: #141414 !important;
+            font-size: 1.0rem !important;
+            padding: 0.45em 0.6em !important;
+            font-weight: 600;
+            border-radius: 0.4rem;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .badge-global-bold i {
+            font-size: 1.2rem;
+            margin-left: 5px;
+        } */
+
+        /* .badge-global-premium {
+            background: linear-gradient(135deg, #0d0d0d, #1e1e1e) !important;
+            font-size: 0.95rem !important;
+            padding: 0.45em 0.7em !important;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+            letter-spacing: 0.2px;
+        }
+
+        .badge-global-premium i {
+            font-size: 1.25rem;
+            margin-left: 6px;
+            filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.4));
+        } */
+
+        .badge-global-myriq {
+            background: #1b1e23 !important;
+            /* gris carbón elegante */
+            color: #e9ecef !important;
+            /* blanco suave */
+            font-size: 0.92rem !important;
+            /* un toque más grande */
+            padding: 0.42em 0.62em !important;
+            font-weight: 600;
+            border-radius: 0.45rem;
+            /* borde suave */
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+            /* sombra leve estilo dashboard */
+            letter-spacing: 0.2px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            /* borde sutil */
+        }
+
+        .badge-global-myriq i {
+            font-size: 1.18rem;
+            /* icono más visible */
+            margin-left: 2px;
+            opacity: 0.9;
+            transform: translateY(1px);
+            /* alineación perfecta */
+        }
     </style>
 
 </head>
@@ -440,13 +527,28 @@
                             <!--begin::Latest Order Widget-->
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
-                                    <h3 class="card-title">⚖️ Asigne a cada indicador un valor relativo dentro de su
-                                        unidad funcional o sector, de modo que refleje su importancia en relación con
-                                        los demás indicadores de ese ámbito. Asimismo, asigne a cada destino (unidad
-                                        funcional o sector) un valor relativo respecto de su nivel superior,
-                                        considerando su aporte a los objetivos estratégicos. En todos los casos, el
-                                        total de cada nivel debe sumar 100.</h3>
-                                    <div class="card-tools">
+                                    <h3 class="card-title">
+                                        ⚖️ Asigne a cada indicador un valor relativo dentro del destino al que
+                                        pertenece, de modo que refleje su importancia respecto de los demás indicadores
+                                        de ese ámbito.
+                                        Asimismo, defina un valor relativo para cada destino respecto de su nivel
+                                        superior, considerando su aporte a los objetivos estratégicos. En todos los
+                                        casos, el total de cada nivel debe sumar 100.
+                                        <br><br>
+                                        <span class="d-flex align-items-start"
+                                            style="gap:6px; font-size:0.95rem; color:#333;">
+                                            <i class="bi bi-globe-americas"
+                                                style="font-size:1.1rem; margin-top:2px;"></i>
+                                            <span>
+                                                Este valor se calcula automáticamente y refleja la importancia relativa
+                                                de cada indicador en el
+                                                contexto global, combinando su peso dentro del destino y el peso de los
+                                                destinos que lo contienen.
+                                            </span>
+                                        </span>
+                                    </h3>
+
+                                    <!-- <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                                             <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
                                             <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
@@ -454,7 +556,7 @@
                                         <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
                                             <i class="bi bi-x-lg"></i>
                                         </button>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body p-0 mt-3 ms-3">
@@ -570,6 +672,21 @@
                 children: roots,
                 parentNode: null
             };
+        }
+
+
+        // 🎯 Calcula el peso global de un nodo (sector o indicador)
+        function calculateGlobalWeight(node) {
+            let global = node.weight; // comienza con su propio peso
+            let current = node.parentNode;
+
+            while (current) {
+                // multiplica por el peso del padre dividido 100
+                global = global * (current.weight / 100);
+                current = current.parentNode;
+            }
+
+            return global; // queda como porcentaje global real
         }
 
         // 🎲🎲🎲 Guarda % en base de datos
@@ -714,6 +831,16 @@
                 weightInput.title = 'Peso relativo (%)';
                 header.appendChild(weightInput);
 
+                // 🎯 Mostrar % global SOLO en indicadores
+                if (node.type === 'indicador') {
+                    const globalTag = document.createElement('span');
+                    globalTag.className = 'badge bg-dark ms-2 badge-global-min'; // Bootstrap 5
+                    globalTag.innerHTML = `${node.globalWeight?.toFixed(2) || 0}% <i class="bi bi-globe-americas"></i>`;
+
+                    header.appendChild(globalTag);
+                    node._globalTag = globalTag;
+                }
+
                 // 👇 si es nodo raíz (no tiene parentNode, o su parent es 'root')
                 if (!parentNode || parentNode.id === 'root') {
                     node.weight = 100;
@@ -728,6 +855,9 @@
 
                         // Recalcular valores
                         calculateValues(getRootNode(node));
+
+                        // Recalcular pesos globales
+                        applyGlobalWeights(getRootNode(node));
 
                         // Control de 100%
                         if (!checkWeights(node.parentNode)) {
@@ -813,6 +943,11 @@
                 if (node._weightInput) { node._weightInput.value = node.weight.toFixed(2); }
                 if (node._errorMsg) node._errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
                 if (node.children && node.children.length > 0) { node.children.forEach(updateNode); }
+                // 🎯 Actualizar badge de globalWeight para indicadores
+                if (node.type === 'indicador' && node._globalTag) {
+                    node._globalTag.textContent = `${node.globalWeight.toFixed(2)}% global`;
+                }
+
             }
             updateNode(window.treeRoot);
         }
@@ -854,11 +989,23 @@
             return thisNodeValid;
         }
 
+        // 🎯 Aplica el cálculo global a cada nodo del árbol
+        function applyGlobalWeights(node) {
+            node.globalWeight = calculateGlobalWeight(node);
+
+            if (node.children && node.children.length > 0) {
+                node.children.forEach(child => applyGlobalWeights(child));
+            }
+        }
+
+
 
         // 🎲🎲🎲 MAIN 🎲🎲🎲
         (async () => {
             window.treeRoot = await fetchData();
             calculateValues(window.treeRoot);
+            applyGlobalWeights(window.treeRoot);
+
 
             // 👇 Verificar errores antes de renderizar
             const hasErrors = !checkAllWeights(window.treeRoot);
@@ -876,12 +1023,10 @@
         })();
     </script>
 
-
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
 
     <!-- Bootstrap (bundle con Popper incluido) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -890,12 +1035,10 @@
 
     <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)-->
 
     <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-    <!-- ChartJS -->
 
     <script>
         const avatarAudio = document.getElementById('avatarAudio');
