@@ -895,31 +895,11 @@
                                     <div class="card card-outline card-info">
                                         <div class="card-body">
                                             <h5 class="mb-3">🔍 Insights Automáticos</h5>
-                                            <div class="insight-box">
-                                                <div class="insight-title">📈 Mejora sostenida</div>
-                                                <div class="insight-text">El cumplimiento global creció un 3.2%
-                                                    respecto al mes anterior, con tendencia positiva sostenida en los
-                                                    últimos 4
-                                                    períodos.
-                                                </div>
-                                            </div>
-                                            <div class="insight-box">
-                                                <div class="insight-title">⚠️ Riesgo en RRHH</div>
-                                                <div class="insight-text">El área de RRHH muestra un
-                                                    cumplimiento de apenas 68%, siendo la más baja del conjunto. Se
-                                                    sugiere revisión de planes de acción.
-                                                </div>
-                                            </div>
-
-                                            <div class="insight-box">
-                                                <div class="insight-title">🏆 Indicador líder</div>
-                                                <div class="insight-text">El KPI "Entregas a tiempo" mantiene un 98% de
-                                                    cumplimiento, consolidándose como el de mejor desempeño del período.
-                                                </div>
-                                            </div>
+                                            <div id="insightsAuto"></div>
                                         </div>
                                     </div>
                                 </div>
+
 
                                 <!-- === Botones de acción === -->
                                 <div class="actions-bar">
@@ -1170,7 +1150,7 @@
                     scales: {
                         y: {
                             min: 0,       // eje Y comienza en 0
-                            max: 100,     // eje Y llega hasta 100
+                            max: 110,     // eje Y llega hasta 100
                             ticks: {
                                 stepSize: 10  // marcas cada 10%
                             },
@@ -1215,7 +1195,27 @@
             window.valorCumplimientoGlobal = cumplimientoGlobalActual;
 
             actualizarResumenGlobal();
+
+            const insights = generarInsightsAutomaticos(dataFiltrada);
+            renderizarInsights(insights);
         }
+
+        function renderizarInsights(insights) {
+            const cont = document.getElementById("insightsAuto");
+            if (!cont) return;
+
+            cont.innerHTML = "";
+
+            insights.forEach(i => {
+                cont.innerHTML += `
+            <div class="insight-box">
+                <div class="insight-title">${i.titulo}</div>
+                <div class="insight-text">${i.texto}</div>
+            </div>
+        `;
+            });
+        }
+
 
         // 📌📌 actualizarResumenGlobal
         function actualizarResumenGlobal() {
@@ -1288,7 +1288,6 @@
         // 📌📌 mostrarDetalleMes(entry)   // 🔹 Mostrar modal con detalle del mes marcado en evolución global
 
         let modoDetalle = "destino";         // "destino" | "contribucion"
-
         function mostrarDetalleMes(entry) {
             document.getElementById('detalleMes').textContent = entry.month;
             const tbody = document.getElementById('detalleTabla');
@@ -1412,7 +1411,7 @@
             // Mostrar modal
             // const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
             // modal.show();
-            window.modalDetalleMes.show();            
+            window.modalDetalleMes.show();
         }
 
         // 🎛 BOTONES PARA ALTERNAR MODO
@@ -1426,6 +1425,92 @@
             mostrarDetalleMes(window.__ultimoEntry);
         });
 
+        function generarInsightsAutomaticos(serie) {
+
+            if (!serie || serie.length < 2) return [];
+
+            const insights = [];
+
+            // --- Datos esenciales ---
+            const ultimo = serie[serie.length - 1];
+            const anterior = serie[serie.length - 2];
+
+            const variacion = (ultimo.cumplimiento - anterior.cumplimiento).toFixed(2);
+
+            // ============================
+            // 1) Insight: Tendencia general
+            // ============================
+            if (variacion > 0) {
+                insights.push({
+                    titulo: "📈 Mejora sostenida",
+                    texto: `El cumplimiento global creció un ${variacion}% respecto al período anterior,
+                    consolidando una tendencia positiva.`
+                });
+            } else if (variacion < 0) {
+                insights.push({
+                    titulo: "📉 Caída reciente",
+                    texto: `El cumplimiento global cayó ${Math.abs(variacion)}% respecto al período anterior,
+                    señalando un deterioro que debería investigarse.`
+                });
+            }
+
+            // ============================
+            // 2) Mejor y peor sector (destino)
+            // ============================
+            const destinos = {};
+
+            ultimo.detalle.forEach(d => {
+                if (!destinos[d.destino]) destinos[d.destino] = { suma: 0, count: 0 };
+                destinos[d.destino].suma += d.cumplimiento;
+                destinos[d.destino].count++;
+            });
+
+            const destinosProm = Object.keys(destinos).map(id => ({
+                id,
+                prom: destinos[id].suma / destinos[id].count
+            }));
+
+            const destinoTop = destinosProm.reduce((a, b) => a.prom > b.prom ? a : b);
+            const destinoLow = destinosProm.reduce((a, b) => a.prom < b.prom ? a : b);
+
+            insights.push({
+                titulo: "🏆 Sector destacado",
+                texto: `El sector "${window.destinosMap[destinoTop.id] || destinoTop.id}" presenta el mejor desempeño,
+                con un promedio de ${destinoTop.prom.toFixed(1)}%.`
+            });
+
+            insights.push({
+                titulo: "⚠️ Sector crítico",
+                texto: `El sector "${window.destinosMap[destinoLow.id] || destinoLow.id}" muestra el menor cumplimiento,
+                con apenas ${destinoLow.prom.toFixed(1)}%.`
+            });
+
+            // ============================
+            // 3) Indicador más fuerte y más débil
+            // ============================
+            const porIndicador = ultimo.detalle.map(d => ({
+                nom: d.indicador,
+                contrib: (d.cumplimiento * d.peso) / 100
+            }));
+
+            const best = porIndicador.reduce((a, b) => a.contrib > b.contrib ? a : b);
+            const worst = porIndicador.reduce((a, b) => a.contrib < b.contrib ? a : b);
+
+            insights.push({
+                titulo: "🔥 Indicador líder",
+                texto: `El KPI "${best.nom}" fue el que mayor contribución realizó al resultado global del período.`
+            });
+
+            insights.push({
+                titulo: "📉 Indicador con menor aporte",
+                texto: `El KPI "${worst.nom}" tuvo la contribución más baja del período, lo que podría indicar un foco de mejora.`
+            });
+
+            return insights;
+        }
+
+
+
 
         // 📌📌 loadGlobalCompliance()
         async function loadGlobalCompliance() {
@@ -1436,15 +1521,7 @@
                 ]);
 
                 const sectores = await sectoresRes.json();
-                // Guardar la cantidad de sectores en localStorage
-                localStorage.setItem('cantSectores', sectores.length);
-
                 const indicadores = await indicadoresRes.json();
-                localStorage.setItem('cantIndicadores', indicadores.length);
-
-                // Indicadores activos (estado = 1)
-                const activos = indicadores.filter(ind => Number(ind.estado) === 1).length;
-                localStorage.setItem('cantIndicadoresActivos', activos);
 
                 const indicadoresConCumplimiento = indicadores.map(ind => {
                     const cumplimiento = calcularCumplimiento(
@@ -1472,64 +1549,12 @@
 
                 // Actualizar ring
                 drawRing('ringGlobal', globalPercent);
-
-                // 🔥 Esperar a que el SVG termine de dibujarse
-                await new Promise(r => setTimeout(r, 80));
-
-                // Guardar SVG generado en localStorage
-                const svgElement = document.getElementById('ringGlobal');
-                if (!svgElement) {
-                    console.warn("ringGlobal no encontrado en el DOM");
-                    return;
-                }
-
-                svgToPng(svgElement, 350, 350).then(pngBase64 => {
-                    if (!pngBase64) {
-                        console.warn("svgToPng devolvió vacío, NO se guarda nada");
-                        return;
-                    }
-
-                    localStorage.setItem("ringGlobalPNG", pngBase64);
-                    console.log("✔️ PNG GUARDADO en localStorage");
-                });
+                // Actualizar texto
+                // document.getElementById('globalPercentText').innerText = globalPercent.toFixed(1) + '%';
 
             } catch (err) {
                 console.error('Error al calcular cumplimiento global:', err);
             }
-        }
-
-        // 📌📌 svgToPng – Convierte el SVG del ring en PNG compatible con PDF
-        function svgToPng(svgElement, width = 300, height = 300) {
-            return new Promise(resolve => {
-                const svgData = new XMLSerializer().serializeToString(svgElement);
-                const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-                const url = URL.createObjectURL(svgBlob);
-
-                const img = new Image();
-                img.onload = () => {
-
-                    // 👉 Doble resolución interna para mejorar calidad
-                    const canvas = document.createElement("canvas");
-                    canvas.width = width * 2;
-                    canvas.height = height * 2;
-
-                    const ctx = canvas.getContext("2d");
-
-                    // 👉 Fondo blanco para evitar problemas en PDF
-                    ctx.fillStyle = "#FFFFFF";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    // 👉 Dibujar SVG centrado
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    URL.revokeObjectURL(url);
-
-                    // 👉 PNG final en base64
-                    resolve(canvas.toDataURL("image/png"));
-                };
-
-                img.src = url;
-            });
         }
 
         // 📌📌 buildHierarchyMinimal(sectores, indicadores)   // Funciones auxiliares
@@ -2244,6 +2269,172 @@
                     resultado = null;
             }
             return resultado;
+        }
+
+
+        // 📌📌 CodigosService // Servicio global para textp de tabla de códigos 
+        // const CodigosService = {
+        //     codigosMap: {},
+
+        //     async init() {
+        //         const response = await fetch('/api/codigos');
+        //         if (!response.ok) throw new Error('No se pudo obtener los codigos.');
+        //         const codigos = await response.json();
+
+        //         codigos.forEach(c => {
+        //             this.codigosMap[c.cod_tabla] = c.cod_nombre;
+        //         });
+        //     },
+
+        //     getNombreCodigo(codigo) {
+        //         return this.codigosMap[codigo] || '-';
+        //     }
+        // };
+
+        // 📌📌 valorCorteDestacados
+        document.getElementById('valorCorteDestacados').addEventListener('input', async () => {
+            await reconstruirTablas(); // función que recalcula y recarga la tabla
+        });
+
+        // 📌📌 valorCorteCriticos
+        document.getElementById('valorCorteCriticos').addEventListener('input', async () => {
+            await reconstruirTablas(); // función que recalcula y recarga la tabla
+        });
+
+        // 📌📌 cargarCumplimientoPorDestino()
+        async function XXXcargarCumplimientoPorDestino() {
+            const spinner = document.getElementById('spinnerCumplimientoDestinos');
+            const tablaContainer = document.getElementById('tablaCumplimientoContainer');
+            const tbody = document.getElementById('tablaCumplimientoDestinos');
+
+            spinner.style.display = 'block';
+            // 🔹 y ahora activás el botón que oculta el sidebar
+            const botonSidebar = document.querySelector('[data-lte-toggle="sidebar"]');
+            if (botonSidebar) botonSidebar.click();
+
+            tablaContainer.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/cumplimiento-por-destino');
+                const data = await res.json();
+
+                // --- Renderizar tabla con ícono de evolución ---
+                tbody.innerHTML = data.map(d => {
+                    const valor = Number(d.promedio_cumplimiento);
+                    const valorSeguro = isNaN(valor) ? 0 : valor;
+
+                    let color = 'text-danger';
+                    if (valorSeguro >= 80) color = 'text-success';
+                    else if (valorSeguro >= 50) color = 'text-warning';
+
+                    const barra = `
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar ${color.replace('text-', 'bg-')}" 
+                                role="progressbar" 
+                                style="width: ${valorSeguro}%;"
+                                aria-valuenow="${valorSeguro}" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100">
+                            </div>
+                        </div>`;
+
+                    // ✅ Aquí agregamos el ícono de Evolución
+                    return `
+                        <tr>
+                            <td>${d.destino}</td>
+                            <td class="text-center">${d.total_indicadores}</td>
+                            <td class="text-center fw-semibold ${color}">
+                                ${valorSeguro}% ${barra}
+                            </td>
+                            <td class="text-center text-success fw-semibold">${d.en_meta}</td>
+                            <td class="text-center text-danger fw-semibold">${d.criticos}</td>
+                            <td class="text-center">
+                                <span class="text-primary fw-semibold"
+                                    role="button"
+                                    style="cursor:pointer"
+                                    title="Ver evolución del destino"
+                                    data-id="${d.id_destino}"
+                                    data-nombre="${d.destino}">
+                                    Ver
+                                </span>
+                            </td>
+                        </tr>`;
+                }).join('');
+
+                spinner.style.display = 'none';
+                tablaContainer.style.display = 'block';
+                chartContainer.style.display = 'block';
+
+                // Delegación de eventos para los íconos de evolución
+                document.getElementById('tablaCumplimientoDestinos').addEventListener('click', async (e) => {
+                    const icono = e.target.closest('[data-id]');
+                    if (!icono) return;
+
+                    const idDestino = Number(icono.dataset.id);
+                    const nombreDestino = icono.dataset.nombre;
+
+                    console.log(`📈 Clic en evolución del destino: ${nombreDestino} (ID: ${idDestino})`);
+
+                    // 🔹 Mostrar el contenedor del gráfico
+                    const graficoContainer = document.getElementById('grafico-evolucion');
+                    // 🔹 Mostrar nombre del destino (si hay un encabezado dinámico)
+                    const titulo = document.querySelector('#grafico-evolucion .card-title');
+                    if (titulo) titulo.textContent = `Evolución del destino: ${nombreDestino}`;
+                    graficoContainer.style.display = 'block';
+
+                    // 🔹 Generar gráfico específico
+                    mostrarEvolucionPorArea(idDestino, nombreDestino);
+
+                    // 🔹 Obtener y mostrar indicadores del destino
+                    await mostrarIndicadoresPorDestino(idDestino, nombreDestino);
+                });
+
+
+            } catch (error) {
+                console.error('Error cargando cumplimiento por destino:', error);
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar los datos</td></tr>`;
+                spinner.style.display = 'none';
+                tablaContainer.style.display = 'block';
+                chartContainer.style.display = 'none';
+            }
+        }
+
+
+        // 📌📌 mostrarIndicadoresPorDestino
+        async function XXXmostrarIndicadoresPorDestino(idDestino, nombreDestino) {
+            try {
+                const res = await fetch(`/api/indicadores/destino/${idDestino}`);
+                if (!res.ok) throw new Error('Error al obtener indicadores');
+                const body = await res.json();
+
+                if (!body.ok) throw new Error(body.mensaje);
+
+                const indicadores = body.data;  // ✅ Este es el array real
+
+                const tituloDestino = document.getElementById('nombreDestino');
+                const contenedor = document.getElementById('indicadores-destino');
+                const tbody = contenedor.querySelector('tbody');
+                tbody.innerHTML = ''; // limpiar
+                tituloDestino.textContent = nombreDestino;
+
+                if (indicadores.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted">No hay indicadores registrados para este destino.</td></tr>`;
+                } else {
+                    indicadores.forEach(ind => {
+                        tbody.innerHTML += `
+                                <tr>
+                                    <td>${ind.nombre || '-'}</td>
+                                    <td>${ind.objetivo || '-'}</td>
+                                    <td>${ind.unico_valor || '-'}</td>
+                                    <td>${ind.peso_porcentual ? ind.peso_porcentual + '%' : '-'}</td>
+                                </tr>
+                                `;
+                    });
+                }
+                contenedor.style.display = 'block';
+            } catch (error) {
+                console.error('Error cargando indicadores del destino:', error);
+            }
         }
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
@@ -3256,28 +3447,33 @@
                 verificarAlerta();
                 console.log("✔ Finalizó 3️⃣ (códigos + alerta)");
 
-                // ------------------------------------------
-                // 4️⃣ Preparar datos de los indicadores
-                // ------------------------------------------
+                // 4️⃣ Prepara datos con medición, usuario y sector
+
                 const hoy = new Date();
                 const year = hoy.getFullYear();                      // AAAA
                 const month = String(hoy.getMonth() + 1).padStart(2, '0');  // MM (dos dígitos)
                 const periodo = `${year}${month}`;
                 indicadoresConDatos = await Promise.all(indicadores.map(async ind => {
-                    const [usuario, ultima] = await Promise.all([
-                        obtenerUsuarioPorLegajo(ind.responsable),
-                        getUltimaMedicionPorIndicador(ind.id)
-                    ]);
+                    const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
+                    const ultima = await getUltimaMedicionPorIndicador(ind.id);
                     const siguienteMedicion = getSiguienteMedicion(ultima, ind.freq_medicion);
-                    const vigencia = (ind.freq_medicion === '0210')
-                        ? "ok"
-                        : (periodo > siguienteMedicion ? "Demorado"
-                            : "ok");
+                    let vigencia;
+                    if (ind.freq_medicion == '0210') { // si es eventual, siempre ok
+                        vigencia = "ok"
+                    } else {
+                        if (periodo > siguienteMedicion) {
+                            vigencia = "Demorado";
+                        } else if (periodo < siguienteMedicion) {
+                            vigencia = "ok";
+                        } else {
+                            vigencia = "Al día";   // si son iguales, opcional
+                        }
+                    };
                     const sector = await obtenerSectoresPorUnidad(ind.destino);
                     const ultimaMedicion = ultima ? ultima.med_valor : null;
                     const porcentaje = ultimaMedicion !== null ? (ultimaMedicion / ind.unico_valor * 100).toFixed(1) : null;
                     // 🔹 Obtener la descripción de la unidad de medida desde CodigosService
-                    const unidad_desc = CodigosService.getNombreCodigo(ind.unidad_medida) ?? '';
+                    const unidad = CodigosService.getNombreCodigo(ind.unidad_medida)
 
                     const mediciones = getMediciones();
                     const medicionesIndicador = mediciones.data.filter(m => m.med_indicador_id == ind.id);
@@ -3297,7 +3493,7 @@
                         ultimaMedicion,
                         unico_valor: ind.unico_valor,  // 👈 agregado
                         unidad_medida: ind.unidad_medida,   // código
-                        unidad_desc,     // descripción
+                        unidad_desc: unidad,     // descripción
                         ultima_medicion: ultimaMedicion,
                         freq_medicion: ind.freq_medicion,
                         porcentaje,
@@ -3399,24 +3595,7 @@
             const valorCorteDestacados = Number(document.getElementById('valorCorteDestacados').value);
             const valorCorteCriticos = Number(document.getElementById('valorCorteCriticos').value);
 
-            let ok = 0;
-            let demorados = 0;
-            let noInformados = 0;
-
-            for (const ind of indicadoresConDatos) {
-                if (ind.vigencia === "ok") {
-                    ok++;
-                } else if (ind.vigencia === "Demorado") {
-                    demorados++;
-                } else if (ind.vigencia === null || ind.vigencia === undefined) {
-                    noInformados++;
-                }
-            }
-
-            // Si querés guardarlo en localStorage:
-            localStorage.setItem("cantOk", ok);
-            localStorage.setItem("cantDemorados", demorados);
-            localStorage.setItem("cantNoInformados", noInformados);
+            console.log("Indicadores con datos:", indicadoresConDatos);
 
             // 🔹 Pendientes (sin medición)
             indicadoresConDatos

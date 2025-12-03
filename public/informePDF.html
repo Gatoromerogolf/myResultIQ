@@ -262,9 +262,13 @@
     /* Títulos */
     .cover2-empresa {
       font-size: 35pt;
+    .cover2-empresa {
+      font-size: 35pt;
       font-weight: 500;
       color: #333333;
+      color: #333333;
       position: absolute;
+      top: 80mm;
       top: 80mm;
       /* distancia desde arriba */
       left: 0;
@@ -275,13 +279,50 @@
     /* Títulos */
     .cover2-infoeje {
       font-size: 24pt;
+    /* Títulos */
+    .cover2-infoeje {
+      font-size: 24pt;
       font-weight: 500;
       position: absolute;
+      top: 110mm;
+      /* distancia desde arriba */
       top: 110mm;
       /* distancia desde arriba */
       left: 0;
       right: 0;
       text-align: center;
+    }
+
+    .cover2-indiGes {
+      font-size: 40pt;
+      font-weight: 600;
+      color: #333333;
+      position: absolute;
+      top: 130mm;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+    .cover2-seguimiento {
+      font-size: 20pt;
+      font-weight: 500;
+      position: absolute;
+      top: 160mm;
+      width: 80%;
+      /* left: 20px;
+      right: 20px; */
+      text-align: center;
+    }
+
+    .cover2-intro {
+      font-size: 14pt;
+      font-weight: 400;
+      /* position: absolute;
+      top: 90mm;
+      left: 40mm;
+      right: 40mm; */
+      text-align: justify;
     }
 
     .cover2-indiGes {
@@ -1048,199 +1089,16 @@
       h.textContent = 'Indicadores Globales';
       content.appendChild(h);
 
-      // --- TABLA DE EJEMPLO ---
-      // const table = document.createElement('table');
-      // table.innerHTML = `
-      //     <thead>
-      //       <tr>
-      //         <th>Indicador</th><th>Meta</th><th>Valor</th><th>Estado</th>
-      //       </tr>
-      //     </thead>
-      //     <tbody>
-      //       <tr><td>Ventas mensuales</td><td>100k</td><td>92k</td><td>AMARILLO</td></tr>
-      //       <tr><td>Tasa de conversión</td><td>2.5%</td><td>3.1%</td><td>VERDE</td></tr>
-      //     </tbody>
-      //   `;
-      // content.appendChild(table);
-
-
-      const valGlobales = localStorage.getItem('resumenGlobal');
-      const resumenGlobal = JSON.parse(valGlobales);
-
-      const metrics = document.createElement('div');
-      metrics.className = 'metrics';
-
-      const m1 = document.createElement('div');
-      m1.className = 'metric';
-      m1.innerHTML = `<div class="label">Promedio Anual</div><div class="value">${resumenGlobal.promAnual}</div>`;
-
-      const m2 = document.createElement('div');
-      m2.className = 'metric';
-      m2.innerHTML = `<div class="label">Promedio Histórico</div><div class="value">${resumenGlobal.promHistorico}</div>`;
-
-      const m3 = document.createElement('div');
-      m3.className = 'metric';
-      let valor = Number(resumenGlobal.variacion) || 0;
-      let color = "black";
-      let textoValor = "";
-      if (valor > 0) { textoValor = `+${valor}`; color = "blue"; }
-      else if (valor < 0) { textoValor = `${valor}`; color = "red"; }
-      else { textoValor = "0"; color = "gray"; }
-
-      m3.innerHTML = `<div class="label">Δ vs mes anterior</div>
-                     <div class="value" style="color:${color}; font-weight:600;">
-                        ${textoValor}
-                     </div>`;
-
-      const m4 = document.createElement('div');
-      m4.className = 'metric';
-      let tendencia = (resumenGlobal.tendencia || "");
-      let colorTendencia = "black";
-      let icono = "";
-      if (tendencia === "Creciente%") { colorTendencia = "#007bff"; icono = "🔼"; }
-      else if (tendencia === "Decreciente%") { colorTendencia = "#d9534f"; icono = "🔽"; }
-      else if (tendencia === "Estable%") { colorTendencia = "#555"; icono = "➖"; }
-
-      const textoTendencia = tendencia.charAt(0).toUpperCase() + tendencia.slice(1);
-      m4.innerHTML = `<div class="label">Tendencia</div>
-                    <div class="value" style="color:${colorTendencia}; font-weight:600; display:flex; align-items:center; gap:6px;">
-                        <span>${icono}</span>
-                        <span>${textoTendencia}</span>
-                    </div>`;
-
-      metrics.appendChild(m1);
-      metrics.appendChild(m2);
-      metrics.appendChild(m3);
-      metrics.appendChild(m4);
-      content.appendChild(metrics);
-
-      // -----------------------
-      // Gráfico estilo premium
-      // -----------------------
-      const graf = document.createElement('div');
-      graf.style.marginTop = '20px';
-      graf.style.display = 'flex';
-      graf.style.justifyContent = 'center';
-
-      // Recuperamos el PNG generado
-      const pngBase64 = localStorage.getItem("ringGlobalPNG");
-      if (pngBase64 !== null) {
-        console.log("EXISTE en localStorage");
-      } else {console.log ('esta vacio')}
-
-      // Valor real del ring (puede venir de resumenGlobal.globalPercent o calculado previamente)
-      const valorRing = resumenGlobal.globalPercent || 0;
-
-      if (pngBase64) {
-        graf.innerHTML = `
-        <div style="
-            width:180px;
-            height:180px;
-            border-radius:50%;
-            background:#fff;
-            box-shadow:0 4px 12px rgba(0,0,0,0.1);
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            justify-content:center;
-            position:relative;
-        ">
-            <img src="${pngBase64}" style="width:140px; height:140px; border-radius:50%;">
-            <div style="
-                position:absolute;
-                font-size:1.5em;
-                font-weight:700;
-                color:#007bff;
-            ">
-
-            </div>
-        </div>
-    `;
-      } else {
-        graf.innerHTML = `
-        <div style="height:180px; width:180px; border:1px dashed #ddd; border-radius:50%;
-                    display:flex; align-items:center; justify-content:center; color:#999;
-                    box-shadow:0 4px 12px rgba(0,0,0,0.05);">
-            [Gráfico no disponible]
-        </div>
-    `;
-      }
-
-      content.appendChild(graf);
-
-
-      // --- RECUPERAR GRÁFICO ---
-      const imagenGrafico = localStorage.getItem("graficoCumplimientoGlobal");
-
-      // --- CARD CONTENEDOR ELEGANTE ---
-      const card = document.createElement("div");
-      card.style.marginTop = "25px";
-      card.style.padding = "20px";
-      card.style.border = "1px solid #e0e0e0";
-      card.style.borderRadius = "10px";
-      card.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
-      card.style.background = "#fff";
-
-      // --- TÍTULO DEL GRÁFICO ---
-      const tituloGraf = document.createElement("h3");
-      tituloGraf.textContent = "Evolución del Cumplimiento Global";
-      tituloGraf.style.fontSize = "18px";
-      tituloGraf.style.marginBottom = "15px";
-      tituloGraf.style.color = "#333";
-      card.appendChild(tituloGraf);
-
-      // --- CONTENEDOR DEL GRÁFICO ---
-      const graf2 = document.createElement("div");
-      graf2.style.display = "flex";
-      graf2.style.alignItems = "center";
-      graf2.style.justifyContent = "center";
-      graf2.style.padding = "10px 0";
-
-      if (imagenGrafico) {
-        graf2.innerHTML = `
-      <img src="${imagenGrafico}" 
-           style="
-             width: 520px; 
-             max-width: 100%;
-             border-radius: 6px;
-             border: 1px solid #ddd;
-             padding: 6px;
-             background: #fafafa;
-           ">
-    `;
-      } else {
-        graf2.innerHTML = `
-      <div style="
-        width: 520px; height: 220px;
-        border: 1px dashed #bbb; 
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #777;
-        background: #fafafa;
-      ">
-        [Gráfico no disponible]
-      </div>
-    `;
-      }
-
-      card.appendChild(graf2);
-
-      // --- PIE DE GRÁFICO ---
-      const nota = document.createElement("div");
-      nota.style.marginTop = "10px";
-      nota.style.fontSize = "12px";
-      nota.style.color = "#666";
-      nota.style.textAlign = "center";
-      nota.innerHTML =
-        "Este gráfico representa la evolución mensual del porcentaje de cumplimiento consolidado en toda la organización.";
-      card.appendChild(nota);
-
-      // Insertar card en el contenido
-      content.appendChild(card);
-
-      // Agregar página final al documento
+      // tabla de ejemplo
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <thead><tr><th>Indicador</th><th>Meta</th><th>Valor</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Ventas mensuales</td><td>100k</td><td>92k</td><td>AMARILLO</td></tr>
+          <tr><td>Tasa de conversión</td><td>2.5%</td><td>3.1%</td><td>VERDE</td></tr>
+        </tbody>
+      `;
+      content.appendChild(table);
       documento.appendChild(page);
     }
 
