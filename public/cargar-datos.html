@@ -84,6 +84,18 @@
             object-fit: contain;
         }
 
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
         #tablaIndicadores th,
         #tablaIndicadores td {
             border-right: none !important;
@@ -139,7 +151,7 @@
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
-                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
+                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li> -->
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
@@ -188,168 +200,199 @@
         <!--begin::App Main-->
         <main class="app-main">
             <div class="app-content-header">
-                <div class="container-fluid mb-3">
-                    <div class="row">
-                        <div class="col-sm-6">
+                <div class="container-fluid">
+
+                    <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
+                        <!-- 🔸 Filtros -->
+                        <div class="d-flex gap-3">
                             <h3 class="mb-0">Registrar mediciones</h3>
                         </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-end">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                            </ol>
+
+                        <!-- 🔹 Avatar asistente alineado a la derecha -->
+                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                            <div style="position: relative;">
+                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                    title="Haz clic para escuchar la explicación" />
+                                <button id="btnDetenerVoz"
+                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                    ✕
+                                </button>
+                            </div>
+                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
                         </div>
                     </div>
 
-                    <div class="card mb-4">
-                        <div class="card-header border-0" style="display: block">
-                            <div>
-                                <h4 id="titulo-indicador">Seleccionar Indicador</h4>
-                            </div>
-                        </div>
+                    <!--begin::Row-->
+                    <div class="row">
+                        <!-- Start col -->
+                        <div class="col-md-12">
 
-                        <div id="formulario-carga" class="p-3  ml-3 border rounded shadow-sm bg-light"
-                            style="display: none;">
-                            <input type="hidden" id="indicadorCodigo" name="indicadorCodigo">
-                            <h5 id="titulo-frecuencia">Frecuencia de medición: <span id="valor-frecuencia"></span></h5>
+                            <div class="card card-primary card-outline mb-4">
+                                <div class="card-header border-0" style="display: block">
+                                    <div>
+                                        <h4 id="titulo-indicador">Seleccionar Indicador</h4>
+                                    </div>
+                                </div>
 
-                            <h5 id="titulo-ult-medicion" ;>
-                                Última Medición:
-                                <span id="valor-ultima-medicion"></span>
-                                <span style="margin-left: 10px;">Correspondiente a:</span>
-                                <span id="periodo-ultima-medicion"></span>
-                                <span style="margin-left: 10px;">Valor medido:</span>
-                                <span id="cantidad-ultima-medicion"></span>
-                                <span style="margin-left: 10px">Meta vigente:</span>
-                                <span id="meta-vigente"></span>
-                            </h5>
+                                <div id="formulario-carga" class="p-3  ml-3 border rounded shadow-sm bg-light"
+                                    style="display: none;">
+                                    <input type="hidden" id="indicadorCodigo" name="indicadorCodigo">
+                                    <h5 id="titulo-frecuencia">Frecuencia de medición: <span
+                                            id="valor-frecuencia"></span></h5>
 
-                            <h5 id="titulo-comentarios">
-                                Comentarios: <span id="valor-comentarios"></span>
-                            </h5>
-                            <h5 id="titulo-plan-accion" style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
-                                Plan de Acción: <span id="valor-plan-accion"></span>
-                            </h5>
+                                    <h5 id="titulo-ult-medicion" ;>
+                                        Última Medición:
+                                        <span id="valor-ultima-medicion"></span>
+                                        <span style="margin-left: 10px;">Correspondiente a:</span>
+                                        <span id="periodo-ultima-medicion"></span>
+                                        <span style="margin-left: 10px;">Valor medido:</span>
+                                        <span id="cantidad-ultima-medicion"></span>
+                                        <span style="margin-left: 10px">Meta vigente:</span>
+                                        <span id="meta-vigente"></span>
+                                    </h5>
 
-                            <h5>Registre nueva medición:</h5>
+                                    <h5 id="titulo-comentarios">
+                                        Comentarios: <span id="valor-comentarios"></span>
+                                    </h5>
+                                    <h5 id="titulo-plan-accion"
+                                        style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                                        Plan de Acción: <span id="valor-plan-accion"></span>
+                                    </h5>
 
-                            <form id="form-carga" class="ml-3 m-1 bg-light" style="width: 90%;">
-                                <div class="row mb-2">
-                                    <div class="col-md-2">
-                                        <label for="texto-período" class="form-label"><strong>Período medido:</strong>
-                                            <i class="fas fa-info-circle info-icon" data-bs-toggle="tooltip"
-                                                data-bs-html="true" data-bs-custom-class="dark-tooltip" title="Identificación del período al que corresponde la medición.<br><br>
+                                    <h5>Registre nueva medición:</h5>
+
+                                    <form id="form-carga" class="ml-3 m-1 bg-light" style="width: 90%;">
+                                        <div class="row mb-2">
+                                            <div class="col-md-2">
+                                                <label for="texto-período" class="form-label"><strong>Período
+                                                        medido:</strong>
+                                                    <i class="fas fa-info-circle info-icon" data-bs-toggle="tooltip"
+                                                        data-bs-html="true" data-bs-custom-class="dark-tooltip" title="Identificación del período al que corresponde la medición.<br><br>
                                                 • <b>Mensual: </b> Número de mes en el año (1 a 12)<br><br>
                                                 • <b>Bimestral: </b> Número de bimestre en el año (1 a 6)<br><br>
                                                 • <b>Trimestral: </b> Número de trimestre en el año (1 a 4)<br><br>
                                                 • <b>Cuatrimestral: </b> Número de cuatrimestre en el año (1 a 3)<br><br>
                                                 • <b>Semestral: </b> Número de semestre en el año (1 o 2)<br><br>
                                                 • <b>Anual: </b> Año evaluado<br><br>">
-                                            </i>
-                                            <!--Eliminado de las opciones: 
+                                                    </i>
+                                                    <!--Eliminado de las opciones: 
                                                 • <b>Diaria: </b> Dia evaluado<br><br>
                                                 • <b>Semanal: </b> Número de semana en el año (1 a 52)<br><br>
                                                 • <b>Quincenal: </b> N° de 1 a 24 a razón de dos quincenas por mes)<br>Ejemplo: 2da de agosto = 16 (7 x 2 + 2)<br><br>
                                             -->
-                                        </label>
-                                        <span id="texto-periodo" class="form-control-plaintext"></span>
-                                    </div>
+                                                </label>
+                                                <span id="texto-periodo" class="form-control-plaintext"></span>
+                                            </div>
 
-                                    <div class="col-md-1">
-                                        <label id="label-valor-periodo" for="label-valor-periodo" class="form-label">
-                                            <strong>Valor período:</strong>
-                                        </label>
-                                        <input type="text" class="form-control" id="valor-periodo" required>
-                                    </div>
+                                            <div class="col-md-1">
+                                                <label id="label-valor-periodo" for="label-valor-periodo"
+                                                    class="form-label">
+                                                    <strong>Valor período:</strong>
+                                                </label>
+                                                <input type="text" class="form-control" id="valor-periodo" required>
+                                            </div>
 
-                                    <div class="col-md-1" id="campo-label-anio" style="display: block">
-                                        <label id="label-anio-periodo" for="label-anio-periodo" class="form-label">
-                                            <strong>Año:</strong></label>
-                                        <input type="text" class="form-control" id="input-anio-periodo" readonly>
-                                    </div>
+                                            <div class="col-md-1" id="campo-label-anio" style="display: block">
+                                                <label id="label-anio-periodo" for="label-anio-periodo"
+                                                    class="form-label">
+                                                    <strong>Año:</strong></label>
+                                                <input type="text" class="form-control" id="input-anio-periodo"
+                                                    readonly>
+                                            </div>
 
-                                    <div class="col-md-1">
-                                        <label class="form-label"><strong>Unidad:</strong></label>
-                                        <span id="unidad-carga" class="form-control-plaintext"></span>
-                                    </div>
+                                            <div class="col-md-1">
+                                                <label class="form-label"><strong>Unidad:</strong></label>
+                                                <span id="unidad-carga" class="form-control-plaintext"></span>
+                                            </div>
 
-                                    <div class="col-md-2">
-                                        <label class="form-label"><strong>Valor medido:</strong></label>
-                                        <input type="number" class="form-control" id="valor-carga" step="0.01" required>
-                                    </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label"><strong>Valor medido:</strong></label>
+                                                <input type="number" class="form-control" id="valor-carga" step="0.01"
+                                                    required>
+                                            </div>
 
-                                    <div class="col-md-2">
-                                        <label class="form-label"><strong>Meta actual:</strong></label>
-                                        <span id="meta-actual" class="form-control-plaintext"></span>
-                                    </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label"><strong>Meta actual:</strong></label>
+                                                <span id="meta-actual" class="form-control-plaintext"></span>
+                                            </div>
 
-                                    <div class="col-md-4">
-                                        <label class="form-label"><strong>Fórmula cálculo:</strong></label>
-                                        <span id="formula-calculo" class="form-control-plaintext"></span>
-                                    </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label"><strong>Fórmula cálculo:</strong></label>
+                                                <span id="formula-calculo" class="form-control-plaintext"></span>
+                                            </div>
 
-                                    <div class="col-md-12 mt-2">
-                                        <label>Comentarios:</label>
-                                        <input type="text" class="form-control" id="comentario-carga">
+                                            <div class="col-md-12 mt-2">
+                                                <label>Comentarios:</label>
+                                                <input type="text" class="form-control" id="comentario-carga">
+                                            </div>
+                                            <div class="col-md-12 mt-2">
+                                                <label>Plan de Acción:</label>
+                                                <input type="text" class="form-control" id="plan-accion-carga">
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-success  mt-2">Guardar</button>
+                                        <button type="button" class="btn btn-secondary mt-2"
+                                            id="cancelar-carga">Cancelar</button>
+                                    </form>
+                                </div>
+
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div class="card-title">
+                                        <i class="fas fa-chart-line me-2"></i>
+                                        Lista de Indicadores
                                     </div>
-                                    <div class="col-md-12 mt-2">
-                                        <label>Plan de Acción:</label>
-                                        <input type="text" class="form-control" id="plan-accion-carga">
+                                    <div class="card-tools">
+                                        <span class="badge bg-primary" id="totalIndicadores">0 indicadores</span>
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-success  mt-2">Guardar</button>
-                                <button type="button" class="btn btn-secondary mt-2"
-                                    id="cancelar-carga">Cancelar</button>
-                            </form>
-                        </div>
-
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <div class="card-title">
-                                <i class="fas fa-chart-line me-2"></i>
-                                Lista de Indicadores
-                            </div>
-                            <div class="card-tools">
-                                <span class="badge bg-primary" id="totalIndicadores">0 indicadores</span>
-                            </div>
-                        </div>
-
-                        <!-- Spinner mientras carga -->
-                        <div id="spinnerCumplimientoDestinos" class="text-center my-3">
-                            <div class="spinner-grow text-primary" role="status"></div>
-                            <div class="mt-2 fw-semibold text-secondary">Cargando...</div>
-                            <!-- <div id="overlaySpinner"
+                                <!-- Spinner mientras carga -->
+                                <div id="spinnerCumplimientoDestinos" class="text-center my-3">
+                                    <div class="spinner-grow text-primary" role="status"></div>
+                                    <div class="mt-2 fw-semibold text-secondary">Cargando...</div>
+                                    <!-- <div id="overlaySpinner"
                                 class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex flex-column justify-content-center align-items-center">
 
                                 <div class="spinner-border text-primary"></div>
                                 <div class="mt-2 fw-semibold text-secondary">Cargando...</div>
                             </div>
                             <div class="icon-spinner"> -->
-                            <!-- <i class="bi bi-arrow-repeat"></i>
+                                    <!-- <i class="bi bi-arrow-repeat"></i>
                                 <span class="spinner-text">Cargando...</span>
                             </div> -->
-                        </div>
+                                </div>
 
-                        <div class="table-responsive m-4">
-                            <table id="tablaIndicadores" class="table table-striped table-bordered table-sm">
-                                <!-- </table> -->
-                                <thead class="table-light">
-                                    <tr>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyIndicadores">
-                                    <!-- Los datos se cargarán dinámicamente aquí -->
-                                </tbody>
-                            </table>
-                        </div>
+                                <div class="table-responsive m-4">
+                                    <table id="tablaIndicadores" class="table table-striped table-bordered table-sm">
+                                        <!-- </table> -->
+                                        <thead class="table-light">
+                                            <tr>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyIndicadores">
+                                            <!-- Los datos se cargarán dinámicamente aquí -->
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                        <div class="text-center py-5" id="emptyState" style="display: none;">
-                            <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No hay indicadores registrados</h5>
-                            <p class="text-muted">Comience agregando su primer indicador PKI</p>
+                                <div class="text-center py-5" id="emptyState" style="display: none;">
+                                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No hay indicadores registrados</h5>
+                                    <p class="text-muted">Comience agregando su primer indicador PKI</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <footer class="main-footer text-center">
+                <strong>© 2025 - myResultIQ 1.0</strong>
+            </footer>
+
         </main>
 
         <!-- Modal de Confirmación de Logout -->
@@ -396,9 +439,13 @@
         // 📌📌 iniciarPagina()            
         async function iniciarPagina() {
 
+            console.time("cargarIndicadores");
             await cargarIndicadores();     // 🔹 después cargo los indicadores
+            console.timeEnd("cargarIndicadores");
 
+            console.time("cargarMediciones");
             medicionesGral = await leerMediciones();  // 2. Leer mediciones
+            console.timeEnd("cargarMediciones");
 
             // 3. Inicializar tooltips Bootstrap
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -408,20 +455,261 @@
             console.log("✅ Tooltips inicializados:", tooltipList.length);
         }
 
-        // 📌📌 cargarIndicadores()
+        // 📌📌 cargarIndicadores() OPTIMIZADA
         async function cargarIndicadores() {
             const spinner = document.getElementById('spinnerCumplimientoDestinos');
             spinner.style.display = 'block';
+
             try {
+                console.time("fetch de cargarIndicadores");
                 const response = await fetch('/api/indicadores');
+                console.timeEnd("fetch de cargarIndicadores");
                 indicadores = await response.json();
+
+                console.time("cargar Indicadores datosTabla");
+
+                // -------------------------------------------------------------
+                // 1) 🚀 Obtener TODOS los responsables con una sola consulta
+                // -------------------------------------------------------------
+                const responsablesLegajos = [...new Set(indicadores.map(i => i.responsable))];
+
+                const usuariosResp = await fetch('/api/usuarios/responsables', {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ legajos: responsablesLegajos })
+                }).then(r => r.json());
+
+                // Aquí está la corrección:
+                const usuariosLista = usuariosResp.data || [];
+
+                const usuariosPorLegajo = {};
+                usuariosLista.forEach(u => usuariosPorLegajo[u.legajo] = u);
+
+
+                // -------------------------------------------------------------
+                // 2) 🚀 Obtener TODAS las últimas mediciones en una sola consulta
+                // -------------------------------------------------------------
+                const respMed = await fetch('/api/mediciones/ultimas');
+                const { data: ultimasMediciones } = await respMed.json();
+                console.table (ultimasMediciones);
+
+                // Diccionario por indicador
+                const ultimaPorIndicador = {};
+                ultimasMediciones.forEach(m => ultimaPorIndicador[m.med_indicador_id] = m);
+                console.log(JSON.stringify(ultimaPorIndicador, null, 2));
+
+
+                // -------------------------------------------------------------
+                // 3) Armar la DataTable SIN await dentro del map 👍
+                // -------------------------------------------------------------
+                const datosTabla = indicadores.map((ind) => {
+
+                    const usuario = usuariosPorLegajo[ind.responsable];
+                    const ultima = ultimaPorIndicador[ind.id];
+                    console.log("Última medición para indicador", ind.id, ":", ultima); 
+                    console.log("Usuario responsable para legajo", ind.responsable, ":", usuario);
+
+                    let fecha = '';
+                    let resultadoActualizacion = '';
+                    let botones = '';
+                    let ultimoValorPeriodo = '';
+                    let ultimaMedicion = 0;
+
+                    // ---------------------------------------------------------
+                    // si tiene mediciones...
+                    // ---------------------------------------------------------
+                    if (ultima) {
+                        ultimoValorPeriodo = ultima.med_valor_periodo;
+                        ultimaMedicion = ultima.med_valor;
+
+                        // -----------------------------------------------------
+                        // Formateos de fecha según frecuencia
+                        // -----------------------------------------------------
+                        switch (ind.freq_medicion) {
+                            case '0201':    // diaria
+                                const p = ultima.med_valor_periodo.split("-");
+                                fecha = `${p[2]}/${p[1]}/${p[0]}`;
+                                break;
+
+                            case '0202':    // semanal
+                                fecha = "Sem. " + ultima.med_valor_periodo.substring(4, 6)
+                                    + ' de ' + ultima.med_valor_periodo.substring(0, 4);
+                                break;
+
+                            case '0203':    // quincenal
+                                const anio = ultima.med_valor_periodo.substring(0, 4);
+                                const qGlobal = parseInt(ultima.med_valor_periodo.substring(4, 6));
+                                const mesNum = Math.ceil(qGlobal / 2);
+                                const qMes = qGlobal % 2 === 0 ? 2 : 1;
+                                const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                                fecha = `${qMes}a. Quin. de ${meses[mesNum - 1]} de ${anio} (${qGlobal})`;
+                                break;
+
+                            case '0204':    // mensual
+                                const anio4 = ultima.med_valor_periodo.substring(0, 4);
+                                const mm = ultima.med_valor_periodo.substring(4, 6);
+                                const nombresMes = {
+                                    '01': 'Enero', '02': 'Febrero', '03': 'Marzo',
+                                    '04': 'Abril', '05': 'Mayo', '06': 'Junio',
+                                    '07': 'Julio', '08': 'Agosto', '09': 'Setiembre',
+                                    '10': 'Octubre', '11': 'Noviembre', '12': 'Diciembre'
+                                };
+                                fecha = `${nombresMes[mm]} de ${anio4}`;
+                                break;
+
+                            case '0205': fecha = ultima.med_valor_periodo.substring(4, 6) + ' Bimestre de ' + ultima.med_anio; break;
+                            case '0206': fecha = ultima.med_valor_periodo.substring(4, 6) + ' Trimestre de ' + ultima.med_anio; break;
+                            case '0207': fecha = ultima.med_valor_periodo.substring(4, 6) + ' Cuatrimestre de ' + ultima.med_valor_periodo.substring(0, 4); break;
+                            case '0208': fecha = ultima.med_valor_periodo.substring(4, 6) + ' Semestre de ' + ultima.med_valor_periodo.substring(0, 4); break;
+                            case '0209': fecha = 'Año ' + ultima.med_valor_periodo; break;
+                            case '0210':
+                                const yy = ultima.med_valor_periodo.substring(0, 4);
+                                const mm2 = ultima.med_valor_periodo.substring(4, 6);
+                                fecha = `${mm2} de ${yy}`;
+                                break;
+                        }
+
+                        // -----------------------------------------------------
+                        // Calcular si está Demorado / Actualizado
+                        // -----------------------------------------------------
+                        const hoy = new Date().toISOString().split("T")[0];
+                        const freqMedi = ind.freq_medicion.substring(2, 4);
+
+                        // esta función sigue siendo async, pero NO bloquea dentro del map
+                        const esperado = calcularFechaEsperada(hoy, freqMedi);
+
+                        // Comparación
+                        if (esperado !== ultima.med_valor_periodo) {
+                            resultadoActualizacion = ind.freq_medicion === '0210'
+                                ? `<td><span class="badge text-bg-info">Informado</span></td>`
+                                : `<td><span class="badge text-bg-danger">Demorado</span></td>`;
+
+                            botones = `
+                                <td class="icon-only-actions">
+                                    <button class="btn btn-primary btn-xs btn-icon-minimal" onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                        <i class="fas fa-eye fa-xs"></i>
+                                    </button>
+                                    <button class="btn btn-warning btn-xs btn-icon-minimal" onclick="editarIndicador(
+                                        '${ind.id}','${ind.codigo_id}','${ind.nombre}',
+                                        '${ind.unidad_medida}','${ind.freq_medicion}',
+                                        '${fecha}','${ultimoValorPeriodo}','${ultimaMedicion}',
+                                        '${ind.formula_calculo}','${ind.unico_valor}')">
+                                        <i class="fas fa-edit fa-xs"></i>
+                                    </button>
+                                </td>
+                                `;
+                        } else {
+                            resultadoActualizacion = ind.freq_medicion === '0210'
+                                ? `<td><span class="badge text-bg-info">Informado</span></td>`
+                                : `<td><span class="badge text-bg-success">Actualizado</span></td>`;
+
+                            botones = `
+                        <td class="icon-only-actions">
+                            <button class="btn btn-primary btn-xs btn-icon-minimal" onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                <i class="fas fa-eye fa-xs"></i>
+                            </button>
+                        </td>`;
+                        }
+                    }
+
+                    // ---------------------------------------------------------
+                    // si NO tiene mediciones
+                    // ---------------------------------------------------------
+                    else {
+                        fecha = "sin mediciones";
+                        resultadoActualizacion = `<td><span class="badge text-bg-secondary">Pendiente</span></td>`;
+                        botones = `
+                    <td class="icon-only-actions">
+                        <button class="btn btn-primary btn-xs btn-icon-minimal" onclick="verDetalleIndicador('${ind.codigo_id}')">
+                            <i class="fas fa-eye fa-xs"></i>
+                        </button>
+                        <button class="btn btn-warning btn-xs btn-icon-minimal" onclick="editarIndicador(
+                            '${ind.id}','${ind.codigo_id}','${ind.nombre}',
+                            '${ind.unidad_medida}','${ind.freq_medicion}',
+                            '${fecha}','${ultimoValorPeriodo}','${ultimaMedicion}',
+                            '${ind.formula_calculo}','${ind.unico_valor}')">
+                            <i class="fas fa-edit fa-xs"></i>
+                        </button>
+                    </td>`;
+                    }
+
+                    return {
+                        codigo: ind.codigo_id,
+                        nombre: ind.nombre,
+                        descripcion: ind.descripcion,
+                        responsable: `${usuario.nombres} ${usuario.apellido}`,
+                        frecuencia: CodigosService.getNombreCodigo(ind.freq_medicion),
+                        carga: fecha,
+                        estado: resultadoActualizacion,
+                        acciones: botones,
+                    };
+                });
+
+                console.timeEnd("cargar Indicadores datosTabla");
+
+                // -------------------------------------------------------------
+                // Inicializar DataTable
+                // -------------------------------------------------------------
+                console.time("inicializarTablaIndicadores");
+
+                if (!tablaIndicadores) {
+                    tablaIndicadores = $('#tablaIndicadores').DataTable({
+                        data: datosTabla,
+                        columns: [
+                            { data: 'codigo', title: 'Código' },
+                            { data: 'nombre', title: 'Nombre' },
+                            { data: 'descripcion', title: 'Descripción' },
+                            { data: 'responsable', title: 'Responsable' },
+                            { data: 'frecuencia', title: 'Medición' },
+                            { data: 'carga', title: 'Última Medición' },
+                            { data: 'estado', title: 'Estado' },
+                            { data: 'acciones', title: 'Acciones', orderable: false, searchable: false },
+                        ],
+                        language: {
+                            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                        },
+                        order: [[0, 'asc']]
+                    });
+                } else {
+                    tablaIndicadores.clear().rows.add(datosTabla).draw();
+                }
+
+                console.timeEnd("inicializarTablaIndicadores");
+
+                // -------------------------------------------------------------
+                // UI final
+                // -------------------------------------------------------------
+                spinner.style.display = 'none';
+
+            } catch (error) {
+                console.error('Error cargando indicadores:', error);
+                alert('No se pudieron cargar los indicadores.');
+            }
+        }
+
+
+
+
+        // 📌📌 cargarIndicadores()
+        async function MMMcargarIndicadores() {
+            const spinner = document.getElementById('spinnerCumplimientoDestinos');
+            spinner.style.display = 'block';
+
+            try {
+                console.time("fetch de cargarIndicadores");
+                const response = await fetch('/api/indicadores');
+                console.timeEnd("fetch de cargarIndicadores");
+                indicadores = await response.json();
+
+                console.time("cargar Indicadores datosTabla");
 
                 // Transformamos los datos para que DataTable los entienda
                 const datosTabla = await Promise.all(indicadores.map(async (ind) => {
-                    const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
-
-                    // lee la ultima medición del indicador 
-                    const ultima = await getUltimaMedicionPorIndicador(ind.id);
+                    // ✔ Ejecutamos las dos consultas EN PARALELO
+                    const [usuario, ultima] = await Promise.all([
+                        obtenerUsuarioPorLegajo(ind.responsable),
+                        getUltimaMedicionPorIndicador(ind.id)
+                    ]);
                     let fecha = '';
                     let resultadoActualizacion = 0;
                     let botones = '';
@@ -608,6 +896,9 @@
                     };
                 }));
 
+                console.timeEnd("cargar Indicadores datosTabla");
+
+                console.time("inicializarTablaIndicadores");
                 // Inicializar tabla la primera vez
                 if (!tablaIndicadores) {
                     tablaIndicadores = $('#tablaIndicadores').DataTable({
@@ -643,6 +934,7 @@
                     // Actualizar datos sin destruir la tabla
                     tablaIndicadores.clear().rows.add(datosTabla).draw();
                 }
+                console.timeEnd("inicializarTablaIndicadores");
 
                 spinner.style.display = 'none';
 
@@ -1381,25 +1673,6 @@
                 return null;
             }
         }
-
-        // 📌📌 CodigosService - Servicio global para texto de tabla de códigos
-        // const CodigosService = {
-        //     codigosMap: {},
-
-        //     async init() {
-        //         const response = await fetch('/api/codigos');
-        //         if (!response.ok) throw new Error('No se pudo obtener los codigos.');
-        //         const codigos = await response.json();
-
-        //         codigos.forEach(c => {
-        //             this.codigosMap[c.cod_tabla] = c.cod_nombre;
-        //         });
-        //     },
-
-        //     getNombreCodigo(codigo) {
-        //         return this.codigosMap[codigo] || '-';
-        //     }
-        // };
 
         // 📌📌 cancelarBtn.addEventListener('click'
         cancelarBtn.addEventListener('click', () => {

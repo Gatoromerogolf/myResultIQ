@@ -30,6 +30,18 @@
     .nav-item {
         margin-bottom: 0;
     }
+
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
 </style>
 
 <head>
@@ -91,7 +103,7 @@
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
-                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
+                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li> -->
                     <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
                 </ul>
                 <!--end::Start Navbar Links-->
@@ -106,14 +118,13 @@
                     <!--end::Navbar Search-->
 
                     <!--begin::Messages Dropdown Menu-->
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link" data-bs-toggle="dropdown" href="#">
                             <i class="bi bi-chat-text"></i>
                             <span class="navbar-badge badge text-bg-danger">3</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <a href="#" class="dropdown-item">
-                                <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
                                         <img src="dist/images/user1-128x128.jpg" alt="User Avatar"
@@ -131,11 +142,9 @@
                                         </p>
                                     </div>
                                 </div>
-                                <!--end::Message-->
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item">
-                                <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
                                         <img src="dist/images/user8-128x128.jpg" alt="User Avatar"
@@ -154,11 +163,9 @@
                                         </p>
                                     </div>
                                 </div>
-                                <!--end::Message-->
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item">
-                                <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
                                         <img src="dist/images/user3-128x128.jpg" alt="User Avatar"
@@ -177,15 +184,14 @@
                                         </p>
                                     </div>
                                 </div>
-                                <!--end::Message-->
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
                         </div>
-                    </li>
+                    </li> -->
                     <!--end::Messages Dropdown Menu-->
                     <!--begin::Notifications Dropdown Menu-->
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link" data-bs-toggle="dropdown" href="#">
                             <i class="bi bi-bell-fill"></i>
                             <span class="navbar-badge badge text-bg-warning">15</span>
@@ -210,7 +216,7 @@
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
                         </div>
-                    </li>
+                    </li> -->
                     <!--end::Notifications Dropdown Menu-->
 
                     <!--begin::Fullscreen Toggle-->
@@ -270,20 +276,31 @@
             <!--begin::App Content Header-->
             <div class="app-content-header">
                 <!--begin::Container-->
-                <div class="container-fluid mb-3">
+                <div class="container-fluid">
                     <!--begin::Row-->
 
-                    <div class="row">
-                        <div class="col-sm-6">
+                    <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
+                        <!-- 🔸 Filtros -->
+                        <div class="d-flex gap-3">
                             <h3 class="mb-0">Mi Perfil</h3>
                         </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-end">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                            </ol>
+
+                        <!-- 🔹 Avatar asistente alineado a la derecha -->
+                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                            <div style="position: relative;">
+                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                    title="Haz clic para escuchar la explicación" />
+                                <button id="btnDetenerVoz"
+                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                    ✕
+                                </button>
+                            </div>
+                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
                         </div>
                     </div>
+                    <!--end::Row-->
 
                     <section class="content">
                         <div class="container-fluid">
@@ -373,9 +390,9 @@
             <!-- <body class="p-4"> -->
 
             <!--end::App Content-->
-            < <footer class="main-footer text-center">
+            <footer class="main-footer text-center">
                 <strong>© 2025 - MiResultIQ 1.0</strong>
-                </footer>
+            </footer>
 
         </main>
         <!--end::App nain-->
@@ -411,7 +428,7 @@
         </script>
 
     </div>
-<!-- 
+    <!-- 
     <script>
         document.getElementById('btn-filtrar').addEventListener('click', function () {
             const filtroPeriodo = document.getElementById('filtro-periodo').value;

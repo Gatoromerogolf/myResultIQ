@@ -1002,6 +1002,32 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
     }
 });
 
+
+app.post("/api/usuarios/responsables", async (req, res) => {
+  try {
+    const { legajos } = req.body;
+
+    if (!Array.isArray(legajos) || legajos.length === 0) {
+      return res.status(400).json({ ok: false, msg: "Lista de legajos vacía" });
+    }
+
+    const [usuarios] = await pool.query(
+      `SELECT * FROM usuarios WHERE legajo IN (?)`,
+      [legajos]
+    );
+
+    res.json({ ok: true, data: usuarios });
+
+  } catch (error) {
+    console.error("Error en /usuarios/responsables:", error);
+    res.status(500).json({ ok: false, msg: "Error interno" });
+  }
+});
+
+
+
+
+
 // // 🚫🚫🚫 Obtener todos los sectores
 app.get('/sectores', async (req, res) => {
     try {
@@ -1510,6 +1536,35 @@ app.get('/api/XXXmediciones/:idIndicador', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error interno del servidor' });
     }
 });
+
+
+app.get("/api/mediciones/ultimas", async (req, res) => {
+  try {
+
+    const [ultimas] = await pool.query(`
+      SELECT m.*
+      FROM mediciones m
+      INNER JOIN (
+          SELECT med_indicador_id, MAX(med_valor_periodo) AS ultima_fecha
+          FROM mediciones
+          GROUP BY med_indicador_id
+      ) AS u
+      ON m.med_indicador_id = u.med_indicador_id
+      AND m.med_valor_periodo = u.ultima_fecha
+      ORDER BY m.med_indicador_id;
+    `);
+
+    res.json({ ok: true, data: ultimas });
+
+  } catch (error) {
+    console.error("Error en /mediciones/ultimas:", error);
+    res.status(500).json({ ok: false, msg: "Error interno" });
+  }
+});
+
+
+
+
 
 app.get('/api/mediciones/:idIndicador', async (req, res) => {
     const { idIndicador } = req.params;

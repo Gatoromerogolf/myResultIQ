@@ -93,6 +93,19 @@
             /* opcional: alinear texto a la izquierda */
         }
 
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+
         #tablaMediciones th,
         #tablaMediciones td {
             border-right: none !important;
@@ -129,7 +142,7 @@
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
-                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
+                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li> -->
                     <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
                 </ul>
                 <!--end::Start Navbar Links-->
@@ -138,7 +151,7 @@
 
 
                     <!--begin::Messages Dropdown Menu-->
-<!--                     <li class="nav-item dropdown">
+                    <!--                     <li class="nav-item dropdown">
                         <a class="nav-link" data-bs-toggle="dropdown" href="#">
                             <i class="bi bi-chat-text"></i>
                             <span class="navbar-badge badge text-bg-danger">3</span>
@@ -295,58 +308,83 @@
             <!--begin::App Content Header-->
             <div class="app-content-header">
                 <!--begin::Container-->
-                <div class="container-fluid mb-3">
+                <div class="container-fluid">
+                    <!--begin::Row-->
+                    <!-- 🔹 Barra superior de filtros + Asistente -->
+                    <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
+                        <!-- 🔸 Filtros -->
+                        <div class="d-flex gap-3">
+                            <h3 class="mb-0">Histórico de mediciones</h3>
+                        </div>
+
+                        <!-- 🔹 Avatar asistente alineado a la derecha -->
+                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                            <div style="position: relative;">
+                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                    title="Haz clic para escuchar la explicación" />
+                                <button id="btnDetenerVoz"
+                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                    ✕
+                                </button>
+                            </div>
+                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                        </div>
+                    </div>
+                    <!--end::Row-->
+
                     <!--begin::Row-->
                     <div class="row">
-                        <div class="col-sm-6">
-                            <h3 class="mb-0">Histórico de cargas</h3>
+                        <!-- Start col -->
+                        <div class="col-md-12">
+                            <div class="card card-primary card-outline">
+                                <div class="card-header">
+
+                                    <!--begin::Empty State-->
+                                    <div class="text-center py-5" id="emptyState" style="display: none;">
+                                        <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                                        <h5 class="text-muted">No hay indicadores registrados</h5>
+                                        <p class="text-muted">Comience agregando su primer indicador PKI</p>
+                                    </div>
+                                    <!--end::Empty State-->
+
+                                    <div class="card-tools">
+                                        <span class="badge bg-primary" id="totalIndicadores">0 indicadores</span>
+                                    </div>
+
+                                    <table id="tablaMediciones" class="table table-striped table-bordered table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Indicador</th>
+                                                <th>Medición</th>
+                                                <th>Periodo</th>
+                                                <th>Año</th>
+                                                <th>Valor</th>
+                                                <th>Unid</th>
+                                                <th>Comentarios</th>
+                                                <th>Plan de Acción</th>
+                                                <th>Respons. Medición</th>
+                                                <th>Respons. Registro</th>
+                                                <th>Fecha Registro</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-end">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                            </ol>
-                        </div>
                     </div>
-
-
-                    <!--begin::Empty State-->
-                    <div class="text-center py-5" id="emptyState" style="display: none;">
-                        <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
-                        <h5 class="text-muted">No hay indicadores registrados</h5>
-                        <p class="text-muted">Comience agregando su primer indicador PKI</p>
-                    </div>
-                    <!--end::Empty State-->
-
-                    <div class="card-tools">
-                        <span class="badge bg-primary" id="totalIndicadores">0 indicadores</span>
-                    </div>
-
-                    <table id="tablaMediciones" class="table table-striped table-bordered table-sm">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Indicador</th>
-                                <th>Medición</th>
-                                <th>Periodo</th>
-                                <th>Año</th>
-                                <th>Valor</th>
-                                <th>Unid</th>
-                                <th>Comentarios</th>
-                                <th>Plan de Acción</th>
-                                <th>Respons. Medición</th>
-                                <th>Respons. Registro</th>
-                                <th>Fecha Registro</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-
                 </div>
             </div>
         </main>
     </div>
 
+    <footer class="main-footer text-center">
+        <strong>© 2025 - myResultIQ 1.0</strong>
+    </footer>
 
     <!-- Modal de Confirmación de Logout -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -397,7 +435,6 @@
 
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
 
 
     <script>

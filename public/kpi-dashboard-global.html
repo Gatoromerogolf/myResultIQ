@@ -267,18 +267,6 @@
             margin-bottom: 20px;
         }
 
-        /* .filters-bar select {
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 0.9rem;
-        }
-
-        .filters-bar button {
-            border-radius: 6px;
-            font-size: 0.9rem;
-        } */
-
         .children-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -298,56 +286,55 @@
             margin: auto;
         }
 
-#indicatorDetailCanvas {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
+        #indicatorDetailCanvas {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
 
-/* Permitir shrink dentro de Bootstrap */
-.col-md-8 {
-    min-width: 0;
-}
+        /* Permitir shrink dentro de Bootstrap */
+        .col-md-8 {
+            min-width: 0;
+        }
 
-.chart-box {
-    flex: 1 1 350px;
-    border: 2px solid #e1e1e1;
-    border-radius: 8px;
-    padding: 12px;
-    background: #fafafa;
+        .chart-box {
+            flex: 1 1 350px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            padding: 12px;
+            background: #fafafa;
 
-    height: 360px;             
-    display: flex;
-    flex-direction: column;
-}
+            height: 360px;
+            display: flex;
+            flex-direction: column;
+        }
 
-.chart-box canvas {
-    flex: 1;
-    width: 100% !important;
-    height: 100% !important;
-}
+        .chart-box canvas {
+            flex: 1;
+            width: 100% !important;
+            height: 100% !important;
+        }
 
-.bar-legend {
-    font-size: 13px;
-    line-height: 1.3;
-    padding: 10px;
-    border-top: 1px solid #ccc;
-    flex-shrink: 0;          
-}
+        .bar-legend {
+            font-size: 13px;
+            line-height: 1.3;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+            flex-shrink: 0;
+        }
 
-.bar-legend-item {
-    margin-bottom: 3px;
-}
+        .bar-legend-item {
+            margin-bottom: 3px;
+        }
 
-/* En pantallas medianas → el de barras baja */
-@media (max-width: 1100px) {
-    .chart-box {
-        flex: 1 1 100%;
-        height: auto;        
-    }
-}
-
+        /* En pantallas medianas → el de barras baja */
+        @media (max-width: 1100px) {
+            .chart-box {
+                flex: 1 1 100%;
+                height: auto;
+            }
+        }
     </style>
 
 </head>
@@ -1195,86 +1182,225 @@
             });
         }
 
+function renderChildren(node) {
 
-        function MMMrenderChildren(node) {
-            const container = document.getElementById("childrenArea");
-            if (!container) return;
+    console.log("NODE:", node);
+    console.log("TYPE:", node.type);
+    console.log("CHILDREN:", node.children);
+    console.log("CHILDREN LENGTH:", node.children?.length);
 
-            container.innerHTML = "";
+    const container = document.getElementById("childrenArea");
+    if (!container) {
+        console.error("❌ No se encontró el contenedor #childrenArea en el DOM");
+        return;
+    }
 
-            if (!node || !node.children || node.children.length === 0) {
-                container.innerHTML = `<p class="text-muted">--</p>`;
-                return;
+    container.innerHTML = "";
+
+    const detail = document.getElementById("indicatorDetailCanvas");
+
+    // ⭐⭐⭐ CONTROL DEFINITIVO ⭐⭐⭐
+    // SI ES INDICADOR → NO TIENE HIJOS → NO GRAFICAMOS NADA
+    if (node.type === "indicator") {
+
+        console.warn("📌 Indicador detectado — No se dibujan hijos ni gráficos");
+
+        // Limpio hijos
+        container.innerHTML = "";
+
+        // Muestro botones
+        detail.innerHTML = `
+            <div class="text-center mt-3">
+                <button id="btnMasInfo" class="btn btn-primary btn-sm mb-2">
+                    Más detalles del indicador
+                </button><br>
+                <button id="btnEvolucion" class="btn btn-secondary btn-sm">
+                    Ver evolución histórica
+                </button>
+            </div>
+        `;
+
+        // Hooks de eventos
+        document.getElementById("btnMasInfo")?.addEventListener("click", () => {
+            abrirModalDetalleIndicador(node);
+        });
+
+        document.getElementById("btnEvolucion")?.addEventListener("click", () => {
+            abrirModalEvolucion(node);
+        });
+
+        return; // ⛔ NO SE SIGUE, NO SE DIBUJAN GRÁFICOS
+    }
+
+    // ============================
+    //   RENDER DE HIJOS (SECTORES)
+    // ============================
+
+    if (node.children && Array.isArray(node.children)) {
+        node.children.forEach(child => {
+
+            const comp = computeCompliance(child);
+            const weight = Number(child.weight) || 0;
+
+            let color = "gray";
+            if (child.type === "indicator") {
+                color = child.colorCumplimiento || "gray";
+            } else {
+                color = comp >= 100 ? "green" :
+                        comp >= 50  ? "orange" : "red";
             }
 
-            // Render tiles
-            node.children.forEach(child => {
-                const comp = computeCompliance(child);
-                const weight = Number(child.weight) || 0;
+            const tile = document.createElement("div");
+            tile.className = "mb-2";
 
-                let color = (child.type === "indicator")
-                    ? (child.colorCumplimiento || "gray")
-                    : comp >= 100 ? "green" : comp >= 50 ? "orange" : "red";
-
-                const tile = document.createElement("div");
-                tile.className = "mb-2";
-                tile.innerHTML = `
-                        <div class="info-box bg-light elevation-2" style="cursor:pointer;">
-                            <div class="info-box-content">
-                                <span class="info-box-text font-weight-bold">${child.name}</span>
-                                <span class="info-box-number">Cumplimiento: ${comp.toFixed(2)}%</span>
-                                <div class="progress" style="height: 12px; border-radius:6px;">
-                                    <div class="progress-bar" style="width:${comp.toFixed(2)}%; background:${color};"></div>
-                                </div>
-                                <span class="progress-description">Peso: ${weight.toFixed(1)}%</span>
-                            </div>
+            tile.innerHTML = `
+                <div class="info-box bg-light elevation-2" style="cursor:pointer;">
+                    <div class="info-box-content">
+                        <span class="info-box-text font-weight-bold">${child.name || "Sin nombre"}</span>
+                        <span class="info-box-number">Cumplimiento: ${comp.toFixed(2)}%</span>
+                        <div class="progress" style="height: 12px; border-radius:6px; overflow:hidden;">
+                            <div class="progress-bar" style="width: ${comp.toFixed(2)}%; background:${color};"></div>
                         </div>
-                    `;
-
-                tile.addEventListener("click", () => {
-                    stack.push(child);
-                    render();
-                });
-
-                container.appendChild(tile);
-            });
-
-            // === GRÁFICO ===
-            const detail = document.getElementById("indicatorDetail");
-            detail.innerHTML = `
-                    <div class="chart-container">
-                        <canvas id="childPie"></canvas>
+                        <span class="progress-description">Peso: ${weight.toFixed(1)}%</span>
                     </div>
-                `;
+                </div>
+            `;
 
-            const canvas = document.getElementById("childPie");
-            const ctx = canvas.getContext("2d");
-
-            const labels = node.children.map(c => c.name);
-            const values = node.children.map(c => computeCompliance(c));
-
-            const colors = node.children.map(c => {
-                const comp = computeCompliance(c);
-                return c.type === "indicator"
-                    ? (c.colorCumplimiento || "gray")
-                    : comp >= 100 ? "green" : comp >= 50 ? "orange" : "red";
+            tile.addEventListener("click", () => {
+                stack.push(child);
+                render();
             });
 
-            if (window.childPieChart) window.childPieChart.destroy();
+            container.appendChild(tile);
+        });
+    }
 
-            window.childPieChart = new Chart(ctx, {
-                type: "pie",
-                data: { labels, datasets: [{ data: values, backgroundColor: colors }] },
-                options: {
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: "bottom" } }
+    // ==============================
+    //    GRÁFICOS (SOLO SI HAY HIJOS)
+    // ==============================
+
+    if (!node.children || node.children.length === 0) {
+        detail.innerHTML = "";
+        return;
+    }
+
+    // Plantilla HTML para los gráficos
+detail.innerHTML = `
+    <div class="text-center mb-2">
+        <p class="mb-0">El área gris representa el espacio pendiente para completar el 100%.</p>
+    </div>
+
+    <div class="d-flex charts-container" style="gap: 20px;">
+        <div class="chart-box">
+            <canvas id="childPie"></canvas>
+        </div>
+        <div class="chart-box">
+            <canvas id="childBar"></canvas>
+            <div id="barLegend" class="bar-legend mt-2"></div>
+        </div>
+    </div>
+`;
+
+
+    // PIE ==========================
+    const canvas = document.getElementById("childPie");
+    canvas.style.border = "2px solid red";
+    const ctx = canvas.getContext("2d");
+
+    const labels = node.children.map(c => c.name);
+
+    // Cumplimiento ponderado
+    const values = node.children.map(c => {
+        const comp = computeCompliance(c);
+        const weight = Number(c.weight) || 0;
+        return (comp * weight) / 100; // ponderación
+    });
+
+    // Espacio faltante
+    const total = values.reduce((a, b) => a + b, 0);
+    const missing = Math.max(0, 100 - total);
+
+    labels.push("Pendiente");
+    values.push(missing);
+
+    let colors = labels.map((_, i) => `hsl(${(i * 45) % 360}, 70%, 55%)`);
+    colors[colors.length - 1] = "#e0e0e0"; // gris para el faltante
+
+    if (window.childPieChart) window.childPieChart.destroy();
+
+    window.childPieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels,
+            datasets: [{
+                data: values,
+                backgroundColor: colors
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: "bottom" },
+                datalabels: {
+                    color: "#000",
+                    font: { weight: "bold", size: 16 },
+                    formatter: (value) => value.toFixed(2) + "%"
                 }
-            });
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // BAR ==========================
+    const canvasBar = document.getElementById("childBar");
+    canvasBar.style.border = "2px solid green";
+    const ctxBar = canvasBar.getContext("2d");
+
+    const numericLabels = node.children.map((_, i) => "Var " + (i + 1));
+
+    if (window.childBarChart) window.childBarChart.destroy();
+
+    window.childBarChart = new Chart(ctxBar, {
+        type: "bar",
+        data: {
+            labels: numericLabels,
+            datasets: [{
+                label: '% Cumplimiento',
+                data: values.slice(0, values.length - 1), // sin "Pendiente"
+                backgroundColor: colors.slice(0, colors.length - 1)
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, max: 120 }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `${ctx.raw.toFixed(2)}%`
+                    }
+                }
+            }
         }
+    });
+
+}
+
 
 
         // // 🚫🚫🚫  renderChildren(node)
-        function renderChildren(node) {
+        function XXXrenderChildren(node) {
+
+            console.log("NODE:", node);
+            console.log("TYPE:", node.type);
+            console.log("CHILDREN:", node.children);
+            console.log("CHILDREN LENGTH:", node.children?.length);
+
+
             const container = document.getElementById("childrenArea");
             if (!container) {
                 console.error("❌ No se encontró el contenedor #childrenArea en el DOM");
@@ -1282,11 +1408,6 @@
             }
 
             container.innerHTML = "";
-
-            // if (!node || !node.children || node.children.length === 0) {
-            //     container.innerHTML = `<p class="text-muted">--</p>`;
-            //     return;
-            // }
 
             node.children.forEach(child => {
                 // Cumplimiento ponderado del sub-nodo
@@ -1303,10 +1424,7 @@
                 }
 
                 const tile = document.createElement("div");
-                // tile.className = "col-12";
-                // tile.className = "col-12 mb-2";
                 tile.className = "mb-2";
-
 
                 tile.innerHTML = `
                     <div class="info-box bg-light elevation-2" style="cursor:pointer;">
@@ -1332,17 +1450,45 @@
 
             // === GRÁFICO CIRCULAR ===
 
+            // const detail = document.getElementById("indicatorDetailCanvas");
+
+            // detail.innerHTML = `
+            //         <div class="chart-box">
+            //             <canvas id="childPie"></canvas>
+            //         </div>
+            //         <div class="chart-box">
+            //             <canvas id="childBar"></canvas>
+            //             <div id="barLegend" class="bar-legend mt-2"></div>
+            //         </div>
+            //     `;
+
             const detail = document.getElementById("indicatorDetailCanvas");
 
-            detail.innerHTML = `
-                    <div class="chart-box">
-                        <canvas id="childPie"></canvas>
-                    </div>
-                    <div class="chart-box">
-                        <canvas id="childBar"></canvas>
-                        <div id="barLegend" class="bar-legend mt-2"></div>
+            // 👉 Si el nodo NO tiene hijos, mostrar los botones y no graficar nada
+            if (!node.children || node.children.length === 0) {
+                detail.innerHTML = `
+                    <div class="text-center mt-3">
+                        <button id="btnMasInfo" class="btn btn-primary btn-sm mb-2">
+                            Más detalles del indicador
+                        </button><br>
+                        <button id="btnEvolucion" class="btn btn-secondary btn-sm">
+                            Ver evolución histórica
+                        </button>
                     </div>
                 `;
+
+                // Aquí podés enganchar eventos si querés
+                document.getElementById("btnMasInfo")?.addEventListener("click", () => {
+                    abrirModalDetalleIndicador(node);
+                });
+
+                document.getElementById("btnEvolucion")?.addEventListener("click", () => {
+                    abrirModalEvolucion(node);
+                });
+
+                return; // 💥 IMPORTANTE: no seguir, no dibujar gráficos
+            }
+
 
             const canvas = document.getElementById("childPie");
 
@@ -1352,8 +1498,27 @@
             console.log("ctx:", ctx);
 
             // Datos del gráfico
+            // const labels = node.children.map(c => c.name);
+            // const values = node.children.map(c => computeCompliance(c));
+
+            // Datos para gráfico ponderado: comp * weight
             const labels = node.children.map(c => c.name);
-            const values = node.children.map(c => computeCompliance(c));  
+
+            // Cumplimiento ponderado
+            const values = node.children.map(c => {
+                const comp = computeCompliance(c);
+                const weight = Number(c.weight) || 0;
+                return (comp * weight) / 100;  // 💥 ponderación
+            });
+
+            // Calcular cuánto falta hasta 100%
+            const total = values.reduce((a, b) => a + b, 0);
+            const missing = Math.max(0, 100 - total);
+
+            // Agregar segmento vacío al pie
+            labels.push("Pendiente");
+            values.push(missing);
+
 
             // 🎨 Paleta de colores distinta para cada valor
             const fallbackColors = [
@@ -1363,6 +1528,9 @@
             ];
 
             const colors = labels.map((_, i) => `hsl(${(i * 45) % 360}, 70%, 55%)`);
+            // Agregar color gris para el segmento faltante
+            colors.push("#e0e0e0");
+
 
             // Destruir gráfico previo si existe
             if (window.childPieChart) {
@@ -1465,6 +1633,7 @@
             // det.innerHTML = '';
 
             if (node.type === 'indicator') {
+
                 const peso = node.weight ?? 0;
                 const valor = node.value ?? '-';
                 const meta = node.target ?? '-';
@@ -1517,21 +1686,6 @@
                     </div>
                     </div>
                 `;
-
-                // Eventos botón modal Mas detalles
-                // document.getElementById('btnDetalle').onclick = () => {
-                //     document.getElementById('modalDetalleBody').innerHTML = `
-                //         <p><strong>Código:</strong> ${codigo} (${key_id})</p>
-                //         <p><strong>Descripción:</strong> ${descripcion}</p>
-                //         <p><strong>Objetivo:</strong> ${objetivo}${unidad}</p>
-                //         <p><strong>Fuente de datos:</strong> ${fuente_datos}</p>
-                //         <p><strong>Forma de cálculo:</strong> ${formula_calculo}</p>
-                //         <p><strong>Frecuencia de medición:</strong> ${freq_medicion}</p>
-                //         <p><strong>Peso relativo:</strong> ${peso}%</p>
-                //         <p><strong>Responsable:</strong> ${responsable}</p>
-                //     `;
-                //     new bootstrap.Modal(document.getElementById('modalDetalle')).show();
-                // };
 
                 document.getElementById('btnDetalle').onclick = () => verDetalleIndicador(codigo);
 
