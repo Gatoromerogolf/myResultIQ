@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       0
     );
 
-    // === 3️⃣ Obtener los datos globales desde el dashboard principal ===
+    /** @type {*} */
     const dataGlobal = obtenerDatosGlobalesDesdeDashboard();
 
     // Incorporar los nuevos campos al objeto global
@@ -131,6 +131,11 @@ function mostrarNarrativaGlobal(data) {
 
 /**
  * 📊 Muestra las conclusiones generales y por destino
+/**
+ *
+ *
+ * @param {*} destinos
+ * @return {*} 
  */
 function mostrarConclusiones(destinos) {
   console.log("Destinos procesados:", destinos);
@@ -143,7 +148,7 @@ function mostrarConclusiones(destinos) {
     return;
   }
 
-  // Calcular métricas generales
+  /** @type {*} */
   const promedioGlobal = (
     destinos.reduce((acc, d) => acc + d.promedio_cumplimiento, 0) / destinos.length
   ).toFixed(2);
@@ -174,7 +179,7 @@ function mostrarConclusiones(destinos) {
       </p>
     `;
 
-  // --- Tabla por destino ---
+  /** @type {*} */
   const listaDestinos = destinos
     .map((d) => `
           <tr>

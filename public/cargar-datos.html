@@ -687,9 +687,6 @@
             }
         }
 
-
-
-
         // 📌📌 cargarIndicadores()
         async function MMMcargarIndicadores() {
             const spinner = document.getElementById('spinnerCumplimientoDestinos');
@@ -1000,6 +997,16 @@
             const valorPeriodo = document.getElementById('valor-periodo').value.trim();
             const anioPeriodo = document.getElementById('input-anio-periodo').value;
             const metaActual = document.getElementById('meta-actual').innerText.trim();
+
+            // Calculo del cumplimiento si es unico_valor
+            let cumplimientoCalculado = null;
+            if (frecuencia === 'unico_valor') {
+                const valor = parseFloat(document.getElementById('valor-carga').value);
+                const meta = parseFloat(metaActual);
+                if (!isNaN(valor) && !isNaN(meta) && meta !== 0) {
+                    cumplimientoCalculado = (valor / meta) * 100;
+                }
+            }
 
             const ahora = new Date();
             const med_fecha_registro =
