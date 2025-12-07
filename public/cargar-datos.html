@@ -264,6 +264,9 @@
                                     <h5>Registre nueva medición:</h5>
 
                                     <form id="form-carga" class="ml-3 m-1 bg-light" style="width: 90%;">
+                                        <input type="hidden" id="metodo-calculo" name="metodo_calculo">
+                                        <input type="hidden" id="med-porcen-destino" name="med_porcen_destino">
+                                        <input type="hidden" id="med-porcen-global" name="med_porcen_global">
                                         <div class="row mb-2">
                                             <div class="col-md-2">
                                                 <label for="texto-período" class="form-label"><strong>Período
@@ -491,7 +494,7 @@
                 // -------------------------------------------------------------
                 const respMed = await fetch('/api/mediciones/ultimas');
                 const { data: ultimasMediciones } = await respMed.json();
-                console.table (ultimasMediciones);
+                console.table(ultimasMediciones);
 
                 // Diccionario por indicador
                 const ultimaPorIndicador = {};
@@ -506,7 +509,7 @@
 
                     const usuario = usuariosPorLegajo[ind.responsable];
                     const ultima = ultimaPorIndicador[ind.id];
-                    console.log("Última medición para indicador", ind.id, ":", ultima); 
+                    console.log("Última medición para indicador", ind.id, ":", ultima);
                     console.log("Usuario responsable para legajo", ind.responsable, ":", usuario);
 
                     let fecha = '';
@@ -580,23 +583,33 @@
 
                         // Comparación
                         if (esperado !== ultima.med_valor_periodo) {
-                            resultadoActualizacion = ind.freq_medicion === '0210'
-                                ? `<td><span class="badge text-bg-info">Informado</span></td>`
-                                : `<td><span class="badge text-bg-danger">Demorado</span></td>`;
 
+                            resultadoActualizacion =
+                                ind.freq_medicion === '0210'
+                                    ? `<td><span class="badge text-bg-info">Informado</span></td>`
+                                    : `<td><span class="badge text-bg-danger">Demorado</span></td>`;
+
+                            // 🔥 Combinar indicador completo + datos adicionales
+                            const dataIndicador = {
+                                ...ind,              // ← incluye todo el registro indicador
+                                fecha,
+                                ultimoValorPeriodo,
+                                ultimaMedicion
+                            };
+
+                            // 🔥 2. Botones
                             botones = `
-                                <td class="icon-only-actions">
-                                    <button class="btn btn-primary btn-xs btn-icon-minimal" onclick="verDetalleIndicador('${ind.codigo_id}')">
-                                        <i class="fas fa-eye fa-xs"></i>
-                                    </button>
-                                    <button class="btn btn-warning btn-xs btn-icon-minimal" onclick="editarIndicador(
-                                        '${ind.id}','${ind.codigo_id}','${ind.nombre}',
-                                        '${ind.unidad_medida}','${ind.freq_medicion}',
-                                        '${fecha}','${ultimoValorPeriodo}','${ultimaMedicion}',
-                                        '${ind.formula_calculo}','${ind.unico_valor}')">
-                                        <i class="fas fa-edit fa-xs"></i>
-                                    </button>
-                                </td>
+                                    <td class="icon-only-actions">
+
+                                        <button class="btn btn-primary btn-xs btn-icon-minimal"
+                                            onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                            <i class="fas fa-eye fa-xs"></i>
+                                        </button>
+                                        <button class="btn btn-warning btn-xs btn-icon-minimal"
+                                            onclick='editarIndicador(${JSON.stringify(dataIndicador)})'>
+                                            <i class="fas fa-edit fa-xs"></i>
+                                        </button>
+                                    </td>
                                 `;
                         } else {
                             resultadoActualizacion = ind.freq_medicion === '0210'
@@ -618,16 +631,20 @@
                     else {
                         fecha = "sin mediciones";
                         resultadoActualizacion = `<td><span class="badge text-bg-secondary">Pendiente</span></td>`;
+                        // Construyo objeto combinado
+                        const dataIndicador = {
+                            ...ind,
+                            fecha,
+                            ultimoValorPeriodo,
+                            ultimaMedicion
+                        };
                         botones = `
                     <td class="icon-only-actions">
                         <button class="btn btn-primary btn-xs btn-icon-minimal" onclick="verDetalleIndicador('${ind.codigo_id}')">
                             <i class="fas fa-eye fa-xs"></i>
                         </button>
-                        <button class="btn btn-warning btn-xs btn-icon-minimal" onclick="editarIndicador(
-                            '${ind.id}','${ind.codigo_id}','${ind.nombre}',
-                            '${ind.unidad_medida}','${ind.freq_medicion}',
-                            '${fecha}','${ultimoValorPeriodo}','${ultimaMedicion}',
-                            '${ind.formula_calculo}','${ind.unico_valor}')">
+                        <button class="btn btn-warning btn-xs btn-icon-minimal"
+                            onclick='editarIndicador(${JSON.stringify(dataIndicador)})'>
                             <i class="fas fa-edit fa-xs"></i>
                         </button>
                     </td>`;
@@ -816,23 +833,20 @@
                             } else {
                                 resultadoActualizacion = `<td><span class="badge text-bg-danger"> Demorado </span></td>`;
                             }
+                            const dataIndicador = {
+                                ...ind,
+                                fecha,
+                                ultimoValorPeriodo,
+                                ultimaMedicion
+                            };
                             botones = `
                             <td class="icon-only-actions">
-                                <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver"
+                                    onclick="verDetalleIndicador('${ind.codigo_id}')">
                                     <i class="fas fa-eye fa-xs"></i>
                                 </button>
-                                <button class="btn btn-warning btn-xs btn-icon-minimal" title="Registrar" onclick="editarIndicador
-                                ('${ind.id}',
-                                 '${ind.codigo_id}',
-                                 '${ind.nombre}',
-                                 '${ind.unidad_medida}',
-                                 '${ind.freq_medicion}',
-                                 '${fecha}',
-                                 '${ultimoValorPeriodo}',
-                                 '${ultimaMedicion}',
-                                 '${ind.formula_calculo}',
-                                 '${ind.unico_valor}'
-                                )">
+                                <button class="btn btn-warning btn-xs btn-icon-minimal" title="Registrar"
+                                    onclick='editarIndicador(${JSON.stringify(dataIndicador)})'>
                                     <i class="fas fa-edit fa-xs"></i>
                                 </button>
                             </td>
@@ -858,23 +872,20 @@
                     else {
                         fecha = "sin mediciones";
                         resultadoActualizacion = `<td><span class="badge text-bg-secondary"> Pendiente </span></td>`;
+                        const dataIndicador = {
+                            ...ind,
+                            fecha,
+                            ultimoValorPeriodo,
+                            ultimaMedicion
+                        };
                         botones = `
                         <td class="icon-only-actions">
-                            <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver" onclick="verDetalleIndicador('${ind.codigo_id}')">
+                            <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver"
+                                onclick="verDetalleIndicador('${ind.codigo_id}')">
                                 <i class="fas fa-eye fa-xs"></i>
                             </button>
-                            <button class="btn btn-warning btn-xs btn-icon-minimal" title="Editar" onclick="editarIndicador
-                                ('${ind.id}',
-                                 '${ind.codigo_id}',
-                                 '${ind.nombre}',
-                                 '${ind.unidad_medida}',
-                                 '${ind.freq_medicion}',
-                                 '${fecha}',
-                                 '${ultimoValorPeriodo}',
-                                 '${ultimaMedicion}',
-                                 '${ind.formula_calculo}',
-                                 '${ind.unico_valor}'
-                                )">
+                            <button class="btn btn-warning btn-xs btn-icon-minimal" title="Editar"
+                                onclick='editarIndicador(${JSON.stringify(dataIndicador)})'>
                                 <i class="fas fa-edit fa-xs"></i>
                             </button>
                         </td>
@@ -997,14 +1008,36 @@
             const valorPeriodo = document.getElementById('valor-periodo').value.trim();
             const anioPeriodo = document.getElementById('input-anio-periodo').value;
             const metaActual = document.getElementById('meta-actual').innerText.trim();
+            const metodo = document.getElementById('metodo-calculo').value;
+            const porcenDestino = document.getElementById('med-porcen-destino').value;
+            const porcenGlobal = document.getElementById('med-porcen-global').value;
 
-            // Calculo del cumplimiento si es unico_valor
+            console.log("Método de cálculo:", metodo);
+
+            // Calculo del cumplimiento segun unico_eval
             let cumplimientoCalculado = null;
-            if (frecuencia === 'unico_valor') {
-                const valor = parseFloat(document.getElementById('valor-carga').value);
-                const meta = parseFloat(metaActual);
+            const valor = parseFloat(document.getElementById('valor-carga').value);
+            const meta = parseFloat(metaActual);
+
+            if (metodo == '1') { // superable positiva - mas es mejor
                 if (!isNaN(valor) && !isNaN(meta) && meta !== 0) {
                     cumplimientoCalculado = (valor / meta) * 100;
+                }
+            }
+
+            if (metodo == '2') {  // limite máximo - no debe superarse
+                if (valor <= meta) {
+                    cumplimientoCalculado = 100;
+                } else {
+                    cumplimientoCalculado = (valor - meta) / meta * 100;
+                }
+            }
+
+            if (metodo == '4') {  // menor es mejor - alejarse en menos es mejor
+                if (valor >= meta) {
+                    cumplimientoCalculado = 0.01;
+                } else {
+                    cumplimientoCalculado = (meta - valor) / meta * 100;
                 }
             }
 
@@ -1033,7 +1066,10 @@
                 med_legajo_resp_medicion: '1',
                 med_legajo_resp_registro: '3',
                 med_fecha_registro: med_fecha_registro,
-                med_plan_accion: document.getElementById('plan-accion-carga').value.trim()
+                med_plan_accion: document.getElementById('plan-accion-carga').value.trim(),
+                med_cumplimiento: cumplimientoCalculado,
+                med_porcen_destino: porcenDestino,
+                med_porcen_global: porcenGlobal
             };
 
             console.log("Datos a enviar:", datos);
@@ -1069,8 +1105,200 @@
             }
         });
 
+        // 📌 editarIndicador(data) — Recibe un objeto con todos los valores // ✅ 2) SOLO PREPARA DATOS (sin listeners)
+        async function editarIndicador(data) {
+
+            // Método de cálculo (antes "metodo")
+            document.getElementById('metodo-calculo').value = data.unico_eval;
+            document.getElementById('med-porcen-destino').value = data.peso_porcentual || '';
+            document.getElementById('med-porcen-global').value = data.peso_porcentual_global || '';  
+
+            // Última medición desde BD
+            const ultima = await getUltimaMedicionPorIndicador(data.id);
+            console.table(ultima);
+
+            // Título
+            const titulo = document.getElementById('titulo-indicador');
+            titulo.innerText = `Indicador: ${data.codigo_id} - ${data.nombre}`;
+
+            // Frecuencia
+            const spanFrecuencia = document.getElementById('valor-frecuencia');
+            spanFrecuencia.textContent = CodigosService.getNombreCodigo(data.freq_medicion) || '';
+            spanFrecuencia.style.color = "red";
+
+            // Spans de otros datos
+            const spanMedicion = document.getElementById('valor-ultima-medicion');
+            const spanUltimoPeriodo = document.getElementById('periodo-ultima-medicion');
+            const spanValorMedido = document.getElementById('cantidad-ultima-medicion');
+            const spanComentarios = document.getElementById('valor-comentarios');
+            const spanPlanAccion = document.getElementById('valor-plan-accion');
+            const spanFormulaCalculo = document.getElementById('formula-calculo');
+            const spanMetaVigente = document.getElementById('meta-vigente');
+            const spanMetaActual = document.getElementById('meta-actual');
+
+            // Fórmula y meta actual
+            spanFormulaCalculo.innerText = data.formula_calculo;
+            spanMetaActual.innerText = data.unico_valor || '-';
+
+            // ====================== ULTIMA MEDICIÓN =======================
+            if (ultima) {
+                const fecha = new Date(ultima.med_fecha_registro);
+                spanMedicion.textContent = fecha.toLocaleDateString('es-AR');
+                spanMedicion.style.color = "red";
+
+                spanComentarios.textContent = ultima.med_comentarios || '-';
+                spanMetaVigente.innerText = ultima.med_meta;
+
+                // Formateo del período
+                if (ultima.med_tipo_periodo === '0201') {
+                    const partes = ultima.med_valor_periodo.split("-");
+                    spanUltimoPeriodo.textContent = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                } else {
+                    const vp = ultima.med_valor_periodo || '';
+                    if (vp.length === 6) {
+                        const anio = vp.substring(0, 4);
+                        const ciclo = vp.substring(4, 6);
+                        spanUltimoPeriodo.textContent = `${ciclo} - ${anio}`;
+                    } else {
+                        spanUltimoPeriodo.textContent = vp;
+                    }
+                }
+
+                spanUltimoPeriodo.style.color = "red";
+
+                // Valor medido (última medición real)
+                spanValorMedido.textContent =
+                    data.ultimaMedicion !== undefined
+                        ? Number(data.ultimaMedicion).toLocaleString('es-AR', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })
+                        : '';
+
+                spanValorMedido.style.color = "red";
+
+            } else {
+                spanMedicion.textContent = "Sin mediciones registradas";
+                spanMedicion.style.color = "grey";
+                spanValorMedido.textContent = "- - -";
+                spanUltimoPeriodo.textContent = "- - -";
+                spanMetaVigente.innerText = "- - -";
+            }
+
+            // ====================== HIDDEN Y DATASETS =======================
+            document.getElementById('indicadorCodigo').value = data.id;
+
+            const unidadCarga = document.getElementById('unidad-carga');
+            unidadCarga.textContent = CodigosService.getNombreCodigo(data.unidad_medida) || '';
+            unidadCarga.dataset.unidad = data.unidad_medida;
+            unidadCarga.dataset.frecuencia = data.freq_medicion;
+
+            // ====================== FRECUENCIAS =======================
+            const textoPeriodo = document.getElementById('texto-periodo');
+            let labelValorPeriodo = document.getElementById('label-valor-periodo');
+            const campoLabelAnio = document.getElementById('campo-label-anio');
+
+            campoLabelAnio.style.display = 'block';
+
+            switch (data.freq_medicion) {
+                case '0201':
+                    textoPeriodo.textContent = "Dia evaluado";
+                    labelValorPeriodo.innerHTML = "<strong>Seleccione dia:</strong>";
+                    campoLabelAnio.style.display = 'none';
+                    break;
+                case '0202':
+                    textoPeriodo.textContent = "Semana (1 a 52):";
+                    labelValorPeriodo.innerHTML = "<strong>N° Semana:</strong>";
+                    break;
+                case '0203':
+                    textoPeriodo.textContent = "Quincena (1 a 24)";
+                    labelValorPeriodo.innerHTML = "<strong>N° Quincena:</strong>";
+                    break;
+                case '0204':
+                    textoPeriodo.textContent = "Mes (1 a 12):";
+                    labelValorPeriodo.innerHTML = "<strong>N° Mes:</strong>";
+                    break;
+                case '0205':
+                    textoPeriodo.textContent = "Bimestre (1 a 6):";
+                    labelValorPeriodo.innerHTML = "<strong>N° Bim.:</strong>";
+                    break;
+                case '0206':
+                    textoPeriodo.textContent = "Trimestre (1 a 4)";
+                    labelValorPeriodo.innerHTML = "<strong>N° Trim.:</strong>";
+                    break;
+                case '0207':
+                    textoPeriodo.textContent = "Cuatrim.(1 a 3):";
+                    labelValorPeriodo.innerHTML = "<strong>N° Cuatr.:</strong>";
+                    break;
+                case '0208':
+                    textoPeriodo.textContent = "Semestre (1 ó 2)";
+                    labelValorPeriodo.innerHTML = "<strong>N° Sem.:</strong>";
+                    break;
+                case '0209':
+                    textoPeriodo.textContent = "Año (AAAA):";
+                    labelValorPeriodo.innerHTML = "<strong>Año:</strong>";
+                    break;
+                case '0210':
+                    textoPeriodo.textContent = "Mes del evento (1 a 12)";
+                    labelValorPeriodo.innerHTML = "<strong>Mes:</strong>";
+                    break;
+            }
+
+            // ====================== VALOR PERÍODO =======================
+            const valorPeriodo = document.getElementById('valor-periodo');
+            valorPeriodo.className = "form-control align-middle";
+
+            if (!ultima) {
+                // Sin mediciones
+                if (data.freq_medicion === "0201") {
+                    valorPeriodo.type = "date";
+                    labelValorPeriodo.innerHTML = "<strong>Dia:</strong>";
+                    valorPeriodo.value = "";
+                    campoLabelAnio.style.display = 'none';
+                } else {
+                    valorPeriodo.type = "number";
+                    valorPeriodo.value = "";
+                    document.getElementById('input-anio-periodo').value = "";
+                    document.getElementById('input-anio-periodo').readOnly = false;
+                }
+
+            } else {
+                // Con mediciones
+                if (data.freq_medicion === "0201") {
+                    valorPeriodo.type = "date";
+                    labelValorPeriodo.innerHTML = "<strong>Dia:</strong>";
+                } else {
+                    valorPeriodo.type = "number";
+
+                    const periodo = data.freq_medicion.substring(2, 4);
+                    const resultado = await siguientePeriodo(data.ultimoValorPeriodo, periodo);
+
+                    let anioResultado = resultado.substring(0, 4);
+                    let cicloResultado = resultado.substring(4, 6);
+
+                    document.getElementById('valor-periodo').value = cicloResultado || "";
+                    document.getElementById('valor-periodo').className = "form-control-plaintext";
+                    document.getElementById('input-anio-periodo').value = anioResultado;
+                    document.getElementById('input-anio-periodo').className = "form-control-plaintext";
+                }
+            }
+
+            if (data.freq_medicion == "0210") {
+                document.getElementById('valor-periodo').className = "form-control";
+                document.getElementById('input-anio-periodo').className = "form-control";
+                document.getElementById('input-anio-periodo').readOnly = false;
+            }
+
+            // Mostrar formulario
+            const formulario = document.getElementById('formulario-carga');
+            formulario.style.display = 'block';
+            window.scrollTo({ behavior: 'smooth', top: 0 });
+        }
+
         // 📌📌 editarIndicador(unidad) // ✅ 2) SOLO PREPARA DATOS (sin listeners)
-        async function editarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo, ultimaMedicion, formula_calculo, metaActual) {
+        async function XXXeditarIndicador(indId, codigo, nombre, unidad, frecuencia, ultPeriodo, ultimoValorPeriodo, ultimaMedicion, formula_calculo, metaActual, metodo) {
+
+            document.getElementById('metodo-calculo').value = metodo;
 
             const ultima = await getUltimaMedicionPorIndicador(indId);
             console.table(ultima)

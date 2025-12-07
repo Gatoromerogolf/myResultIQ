@@ -229,44 +229,16 @@
             padding: 0.35em 0.55em !important;
             font-weight: 500;
             border-radius: 0.35rem;
-            margin-right: 4px;      /* separa el globo del texto */
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);  /* sombra leve estilo dashboard */
+            margin-right: 4px;
+            /* separa el globo del texto */
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+            /* sombra leve estilo dashboard */
         }
 
         .badge-global-min i {
             font-size: 1.1rem;
             margin-left: 4px;
         }
-
-        /* .badge-global-bold {
-            background: #141414 !important;
-            font-size: 1.0rem !important;
-            padding: 0.45em 0.6em !important;
-            font-weight: 600;
-            border-radius: 0.4rem;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-        }
-
-        .badge-global-bold i {
-            font-size: 1.2rem;
-            margin-left: 5px;
-        } */
-
-        /* .badge-global-premium {
-            background: linear-gradient(135deg, #0d0d0d, #1e1e1e) !important;
-            font-size: 0.95rem !important;
-            padding: 0.45em 0.7em !important;
-            font-weight: 600;
-            border-radius: 0.5rem;
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-            letter-spacing: 0.2px;
-        }
-
-        .badge-global-premium i {
-            font-size: 1.25rem;
-            margin-left: 6px;
-            filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.4));
-        } */
 
         .badge-global-myriq {
             background: #1b1e23 !important;
@@ -674,7 +646,6 @@
             };
         }
 
-
         // 🎯 Calcula el peso global de un nodo (sector o indicador)
         function calculateGlobalWeight(node) {
             let global = node.weight; // comienza con su propio peso
@@ -881,10 +852,14 @@
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
                                     id: node.id,
-                                    type: node.type, // 'sector' o 'indicador'
-                                    weight: val
+                                    type: node.type,         // 'sector' o 'indicador'
+                                    weight: node.weight,     // peso relativo
+                                    globalWeight: node.type === 'indicador'
+                                        ? Number(node.globalWeight.toFixed(4))
+                                        : null               // sectores no guardan peso global
                                 })
                             });
+
                         } catch (err) {
                             console.error('Error guardando en BD', err);
                         }
@@ -943,11 +918,12 @@
                 if (node._weightInput) { node._weightInput.value = node.weight.toFixed(2); }
                 if (node._errorMsg) node._errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
                 if (node.children && node.children.length > 0) { node.children.forEach(updateNode); }
+
                 // 🎯 Actualizar badge de globalWeight para indicadores
                 if (node.type === 'indicador' && node._globalTag) {
-                    node._globalTag.textContent = `${node.globalWeight.toFixed(2)}% global`;
+                    let g = Number(node.globalWeight) || 0;
+                    node._globalTag.innerHTML = `${g.toFixed(2)}% <i class="bi bi-globe-americas"></i>`;
                 }
-
             }
             updateNode(window.treeRoot);
         }
@@ -998,8 +974,6 @@
             }
         }
 
-
-
         // 🎲🎲🎲 MAIN 🎲🎲🎲
         (async () => {
             window.treeRoot = await fetchData();
@@ -1024,7 +998,6 @@
     </script>
 
     <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
 

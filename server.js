@@ -438,7 +438,8 @@ app.get('/api/indicadores/:codigo', async (req, res) => {
                 i.comentarios,
                 i.peso_porcentual,
                 i.estado,
-                i.dimension_porcentual
+                i.dimension_porcentual,
+                i.peso_porcentual_global
             FROM indicadores i
             LEFT JOIN sectores s ON i.destino = s.id
             LEFT JOIN usuarios u ON i.responsable = u.legajo
@@ -540,11 +541,7 @@ app.put('/api/indicadores/actualizar-pesos', async (req, res) => {
     } finally {
         if (conn) conn.release();
     }
-
 });
-
-
-
 
 
 // // 🚫🚫🚫POST para subir o reemplazar imagen
@@ -1004,24 +1001,24 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
 
 
 app.post("/api/usuarios/responsables", async (req, res) => {
-  try {
-    const { legajos } = req.body;
+    try {
+        const { legajos } = req.body;
 
-    if (!Array.isArray(legajos) || legajos.length === 0) {
-      return res.status(400).json({ ok: false, msg: "Lista de legajos vacía" });
+        if (!Array.isArray(legajos) || legajos.length === 0) {
+            return res.status(400).json({ ok: false, msg: "Lista de legajos vacía" });
+        }
+
+        const [usuarios] = await pool.query(
+            `SELECT * FROM usuarios WHERE legajo IN (?)`,
+            [legajos]
+        );
+
+        res.json({ ok: true, data: usuarios });
+
+    } catch (error) {
+        console.error("Error en /usuarios/responsables:", error);
+        res.status(500).json({ ok: false, msg: "Error interno" });
     }
-
-    const [usuarios] = await pool.query(
-      `SELECT * FROM usuarios WHERE legajo IN (?)`,
-      [legajos]
-    );
-
-    res.json({ ok: true, data: usuarios });
-
-  } catch (error) {
-    console.error("Error en /usuarios/responsables:", error);
-    res.status(500).json({ ok: false, msg: "Error interno" });
-  }
 });
 
 
@@ -1386,7 +1383,7 @@ app.get('/api/arbol-jstree-lazy', async (req, res) => {
 
 
 // 🚀 Actualiza porcentajes de sector e indicador
-app.post('/api/update-weight', async (req, res) => {
+app.post('/XXX/api/update-weight', async (req, res) => {
     const { id, weight } = req.body;
 
     if (!id || typeof weight !== 'number') {
@@ -1412,6 +1409,57 @@ app.post('/api/update-weight', async (req, res) => {
                 'UPDATE indicadores SET peso_porcentual = ? WHERE id = ?',
                 [weight, numericId]
             );
+        } else {
+            return res.status(400).json({ error: 'Tipo inválido' });
+        }
+
+        res.sendStatus(200);
+    } catch (err) {
+        console.error('Error actualizando peso:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+// 🚀 Actualiza porcentajes de sector e indicador (incluye peso global)
+app.post('/api/update-weight', async (req, res) => {
+    const { id, weight, globalWeight } = req.body;
+
+    if (!id || typeof weight !== 'number') {
+        return res.status(400).json({ error: 'Datos inválidos' });
+    }
+
+    // id viene como "sector-29" o "indicador-15"
+    const [type, rawId] = id.split('-');
+    const numericId = parseInt(rawId, 10);
+
+    if (!numericId) {
+        return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    try {
+        if (type === 'sector') {
+
+            // 👉 Actualiza solo porcentaje del sector
+            await pool.query(
+                'UPDATE sectores SET sector_porcentual = ? WHERE id = ?',
+                [weight, numericId]
+            );
+
+        } else if (type === 'indicador') {
+
+            // 👉 Actualiza porcentaje + porcentaje global (nuevo)
+            await pool.query(
+                `UPDATE indicadores 
+                 SET peso_porcentual = ?, 
+                     peso_porcentual_global = ?
+                 WHERE id = ?`,
+                [
+                    weight,
+                    typeof globalWeight === 'number' ? globalWeight : null,
+                    numericId
+                ]
+            );
+
         } else {
             return res.status(400).json({ error: 'Tipo inválido' });
         }
@@ -1539,9 +1587,9 @@ app.get('/api/XXXmediciones/:idIndicador', async (req, res) => {
 
 
 app.get("/api/mediciones/ultimas", async (req, res) => {
-  try {
+    try {
 
-    const [ultimas] = await pool.query(`
+        const [ultimas] = await pool.query(`
       SELECT m.*
       FROM mediciones m
       INNER JOIN (
@@ -1554,12 +1602,12 @@ app.get("/api/mediciones/ultimas", async (req, res) => {
       ORDER BY m.med_indicador_id;
     `);
 
-    res.json({ ok: true, data: ultimas });
+        res.json({ ok: true, data: ultimas });
 
-  } catch (error) {
-    console.error("Error en /mediciones/ultimas:", error);
-    res.status(500).json({ ok: false, msg: "Error interno" });
-  }
+    } catch (error) {
+        console.error("Error en /mediciones/ultimas:", error);
+        res.status(500).json({ ok: false, msg: "Error interno" });
+    }
 });
 
 
@@ -1623,7 +1671,9 @@ app.post('/api/mediciones', async (req, res) => {
             med_legajo_resp_medicion,
             med_legajo_resp_registro,
             med_fecha_registro,
-            med_plan_accion } = req.body;
+            med_plan_accion,
+            med_cumplimiento
+        } = req.body;
 
         // Validar datos
         const errores = [];
@@ -1668,8 +1718,9 @@ app.post('/api/mediciones', async (req, res) => {
             med_legajo_resp_medicion,
             med_legajo_resp_registro,
             med_fecha_registro,
-            med_plan_accion
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            med_plan_accion,
+            med_cumplimiento
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
             [
                 med_indicador_id,
@@ -1683,7 +1734,8 @@ app.post('/api/mediciones', async (req, res) => {
                 med_legajo_resp_medicion,
                 med_legajo_resp_registro,
                 med_fecha_registro,
-                med_plan_accion
+                med_plan_accion,
+                med_cumplimiento
             ]
         );
 

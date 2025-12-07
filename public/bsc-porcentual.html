@@ -330,8 +330,9 @@
                                     <div id="contenedorDimensiones"></div>
                                 </div>
 
-                                <div class="text-end mt-4">
-                                    <button id="btnGuardarPesos" onclick="guardarPonderaciones()" class="btn btn-primary">💾 Guardar Cambios</button>
+                                <div class="text-center mt-4">
+                                    <button id="btnGuardarPesos" onclick="guardarPonderaciones()"
+                                        class="btn btn-primary mb-4">💾 Guardar Cambios</button>
                                 </div>
                             </div>
                             <!--end::Row-->
@@ -462,7 +463,7 @@
         contenedor.addEventListener("click", function (e) {
             if (e.target.classList.contains("indicador-link")) {
                 const id = e.target.dataset.codigo;
-                abrirModalIndicador(id);
+                verDetalleIndicador(id);
             }
         });
 
@@ -493,47 +494,47 @@
                     card.className = "col-md-8 mb-4";
 
                     card.innerHTML = `
-                <div class="card shadow-sm">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="fs-4">${dimension}</strong>
-                        <span id="total-${dimension}" class="badge fs-5 ${total === 100 ? 'bg-success' : 'bg-warning'}">
-                            Total: ${total.toFixed(2)}%
-                        </span>
-                    </div>
-                    <div class="card-body p-0">
-                        <table class="table table-sm mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Indicador</th>
-                                    <th class="text-end">%</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${lista.map(ind => `
-                                    <tr>
-                                        <td>
-                                            <span class="indicador-link"
-                                             data-codigo="${ind.codigo_id}"
-                                             style="cursor:pointer; text-decoration:none; color:#0d6efd;">
-                                                ${ind.nombre}
-                                            </span>
-                                        </td>
-                                        <td class="text-end">
-                                            <input 
-                                                type="number" 
-                                                step="0.01" min="0" max="100"
-                                                class="form-control form-control-sm text-end peso-input"
-                                                data-dimension="${dimension}"
-                                                data-db-id="${ind.id}"  
-                                                value="${ind.dimension_porcentual || 0}">
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
+                        <div class="card shadow-sm">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <strong class="fs-4">${dimension}</strong>
+                                <span id="total-${dimension}" class="badge fs-5 ${total === 100 ? 'bg-success' : 'bg-warning'}">
+                                    Total: ${total.toFixed(2)}%
+                                </span>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-sm mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Indicador</th>
+                                            <th class="text-end">%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${lista.map(ind => `
+                                            <tr>
+                                                <td>
+                                                    <span class="indicador-link"
+                                                    data-codigo="${ind.codigo_id}"
+                                                    style="cursor:pointer; text-decoration:none; color:#0d6efd;">
+                                                        ${ind.codigo_id} - ${SectoresService.getNombreSector(ind.destino)} - ${ind.nombre}
+                                                    </span>
+                                                </td>
+                                                <td class="text-end">
+                                                    <input 
+                                                        type="number" 
+                                                        step="0.01" min="0" max="100"
+                                                        class="form-control form-control-sm text-end peso-input"
+                                                        data-dimension="${dimension}"
+                                                        data-db-id="${ind.id}"  
+                                                        value="${ind.dimension_porcentual || 0}">
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        `;
 
                     contenedor.appendChild(card);
                 }
@@ -624,10 +625,17 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', cargarIndicadoresPorDimension);
+        document.addEventListener('DOMContentLoaded', async () => {
+            await CodigosService.init();
+            await SectoresService.init();
+            cargarIndicadoresPorDimension();
+        });
+
+
+
     </script>
 
-        <script>
+    <script>
         const avatarAudio = document.getElementById('avatarAudio');
         const btnDetener = document.getElementById('btnDetenerVoz');
 
@@ -721,6 +729,56 @@
             }
         }
     </style>
+
+    <script>
+        const SectoresService = {
+            sectoresMap: {},
+
+            async init() {
+                try {
+                    const response = await fetch('/api/sectores');
+                    if (!response.ok) throw new Error('No se pudo obtener los sectores.');
+                    const sectores = await response.json();
+
+                    sectores.forEach(s => {
+                        this.sectoresMap[s.id] = s.nombre;
+                    });
+
+                    console.log(`✅ Sectores cargados (${sectores.length})`);
+                } catch (err) {
+                    console.error('Error al inicializar sectores:', err);
+                }
+            },
+
+            getNombreSector(id) {
+                return this.sectoresMap[id] || '-';
+            }
+        };
+    </script>
+
+    <div id="contenedorModal"></div>
+    <div id="contenedorModalMediciones"></div>
+
+    <script>
+        // Cargar modal de indicadores
+        fetch('/modal-indicador.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModal').innerHTML = html;
+            });
+
+        // Cargar modal de mediciones
+        fetch('/modal-mediciones.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalMediciones').innerHTML = html;
+            });
+    </script>
+
+    <!-- Scripts asociados -->
+    <script src="/modal-indicador.js"></script>
+    <script src="/modal-mediciones.js"></script>
+
 
 </body>
 <!--end::Body-->
