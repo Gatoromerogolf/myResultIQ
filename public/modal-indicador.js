@@ -69,38 +69,9 @@ async function verDetalleIndicador(codigo) {
         // ----------------------------------------------------
         const peso = indicador.peso_porcentual ?? '-';
         const pesoGlobal = indicador.peso_porcentual_global ?? '-';
+        const pesoPerspectiva = indicador.dimension_porcentual ?? '-';
 
-        // const bloqueInfo = document.getElementById("bloqueInfoIndicador");
-
-        // if (bloqueInfo) {
-        //     bloqueInfo.innerHTML = `
-        //         <div class="row mb-3">
-        //             <div class="col-md-6">
-        //                 <div class="info-box shadow-sm">
-        //                     <span class="info-box-icon bg-info">
-        //                         <i class="fas fa-balance-scale"></i>
-        //                     </span>
-        //                     <div class="info-box-content">
-        //                         <span class="info-box-text fw-bold">Peso</span>
-        //                         <span class="info-box-number">${peso}%</span>
-        //                     </div>
-        //                 </div>
-        //             </div>
-
-        //             <div class="col-md-6">
-        //                 <div class="info-box shadow-sm">
-        //                     <span class="info-box-icon bg-success">
-        //                         <i class="fas fa-globe-americas"></i>
-        //                     </span>
-        //                     <div class="info-box-content">
-        //                         <span class="info-box-text fw-bold">Peso Global</span>
-        //                         <span class="info-box-number">${pesoGlobal}%</span>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     `;
-        // }
+ 
 
         const bloque = document.getElementById("bloqueInfoIndicador");
         bloque.innerHTML = `
@@ -111,7 +82,7 @@ async function verDetalleIndicador(codigo) {
                 <div class="card shadow-sm border-left-primary">
                     <div class="card-body py-2">
                         <i class="fas fa-balance-scale text-primary fa-2x mb-1"></i>
-                        <h6 class="mt-1 mb-0">Peso del Indicador</h6>
+                        <h6 class="mt-1 mb-0">Peso en Destino</h6>
                         <h5 class="fw-bold">${indicador.peso_porcentual || 0}%</h5>
                     </div>
                 </div>
@@ -178,7 +149,10 @@ async function verDetalleIndicador(codigo) {
 
             "__sep1__": null,
             "Tipo": `${indicador.tipo_id} - ${tipos[indicador.tipo_id]}`,
-            "Perspectiva (BSC)": `${indicador.dimension_id} - ${dimensiones[indicador.dimension_id]}`,
+            "Perspectiva (BSC)": `
+                ${indicador.dimension_id} -  ${dimensiones[indicador.dimension_id] || '-'}
+                <br><b>Peso:</b> ${pesoPerspectiva}% 
+            `,
             "Criticidad": `${indicador.criticidad_id} - ${criticidades[indicador.criticidad_id]}`,
             "__sep2__": null,
             "Tipo de Meta": `${indicador.meta_tipo} - ${tiposMeta[indicador.meta_tipo]}`

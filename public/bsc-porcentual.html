@@ -209,9 +209,30 @@
                                 </div>
 
                                 <!-- /.card-header -->
-                                <div class="card-body p-0 mt-3 ms-3">
-                                    <div id="contenedorDimensiones"></div>
+                                <div class="row">
+                                    <div id="contenedorDimensiones" class="col-md-8"></div>
+
+                                    <!-- Columna Derecha -->
+                                    <div class="col-md-4">
+                                        <div id="alertaCondicional" class="card border-warning mb-3 mt-4 me-3"
+                                            style="display:none;">
+                                            <div class="d-flex align-items-center justify-content-center p-4">
+                                                <div class="d-flex align-items-center">
+                                                    <img src="https://cdn-icons-png.flaticon.com/512/463/463612.png"
+                                                        alt="Alerta" style="width: 40px; height: 40px;" class="me-3">
+                                                    <div class="card-body p-0">
+                                                        <p class="card-text mb-0">
+                                                            <a href="kpi-ponderado.html" class="nav-link d-inline">
+                                                                Revisar <strong>Valoración %</strong> de indicadores por Dimensión.
+                                                            </a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
 
                                 <div class="text-left ms-5 mt-4">
                                     <button id="btnGuardarPesos" onclick="guardarPonderaciones()"
@@ -308,8 +329,131 @@
             }
         });
 
-        // Función para cargar los indicadores por dimensión
+
         async function cargarIndicadoresPorDimension() {
+            try {
+                const res = await fetch('/api/indicadores');
+                const indicadores = await res.json();
+
+                const contenedor = document.getElementById("contenedorDimensiones");
+                const alerta = document.getElementById("alertaCondicional");
+
+                // Agrupar por dimension_nombre
+                const grupos = {};
+                indicadores.forEach(ind => {
+                    const dim = ind.dimension_nombre || "Sin dimensión";
+                    if (!grupos[dim]) grupos[dim] = [];
+                    grupos[dim].push(ind);
+                });
+
+                contenedor.innerHTML = "";
+
+                let algunaDimensionIncorrecta = false;
+
+                for (const [dimension, lista] of Object.entries(grupos)) {
+
+                    // Calcular total inicial
+                    const total = lista.reduce((acc, i) => {
+                        const val = parseFloat(i.dimension_porcentual);
+                        return acc + (isNaN(val) ? 0 : val);
+                    }, 0);
+
+                    // Si no suma 100, encender la alerta
+                    if (total !== 100) algunaDimensionIncorrecta = true;
+
+                    const card = document.createElement("div");
+                    card.className = "col-md-12 mb-4";
+
+                    card.innerHTML = `
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong class="fs-4">${dimension}</strong>
+                        <span id="total-${dimension}" 
+                              class="badge fs-5 ${total === 100 ? 'bg-success' : 'bg-warning'}">
+                            Total: ${total.toFixed(2)}%
+                        </span>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-sm mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 120px;">Código</th>
+                                    <th>Nombre</th>
+                                    <th>Destino</th>
+                                    <th class="text-end" style="width: 100px;">%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${lista.map(ind => `
+                                    <tr>
+                                        <td>
+                                            <span class="indicador-link"
+                                                data-codigo="${ind.codigo_id}"
+                                                style="cursor:pointer; text-decoration:none; color:#0d6efd;">
+                                                ${ind.codigo_id}
+                                            </span>
+                                        </td>
+                                        <td>${ind.nombre}</td>
+                                        <td>${SectoresService.getNombreSector(ind.destino) || "-"}</td>
+                                        <td class="text-end">
+                                            <input 
+                                                type="number" 
+                                                step="0.01" min="0" max="100"
+                                                class="form-control form-control-sm text-end peso-input"
+                                                data-dimension="${dimension}"
+                                                data-db-id="${ind.id}"  
+                                                value="${ind.dimension_porcentual || 0}">
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+                    contenedor.appendChild(card);
+                }
+
+                // Mostrar/ocultar alerta inicial
+                alerta.style.display = algunaDimensionIncorrecta ? "block" : "none";
+
+                // === Listener para recalcular totales ===
+                document.querySelectorAll(".peso-input").forEach(input => {
+                    input.addEventListener("input", function () {
+                        const dimension = this.dataset.dimension;
+                        const inputs = document.querySelectorAll(`.peso-input[data-dimension="${dimension}"]`);
+
+                        let total = 0;
+                        inputs.forEach(i => total += parseFloat(i.value) || 0);
+
+                        // Actualiza badge
+                        const totalBadge = document.getElementById(`total-${dimension}`);
+                        totalBadge.textContent = `Total: ${total.toFixed(2)}%`;
+                        totalBadge.classList.remove("bg-success", "bg-warning");
+                        totalBadge.classList.add(total === 100 ? "bg-success" : "bg-warning");
+
+                        // --- Recalcular TODAS las dimensiones para ver si alguna falla ---
+                        let hayProblemas = false;
+                        document.querySelectorAll("[id^='total-']").forEach(badge => {
+                            if (!badge.textContent.includes("100.00%")) {
+                                hayProblemas = true;
+                            }
+                        });
+
+                        // Mostrar / ocultar alerta
+                        alerta.style.display = hayProblemas ? "block" : "none";
+                    });
+                });
+
+            } catch (err) {
+                console.error("Error al cargar indicadores:", err);
+            }
+        }
+
+
+        // Función para cargar los indicadores por dimensión
+        async function XXXcargarIndicadoresPorDimension() {
             try {
                 const res = await fetch('/api/indicadores');
                 const indicadores = await res.json();
@@ -334,51 +478,8 @@
                     const card = document.createElement("div");
                     card.className = "col-md-8 mb-4";
 
-                    // card.innerHTML = `
-                    //     <div class="card shadow-sm">
-                    //         <div class="card-header d-flex justify-content-between align-items-center">
-                    //             <strong class="fs-4">${dimension}</strong>
-                    //             <span id="total-${dimension}" class="badge fs-5 ${total === 100 ? 'bg-success' : 'bg-warning'}">
-                    //                 Total: ${total.toFixed(2)}%
-                    //             </span>
-                    //         </div>
-                    //         <div class="card-body p-0">
-                    //             <table class="table table-sm mb-0">
-                    //                 <thead class="table-light">
-                    //                     <tr>
-                    //                         <th>Indicador</th>
-                    //                         <th class="text-end">%</th>
-                    //                     </tr>
-                    //                 </thead>
-                    //                 <tbody>
-                    //                     ${lista.map(ind => `
-                    //                         <tr>
-                    //                             <td>
-                    //                                 <span class="indicador-link"
-                    //                                 data-codigo="${ind.codigo_id}"
-                    //                                 style="cursor:pointer; text-decoration:none; color:#0d6efd;">
-                    //                                     ${ind.codigo_id} - ${SectoresService.getNombreSector(ind.destino)} - ${ind.nombre}
-                    //                                 </span>
-                    //                             </td>
-                    //                             <td class="text-end">
-                    //                                 <input 
-                    //                                     type="number" 
-                    //                                     step="0.01" min="0" max="100"
-                    //                                     class="form-control form-control-sm text-end peso-input"
-                    //                                     data-dimension="${dimension}"
-                    //                                     data-db-id="${ind.id}"  
-                    //                                     value="${ind.dimension_porcentual || 0}">
-                    //                             </td>
-                    //                         </tr>
-                    //                     `).join('')}
-                    //                 </tbody>
-                    //             </table>
-                    //         </div>
-                    //     </div>
-                    //     `;
-
                     card.innerHTML = `
-                                            <div class="card shadow-sm">
+                    <div class="card shadow-sm">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <strong class="fs-4">${dimension}</strong>
                                 <span id="total-${dimension}" class="badge fs-5 ${total === 100 ? 'bg-success' : 'bg-warning'}">
@@ -428,7 +529,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        </div>
+                    </div>
                         `;
 
                     contenedor.appendChild(card);
