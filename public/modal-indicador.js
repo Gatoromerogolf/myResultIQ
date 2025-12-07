@@ -41,6 +41,11 @@ async function verDetalleIndicador(codigo) {
         const body = await response.json();
         const indicador = body.data;  // 👈 EXTRAER EL INDICADOR REAL
 
+
+        console.log("DEBUG indicador:", indicador);
+
+
+        
         const tabla = document.getElementById('tablaDetalleIndicador');
         tabla.innerHTML = '';
 
@@ -84,7 +89,12 @@ async function verDetalleIndicador(codigo) {
             "Nombre": indicador.nombre,
             "Descripción": indicador.descripcion || '-',
             "Objetivo": indicador.objetivo || '-',
-            "Destino": `${indicador.destino_nombre || '-'} (${indicador.destino || '-'})`,
+            "Destino": `
+                        ${indicador.destino_nombre || '-'}
+                        <br><b>Peso:</b> ${(indicador.peso_porcentual ?? '-')}%
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <b>Global:</b> ${(indicador.peso_porcentual_global ?? '-')}%
+                    `,
             "__sep1__": null,
             "Tipo": `${indicador.tipo_id} - ${tipos[indicador.tipo_id] || '-'}`,
             "Perspectiva (BSC)": `${indicador.dimension_id} - ${dimensiones[indicador.dimension_id] || '-'}`,
@@ -131,7 +141,9 @@ async function verDetalleIndicador(codigo) {
         });
 
         // === Render de tabla ===
+        // === Render de tabla ===
         for (const [campo, valor] of Object.entries(campos)) {
+
             if (campo.startsWith("__sep")) {
                 const sepRow = document.createElement('tr');
                 const sepCell = document.createElement('td');
@@ -142,16 +154,47 @@ async function verDetalleIndicador(codigo) {
                 continue;
             }
 
+            // 👉 Si NO es peso_porcentual y NO es peso_global → render normal
+            if (campo !== 'peso_porcentual') {
+                const fila = document.createElement('tr');
+                const th = document.createElement('th');
+                th.style.width = '200px';
+                th.textContent = campo;
+                const td = document.createElement('td');
+                td.innerHTML = valor;
+                fila.appendChild(th);
+                fila.appendChild(td);
+                tabla.appendChild(fila);
+                continue;
+            }
+
+            // ===============================
+            // ✅ Caso especial: peso_porcentual
+            // ===============================
+
             const fila = document.createElement('tr');
+
+            // Título en negrita
             const th = document.createElement('th');
-            th.textContent = campo;
             th.style.width = '200px';
+            th.innerHTML = `<span style="font-weight: bold;">Peso</span>`;
+
+            // Valores porcentuales
+            const peso = parseFloat(valor);
+            const pesoGlobal = parseFloat(campos['peso_porcentual_global']);
+
             const td = document.createElement('td');
-            td.textContent = valor;
+            td.innerHTML = `
+        ${isNaN(peso) ? '-' : peso.toFixed(2) + '%'}
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <b>Global:</b> ${isNaN(pesoGlobal) ? '-' : pesoGlobal.toFixed(2) + '%'}
+    `;
+
             fila.appendChild(th);
             fila.appendChild(td);
             tabla.appendChild(fila);
         }
+
 
         // === Mostrar modal ===
         const modal = new bootstrap.Modal(document.getElementById('modalDetalleIndicador'));
