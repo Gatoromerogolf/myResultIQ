@@ -8,7 +8,6 @@ const CodigosService = {
             if (!response.ok) throw new Error('No se pudo obtener los códigos.');
             const codigos = await response.json();
 
-            // Mapeamos por el campo cod_tabla (o ajusta si tu tabla usa otro campo)
             codigos.forEach(c => {
                 this.codigosMap[c.cod_tabla] = c.cod_nombre;
             });
@@ -24,53 +23,130 @@ const CodigosService = {
     }
 };
 
+
 // === Inicialización automática ===
 document.addEventListener('DOMContentLoaded', async () => {
     await CodigosService.init();
 });
 
-// === Función principal del modal ===
+
+// =====================================================
+// === FUNCIÓN PRINCIPAL: verDetalleIndicador(codigo)
+// =====================================================
 async function verDetalleIndicador(codigo) {
 
     try {
         const response = await fetch(`/api/indicadores/${codigo}`);
-        if (!response.ok) {
-            throw new Error('No se pudo obtener el indicador.')
-        };
+        if (!response.ok) throw new Error('No se pudo obtener el indicador.');
 
         const body = await response.json();
-        const indicador = body.data;  // 👈 EXTRAER EL INDICADOR REAL
+        const indicador = body.data;
 
+        console.log("🟦 DEBUG indicador:", indicador);
 
-        console.log("DEBUG indicador:", indicador);
-
-
-        
-        const tabla = document.getElementById('tablaDetalleIndicador');
-        tabla.innerHTML = '';
-
-        // === 👤 Sección: Responsable (foto + nombre + legajo)
+        // ----------------------------------------------------
+        // Bloque Responsable
+        // ----------------------------------------------------
         const contenedorResponsable = document.getElementById('detalleResponsable');
-        if (contenedorResponsable) {
-            contenedorResponsable.innerHTML = `
-                <div class="d-flex align-items-center gap-3 border-bottom pb-2 mb-3">
-                    ${indicador.responsable_foto
-                    ? `<img src="${indicador.responsable_foto}" class="rounded-circle border" width="70" height="70" alt="Foto del responsable">`
-                    : `<i class="fa fa-user-circle fa-4x text-secondary"></i>`
-                }
-                    <div>
-                        <small class="text-muted">Responsable</small>
-                        <h6 class="mb-0">${indicador.responsable_nombre || 'Sin asignar'}</h6>
-                        <small class="text-muted">Legajo: ${indicador.responsable || '-'}</small>
+
+        contenedorResponsable.innerHTML = `
+            <div class="d-flex align-items-center gap-3 border-bottom pb-2 mb-3">
+                ${indicador.responsable_foto
+                ? `<img src="${indicador.responsable_foto}" class="rounded-circle border" width="70" height="70">`
+                : `<i class="fa fa-user-circle fa-4x text-secondary"></i>`
+            }
+                <div>
+                    <small class="text-muted">Responsable</small>
+                    <h6 class="mb-0">${indicador.responsable_nombre || 'Sin asignar'}</h6>
+                    <small class="text-muted">Legajo: ${indicador.responsable || '-'}</small>
+                </div>
+            </div>
+        `;
+
+
+        // ----------------------------------------------------
+        // ⭐ NUEVO BLOQUE ELEGANTE: Tarjetas Peso / Global
+        // ----------------------------------------------------
+        const peso = indicador.peso_porcentual ?? '-';
+        const pesoGlobal = indicador.peso_porcentual_global ?? '-';
+
+        // const bloqueInfo = document.getElementById("bloqueInfoIndicador");
+
+        // if (bloqueInfo) {
+        //     bloqueInfo.innerHTML = `
+        //         <div class="row mb-3">
+        //             <div class="col-md-6">
+        //                 <div class="info-box shadow-sm">
+        //                     <span class="info-box-icon bg-info">
+        //                         <i class="fas fa-balance-scale"></i>
+        //                     </span>
+        //                     <div class="info-box-content">
+        //                         <span class="info-box-text fw-bold">Peso</span>
+        //                         <span class="info-box-number">${peso}%</span>
+        //                     </div>
+        //                 </div>
+        //             </div>
+
+        //             <div class="col-md-6">
+        //                 <div class="info-box shadow-sm">
+        //                     <span class="info-box-icon bg-success">
+        //                         <i class="fas fa-globe-americas"></i>
+        //                     </span>
+        //                     <div class="info-box-content">
+        //                         <span class="info-box-text fw-bold">Peso Global</span>
+        //                         <span class="info-box-number">${pesoGlobal}%</span>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     `;
+        // }
+
+        const bloque = document.getElementById("bloqueInfoIndicador");
+        bloque.innerHTML = `
+        <div class="row text-center">
+
+            <!-- Peso del Indicador -->
+            <div class="col-md-4 mb-2">
+                <div class="card shadow-sm border-left-primary">
+                    <div class="card-body py-2">
+                        <i class="fas fa-balance-scale text-primary fa-2x mb-1"></i>
+                        <h6 class="mt-1 mb-0">Peso del Indicador</h6>
+                        <h5 class="fw-bold">${indicador.peso_porcentual || 0}%</h5>
                     </div>
                 </div>
-            `;
-        }
+            </div>
 
-        // === Diccionarios para valores numéricos ===
+            <!-- Peso Global -->
+            <div class="col-md-4 mb-2">
+                <div class="card shadow-sm border-left-success">
+                    <div class="card-body py-2">
+                        <i class="fas fa-chart-pie text-success fa-2x mb-1"></i>
+                        <h6 class="mt-1 mb-0">Peso Global</h6>
+                        <h5 class="fw-bold">${indicador.peso_porcentual_global || 0}%</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Peso en BSC (Dimension) -->
+            <div class="col-md-4 mb-2">
+                <div class="card shadow-sm border-left-warning">
+                    <div class="card-body py-2">
+                        <i class="fas fa-layer-group text-warning fa-2x mb-1"></i>
+                        <h6 class="mt-1 mb-0">Peso en BSC</h6>
+                        <h5 class="fw-bold">${indicador.dimension_porcentual || 0}%</h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    `;
+
+        // ----------------------------------------------------
+        // Diccionarios (los tuyos)
+        // ----------------------------------------------------
         const tipos = { 1: 'Estratégico', 2: 'Táctico', 3: 'Operativo' };
         const dimensiones = { 1: 'Financiera', 2: 'Clientes', 3: 'Procesos', 4: 'Capital Humano' };
-        // const categorias = { 1: 'Eficiencia', 2: 'Eficacia', 3: 'Calidad', 4: 'Productividad' };
         const criticidades = { 1: 'Alta', 2: 'Media', 3: 'Baja' };
         const tiposMeta = { 1: 'Valor único', 2: 'Rango de valores', 3: 'Tendencia' };
         const tendencias = { 1: 'Creciente', 2: 'Decreciente', 3: 'Estable' };
@@ -83,112 +159,96 @@ async function verDetalleIndicador(codigo) {
         };
         const estados = { 1: 'Vigente', 2: 'Suspendido', 3: 'Cancelado' };
 
-        // === Campos principales ===
+
+        // ----------------------------------------------------
+        // Campos principales
+        // ----------------------------------------------------
         const campos = {
             "Código": indicador.codigo_id,
             "Nombre": indicador.nombre,
             "Descripción": indicador.descripcion || '-',
             "Objetivo": indicador.objetivo || '-',
+
             "Destino": `
-                        ${indicador.destino_nombre || '-'}
-                        <br><b>Peso:</b> ${(indicador.peso_porcentual ?? '-')}%
-                        &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <b>Global:</b> ${(indicador.peso_porcentual_global ?? '-')}%
-                    `,
+                ${indicador.destino_nombre || '-'}
+                <br><b>Peso:</b> ${peso}% 
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <b>Global:</b> ${pesoGlobal}%
+            `,
+
             "__sep1__": null,
-            "Tipo": `${indicador.tipo_id} - ${tipos[indicador.tipo_id] || '-'}`,
-            "Perspectiva (BSC)": `${indicador.dimension_id} - ${dimensiones[indicador.dimension_id] || '-'}`,
-            // "Categoría": `${indicador.categoria_id} - ${categorias[indicador.categoria_id] || '-'}`,
-            "Criticidad": `${indicador.criticidad_id} - ${criticidades[indicador.criticidad_id] || '-'}`,
+            "Tipo": `${indicador.tipo_id} - ${tipos[indicador.tipo_id]}`,
+            "Perspectiva (BSC)": `${indicador.dimension_id} - ${dimensiones[indicador.dimension_id]}`,
+            "Criticidad": `${indicador.criticidad_id} - ${criticidades[indicador.criticidad_id]}`,
             "__sep2__": null,
-            "Tipo de Meta": `${indicador.meta_tipo} - ${tiposMeta[indicador.meta_tipo] || '-'}`,
+            "Tipo de Meta": `${indicador.meta_tipo} - ${tiposMeta[indicador.meta_tipo]}`
         };
 
-        // === Campos específicos según tipo de meta ===
+
+        // Según meta
         if (indicador.meta_tipo === 1) {
             Object.assign(campos, {
                 "Valor Meta": `${indicador.unico_valor || '-'} - ${CodigosService.getNombreCodigo(indicador.unidad_medida)}`,
-                "Método de evaluación": `${indicador.unico_eval} - ${evaluaciones[indicador.unico_eval] || '-'}`,
-                "__sep3__": null,
+                "Método de evaluación": evaluaciones[indicador.unico_eval] || '-',
+                "__sep3__": null
             });
+
         } else if (indicador.meta_tipo === 2) {
             Object.assign(campos, {
                 "Rango Desde": indicador.rango_desde || '-',
                 "Rango Hasta": indicador.rango_hasta || '-',
-                "__sep4__": null,
+                "__sep4__": null
             });
+
         } else if (indicador.meta_tipo === 3) {
             Object.assign(campos, {
                 "Tendencia Tipo": tendencias[indicador.tenden_tipo] || '-',
                 "Tendencia Referencia": indicador.tenden_refe || '-',
-                "__sep5__": null,
+                "__sep5__": null
             });
         }
 
-        // === Campos adicionales ===
+        // Campos extra
         Object.assign(campos, {
             "Fuente de Datos": indicador.fuente_datos || '-',
             "Fórmula de Cálculo": indicador.formula_calculo || '-',
-            // "Unidad de Medida": CodigosService.getNombreCodigo(indicador.unidad_medida),
             "Frecuencia de Medición": CodigosService.getNombreCodigo(indicador.freq_medicion),
-            "Fecha de Inicio": `${indicador.fecha_inicio
-                ? new Date(indicador.fecha_inicio).toLocaleDateString('es-AR')
-                : '-'
-                } - ${estados[indicador.estado] || '-'}`,
-
+            "Fecha de Inicio": indicador.fecha_inicio ? new Date(indicador.fecha_inicio).toLocaleDateString('es-AR') : '-',
             "__sep6__": null,
             "Comentarios": indicador.comentarios || '-'
         });
 
-        // === Render de tabla ===
-        // === Render de tabla ===
+
+        // ----------------------------------------------------
+        // Render de tabla
+        // ----------------------------------------------------
+        const tabla = document.getElementById("tablaDetalleIndicador");
+        tabla.innerHTML = "";
+
         for (const [campo, valor] of Object.entries(campos)) {
 
             if (campo.startsWith("__sep")) {
-                const sepRow = document.createElement('tr');
-                const sepCell = document.createElement('td');
-                sepCell.colSpan = 2;
-                sepCell.innerHTML = "&nbsp;";
-                sepRow.appendChild(sepCell);
+                const sepRow = document.createElement("tr");
+                sepRow.innerHTML = `<td colspan="2" class="py-2"></td>`;
                 tabla.appendChild(sepRow);
                 continue;
             }
 
-            // 👉 Si NO es peso_porcentual y NO es peso_global → render normal
-            if (campo !== 'peso_porcentual') {
-                const fila = document.createElement('tr');
-                const th = document.createElement('th');
-                th.style.width = '200px';
-                th.textContent = campo;
-                const td = document.createElement('td');
-                td.innerHTML = valor;
-                fila.appendChild(th);
-                fila.appendChild(td);
-                tabla.appendChild(fila);
-                continue;
-            }
+            //             if (campo.startsWith("__sep")) {
+            //     const trSep = document.createElement("tr");
+            //     trSep.innerHTML = `<td colspan="2" class="bg-light"></td>`;
+            //     tabla.appendChild(trSep);
+            //     continue;
+            // }
 
-            // ===============================
-            // ✅ Caso especial: peso_porcentual
-            // ===============================
+            const fila = document.createElement("tr");
+            const th = document.createElement("th");
 
-            const fila = document.createElement('tr');
+            th.style.width = "200px";
+            th.innerHTML = campo;
 
-            // Título en negrita
-            const th = document.createElement('th');
-            th.style.width = '200px';
-            th.innerHTML = `<span style="font-weight: bold;">Peso</span>`;
-
-            // Valores porcentuales
-            const peso = parseFloat(valor);
-            const pesoGlobal = parseFloat(campos['peso_porcentual_global']);
-
-            const td = document.createElement('td');
-            td.innerHTML = `
-        ${isNaN(peso) ? '-' : peso.toFixed(2) + '%'}
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-        <b>Global:</b> ${isNaN(pesoGlobal) ? '-' : pesoGlobal.toFixed(2) + '%'}
-    `;
+            const td = document.createElement("td");
+            td.innerHTML = valor;
 
             fila.appendChild(th);
             fila.appendChild(td);
@@ -196,16 +256,15 @@ async function verDetalleIndicador(codigo) {
         }
 
 
-        // === Mostrar modal ===
+        // ----------------------------------------------------
+        // Mostrar Modal
+        // ----------------------------------------------------
         const modal = new bootstrap.Modal(document.getElementById('modalDetalleIndicador'));
         modal.show();
 
+
     } catch (error) {
-        console.error('Error al obtener el detalle:', error);
-        alert('No se pudo obtener el detalle del indicador.');
+        console.error("Error al obtener el detalle:", error);
+        alert("No se pudo obtener el detalle del indicador.");
     }
 }
-
-
-
-

@@ -102,17 +102,133 @@
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
+        <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body">
+            <!--begin::Container-->
             <div class="container-fluid">
+                <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
+                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li> -->
+                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
                 </ul>
-
+                <!--end::Start Navbar Links-->
+                <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
+                    <!--begin::Navbar Search-->
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                            <i class="bi bi-search"></i>
+                        </a>
+                    </li> -->
+                    <!--end::Navbar Search-->
+
+                    <!--begin::Messages Dropdown Menu-->
+                    <!-- <li class="nav-item dropdown">
+                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
+                            <i class="bi bi-chat-text"></i>
+                            <span class="navbar-badge badge text-bg-danger">3</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <img src="dist/images/user1-128x128.jpg" alt="User Avatar"
+                                            class="img-size-50 rounded-circle me-3" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h3 class="dropdown-item-title">
+                                            Brad Diesel
+                                            <span class="float-end fs-7 text-danger"><i
+                                                    class="bi bi-star-fill"></i></span>
+                                        </h3>
+                                        <p class="fs-7">Call me whenever you can...</p>
+                                        <p class="fs-7 text-secondary">
+                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <img src="dist/images/user8-128x128.jpg" alt="User Avatar"
+                                            class="img-size-50 rounded-circle me-3" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h3 class="dropdown-item-title">
+                                            John Pierce
+                                            <span class="float-end fs-7 text-secondary">
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                        </h3>
+                                        <p class="fs-7">I got your message bro</p>
+                                        <p class="fs-7 text-secondary">
+                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <img src="dist/images/user3-128x128.jpg" alt="User Avatar"
+                                            class="img-size-50 rounded-circle me-3" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h3 class="dropdown-item-title">
+                                            Nora Silvester
+                                            <span class="float-end fs-7 text-warning">
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                        </h3>
+                                        <p class="fs-7">The subject goes here</p>
+                                        <p class="fs-7 text-secondary">
+                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+                        </div>
+                    </li> -->
+                    <!--end::Messages Dropdown Menu-->
+                    <!--begin::Notifications Dropdown Menu-->
+                    <!-- <li class="nav-item dropdown">
+                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
+                            <i class="bi bi-bell-fill"></i>
+                            <span class="navbar-badge badge text-bg-warning">15</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                            <span class="dropdown-item dropdown-header">15 Notifications</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-envelope me-2"></i> 4 new messages
+                                <span class="float-end text-secondary fs-7">3 mins</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-people-fill me-2"></i> 8 friend requests
+                                <span class="float-end text-secondary fs-7">12 hours</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
+                                <span class="float-end text-secondary fs-7">2 days</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
+                        </div>
+                    </li> -->
+                    <!--end::Notifications Dropdown Menu-->
+
                     <!--begin::Fullscreen Toggle-->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
@@ -132,6 +248,7 @@
                                 style="width: 40px; height: 40px;" alt="User Image" />
                         </span>
                     </li>
+                    <!--end::User Menu Dropdown-->
 
                     <li>
                         <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
@@ -213,14 +330,17 @@
                                     <div id="contenedorDimensiones"></div>
                                 </div>
 
-                                <div class="text-left ms-5 mt-4">
+                                <div class="text-center mt-4">
                                     <button id="btnGuardarPesos" onclick="guardarPonderaciones()"
                                         class="btn btn-primary mb-4">💾 Guardar Cambios</button>
                                 </div>
                             </div>
+                            <!--end::Row-->
                         </div>
+                        <!--end::Container-->
                     </div>
                 </div>
+                <!--end::App Content-->
 
                 <footer class="main-footer text-center">
                     <strong>© 2025 - myResultIQ 1.0</strong>
@@ -229,6 +349,7 @@
         <!--end::App nain-->
 
     </div>
+    <!--end::App Wrapper-->
 
     <!--begin::Modal del usuario-->
     <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
@@ -269,6 +390,23 @@
         </div>
     </div>
 
+    <!-- Modal indicador  -->
+    <div class="modal fade" id="modalIndicador" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalIndicadorTitulo"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="modalIndicadorCuerpo">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
@@ -284,6 +422,7 @@
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
 
     <!-- Bootstrap (bundle con Popper incluido) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -296,9 +435,21 @@
     <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+    <!-- ChartJS -->
 
     <script>
         const contenedor = document.getElementById("contenedorDimensiones");
+
+        // Crear una sola instancia del modal
+        // const modalIndicador = new bootstrap.Modal(document.getElementById("modalIndicador"));
+        // const modalTitulo = document.getElementById("modalIndicadorTitulo");
+        // const modalCuerpo = document.getElementById("modalIndicadorCuerpo");
+
+        // Limpiar contenido al cerrar
+        document.getElementById("modalIndicador").addEventListener('hidden.bs.modal', () => {
+            modalTitulo.textContent = '';
+            modalCuerpo.innerHTML = '';
+        });
 
         // Delegación de evento para abrir modal
         contenedor.addEventListener("click", function (e) {
@@ -334,100 +485,46 @@
                     const card = document.createElement("div");
                     card.className = "col-md-8 mb-4";
 
-                    // card.innerHTML = `
-                    //     <div class="card shadow-sm">
-                    //         <div class="card-header d-flex justify-content-between align-items-center">
-                    //             <strong class="fs-4">${dimension}</strong>
-                    //             <span id="total-${dimension}" class="badge fs-5 ${total === 100 ? 'bg-success' : 'bg-warning'}">
-                    //                 Total: ${total.toFixed(2)}%
-                    //             </span>
-                    //         </div>
-                    //         <div class="card-body p-0">
-                    //             <table class="table table-sm mb-0">
-                    //                 <thead class="table-light">
-                    //                     <tr>
-                    //                         <th>Indicador</th>
-                    //                         <th class="text-end">%</th>
-                    //                     </tr>
-                    //                 </thead>
-                    //                 <tbody>
-                    //                     ${lista.map(ind => `
-                    //                         <tr>
-                    //                             <td>
-                    //                                 <span class="indicador-link"
-                    //                                 data-codigo="${ind.codigo_id}"
-                    //                                 style="cursor:pointer; text-decoration:none; color:#0d6efd;">
-                    //                                     ${ind.codigo_id} - ${SectoresService.getNombreSector(ind.destino)} - ${ind.nombre}
-                    //                                 </span>
-                    //                             </td>
-                    //                             <td class="text-end">
-                    //                                 <input 
-                    //                                     type="number" 
-                    //                                     step="0.01" min="0" max="100"
-                    //                                     class="form-control form-control-sm text-end peso-input"
-                    //                                     data-dimension="${dimension}"
-                    //                                     data-db-id="${ind.id}"  
-                    //                                     value="${ind.dimension_porcentual || 0}">
-                    //                             </td>
-                    //                         </tr>
-                    //                     `).join('')}
-                    //                 </tbody>
-                    //             </table>
-                    //         </div>
-                    //     </div>
-                    //     `;
-
                     card.innerHTML = `
-                                            <div class="card shadow-sm">
+                        <div class="card shadow-sm">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <strong class="fs-4">${dimension}</strong>
                                 <span id="total-${dimension}" class="badge fs-5 ${total === 100 ? 'bg-success' : 'bg-warning'}">
                                     Total: ${total.toFixed(2)}%
                                 </span>
                             </div>
-                        <div class="card-body p-0">
-                            <table class="table table-sm mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="width: 120px;">Código</th>
-                                        <th>Nombre</th>
-                                        <th>Destino</th>
-                                        <th class="text-end" style="width: 100px;">%</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${lista.map(ind => `
+                            <div class="card-body p-0">
+                                <table class="table table-sm mb-0">
+                                    <thead class="table-light">
                                         <tr>
-                                            <!-- Código -->
-                                            <td>
-                                                <span class="indicador-link"
+                                            <th>Indicador</th>
+                                            <th class="text-end">%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${lista.map(ind => `
+                                            <tr>
+                                                <td>
+                                                    <span class="indicador-link"
                                                     data-codigo="${ind.codigo_id}"
                                                     style="cursor:pointer; text-decoration:none; color:#0d6efd;">
-                                                    ${ind.codigo_id}
-                                                </span>
-                                            </td>
-
-                                            <!-- Nombre del indicador -->
-                                            <td>${ind.nombre}</td>
-
-                                            <!-- Destino / Sector -->
-                                            <td>${SectoresService.getNombreSector(ind.destino) || "-"}</td>
-
-                                            <!-- Porcentaje -->
-                                            <td class="text-end">
-                                                <input 
-                                                    type="number" 
-                                                    step="0.01" min="0" max="100"
-                                                    class="form-control form-control-sm text-end peso-input"
-                                                    data-dimension="${dimension}"
-                                                    data-db-id="${ind.id}"  
-                                                    value="${ind.dimension_porcentual || 0}">
-                                            </td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
+                                                        ${ind.codigo_id} - ${SectoresService.getNombreSector(ind.destino)} - ${ind.nombre}
+                                                    </span>
+                                                </td>
+                                                <td class="text-end">
+                                                    <input 
+                                                        type="number" 
+                                                        step="0.01" min="0" max="100"
+                                                        class="form-control form-control-sm text-end peso-input"
+                                                        data-dimension="${dimension}"
+                                                        data-db-id="${ind.id}"  
+                                                        value="${ind.dimension_porcentual || 0}">
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         `;
 
@@ -493,11 +590,40 @@
             }
         }
 
+        // Función para abrir y cargar los datos del indicador
+        // async function abrirModalIndicador(id) {
+        //     try {
+        //         const res = await fetch(`/api/indicadores/${id}`);
+        //         if (!res.ok) throw new Error('Error al obtener el indicador');
+
+        //         const ind = await res.json();
+
+        //         modalTitulo.textContent = ind.nombre || '-';
+        //         modalCuerpo.innerHTML = `
+        //     <p><strong>Código:</strong> ${ind.codigo_id || '-'}</p>    
+        //     <p><strong>Descripción:</strong> ${ind.descripcion || '-'}</p>
+        //     <p><strong>Responsable:</strong> ${ind.responsable || '-'}</p>
+        //     <p><strong>Dimensión:</strong> ${ind.dimension_nombre || '-'}</p>
+        //     <p><strong>Categoría:</strong> ${ind.categoria_descripcion || '-'}</p>
+        //     <p><strong>Criticidad:</strong> ${ind.criticidad_descripcion || '-'}</p>
+        //     <p><strong>Peso asignado:</strong> ${ind.dimension_porcentual || 0}%</p>
+        //     <p><strong>Última medición:</strong> ${ind.ultimo_valor || '-'} (${ind.fecha_ultima_medicion || '-'})</p>
+        // `;
+
+        //         modalIndicador.show();
+        //     } catch (err) {
+        //         console.error(err);
+        //         alert(`❌ Error al cargar el indicador ${id}`);
+        //     }
+        // }
+
         document.addEventListener('DOMContentLoaded', async () => {
             // await CodigosService.init();
             await SectoresService.init();
             cargarIndicadoresPorDimension();
         });
+
+
 
     </script>
 
