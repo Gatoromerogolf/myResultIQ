@@ -240,6 +240,96 @@
             margin: 30px auto;
         }
 
+        /* Contenedor general */
+        .indicador-meta {
+            margin-top: .75rem;
+            font-size: .88rem;
+            color: #444;
+        }
+
+        /* ----- CONTENEDOR GENERAL ----- */
+        .indicador-meta {
+            margin-top: .75rem;
+            font-size: .88rem;
+            color: #444;
+        }
+
+        /* ----- MINI TARJETAS ----- */
+        .mini-card {
+            border-radius: 14px;
+            padding: 14px 16px;
+            min-height: 110px;
+            position: relative;
+            overflow: hidden;
+
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            /* Sombra suave */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .mini-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+        }
+
+        /* ----- ÍCONO DECORATIVO ----- */
+        .mini-card::before {
+            content: attr(data-icon);
+            position: absolute;
+            right: 12px;
+            top: 8px;
+            font-size: 2.4rem;
+            opacity: 0.18;
+        }
+
+        /* ----- TÍTULO ----- */
+        .mini-card h6 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+        }
+
+        /* ----- CANTIDAD ----- */
+        .mini-card strong {
+            font-weight: 600;
+        }
+
+        /* ----- PROMEDIO ----- */
+        .mini-card .value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-align: right;
+            margin-top: 4px;
+        }
+
+
+        /*=========================================================
+    COLORES DE TARJETAS (tipo, categoría, criticidad)
+=========================================================*/
+
+        /* 1 — Primera columna */
+        .colored-1 {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            /* azul */
+        }
+
+        /* 2 — Segunda columna */
+        .colored-2 {
+            background: linear-gradient(135deg, #10b981, #065f46);
+            /* verde */
+        }
+
+        /* 3 — Tercera columna */
+        .colored-3 {
+            background: linear-gradient(135deg, #f59e0b, #b45309);
+            /* amarillo/naranja */
+        }
+
 
         /* .card-outline {
             border: 1px solid #0d6efd;
@@ -797,17 +887,20 @@
                                 </div>
                             </div>
 
-                            <!-- === Críticos === -->
-                            <div class="card card-danger card-outline col-12 mt-3 mb-4 card-shadow">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-3 d-flex align-items-center flex-wrap" style="gap: 6px;">
-                                        <i class="fa fa-arrow-down text-danger"></i>
-                                        <label for="valorCorteCriticos" class="mb-0 fw-semibold text-gray-700">
-                                            Críticos: cumplimiento menor al
-                                        </label>
-                                        <div class="input-group input-group-sm" style="width: 80px;">
-                                            <input type="number" id="valorCorteCriticos" value="50" min="0" max="100"
-                                                step="1" class="form-control text-end" style="
+
+                            <div class="row">
+                                <!-- === Críticos === -->
+                                <div class="card card-danger card-outline col-md-6 mt-3 mb-4 card-shadow">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-3 d-flex align-items-center flex-wrap"
+                                            style="gap: 6px;">
+                                            <i class="fa fa-arrow-down text-danger"></i>
+                                            <label for="valorCorteCriticos" class="mb-0 fw-semibold text-gray-700">
+                                                Críticos: cumplimiento menor al
+                                            </label>
+                                            <div class="input-group input-group-sm" style="width: 80px;">
+                                                <input type="number" id="valorCorteCriticos" value="50" min="0"
+                                                    max="100" step="1" class="form-control text-end" style="
                                                             border: 1px solid #dee2e6;
                                                             border-radius: 6px;
                                                             background-color: #f8f9fa;
@@ -818,47 +911,47 @@
                                                             padding: 4px 6px;
                                                             height: auto;
                                                         "
-                                                onfocus="this.style.borderColor='#0d6efd'; this.style.backgroundColor='#fff';"
-                                                onblur="this.style.borderColor='#dee2e6'; this.style.backgroundColor='#f8f9fa';" />
-                                            <span class="input-group-text fw-semibold" style="
+                                                    onfocus="this.style.borderColor='#0d6efd'; this.style.backgroundColor='#fff';"
+                                                    onblur="this.style.borderColor='#dee2e6'; this.style.backgroundColor='#f8f9fa';" />
+                                                <span class="input-group-text fw-semibold" style="
                                                         background-color: #f8f9fa; 
                                                         border: 1px solid #dee2e6;
                                                         font-size: 1rem;
                                                     ">%</span>
+                                            </div>
+                                        </h5>
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                                                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                            </button>
                                         </div>
-                                    </h5>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-borderless mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Indicador</th>
+                                                        <th>Destino</th>
+                                                        <th>Responsable</th>
+                                                        <th>Meta</th>
+                                                        <th>Unidad</th>
+                                                        <th>UltMed</th>
+                                                        <th>Cumpl.</th>
+                                                        <th>Tendencia</th>
+                                                        <th>Variación</th>
+                                                        <th>Vigencia</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbodyCriticos"></tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-sm table-borderless mb-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Indicador</th>
-                                                    <th>Destino</th>
-                                                    <th>Responsable</th>
-                                                    <th>Meta</th>
-                                                    <th>Unidad</th>
-                                                    <th>UltMed</th>
-                                                    <th>Cumpl.</th>
-                                                    <th>Tendencia</th>
-                                                    <th>Variación</th>
-                                                    <th>Vigencia</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="tbodyCriticos"></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- === Final de página ===  -->
-                            <div class="row">
+                                <!-- === Final de página ===  -->
+
                                 <!-- === Sin última medición === -->
                                 <div class="col-md-6 mt-3">
                                     <div class="card card-warning card-outline">
@@ -889,6 +982,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+
+                            <div class="row">
 
                                 <!-- === Insights Automáticos === -->
                                 <div class="col-md-6 mt-3">
@@ -900,24 +997,43 @@
                                     </div>
                                 </div>
 
+                                <div class="col-md-6 indicador-meta">
 
-                                <!-- === Botones de acción === -->
-                                <div class="actions-bar">
-                                    <a href="informePDF.html" class="btn btn-outline-primary">
-                                        <i class="fas fa-chart-line"></i> Ver formato previo PDF
-                                    </a>
-                                    <a href="kpi-conclusiones.html" class="btn btn-outline-primary">
-                                        <i class="fas fa-chart-line"></i> Ver conclusiones generales
-                                    </a>
-                                    <button id="btnDescargarPDF" class="btn btn-outline-primary">
-                                        <i class="fas fa-file-pdf"></i> Descargar PDF
-                                    </button>
-                                    <button class="btn btn-primary" onclick="location.reload();"><i
-                                            class="fas fa-sync"></i>
-                                        Actualizar
-                                        Datos</button>
+                                    <div class="card shadow-sm p-3 mb-3 mt-3">
+                                        <h5 class="mb-3"><i class="bi bi-diagram-2"></i> Cumplimiento por Tipo</h5>
+                                        <div id="tarjetaTipos"></div>
+                                    </div>
+
+                                    <div class="card shadow-sm p-3 mb-3">
+                                        <h5 class="mb-3"><i class="bi bi-tags"></i> Cumplimiento por Categoría</h5>
+                                        <div id="tarjetaCategorias"></div>
+                                    </div>
+
+                                    <div class="card shadow-sm p-3 mb-3">
+                                        <h5 class="mb-3"><i class="bi bi-exclamation-triangle"></i> Cumplimiento por
+                                            Criticidad</h5>
+                                        <div id="tarjetaCriticidad"></div>
+                                    </div>
+
                                 </div>
                             </div>
+
+                            <!-- === Botones de acción === -->
+                            <div class="actions-bar">
+                                <a href="informePDF.html" class="btn btn-outline-primary">
+                                    <i class="fas fa-chart-line"></i> Ver formato previo PDF
+                                </a>
+                                <a href="kpi-conclusiones.html" class="btn btn-outline-primary">
+                                    <i class="fas fa-chart-line"></i> Ver conclusiones generales
+                                </a>
+                                <button id="btnDescargarPDF" class="btn btn-outline-primary">
+                                    <i class="fas fa-file-pdf"></i> Descargar PDF
+                                </button>
+                                <button class="btn btn-primary" onclick="location.reload();"><i class="fas fa-sync"></i>
+                                    Actualizar
+                                    Datos</button>
+                            </div>
+
                             <footer class="main-footer text-center">
                                 <strong>© 2025 - myResultIQ 1.0</strong>
                             </footer>
@@ -3488,6 +3604,9 @@
                         destino: ind.destino,
                         objetivo: ind.objetivo,
                         descripcion: ind.descripcion,
+                        tipo: ind.tipo_id,
+                        categoria: ind.categoria_id,
+                        criticidad: ind.criticidad_id,
                         sector: sector?.nombre || '-',
                         usuario: usuario ? `${usuario.nombres} ${usuario.apellido}` : '-',
                         ultimaMedicion,
@@ -3541,12 +3660,19 @@
                 mostrarPanelIndicadoresResumen();
                 console.log("✔ Finalizó 9️⃣ (filtros resumen)");
 
-                // 🔟  Inicializar al cargar
+
+                // ------------------------------------------
+                // 🔟 Carga tarjetas de cumplimiento
+                // ------------------------------------------
+                buildTarjetas(indicadoresConDatos);
+                console.log("✔ Finalizó 🔟 (tarjetas cumplimiento)");
+
+                // 1️⃣1️⃣  Inicializar al cargar
                 renderizarGrafico().catch(err => {
                     console.error(err);
                     alert('No se pudo cargar la evolución global');
                 });
-                console.log('finalizo 🔟');
+                console.log('finalizo 1️⃣1️⃣');
 
                 console.log("🎉 INIT COMPLETADO EXITOSAMENTE");
 
@@ -4213,7 +4339,257 @@
                 return null;
             }
         };
+
+        function buildTarjetas(indicadoresConDatos) {
+
+            window._indicadoresGlobales = indicadoresConDatos;
+
+            // --- Definiciones ---
+            const TIPOS = {
+                1: "Estratégico",
+                2: "Táctico",
+                3: "Operativo"
+            };
+
+            const CATEGORIAS = {
+                1: "Eficiencia",
+                2: "Eficacia",
+                3: "Calidad",
+                4: "Productividad"
+            };
+
+            const CRITICIDAD = {
+                1: "Alta",
+                2: "Media",
+                3: "Baja"
+            };
+
+
+            // --- Función genérica para calcular grupos ---
+            function getGroupStats(arr, field, groupsDefinition) {
+                const result = [];
+
+                for (const [id, name] of Object.entries(groupsDefinition)) {
+
+                    // Filtrar por campo + excluir porcentaje null
+                    const filtered = arr.filter(ind =>
+                        Number(ind[field]) === Number(id) &&
+                        ind.porcentaje !== null
+                    );
+
+                    const count = filtered.length;
+
+                    const avg = count > 0
+                        ? (
+                            filtered.reduce((s, i) => s + (parseFloat(i.porcentaje) || 0), 0)
+                            / count
+                        )
+                        : 0;
+
+                    result.push({
+                        id,
+                        name,
+                        count,
+                        avg: Number(avg.toFixed(2))
+                    });
+                }
+
+                return result;
+            }
+
+
+            // --- Render de tarjetas ---
+            function XXXrenderTarjetas(containerId, data) {
+                const container = document.getElementById(containerId);
+
+                const iconos = ["📊", "📁", "⭐"]; // 3 por columna
+
+                container.innerHTML = `
+                    <div class="row">
+                        ${data.map((item, i) => `
+                            <div class="col-4">
+                                <div class="mini-card mb-2 colored-${i + 1}" data-icon="${iconos[i]}">
+                                    <h6>${item.name}</h6>
+                                    <div><strong>Cant:</strong> ${item.count}</div>
+                                    <div class="value">${item.avg}%</div>
+                                </div>
+                            </div>
+                        `).join("")}
+                    </div>
+                `;
+            }
+
+
+            function XXXmostrarDetalleTarjeta(nombre, field, id) {
+
+                const titulo = document.getElementById("modalTarjetaTitulo");
+                const contenido = document.getElementById("modalTarjetaContenido");
+
+                titulo.textContent = `Indicadores de: ${nombre}`;
+
+                // Filtrar indicadores globales
+                const indicadores = window._indicadoresGlobales.filter(ind =>
+                    Number(ind[field]) === Number(id) &&
+                    ind.porcentaje !== null
+                );
+
+                if (indicadores.length === 0) {
+                    contenido.innerHTML = `<p>No hay indicadores disponibles.</p>`;
+                } else {
+                    contenido.innerHTML = `
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Últ. %</th>
+                                <th>Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${indicadores.map(ind => `
+                                <tr>
+                                    <td>${ind.codigo_id}</td>
+                                    <td>${ind.nombre}</td>
+                                    <td><strong>${ind.porcentaje}%</strong></td>
+                                    <td>${ind.usuario}</td>
+                                </tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                `;
+                }
+
+                // Abrir modal
+                const modal = new bootstrap.Modal(document.getElementById("modalTarjetaDetalle"));
+                modal.show();
+            }
+
+            function renderTarjetas(containerId, data, fieldName) {
+                const container = document.getElementById(containerId);
+
+                const iconos = ["📊", "📁", "⭐"];
+
+                container.innerHTML = `
+                        <div class="row">
+                            ${data.map((item, i) => `
+                                <div class="col-4">
+                                    <div class="mini-card mb-2 colored-${i + 1}" 
+                                        data-icon="${iconos[i]}"
+                                        data-field="${fieldName}"
+                                        data-id="${item.id}"
+                                        data-name="${item.name}"
+                                        style="cursor:pointer">
+                                        <h6>${item.name}</h6>
+                                        <div><strong>Cant:</strong> ${item.count}</div>
+                                        <div class="value">${item.avg}%</div>
+                                    </div>
+                                </div>
+                            `).join("")}
+                        </div>
+                    `;
+
+                // Después de renderizar, agrego los listeners
+                container.querySelectorAll('.mini-card').forEach(card => {
+                    card.addEventListener('click', function () {
+                        const name = this.getAttribute('data-name');
+                        const field = this.getAttribute('data-field');
+                        const id = this.getAttribute('data-id');
+
+                        // Llamo a la función que muestra el modal (puede seguir siendo local)
+                        mostrarDetalleTarjeta(name, field, id);
+                    });
+                });
+            }
+
+
+
+
+            // --- Ejecutar renderización final ---
+            renderTarjetas(
+                "tarjetaTipos",
+                getGroupStats(indicadoresConDatos, "tipo", TIPOS),
+                "tipo",
+                indicadoresConDatos
+            );
+
+            renderTarjetas(
+                "tarjetaCategorias",
+                getGroupStats(indicadoresConDatos, "categoria", CATEGORIAS),
+                "categoria",
+                indicadoresConDatos
+            );
+
+            renderTarjetas(
+                "tarjetaCriticidad",
+                getGroupStats(indicadoresConDatos, "criticidad", CRITICIDAD),
+                "criticidad",
+                indicadoresConDatos
+            );
+
+        }
+
+        function mostrarDetalleTarjeta(nombre, field, id) {
+
+            const titulo = document.getElementById("modalTarjetaTitulo");
+            const contenido = document.getElementById("modalTarjetaContenido");
+
+            titulo.textContent = `Indicadores de: ${nombre}`;
+
+            // Filtrar indicadores globales
+            const indicadores = window._indicadoresGlobales.filter(ind =>
+                Number(ind[field]) === Number(id) &&
+                ind.porcentaje !== null
+            );
+
+            if (indicadores.length === 0) {
+                contenido.innerHTML = `<p>No hay indicadores disponibles.</p>`;
+            } else {
+                contenido.innerHTML = `
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Últ. %</th>
+                                <th>Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${indicadores.map(ind => `
+                                <tr>
+                                    <td>${ind.codigo_id}</td>
+                                    <td>${ind.nombre}</td>
+                                    <td><strong>${ind.porcentaje}%</strong></td>
+                                    <td>${ind.usuario}</td>
+                                </tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            // Abrir modal
+            const modal = new bootstrap.Modal(document.getElementById("modalTarjetaDetalle"));
+            modal.show();
+        }
     </script>
+
+        <div class="modal fade" id="modalTarjetaDetalle" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content p-3">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTarjetaTitulo"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body" id="modalTarjetaContenido">
+                        Cargando...
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     <!-- Librería jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
