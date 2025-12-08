@@ -262,7 +262,7 @@
             position: relative;
             overflow: hidden;
 
-            color: #fff;
+            color: #000;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -4364,7 +4364,6 @@
                 3: "Baja"
             };
 
-
             // --- Función genérica para calcular grupos ---
             function getGroupStats(arr, field, groupsDefinition) {
                 const result = [];
@@ -4393,116 +4392,67 @@
                         avg: Number(avg.toFixed(2))
                     });
                 }
-
                 return result;
             }
 
 
             // --- Render de tarjetas ---
-            function XXXrenderTarjetas(containerId, data) {
+
+            function renderTarjetas(containerId, data, tipo) {
                 const container = document.getElementById(containerId);
 
-                const iconos = ["📊", "📁", "⭐"]; // 3 por columna
+                // Paletas e iconos (seguras)
+                const palettes = {
+                    tipo: ["#cfe2ff", "#e2f0d9", "#ffe5d9"],
+                    categoria: ["#d1e7dd", "#ffe5ec", "#fff3cd", "#e2e3ff"],
+                    criticidad: ["#f8d7da", "#fff3cd", "#d1e7dd"]
+                };
+                const icons = {
+                    tipo: ["📊", "📈", "⚙️"],
+                    categoria: ["⚡", "🎯", "⭐", "📦"],
+                    criticidad: ["🔴", "🟡", "🟢"]
+                };
+
+                const palette = palettes[tipo] || ["#f0f0f0"];
+                const iconset = icons[tipo] || ["📌"];
 
                 container.innerHTML = `
-                    <div class="row">
-                        ${data.map((item, i) => `
-                            <div class="col-4">
-                                <div class="mini-card mb-2 colored-${i + 1}" data-icon="${iconos[i]}">
-                                    <h6>${item.name}</h6>
-                                    <div><strong>Cant:</strong> ${item.count}</div>
-                                    <div class="value">${item.avg}%</div>
-                                </div>
-                            </div>
-                        `).join("")}
-                    </div>
-                `;
-            }
-
-
-            function XXXmostrarDetalleTarjeta(nombre, field, id) {
-
-                const titulo = document.getElementById("modalTarjetaTitulo");
-                const contenido = document.getElementById("modalTarjetaContenido");
-
-                titulo.textContent = `Indicadores de: ${nombre}`;
-
-                // Filtrar indicadores globales
-                const indicadores = window._indicadoresGlobales.filter(ind =>
-                    Number(ind[field]) === Number(id) &&
-                    ind.porcentaje !== null
-                );
-
-                if (indicadores.length === 0) {
-                    contenido.innerHTML = `<p>No hay indicadores disponibles.</p>`;
-                } else {
-                    contenido.innerHTML = `
-                    <table class="table table-sm table-hover">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nombre</th>
-                                <th>Últ. %</th>
-                                <th>Responsable</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${indicadores.map(ind => `
-                                <tr>
-                                    <td>${ind.codigo_id}</td>
-                                    <td>${ind.nombre}</td>
-                                    <td><strong>${ind.porcentaje}%</strong></td>
-                                    <td>${ind.usuario}</td>
-                                </tr>
-                            `).join("")}
-                        </tbody>
-                    </table>
-                `;
-                }
-
-                // Abrir modal
-                const modal = new bootstrap.Modal(document.getElementById("modalTarjetaDetalle"));
-                modal.show();
-            }
-
-            function renderTarjetas(containerId, data, fieldName) {
-                const container = document.getElementById(containerId);
-
-                const iconos = ["📊", "📁", "⭐"];
-
-                container.innerHTML = `
-                        <div class="row">
-                            ${data.map((item, i) => `
+                            <div class="row">
+                                ${data.map((item, i) => {
+                    const bg = palette[i] || "#f0f0f0";
+                    const icon = iconset[i] || "📌";
+                    // data-field = tipo/categoria/criticidad, data-key = id numérico
+                    return `
                                 <div class="col-4">
-                                    <div class="mini-card mb-2 colored-${i + 1}" 
-                                        data-icon="${iconos[i]}"
-                                        data-field="${fieldName}"
-                                        data-id="${item.id}"
-                                        data-name="${item.name}"
-                                        style="cursor:pointer">
-                                        <h6>${item.name}</h6>
+                                    <div class="mini-card mb-2 p-2 colored-${i + 1}" 
+                                        data-field="${tipo}"
+                                        data-key="${item.id}"
+                                        data-name="${escapeHtml(item.name)}"
+                                        style="background:${bg}; border-radius:10px; cursor:pointer;">
+                                        <div style="font-size:1.4rem">${icon}</div>
+                                        <h6 class="mt-1 mb-1">${escapeHtml(item.name)}</h6>
                                         <div><strong>Cant:</strong> ${item.count}</div>
-                                        <div class="value">${item.avg}%</div>
+                                        <div class="value"><strong>${item.avg}%</strong></div>
                                     </div>
                                 </div>
-                            `).join("")}
-                        </div>
-                    `;
+                            `;
+                }).join("")}
+                    </div>
+                `;
+
 
                 // Después de renderizar, agrego los listeners
                 container.querySelectorAll('.mini-card').forEach(card => {
                     card.addEventListener('click', function () {
                         const name = this.getAttribute('data-name');
                         const field = this.getAttribute('data-field');
-                        const id = this.getAttribute('data-id');
+                        const id = this.getAttribute('data-key');
 
                         // Llamo a la función que muestra el modal (puede seguir siendo local)
                         mostrarDetalleTarjeta(name, field, id);
                     });
                 });
             }
-
-
 
 
             // --- Ejecutar renderización final ---
@@ -4569,26 +4519,42 @@
                 `;
             }
 
-            // Abrir modal
-            const modal = new bootstrap.Modal(document.getElementById("modalTarjetaDetalle"));
-            modal.show();
+            // Abrir modal Bootstrap
+            const modalEl = document.getElementById("modalTarjetaDetalle");
+            if (modalEl) {
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
+            } else {
+                console.warn("No se encontró #modalTarjetaDetalle en el DOM.");
+            }
+        }
+
+        // función auxiliar para escapar texto en inserciones HTML
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
         }
     </script>
 
-        <div class="modal fade" id="modalTarjetaDetalle" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content p-3">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalTarjetaTitulo"></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
+    <div class="modal fade" id="modalTarjetaDetalle" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content p-3">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTarjetaTitulo"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
 
-                    <div class="modal-body" id="modalTarjetaContenido">
-                        Cargando...
-                    </div>
+                <div class="modal-body" id="modalTarjetaContenido">
+                    Cargando...
                 </div>
             </div>
         </div>
+    </div>
 
 
     <!-- Librería jsPDF -->
