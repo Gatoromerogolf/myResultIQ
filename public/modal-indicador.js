@@ -121,15 +121,8 @@ async function verDetalleIndicador(codigo) {
         const criticidades = { 1: 'Alta', 2: 'Media', 3: 'Baja' };
         const tiposMeta = { 1: 'Valor único', 2: 'Rango de valores', 3: 'Tendencia' };
         const tendencias = { 1: 'Creciente', 2: 'Decreciente', 3: 'Estable' };
-        const evaluaciones = {
-            1: 'Superable positiva - Más es mejor',
-            2: 'Límite máximo - No debe superarse',
-            3: 'Tolerancia simétrica - Penaliza desviaciones',
-            4: 'Menor es mejor - Más es negativo',
-            5: 'Valor exacto - Cero tolerancia'
-        };
-        const estados = { 1: 'Vigente', 2: 'Suspendido', 3: 'Cancelado' };
 
+        const estados = { 1: 'Vigente', 2: 'Suspendido', 3: 'Cancelado' };
 
         // ----------------------------------------------------
         // Campos principales
@@ -163,7 +156,7 @@ async function verDetalleIndicador(codigo) {
         if (indicador.meta_tipo === 1) {
             Object.assign(campos, {
                 "Valor Meta": `${indicador.unico_valor || '-'} - ${CodigosService.getNombreCodigo(indicador.unidad_medida)}`,
-                "Método de evaluación": evaluaciones[indicador.unico_eval] || '-',
+                "Método de evaluación": `${CodigosService.getNombreCodigo(indicador.unico_eval)}`,
                 "__sep3__": null
             });
 

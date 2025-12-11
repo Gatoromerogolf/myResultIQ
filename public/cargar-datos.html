@@ -267,6 +267,7 @@
                                         <input type="hidden" id="metodo-calculo" name="metodo_calculo">
                                         <input type="hidden" id="med-porcen-destino" name="med_porcen_destino">
                                         <input type="hidden" id="med-porcen-global" name="med_porcen_global">
+                                        <input type="hidden" id="med-porcen-dimension" name="med_porcen_dimension">
                                         <div class="row mb-2">
                                             <div class="col-md-2">
                                                 <label for="texto-período" class="form-label"><strong>Período
@@ -494,12 +495,10 @@
                 // -------------------------------------------------------------
                 const respMed = await fetch('/api/mediciones/ultimas');
                 const { data: ultimasMediciones } = await respMed.json();
-                console.table(ultimasMediciones);
 
                 // Diccionario por indicador
                 const ultimaPorIndicador = {};
                 ultimasMediciones.forEach(m => ultimaPorIndicador[m.med_indicador_id] = m);
-                console.log(JSON.stringify(ultimaPorIndicador, null, 2));
 
 
                 // -------------------------------------------------------------
@@ -509,8 +508,6 @@
 
                     const usuario = usuariosPorLegajo[ind.responsable];
                     const ultima = ultimaPorIndicador[ind.id];
-                    console.log("Última medición para indicador", ind.id, ":", ultima);
-                    console.log("Usuario responsable para legajo", ind.responsable, ":", usuario);
 
                     let fecha = '';
                     let resultadoActualizacion = '';
@@ -597,6 +594,7 @@
                                 ultimaMedicion
                             };
 
+                            console.log("Data Indicador para editar:", dataIndicador);    
                             // 🔥 2. Botones
                             botones = `
                                     <td class="icon-only-actions">
@@ -638,17 +636,18 @@
                             ultimoValorPeriodo,
                             ultimaMedicion
                         };
+                        console.log("Data Indicador para editar (sin mediciones):", dataIndicador);
                         botones = `
-                    <td class="icon-only-actions">
-                        <button class="btn btn-primary btn-xs btn-icon-minimal" onclick="verDetalleIndicador('${ind.codigo_id}')">
-                            <i class="fas fa-eye fa-xs"></i>
-                        </button>
-                        <button class="btn btn-warning btn-xs btn-icon-minimal"
-                            onclick='editarIndicador(${JSON.stringify(dataIndicador)})'>
-                            <i class="fas fa-edit fa-xs"></i>
-                        </button>
-                    </td>`;
-                    }
+                            <td class="icon-only-actions">
+                                <button class="btn btn-primary btn-xs btn-icon-minimal" onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                    <i class="fas fa-eye fa-xs"></i>
+                                </button>
+                                <button class="btn btn-warning btn-xs btn-icon-minimal"
+                                    onclick='editarIndicador(${JSON.stringify(dataIndicador)})'>
+                                    <i class="fas fa-edit fa-xs"></i>
+                                </button>
+                            </td>`;
+                        }
 
                     return {
                         codigo: ind.codigo_id,
@@ -839,6 +838,7 @@
                                 ultimoValorPeriodo,
                                 ultimaMedicion
                             };
+                            console.log("dataIndicador con medición demorada:", dataIndicador);
                             botones = `
                             <td class="icon-only-actions">
                                 <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver"
@@ -878,6 +878,8 @@
                             ultimoValorPeriodo,
                             ultimaMedicion
                         };
+                        console.log("dataIndicador sin medición:", dataIndicador);
+
                         botones = `
                         <td class="icon-only-actions">
                             <button class="btn btn-primary btn-xs btn-icon-minimal" title="Ver"
@@ -1011,6 +1013,9 @@
             const metodo = document.getElementById('metodo-calculo').value;
             const porcenDestino = document.getElementById('med-porcen-destino').value;
             const porcenGlobal = document.getElementById('med-porcen-global').value;
+            const porcenDimension = document.getElementById('med-porcen-dimension').value;
+
+            console.log(`valores porcentuales - destino: ${porcenDestino}, global: ${porcenGlobal}, dimension: ${porcenDimension}`);
 
             console.log("Método de cálculo:", metodo);
 
@@ -1019,26 +1024,28 @@
             const valor = parseFloat(document.getElementById('valor-carga').value);
             const meta = parseFloat(metaActual);
 
-            if (metodo == '1') { // superable positiva - mas es mejor
+            if (metodo == '0401') { // superable positiva - mas es mejor
                 if (!isNaN(valor) && !isNaN(meta) && meta !== 0) {
                     cumplimientoCalculado = (valor / meta) * 100;
                 }
             }
 
-            if (metodo == '2') {  // limite máximo - no debe superarse
-                if (valor <= meta) {
-                    cumplimientoCalculado = 100;
-                } else {
-                    cumplimientoCalculado = (valor - meta) / meta * 100;
-                }
-            }
-
-            if (metodo == '4') {  // menor es mejor - alejarse en menos es mejor
-                if (valor >= meta) {
+            if (metodo == '0402') {  // limite máximo - no debe supera ñlrse
+                if (meta < valor) {
                     cumplimientoCalculado = 0.01;
                 } else {
-                    cumplimientoCalculado = (meta - valor) / meta * 100;
+                    cumplimientoCalculado = (meta / valor) * 100;
                 }
+                // Comienza en un valor inferior a la meta.  Busca no superarla.  Si la supera, el cumplimiento es 0% (0,01)
+                // Si no supera la meta, el cumplimiento es 100%.  Cuanto más se aleja de la meta, mejor es el cumplimiento
+            }
+
+            if (metodo == '0404') {  // menor es mejor - alejarse en menos es mejor
+                    cumplimientoCalculado = (meta / valor) * 100;
+                    // Comienza en un valor superior a la meta.  Busca disminuir el valor y acercarse a la meta
+                    // Si alcanza la meta, el cumplimiento es 100%
+                    // Si obtiene un valor menor a la meta, el cumplimiento supera el 100%
+                    // INDICADOR DE MEJORA CONTINUA
             }
 
             const ahora = new Date();
@@ -1059,6 +1066,7 @@
                 med_anio: (frecuencia === '0201')
                     ? Number(valorPeriodo.substring(0, 4))  // extrae año de "AAAAMMDD"
                     : anioPeriodo,
+                    
                 med_valor: parseFloat(document.getElementById('valor-carga').value),
                 med_meta: metaActual,
                 med_comentarios: document.getElementById('comentario-carga').value.trim(),
@@ -1069,7 +1077,8 @@
                 med_plan_accion: document.getElementById('plan-accion-carga').value.trim(),
                 med_cumplimiento: cumplimientoCalculado,
                 med_porcen_destino: porcenDestino,
-                med_porcen_global: porcenGlobal
+                med_porcen_global: porcenGlobal,
+                med_porcen_dimension: porcenDimension
             };
 
             console.log("Datos a enviar:", datos);
@@ -1108,10 +1117,12 @@
         // 📌 editarIndicador(data) — Recibe un objeto con todos los valores // ✅ 2) SOLO PREPARA DATOS (sin listeners)
         async function editarIndicador(data) {
 
+            console.table(data);
             // Método de cálculo (antes "metodo")
             document.getElementById('metodo-calculo').value = data.unico_eval;
             document.getElementById('med-porcen-destino').value = data.peso_porcentual || '';
             document.getElementById('med-porcen-global').value = data.peso_porcentual_global || '';  
+            document.getElementById('med-porcen-dimension').value = data.dimension_porcentual || '';
 
             // Última medición desde BD
             const ultima = await getUltimaMedicionPorIndicador(data.id);

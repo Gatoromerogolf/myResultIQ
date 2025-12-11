@@ -415,7 +415,6 @@
             cargarAside();
         </script>
 
-
         <main class="app-main">
             <!-- <body class="hold-transition layout-top-nav"> -->
             <div class="app-content-header">
@@ -779,7 +778,6 @@
                                                 </div>
 
                                                 <div class="card-body">
-                                                    <!--begin::Row-->
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <p class="text-center">
@@ -807,8 +805,7 @@
                                                             <div class="row mt-2">
                                                                 <div class="col-12">
                                                                     <div class="bg-white rounded shadow-sm p-4">
-                                                                        <h4 class="fw-bold mb-3">📋
-                                                                            Conclusiones</h4>
+                                                                        <h4 class="fw-bold mb-3">📋 Destacados</h4>
                                                                         <div class="row" id="analisisContainer">
                                                                         </div>
                                                                     </div>
@@ -1316,6 +1313,7 @@
             renderizarInsights(insights);
         }
 
+        // 📌📌 renderizarInsights
         function renderizarInsights(insights) {
             const cont = document.getElementById("insightsAuto");
             if (!cont) return;
@@ -1331,7 +1329,6 @@
         `;
             });
         }
-
 
         // 📌📌 actualizarResumenGlobal
         function actualizarResumenGlobal() {
@@ -1402,7 +1399,6 @@
         }
 
         // 📌📌 mostrarDetalleMes(entry)   // 🔹 Mostrar modal con detalle del mes marcado en evolución global
-
         let modoDetalle = "destino";         // "destino" | "contribucion"
         function mostrarDetalleMes(entry) {
             document.getElementById('detalleMes').textContent = entry.month;
@@ -1541,6 +1537,7 @@
             mostrarDetalleMes(window.__ultimoEntry);
         });
 
+        // 📌📌 generarInsightsAutomaticos()
         function generarInsightsAutomaticos(serie) {
 
             if (!serie || serie.length < 2) return [];
@@ -1624,9 +1621,6 @@
 
             return insights;
         }
-
-
-
 
         // 📌📌 loadGlobalCompliance()
         async function loadGlobalCompliance() {
@@ -2387,26 +2381,6 @@
             return resultado;
         }
 
-
-        // 📌📌 CodigosService // Servicio global para textp de tabla de códigos 
-        // const CodigosService = {
-        //     codigosMap: {},
-
-        //     async init() {
-        //         const response = await fetch('/api/codigos');
-        //         if (!response.ok) throw new Error('No se pudo obtener los codigos.');
-        //         const codigos = await response.json();
-
-        //         codigos.forEach(c => {
-        //             this.codigosMap[c.cod_tabla] = c.cod_nombre;
-        //         });
-        //     },
-
-        //     getNombreCodigo(codigo) {
-        //         return this.codigosMap[codigo] || '-';
-        //     }
-        // };
-
         // 📌📌 valorCorteDestacados
         document.getElementById('valorCorteDestacados').addEventListener('input', async () => {
             await reconstruirTablas(); // función que recalcula y recarga la tabla
@@ -2416,142 +2390,6 @@
         document.getElementById('valorCorteCriticos').addEventListener('input', async () => {
             await reconstruirTablas(); // función que recalcula y recarga la tabla
         });
-
-        // 📌📌 cargarCumplimientoPorDestino()
-        async function XXXcargarCumplimientoPorDestino() {
-            const spinner = document.getElementById('spinnerCumplimientoDestinos');
-            const tablaContainer = document.getElementById('tablaCumplimientoContainer');
-            const tbody = document.getElementById('tablaCumplimientoDestinos');
-
-            spinner.style.display = 'block';
-            // 🔹 y ahora activás el botón que oculta el sidebar
-            const botonSidebar = document.querySelector('[data-lte-toggle="sidebar"]');
-            if (botonSidebar) botonSidebar.click();
-
-            tablaContainer.style.display = 'none';
-
-            try {
-                const res = await fetch('/api/cumplimiento-por-destino');
-                const data = await res.json();
-
-                // --- Renderizar tabla con ícono de evolución ---
-                tbody.innerHTML = data.map(d => {
-                    const valor = Number(d.promedio_cumplimiento);
-                    const valorSeguro = isNaN(valor) ? 0 : valor;
-
-                    let color = 'text-danger';
-                    if (valorSeguro >= 80) color = 'text-success';
-                    else if (valorSeguro >= 50) color = 'text-warning';
-
-                    const barra = `
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar ${color.replace('text-', 'bg-')}" 
-                                role="progressbar" 
-                                style="width: ${valorSeguro}%;"
-                                aria-valuenow="${valorSeguro}" 
-                                aria-valuemin="0" 
-                                aria-valuemax="100">
-                            </div>
-                        </div>`;
-
-                    // ✅ Aquí agregamos el ícono de Evolución
-                    return `
-                        <tr>
-                            <td>${d.destino}</td>
-                            <td class="text-center">${d.total_indicadores}</td>
-                            <td class="text-center fw-semibold ${color}">
-                                ${valorSeguro}% ${barra}
-                            </td>
-                            <td class="text-center text-success fw-semibold">${d.en_meta}</td>
-                            <td class="text-center text-danger fw-semibold">${d.criticos}</td>
-                            <td class="text-center">
-                                <span class="text-primary fw-semibold"
-                                    role="button"
-                                    style="cursor:pointer"
-                                    title="Ver evolución del destino"
-                                    data-id="${d.id_destino}"
-                                    data-nombre="${d.destino}">
-                                    Ver
-                                </span>
-                            </td>
-                        </tr>`;
-                }).join('');
-
-                spinner.style.display = 'none';
-                tablaContainer.style.display = 'block';
-                chartContainer.style.display = 'block';
-
-                // Delegación de eventos para los íconos de evolución
-                document.getElementById('tablaCumplimientoDestinos').addEventListener('click', async (e) => {
-                    const icono = e.target.closest('[data-id]');
-                    if (!icono) return;
-
-                    const idDestino = Number(icono.dataset.id);
-                    const nombreDestino = icono.dataset.nombre;
-
-                    console.log(`📈 Clic en evolución del destino: ${nombreDestino} (ID: ${idDestino})`);
-
-                    // 🔹 Mostrar el contenedor del gráfico
-                    const graficoContainer = document.getElementById('grafico-evolucion');
-                    // 🔹 Mostrar nombre del destino (si hay un encabezado dinámico)
-                    const titulo = document.querySelector('#grafico-evolucion .card-title');
-                    if (titulo) titulo.textContent = `Evolución del destino: ${nombreDestino}`;
-                    graficoContainer.style.display = 'block';
-
-                    // 🔹 Generar gráfico específico
-                    mostrarEvolucionPorArea(idDestino, nombreDestino);
-
-                    // 🔹 Obtener y mostrar indicadores del destino
-                    await mostrarIndicadoresPorDestino(idDestino, nombreDestino);
-                });
-
-
-            } catch (error) {
-                console.error('Error cargando cumplimiento por destino:', error);
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar los datos</td></tr>`;
-                spinner.style.display = 'none';
-                tablaContainer.style.display = 'block';
-                chartContainer.style.display = 'none';
-            }
-        }
-
-
-        // 📌📌 mostrarIndicadoresPorDestino
-        async function XXXmostrarIndicadoresPorDestino(idDestino, nombreDestino) {
-            try {
-                const res = await fetch(`/api/indicadores/destino/${idDestino}`);
-                if (!res.ok) throw new Error('Error al obtener indicadores');
-                const body = await res.json();
-
-                if (!body.ok) throw new Error(body.mensaje);
-
-                const indicadores = body.data;  // ✅ Este es el array real
-
-                const tituloDestino = document.getElementById('nombreDestino');
-                const contenedor = document.getElementById('indicadores-destino');
-                const tbody = contenedor.querySelector('tbody');
-                tbody.innerHTML = ''; // limpiar
-                tituloDestino.textContent = nombreDestino;
-
-                if (indicadores.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted">No hay indicadores registrados para este destino.</td></tr>`;
-                } else {
-                    indicadores.forEach(ind => {
-                        tbody.innerHTML += `
-                                <tr>
-                                    <td>${ind.nombre || '-'}</td>
-                                    <td>${ind.objetivo || '-'}</td>
-                                    <td>${ind.unico_valor || '-'}</td>
-                                    <td>${ind.peso_porcentual ? ind.peso_porcentual + '%' : '-'}</td>
-                                </tr>
-                                `;
-                    });
-                }
-                contenedor.style.display = 'block';
-            } catch (error) {
-                console.error('Error cargando indicadores del destino:', error);
-            }
-        }
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function mostrarPanelIndicadoresResumen() {
@@ -2942,7 +2780,7 @@
 
                                         <!-- 🗃️ Mediciones -->
                                         <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
-                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}')">
+                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}', '${ind.unico_eval}')">
                                             <i class="fas fa-database text-success"></i>
                                         </button>
                                     </div>
@@ -2975,14 +2813,14 @@
         }
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
-        function verGraficoIndicador(key_id, nombre, meta, descripcion) {
+        function verGraficoIndicador(key_id, nombre, meta, descripcion, metodo) {
             // Guardar en sessionStorage
             sessionStorage.setItem('indicador_seleccionado', key_id);
             document.getElementById('grafico-evolucion-indicador').style.display = 'block';
 
             // Llama a la función que renderiza el gráfico
 
-            renderIndicadorChart(key_id, nombre, meta, descripcion)
+            renderIndicadorChart(key_id, nombre, meta, descripcion, metodo)
 
         }
 
@@ -3385,7 +3223,7 @@
             }
 
             if (brechaPromedio < 0) {
-                observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)} por debajo`);
+                observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)} por debajo del objetivo`);
             } else {
                 observaciones.push(`Superó la meta en promedio por ${brechaPromedio}`);
             }
@@ -3484,28 +3322,6 @@
             return { observaciones, recomendaciones };
         }
 
-        // Escuchar clics en cualquier fila de indicador
-        // document.querySelectorAll('.fila-indicador').forEach(fila => {
-        //     fila.addEventListener('click', e => {
-        //         const id = fila.getAttribute('data-id');
-        //         const indicador = indicadoresConDatos.find(ind => ind.id == id);
-
-        //         if (indicador) {
-        //             // Cargar datos en el modal
-        //             document.getElementById('detalleNombre').textContent = indicador.nombre;
-        //             document.getElementById('detalleSector').textContent = indicador.sector;
-        //             document.getElementById('detalleUsuario').textContent = indicador.usuario || '—';
-        //             document.getElementById('detalleUltimaMedicion').textContent = indicador.ultimaMedicion ?? 'Sin medición';
-        //             document.getElementById('detallePorcentaje').textContent = indicador.porcentaje !== null ? indicador.porcentaje + '%' : '—';
-        //             document.getElementById('detalleMeta').textContent = indicador.meta ?? '—';
-        //             document.getElementById('detalleFrecuencia').textContent = indicador.frecuencia ?? '—';
-
-        //             // Mostrar modal (Bootstrap)
-        //             const modal = new bootstrap.Modal(document.getElementById('modalDetalleIndicador'));
-        //             modal.show();
-        //         }
-        //     });
-        // });
     </script>
 
     <script type="module">     // 📌📌 module
@@ -3611,6 +3427,7 @@
                         usuario: usuario ? `${usuario.nombres} ${usuario.apellido}` : '-',
                         ultimaMedicion,
                         unico_valor: ind.unico_valor,  // 👈 agregado
+                        unico_eval: ind.unico_eval,    // 👈 agregado
                         unidad_medida: ind.unidad_medida,   // código
                         unidad_desc: unidad,     // descripción
                         ultima_medicion: ultimaMedicion,
@@ -3787,7 +3604,7 @@
 
                             <!-- 🗃️ Mediciones -->
                             <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
-                                onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}')">
+                                onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}', '${ind.unico_eval}')">
                                 <i class="fas fa-database text-success"></i>
                             </button>
                         </td>
@@ -3849,7 +3666,7 @@
 
                             <!-- 🗃️ Mediciones -->
                             <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
-                                onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' , '${ind.freq_medicion}')">
+                                onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}' , '${ind.freq_medicion}', '${ind.unico_eval}')">
                                 <i class="fas fa-database text-success"></i>
                             </button>
                         </td>
@@ -3857,6 +3674,7 @@
                 });
         }
 
+        // 📌📌 cargarCumplimientoPorDestino()
         async function cargarCumplimientoPorDestino() {
             const spinner = document.getElementById('spinnerCumplimientoDestinos');
             const tablaContainer = document.getElementById('tablaCumplimientoContainer');
@@ -3998,7 +3816,7 @@
 
                                         <!-- 🗃️ Mediciones -->
                                         <button type="button" class="btn btn-link p-0 ms-2" title="Ver mediciones registradas"
-                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}')">
+                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}', '${ind.unico_eval}')">
                                             <i class="fas fa-database text-success"></i>
                                         </button>
                                         </td>
@@ -4016,6 +3834,7 @@
         let chartEvolucionArea = null;
         let chartBarrasArea = null;
 
+        // 📌📌 mostrarEvolucionPorArea(idDestino, nombreDestino)
         function mostrarEvolucionPorArea(idDestino, nombreDestino) {
             if (!evolucionGlobal || !evolucionGlobal.length) {
                 console.warn("⚠️ No hay datos globales cargados aún.");
@@ -4340,6 +4159,7 @@
             }
         };
 
+        // 📌📌 buildTarjetas
         function buildTarjetas(indicadoresConDatos) {
 
             window._indicadoresGlobales = indicadoresConDatos;
@@ -4479,6 +4299,7 @@
 
         }
 
+        // 📌📌 mostrarDetalleTarjeta
         function mostrarDetalleTarjeta(nombre, field, id) {
 
             const titulo = document.getElementById("modalTarjetaTitulo");

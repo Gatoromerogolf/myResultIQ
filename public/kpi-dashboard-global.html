@@ -635,8 +635,25 @@
 
 
                                                 <div class="card-header">
-                                                    <h5 class="card-title">Reporte de Evolución</h5>
-                                                    <!-- <div class="card-tools">
+                                                    <!-- <h5 class="card-title">Reporte de Evolución</h5> -->
+                                                    <div
+                                                        class="card-header d-flex justify-content-between align-items-start flex-wrap">
+                                                        <div class="d-flex flex-column">
+                                                            <h4 class="mb-1"><strong>Indicador:</strong> <span
+                                                                    id="indNombre"></span></h4>
+                                                            <p class="mb-1"><strong>Descripción:</strong> <span
+                                                                    id="descripcionGraf"></span></p>
+                                                            <div class="d-flex gap-5">
+                                                                <p class="mb-0">
+                                                                    <strong>Meta:</strong> <span id="metaGraf"></span>
+                                                                </p>
+                                                                <p class="mb-0">
+                                                                    <strong>Evaluación:</strong> <span
+                                                                        id="evaluaGraf"></span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <!-- <div class="card-tools">
                                                         <button type="button" class="btn btn-tool"
                                                             data-lte-toggle="card-collapse">
                                                             <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -661,141 +678,35 @@
                                                             <i class="bi bi-x-lg"></i>
                                                         </button>
                                                     </div> -->
-                                                </div>
-
-
-                                                <!-- /.card-header -->
-                                                <div class="card-body">
-                                                    <!--begin::Row-->
-                                                    <div class="row">
-
-                                                        <div class="col-md-12">
-                                                            <p class="text-center">
-                                                                <strong>Evolución histórica</strong>
-                                                            </p>
-                                                            <div>
-                                                                <button id="btnLine"
-                                                                    class="btn btn-sm btn-primary">Línea</button>
-                                                                <button id="btnArea"
-                                                                    class="btn btn-sm btn-success">Área</button>
-                                                                <button id="btnBar"
-                                                                    class="btn btn-sm btn-warning">Barra</button>
-                                                            </div>
-                                                            <div id="sales-chart"></div>
-                                                        </div>
-
-                                                        <!-- /.col -->
-                                                        <!-- <div class="col-md-12">
-                                                            <p class="text-center"><strong>Cumplimiento de
-                                                                    Objetivos</strong></p> -->
-
-
-                                                        <!-- /.progress-group Margen de Ganancia Bruta -->
-                                                        <!-- <div class="progress-group">
-                                                                Margen de Ganancia Bruta
-                                                                <span class="float-end"><b>160</b>/200</span>
-                                                                <div class="progress progress-sm">
-                                                                    <div class="progress-bar text-bg-success"
-                                                                        style="width: 80%"></div>
-                                                                </div>
-                                                            </div> -->
-                                                        <!-- /.progress-group Satisfacción del cliente -->
-                                                        <!-- <div class="progress-group">
-                                                                Satisfacción del Cliente
-                                                                <span class="float-end"><b>310</b>/400</span>
-                                                                <div class="progress progress-sm">
-                                                                    <div class="progress-bar text-bg-primary"
-                                                                        style="width: 75%"></div>
-                                                                </div>
-                                                            </div> -->
-                                                        <!-- /.progress-group Tiempo de procesamiento -->
-                                                        <!-- <div class="progress-group">
-                                                                <span class="progress-text">Tiempo de
-                                                                    procesamiento</span>
-                                                                <span class="float-end"><b>480</b>/800</span>
-                                                                <div class="progress progress-sm">
-                                                                    <div class="progress-bar text-bg-danger"
-                                                                        style="width: 60%"></div>
-                                                                </div>
-                                                            </div> -->
-                                                        <!-- /.progress-group Send Inquiries-->
-                                                        <!-- <div class="progress-group">
-                                                                Send Inquiries
-                                                                <span class="float-end"><b>250</b>/500</span>
-                                                                <div class="progress progress-sm">
-                                                                    <div class="progress-bar text-bg-warning"
-                                                                        style="width: 50%"></div>
-                                                                </div>
-                                                            </div> -->
-                                                        <!-- /.progress-group -->
-                                                        <!-- </div> -->
-
                                                     </div>
-                                                    <!--end::Row-->
 
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <p class="text-center">
+                                                                    <strong>Evolución histórica</strong>
+                                                                </p>
+                                                                <div>
+                                                                    <button id="btnLine"
+                                                                        class="btn btn-sm btn-primary">Línea</button>
+                                                                    <button id="btnArea"
+                                                                        class="btn btn-sm btn-success">Área</button>
+                                                                    <button id="btnBar"
+                                                                        class="btn btn-sm btn-warning">Barra</button>
+                                                                </div>
+                                                                <div id="sales-chart"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- 🔽 KPIs al pie -->
+                                                    <div class="row mt-4" id="kpiCards"></div>
                                                 </div>
-                                                <!-- ./card-body -->
-
-                                                <!-- <div class="card-footer"> -->
-                                                <!--REVENUE - COST - PROFIT - COMPLETIONS -->
-                                                <!--begin::Row-->
-                                                <!-- <div class="row">
-                                                        <div class="col-md-3 col-6">
-                                                            <div class="text-center border-end">
-                                                                <span class="text-success">
-                                                                    <i class="bi bi-caret-up-fill"></i> 17%
-                                                                </span>
-                                                                <h5 class="fw-bold mb-0">$35,210.43</h5>
-                                                                <span class="text-uppercase">TOTAL REVENUE</span>
-                                                            </div>
-                                                        </div> -->
-                                                <!-- /.col -->
-                                                <!-- <div class="col-md-3 col-6">
-                                                            <div class="text-center border-end">
-                                                                <span class="text-info"> <i
-                                                                        class="bi bi-caret-left-fill"></i> 0%
-                                                                </span>
-                                                                <h5 class="fw-bold mb-0">$10,390.90</h5>
-                                                                <span class="text-uppercase">TOTAL COST</span>
-                                                            </div>
-                                                        </div> -->
-                                                <!-- /.col -->
-                                                <!-- <div class="col-md-3 col-6">
-                                                            <div class="text-center border-end">
-                                                                <span class="text-success">
-                                                                    <i class="bi bi-caret-up-fill"></i> 20%
-                                                                </span>
-                                                                <h5 class="fw-bold mb-0">$24,813.53</h5>
-                                                                <span class="text-uppercase">TOTAL PROFIT</span>
-                                                            </div>
-                                                        </div> -->
-                                                <!-- /.col -->
-                                                <!-- <div class="col-md-3 col-6">
-                                                            <div class="text-center">
-                                                                <span class="text-danger">
-                                                                    <i class="bi bi-caret-down-fill"></i> 18%
-                                                                </span>
-                                                                <h5 class="fw-bold mb-0">1200</h5>
-                                                                <span class="text-uppercase">GOAL COMPLETIONS</span>
-                                                            </div>
-                                                        </div> -->
-                                                <!-- </div> -->
-                                                <!--end::Row-->
-                                                <!-- </div> -->
-                                                <!-- /.card-footer -->
-                                                <!-- </div> -->
-
-                                                <!-- /.card -->
-                                                <!-- 🔽 KPIs al pie -->
-                                                <div class="row mt-4" id="kpiCards"></div>
-
                                             </div>
-                                            <!-- /.col -->
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </section>
 
                     <section class="content mt-3" id="analisis-automatico" style="display: none;">
@@ -909,13 +820,14 @@
                     const peso = Number(ind.peso_porcentual) || 0;
 
                     // Calcular cumplimiento
-                    const cumplimiento = calcularCumplimiento(
-                        ind.ultimo_valor,    // valor real
-                        ind.unico_valor,     // meta / objetivo
-                        ind.unico_acepta,
-                        ind.unico_riesgo,
-                        ind.unico_critico
-                    );
+                    // const cumplimiento = calcularCumplimiento(
+                    //     ind.ultimo_valor,    // valor real
+                    //     ind.unico_valor,     // meta / objetivo
+                    //     ind.unico_acepta,
+                    //     ind.unico_riesgo,
+                    //     ind.unico_critico
+                    // );
+                    const cumplimiento = ind.ultimo_cumplimiento;
 
                     // Color de cumplimiento
                     const colorCumplimiento = cumplimiento === null ? 'gray' :
@@ -973,13 +885,14 @@
 
                 // Añadimos campo de cumplimiento y unidad de medida ya resuelta
                 const indicadoresConCumplimiento = indicadores.map(ind => {
-                    const cumplimiento = calcularCumplimiento(
-                        ind.ultimo_valor,
-                        ind.unico_valor,
-                        ind.unico_acepta,
-                        ind.unico_riesgo,
-                        ind.unico_critico
-                    );
+                    // const cumplimiento = calcularCumplimiento(
+                    //     ind.ultimo_valor,
+                    //     ind.unico_valor,
+                    //     ind.unico_acepta,
+                    //     ind.unico_riesgo,
+                    //     ind.unico_critico
+                    // );
+                    const cumplimiento = ind.ultimo_cumplimiento;
 
                     // Mapeo seguro de unidad (usa nombre si existe, sino el código raw, sino vacío)
                     const unidadNombre = CodigosService.getNombreCodigo(ind.unidad_medida) || (ind.unidad_medida ?? '');
@@ -1049,11 +962,12 @@
             if (!node) return;
 
             // Cumplimiento ponderado de todos los niveles
-            const comp = computeCompliance(node);
+            // const comp = computeCompliance(node);
+            const comp = Number(computeCompliance(node));
 
             // Actualizamos globalPercent
             const globalPercentEl = document.getElementById('globalPercent');
-            if (globalPercentEl) globalPercentEl.innerText = comp.toFixed(2) + '%';
+            if (globalPercentEl) globalPercentEl.innerText = Number(comp).toFixed(2) + '%';
 
             // Actualizar título 
             const nodeTitleEl = document.getElementById('nodeTitle');
@@ -1081,7 +995,7 @@
                             </div>
 
                             <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
-                                <span><strong>Cumplimiento: </strong>${cumplimiento.toFixed(2)}%</span>
+                                <span><strong>Cumplimiento: </strong>${Number(cumplimiento).toFixed(2)}%</span>
                                 <div style="flex:1; height:12px; background:#eee; border-radius:6px; overflow:hidden;">
                                     <div style="width:${cumplimiento}%; background:${color}; height:100%;"></div>
                                 </div>
@@ -1090,7 +1004,6 @@
                             <div style="margin-top:4px;">
                                 <strong>Peso relativo: </strong>${peso}%
                             </div>
-
                         `;
                 } else {
                     nodeDescEl.innerText = `${(node.children || []).length} dependientes`;
@@ -1182,213 +1095,213 @@
             });
         }
 
-function renderChildren(node) {
+        function renderChildren(node) {
 
-    console.log("NODE:", node);
-    console.log("TYPE:", node.type);
-    console.log("CHILDREN:", node.children);
-    console.log("CHILDREN LENGTH:", node.children?.length);
+            console.log("NODE:", node);
+            console.log("TYPE:", node.type);
+            console.log("CHILDREN:", node.children);
+            console.log("CHILDREN LENGTH:", node.children?.length);
 
-    const container = document.getElementById("childrenArea");
-    if (!container) {
-        console.error("❌ No se encontró el contenedor #childrenArea en el DOM");
-        return;
-    }
-
-    container.innerHTML = "";
-
-    const detail = document.getElementById("indicatorDetailCanvas");
-
-    // ⭐⭐⭐ CONTROL DEFINITIVO ⭐⭐⭐
-    // SI ES INDICADOR → NO TIENE HIJOS → NO GRAFICAMOS NADA
-    if (node.type === "indicator") {
-
-        console.warn("📌 Indicador detectado — No se dibujan hijos ni gráficos");
-
-        // Limpio hijos
-        container.innerHTML = "";
-
-        // Muestro botones
-        detail.innerHTML = `
-            <div class="text-center mt-3">
-                <button id="btnMasInfo" class="btn btn-primary btn-sm mb-2">
-                    Más detalles del indicador
-                </button><br>
-                <button id="btnEvolucion" class="btn btn-secondary btn-sm">
-                    Ver evolución histórica
-                </button>
-            </div>
-        `;
-
-        // Hooks de eventos
-        document.getElementById("btnMasInfo")?.addEventListener("click", () => {
-            abrirModalDetalleIndicador(node);
-        });
-
-        document.getElementById("btnEvolucion")?.addEventListener("click", () => {
-            abrirModalEvolucion(node);
-        });
-
-        return; // ⛔ NO SE SIGUE, NO SE DIBUJAN GRÁFICOS
-    }
-
-    // ============================
-    //   RENDER DE HIJOS (SECTORES)
-    // ============================
-
-    if (node.children && Array.isArray(node.children)) {
-        node.children.forEach(child => {
-
-            const comp = computeCompliance(child);
-            const weight = Number(child.weight) || 0;
-
-            let color = "gray";
-            if (child.type === "indicator") {
-                color = child.colorCumplimiento || "gray";
-            } else {
-                color = comp >= 100 ? "green" :
-                        comp >= 50  ? "orange" : "red";
+            const container = document.getElementById("childrenArea");
+            if (!container) {
+                console.error("❌ No se encontró el contenedor #childrenArea en el DOM");
+                return;
             }
 
-            const tile = document.createElement("div");
-            tile.className = "mb-2";
+            container.innerHTML = "";
 
-            tile.innerHTML = `
-                <div class="info-box bg-light elevation-2" style="cursor:pointer;">
-                    <div class="info-box-content">
-                        <span class="info-box-text font-weight-bold">${child.name || "Sin nombre"}</span>
-                        <span class="info-box-number">Cumplimiento: ${comp.toFixed(2)}%</span>
-                        <div class="progress" style="height: 12px; border-radius:6px; overflow:hidden;">
-                            <div class="progress-bar" style="width: ${comp.toFixed(2)}%; background:${color};"></div>
+            const detail = document.getElementById("indicatorDetailCanvas");
+
+            // ⭐⭐⭐ CONTROL DEFINITIVO ⭐⭐⭐
+            // SI ES INDICADOR → NO TIENE HIJOS → NO GRAFICAMOS NADA
+            if (node.type === "indicator") {
+
+                console.warn("📌 Indicador detectado — No se dibujan hijos ni gráficos");
+
+                // Limpio hijos
+                container.innerHTML = "";
+
+                // Muestro botones
+                detail.innerHTML = `
+                        <div class="text-center mt-3">
+                            <button id="btnMasInfo" class="btn btn-primary btn-sm mb-2">
+                                Más detalles del indicador
+                            </button><br>
+                            <button id="btnEvolucion" class="btn btn-secondary btn-sm">
+                                Ver evolución histórica
+                            </button>
                         </div>
-                        <span class="progress-description">Peso: ${weight.toFixed(1)}%</span>
-                    </div>
-                </div>
-            `;
+                    `;
 
-            tile.addEventListener("click", () => {
-                stack.push(child);
-                render();
+                // Hooks de eventos
+                document.getElementById("btnMasInfo")?.addEventListener("click", () => {
+                    abrirModalDetalleIndicador(node);
+                });
+
+                document.getElementById("btnEvolucion")?.addEventListener("click", () => {
+                    abrirModalEvolucion(node);
+                });
+
+                return; // ⛔ NO SE SIGUE, NO SE DIBUJAN GRÁFICOS
+            }
+
+            // ============================
+            //   RENDER DE HIJOS (SECTORES)
+            // ============================
+
+            if (node.children && Array.isArray(node.children)) {
+                node.children.forEach(child => {
+
+                    const comp = computeCompliance(child);
+                    const weight = Number(child.weight) || 0;
+
+                    let color = "gray";
+                    if (child.type === "indicator") {
+                        color = child.colorCumplimiento || "gray";
+                    } else {
+                        color = comp >= 100 ? "green" :
+                            comp >= 50 ? "orange" : "red";
+                    }
+
+                    const tile = document.createElement("div");
+                    tile.className = "mb-2";
+
+                    tile.innerHTML = `
+                        <div class="info-box bg-light elevation-2" style="cursor:pointer; min-width: 260px; width: 260px;">
+                            <div class="info-box-content">
+                                <span class="info-box-text font-weight-bold">${child.name || "Sin nombre"}</span>
+                                <span class="info-box-number">Cumplimiento: ${Number(comp).toFixed(2)}%</span>
+                                <div class="progress" style="height: 12px; border-radius:6px; overflow:hidden;">
+                                    <div class="progress-bar" style="width: ${Number(comp).toFixed(2)}%; background:${color};"></div>
+                                </div>
+                                <span class="progress-description">Peso: ${weight.toFixed(1)}%</span>
+                            </div>
+                        </div>
+                    `;
+
+                    tile.addEventListener("click", () => {
+                        stack.push(child);
+                        render();
+                    });
+
+                    container.appendChild(tile);
+                });
+            }
+
+            // ==============================
+            //    GRÁFICOS (SOLO SI HAY HIJOS)
+            // ==============================
+
+            if (!node.children || node.children.length === 0) {
+                detail.innerHTML = "";
+                return;
+            }
+
+            // Plantilla HTML para los gráficos
+            detail.innerHTML = `
+                    <div class="text-center mb-2">
+                        <p class="mb-0">El área gris representa el espacio pendiente para completar el 100%.</p>
+                    </div>
+
+                    <div class="d-flex charts-container" style="gap: 20px;">
+                        <div class="chart-box">
+                            <canvas id="childPie"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <canvas id="childBar"></canvas>
+                            <div id="barLegend" class="bar-legend mt-2"></div>
+                        </div>
+                    </div>
+                `;
+
+
+            // PIE ==========================
+            const canvas = document.getElementById("childPie");
+            canvas.style.border = "2px solid red";
+            const ctx = canvas.getContext("2d");
+
+            const labels = node.children.map(c => c.name);
+
+            // Cumplimiento ponderado
+            const values = node.children.map(c => {
+                const comp = computeCompliance(c);
+                const weight = Number(c.weight) || 0;
+                return (comp * weight) / 100; // ponderación
             });
 
-            container.appendChild(tile);
-        });
-    }
+            // Espacio faltante
+            const total = values.reduce((a, b) => a + b, 0);
+            const missing = Math.max(0, 100 - total);
 
-    // ==============================
-    //    GRÁFICOS (SOLO SI HAY HIJOS)
-    // ==============================
+            labels.push("Pendiente");
+            values.push(missing);
 
-    if (!node.children || node.children.length === 0) {
-        detail.innerHTML = "";
-        return;
-    }
+            let colors = labels.map((_, i) => `hsl(${(i * 45) % 360}, 70%, 55%)`);
+            colors[colors.length - 1] = "#e0e0e0"; // gris para el faltante
 
-    // Plantilla HTML para los gráficos
-detail.innerHTML = `
-    <div class="text-center mb-2">
-        <p class="mb-0">El área gris representa el espacio pendiente para completar el 100%.</p>
-    </div>
+            if (window.childPieChart) window.childPieChart.destroy();
 
-    <div class="d-flex charts-container" style="gap: 20px;">
-        <div class="chart-box">
-            <canvas id="childPie"></canvas>
-        </div>
-        <div class="chart-box">
-            <canvas id="childBar"></canvas>
-            <div id="barLegend" class="bar-legend mt-2"></div>
-        </div>
-    </div>
-`;
+            window.childPieChart = new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: "bottom" },
+                        datalabels: {
+                            color: "#000",
+                            font: { weight: "bold", size: 16 },
+                            formatter: (value) => value.toFixed(2) + "%"
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
 
+            // BAR ==========================
+            const canvasBar = document.getElementById("childBar");
+            canvasBar.style.border = "2px solid green";
+            const ctxBar = canvasBar.getContext("2d");
 
-    // PIE ==========================
-    const canvas = document.getElementById("childPie");
-    canvas.style.border = "2px solid red";
-    const ctx = canvas.getContext("2d");
+            const numericLabels = node.children.map((_, i) => "Var " + (i + 1));
 
-    const labels = node.children.map(c => c.name);
+            if (window.childBarChart) window.childBarChart.destroy();
 
-    // Cumplimiento ponderado
-    const values = node.children.map(c => {
-        const comp = computeCompliance(c);
-        const weight = Number(c.weight) || 0;
-        return (comp * weight) / 100; // ponderación
-    });
-
-    // Espacio faltante
-    const total = values.reduce((a, b) => a + b, 0);
-    const missing = Math.max(0, 100 - total);
-
-    labels.push("Pendiente");
-    values.push(missing);
-
-    let colors = labels.map((_, i) => `hsl(${(i * 45) % 360}, 70%, 55%)`);
-    colors[colors.length - 1] = "#e0e0e0"; // gris para el faltante
-
-    if (window.childPieChart) window.childPieChart.destroy();
-
-    window.childPieChart = new Chart(ctx, {
-        type: "pie",
-        data: {
-            labels,
-            datasets: [{
-                data: values,
-                backgroundColor: colors
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: "bottom" },
-                datalabels: {
-                    color: "#000",
-                    font: { weight: "bold", size: 16 },
-                    formatter: (value) => value.toFixed(2) + "%"
-                }
-            }
-        },
-        plugins: [ChartDataLabels]
-    });
-
-    // BAR ==========================
-    const canvasBar = document.getElementById("childBar");
-    canvasBar.style.border = "2px solid green";
-    const ctxBar = canvasBar.getContext("2d");
-
-    const numericLabels = node.children.map((_, i) => "Var " + (i + 1));
-
-    if (window.childBarChart) window.childBarChart.destroy();
-
-    window.childBarChart = new Chart(ctxBar, {
-        type: "bar",
-        data: {
-            labels: numericLabels,
-            datasets: [{
-                label: '% Cumplimiento',
-                data: values.slice(0, values.length - 1), // sin "Pendiente"
-                backgroundColor: colors.slice(0, colors.length - 1)
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: true, max: 120 }
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: (ctx) => `${ctx.raw.toFixed(2)}%`
+            window.childBarChart = new Chart(ctxBar, {
+                type: "bar",
+                data: {
+                    labels: numericLabels,
+                    datasets: [{
+                        label: '% Cumplimiento',
+                        data: values.slice(0, values.length - 1), // sin "Pendiente"
+                        backgroundColor: colors.slice(0, colors.length - 1)
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 120 }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.raw.toFixed(2)}%`
+                            }
+                        }
                     }
                 }
-            }
-        }
-    });
+            });
 
-}
+        }
 
 
 
@@ -1693,8 +1606,18 @@ detail.innerHTML = `
                 document.getElementById('btnEvolucion').onclick = async () => {
                     document.getElementById('grafico-evolucion').style.display = 'block';
 
-                    // Llama a la función que renderiza el gráfico
-                    renderIndicadorChart(key_id, meta);
+                    // 🔎 Traemos el indicador completo DESDE backend
+                    const resp = await fetch(`/api/indicadores/${node.codigo_id}`);
+                    const indicador = await resp.json();
+
+                    console.log("Método:", indicador.data.unico_eval);
+
+                    const metodoReal = indicador.data.unico_eval || "N/A";
+                    const descripcion = indicador.data.descripcion || "Sin descripción";
+                    const nombre = indicador.data.nombre || "Sin nombre";
+
+                    // 🎯 Graficamos con el método real
+                    renderIndicadorChart(key_id, nombre, meta, descripcion, metodoReal);
                 }
             }
         }
@@ -1749,7 +1672,75 @@ detail.innerHTML = `
             };
         }
 
+
         function crearKPICards(datos) {
+            const cambioNum = Number(datos.cambio);
+
+            const kpis = [
+                {
+                    titulo: 'Valor Actual',
+                    valor: `${datos.valorActual ?? '-'}`,
+                    subtitulo: `${cambioNum >= 0 ? '↗️' : '↘️'} ${cambioNum >= 0 ? '+' : ''}${cambioNum}% vs medición anterior`,
+                    color: cambioNum >= 0 ? '#198754' : '#dc3545',
+                    icono: '💰'
+                },
+                {
+                    titulo: 'Cumplimiento Meta',
+                    valor: datos.cumplimiento != null ? `${datos.cumplimiento}%` : '-',
+                    subtitulo: `Meta: ${datos.meta ?? '-'}`,
+                    color: datos.cumplimiento >= 100 ? '#198754' : '#ffc107',
+                    icono: '🎯'
+                },
+                {
+                    titulo: 'Promedio',
+                    valor: `${datos.promedio6 ?? '-'}`,
+                    subtitulo: datos.rangoMeses ?? '',
+                    color: '#6c757d',
+                    icono: '📊'
+                },
+                {
+                    titulo: 'Mejor Resultado',
+                    valor: `${datos.mejorMesValor ?? '-'}`,
+                    subtitulo: datos.mejorMesNombre ?? '',
+                    color: '#0dcaf0',
+                    icono: '🏆'
+                },
+                {
+                    titulo: 'Tendencia',
+                    valor: `${datos.tendencia}`,
+                    subtitulo: datos.variacion,
+                    color: datos.colorTendencia,
+                    icono: datos.iconoTendencia
+                }
+            ];
+
+            const container = document.getElementById('kpiCards');
+            container.className = "row gx-3 gy-3 p-3";
+            container.innerHTML = kpis.map(kpi => `
+                        <div class="col-md-6 col-lg-3 mb-3 ml-3">
+                            <div class="card kpi-card h-100" style="border-left: 4px solid ${kpi.color}">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <p class="text-muted small mb-1">${kpi.titulo}</p>
+                                            <h2 class="kpi-value mb-1" style="color: ${kpi.color}">${kpi.valor}</h2>
+                                            <p class="text-muted small mb-0">${kpi.subtitulo}</p>
+                                        </div>
+                                        <span style="font-size: 2rem;">${kpi.icono}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+        }
+
+
+
+
+
+
+        function XXXcrearKPICards(datos) {
+
             const kpis = [
                 {
                     titulo: 'Valor Actual',
@@ -1808,6 +1799,7 @@ detail.innerHTML = `
                 `).join('');
         }
 
+
         // // 🚫🚫🚫  Exportación CSV
         function exportCSV() {
             const rows = [];
@@ -1850,57 +1842,13 @@ detail.innerHTML = `
 
         render();
 
-    </script>
-
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-
-    <!-- Bootstrap (bundle con Popper incluido) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-
-    <!-- <script src="../../dist/js/adminlte.js"></script> -->
-    <script src="../js/adminlte.js"></script>
-
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-
-    <script>
-        window.Apex = {
-            locales: [{
-                name: "es",
-                options: {
-                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                    shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                    days: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-                    shortDays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-                    toolbar: {
-                        exportToSVG: "Descargar SVG",
-                        exportToPNG: "Descargar PNG",
-                        exportToCSV: "Descargar CSV",
-                        menu: "Menú",
-                        selection: "Selección",
-                        selectionZoom: "Zoom selección",
-                        zoomIn: "Acercar",
-                        zoomOut: "Alejar",
-                        pan: "Mover",
-                        reset: "Restablecer Zoom"
-                    }
-                }
-            }],
-            defaultLocale: "es"
-        };
-    </script>
-
-    <script>
 
         let salesChart = null; // Variable global para el gráfico
 
         // Función para renderizar el gráfico de un indicador
-        async function renderIndicadorChart(idIndicador, meta) {
+        // 🚫🚫🚫  renderIndicadorChart
+        async function renderIndicadorChart(idIndicador, nombre, meta, descripcion, metodo) {
+            console.log(`Renderizando gráfico para indicador ID: ${idIndicador} con meta: ${meta} y método: ${metodo}`);
 
             try {
                 const response = await fetch(`/api/mediciones/${idIndicador}`);
@@ -1928,6 +1876,7 @@ detail.innerHTML = `
                     const sufijo = str.slice(4);
                     return `${year}-${sufijo}`;
                 });
+                const cumplimientos = result.data.map(d => parseFloat(d.med_cumplimiento) || 0);
 
                 const options = {
                     chart: {
@@ -1979,6 +1928,10 @@ detail.innerHTML = `
                     window.salesChart = null;
                 }
 
+                document.getElementById('indNombre').textContent = nombre;
+                document.getElementById('descripcionGraf').textContent = descripcion;
+                document.getElementById('metaGraf').textContent = meta;
+                document.getElementById('evaluaGraf').textContent = CodigosService.getNombreCodigo(metodo) || metodo;
                 chartContainer.innerHTML = "";
                 await new Promise(resolve => setTimeout(resolve, 50));
 
@@ -2004,13 +1957,32 @@ detail.innerHTML = `
                 const valorActual = valores[valores.length - 1];
                 const valorAnterior = valores[valores.length - 2];
                 const promedio = Math.round(valores.reduce((a, b) => a + b, 0) / valores.length);
-                const mejorMes = Math.max(...valores);
+                let mejorMes = 0;
+
+                if (metodo == "0401") {
+                    mejorMes = Math.max(...valores);
+                }
+                else {
+                    mejorMes = Math.min(...valores);
+                }
                 const cambio = Math.round(((valorActual - valorAnterior) / valorAnterior) * 100);
-                const cumplimiento = Math.round((valorActual / meta) * 100);
+                // const cumplimiento = Math.round((valorActual / meta) * 100);
+                const cumplimiento = cumplimientos[cumplimientos.length - 1];
+                const cumplimientoAnterior = cumplimientos.length >= 2 ? cumplimientos[cumplimientos.length - 2] : 0;
+
+                // resultado.tendencia = resultado.tendencia === "En alza" ? "En baja"
+                //     : resultado.tendencia === "En baja" ? "En alza"
+                //         : resultado.tendencia;
+                // resultado.color = resultado.color === "#28a745" ? "#dc3545"
+                //     : resultado.color === "#dc3545" ? "#28a745"
+                //         : resultado.color;
+                // resultado.icono = resultado.icono === "📈" ? "📉"
+                //     : resultado.icono === "📉" ? "📈"
+                //         : resultado.icono;
 
                 crearKPICards({
                     valorActual: valorActual,
-                    cambio: valores.length > 1
+                    cambio: valores.length > 1 && valorAnterior !== 0
                         ? ((valorActual - valorAnterior) / valorAnterior * 100).toFixed(1)
                         : 0,
                     cumplimiento: cumplimiento,
@@ -2033,10 +2005,17 @@ detail.innerHTML = `
                 const peorValor = Math.min(...valores);
                 const peorIndice = valores.indexOf(peorValor);
 
+                const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+                const desviacion = Math.sqrt(varianza);
+                if (desviacion > promedio * 0.2) {
+                    recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
+                }
+
                 console.log('Datos para análisis:', {
                     valores,
                     periodos,
                     meta,
+                    metodo,
                     primerValor,
                     ultimoValor,
                     valorAnterior,
@@ -2054,6 +2033,7 @@ detail.innerHTML = `
                     valores,
                     periodos,
                     meta,
+                    metodo,
                     primerValor,
                     ultimoValor,
                     valorAnterior,
@@ -2062,7 +2042,9 @@ detail.innerHTML = `
                     mejorIndice,
                     mejorMes,
                     peorValor,
-                    peorIndice
+                    peorIndice,
+                    promedio,
+                    cumplimiento
                 );
                 const container = document.getElementById('analisisContainer');
                 document.getElementById('analisis-automatico').style.display = 'block';
@@ -2087,10 +2069,12 @@ detail.innerHTML = `
             }
         }
 
+        // 🚫🚫🚫  generarAnalisisAutomatico
         function generarAnalisisAutomatico(
             valores,
             periodos,
             meta,
+            metodo,
             primerValor,
             ultimoValor,
             valorAnterior,
@@ -2103,104 +2087,381 @@ detail.innerHTML = `
             promedio,
             cumplimiento
         ) {
+
             const observaciones = [];
             const recomendaciones = [];
 
-            console.log('Generando análisis automático con:', {
-                valores,
-                periodos,
-                meta,
-                primerValor,
-                ultimoValor,
-                valorAnterior,
-                crecimientoTotal,
-                brechaPromedio,
-                mejorIndice,
-                mejorMes,
-                peorValor,
-                peorIndice,
-                promedio,
-                cumplimiento
-            });
+            // -----------------------------
+            // AYUDANTES
+            // -----------------------------
+            const direccion = (metodo == "0402" || metodo == "0404") ? 'menor' : 'mayor';
 
-            if (crecimientoTotal > 0) {
-                observaciones.push(`Crecimiento positivo del ${crecimientoTotal}% en el período analizado`);
-            } else if (crecimientoTotal < 0) {
-                observaciones.push(`Decrecimiento del ${Math.abs(crecimientoTotal)}% en el período analizado`);
-            }
+            const esMejor = (valorActual, valorComparado) => {
+                return direccion === 'mayor'
+                    ? valorActual > valorComparado
+                    : valorActual < valorComparado;
+            };
 
-            observaciones.push(`Mejor resultado en ${periodos[mejorIndice]}: ${mejorMes}`);
-            observaciones.push(`Valor más bajo en ${periodos[peorIndice]}: ${peorValor}`);
+            const diferenciaVsMeta = ultimoValor - meta;
+            const porEncimaMeta = ultimoValor > meta;
 
-            if (brechaPromedio < 0) {
-                observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)}`);
-            } else {
-                observaciones.push(`Superó la meta en promedio por ${brechaPromedio}`);
-            }
+            // Variabilidad
+            const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+            const desviacion = Math.sqrt(varianza);
 
-            let mesesConsecutivos = 0;
-            for (let i = 1; i < valores.length; i++) {
-                if (valores[i] > valores[i - 1]) {
-                    mesesConsecutivos++;
+            // -----------------------------
+            // OBSERVACIONES SEGÚN MÉTODO
+            // -----------------------------
+
+            // ---- Método 0401: MÁS ES MEJOR ----
+            if (metodo == "0401") {
+
+                if (crecimientoTotal > 0) {
+                    observaciones.push(`Crecimiento positivo del ${crecimientoTotal}% en el período analizado`);
+                } else if (crecimientoTotal < 0) {
+                    observaciones.push(`Caída del ${Math.abs(crecimientoTotal)}% en el período analizado`);
+                }
+
+                // Tendencia sostenida de crecimiento
+                let mesesCrecimiento = 0;
+                for (let i = 1; i < valores.length; i++) {
+                    if (valores[i] > valores[i - 1]) {
+                        mesesCrecimiento++;
+                    } else break;
+                }
+                if (mesesCrecimiento >= 2) {
+                    observaciones.push(`Crecimiento sostenido durante ${mesesCrecimiento + 1} períodos consecutivos`);
+                }
+
+                observaciones.push(`Mejor resultado en ${periodos[mejorIndice]}: ${mejorMes}`);
+                observaciones.push(`Valor más bajo en ${periodos[peorIndice]}: ${peorValor}`);
+
+                if (ultimoValor > meta) {
+                    observaciones.push(`Superó la meta actual`);
                 } else {
-                    break;
+                    observaciones.push(`A ${Math.abs(diferenciaVsMeta)} unidades de alcanzar la meta`);
                 }
-            }
-            if (mesesConsecutivos >= 2) {
-                observaciones.push(`Crecimiento sostenido durante ${mesesConsecutivos + 1} meses consecutivos`);
-            }
 
-            if (ultimoValor < valorAnterior) {
-                const caida = Math.round(((ultimoValor - valorAnterior) / valorAnterior) * 100);
-                observaciones.push(`Caída del ${Math.abs(caida)}% en el último mes`);
-            }
+                if (brechaPromedio < 0) {
+                    observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)} por debajo del objetivo`);
+                } else {
+                    observaciones.push(`Superó la meta en promedio por ${brechaPromedio}`);
+                }
 
-            if (mejorIndice < valores.length - 1) {
-                recomendaciones.push(`Analizar factores de éxito de ${periodos[mejorIndice]} para replicarlos`);
-            }
+                // Variabilidad
 
-            if (ultimoValor < meta) {
-                const necesario = Math.round(((meta - ultimoValor) / ultimoValor) * 100);
-                recomendaciones.push(`Requiere incremento del ${necesario}% para alcanzar la meta`);
-            }
-
-            if (ultimoValor > valorAnterior) {
-                recomendaciones.push('Mantener las estrategias del último mes que generaron recuperación');
-            } else if (ultimoValor < valorAnterior) {
-                recomendaciones.push('Investigar causas de la caída reciente y tomar acciones correctivas');
-            }
-
-            // const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
-            // const desviacion = Math.sqrt(varianza);
-            // if (desviacion > promedio * 0.2) {
-            //     recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
-            // }
-
-            // const tendenciaReciente = valores.slice(-3);
-            // const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
-            // if (crecimientoReciente) {
-            //     recomendaciones.push('Tendencia positiva en últimos meses - continuar con estrategia actual');
-            // }
-
-            // Recomendaciones
-            if (valores && valores.length > 0) {
-                const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
-                const desviacion = Math.sqrt(varianza);
                 if (desviacion > promedio * 0.2) {
-                    recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
+                    observaciones.push('El indicador presenta alta variabilidad en el período analizado');
+                } else if (desviacion < promedio * 0.05) {
+                    observaciones.push('El indicador se mantuvo estable durante el período');
                 }
+
+            }
+
+            // ---- Método 0402: NO SUPERAR META ----
+            if (metodo == "0402") {
+
+                if (porEncimaMeta) {
+                    observaciones.push(`El indicador superó el límite máximo permitido`);
+                } else {
+                    observaciones.push(`Valor dentro de los límites (${ultimoValor} ≤ ${meta})`);
+                }
+
+                if (ultimoValor < valorAnterior) {
+                    observaciones.push(`Mejora: el indicador disminuyó respecto al mes anterior`);
+                } else {
+                    observaciones.push(`Empeoramiento: el valor aumentó y se acerca al límite máximo`);
+                }
+
+                observaciones.push(
+                    `Mejor valor en ${periodos[peorIndice]}: ${peorValor} (al ser menor es mejor)`
+                );
+
+                if (brechaPromedio < 0) {
+                    observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)} por debajo, cumpliendo el objetivo`);
+                } else {
+                    observaciones.push(`Superó el valor admitido en ${brechaPromedio}`);
+                }
+
+
+                // Tendencia sostenida de crecimiento
+                let mesesCrecimiento = 0;
+                for (let i = 1; i < valores.length; i++) {
+                    if (valores[i] < valores[i - 1]) {
+                        mesesCrecimiento++;
+                    } else break;
+                }
+                if (mesesCrecimiento >= 2) {
+                    observaciones.push(`Disminución sostenida durante ${mesesCrecimiento + 1} períodos consecutivos`);
+                }
+
+                // Variabilidad
+                if (desviacion > promedio * 0.2) {
+                    observaciones.push('El indicador presenta alta variabilidad en el período analizado');
+                } else if (desviacion < promedio * 0.05) {
+                    observaciones.push('El indicador se mantuvo estable durante el período');
+                }
+
+
+            }
+
+            // ---- Método 0404: PARTIDA ALTA, DEBE BAJAR HASTA META ----
+            if (metodo == "0404") {
+
+                if (ultimoValor < primerValor) {
+                    observaciones.push(`Tendencia correcta: el indicador viene disminuyendo`);
+                }
+
+                if (ultimoValor <= meta) {
+                    observaciones.push(`Alcanzó o superó la meta de reducción`);
+                } else {
+                    observaciones.push(`Aún falta reducir ${ultimoValor - meta} unidades para llegar al objetivo`);
+                }
+
+                if (ultimoValor < valorAnterior) {
+                    observaciones.push(`Nueva disminución mensual, lo cual es positivo`);
+                }
+
+                if (brechaPromedio < 0) {
+                    observaciones.push(`Brecha promedio vs meta: ${Math.abs(brechaPromedio)} por debajo, cumpliendo el objetivo`);
+                } else {
+                    observaciones.push(`Superó el valor admitido en ${brechaPromedio}`);
+                }
+
+                // Variabilidad
+
+                if (desviacion > promedio * 0.2) {
+                    observaciones.push('El indicador presenta alta variabilidad en el período analizado');
+                } else if (desviacion < promedio * 0.05) {
+                    observaciones.push('El indicador se mantuvo estable durante el período');
+                }
+
+            }
+
+            // -----------------------------
+            // RECOMENDACIONES GENERALES
+            // -----------------------------
+
+            if (metodo == "0401") {
+                if (ultimoValor < meta) {
+                    recomendaciones.push(`Reforzar acciones para impulsar crecimiento hacia la meta`);
+                }
+                if (ultimoValor > meta) {
+                    recomendaciones.push(`Mantener estrategias actuales que permiten superar la meta`);
+                }
+
+                // 1️⃣ Replicar buenas prácticas del mejor mes
+                if (mejorIndice < valores.length - 1) {
+                    recomendaciones.push(`Analizar factores de éxito de ${periodos[mejorIndice]} para replicarlos`);
+                }
+
+                // 3️⃣ Comportamiento reciente
+                if (ultimoValor > valorAnterior) {
+                    recomendaciones.push('Mantener las estrategias recientes que impulsaron la mejora');
+                } else if (ultimoValor < valorAnterior) {
+                    recomendaciones.push('Investigar causas de la caída reciente y tomar acciones correctivas');
+                }
+
+                // 5️⃣ Tendencia reciente positiva
                 const tendenciaReciente = valores.slice(-3);
                 const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
-                if (crecimientoReciente) recomendaciones.push('Tendencia positiva en últimos meses - continuar con estrategia actual');
+                if (crecimientoReciente) {
+                    recomendaciones.push('Tendencia positiva en los últimos meses - continuar con la estrategia actual');
+                }
+
+                // 6️⃣ Meta difícil de alcanzar
+                const periodosBajos = valores.filter(v => v < meta * 0.7).length;
+                if (cumplimiento < 70 && periodosBajos >= 3) {
+                    recomendaciones.push('El cumplimiento ha sido bajo durante varios períodos - revisar si la meta es alcanzable en condiciones normales');
+                }
+
+                // 7️⃣ Meta demasiado baja
+                const periodosAltos = valores.filter(v => v > meta * 1.1).length;
+                if (periodosAltos >= 3) {
+                    recomendaciones.push('El indicador supera la meta en varios períodos consecutivos - evaluar si la meta está subestimada');
+                }
+
+                // 8️⃣ Estancamiento o falta de progreso
+                const sinCambio = valores.every(v => Math.abs(v - promedio) < promedio * 0.02);
+                if (sinCambio) {
+                    recomendaciones.push('El indicador muestra estancamiento - revisar estrategias o reasignar recursos');
+                }
+
+
+                // 9️⃣ Buen desempeño sostenido
+                if (cumplimiento >= 90 && desviacion < promedio * 0.1) {
+                    recomendaciones.push('Buen desempeño y estabilidad - mantener consistencia en las acciones implementadas');
+                }
+
+                // 🔟 Datos escasos o irregulares
+                if (valores.length < 3) {
+                    recomendaciones.push('Pocos períodos medidos - se recomienda incrementar la frecuencia de medición para mayor precisión');
+                }
             }
 
-            if (cumplimiento < 70) {
-                recomendaciones.push('Revisar si la meta es realista o si se requieren recursos adicionales');
+            if (metodo == "0402") {
+                if (porEncimaMeta) {
+                    recomendaciones.push(`Acciones urgentes para reducir valores debajo del límite máximo`);
+                } else {
+                    recomendaciones.push(`Mantener controles para evitar superar la meta`);
+                }
+
+                // 1️⃣ Replicar buenas prácticas del mejor mes
+                if (mejorIndice < valores.length - 1) {
+                    recomendaciones.push(`Analizar factores de éxito de ${periodos[mejorIndice]} para replicarlos`);
+                }
+
+                // 3️⃣ Comportamiento reciente
+                if (ultimoValor > valorAnterior) {
+                    recomendaciones.push('Mantener las estrategias recientes que impulsaron la mejora');
+                } else if (ultimoValor < valorAnterior) {
+                    recomendaciones.push('Investigar causas de la caída reciente y tomar acciones correctivas');
+                }
+
+                // 5️⃣ Tendencia reciente positiva
+                const tendenciaReciente = valores.slice(-3);
+                const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
+                if (crecimientoReciente) {
+                    recomendaciones.push('Tendencia positiva en los últimos meses - continuar con la estrategia actual');
+                }
+
+                // 6️⃣ Meta difícil de alcanzar
+                const periodosBajos = valores.filter(v => v < meta * 0.7).length;
+                if (cumplimiento < 70 && periodosBajos >= 3) {
+                    recomendaciones.push('El cumplimiento ha sido bajo durante varios períodos - revisar si la meta es alcanzable en condiciones normales');
+                }
+
+                // 7️⃣ Meta demasiado baja
+                const periodosAltos = valores.filter(v => v > meta * 1.1).length;
+                if (periodosAltos >= 3) {
+                    recomendaciones.push('El indicador supera la meta en varios períodos consecutivos - evaluar si la meta está subestimada');
+                }
+
+                // 8️⃣ Estancamiento o falta de progreso
+                const sinCambio = valores.every(v => Math.abs(v - promedio) < promedio * 0.02);
+                if (sinCambio) {
+                    recomendaciones.push('El indicador muestra estancamiento - revisar estrategias o reasignar recursos');
+                }
+
+
+                // 9️⃣ Buen desempeño sostenido
+                if (cumplimiento >= 90 && desviacion < promedio * 0.1) {
+                    recomendaciones.push('Buen desempeño y estabilidad - mantener consistencia en las acciones implementadas');
+                }
+
+                // 🔟 Datos escasos o irregulares
+                if (valores.length < 3) {
+                    recomendaciones.push('Pocos períodos medidos - se recomienda incrementar la frecuencia de medición para mayor precisión');
+                }
+
             }
 
+            if (metodo == "0404") {
+                if (ultimoValor > meta) {
+                    recomendaciones.push(`Reforzar medidas para sostener la reducción del indicador`);
+                } else {
+                    recomendaciones.push(`El nivel está por debajo de la meta: continuar monitoreo preventivo`);
+                }
+
+                // 1️⃣ Replicar buenas prácticas del mejor mes
+                if (mejorIndice < valores.length - 1) {
+                    recomendaciones.push(`Analizar factores de éxito de ${periodos[mejorIndice]} para replicarlos`);
+                }
+
+                // 3️⃣ Comportamiento reciente
+                if (ultimoValor > valorAnterior) {
+                    recomendaciones.push('Mantener las estrategias recientes que impulsaron la mejora');
+                } else if (ultimoValor < valorAnterior) {
+                    recomendaciones.push('Investigar causas de la caída reciente y tomar acciones correctivas');
+                }
+
+                // 5️⃣ Tendencia reciente positiva
+                const tendenciaReciente = valores.slice(-3);
+                const crecimientoReciente = tendenciaReciente.every((val, i) => i === 0 || val >= tendenciaReciente[i - 1]);
+                if (crecimientoReciente) {
+                    recomendaciones.push('Tendencia positiva en los últimos meses - continuar con la estrategia actual');
+                }
+
+                // 6️⃣ Meta difícil de alcanzar
+                const periodosBajos = valores.filter(v => v < meta * 0.7).length;
+                if (cumplimiento < 70 && periodosBajos >= 3) {
+                    recomendaciones.push('El cumplimiento ha sido bajo durante varios períodos - revisar si la meta es alcanzable en condiciones normales');
+                }
+
+                // 7️⃣ Meta demasiado baja
+                const periodosAltos = valores.filter(v => v > meta * 1.1).length;
+                if (periodosAltos >= 3) {
+                    recomendaciones.push('El indicador supera la meta en varios períodos consecutivos - evaluar si la meta está subestimada');
+                }
+
+                // 8️⃣ Estancamiento o falta de progreso
+                const sinCambio = valores.every(v => Math.abs(v - promedio) < promedio * 0.02);
+                if (sinCambio) {
+                    recomendaciones.push('El indicador muestra estancamiento - revisar estrategias o reasignar recursos');
+                }
+
+
+                // 9️⃣ Buen desempeño sostenido
+                if (cumplimiento >= 90 && desviacion < promedio * 0.1) {
+                    recomendaciones.push('Buen desempeño y estabilidad - mantener consistencia en las acciones implementadas');
+                }
+
+                // 🔟 Datos escasos o irregulares
+                if (valores.length < 3) {
+                    recomendaciones.push('Pocos períodos medidos - se recomienda incrementar la frecuencia de medición para mayor precisión');
+                }
+            }
+
+            // -----------------------------
+            // ANALISIS ESTADÍSTICO (IGUAL)
+            // -----------------------------
+            if (desviacion > promedio * 0.2) {
+                recomendaciones.push("Alta variabilidad en resultados - considerar estabilizar procesos");
+            }
             return { observaciones, recomendaciones };
         }
+    </script>
 
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap (bundle con Popper incluido) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script src="../js/adminlte.js"></script>
+
+    <!-- apexcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+
+    <script>
+        window.Apex = {
+            locales: [{
+                name: "es",
+                options: {
+                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    days: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    shortDays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                    toolbar: {
+                        exportToSVG: "Descargar SVG",
+                        exportToPNG: "Descargar PNG",
+                        exportToCSV: "Descargar CSV",
+                        menu: "Menú",
+                        selection: "Selección",
+                        selectionZoom: "Zoom selección",
+                        zoomIn: "Acercar",
+                        zoomOut: "Alejar",
+                        pan: "Mover",
+                        reset: "Restablecer Zoom"
+                    }
+                }
+            }],
+            defaultLocale: "es"
+        };
     </script>
 
     <script>

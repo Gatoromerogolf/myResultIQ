@@ -292,8 +292,10 @@ app.get('/api/indicadores', async (req, res) => {
         i.peso_porcentual,
         i.estado,
         i.dimension_porcentual,
+        i.peso_porcentual_global,
         u.med_valor AS ultimo_valor,
-        u.med_fecha_registro AS fecha_ultima_medicion
+        u.med_fecha_registro AS fecha_ultima_medicion,
+        u.med_cumplimiento AS ultimo_cumplimiento
       FROM indicadores i
       LEFT JOIN ultimas u 
         ON u.med_indicador_id = i.id AND u.rn = 1
@@ -1611,9 +1613,6 @@ app.get("/api/mediciones/ultimas", async (req, res) => {
 });
 
 
-
-
-
 app.get('/api/mediciones/:idIndicador', async (req, res) => {
     const { idIndicador } = req.params;
 
@@ -1625,6 +1624,7 @@ app.get('/api/mediciones/:idIndicador', async (req, res) => {
                 m.med_valor,
                 m.med_valor_periodo,
                 m.med_fecha_registro,
+                m.med_cumplimiento,
                 m.med_meta,
                 m.med_comentarios,
                 m.med_plan_accion,
@@ -1672,7 +1672,10 @@ app.post('/api/mediciones', async (req, res) => {
             med_legajo_resp_registro,
             med_fecha_registro,
             med_plan_accion,
-            med_cumplimiento
+            med_cumplimiento,
+            med_porcen_destino,
+            med_porcen_global,
+            med_porcen_dimension
         } = req.body;
 
         // Validar datos
@@ -1719,8 +1722,11 @@ app.post('/api/mediciones', async (req, res) => {
             med_legajo_resp_registro,
             med_fecha_registro,
             med_plan_accion,
-            med_cumplimiento
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            med_cumplimiento,
+            med_porcen_destino,
+            med_porcen_global,
+            med_porcen_dimension
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
             [
                 med_indicador_id,
@@ -1735,7 +1741,10 @@ app.post('/api/mediciones', async (req, res) => {
                 med_legajo_resp_registro,
                 med_fecha_registro,
                 med_plan_accion,
-                med_cumplimiento
+                med_cumplimiento,   
+                med_porcen_destino,
+                med_porcen_global,
+                med_porcen_dimension    
             ]
         );
 

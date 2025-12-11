@@ -550,6 +550,10 @@
     <script>
 
         // 🎲🎲🎲 Arma el árbol
+
+        /* ===========================================================
+           1) CARGA DE DATOS Y ARMADO DEL ÁRBOL
+        =========================================================== */
         async function fetchData() {
             const response = await fetch('/api/arbol-jstree');
             const flatNodes = await response.json();
@@ -562,12 +566,12 @@
                 sectorMap[s.id] = {
                     ...s,
                     children: [],
-                    weight: Number(s.weight) || 0,  // usar porcentaje real de la BD
+                    weight: Number(s.weight) || 0,
                     value: 0
                 };
             });
 
-            // Asignar sectores hijos
+            // Relacionar sectores padre/hijo
             sectores.forEach(s => {
                 if (s.parent !== "#") {
                     if (sectorMap[s.parent]) {
@@ -577,22 +581,21 @@
                 }
             });
 
-            // Asignar indicadores a sectores
+            // Asignar indicadores a sector
             indicadores.forEach(ind => {
-                const parentSector = sectorMap[ind.parent];
-                if (parentSector) {
+                if (sectorMap[ind.parent]) {
                     const indNode = {
                         ...ind,
-                        weight: Number(ind.weight) || 0, // usar porcentaje real de la BD
-                        value: 0,
                         children: [],
-                        parentNode: parentSector
+                        parentNode: sectorMap[ind.parent],
+                        weight: Number(ind.weight) || 0,
+                        value: 0
                     };
-                    parentSector.children.push(indNode);
+                    sectorMap[ind.parent].children.push(indNode);
                 }
             });
 
-            // Buscar raíces
+            // Raíces del árbol real
             const roots = sectores
                 .filter(s => s.parent === "#")
                 .map(s => sectorMap[s.id]);
@@ -602,129 +605,191 @@
                 name: 'Organización',
                 weight: 100,
                 value: 0,
-                children: roots,
-                parentNode: null
+                parentNode: null,
+                children: roots
             };
         }
 
-        // 🎯 Calcula el peso global de un nodo (sector o indicador)
+        /* ===========================================================
+           2) CÁLCULO DE VALORES (SECTORES + INDICADORES)
+        =========================================================== */
+        function calculateValues(node) {
+
+            // Indicador = hoja
+            if (!node.children || node.children.length === 0) {
+                if (typeof node.value !== 'number' || isNaN(node.value)) {
+                    node.value = 0;
+                }
+                return;
+            }
+
+            // Sector = suma ponderada de hijos
+            let total = 0;
+            node.children.forEach(child => {
+                calculateValues(child);
+
+                const v = (typeof child.value === 'number' && !isNaN(child.value)) ? child.value : 0;
+                const w = (typeof child.weight === 'number' && !isNaN(child.weight)) ? child.weight : 0;
+
+                total += v * w / 100;
+            });
+
+            node.value = total;
+        }
+
+        /* ===========================================================
+           3) CÁLCULO DE PESO GLOBAL
+        =========================================================== */
         function calculateGlobalWeight(node) {
-            let global = node.weight; // comienza con su propio peso
+            let global = (typeof node.weight === "number" ? node.weight : 0);
             let current = node.parentNode;
 
             while (current) {
-                // multiplica por el peso del padre dividido 100
-                global = global * (current.weight / 100);
+                const pw = (typeof current.weight === "number" ? current.weight : 0);
+                global *= pw / 100;
                 current = current.parentNode;
             }
-
-            return global; // queda como porcentaje global real
+            return global;
         }
 
-        // 🎲🎲🎲 Guarda % en base de datos
-        async function updateWeightInDB(nodeId, type, newWeight) {
-            try {
-                let url;
-                let body;
+        /* ===========================================================
+           4) APLICAR PESOS GLOBALES A TODO EL ÁRBOL
+        =========================================================== */
+        function applyGlobalWeights(node) {
+            let g = calculateGlobalWeight(node);
+            if (typeof g !== "number" || isNaN(g)) g = 0;
 
-                if (type === 'sector') {
-                    url = `/api/sectores/${nodeId}`;
-                    body = { sector_porcentual: newWeight };
-                } else if (type === 'indicador') {
-                    url = `/api/indicadores/${nodeId}`;
-                    body = { peso_porcentual: newWeight };
-                } else {
-                    console.warn("Tipo de nodo desconocido:", type);
-                    return;
-                }
+            node.globalWeight = g;
 
-                const response = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error al actualizar en la BD: ${response.statusText}`);
-                }
-
-                console.log(`✅ Peso actualizado para ${type} ${nodeId}: ${newWeight}%`);
-            } catch (err) {
-                console.error("❌ No se pudo actualizar en la BD:", err);
-            }
-        }
-
-        // 🎲🎲🎲 Calcula valores y verifica pesos
-        function calculateValues(node) {
             if (node.children && node.children.length > 0) {
-                let total = 0;
-                node.children.forEach(child => {
-                    calculateValues(child);
-                    total += (child.value || 0) * (child.weight || 0) / 100;
-                });
-                node.value = total;
+                node.children.forEach(child => applyGlobalWeights(child));
             }
         }
 
-        // 🎲🎲🎲 Chequea pesos
+        /* ===========================================================
+           5) RECÁLCULO COMPLETO (VALORES + PESOS GLOBALES)
+        =========================================================== */
+        function recalculateAll() {
+            const root = window.treeRoot;
+            if (!root) return;
+
+            calculateValues(root);
+            applyGlobalWeights(root);
+        }
+
+        /* ===========================================================
+           6) VALIDACIÓN DE PESOS
+        =========================================================== */
         function checkWeights(parentNode) {
             if (!parentNode) return true;
+            if (!parentNode.parentNode) return true;
 
-            // Si es la raíz, no aplica el control
-            if (!parentNode.parentNode) {
-                return true;
-            }
+            if (!parentNode.children || parentNode.children.length === 0) return true;
 
-            // Si no tiene hijos o tiene array vacío, es válido (nodo hoja)
-            if (!parentNode.children || parentNode.children.length === 0) {
-                return true;
-            }
-
-            // Solo validar suma si realmente tiene hijos
             let sum = 0;
             parentNode.children.forEach(c => {
                 sum += Number(c.weight) || 0;
             });
 
-            return Math.abs(sum - 100) < 0.001;
+            return Math.abs(sum - 100) < 0.01;
         }
 
-        // 🎲🎲🎲 Construye el árbol
-        function buildTree(node, parentNode = null, level = 0) {
-            node.parentNode = parentNode;
-            const container = document.createElement('div');
-            container.className = 'list-group-item node-container node-' + node.type; // usa estilo AdminLTE/list-group
+        function checkAllWeights(node) {
+            if (!node) return true;
+            const ok = checkWeights(node);
+            if (!ok) return false;
 
-            // Cabecera con input y nombre
+            if (node.children && node.children.length > 0) {
+                return node.children.every(child => checkAllWeights(child));
+            }
+            return true;
+        }
+
+        /* ===========================================================
+           7) GUARDAR EN BD
+        =========================================================== */
+        async function updateWeightInDB(node) {
+            try {
+                let url;
+                let body;
+
+                if (node.type === 'sector') {
+                    url = `/api/sectores/${node.id}`;
+                    body = { sector_porcentual: node.weight };
+                } else {
+                    url = `/api/indicadores/${node.id}`;
+                    body = {
+                        peso_porcentual: node.weight,
+                        peso_porcentual_global: Number(node.globalWeight.toFixed(4))
+                    };
+                }
+
+                await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+            } catch (err) {
+                console.error("❌ Error al guardar en BD", err);
+            }
+        }
+
+        /* ===========================================================
+           8) UI
+        =========================================================== */
+        function refreshUI() {
+            function updateNode(node) {
+
+                // Barra
+                if (node._progressBar) {
+                    node._progressBar.style.width = `${node.value?.toFixed(1)}%`;
+                }
+
+                // Peso
+                if (node._weightInput) {
+                    node._weightInput.value = node.weight.toFixed(2);
+                }
+
+                // Error
+                if (node._errorMsg) {
+                    node._errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
+                }
+
+                // Global
+                if (node.type === 'indicador' && node._globalTag) {
+                    const g = Number(node.globalWeight) || 0;
+                    node._globalTag.innerHTML = `${g.toFixed(2)}% <i class="bi bi-globe-americas"></i>`;
+                }
+
+                // Hijos
+                if (node.children) node.children.forEach(updateNode);
+            }
+
+            updateNode(window.treeRoot);
+        }
+
+        /* ===========================================================
+           9) ARMAR ÁRBOL HTML
+        =========================================================== */
+        function buildTree(node, parentNode = null, level = 0) {
+
+            node.parentNode = parentNode;
+
+            const container = document.createElement('div');
+            // container.className = 'list-group-item node-container';
+            container.className = 'list-group-item node-container node-' + node.type; 
+
             const header = document.createElement('div');
             header.className = 'node-header';
 
-            // Ícono por tipo
+            // Icono
             const icon = document.createElement('i');
             icon.className = node.type === 'sector' ? 'fas fa-sitemap' : 'fas fa-chart-line';
             header.appendChild(icon);
 
-            // === Color según nivel ===
-            let title = document.createElement('span');
-            title.textContent = node.name || node.text;
-
-            // Clases de color por nivel (0 = raíz, 1 = hijos de raíz, etc.)
-            // const colores = ["text-dark", "text-primary", "text-success", "text-dark", "text-purple", "text-teal", "text-orange"];
-            // const colorClase = colores[level % colores.length]; // rota si hay más niveles
-            // title.classList.add(colorClase);
-
-            // if (node.type === 'indicador') {
-            //     // 🔸 Un único color para todos los indicadores
-            //     title.classList.add('text-purple');
-            // } else {
-            //     // 🎨 Colores rotativos para los sectores según nivel
-            //     const colores = ["text-dark", "text-primary", "text-success", "text-dark", "text-purple", "text-teal"];
-            //     const colorClase = colores[level % colores.length];
-            //     title.classList.add(colorClase);
-            // }
-
+            // Etiqueta
+            let title;
             if (node.type === 'indicador') {
                 // 🔸 Si es un indicador, usar <a> en lugar de <span>
                 title = document.createElement('a');
@@ -734,11 +799,10 @@
 
                 // 👉 evento para abrir modal
                 title.addEventListener('click', (e) => {
-                    e.preventDefault(); // evita el scroll arriba por el href="#"
-                    verDetalleIndicador(node.codigo_id); // función que muestra el modal con info
+                    e.preventDefault();
+                    verDetalleIndicador(node.codigo_id);
                 });
             } else {
-                // 🎨 Sectores siguen siendo un <span>
                 title = document.createElement('span');
                 title.textContent = node.name || node.text;
 
@@ -750,211 +814,125 @@
             header.appendChild(title);
             container.appendChild(header);
 
+            // Peso editable
             if (node.id !== 'root') {
-                const weightInput = document.createElement('input');
-                weightInput.type = 'number';
-                weightInput.min = 0;
-                weightInput.max = 100;
-                weightInput.step = 0.01; // Permite decimales
-                weightInput.value = node.weight.toFixed(2);
-                weightInput.className = 'form-control form-control-sm weight-input';
-                weightInput.title = 'Peso relativo (%)';
-                header.appendChild(weightInput);
+                const input = document.createElement('input');
+                input.type = "number";
+                input.min = 0;
+                input.max = 100;
+                input.value = node.weight.toFixed(2);
+                input.className = "form-control form-control-sm weight-input";
+                // node._weightInput = input;
+                header.appendChild(input);
 
-                // 🎯 Mostrar % global SOLO en indicadores
+                // Badge global
                 if (node.type === 'indicador') {
                     const globalTag = document.createElement('span');
-                    globalTag.className = 'badge bg-dark ms-2 badge-global-min'; // Bootstrap 5
+                    globalTag.className = "badge bg-dark ms-2 badge-global-min";
                     globalTag.innerHTML = `${node.globalWeight?.toFixed(2) || 0}% <i class="bi bi-globe-americas"></i>`;
-
-                    header.appendChild(globalTag);
                     node._globalTag = globalTag;
+                    header.appendChild(globalTag);
                 }
 
-                // 👇 si es nodo raíz (no tiene parentNode, o su parent es 'root')
+                // Raíz no editable
                 if (!parentNode || parentNode.id === 'root') {
                     node.weight = 100;
-                    weightInput.value = 100;
-                    weightInput.disabled = true; // no editable
+                    input.value = 100;
+                    input.disabled = true;
                 } else {
-                    weightInput.addEventListener('change', async () => {
-                        let val = Number(weightInput.value);
+                    // Evento cambio de peso
+                    input.addEventListener('change', async () => {
+
+                        let val = Number(input.value);
                         if (isNaN(val) || val < 0) val = 0;
                         if (val > 100) val = 100;
+
                         node.weight = val;
 
-                        // Recalcular valores
-                        calculateValues(getRootNode(node));
+                        // Recalcular SIEMPRE desde la raíz
+                        recalculateAll();
 
-                        // Recalcular pesos globales
-                        applyGlobalWeights(getRootNode(node));
+                        // Validación local
+                        node.parentNode._errorMsg.style.display = checkWeights(node.parentNode)
+                            ? 'none' : 'block';
 
-                        // Control de 100%
-                        if (!checkWeights(node.parentNode)) {
-                            node.parentNode._errorMsg.style.display = 'block';
-                        } else {
-                            node.parentNode._errorMsg.style.display = 'none';
-                        }
-                        // 👇 AQUÍ: verificar TODO el árbol después del cambio
-                        const hasErrors = !checkAllWeights(window.treeRoot);
-                        if (hasErrors) {
-                            console.warn('⚠️ Se encontraron errores de pesos en el árbol');
-                            actualizarAlerta(1);
-                        } else {
-                            actualizarAlerta(0);
-                        }
+                        // Validación global
+                        actualizarAlerta(!checkAllWeights(window.treeRoot));
 
-                        // Guardar peso del nodo en BD
-                        try {
-                            await fetch(`/api/update-weight`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    id: node.id,
-                                    type: node.type,         // 'sector' o 'indicador'
-                                    weight: node.weight,     // peso relativo
-                                    globalWeight: node.type === 'indicador'
-                                        ? Number(node.globalWeight.toFixed(4))
-                                        : null               // sectores no guardan peso global
-                                })
-                            });
-                        } catch (err) {
-                            console.error('Error guardando en BD', err);
-                        }
+                        // Guardar en BD
+                        await updateWeightInDB(node);
+
                         refreshUI();
                     });
                 }
-                node._weightInput = weightInput;
             }
 
-            const title2 = document.createElement('span');
-            title2.textContent = node.name || node.text;
-            header.appendChild(title);
+            container.appendChild(header);
 
+            // Error de pesos
+            if (node.children && node.children.length > 0) {
+                const err = document.createElement('div');
+                err.className = "error-msg";
+                err.textContent = "La suma de pesos de este nivel debe ser 100%";
+                err.style.display = checkWeights(node) ? 'none' : 'block';
+                node._errorMsg = err;
+                container.appendChild(err);
+            }
 
-            // Barra de progreso
-            const progress = document.createElement('div');
-            progress.className = 'progress';
-            const bar = document.createElement('div');
-            bar.className = 'progress-bar';
-            bar.style.width = `${node.value?.toFixed(1) || 0}%`;
+            // Hijos
+            if (node.children && node.children.length > 0) {
+                const box = document.createElement('div');
+                box.className = "children-container";
+                node.children.forEach(child => {
+                    box.appendChild(buildTree(child, node, level + 1));
+                });
+                container.appendChild(box);
+            }
+
+            // Barra
+            // const progress = document.createElement('div');
+            // progress.className = 'progress';
+            // const bar = document.createElement('div');
+            // bar.className = 'progress-bar';
+            // bar.style.width = `${node.value?.toFixed(1)}%`;
             // progress.appendChild(bar);
             // container.appendChild(progress);
+            // node._progressBar = bar;
 
-            // Mensaje de error (solo para nodos con hijos)
-            if (node.children && node.children.length > 0) {
-                const errorMsg = document.createElement('div');
-                errorMsg.className = 'error-msg';
-                errorMsg.textContent = '- - - La suma de los pesos de este nivel debe ser 100% - - -';
-                errorMsg.style.fontSize = '16px';
-                errorMsg.style.fontWeight = 'bold';
-                errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
-                container.appendChild(errorMsg);
-                node._errorMsg = errorMsg;
-                const tieneError = !checkWeights(node)
-                if (tieneError) { console.log(`tiene error: ${tieneError}`) };
-            }
-
-            // Hijos recursivos
-            if (node.children && node.children.length > 0) {
-                const childrenContainer = document.createElement('div');
-                childrenContainer.className = 'children-container'; // <-- aquí
-                node.children.forEach(child => {
-                    childrenContainer.appendChild(buildTree(child, node, level + 1));
-                });
-                container.appendChild(childrenContainer);
-            }
-
-            node._progressBar = bar;
             return container;
         }
 
-        // 🎲🎲🎲 Refresca interfase
-        function refreshUI() {
-            function updateNode(node) {
-                if (node._progressBar) { node._progressBar.style.width = `${node.value?.toFixed(1) || 0}%`; }
-                if (node._weightInput) { node._weightInput.value = node.weight.toFixed(2); }
-                if (node._errorMsg) node._errorMsg.style.display = checkWeights(node) ? 'none' : 'block';
-                if (node.children && node.children.length > 0) { node.children.forEach(updateNode); }
-
-                // 🎯 Actualizar badge de globalWeight para indicadores
-                if (node.type === 'indicador' && node._globalTag) {
-                    let g = Number(node.globalWeight) || 0;
-                    node._globalTag.innerHTML = `${g.toFixed(2)}% <i class="bi bi-globe-americas"></i>`;
-                }
-            }
-            updateNode(window.treeRoot);
+        /* ===========================================================
+           10) ALERTA EN BD
+        =========================================================== */
+        function actualizarAlerta(err) {
+            fetch(`/api/alertas/1/valor`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ valor: err ? 1 : 0 })
+            }).catch(console.error);
         }
 
-        // 🎲🎲🎲 Get Root Node
-        function getRootNode(node) {
-            while (node.parentNode) {
-                node = node.parentNode;
-            }
-            return node;
-        }
-
-        // 🎲🎲🎲 Actualizar alertas
-        function actualizarAlerta(tieneError) {
-            (async () => {
-                try {
-                    await fetch(`/api/alertas/1/valor`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ valor: tieneError })
-                    });
-                } catch (err) {
-                    console.error('Error actualizando alertas.valor', err);
-                }
-            })();
-        }
-
-        // 🎲🎲🎲 Controla balance de todos los nodos
-        function checkAllWeights(node) {
-            if (!node) return true;
-            // Verificar este nodo
-            const thisNodeValid = checkWeights(node);
-
-            // Si tiene hijos, verificar recursivamente cada hijo
-            if (node.children && node.children.length > 0) {
-                const childrenValid = node.children.every(child => checkAllWeights(child));
-                return thisNodeValid && childrenValid;
-            }
-            return thisNodeValid;
-        }
-
-        // 🎯 Aplica el cálculo global a cada nodo del árbol
-        function applyGlobalWeights(node) {
-            node.globalWeight = calculateGlobalWeight(node);
-
-            if (node.children && node.children.length > 0) {
-                node.children.forEach(child => applyGlobalWeights(child));
-            }
-        }
-
-        // 🎲🎲🎲 MAIN 🎲🎲🎲
+        /* ===========================================================
+           11) MAIN
+        =========================================================== */
         (async () => {
             window.treeRoot = await fetchData();
-            calculateValues(window.treeRoot);
-            applyGlobalWeights(window.treeRoot);
 
+            recalculateAll();
 
-            // 👇 Verificar errores antes de renderizar
-            const hasErrors = !checkAllWeights(window.treeRoot);
-            if (hasErrors) {
-                console.warn('⚠️ Se encontraron errores de % al cargar el árbol');
-                actualizarAlerta(1);
-            } else {
-                actualizarAlerta(0);  // Todo OK
-            }
+            actualizarAlerta(!checkAllWeights(window.treeRoot));
 
             const container = document.getElementById('treeContainer');
-            container.innerHTML = '';
+            container.innerHTML = "";
             container.appendChild(buildTree(window.treeRoot));
 
         })();
-    </script>
 
+
+
+
+    </script>
     <!--begin::Script-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
