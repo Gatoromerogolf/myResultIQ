@@ -13,12 +13,19 @@ const upload = multer(); // Esta es la línea que falta
 
 const cors = require('cors');
 const sectoresRoutes = require('./routes/sectores');
+const authRoutes = require('./routes/auth');
+const verificarToken = require('./middleware/auth');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Rutas públicas:
+app.use('/api/auth', authRoutes);
+
 app.use('/api/sectores', sectoresRoutes);
+
+// Archivos estáticos
 app.use(express.static('public'));
 app.use('/dist', express.static('public'));
 
