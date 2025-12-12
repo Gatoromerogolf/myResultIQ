@@ -1,0 +1,62 @@
+<section class="content mt-3" id="grafico-evolucion-Full" style="display: none;">
+    <div class="container-fluid">
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <div class="card-header d-flex justify-content-between align-items-start flex-wrap">
+                                    <div class="d-flex flex-column">
+                                        <h4 class="mb-1"><strong>Indicador:</strong> <span id="indNombre"></span></h4>
+                                        <p class="mb-1"><strong>Descripción:</strong> <span id="descripcionGraf"></span>
+                                        </p>
+                                        <div class="d-flex gap-5">
+                                            <p class="mb-0">
+                                                <strong>Meta:</strong> <span id="metaGraf"></span>
+                                            </p>
+                                            <p class="mb-0">
+                                                <strong>Evaluación:</strong> <span id="evaluaGraf"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p class="text-center">
+                                                <strong>Evolución histórica</strong>
+                                            </p>
+                                            <div>
+                                                <button id="btnLine" class="btn btn-sm btn-primary">Línea</button>
+                                                <button id="btnArea" class="btn btn-sm btn-success">Área</button>
+                                                <button id="btnBar" class="btn btn-sm btn-warning">Barra</button>
+                                            </div>
+                                            <div id="sales-chart"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 🔽 KPIs al pie -->
+                                <div class="row mt-4" id="kpiCards"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+<section class="content mt-3" id="analisis-automatico" style="display: none;">
+    <div class="container-fluid">
+        <div class="card card-primary card-outline">
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="bg-white rounded shadow-sm p-4">
+                        <h4 class="fw-bold mb-3">📋 Destacados</h4>
+                        <div class="row" id="analisisContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

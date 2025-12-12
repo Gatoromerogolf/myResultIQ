@@ -35,14 +35,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 // =====================================================
 async function verDetalleIndicador(codigo) {
 
+    console.log(`recibido para consulta ${codigo}`)
+
     try {
         const response = await fetch(`/api/indicadores/${codigo}`);
         if (!response.ok) throw new Error('No se pudo obtener el indicador.');
 
         const body = await response.json();
         const indicador = body.data;
-
-        console.log("🟦 DEBUG indicador:", indicador);
 
         // ----------------------------------------------------
         // Bloque Responsable

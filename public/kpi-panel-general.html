@@ -760,10 +760,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="content mt-3" id="grafico-evolucion-indicador" style="display: none;">
+
+                                    <!-- <div class="content mt-3" id="grafico-evolucion-indicador" style="display: none;">
                                         <div class="container-fluid">
                                             <div class="card card-primary card-outline">
-                                                <!-- Grafico indicador -->
                                                 <div
                                                     class="card-header d-flex justify-content-between align-items-start flex-wrap">
                                                     <div class="d-flex flex-column">
@@ -776,7 +776,6 @@
                                                         </p>
                                                     </div>
                                                 </div>
-
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col-md-12">
@@ -795,7 +794,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <!-- 🔽 KPIs al pie -->
+
                                                     <div class="content mt-4" id="kpiCards">
                                                     </div>
 
@@ -816,7 +815,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
+
+                                    <div id="graficoIndicadorFull"></div>
+                                    <div id="kpiTarjetasFull"></div>
+
                                 </div>
                             </div>
                             <!-- === Mejores y Peores Indicadores === -->
@@ -2733,7 +2736,9 @@
                 // aseguramos datos auxiliares
                 const usuario = ind._usuario || await obtenerUsuarioPorLegajo(ind.responsable).catch(() => null);
                 const sectores = ind._sector || await obtenerSectoresPorUnidad(ind.destino).catch(() => null);
-                const info = ind._cumplimiento || await obtenerCumplimientoIndicador(ind.codigo_id).catch(() => ({ porcentaje: 0 }));
+                const info =  await obtenerCumplimientoIndicador(ind.codigo_id).catch(() => ({ porcentaje: 0 }));
+
+                console.log(`recibio indicador ${ind.nombre} con sector ${sectores?.nombre} y cumplimiento ${info?.porcentaje}`);
 
                 // cache
                 ind._usuario = usuario;
@@ -2741,7 +2746,10 @@
                 ind._cumplimiento = info;
                 ind._destinoKey = ind._destinoKey || normalizeKey(ind.destino);
 
-                const porcentaje = (info && typeof info.porcentaje === 'number') ? info.porcentaje : 0;
+                const porcentaje = Number(info?.porcentaje) || 0;
+
+                console.log(`Indicador ${ind.nombre} tiene cumplimiento de ${porcentaje}%`);
+
                 const color = getColorPorCumplimiento(porcentaje);
 
                 const card = document.createElement('div');
@@ -2816,16 +2824,18 @@
         function verGraficoIndicador(key_id, nombre, meta, descripcion, metodo) {
             // Guardar en sessionStorage
             sessionStorage.setItem('indicador_seleccionado', key_id);
-            document.getElementById('grafico-evolucion-indicador').style.display = 'block';
+            // document.getElementById('grafico-evolucion-indicador').style.display = 'block';
+            document.getElementById('grafico-evolucion-Full').style.display = 'block';
 
             // Llama a la función que renderiza el gráfico
+            console.log('Renderizando gráfico para indicador:', key_id,  'con metodo', metodo);
 
             renderIndicadorChart(key_id, nombre, meta, descripcion, metodo)
 
         }
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
-        async function renderIndicadorChart(idIndicador, nombre, meta, descripcion) {
+        async function XXXrenderIndicadorChart(idIndicador, nombre, meta, descripcion) {
 
             const chartContainer = document.querySelector('#sales-chart');
             if (!chartContainer) {
@@ -3166,7 +3176,7 @@
         }
 
         // 📊🤖 Generador de análisis automático de cumplimiento
-        function generarAnalisisAutomatico(
+        function XXXgenerarAnalisisAutomatico(
             valores,
             periodos,
             meta,
@@ -3403,7 +3413,9 @@
                     };
                     const sector = await obtenerSectoresPorUnidad(ind.destino);
                     const ultimaMedicion = ultima ? ultima.med_valor : null;
-                    const porcentaje = ultimaMedicion !== null ? (ultimaMedicion / ind.unico_valor * 100).toFixed(1) : null;
+                    // const porcentaje = ultimaMedicion !== null ? (ultimaMedicion / ind.unico_valor * 100).toFixed(1) : null;
+                    const porcentaje = ultima?.med_cumplimiento ?? 0;
+                    
                     // 🔹 Obtener la descripción de la unidad de medida desde CodigosService
                     const unidad = CodigosService.getNombreCodigo(ind.unidad_medida)
 
@@ -3592,7 +3604,7 @@
                         <td>
                             <!-- 📈 Ver evolución -->
                             <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
-                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}', '${ind.unico_eval}')">
                                 <i class="fas fa-chart-line text-primary"></i>
                             </button>
 
@@ -3654,7 +3666,7 @@
                         <td>
                             <!-- 📈 Ver evolución -->
                             <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
-                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}' , '${ind.unico_eval}')">
                                 <i class="fas fa-chart-line text-primary"></i>
                             </button>
 
@@ -4829,6 +4841,29 @@
     <!-- Scripts asociados -->
     <script src="/modal-indicador.js"></script>
     <script src="/modal-mediciones.js"></script>
+
+    <script>
+        fetch('/kpi-tools.html')
+            .then(res => res.text())
+            .then(html => {
+                // Crear contenedor temporal para poder querySelectorear
+                const temp = document.createElement("div");
+                temp.innerHTML = html;
+
+                // Seleccionar las secciones del HTML externo
+                const sectionA = temp.querySelector("#grafico-evolucion-Full");
+                const sectionB = temp.querySelector("#analisis-automatico");
+
+                // Insertarlas donde querés
+                document.getElementById("graficoIndicadorFull").appendChild(sectionA);
+                document.getElementById("kpiTarjetasFull").appendChild(sectionB);
+
+                // (Opcional) inicializar scripts, gráficos, etc.
+                if (typeof initGraficos === "function") initGraficos();
+            });
+    </script>
+
+    <script src="/kpi-tools.js"></script>
 
 
 </body>

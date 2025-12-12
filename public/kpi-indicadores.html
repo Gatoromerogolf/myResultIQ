@@ -1044,7 +1044,8 @@
                                                     <div class="row align-items-end">
 
                                                         <div class="mt-2 col-md-2">
-                                                            <label for="tipo_meta" class="form-label"><strong>Tipo de meta:</strong>
+                                                            <label for="tipo_meta" class="form-label"><strong>Tipo de
+                                                                    meta:</strong>
                                                                 <i class="fas fa-info-circle info-icon"
                                                                     data-bs-toggle="tooltip" data-bs-html="true"
                                                                     data-bs-custom-class="custom-tooltip"
@@ -1058,8 +1059,10 @@
                                                                 onchange="mostrarCamposMeta()">
                                                                 <option value="">-- Seleccionar --</option>
                                                                 <option value="1">Valor único</option>
-                                                                <option value="2" disabled style="color: #a0a0a0;">Rango de valores</option>
-                                                                <option value="3" disabled style="color: #a0a0a0;">Tendencia</option>
+                                                                <option value="2" disabled style="color: #a0a0a0;">Rango
+                                                                    de valores</option>
+                                                                <option value="3" disabled style="color: #a0a0a0;">
+                                                                    Tendencia</option>
                                                             </select>
                                                         </div>
 
@@ -1097,11 +1100,18 @@
                                                                     <select id="unico_eval" name="unico_eval"
                                                                         class="form-select">
                                                                         <option value="">-- Seleccionar --</option>
-                                                                        <option value="0401">Superable positiva – Más es mejor</option>
-                                                                        <option value="0402">Límite máximo – No debe superarse</option>
-                                                                        <option value="0403" disabled style="color: #a0a0a0;">Tolerancia simétrica – Penaliza desviaciones</option>
-                                                                        <option value="0404">Menor es mejor – Alejarse en menos es mejor</option>
-                                                                        <option value="0405" disabled style="color: #a0a0a0;">Valor exacto – Cero tolerancia</option>
+                                                                        <option value="0401">Superable positiva – Más es
+                                                                            mejor</option>
+                                                                        <option value="0402">Límite máximo – No debe
+                                                                            superarse</option>
+                                                                        <option value="0403" disabled
+                                                                            style="color: #a0a0a0;">Tolerancia simétrica
+                                                                            – Penaliza desviaciones</option>
+                                                                        <option value="0404">Menor es mejor – Alejarse
+                                                                            en menos es mejor</option>
+                                                                        <option value="0405" disabled
+                                                                            style="color: #a0a0a0;">Valor exacto – Cero
+                                                                            tolerancia</option>
                                                                     </select>
                                                                 </div>
 
@@ -1205,7 +1215,8 @@
 
                                                                 <div class="col-md-3">
                                                                     <label for="valor_referencia"
-                                                                        class="form-label"><strong>Valor de referencia:</strong></label>
+                                                                        class="form-label"><strong>Valor de
+                                                                            referencia:</strong></label>
                                                                     <input type="number" step="any" id="tenden_refe"
                                                                         name="tenden_refe" class="form-control"
                                                                         placeholder="Ej: 65">
@@ -1214,7 +1225,8 @@
                                                                 <!-- Umbrales -->
                                                                 <div class="col-md-2">
                                                                     <label for="umbral_aceptable"
-                                                                        class="form-label"><strong>% Aceptable *</strong>
+                                                                        class="form-label"><strong>% Aceptable
+                                                                            *</strong>
                                                                         <i class="fas fa-info-circle info-icon"
                                                                             data-bs-toggle="tooltip" data-bs-html="true"
                                                                             data-bs-custom-class="dark-tooltip"
@@ -1336,14 +1348,14 @@
 
                                                     <!--begin::Unidad de demora-->
                                                     <!-- <div class="col-md-2"> -->
-                                                        <!-- <label for="tolerancia_plazo" class="form-label"><strong>Demora
+                                                    <!-- <label for="tolerancia_plazo" class="form-label"><strong>Demora
                                                                 admitida *</strong>
                                                             <i class="fas fa-info-circle info-icon"
                                                                 data-bs-toggle="tooltip" data-bs-html="true"
                                                                 data-bs-custom-class="dark-tooltip"
                                                                 title="Demora máxima en días para informar el valor del indicador, según la frecuencia establecida"></i>
                                                         </label> -->
-                                                        <!-- <input type="text" class="form-control" id="tolerancia_plazo"
+                                                    <!-- <input type="text" class="form-control" id="tolerancia_plazo"
                                                             name="tolerancia_plazo" placeholder="Ej: 0" required>
                                                         <div class="invalid-feedback">Debe seleccionar el máximo de
                                                             demora admitido.
@@ -1382,7 +1394,7 @@
                                                             name="freq_reporte" required>
                                                             <option selected disabled value="">Seleccione
                                                                 periodicidad...</option> -->
-                                                            <!-- <option value="0201">Diaria</option>
+                                                    <!-- <option value="0201">Diaria</option>
                                                             <option value="0202">Semanal</option>
                                                             <option value="0203">Quincenal</option>
                                                             <option value="0204">Mensual</option>
@@ -1392,7 +1404,7 @@
                                                             <option value="0208">Semestral</option>
                                                             <option value="0209">Anual</option>
                                                             <option value="0210">Eventual</option>-->
-                                                        <!-- </select>
+                                                    <!-- </select>
                                                         <div class="invalid-feedback">Debe seleccionar la
                                                             periodicidad de reporte.
                                                         </div>
@@ -1854,7 +1866,7 @@
                 form.elements['unidad_medida'].value = indicador.unidad_medida || '';
 
                 const frecuencia = CodigosService.getNombreCodigo(indicador.freq_medicion);
-                console.log (`frecuencia ${frecuencia}`)
+                console.log(`frecuencia ${frecuencia}`)
                 form.elements['freq_medicion'].value = indicador.freq_medicion || '';
 
                 // form.elements['freq_reporte'].value = 0 || '';
@@ -1878,15 +1890,15 @@
                     // form.elements['unico_acepta'].value = 0 || '';
                     // form.elements['unico_riesgo'].value = 0 || '';
                     // form.elements['unico_critico'].value = 0 || '';
-                // } else if (indicador.meta_tipo == 2) {
-                //     form.elements['rango_desde'].value = indicador.rango_desde || '';
-                //     form.elements['rango_hasta'].value = indicador.rango_hasta || '';
+                    // } else if (indicador.meta_tipo == 2) {
+                    //     form.elements['rango_desde'].value = indicador.rango_desde || '';
+                    //     form.elements['rango_hasta'].value = indicador.rango_hasta || '';
                     // form.elements['rango_acepta'].value = indicador.rango_acepta || '';
                     // form.elements['rango_riesgo'].value = indicador.rango_riesgo || '';
                     // form.elements['rango_critico'].value = indicador.rango_critico || '';
-                // } else if (indicador.meta_tipo == 3) {
-                //     form.elements['tenden_tipo'].value = indicador.tenden_tipo || '';
-                //     form.elements['tenden_refe'].value = indicador.tenden_refe || '';
+                    // } else if (indicador.meta_tipo == 3) {
+                    //     form.elements['tenden_tipo'].value = indicador.tenden_tipo || '';
+                    //     form.elements['tenden_refe'].value = indicador.tenden_refe || '';
                     // form.elements['tenden_acepta'].value = indicador.tenden_acepta || '';
                     // form.elements['tenden_riesgo'].value = indicador.tenden_riesgo || '';
                     // form.elements['tenden_critico'].value = indicador.tenden_critico || '';
@@ -1948,8 +1960,11 @@
                 // Transformamos los datos para que DataTable los entienda
                 const datosTabla = await Promise.all
                     (indicadores.map(async (ind) => {
-                        const [usuario, sector] = await Promise.all([
-                            obtenerUsuarioPorLegajo(ind.responsable),
+                        // const [usuario, sector] = await Promise.all([
+                        //     obtenerUsuarioPorLegajo(ind.responsable),
+                        //     obtenerSectoresPorUnidad(ind.destino)
+                        // ]);
+                        const [sector] = await Promise.all([
                             obtenerSectoresPorUnidad(ind.destino)
                         ]);
 
@@ -1961,9 +1976,9 @@
                             dimension: `<span class="badge bg-${getColorDimension(ind.dimension_id)} badge-dimension">${getClaseDimension(ind.dimension_id)}</span>`,
                             descripcion: ind.descripcion,
                             sectores: sector?.nombre ?? "—",
-                            responsable: usuario
-                                ? `${usuario.nombres} ${usuario.apellido}`
-                                : "Sin asignar",
+                            // responsable: usuario
+                            //     ? `${usuario.nombres} ${usuario.apellido}`
+                            //     : "Sin asignar",
                             objetivo: ind.objetivo,
                             frecuencia: CodigosService.getNombreCodigo(ind.freq_medicion),
                             estado: xestado,
@@ -1993,7 +2008,7 @@
                             { data: 'sectores', title: 'Destino' },
                             { data: 'descripcion', title: 'Descripción' },
                             { data: 'objetivo', title: 'Objetivo' },
-                            { data: 'responsable', title: 'Responsable' },
+                            // { data: 'responsable', title: 'Responsable' },
                             { data: 'frecuencia', title: 'Medición' },
                             { data: 'dimension', title: 'Perspectiva BSC' },
                             { data: 'estado', title: 'Est' },
@@ -2005,11 +2020,11 @@
                             { width: "50px", targets: 2 },   // destino
                             { width: "150px", targets: 3 },  // descripcion
                             { width: "150px", targets: 4 },   // objetivo
-                            { width: "60px", targets: 5 },  // responsable
-                            { width: "30px", targets: 6 },   // medición
-                            { width: "30px", targets: 7 },   // dimension
-                            { width: "20px", targets: 8 },   // estado
-                            { width: "25px", targets: 9 },   // acciones
+                            // { width: "60px", targets: 5 },  // responsable
+                            { width: "30px", targets: 5 },   // medición
+                            { width: "30px", targets: 6 },   // dimension
+                            { width: "20px", targets: 7 },   // estado
+                            { width: "25px", targets: 8 },   // acciones
                         ],
                         responsive: true,
                         autoWidth: false,
@@ -2042,7 +2057,6 @@
         }
 
         function agregarIndicador() {
-            // alert('Redirigiendo al formulario de creación de indicador...');
 
             const div2 = document.getElementById("appContent");
             div2.style.display = "none";
