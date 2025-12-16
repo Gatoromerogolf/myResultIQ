@@ -2,6 +2,108 @@
 <html lang="en">
 <!--begin::Head-->
 
+<!-- <style>
+    .brand-image {
+        opacity: 1 !important;
+        width: 40px;
+        height: auto;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        object-fit: contain;
+    }
+
+    .app-sidebar {
+        height: 100vh;
+        /* que ocupe toda la altura de la ventana */
+        overflow-y: auto;
+        /* permite scroll vertical */
+        overflow-x: hidden;
+        /* evita scroll horizontal */
+    }
+
+    .nav-item .nav-link {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .nav-item {
+        margin-bottom: 0;
+    }
+
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
+
+    /* Agregar margen al selector de registros */
+    .dataTables_length {
+        margin-left: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* También puedes agregar margen al buscador si lo necesitas */
+    .dataTables_filter {
+        margin-right: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* Margen general a todos los controles de DataTables */
+    .dataTables_wrapper .row {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+</style> -->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>myResultIQ | Usuarios</title>
+    <!--begin::Primary Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="title" content="AdminLTE v4 | Dashboard" />
+    <meta name="author" content="ColorlibHQ" />
+    <meta name="description"
+        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+    <meta name="keywords"
+        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="../css/estilos-custom.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="../css/adminlte.css" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+
+    <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
+    <script src="/js/auth-guard.js"></script>
+
+</head>
 <style>
     .brand-image {
         opacity: 1 !important;
@@ -42,226 +144,64 @@
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
         margin-bottom: 20px;
     }
+
+    /* Agregar margen al selector de registros */
+    .dataTables_length {
+        margin-left: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* También puedes agregar margen al buscador si lo necesitas */
+    .dataTables_filter {
+        margin-right: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* Margen general a todos los controles de DataTables */
+    .dataTables_wrapper .row {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 </style>
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>myResultIQ | Usuarios</title>
-    <!--begin::Primary Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="AdminLTE v4 | Dashboard" />
-    <meta name="author" content="ColorlibHQ" />
-    <meta name="description"
-        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-    <meta name="keywords"
-        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-    <!--end::Primary Meta Tags-->
-
-    <!--begin::Fonts-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
-    <!--end::Fonts-->
-
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-
-    <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
-    <!--end::Third Party Plugin(Bootstrap Icons)-->
-
-    <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../css/estilos-custom.css">
-    <!--end::Required Plugin(AdminLTE)-->
-
-    <!-- apexcharts -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
-
-    <!-- jsvectormap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
-        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <!-- AdminLTE se basa en Bootstrap, así que hay que incluirlo primero:-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!--  Bootstrap Icons (Para que <i class="bi bi-..."> funcione) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-    <!--  AdminLTE CSS (Estilos del template)-->
-    <link rel="stylesheet" href="../css/adminlte.css" />
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
-
-</head>
-<!--end::Head-->
-<!--begin::Body-->
-
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <!--begin::App Wrapper-->
     <div class="app-wrapper">
-        <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body">
-            <!--begin::Container-->
             <div class="container-fluid">
-                <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
                             <i class="bi bi-list"></i>
+
                         </a>
                     </li>
-                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li> -->
-                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
                 </ul>
-                <!--end::Start Navbar Links-->
-                <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
-                    <!--begin::Navbar Search-->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                            <i class="bi bi-search"></i>
-                        </a>
-                    </li> -->
-                    <!--end::Navbar Search-->
-
-                    <!--begin::Messages Dropdown Menu-->
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                            <i class="bi bi-chat-text"></i>
-                            <span class="navbar-badge badge text-bg-danger">3</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user1-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            Brad Diesel
-                                            <span class="float-end fs-7 text-danger"><i
-                                                    class="bi bi-star-fill"></i></span>
-                                        </h3>
-                                        <p class="fs-7">Call me whenever you can...</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user8-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            John Pierce
-                                            <span class="float-end fs-7 text-secondary">
-                                                <i class="bi bi-star-fill"></i>
-                                            </span>
-                                        </h3>
-                                        <p class="fs-7">I got your message bro</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user3-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            Nora Silvester
-                                            <span class="float-end fs-7 text-warning">
-                                                <i class="bi bi-star-fill"></i>
-                                            </span>
-                                        </h3>
-                                        <p class="fs-7">The subject goes here</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                        </div>
-                    </li> -->
-                    <!--end::Messages Dropdown Menu-->
-                    <!--begin::Notifications Dropdown Menu-->
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                            <i class="bi bi-bell-fill"></i>
-                            <span class="navbar-badge badge text-bg-warning">15</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            <span class="dropdown-item dropdown-header">15 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-envelope me-2"></i> 4 new messages
-                                <span class="float-end text-secondary fs-7">3 mins</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-people-fill me-2"></i> 8 friend requests
-                                <span class="float-end text-secondary fs-7">12 hours</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
-                                <span class="float-end text-secondary fs-7">2 days</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
-                        </div>
-                    </li> -->
-                    <!--end::Notifications Dropdown Menu-->
-
-                    <!--begin::Fullscreen Toggle-->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
                             <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
                             <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
                         </a>
                     </li>
-                    <!--end::Fullscreen Toggle-->
 
-                    <!--begin::User Menu Dropdown"-->
-                    <li class="nav-item dropdown1 user-menu">
-
-                        <span class="nav-link dropdown-toggle">
-                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Daniel González
-                                    (ADM)</strong></span>
-                            <img src="/dist/images/user6-128x128.jpg" class="user-image rounded-circle shadow"
-                                style="width: 40px; height: 40px;" alt="User Image" />
-                        </span>
-                    </li>
-                    <li>
-                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
-                        <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
-                            <i class="fas fa-sign-out-alt me-1"></i> Salir
+                    <!-- Usuario -->
+                    <li class="nav-item dropdown user-menu">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img id="userAvatar" src="/dist/images/default_user.jpg"
+                                class="user-image rounded-circle shadow" alt="User Image">
+                            <span id="userName" class="ms-2"></span>
                         </a>
                     </li>
-                    <!--end::User Menu Dropdown-->
+
+                    <!-- Logout -->
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt"></i> Salir
+                        </a>
+                    </li>
                 </ul>
-                <!--end::End Navbar Links-->
             </div>
-            <!--end::Container-->
         </nav>
-        <!--end::Header-->
 
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
@@ -323,7 +263,8 @@
                                     <h3 class="card-title">Usuarios Registrados</h3>
                                     <div class="card-tools">
                                         <div class="card-tools">
-                                            <button class="btn btn-success btn-sm" onclick="agregarUsuario()">
+                                            <button id="btnAgregarUsuario" class="btn btn-success btn-sm"
+                                                onclick="agregarUsuario()">
                                                 <i class="fas fa-user-plus"></i> Agregar Usuario
                                             </button>
                                         </div>
@@ -331,7 +272,8 @@
                                 </div>
 
                                 <div class="card-body table-responsive p-0">
-                                    <table class="table table-hover text-nowrap">
+                                    <table id="tabla-usuarios" class="table table-bordered table-hover table-striped"
+                                        style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th>Legajo</th>
@@ -339,14 +281,15 @@
                                                 <th>Nombre</th>
                                                 <th>Cargo</th>
                                                 <th>Sector</th>
+                                                <th>Reporta</th>
                                                 <th>Estado</th>
-                                                <th>Perfil</th>
+                                                <th>Rol</th>
                                                 <th>Foto</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="tabla-usuarios">
-                                            <!-- Aquí se cargan dinámicamente los usuarios -->
+                                        <tbody>
+                                            <!-- Se llena dinámicamente -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -360,7 +303,7 @@
                                 class="mt-4">
                                 <div class="card card-primary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Nuevo Usuario</h3>
+                                        <h3 class="card-title" id="tituloTarjeta">Nuevo Usuario</h3>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
@@ -401,7 +344,11 @@
                                         <div class="row mt-3">
                                             <div class="col-md-4">
                                                 <label>Email</label>
-                                                <input type="email" name="email" class="form-control">
+                                                <input type="email" id="email" name="email" class="form-control"
+                                                    required>
+                                                <small class="text-muted">
+                                                    El correo será utilizado como usuario para iniciar sesión
+                                                </small>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Teléfono</label>
@@ -445,13 +392,14 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="perfil" class="form-label">Perfil</label>
-                                                <select id="perfil" name="perfil" class="form-select">
-                                                    <option value="1">Operador</option>
-                                                    <option value="2">Responsable</option>
-                                                    <option value="3">Analista</option>
-                                                    <option value="4">Superior</option>
-                                                    <option value="5">Administrador</option>
+                                                <label for="rol" class="form-label">Rol</label>
+                                                <select id="rol" name="rol" class="form-select" required>
+                                                    <option value="">Seleccione un rol</option>
+                                                    <option value="administrador">Administrador</option>
+                                                    <option value="directivo">Directivo</option>
+                                                    <option value="responsable">Responsable</option>
+                                                    <option value="operador">Operador</option>
+                                                    <option value="otro">Otro</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -477,12 +425,27 @@
                 </footer>
             </div>
         </main>
-        <!--end::App nain-->
-
     </div>
     <!--end::App Wrapper-->
 
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+
+    <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
+    <script src="/js/auth-guard.js"></script>
+
     <script>
+
+        let dataTable;
         function agregarUsuario() {
             document.getElementById('listaUsuarios').style.display = 'none';
             document.getElementById('nuevoUsuario').style.display = 'block';
@@ -498,40 +461,29 @@
             document.getElementById('listaUsuarios').style.display = 'block';
         }
 
-        const API_SECTORES = '/api/sectores'; // Reemplazá con la ruta real
+        /*
+        Optimizaciones aplicadas:
+        ✅ Parseo JSON en paralelo: fetch().then(r => r.json()) en el mismo Promise.all
+        ✅ Un solo innerHTML: En lugar de hacer appendChild() por cada usuario (que causa múltiples reflows del DOM),
+        generamos todo el HTML y lo insertamos una sola vez
+        ✅ Timestamp calculado una vez: Date.now() se ejecuta solo una vez en lugar de por cada usuario
+        ✅ Uso de map() + join(): Más funcional y eficiente que un forEach con concatenación
+    
+        Impacto en performance:
+    
+        🚀 Mucho más rápido con listas grandes (100+ usuarios)
+        📉 Menos reflows del DOM = navegador más eficiente
+        🎯 Código más limpio y funcional */
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const response = await fetch(API_SECTORES);
-                const sectores = await response.json();
-                llenarSelectUnidades(sectores);
-
-                const leoUsuarios = await fetch('/usuarios');
-                const usuarios = await leoUsuarios.json();
-                llenarUsuarios(usuarios);
-            } catch (error) {
-                console.error('Error al cargar sectores:', error);
-            }
-        });
-
+        // // 🚫🚫🚫
         function llenarSelectUnidades(sectores, sectorEmpleadoId = null) {
             const select = document.getElementById('unidadFuncional');
-            select.innerHTML = ""; // limpiar por si ya tenía opciones
-
-            // opción inicial
-            const placeholder = document.createElement('option');
-            placeholder.value = "";
-            placeholder.textContent = "Seleccione sector...";
-            placeholder.disabled = true;
-            placeholder.selected = true;
-            select.appendChild(placeholder);
+            select.innerHTML = '<option value="" disabled selected>Seleccione sector...</option>';
 
             sectores.forEach(sector => {
                 const opcion = document.createElement('option');
                 opcion.value = sector.id;
                 opcion.textContent = obtenerNombreJerarquico(sector, sectores);
-
-                // 👇 Marcar seleccionado si coincide con el empleado
                 if (sectorEmpleadoId && sector.id === sectorEmpleadoId) {
                     opcion.selected = true;
                 }
@@ -539,24 +491,15 @@
             });
         }
 
+        // // 🚫🚫🚫
         function llenarUsuarios(usuarios, jefeEmpleadoId = null) {
             const select = document.getElementById('jefe');
-            select.innerHTML = ""; // limpiar por si ya tenía opciones
-
-            // opción inicial
-            const placeholder = document.createElement('option');
-            placeholder.value = "";
-            placeholder.textContent = "Seleccione Supervisor...";
-            placeholder.disabled = true;
-            placeholder.selected = true;
-            select.appendChild(placeholder);
+            select.innerHTML = '<option value="" disabled selected>Seleccione Supervisor...</option>';
 
             usuarios.forEach(usuario => {
                 const opcion = document.createElement('option');
-                opcion.value = usuario.legajo_jefe;  // identificador real en DB
-                opcion.textContent = `${usuario.apellido}, ${usuario.nombres}`; // lo que se ve
-
-                // ✅ marcar jefe actual, usando trim() para evitar espacios
+                opcion.value = usuario.legajo;
+                opcion.textContent = `${usuario.apellido}, ${usuario.nombres}`;
                 if (jefeEmpleadoId && usuario.legajo_jefe === jefeEmpleadoId) {
                     opcion.selected = true;
                 }
@@ -564,7 +507,7 @@
             });
         }
 
-
+        // // 🚫🚫🚫
         // (opcional) Mostrar estructura jerárquica si los sectores tienen padres
         function obtenerNombreJerarquico(sector, todos) {
             const cadena = [sector.nombre];
@@ -576,39 +519,177 @@
             return cadena.join(' > ');
         }
 
-        document.getElementById('form-usuario').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const form = e.target;
-            const formData = new FormData(form);
-            const modo = form.getAttribute('data-modo');
-            const legajo = form.getAttribute('data-legajo');
-
-            const url = modo === 'editar' ? `/usuarios/${legajo}` : '/usuarios';
-            const method = modo === 'editar' ? 'PUT' : 'POST';
-
+        // // 🚫🚫🚫
+        async function cargarUsuarios() {
             try {
-                const response = await fetch(url, {
-                    method: method,
-                    body: formData
+                const [sectores, usuarios] = await Promise.all([
+                    fetch('/sectores').then(r => r.json()),
+                    fetch('/usuarios').then(r => r.json())
+                ]);
+
+                // Mapa de sectores
+                const mapSectores = {};
+                sectores.forEach(s => {
+                    mapSectores[s.id] = obtenerNombreJerarquico(s, sectores);
                 });
 
-                if (response.ok) {
-                    window.location.href = 'kpi-usuarios.html';
-                } else {
-                    alert('Error al guardar el usuario');
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Error al enviar el formulario');
-            }
-        });
+                // ✅ Mapa de usuarios: legajo -> nombre completo
+                const mapUsuarios = {};
+                usuarios.forEach(u => {
+                    mapUsuarios[u.legajo] = `${u.apellido}, ${u.nombres}`;
+                });
 
+                const timestamp = Date.now();
+
+                // ✅ Destruir DataTable si existe
+                if (dataTable) {
+                    dataTable.destroy();
+                }
+
+                // ✅ Preparar datos para DataTables
+                const datos = usuarios.map(usuario => {
+                    const fotoURL = usuario.tiene_foto
+                        ? `/usuarios/foto/${usuario.legajo}?t=${timestamp}`
+                        : '/dist/images/default_user.jpg';
+
+                    const nombreSector = mapSectores[usuario.sector] || 'No asignado';
+
+                    // ✅ Obtener nombre del jefe
+                    const nombreJefe = usuario.legajo_jefe
+                        ? (mapUsuarios[usuario.legajo_jefe] || 'No encontrado')
+                        : 'Sin asignar';
+
+                    // ✅ Define botones según rol
+                    const botonesAcciones = esAdmin
+                        ? `
+                        <div style="white-space: nowrap;">
+                            <button class="btn btn-sm btn-primary" title="Ver" onclick="verDetalleUsuario('${usuario.legajo}')">
+                                <i class="fas fa-eye fa-xs"></i>
+                            </button>
+                            <button class="btn btn-sm btn-warning" title="Editar" onclick="editarUsuario('${usuario.legajo}')">
+                                <i class="fas fa-edit fa-xs"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" title="Eliminar" onclick="eliminarUsuario('${usuario.legajo}')">
+                                <i class="fas fa-trash fa-xs"></i>
+                            </button>
+                        </div>
+                        `
+                        : `
+                        <div style="white-space: nowrap;">
+                            <button class="btn btn-sm btn-primary" title="Ver" onclick="verDetalleUsuario('${usuario.legajo}')">
+                                <i class="fas fa-eye fa-xs"></i>
+                            </button>
+                        </div>
+                        `;
+
+                    return [
+                        usuario.legajo,
+                        usuario.apellido,
+                        usuario.nombres,
+                        usuario.cargo || '-',
+                        nombreSector,
+                        nombreJefe,
+                        usuario.estado,
+                        usuario.rol,
+                        `<img src="${fotoURL}" alt="foto" width="32" height="32" class="rounded-circle" style="cursor:pointer" onclick="verFoto('${fotoURL}')">`,
+                        botonesAcciones
+                    ];
+                });
+
+                // ✅ Inicializar DataTables
+                dataTable = $('#tabla-usuarios').DataTable({
+                    data: datos,
+                    responsive: true,
+                    language: {
+                        url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+                    },
+                    pageLength: 10,
+                    order: [[1, 'asc']], // Ordenar por apellido
+                    columnDefs: [
+                        { orderable: false, targets: [8, 9] }, // ✅ Actualizado índices (foto y acciones)
+                        { className: 'text-center', targets: [8, 9] }
+                    ]
+                });
+
+            } catch (err) {
+                console.error('Error cargando usuarios:', err);
+                alert('Error al cargar usuarios');
+            }
+        }
+
+        // // 🚫🚫🚫
+        async function editarUsuario(legajo) {
+            try {
+                const [usuario, usuarios, sectores] = await Promise.all([
+                    fetch(`/usuarios/${legajo}`).then(r => r.json()),
+                    fetch('/usuarios').then(r => r.json()),
+                    fetch('/sectores').then(r => r.json())
+                ]);
+
+                llenarUsuarios(usuarios, usuario.legajo_jefe);
+                llenarSelectUnidades(sectores, usuario.sector_id);
+
+                document.getElementById('nuevoUsuario').style.display = 'block';
+                document.getElementById('listaUsuarios').style.display = 'none';
+                document.getElementById('tituloTarjeta').innerText = "Modificación de datos";
+
+                const form = document.getElementById('form-usuario');
+                form.reset();
+                form.setAttribute('data-modo', 'editar');
+                form.setAttribute('data-legajo', legajo);
+
+                const emailInput = document.getElementById('email');
+                emailInput.readOnly = true;
+                emailInput.classList.add('bg-light');
+
+                for (const [key, value] of Object.entries(usuario)) {
+                    if (form.elements[key] && form.elements[key].type !== 'file') {
+                        form.elements[key].value = value;
+                    }
+                }
+
+                const fotoPreview = document.getElementById('fotoEmpleado');
+                fotoPreview.src = `/usuarios/foto/${legajo}?t=${Date.now()}`;
+
+            } catch (error) {
+                console.error('Error al cargar usuario:', error);
+                alert('No se pudo cargar el usuario.');
+            }
+        }
+
+        // // 🚫🚫🚫
+        async function eliminarUsuario(legajo) {
+            if (confirm("¿Estás seguro de que querés eliminar este usuario?")) {
+                try {
+                    const res = await fetch(`/usuarios/${legajo}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        alert("Usuario eliminado correctamente.");
+                        // location.reload();
+                        cargarUsuarios(); // ✅ Recargar DataTable
+                    } else {
+                        alert("No se pudo eliminar el usuario.");
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert("Error al eliminar el usuario.");
+                }
+            }
+        }
+
+        // // 🚫🚫🚫
+        function verFoto(url) {
+            document.getElementById('imgModalFoto').src = url;
+            const modal = new bootstrap.Modal(document.getElementById('modalFoto'));
+            modal.show();
+        }
+
+        // // 🚫🚫🚫
         function cambiarImagen() {
             // Dispara el input file oculto
             document.getElementById('inputImagen').click();
         }
 
+        // // 🚫🚫🚫
         // Cuando el usuario selecciona un archivo
         document.getElementById('inputImagen').addEventListener('change', function (event) {
             const file = event.target.files[0];
@@ -621,6 +702,7 @@
             }
         });
 
+        // // 🚫🚫🚫
         function eliminarImagen() {
             // Restablece a la imagen por defecto
             document.getElementById('fotoEmpleado').src = '/dist/images/default_user.jpg';
@@ -629,197 +711,96 @@
             document.getElementById('inputImagen').value = '';
         }
 
-        async function cargarUsuarios() {
+        // // 🚫🚫🚫
+        document.getElementById('form-usuario').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Sesión expirada. Vuelva a iniciar sesión.');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const modo = form.getAttribute('data-modo');
+            const legajo = form.getAttribute('data-legajo');
+
+            const esEdicion = modo === 'editar';
+            const url = esEdicion ? `/usuarios/${legajo}` : '/usuarios';
+            const method = esEdicion ? 'PUT' : 'POST';
+
             try {
-                // 1. Traer todos los usuarios
-                const response = await fetch('/usuarios'); // Debe estar definida en el backend
-                const usuarios = await response.json();
-
-                // 2. Traer todos los sectores
-                const responseSectores = await fetch('/sectores');
-                const sectores = await responseSectores.json();
-
-                // Crear un mapa id -> nombre (con jerarquía si querés)
-                const mapSectores = {};
-                sectores.forEach(s => {
-                    mapSectores[s.id] = obtenerNombreJerarquico(s, sectores);
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                        // ❗ NO agregar Content-Type cuando usás FormData
+                    },
+                    body: formData
                 });
 
-                const tbody = document.getElementById('tabla-usuarios');
-                tbody.innerHTML = '';
+                const data = await response.json();
 
-                usuarios.forEach(usuario => {
-                    const fotoURL = usuario.tiene_foto
-                        ? `/usuarios/foto/${usuario.legajo}?t=${Date.now()}`
-                        : '../dist/images/default_user.jpg';
-
-                    const nombreSector = mapSectores[usuario.sector] || 'No asignado';
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                <td>${usuario.legajo}</td>
-                <td>${usuario.apellido}</td>
-                <td>${usuario.nombres}</td>
-                <td>${usuario.cargo}</td>
-                <td>${nombreSector}</td>
-                <td>${usuario.estado}</td>
-                <td>${usuario.perfil}</td>
-                <td>
-                 <img src="${fotoURL}" alt="foto" width="32" height="32" class="rounded-circle" 
-                    style="cursor:pointer" onclick="verFoto('${fotoURL}')">
-                </td>
-                <td>
-                    <button class="btn btn-sm btn-warning" onclick="editarUsuario('${usuario.legajo}')">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger" onclick="eliminarUsuario('${usuario.legajo}')">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            `;
-                    tbody.appendChild(tr);
-                });
-            } catch (err) {
-                console.error('Error cargando usuarios:', err);
-            }
-        }
-
-        async function editarUsuarioXXX(legajo) {
-            try {
-                // 1. Traer datos del usuario
-                const resEmpleado = await fetch(`/usuarios/${legajo}`);
-                const empleado = await resEmpleado.json();
-
-                // 2. Traer lista de sectores
-                const resSectores = await fetch('/sectores');
-                const sectores = await resSectores.json();
-
-                // 3. Llenar el select de sectores con el sector actual marcado
-                llenarSelectUnidades(sectores, empleado.sector_id);
-
-                // 4. Llenar campos del formulario
-                document.getElementById('legajo').value = empleado.legajo;
-                document.getElementById('apellido').value = empleado.apellido;
-                document.getElementById('nombres').value = empleado.nombres;
-                document.getElementById('cargo').value = empleado.cargo;
-                document.getElementById('email').value = empleado.email;
-                document.getElementById('telefono').value = empleado.telefono || '';
-                document.getElementById('estado').value = empleado.estado;
-                document.getElementById('perfil').value = empleado.perfil;
-
-                // 5. Mostrar modal
-                const modal = new bootstrap.Modal(document.getElementById('detalleUsuarioModal'));
-                modal.show();
-
-            } catch (err) {
-                console.error('Error al cargar usuario:', err);
-            }
-        }
-
-        async function editarUsuarioZZZ(legajo) {
-            try {
-                const response = await fetch(`/usuarios/${legajo}`);
-                const usuario = await response.json();
-
-                // Traer la lista completa de usuarios para el select de jefes
-                const resUsuarios = await fetch('/usuarios');
-                const usuarios = await resUsuarios.json();
-
-                // Llenar el select y marcar el jefe actual
-                llenarUsuarios(usuarios, usuario.legajo_jefe);
-
-                // Mostrar el formulario y ocultar la lista
-                document.getElementById('nuevoUsuario').style.display = 'block';
-                document.getElementById('listaUsuarios').style.display = 'none';
-
-                // Llenar el formulario con los datos del usuario
-                const form = document.getElementById('form-usuario');
-                form.reset();
-                form.setAttribute('data-modo', 'editar');
-                form.setAttribute('data-legajo', legajo); // clave para update
-
-                // Recorremos todas las claves del objeto usuario
-                for (const [key, value] of Object.entries(usuario)) {
-                    if (form.elements[key] && form.elements[key].type !== 'file') {
-                        form.elements[key].value = value;
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        alert('No tiene permisos para realizar esta acción');
+                    } else {
+                        alert(data.error || 'Error al guardar el usuario');
                     }
+                    return;
                 }
 
-                // Mostrar la foto previa si tiene
-                const fotoPreview = document.getElementById('fotoEmpleado');
-                fotoPreview.src = `/usuarios/foto/${legajo}`;
-                fotoPreview.style.display = 'block';
-            }
-            catch (error) {
-                console.error('Error al cargar usuario:', error);
-                alert('No se pudo cargar el usuario.');
-            }
-        }
+                if (!esEdicion) {
+                    alert(`
+                            Usuario creado correctamente
 
-        async function editarUsuario(legajo) {
-            try {
-                // 1️⃣ Traer datos del usuario
-                const response = await fetch(`/usuarios/${legajo}`);
-                const usuario = await response.json();
+                            Clave temporal:
+                            ${data.password_temporal}
 
-                // 2️⃣ Traer lista de todos los usuarios para el select de jefes
-                const resUsuarios = await fetch('/usuarios');
-                const usuarios = await resUsuarios.json();
-                llenarUsuarios(usuarios, usuario.legajo_jefe); // marcar jefe actual
-
-                // 3️⃣ Traer lista de sectores y marcar el sector actual
-                const resSectores = await fetch('/sectores');
-                const sectores = await resSectores.json();
-                llenarSelectUnidades(sectores, usuario.sector_id); // marcar sector actual
-
-                // 4️⃣ Mostrar el formulario y ocultar la lista de usuarios
-                document.getElementById('nuevoUsuario').style.display = 'block';
-                document.getElementById('listaUsuarios').style.display = 'none';
-
-                // 5️⃣ Llenar el formulario con los datos del usuario
-                const form = document.getElementById('form-usuario');
-                form.reset();
-                form.setAttribute('data-modo', 'editar');
-                form.setAttribute('data-legajo', legajo); // clave para update
-
-                for (const [key, value] of Object.entries(usuario)) {
-                    if (form.elements[key] && form.elements[key].type !== 'file') {
-                        form.elements[key].value = value;
-                    }
+                            ⚠️ El usuario deberá cambiarla en el primer ingreso
+                        `);
+                } else {
+                    alert('Usuario actualizado correctamente');
                 }
 
-                // 6️⃣ Mostrar la foto previa si tiene
-                const fotoPreview = document.getElementById('fotoEmpleado');
-                fotoPreview.src = `/usuarios/foto/${legajo}?t=${Date.now()}`; // evitar cache
-                fotoPreview.style.display = 'block';
+                cancelarEdicion();
+                cargarUsuarios();
 
             } catch (error) {
-                console.error('Error al cargar usuario:', error);
-                alert('No se pudo cargar el usuario.');
+                console.error(error);
+                alert('Error al enviar el formulario');
             }
-        }
+        });
 
+        // // 🚫🚫🚫
+        const API_SECTORES = '/api/sectores'; // Reemplazá con la ruta real
 
+        let esAdmin = false;
+        document.addEventListener('DOMContentLoaded', async () => {
 
+            const usuarioLogueado = JSON.parse(localStorage.getItem('usuario'));
+            esAdmin = usuarioLogueado?.rol === 'administrador';
 
-        async function eliminarUsuario(legajo) {
-            if (confirm("¿Estás seguro de que querés eliminar este usuario?")) {
-                try {
-                    const res = await fetch(`/usuarios/${legajo}`, { method: 'DELETE' });
-                    if (res.ok) {
-                        alert("Usuario eliminado correctamente.");
-                        location.reload();
-                    } else {
-                        alert("No se pudo eliminar el usuario.");
-                    }
-                } catch (error) {
-                    console.error(error);
-                    alert("Error al eliminar el usuario.");
-                }
+            if (!esAdmin) {
+                document.getElementById('btnAgregarUsuario').style.display = 'none';
             }
-        }
 
-        document.addEventListener('DOMContentLoaded', cargarUsuarios);
+            try {
+                // Ejecutar ambas peticiones simultáneamente
+                const [sectores, usuarios] = await Promise.all([
+                    fetch(API_SECTORES).then(r => r.json()),
+                    fetch('/usuarios').then(r => r.json())
+                ]);
+
+                llenarSelectUnidades(sectores);
+                llenarUsuarios(usuarios);
+                cargarUsuarios();
+            } catch (error) {
+                console.error('Error al cargar datos:', error);
+            }
+        });
 
     </script>
 
@@ -831,58 +812,16 @@
             </div>
         </div>
     </div>
-    <script>
-        function verFoto(url) {
-            document.getElementById('imgModalFoto').src = url;
-            const modal = new bootstrap.Modal(document.getElementById('modalFoto'));
-            modal.show();
-        }
-    </script>
 
-    <!-- Modal de Confirmación de Logout -->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    Esta acción cerrará tu sesión actual y volverás a la página de inicio.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        document.getElementById('confirmLogout').addEventListener('click', function () {
-            // Limpiar lo necesario
-            sessionStorage.clear();
-            localStorage.clear(); // si usás localStorage
-
-            // Redirigir al inicio
-            window.location.href = 'index.html';
-        });
-    </script>
-
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
 
-    <!-- Bootstrap (bundle con Popper incluido) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-    <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)-->
 
-    <!--begin::OverlayScrollbars Configure-->
     <script>
         const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
         const Default = {
@@ -903,7 +842,6 @@
             }
         });
     </script>
-    <!--end::OverlayScrollbars Configure-->
 
 
     <!-- apexcharts -->
@@ -911,13 +849,13 @@
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
     <!-- ChartJS -->
 
-        <script>
+    <script>
         const avatarAudio = document.getElementById('avatarAudio');
         const btnDetener = document.getElementById('btnDetenerVoz');
 
         const textoExplicativo = `
-            Desde acá se crean los usuarios.  Se requiere informar a quien reporta cada usuario, de manera que se permita enviar notificaciones ante situaciones determinadas.  Cada usuario a su vez, tendrá una opcion personalizada para modificar sus datos de correo electrónico, teléfono y contraseña.
-            ¡Comencemos!  Aguante Juanpi!!!!!
+    Desde acá se crean los usuarios.  Se requiere informar a quien reporta cada usuario, de manera que se permita enviar notificaciones ante situaciones determinadas.  Cada usuario a su vez, tendrá una opcion personalizada para modificar sus datos de correo electrónico, teléfono y contraseña.
+    ¡Comencemos!  Aguante Juanpi!!!!!
     `;
 
         let vozSeleccionada = null;
@@ -1006,7 +944,90 @@
         }
     </style>
 
+
+    <div id="contenedorModal"></div>
+    <div id="contenedorModalMediciones"></div>
+    <div id="contenedorModalUsuario"></div>
+    <div id="contenedorModalLogout"></div>
+
+    <script>
+        // Cargar modal de indicadores
+        fetch('/modal-indicador.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModal').innerHTML = html;
+            });
+
+        // Cargar modal de mediciones
+        fetch('/modal-mediciones.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalMediciones').innerHTML = html;
+            });
+
+        // Cargar modal usuario
+        fetch('/modal-usuario.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalUsuario').innerHTML = html;
+            });
+
+        // Cargar modal logout
+        fetch('/modal-logout.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalLogout').innerHTML = html;
+
+                const btnLogout = document.getElementById('confirmLogout');
+                if (!btnLogout) return;
+
+                btnLogout.addEventListener('click', async () => {
+                    // Cerrar modal
+                    const modalEl = document.getElementById('logoutModal');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+
+                    // 🔐 Auditoría logout
+                    const token = localStorage.getItem('token');
+                    if (token) {
+                        try {
+                            await fetch('/api/auth/logout', {
+                                method: 'POST',
+                                headers: {
+                                    Authorization: 'Bearer ' + token
+                                }
+                            });
+                        } catch (e) {
+                            console.warn('No se pudo registrar logout');
+                        }
+                    }
+
+                    // 🧹 Limpiar sesión
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    // 🚀 Redirigir
+                    window.location.href = '/';
+                });
+            });
+
+    </script>
+
+    <script src="/modal-indicador.js"></script>
+    <script src="/modal-mediciones.js"></script>
+    <script src="/modal-usuario.js"></script>
+
+
+    <script src="/js/layout.js"></script>
+
+    <!-- Layout / usuario -->
+    <script src="/js/navbar-user.js"></script>
+
+    <!-- Logout -->
+    <script src="/js/logout.js"></script>
+
+
+
 </body>
-<!--end::Body-->
 
 </html>

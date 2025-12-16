@@ -34,3 +34,42 @@ COOKIE_NAME=jwt
 Variable	Para qué sirve
 JWT_SECRET	La clave con la que se firman los tokens JWT. Es obligatoria. Sin esto, tu app no puede generar ni validar tokens. Cambiala por algo largo y seguro.
 JWT_EXPIRES_IN	Tiempo de expiración del token. Podés usar “8h”, “2d”, “30m”, etc.
+
+
+
+4️⃣ Flujo final correcto (checklist)
+
+✔ Alta de usuario
+✔ Password temporal
+✔ debe_cambiar_password = 1
+✔ Login devuelve debeCambiarPassword
+✔ Redirección a cambiar-password.html
+✔ Validación fuerte en frontend (UX)
+✔ Validación fuerte en backend (seguridad)
+✔ Se borra el flag
+✔ Login normal habilitado
+
+👉 Este flujo es enterprise-grade.
+
+5️⃣ Próximo paso lógico (mañana 😉)
+
+Cuando quieras seguimos con:
+
+🚫 impedir reutilizar la última contraseña
+
+🕒 vencimiento de password
+
+📜 auditoría (password cambiado, login, logout)
+
+🔐 política por rol
+
+🔁 recuperación de contraseña (sin email por ahora)
+
+Cuando digas, seguimos.
+
+
+/js
+ ├── auth-guard.js        // controla login + rol
+ ├── navbar-user.js      // pinta nombre, rol y foto
+ ├── logout.js           // maneja logout
+ ├── layout.js           // carga navbar + modal

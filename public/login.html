@@ -69,10 +69,11 @@
 
     <form id="loginForm">
       <div class="mb-3">
-        <label for="username" class="form-label">Usuario</label>
+        <label for="username" class="form-label">Usuario (correo electrónico)</label>
+
         <div class="input-group">
           <span class="input-group-text"><i class="fas fa-user"></i></span>
-          <input type="text" class="form-control" id="username" required autofocus />
+          <input type="text" class="form-control" id="username" placeholder="correo@empresa.com" required autofocus />
         </div>
       </div>
 
@@ -129,7 +130,7 @@
       const pass = password.value.trim();
 
       if (!user || !pass) {
-        alert("Debe completar usuario y contraseñass.");
+        alert("Debe completar usuario y contraseñas.");
         return;
       }
 
@@ -156,10 +157,11 @@
         // Guardamos datos básicos del usuario (rol, nombre, etc.)
         localStorage.setItem('usuario', JSON.stringify(data.user));
 
-        // 👉 Log para ver qué llega desde el backend
-console.log("Datos recibidos del backend:", data);
-console.log("Usuario recibido:", data.usuario);
-console.log("Rol del usuario:", data.usuario?.rol);
+        if (data.debeCambiarPassword) {
+          localStorage.setItem('token', data.token);
+          window.location.href = '/cambiar-password.html';
+          return;
+        }
 
         // Redirección según rol
         switch (data.user.rol) {

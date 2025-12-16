@@ -14,7 +14,9 @@ const upload = multer(); // Esta es la línea que falta
 const cors = require('cors');
 const sectoresRoutes = require('./routes/sectores');
 const authRoutes = require('./routes/auth');
+const auditRoutes = require('./routes/auditoria');
 const verificarToken = require('./middleware/auth');
+const soloRoles = require('./middleware/roles');
 
 const app = express();
 app.use(cors());
@@ -24,6 +26,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 
 app.use('/api/sectores', sectoresRoutes);
+app.use('/api/auditoria', auditRoutes);
 
 // Archivos estáticos
 app.use(express.static('public'));
@@ -885,46 +888,182 @@ Eje X del gráfico sigue siendo 1..6 (más antiguo → más reciente).
 
 
 
-
-
 // // 🚫🚫🚫 Crear usuario con imagen
-app.post('/usuarios', upload.single('foto'), async (req, res) => {
+
+// const { crearUsuario } = require('../controllers/usuarios.controller');
+// esto queda para despues
+
+const bcrypt = require('bcrypt');
+
+app.post(
+    '/usuarios',
+    verificarToken,               // 1️⃣ valida token
+    soloRoles('administrador'),   // 2️⃣ valida rol
+    upload.single('foto'),        // 3️⃣ procesa archivo
+    async (req, res) => {
+        // tu lógica actual de alta
     try {
         const {
             legajo, apellido, nombres, email, telefono,
             cargo, sector, legajo_jefe,
-            estado, perfil
+            estado, rol
         } = req.body;
 
+        if (!email || !email.includes('@')) {
+            return res.status(400).json({ error: 'Email inválido' });
+        }
+
+        const username = email.toLowerCase();
         const fotoBuffer = req.file ? req.file.buffer : null;
 
+        // 🔍 Verificar duplicado
+        const [existe] = await pool.query(
+            'SELECT id FROM usuarios WHERE username = ?',
+            [username]
+        );
+
+        if (existe.length > 0) {
+            return res.status(409).json({
+                error: 'Ya existe un usuario con ese email'
+            });
+        }
+
+        // 🔐 Password temporal
+        const tempPassword = Math.random().toString(36).slice(-8);
+        const passwordHash = await bcrypt.hash(tempPassword, 10);
+
         const sql = `
-            INSERT INTO usuarios (
-                legajo, apellido, nombres, email, telefono, foto,
-                cargo, sector, legajo_jefe,
-                estado, perfil
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
+      INSERT INTO usuarios (
+        legajo, username, email,
+        password_hash, debe_cambiar_password,
+        apellido, nombres, telefono, foto,
+        cargo, sector, legajo_jefe,
+        estado, rol
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
 
         const values = [
-            legajo, apellido, nombres, email, telefono, fotoBuffer,
-            cargo, sector, legajo_jefe,
-            estado, perfil
+            legajo,
+            username,
+            email,
+            passwordHash,
+            1, // debe_cambiar_password
+            apellido,
+            nombres,
+            telefono,
+            fotoBuffer,
+            cargo,
+            sector,
+            legajo_jefe,
+            estado || 'activo',
+            rol || 'operador'
         ];
 
-        const [result] = await pool.execute(sql, values);
+        await pool.execute(sql, values);
 
-        res.status(201).json({ message: 'Usuario creado', userId: result.insertId });
+        // ⚠️ Mostrar solo una vez
+        res.status(201).json({
+            success: true,
+            message: 'Usuario creado correctamente',
+            password_temporal: tempPassword
+        });
+
     } catch (err) {
         console.error('Error al crear usuario:', err);
         res.status(500).json({ error: 'Error interno al guardar el usuario' });
     }
 });
 
+
+
+
+
+// app.post(
+//     '/usuarios',
+//     verificarToken,
+//     soloRoles('administrador'),
+//     upload.single('foto'),
+//     crearUsuario
+// );
+
+// app.post('/usuarios', upload.single('foto'), async (req, res) => {
+//     try {
+//         const {
+//             legajo, apellido, nombres, email, telefono,
+//             cargo, sector, legajo_jefe,
+//             estado, rol
+//         } = req.body;
+
+//         if (!email || !email.includes('@')) {
+//             return res.status(400).json({ error: 'Email inválido' });
+//         }
+
+//         const username = email.toLowerCase();
+//         const fotoBuffer = req.file ? req.file.buffer : null;
+
+//         // 🔍 Verificar duplicado
+//         const [existe] = await pool.query(
+//             'SELECT id FROM usuarios WHERE username = ?',
+//             [username]
+//         );
+
+//         if (existe.length > 0) {
+//             return res.status(409).json({
+//                 error: 'Ya existe un usuario con ese email'
+//             });
+//         }
+
+//         // 🔐 Password temporal
+//         const tempPassword = Math.random().toString(36).slice(-8);
+//         const passwordHash = await bcrypt.hash(tempPassword, 10);
+
+//         const sql = `
+//       INSERT INTO usuarios (
+//         legajo, username, email,
+//         password_hash, debe_cambiar_password,
+//         apellido, nombres, telefono, foto,
+//         cargo, sector, legajo_jefe,
+//         estado, rol
+//       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+//     `;
+
+//         const values = [
+//             legajo,
+//             username,
+//             email,
+//             passwordHash,
+//             1, // debe_cambiar_password
+//             apellido,
+//             nombres,
+//             telefono,
+//             fotoBuffer,
+//             cargo,
+//             sector,
+//             legajo_jefe,
+//             estado || 'activo',
+//             rol || 'operador'
+//         ];
+
+//         await pool.execute(sql, values);
+
+//         // ⚠️ Mostrar solo una vez
+//         res.status(201).json({
+//             success: true,
+//             message: 'Usuario creado correctamente',
+//             password_temporal: tempPassword
+//         });
+
+//     } catch (err) {
+//         console.error('Error al crear usuario:', err);
+//         res.status(500).json({ error: 'Error interno al guardar el usuario' });
+//     }
+// });
+
+
 // // 🚫🚫🚫 Leer usuarios con imagen
 app.get('/usuarios', async (req, res) => {
     try {
-        const [rows] = await pool.execute('SELECT legajo, apellido, nombres, cargo, sector,  legajo_jefe, email, estado, perfil, foto IS NOT NULL AS tiene_foto FROM usuarios ORDER BY apellido ASC, nombres ASC');
+        const [rows] = await pool.execute('SELECT legajo, apellido, nombres, cargo, sector,  legajo_jefe, email, estado, rol, foto IS NOT NULL AS tiene_foto FROM usuarios ORDER BY apellido ASC, nombres ASC');
         res.json(rows);
     } catch (error) {
         console.error('Error al obtener usuarios:', error);
@@ -937,7 +1076,7 @@ app.get('/usuarios/:legajo', async (req, res) => {
     const legajo = req.params.legajo;
 
     try {
-        const [rows] = await pool.query('SELECT legajo, apellido, nombres, email, telefono, cargo, sector, legajo_jefe, estado, perfil FROM usuarios WHERE legajo = ?',
+        const [rows] = await pool.query('SELECT legajo, apellido, nombres, email, telefono, cargo, sector, legajo_jefe, estado, rol, ultima_sesion FROM usuarios WHERE legajo = ?',
             [legajo]);
         if (rows.length > 0) {
             res.json(rows[0]);
@@ -983,16 +1122,16 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
     try {
         const {
             apellido, nombres, email, telefono, cargo, sector,
-            legajo_jefe, estado, perfil
+            legajo_jefe, estado, rol
         } = req.body;
 
         const campos = [
             'apellido = ?', 'nombres = ?', 'email = ?', 'telefono = ?',
             'cargo = ?', 'sector = ?',
-            'legajo_jefe = ?', 'estado = ?', 'perfil = ?'
+            'legajo_jefe = ?', 'estado = ?', 'rol = ?'
         ];
         const valores = [apellido, nombres, email, telefono, cargo, sector,
-            legajo_jefe, estado, perfil];
+            legajo_jefe, estado, rol];
 
         if (req.file) {
             campos.push('foto = ?');
@@ -1004,10 +1143,18 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
         const sql = `UPDATE usuarios SET ${campos.join(', ')} WHERE legajo = ?`;
         await pool.query(sql, valores);
 
-        res.sendStatus(200);
+        // ✅ RESPUESTA JSON (clave)
+        res.json({
+            success: true,
+            message: 'Usuario actualizado correctamente'
+        });
+
     } catch (err) {
-        console.error(err);
-        res.sendStatus(500);
+        console.error('Error al modificar usuario:', err);
+        res.status(500).json({
+            success: false,
+            error: 'Error interno al actualizar el usuario'
+        });
     }
 });
 
@@ -1034,6 +1181,30 @@ app.post("/api/usuarios/responsables", async (req, res) => {
 });
 
 
+app.post('/api/auth/cambiar-password', verificarToken, async (req, res) => {
+    try {
+        const { password } = req.body;
+
+        if (!password || password.length < 8) {
+            return res.status(400).json({ error: 'Password inválido' });
+        }
+
+        const hash = await bcrypt.hash(password, 10);
+
+        await pool.query(`
+            UPDATE usuarios
+            SET password_hash = ?,
+                debe_cambiar_password = 0,
+                password_updated_at = NOW()
+            WHERE id = ?
+        `, [hash, req.user.id]);
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error interno' });
+    }
+});
 
 
 
@@ -1726,10 +1897,10 @@ app.post('/api/mediciones', async (req, res) => {
                 med_legajo_resp_registro,
                 med_fecha_registro,
                 med_plan_accion,
-                med_cumplimiento,   
+                med_cumplimiento,
                 med_porcen_destino,
                 med_porcen_global,
-                med_porcen_dimension    
+                med_porcen_dimension
             ]
         );
         res.status(201).json({ ok: true, id: result.insertId });

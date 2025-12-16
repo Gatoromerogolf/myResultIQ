@@ -25,6 +25,49 @@
         </div>
     </form>
     <div id="mensaje"></div>
+
+    <script>
+        document.getElementById('formCambiarPassword').addEventListener('submit', async e => {
+            e.preventDefault();
+
+            const p1 = password1.value.trim();
+            const p2 = password2.value.trim();
+
+            if (p1.length < 8) {
+                alert('La contraseña debe tener al menos 8 caracteres');
+                return;
+            }
+
+            if (p1 !== p2) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+
+            const resp = await fetch('/api/auth/cambiar-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + token
+                },
+                body: JSON.stringify({ password: p1 })
+            });
+
+            const data = await resp.json();
+
+            if (!resp.ok) {
+                alert(data.error || 'Error al cambiar contraseña');
+                return;
+            }
+
+            alert('Contraseña actualizada correctamente');
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+
+
+    </script>
 </body>
 
 </html>
