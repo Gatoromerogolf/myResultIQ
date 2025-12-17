@@ -1,11 +1,12 @@
 // routes/auditoria.js
 const express = require('express');
 const router = express.Router();
+const pool = require("../db");
 const verificarToken = require('../middleware/auth');
 const soloRoles = require('../middleware/roles.js')
 
 router.get(
-    '/auditoria',
+    '/',
     verificarToken,
     soloRoles('administrador', 'directivo'),
     async (req, res) => {
@@ -30,6 +31,5 @@ router.get(
         }
     }
 );
-
 
 module.exports = router;

@@ -1,3 +1,5 @@
+// middleware/roles.js
+//  verifica existencia de token
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 

@@ -1,4 +1,5 @@
 // middleware/roles.js
+//  recibe roles en el backend
 function soloRoles(...rolesPermitidos) {
     return (req, res, next) => {
         if (!req.user) {

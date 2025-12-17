@@ -1,6 +1,60 @@
 <!DOCTYPE html>
 <html lang="es">
 
+<head>
+    <meta charset="UTF-8">
+    <title>myResultIQ | Entidades</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="title" content="AdminLTE v4 | Dashboard" />
+    <meta name="author" content="ColorlibHQ" />
+    <meta name="description"
+        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+    <meta name="keywords"
+        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+
+    <!--begin::Fonts-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
+
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
+
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="../css/estilos-custom.css">
+
+    <!-- apexcharts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
+
+    <!-- jsvectormap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- AdminLTE se basa en Bootstrap, así que hay que incluirlo primero:-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--  Bootstrap Icons (Para que <i class="bi bi-..."> funcione) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!--  AdminLTE CSS (Estilos del template)-->
+    <link rel="stylesheet" href="../css/adminlte.css" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+
+    <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
+    <script src="/js/auth-guard.js"></script>
+    <script>
+        authGuard({
+            rolesPermitidos: ['administrador', 'directivo', 'responsable']
+        });
+    </script>
+</head>
 <style>
     .brand-image {
         opacity: 1 !important;
@@ -29,144 +83,87 @@
     .nav-item {
         margin-bottom: 0;
     }
+
+    .brand-image {
+        opacity: 1 !important;
+        width: 40px;
+        height: auto;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        object-fit: contain;
+    }
+
+    .app-main {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+    }
+
+    .app-content-header {
+        background-color: #ffffff;
+        border-bottom: 1px solid #dee2e6;
+        padding: 1rem 0;
+    }
+
+    .card-outline {
+        border: 1px solid #dee2e6;
+    }
+
+    .badge-dimension {
+        font-size: 0.75rem;
+    }
+
+    .table-responsive {
+        border-radius: 0.375rem;
+    }
+
+    .btn-link-custom {
+        color: #0d6efd;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .btn-link-custom:hover {
+        color: #0a58ca;
+        text-decoration: underline;
+    }
+
+    .criticidad-alta {
+        color: #dc3545;
+    }
+
+    .criticidad-media {
+        color: #fd7e14;
+    }
+
+    .criticidad-baja {
+        color: #198754;
+    }
+
+    .tendencia-ascendente {
+        color: #198754;
+    }
+
+    .tendencia-descendente {
+        color: #dc3545;
+    }
+
+    .tendencia-estable {
+        color: #6c757d;
+    }
+
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
 </style>
-
-
-<head>
-    <meta charset="UTF-8">
-    <title>myResultIQ | Entidades</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="AdminLTE v4 | Dashboard" />
-    <meta name="author" content="ColorlibHQ" />
-    <meta name="description"
-        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-    <meta name="keywords"
-        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-    <!--end::Primary Meta Tags-->
-
-    <!--begin::Fonts-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
-    <!--end::Fonts-->
-
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-
-    <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
-    <!--end::Third Party Plugin(Bootstrap Icons)-->
-
-    <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../css/estilos-custom.css">
-    <!--end::Required Plugin(AdminLTE)-->
-
-    <!-- apexcharts -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
-
-    <!-- jsvectormap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
-        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <!-- AdminLTE se basa en Bootstrap, así que hay que incluirlo primero:-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!--  Bootstrap Icons (Para que <i class="bi bi-..."> funcione) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-    <!--  AdminLTE CSS (Estilos del template)-->
-    <link rel="stylesheet" href="../css/adminlte.css" />
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
-
-    <style>
-        .brand-image {
-            opacity: 1 !important;
-            width: 40px;
-            height: auto;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-            border-radius: 6px;
-            object-fit: contain;
-        }
-
-        .app-main {
-            background-color: #f8f9fa;
-            min-height: 100vh;
-        }
-
-        .app-content-header {
-            background-color: #ffffff;
-            border-bottom: 1px solid #dee2e6;
-            padding: 1rem 0;
-        }
-
-        .card-outline {
-            border: 1px solid #dee2e6;
-        }
-
-        .badge-dimension {
-            font-size: 0.75rem;
-        }
-
-        .table-responsive {
-            border-radius: 0.375rem;
-        }
-
-        .btn-link-custom {
-            color: #0d6efd;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .btn-link-custom:hover {
-            color: #0a58ca;
-            text-decoration: underline;
-        }
-
-        .criticidad-alta {
-            color: #dc3545;
-        }
-
-        .criticidad-media {
-            color: #fd7e14;
-        }
-
-        .criticidad-baja {
-            color: #198754;
-        }
-
-        .tendencia-ascendente {
-            color: #198754;
-        }
-
-        .tendencia-descendente {
-            color: #dc3545;
-        }
-
-        .tendencia-estable {
-            color: #6c757d;
-        }
-
-        .filters-bar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            background: white;
-            border-radius: 8px;
-            padding: 10px 15px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
-        }
-    </style>
-
 </head>
-
-<!-- <body class="hold-transition sidebar-mini"> -->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">

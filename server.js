@@ -24,7 +24,6 @@ app.use(express.json());
 
 // Rutas públicas:
 app.use('/api/auth', authRoutes);
-
 app.use('/api/sectores', sectoresRoutes);
 app.use('/api/auditoria', auditRoutes);
 

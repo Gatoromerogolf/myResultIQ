@@ -95,6 +95,17 @@
     <link rel="stylesheet" href="../css/adminlte.css" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+
+    <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
+    <script src="/js/auth-guard.js"></script>
+    <script>
+        authGuard({
+            rolesPermitidos: ['administrador', 'directivo', 'responsable']
+        });
+    </script>
+
+
+
 </head>
 <!--end::Head-->
 <!--begin::Body-->

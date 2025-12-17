@@ -1,66 +1,5 @@
 <!doctype html>
 <html lang="en">
-<!--begin::Head-->
-
-<!-- <style>
-    .brand-image {
-        opacity: 1 !important;
-        width: 40px;
-        height: auto;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        object-fit: contain;
-    }
-
-    .app-sidebar {
-        height: 100vh;
-        /* que ocupe toda la altura de la ventana */
-        overflow-y: auto;
-        /* permite scroll vertical */
-        overflow-x: hidden;
-        /* evita scroll horizontal */
-    }
-
-    .nav-item .nav-link {
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
-        font-size: 0.9rem;
-    }
-
-    .nav-item {
-        margin-bottom: 0;
-    }
-
-    .filters-bar {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 10px;
-        background: white;
-        border-radius: 8px;
-        padding: 10px 15px;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-        margin-bottom: 20px;
-    }
-
-    /* Agregar margen al selector de registros */
-    .dataTables_length {
-        margin-left: 15px;
-        margin-bottom: 15px;
-    }
-
-    /* También puedes agregar margen al buscador si lo necesitas */
-    .dataTables_filter {
-        margin-right: 15px;
-        margin-bottom: 15px;
-    }
-
-    /* Margen general a todos los controles de DataTables */
-    .dataTables_wrapper .row {
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-</style> -->
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -102,6 +41,11 @@
 
     <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
     <script src="/js/auth-guard.js"></script>
+    <script>
+        authGuard({
+            rolesPermitidos: ['administrador', 'directivo', 'responsble', 'operador', 'otro']
+        });
+    </script>
 
 </head>
 <style>

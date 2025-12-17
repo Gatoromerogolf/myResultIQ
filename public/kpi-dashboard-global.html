@@ -1,34 +1,5 @@
 <!doctype html>
 <html lang="en">
-<style>
-    .brand-image {
-        opacity: 1 !important;
-        width: 40px;
-        height: auto;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        object-fit: contain;
-    }
-
-    .app-sidebar {
-        height: 100vh;
-        /* que ocupe toda la altura de la ventana */
-        overflow-y: auto;
-        /* permite scroll vertical */
-        overflow-x: hidden;
-        /* evita scroll horizontal */
-    }
-
-    .nav-item .nav-link {
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
-        font-size: 0.9rem;
-    }
-
-    .nav-item {
-        margin-bottom: 0;
-    }
-</style>
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -82,262 +53,297 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-    <style>
-        :root {
-            --bg: #c75509;
-            --card: #3c0de6;
-            --muted: #01050c;
-            --accent: #2563eb
-        }
-
-        body {
-            font-family: Inter, ui-sans-serif, system-ui, Arial;
-            margin: 0;
-            background: var(--bg);
-            color: #111
-        }
-
-        .app {
-            max-width: 1100px;
-            margin: 28px auto;
-            padding: 20px
-        }
-
-        header {
-            display: flex;
-            align-items: center;
-            gap: 16px
-        }
-
-        h1 {
-            font-size: 20px;
-            margin: 0
-        }
-
-        .breadcrumb {
-            margin-top: 12px;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap
-        }
-
-        .crumb {
-            background: var(--card);
-            padding: 6px 10px;
-            border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
-            cursor: pointer
-        }
-
-        .panel {
-            display: grid;
-            grid-template-columns: 360px 1fr;
-            gap: 18px;
-            margin-top: 18px
-        }
-
-        .left,
-        .right {
-            background: var(--card);
-            padding: 16px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04)
-        }
-
-        .overview {
-            display: flex;
-            align-items: center;
-            gap: 16px
-        }
-
-        .progress-ring {
-            width: 120px;
-            height: 120px;
-            flex: 0 0 120px
-        }
-
-        .summary {
-            flex: 1
-        }
-
-        .big-number {
-            font-size: 28px;
-            font-weight: 700
-        }
-
-        .muted {
-            color: var(--muted);
-            font-size: 13px
-        }
-
-        .controls {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px
-        }
-
-        button {
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            background: #fff;
-            cursor: pointer
-        }
-
-        footer {
-            margin-top: 14px;
-            color: var(--muted);
-            font-size: 13px
-        }
-
-        @media (max-width:880px) {
-            .panel {
-                grid-template-columns: 1fr
-            }
-        }
-
-        .children-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        #childrenArea {
-            /* Contenedor de fichas */
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
-            justify-content: start;
-            /* Alinea las fichas a la izquierda */
-        }
-
-        .tile {
-            background: #fa3737;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            cursor: pointer;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-        }
-
-        .tile .title {
-            /* Título y subtítulo dentro de cada ficha */
-            font-weight: 600;
-            margin-bottom: 4px;
-            word-break: break-word;
-            /* Asegura que el título también respete los límites */
-            overflow-wrap: anywhere;
-        }
-
-        .tile .sub {
-            font-size: 12px;
-            color: #7d6c6f;
-            line-height: 1.4;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-        }
-
-        .bar {
-            height: 10px;
-            background: #e9ecef;
-            border-radius: 8px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-
-        .bar>i {
-            display: block;
-            height: 100%;
-            border-radius: 8px;
-            background: linear-gradient(90deg, #007bff, #66b0ff);
-        }
-
-        /* --- Header y asistente --- */
-        .filters-bar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            background: white;
-            border-radius: 8px;
-            padding: 10px 15px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
-        }
-
-        .children-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 12px;
-        }
-
-        #indicatorDetail {
-            min-height: 280px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .chart-container {
-            width: 360px;
-            height: 260px;
-            margin: auto;
-        }
-
-        #indicatorDetailCanvas {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-            flex-wrap: wrap;
-        }
-
-        /* Permitir shrink dentro de Bootstrap */
-        .col-md-8 {
-            min-width: 0;
-        }
-
-        .chart-box {
-            flex: 1 1 350px;
-            border: 2px solid #e1e1e1;
-            border-radius: 8px;
-            padding: 12px;
-            background: #fafafa;
-
-            height: 360px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chart-box canvas {
-            flex: 1;
-            width: 100% !important;
-            height: 100% !important;
-        }
-
-        .bar-legend {
-            font-size: 13px;
-            line-height: 1.3;
-            padding: 10px;
-            border-top: 1px solid #ccc;
-            flex-shrink: 0;
-        }
-
-        .bar-legend-item {
-            margin-bottom: 3px;
-        }
-
-        /* En pantallas medianas → el de barras baja */
-        @media (max-width: 1100px) {
-            .chart-box {
-                flex: 1 1 100%;
-                height: auto;
-            }
-        }
-    </style>
+    <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
+    <script src="/js/auth-guard.js"></script>
+    <script>
+        authGuard({
+            rolesPermitidos: ['administrador', 'directivo', 'responsable']
+        });
+    </script>
 
 </head>
+<style>
+    .brand-image {
+        opacity: 1 !important;
+        width: 40px;
+        height: auto;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        object-fit: contain;
+    }
+
+    .app-sidebar {
+        height: 100vh;
+        /* que ocupe toda la altura de la ventana */
+        overflow-y: auto;
+        /* permite scroll vertical */
+        overflow-x: hidden;
+        /* evita scroll horizontal */
+    }
+
+    .nav-item .nav-link {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .nav-item {
+        margin-bottom: 0;
+    }
+
+    :root {
+        --bg: #c75509;
+        --card: #3c0de6;
+        --muted: #01050c;
+        --accent: #2563eb
+    }
+
+    body {
+        font-family: Inter, ui-sans-serif, system-ui, Arial;
+        margin: 0;
+        background: var(--bg);
+        color: #111
+    }
+
+    .app {
+        max-width: 1100px;
+        margin: 28px auto;
+        padding: 20px
+    }
+
+    header {
+        display: flex;
+        align-items: center;
+        gap: 16px
+    }
+
+    h1 {
+        font-size: 20px;
+        margin: 0
+    }
+
+    .breadcrumb {
+        margin-top: 12px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap
+    }
+
+    .crumb {
+        background: var(--card);
+        padding: 6px 10px;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+        cursor: pointer
+    }
+
+    .panel {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 18px;
+        margin-top: 18px
+    }
+
+    .left,
+    .right {
+        background: var(--card);
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04)
+    }
+
+    .overview {
+        display: flex;
+        align-items: center;
+        gap: 16px
+    }
+
+    .progress-ring {
+        width: 120px;
+        height: 120px;
+        flex: 0 0 120px
+    }
+
+    .summary {
+        flex: 1
+    }
+
+    .big-number {
+        font-size: 28px;
+        font-weight: 700
+    }
+
+    .muted {
+        color: var(--muted);
+        font-size: 13px
+    }
+
+    .controls {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px
+    }
+
+    button {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        background: #fff;
+        cursor: pointer
+    }
+
+    footer {
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 13px
+    }
+
+    @media (max-width:880px) {
+        .panel {
+            grid-template-columns: 1fr
+        }
+    }
+
+    .children-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    #childrenArea {
+        /* Contenedor de fichas */
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+        justify-content: start;
+        /* Alinea las fichas a la izquierda */
+    }
+
+    .tile {
+        background: #fa3737;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .tile .title {
+        /* Título y subtítulo dentro de cada ficha */
+        font-weight: 600;
+        margin-bottom: 4px;
+        word-break: break-word;
+        /* Asegura que el título también respete los límites */
+        overflow-wrap: anywhere;
+    }
+
+    .tile .sub {
+        font-size: 12px;
+        color: #7d6c6f;
+        line-height: 1.4;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    .bar {
+        height: 10px;
+        background: #e9ecef;
+        border-radius: 8px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+
+    .bar>i {
+        display: block;
+        height: 100%;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #007bff, #66b0ff);
+    }
+
+    /* --- Header y asistente --- */
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
+
+    .children-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 12px;
+    }
+
+    #indicatorDetail {
+        min-height: 280px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .chart-container {
+        width: 360px;
+        height: 260px;
+        margin: auto;
+    }
+
+    #indicatorDetailCanvas {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    /* Permitir shrink dentro de Bootstrap */
+    .col-md-8 {
+        min-width: 0;
+    }
+
+    .chart-box {
+        flex: 1 1 350px;
+        border: 2px solid #e1e1e1;
+        border-radius: 8px;
+        padding: 12px;
+        background: #fafafa;
+
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chart-box canvas {
+        flex: 1;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .bar-legend {
+        font-size: 13px;
+        line-height: 1.3;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+        flex-shrink: 0;
+    }
+
+    .bar-legend-item {
+        margin-bottom: 3px;
+    }
+
+    /* En pantallas medianas → el de barras baja */
+    @media (max-width: 1100px) {
+        .chart-box {
+            flex: 1 1 100%;
+            height: auto;
+        }
+    }
+</style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
@@ -465,92 +471,12 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </section>
-
-                    <!-- <section class="content mt-3" id="grafico-evolucion" style="display: none;">
-                        <div class="container-fluid">
-                            <div class="card card-primary card-outline">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card mb-4">
-                                                <div class="card-header"> -->
-                    <!-- <h5 class="card-title">Reporte de Evolución</h5> -->
-
-                    <!-- <div class="card-tools">
-                                                        <button type="button" class="btn btn-tool"
-                                                            data-lte-toggle="card-collapse">
-                                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                                                        </button>
-                                                        <div class="btn-group">
-                                                            <button type="button" class="btn btn-tool dropdown-toggle"
-                                                                data-bs-toggle="dropdown">
-                                                                <i class="bi bi-wrench"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu dropdown-menu-end" role="menu">
-                                                                <a href="#" class="dropdown-item">Action</a>
-                                                                <a href="#" class="dropdown-item">Another action</a>
-                                                                <a href="#" class="dropdown-item"> Something else here
-                                                                </a>
-                                                                <a class="dropdown-divider"></a>
-                                                                <a href="#" class="dropdown-item">Separated link</a>
-                                                            </div>
-                                                        </div>
-                                                        <button type="button" class="btn btn-tool"
-                                                            data-lte-toggle="card-remove">
-                                                            <i class="bi bi-x-lg"></i>
-                                                        </button>
-                                                    </div> -->
-                    <!-- </div>
-
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <p class="text-center">
-                                                                    <strong>Evolución histórica</strong>
-                                                                </p>
-                                                                <div>
-                                                                    <button id="btnLine"
-                                                                        class="btn btn-sm btn-primary">Línea</button>
-                                                                    <button id="btnArea"
-                                                                        class="btn btn-sm btn-success">Área</button>
-                                                                    <button id="btnBar"
-                                                                        class="btn btn-sm btn-warning">Barra</button>
-                                                                </div>
-                                                                <div id="sales-chart"></div>
-                                                            </div>
-                                                        </div>
-                                                    </div> -->
-
-                    <!-- 🔽 KPIs al pie
-                                                    <div class="row mt-4" id="kpiCards"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                    </section> -->
-
-                    <!-- <section class="content mt-3" id="analisis-automatico" style="display: none;">
-                        <div class="container-fluid">
-                            <div class="card card-primary card-outline">
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <div class="bg-white rounded shadow-sm p-4">
-                                            <h4 class="fw-bold mb-3">📋 Destacados</h4>
-                                            <div class="row" id="analisisContainer"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section> -->
 
                     <div id="graficoIndicadorFull"></div>
                     <div id="kpiTarjetasFull"></div>
@@ -926,6 +852,7 @@
             });
         }
 
+        // // 🚫🚫🚫  render
         function renderChildren(node) {
 
             const container = document.getElementById("childrenArea");
@@ -1128,7 +1055,6 @@
             });
 
         }
-
 
 
         // // 🚫🚫🚫  renderChildren(node)
@@ -1430,7 +1356,7 @@
 
                 // Evento botón evolución
                 document.getElementById('btnEvolucion').onclick = async () => {
-                document.getElementById('grafico-evolucion-Full').style.display = 'block';
+                    document.getElementById('grafico-evolucion-Full').style.display = 'block';
 
                     // 🔎 Traemos el indicador completo DESDE backend
                     const resp = await fetch(`/api/indicadores/${node.codigo_id}`);
@@ -1561,71 +1487,6 @@
         }
 
 
-
-
-
-
-        function XXXcrearKPICards(datos) {
-
-            const kpis = [
-                {
-                    titulo: 'Valor Actual',
-                    valor: `${datos.valorActual ?? '-'}`,
-                    subtitulo: `${datos.cambio >= 0 ? '↗️' : '↘️'} ${datos.cambio >= 0 ? '+' : ''}${datos.cambio}% vs medición anterior`,
-                    color: datos.cambio >= 0 ? '#198754' : '#dc3545',
-                    icono: '💰'
-                },
-                {
-                    titulo: 'Cumplimiento Meta',
-                    valor: `${datos.cumplimiento ?? '-'}%`,
-                    subtitulo: `Meta: ${datos.meta ?? '-'}`,
-                    color: datos.cumplimiento >= 100 ? '#198754' : '#ffc107',
-                    icono: '🎯'
-                },
-                {
-                    titulo: 'Promedio',
-                    valor: `${datos.promedio6 ?? '-'}`,
-                    subtitulo: datos.rangoMeses ?? '',
-                    color: '#6c757d',
-                    icono: '📊'
-                },
-                {
-                    titulo: 'Mejor Resultado',
-                    valor: `${datos.mejorMesValor ?? '-'}`,
-                    subtitulo: datos.mejorMesNombre ?? '',
-                    color: '#0dcaf0',
-                    icono: '🏆'
-                },
-                {
-                    titulo: 'Tendencia',
-                    valor: `${datos.tendencia}`,
-                    subtitulo: datos.variacion,
-                    color: datos.colorTendencia,
-                    icono: datos.iconoTendencia
-                }
-            ];
-
-            const container = document.getElementById('kpiCards');
-            container.className = "row gx-3 gy-3 p-3";
-            container.innerHTML = kpis.map(kpi => `
-                    <div class="col-md-6 col-lg-3 mb-3 ml-3">
-                        <div class="card kpi-card h-100" style="border-left: 4px solid ${kpi.color}">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <p class="text-muted small mb-1">${kpi.titulo}</p>
-                                        <h2 class="kpi-value mb-1" style="color: ${kpi.color}">${kpi.valor}</h2>
-                                        <p class="text-muted small mb-0">${kpi.subtitulo}</p>
-                                    </div>
-                                    <span style="font-size: 2rem;">${kpi.icono}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-        }
-
-
         // // 🚫🚫🚫  Exportación CSV
         function exportCSV() {
             const rows = [];
@@ -1667,7 +1528,6 @@
         // document.getElementById('btnExport').onclick = exportCSV;  -- se anula el botón
 
         render();
-
 
     </script>
 
