@@ -28,6 +28,7 @@ router.post("/login", async (req, res) => {
         const [rows] = await pool.query(
             `SELECT 
                 id,
+                legajo,
                 username,
                 password_hash,
                 rol,
@@ -119,6 +120,7 @@ router.post("/login", async (req, res) => {
             token,
             user: {
                 id: user.id,
+                legajo: user.legajo,
                 username: user.username,
                 rol: user.rol,
                 apellido: user.apellido,

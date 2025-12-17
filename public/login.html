@@ -157,6 +157,8 @@
         // Guardamos datos básicos del usuario (rol, nombre, etc.)
         localStorage.setItem('usuario', JSON.stringify(data.user));
 
+        alert (`datos usuario ${data.user.legajo}`)
+
         if (data.debeCambiarPassword) {
           localStorage.setItem('token', data.token);
           window.location.href = '/cambiar-password.html';

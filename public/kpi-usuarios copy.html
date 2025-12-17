@@ -48,6 +48,7 @@
     </script>
 
 </head>
+
 <style>
     .brand-image {
         opacity: 1 !important;
@@ -65,17 +66,6 @@
         /* permite scroll vertical */
         overflow-x: hidden;
         /* evita scroll horizontal */
-    }
-
-    /* ===== ALTURA DE LA NAVBAR ===== */
-    .app-header.navbar {
-        min-height: 70px;
-        padding: 0.75rem 0;
-    }
-
-    .app-header .navbar-nav .nav-link {
-        padding: 0.75rem 1rem;
-
     }
 
     .nav-item .nav-link {
@@ -118,30 +108,155 @@
         margin-right: 10px;
     }
 
+
+    /* ===== DROPDOWN MODERNO ===== */
+    .user-dropdown {
+        min-width: 280px;
+        background: #ffffff !important;
+        border-radius: 12px !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+        border: 1px solid #e0e0e0 !important;
+        padding: 0 !important;
+        margin-top: 8px !important;
+        overflow: hidden;
+    }
+
+    /* Header del dropdown - SIN AZUL */
+    .user-dropdown-header {
+        padding: 20px;
+        background: #f8f9fa !important;
+        border-bottom: 1px solid #e9ecef;
+        text-align: center;
+    }
+
+    .user-dropdown-header img {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        margin-bottom: 10px;
+    }
+
+    .user-dropdown-header p {
+        margin: 0;
+        font-weight: 600;
+        color: #333 !important;
+        font-size: 1rem;
+    }
+
+    .user-dropdown-header small {
+        color: #6c757d !important;
+        font-size: 0.85rem;
+    }
+
+    /* Body del dropdown */
+    .user-dropdown-body {
+        padding: 12px 0;
+        background: #ffffff;
+    }
+
+    .user-dropdown-body .row {
+        margin: 0;
+    }
+
+    .user-dropdown-body a {
+        display: block;
+        padding: 12px 20px;
+        color: #333;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+        font-size: 0.9rem;
+    }
+
+    .user-dropdown-body a:hover {
+        background-color: #f8f9fa;
+    }
+
+    .user-dropdown-body i {
+        width: 20px;
+        margin-right: 8px;
+        text-align: center;
+    }
+
+    /* Footer del dropdown */
+    .user-dropdown-footer {
+        padding: 12px 20px;
+        border-top: 1px solid #e9ecef;
+        background: #ffffff;
+        text-align: center;
+    }
+
+    .user-dropdown-footer .btn {
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        border: none;
+        color: #dc3545;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: background-color 0.2s ease;
+    }
+
+    .user-dropdown-footer .btn:hover {
+        background-color: #fee;
+    }
+
     /* Avatar en navbar */
     .user-avatar {
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
         cursor: pointer;
         border-radius: 50%;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         transition: transform 0.2s;
         object-fit: cover;
-        margin-top: 5px;
     }
 
     .user-avatar:hover {
         transform: scale(1.05);
     }
 
-    .user-dropdown-header {
-        padding: 28px 20px;
-        /* Más espacio vertical */
+    /* Quitar estilos de AdminLTE */
+    .navbar-nav .nav-link {
+        background-color: transparent !important;
     }
 
-    .user-dropdown-header img {
+    .navbar-nav .dropdown-toggle::after {
+        display: none;
+    }
+
+    /* Ocultar clases de AdminLTE que causan problemas */
+    .user-menu .user-header.bg-primary {
+        background: #f8f9fa !important;
+    }
+
+    /* DataTables */
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
+
+    .dataTables_length {
+        margin-left: 15px;
         margin-bottom: 15px;
-        /* Más separación del texto */
+    }
+
+    .dataTables_filter {
+        margin-right: 15px;
+        margin-bottom: 15px;
+    }
+
+    .dataTables_wrapper .row {
+        margin-left: 10px;
+        margin-right: 10px;
     }
 </style>
 
@@ -149,13 +264,18 @@
     <div class="app-wrapper">
         <nav class="app-header navbar navbar-expand bg-body">
             <div class="container-fluid">
+                <!-- Toggle Sidebar -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
+                </ul>
 
+                <!-- Right navbar links -->
+                <ul class="navbar-nav ms-auto">
+                    <!-- Fullscreen -->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
                             <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
@@ -163,29 +283,16 @@
                         </a>
                     </li>
 
-                    <div class="avatar-container d-flex align-items-center gap-2 me-2">
-                        <div style="position: relative;">
-                            <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:50px; height:50px; cursor:pointer; border-radius:50%; 
-                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
-                                title="Haz clic para escuchar la explicación" />
-                            <button id="btnDetenerVoz"
-                                style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
-                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
-                                ✕
-                            </button>
-                        </div>
-                        <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
-                    </div>
-                </ul>
-
-                <ul class="navbar-nav ms-auto">
-
-                    <!-- Usuario -->
+                    <!-- User Dropdown -->
                     <li class="nav-item dropdown user-menu">
-                        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
+                        <a href="#"
+                            class="nav-link dropdown-toggle d-flex align-items-center"
+                            data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            <img id="userAvatar" src="/dist/images/default_user.jpg" class="user-avatar" alt="Usuario">
-                            <span id="userName" class="d-none d-md-inline ms-2">Usuario</span>
+                        <img id="userAvatar"
+                            src="/dist/images/default_user.jpg"
+                            class="user-avatar" alt="Usuario">
+                        <span id="userName" class="d-none d-md-inline ms-2">Usuario</span>
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end user-dropdown">
@@ -215,10 +322,11 @@
                                 </div>
                             </li>
 
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt"></i> Salir 2
-                                </a>
+                            <!-- Footer -->
+                            <li class="user-dropdown-footer">
+                                <button id="logoutBtn" class="btn btn-default text-danger">
+                                    <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                                </button>
                             </li>
                         </ul>
                     </li>
@@ -261,6 +369,20 @@
                             <h3 class="mb-0">Usuarios</h3>
                         </div>
 
+                        <!-- 🔹 Avatar asistente alineado a la derecha -->
+                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                            <div style="position: relative;">
+                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:50px; height:50px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                    title="Haz clic para escuchar la explicación" />
+                                <button id="btnDetenerVoz"
+                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                    ✕
+                                </button>
+                            </div>
+                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                        </div>
                     </div>
                     <!--end::Row-->
 
@@ -451,6 +573,12 @@
 
     <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
     <script src="/js/auth-guard.js"></script>
+    <script src="/js/auth-guard.js"></script>
+    <script>
+        authGuard({
+            rolesPermitidos: ['administrador', 'directivo', 'responsable', 'operador']
+        });
+    </script>
 
     <script>
 

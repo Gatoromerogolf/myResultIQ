@@ -16,17 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (userNameEl) {
         userNameEl.innerHTML = `
-            Bienvenido 
             <strong>${usuario.nombres} ${usuario.apellido}</strong>
             <span class="text-muted">(${usuario.rol.toUpperCase()})</span>
         `;
     }
 
-    if (userAvatarEl) {
-        userAvatarEl.src = usuario.tiene_foto
-            ? `/usuarios/foto/${usuario.id}?t=${Date.now()}`
-            : '/dist/images/default_user.jpg';
-    }
+    userAvatarEl.src = `/usuarios/foto/${usuario.legajo}?t=${Date.now()}`;
+
+    userAvatarEl.onerror = () => {
+        userAvatarEl.src = '/dist/images/default_user.jpg';
+    };
+
 });
 
 

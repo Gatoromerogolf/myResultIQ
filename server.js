@@ -901,37 +901,37 @@ app.post(
     upload.single('foto'),        // 3️⃣ procesa archivo
     async (req, res) => {
         // tu lógica actual de alta
-    try {
-        const {
-            legajo, apellido, nombres, email, telefono,
-            cargo, sector, legajo_jefe,
-            estado, rol
-        } = req.body;
+        try {
+            const {
+                legajo, apellido, nombres, email, telefono,
+                cargo, sector, legajo_jefe,
+                estado, rol
+            } = req.body;
 
-        if (!email || !email.includes('@')) {
-            return res.status(400).json({ error: 'Email inválido' });
-        }
+            if (!email || !email.includes('@')) {
+                return res.status(400).json({ error: 'Email inválido' });
+            }
 
-        const username = email.toLowerCase();
-        const fotoBuffer = req.file ? req.file.buffer : null;
+            const username = email.toLowerCase();
+            const fotoBuffer = req.file ? req.file.buffer : null;
 
-        // 🔍 Verificar duplicado
-        const [existe] = await pool.query(
-            'SELECT id FROM usuarios WHERE username = ?',
-            [username]
-        );
+            // 🔍 Verificar duplicado
+            const [existe] = await pool.query(
+                'SELECT id FROM usuarios WHERE username = ?',
+                [username]
+            );
 
-        if (existe.length > 0) {
-            return res.status(409).json({
-                error: 'Ya existe un usuario con ese email'
-            });
-        }
+            if (existe.length > 0) {
+                return res.status(409).json({
+                    error: 'Ya existe un usuario con ese email'
+                });
+            }
 
-        // 🔐 Password temporal
-        const tempPassword = Math.random().toString(36).slice(-8);
-        const passwordHash = await bcrypt.hash(tempPassword, 10);
+            // 🔐 Password temporal
+            const tempPassword = Math.random().toString(36).slice(-8);
+            const passwordHash = await bcrypt.hash(tempPassword, 10);
 
-        const sql = `
+            const sql = `
       INSERT INTO usuarios (
         legajo, username, email,
         password_hash, debe_cambiar_password,
@@ -941,37 +941,37 @@ app.post(
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-        const values = [
-            legajo,
-            username,
-            email,
-            passwordHash,
-            1, // debe_cambiar_password
-            apellido,
-            nombres,
-            telefono,
-            fotoBuffer,
-            cargo,
-            sector,
-            legajo_jefe,
-            estado || 'activo',
-            rol || 'operador'
-        ];
+            const values = [
+                legajo,
+                username,
+                email,
+                passwordHash,
+                1, // debe_cambiar_password
+                apellido,
+                nombres,
+                telefono,
+                fotoBuffer,
+                cargo,
+                sector,
+                legajo_jefe,
+                estado || 'activo',
+                rol || 'operador'
+            ];
 
-        await pool.execute(sql, values);
+            await pool.execute(sql, values);
 
-        // ⚠️ Mostrar solo una vez
-        res.status(201).json({
-            success: true,
-            message: 'Usuario creado correctamente',
-            password_temporal: tempPassword
-        });
+            // ⚠️ Mostrar solo una vez
+            res.status(201).json({
+                success: true,
+                message: 'Usuario creado correctamente',
+                password_temporal: tempPassword
+            });
 
-    } catch (err) {
-        console.error('Error al crear usuario:', err);
-        res.status(500).json({ error: 'Error interno al guardar el usuario' });
-    }
-});
+        } catch (err) {
+            console.error('Error al crear usuario:', err);
+            res.status(500).json({ error: 'Error interno al guardar el usuario' });
+        }
+    });
 
 
 
@@ -1096,7 +1096,7 @@ app.get('/usuarios/foto/:legajo', async (req, res) => {
             res.set('Content-Type', 'image/jpeg');
             res.send(rows[0].foto);
         } else {
-            res.redirect('/images/default-user.jpg'); // o mandá 404
+            res.sendFile(path.join(__dirname, 'public/images/default-user.jpg'));
         }
     } catch (err) {
         console.error(err);
