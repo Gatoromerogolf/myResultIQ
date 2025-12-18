@@ -2,48 +2,6 @@
 <html lang="en">
 <!--begin::Head-->
 
-<style>
-    .brand-image {
-        opacity: 1 !important;
-        width: 40px;
-        height: auto;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        object-fit: contain;
-    }
-
-    .app-sidebar {
-        height: 100vh;
-        /* que ocupe toda la altura de la ventana */
-        overflow-y: auto;
-        /* permite scroll vertical */
-        overflow-x: hidden;
-        /* evita scroll horizontal */
-    }
-
-    .nav-item .nav-link {
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
-        font-size: 0.9rem;
-    }
-
-    .nav-item {
-        margin-bottom: 0;
-    }
-
-    .filters-bar {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 10px;
-        background: white;
-        border-radius: 8px;
-        padding: 10px 15px;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-        margin-bottom: 20px;
-    }
-</style>
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>myResultIQ | Dashboard</title>
@@ -85,171 +43,196 @@
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 
 
+    <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
+    <script src="/js/auth-guard.js"></script>
+    <script>
+        authGuard({
+            rolesPermitidos: ['administrador', 'directivo', 'responsble', 'operador', 'otro']
+        });
+    </script>
 </head>
-<!--end::Head-->
-<!--begin::Body-->
+
+
+<style>
+    .brand-image {
+        opacity: 1 !important;
+        width: 40px;
+        height: auto;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        object-fit: contain;
+    }
+
+    .app-sidebar {
+        height: 100vh;
+        /* que ocupe toda la altura de la ventana */
+        overflow-y: auto;
+        /* permite scroll vertical */
+        overflow-x: hidden;
+        /* evita scroll horizontal */
+    }
+
+    /* ===== ALTURA DE LA NAVBAR ===== */
+    .app-header.navbar {
+        min-height: 70px;
+        padding: 0.75rem 0;
+    }
+
+    .app-header .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+
+    }
+
+    .nav-item .nav-link {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .nav-item {
+        margin-bottom: 0;
+    }
+
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
+
+    /* Agregar margen al selector de registros */
+    .dataTables_length {
+        margin-left: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* También puedes agregar margen al buscador si lo necesitas */
+    .dataTables_filter {
+        margin-right: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* Margen general a todos los controles de DataTables */
+    .dataTables_wrapper .row {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    /* Avatar en navbar */
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s;
+        object-fit: cover;
+        margin-top: 5px;
+    }
+
+    .user-avatar:hover {
+        transform: scale(1.05);
+    }
+
+    .user-dropdown-header {
+        padding: 28px 20px;
+        /* Más espacio vertical */
+    }
+
+    .user-dropdown-header img {
+        margin-bottom: 15px;
+        /* Más separación del texto */
+    }
+</style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <!--begin::App Wrapper-->
     <div class="app-wrapper">
-        <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body">
-            <!--begin::Container-->
             <div class="container-fluid">
-                <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
-                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li> -->
-                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
-                </ul>
-                <!--end::Start Navbar Links-->
-                <!--begin::End Navbar Links-->
-                <ul class="navbar-nav ms-auto">
-                    <!--begin::Navbar Search-->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                            <i class="bi bi-search"></i>
-                        </a>
-                    </li> -->
-                    <!--end::Navbar Search-->
 
-                    <!--begin::Messages Dropdown Menu-->
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                            <i class="bi bi-chat-text"></i>
-                            <span class="navbar-badge badge text-bg-danger">3</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user1-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            Brad Diesel
-                                            <span class="float-end fs-7 text-danger"><i
-                                                    class="bi bi-star-fill"></i></span>
-                                        </h3>
-                                        <p class="fs-7">Call me whenever you can...</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user8-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            John Pierce
-                                            <span class="float-end fs-7 text-secondary">
-                                                <i class="bi bi-star-fill"></i>
-                                            </span>
-                                        </h3>
-                                        <p class="fs-7">I got your message bro</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user3-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            Nora Silvester
-                                            <span class="float-end fs-7 text-warning">
-                                                <i class="bi bi-star-fill"></i>
-                                            </span>
-                                        </h3>
-                                        <p class="fs-7">The subject goes here</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                        </div>
-                    </li> -->
-                    <!--end::Messages Dropdown Menu-->
-                    <!--begin::Notifications Dropdown Menu-->
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                            <i class="bi bi-bell-fill"></i>
-                            <span class="navbar-badge badge text-bg-warning">15</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            <span class="dropdown-item dropdown-header">15 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-envelope me-2"></i> 4 new messages
-                                <span class="float-end text-secondary fs-7">3 mins</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-people-fill me-2"></i> 8 friend requests
-                                <span class="float-end text-secondary fs-7">12 hours</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
-                                <span class="float-end text-secondary fs-7">2 days</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
-                        </div>
-                    </li> -->
-                    <!--end::Notifications Dropdown Menu-->
-
-                    <!--begin::Fullscreen Toggle-->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
                             <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
                             <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
                         </a>
                     </li>
-                    <!--end::Fullscreen Toggle-->
 
-                    <!--begin::User Menu Dropdown"-->
-                    <li class="nav-item dropdown1 user-menu">
-
-                        <span class="nav-link dropdown-toggle">
-                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Juan Pérez</strong></span>
-                            <img src="/dist/images/user8-128x128.jpg" class="user-image rounded-circle shadow"
-                                style="width: 40px; height: 40px;" alt="User Image" />
-                        </span>
-                    </li>
-                    <li>
-                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
-                        <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
-                            <i class="fas fa-sign-out-alt me-1"></i> Salir
-                        </a>
-                    </li>
-                    <!--end::User Menu Dropdown-->
+                    <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                        <div style="position: relative;">
+                            <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:50px; height:50px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                title="Haz clic para escuchar la explicación" />
+                            <button id="btnDetenerVoz"
+                                style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                ✕
+                            </button>
+                        </div>
+                        <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                    </div>
                 </ul>
-                <!--end::End Navbar Links-->
+
+                <ul class="navbar-nav ms-auto">
+
+                    <!-- Usuario -->
+                    <li class="nav-item dropdown user-menu">
+                        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img id="userAvatar" src="/dist/images/default_user.jpg" class="user-avatar" alt="Usuario">
+                            <span id="userName" class="d-none d-md-inline ms-2">Usuario</span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end user-dropdown">
+                            <!-- Header -->
+                            <li class="user-dropdown-header  text-center px-3 py-3">
+                                <img id="userAvatarDropdown" style="width:150px " src="/dist/images/default_user.jpg"
+                                    alt="Usuario">
+                                <p id="userNameDropdown" class="mb-0 user-name" style="font-size: 18px;">
+                                    Usuario
+                                    <br>
+                                    <small id="userRole" class="text-muted">Rol</small>
+                                </p>
+                            </li>
+                            <!-- Body -->
+                            <li class="user-dropdown-body px-2">
+                                <a href="/miPerfil.html" class="dropdown-item text-start" style="font-size:16px;">
+                                    <i class="fas fa-user me-2"></i> Mis datos
+                                </a>
+
+                                <a href="/cambiar-password.html" class="dropdown-item text-start"
+                                    style="font-size:16px;">
+                                    <i class="fas fa-key me-2"></i> Cambiar contraseña
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!-- Logout -->
+                            <li>
+                                <a href="#" class="dropdown-item text-start"
+                                    style="font-size:18px; color:#dc3545; /* rojo Bootstrap */" data-bs-toggle="modal"
+                                    data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Salir
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            <!--end::Container-->
         </nav>
-        <!--end::Header-->
 
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
@@ -272,234 +255,355 @@
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
+
+        <!--begin::App Main-->
         <main class="app-main">
             <!--begin::App Content Header-->
             <div class="app-content-header">
                 <!--begin::Container-->
                 <div class="container-fluid">
                     <!--begin::Row-->
-
+                    <!-- 🔹 Asistente -->
                     <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
-                        <!-- 🔸 Filtros -->
                         <div class="d-flex gap-3">
-                            <h3 class="mb-0">Mi Perfil</h3>
-                        </div>
-
-                        <!-- 🔹 Avatar asistente alineado a la derecha -->
-                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
-                            <div style="position: relative;">
-                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
-                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
-                                    title="Haz clic para escuchar la explicación" />
-                                <button id="btnDetenerVoz"
-                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
-                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
-                                    ✕
-                                </button>
-                            </div>
-                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                            <h3 class="mb-0">Mis datos</h3>
                         </div>
                     </div>
-                    <!--end::Row-->
 
-                    <section class="content">
+                    <section class="content" id="nuevoUsuario">
                         <div class="container-fluid">
-                            <div class="card card-primary">
-                                <div class="card-header">
-                                    <h3 class="card-title">Datos del Usuario</h3>
-                                </div>
-                                <form>
+                            <form id="form-usuario" method="POST" action="/usuarios" enctype="multipart/form-data"
+                                class="mt-4">
+                                <div class="card card-primary">
+                                    <!-- <div class="card-header">
+                                        <h3 class="card-title" id="tituloTarjeta">Nuevo Usuario</h3>
+                                    </div> -->
                                     <div class="card-body">
                                         <div class="row">
+                                            <div class="col-md-6 d-flex align-items-center gap-3">
+                                                <!-- Imagen de perfil -->
+                                                <img id="fotoEmpleado" src="/dist/images/default_user.jpg"
+                                                    alt="Foto empleado" class="img-thumbnail" style="max-width: 120px;">
+
+                                                <!-- Input oculto para seleccionar imagen -->
+                                                <input type="file" id="inputImagen" name="foto" accept="image/*"
+                                                    style="display: none;">
+
+                                                <!-- Botones en la misma fila -->
+                                                <div class="d-flex gap-2">
+                                                    <button type="button" class="btn btn-sm btn-primary"
+                                                        onclick="cambiarImagen()">Cambiar imagen</button>
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                        onclick="eliminarImagen()">Eliminar imagen</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
                                             <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="legajo">Legajo</label>
-                                                    <input type="text" class="form-control" id="legajo" value="12345"
-                                                        readonly>
-                                                </div>
+                                                <label>Legajo</label>
+                                                <input type="text" name="legajo" class="form-control" required>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="apellido">Apellidos</label>
-                                                    <input type="text" class="form-control" id="apellido" value="García"
-                                                        readonly>
-                                                </div>
+                                                <label>Apellido</label>
+                                                <input type="text" name="apellido" class="form-control" required>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="nombre">Nombres</label>
-                                                    <input type="text" class="form-control" id="nombre"
-                                                        value="Ruben Alberto" readonly>
-                                                </div>
+                                                <label>Nombres</label>
+                                                <input type="text" name="nombres" class="form-control" required>
                                             </div>
                                         </div>
+
                                         <div class="row mt-3">
                                             <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="email">Correo electrónico</label>
-                                                    <input type="email" class="form-control" id="email"
-                                                        placeholder="Ingrese su correo">
-                                                </div>
+                                                <label>Email</label>
+                                                <input type="email" id="email" name="email" class="form-control"
+                                                    required>
+                                                <small class="text-muted">
+                                                    El correo será utilizado como usuario para iniciar sesión
+                                                </small>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="confirmEmail">Confirmar Correo electrónico</label>
-                                                    <input type="email" class="form-control" id="confirmEmail"
-                                                        placeholder="Confirme su correo">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group"></div>
-                                                <label for="telefono">Teléfono</label>
-                                                <input type="text" class="form-control" id="telefono"
-                                                    placeholder="Actualice su teléfono">
+                                                <label>Teléfono</label>
+                                                <input type="text" name="telefono" class="form-control">
                                             </div>
                                         </div>
+
                                         <div class="row mt-3">
                                             <div class="col-md-4">
-                                                <div class="form-group"></div>
-                                                <label for="password">Nueva contraseña</label>
-                                                <input type="password" class="form-control" id="password"
-                                                    placeholder="Ingrese nueva contraseña">
+                                                <label>Cargo/Función</label>
+                                                <input type="text" name="cargo" class="form-control">
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group"></div>
-                                                <label for="password">Confirmar contraseña</label>
-                                                <input type="password" class="form-control" id="confirmar"
-                                                    placeholder="Repita la nueva contraseña">
+                                            <div class="col-md-6">
+                                                <label>Sector</label>
+                                                <select class="form-select" id="unidadFuncional" name="sector" required>
+                                                    <option selected disabled value="">Seleccione sector...
+                                                    </option>
+                                                    <!-- Las opciones se agregarán dinámicamente -->
+                                                </select>
                                             </div>
+                                        </div>
+
+                                        <div class="row mt-3">
                                             <div class="col-md-4">
-                                                <label>Fotografía</label>
-                                                <input type="file" name="foto" accept="image/*" class="form-control">
+                                                <label>Reporta a:</label>
+                                                <select class="form-select" id="jefe" name="legajo_jefe" required>
+                                                    <option selected disabled value="">Seleccione superior ...
+                                                    </option>
+                                                    <!-- Las opciones se agregarán dinámicamente -->
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-3">
+                                                <label for="estado" class="form-label">Estado</label>
+                                                <select name="estado" class="form-select">
+                                                    <option value="activo">Activo</option>
+                                                    <option value="inactivo">Inactivo</option>
+                                                    <option value="suspendido">Suspendido</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="rol" class="form-label">Rol</label>
+                                                <select id="rol" name="rol" class="form-select" required>
+                                                    <option value="">Seleccione un rol</option>
+                                                    <option value="administrador">Administrador</option>
+                                                    <option value="directivo">Directivo</option>
+                                                    <option value="responsable">Responsable</option>
+                                                    <option value="operador">Operador</option>
+                                                    <option value="otro">Otro</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                            <div class="card-footer mt-3">
-                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                                <button type="reset" class="btn btn-secondary">Cancelar</button>
-                            </div>
+
+                                    <div class="card-footer d-flex justify-content-between">
+                                        <button type="button" class="btn btn-secondary" onclick="cancelarEdicion()">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save"></i> Guardar Usuario
+                                        </button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </section>
                 </div>
-                <!--end::Row-->
-                <!-- Contenido principal -->
-            </div> <!-- ./wrapper -->
-            <!-- <body class="p-4"> -->
+            </div>
 
-            <!--end::App Content-->
             <footer class="main-footer text-center">
                 <strong>© 2025 - MiResultIQ 1.0</strong>
             </footer>
-
         </main>
-        <!--end::App nain-->
-
-
-        <!-- Modal de Confirmación de Logout -->
-        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        Esta acción cerrará tu sesión actual y volverás a la página de inicio.
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script>
-            document.getElementById('confirmLogout').addEventListener('click', function () {
-                // Limpiar lo necesario
-                sessionStorage.clear();
-                localStorage.clear(); // si usás localStorage
-
-                // Redirigir al inicio
-                window.location.href = 'index.html';
-            });
-        </script>
-
     </div>
-    <!-- 
+
+
     <script>
-        document.getElementById('btn-filtrar').addEventListener('click', function () {
-            const filtroPeriodo = document.getElementById('filtro-periodo').value;
-            const filtroEstado = document.getElementById('filtro-estado').value;
-
-            document.querySelectorAll('.kpi-tarjeta').forEach(function (card) {
-                const estado = card.getAttribute('data-estado');
-                const periodo = card.getAttribute('data-periodo');
-
-                const coincideEstado = (filtroEstado === 'todos' || filtroEstado === estado);
-                const coincidePeriodo = (filtroPeriodo === 'todos' || filtroPeriodo === periodo);
-
-                if (coincideEstado && coincidePeriodo) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarMisDatos();
+            // configurarFormulario();
         });
-    </script> -->
 
-    <!--end::App Wrapper-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+        /* ===============================
+           CARGA DE DATOS DEL USUARIO
+        ================================ */
+        async function cargarMisDatos() {
+
+            const usuarioRaw = localStorage.getItem('usuario');
+            if (!usuarioRaw) return;
+
+            usuarioRaw2 = JSON.parse(usuarioRaw);
+
+            console.log(usuarioRaw2)
+
+            // 🔹 1. Esperar la respuesta HTTP
+            const response = await fetch(`/usuarios/${usuarioRaw2.legajo}`);
+            if (!response.ok) {
+                console.error('Error al obtener usuario');
+                return;
+            }
+
+            // 🔹 2. Convertir la respuesta a JSON
+            const usuario = await response.json();
+            console.log('Usuario completo:', usuario);
+
+            // 🔹 Obtener sectores
+            const respSectores = await fetch('/sectores');
+            if (!respSectores.ok) {
+                console.error('Error al obtener sectores');
+                return;
+            }
+
+            const sectores = await respSectores.json();
+
+            // 🔹 Llenar select marcando el sector del usuario
+            llenarSelectUnidades(sectores, usuario.sector);
+
+            // 🔹 3. Cargar datos en el formulario
+            document.querySelector('input[name="legajo"]').value = usuario.legajo;
+            document.querySelector('input[name="apellido"]').value = usuario.apellido || '';
+            document.querySelector('input[name="nombres"]').value = usuario.nombres || '';
+            document.querySelector('input[name="telefono"]').value = usuario.telefono || '';
+            document.querySelector('input[name="email"]').value = usuario.email || '';
+            document.querySelector('input[name="cargo"]').value = usuario.cargo || '';
+
+
+            // 🔹 4. Bloquear campos no editables
+            document.querySelector('input[name="legajo"]').readOnly = true;
+            document.querySelector('input[name="email"]').readOnly = true;
+
+            // 🔹 5. Imagen
+            const fotoUrl = usuario.foto
+                ? `/usuarios/foto/${usuario.legajo}?t=${Date.now()}`
+                : '/dist/images/default_user.jpg';
+
+            document.getElementById('fotoEmpleado').src = fotoUrl;
+            document.getElementById('userAvatar').src = fotoUrl;
+            document.getElementById('userAvatarDropdown').src = fotoUrl;
+
+            // 🔹 6. Nombre en navbar
+            const nombreCompleto = `${usuario.nombres} ${usuario.apellido}`;
+            document.getElementById('userName').textContent = nombreCompleto;
+
+            // Para el dropdown (primer nodo de texto)
+            document.getElementById('userNameDropdown').childNodes[0].textContent = nombreCompleto;
+        }
+
+
+        // // 🚫🚫🚫
+        function llenarSelectUnidades(sectores, sectorEmpleadoId = null) {
+            const select = document.getElementById('unidadFuncional');
+            select.innerHTML = '<option value="" disabled selected>Seleccione sector...</option>';
+
+            sectores.forEach(sector => {
+                const opcion = document.createElement('option');
+                opcion.value = sector.id;
+                opcion.textContent = obtenerNombreJerarquico(sector, sectores);
+                if (sectorEmpleadoId && sector.id === sectorEmpleadoId) {
+                    opcion.selected = true;
+                }
+                select.appendChild(opcion);
+            });
+        }
+
+        /* ===============================
+           IMAGEN
+        ================================ */
+        function cambiarImagen() {
+            document.getElementById('inputImagen').click();
+        }
+
+        document.getElementById('inputImagen').addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                document.getElementById('fotoEmpleado').src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function eliminarImagen() {
+            document.getElementById('fotoEmpleado').src = '/dist/images/default_user.jpg';
+            document.getElementById('inputImagen').value = '';
+            document.getElementById('fotoEmpleado').dataset.eliminar = 'true';
+        }
+
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)
-    --><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)
---><!--begin::Required Plugin(Bootstrap 5)-->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <!-- <script src="../../dist/js/adminlte.js"></script> -->
+
     <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
 
-    <!-- <script>
-        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-        const Default = {
-            scrollbarTheme: 'os-theme-light',
-            scrollbarAutoHide: 'leave',
-            scrollbarClickScroll: true,
-        };
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-            if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
-                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                        theme: Default.scrollbarTheme,
-                        autoHide: Default.scrollbarAutoHide,
-                        clickScroll: Default.scrollbarClickScroll,
-                    },
-                });
-            }
-        });
-    </script> -->
-
-    <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
-
-    <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
-    <!-- ChartJS -->
+
+    <div id="contenedorModal"></div>
+    <div id="contenedorModalMediciones"></div>
+    <div id="contenedorModalUsuario"></div>
+    <div id="contenedorModalLogout"></div>
+
+    <script>
+        // Cargar modal de indicadores
+        fetch('/modal-indicador.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModal').innerHTML = html;
+            });
+
+        // Cargar modal de mediciones
+        fetch('/modal-mediciones.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalMediciones').innerHTML = html;
+            });
+
+        // Cargar modal usuario
+        fetch('/modal-usuario.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalUsuario').innerHTML = html;
+            });
+
+        // Cargar modal logout
+        fetch('/modal-logout.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalLogout').innerHTML = html;
+
+                const btnLogout = document.getElementById('confirmLogout');
+                if (!btnLogout) return;
+
+                btnLogout.addEventListener('click', async () => {
+                    // Cerrar modal
+                    const modalEl = document.getElementById('logoutModal');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+
+                    // 🔐 Auditoría logout
+                    const token = localStorage.getItem('token');
+                    if (token) {
+                        try {
+                            await fetch('/api/auth/logout', {
+                                method: 'POST',
+                                headers: {
+                                    Authorization: 'Bearer ' + token
+                                }
+                            });
+                        } catch (e) {
+                            console.warn('No se pudo registrar logout');
+                        }
+                    }
+
+                    // 🧹 Limpiar sesión
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    // 🚀 Redirigir
+                    window.location.href = '/';
+                });
+            });
+    </script>
+
+    <script src="/modal-indicador.js"></script>
+    <script src="/modal-mediciones.js"></script>
+    <script src="/modal-usuario.js"></script>
+
+    <script src="/js/layout.js"></script>
+    <script src="/js/navbar-user.js"></script>
+    <script src="/js/logout.js"></script>
 
 </body>
-<!--end::Body-->
 
 </html>

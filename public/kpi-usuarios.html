@@ -48,6 +48,7 @@
     </script>
 
 </head>
+
 <style>
     .brand-image {
         opacity: 1 !important;
@@ -190,34 +191,36 @@
 
                         <ul class="dropdown-menu dropdown-menu-end user-dropdown">
                             <!-- Header -->
-                            <li class="user-dropdown-header">
-                                <img id="userAvatarDropdown" src="/dist/images/default_user.jpg" alt="Usuario">
-                                <p id="userNameDropdown" class="mb-1">
+                            <li class="user-dropdown-header  text-center px-3 py-3">
+                                <img id="userAvatarDropdown" style="width:150px " src="/dist/images/default_user.jpg"
+                                    alt="Usuario">
+                                <p id="userNameDropdown" class="mb-0 user-name" style="font-size: 18px;">
                                     Usuario
                                     <br>
-                                    <small id="userRole">Rol</small>
+                                    <small id="userRole" class="text-muted">Rol</small>
                                 </p>
                             </li>
-
                             <!-- Body -->
-                            <li class="user-dropdown-body">
-                                <div class="row text-center">
-                                    <div class="col-12">
-                                        <a href="/kpi-usuarios.html">
-                                            <i class="fas fa-user"></i> Mis datos
-                                        </a>
-                                    </div>
-                                    <div class="col-12">
-                                        <a href="/perfil.html#password">
-                                            <i class="fas fa-key"></i> Cambiar contraseña
-                                        </a>
-                                    </div>
-                                </div>
+                            <li class="user-dropdown-body px-2">
+                                <a href="/miPerfil.html" class="dropdown-item text-start" style="font-size:16px;">
+                                    <i class="fas fa-user me-2"></i> Mis datos
+                                </a>
+
+                                <a href="/cambiar-password.html" class="dropdown-item text-start"
+                                    style="font-size:16px;">
+                                    <i class="fas fa-key me-2"></i> Cambiar contraseña
+                                </a>
                             </li>
 
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt"></i> Salir 2
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!-- Logout -->
+                            <li>
+                                <a href="#" class="dropdown-item text-start" style="font-size:18px; color:#dc3545; /* rojo Bootstrap */"
+                                    data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Salir
                                 </a>
                             </li>
                         </ul>
@@ -426,6 +429,7 @@
                             </form>
                         </div>
                     </section>
+
                 </div>
                 <!--end::App Content-->
 
