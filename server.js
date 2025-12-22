@@ -9,7 +9,7 @@ const cron = require("node-cron");
 require("dotenv").config(); //
 
 const multer = require('multer');
-const upload = multer(); // Esta es la línea que falta
+const upload = multer(); 
 
 const cors = require('cors');
 const sectoresRoutes = require('./routes/sectores');
@@ -696,13 +696,12 @@ app.get('/api/indicadores/:codigo/cumplimiento', async (req, res) => {
         // 3️⃣ Calcular cumplimiento (acercamiento a la meta)
         let cumplimiento = 0;
         if (indicador.unico_valor && medicion.med_valor) {
-            // cumplimiento = (medicion.med_valor / indicador.unico_valor) * 100;
-            // if (cumplimiento > 100) cumplimiento = 100;
+        //     // cumplimiento = (medicion.med_valor / indicador.unico_valor) * 100;
+        //     // if (cumplimiento > 100) cumplimiento = 100;
             cumplimiento = medicion.med_cumplimiento; // Usar el valor ya calculado y guardado
-            console.log(`Cumplimiento único valor:, ${cumplimiento}, para med ${medicion.med_valor}, meta ${medicion.med_meta} e indicador ${indicador.id}`);
         }
+        // el cumplimiento es el de la ultima medición....
 
-        console.log(`va a devolver cumplimiento: ${cumplimiento}`);
         // 4️⃣ Devolver respuesta completa
         res.json({
             porcentaje: cumplimiento,
@@ -1117,7 +1116,106 @@ app.delete('/usuarios/:legajo', async (req, res) => {
 });
 
 // // 🚫🚫🚫 Modificar usuario
-app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
+const auth = require('./middleware/auth');
+
+app.put('/usuarios/:legajo', auth, upload.single('imagen'), async (req, res) => {
+    console.log('BODY:', req.body);
+    try {
+        // 🔐 Determinar a quién se puede modificar
+        const legajoObjetivo =
+            req.user.rol === 'administrador'
+                ? req.params.legajo
+                : req.user.legajo;
+
+        // 🚫 Usuario común intentando modificar a otro
+        if (
+            req.user.rol !== 'administrador' &&
+            String(req.params.legajo) !== String(req.user.legajo)
+        ) {
+            return res.status(403).json({
+                success: false,
+                message: 'No autorizado para modificar este usuario'
+            });
+        }
+
+                console.log('JWT legajo:', req.user.legajo);
+console.log('URL legajo:', req.params.legajo);
+console.log('ROL:', req.user.rol);
+
+        const campos = [];
+        const valores = [];
+
+        const camposPermitidos = [
+            'apellido',
+            'nombres',
+            'email',
+            'telefono',
+            'cargo',
+            'sector',
+            'legajo_jefe',
+            'estado',
+            'rol'
+        ];
+
+        // 🧠 Usuario común → solo estos campos
+        const camposPerfil = ['apellido', 'nombres', 'telefono'];
+
+        const listaCampos =
+            req.user.rol === 'administrador'
+                ? camposPermitidos
+                : camposPerfil;
+
+        listaCampos.forEach(campo => {
+            if (req.body[campo] !== undefined) {
+                campos.push(`${campo} = ?`);
+                valores.push(req.body[campo]);
+            }
+        });
+
+        // 📸 Imagen
+        if (req.file) {
+            campos.push('foto = ?');
+            valores.push(req.file.buffer);
+        }
+
+        // 🗑️ Eliminar imagen
+        if (req.body.eliminarImagen === 'true') {
+            campos.push('foto = NULL');
+        }
+
+        if (campos.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'No hay campos para actualizar'
+            });
+        }
+
+        valores.push(legajoObjetivo);
+
+        const sql = `
+            UPDATE usuarios
+            SET ${campos.join(', ')}
+            WHERE legajo = ?
+        `;
+
+        await pool.query(sql, valores);
+
+        res.json({
+            success: true,
+            message: 'Usuario actualizado correctamente'
+        });
+
+    } catch (err) {
+        console.error('Error al modificar usuario:', err);
+        res.status(500).json({
+            success: false,
+            error: 'Error interno al actualizar el usuario'
+        });
+    }
+});
+
+
+app.put('XXX/usuarios/:legajo', upload.single('foto'), async (req, res) => {
     try {
         const {
             apellido, nombres, email, telefono, cargo, sector,
@@ -1158,6 +1256,7 @@ app.put('/usuarios/:legajo', upload.single('foto'), async (req, res) => {
 });
 
 
+// // 🚫🚫🚫 Modificar usuario responsables
 app.post("/api/usuarios/responsables", async (req, res) => {
     try {
         const { legajos } = req.body;
@@ -1180,6 +1279,7 @@ app.post("/api/usuarios/responsables", async (req, res) => {
 });
 
 
+// // 🚫🚫🚫 Cambiar password
 app.post('/api/auth/cambiar-password', verificarToken, async (req, res) => {
     try {
         const { password } = req.body;

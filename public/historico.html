@@ -29,6 +29,30 @@
     .nav-item {
         margin-bottom: 0;
     }
+
+        /* Avatar en navbar */
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s;
+        object-fit: cover;
+        margin-top: 5px;
+    }
+
+    .user-avatar:hover {
+        transform: scale(1.05);
+    }
+
+    .user-dropdown-header {
+        padding: 28px 20px; /* Más espacio vertical */
+    }
+
+    .user-dropdown-header img {
+        margin-bottom: 15px; /* Más separación del texto */
+    }
 </style>
 
 
@@ -129,22 +153,15 @@
 <!--begin::Body-->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <!--begin::App Wrapper-->
     <div class="app-wrapper">
-        <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body">
-            <!--begin::Container-->
             <div class="container-fluid">
-                <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
-                </ul>
-
-                <ul class="navbar-nav ms-auto">
 
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
@@ -152,17 +169,66 @@
                             <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
                         </a>
                     </li>
-                    <li class="nav-item dropdown1 user-menu">
-                        <span class="nav-link dropdown-toggle">
-                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Juan Pérez</strong></span>
-                            <img src="/dist/images/user8-128x128.jpg" class="user-image rounded-circle shadow"
-                                style="width: 40px; height: 40px;" alt="User Image" />
-                        </span>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
-                            <i class="fas fa-sign-out-alt me-1"></i> Salir
+
+                    <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                        <div style="position: relative;">
+                            <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:50px; height:50px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                title="Haz clic para escuchar la explicación" />
+                            <button id="btnDetenerVoz"
+                                style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                ✕
+                            </button>
+                        </div>
+                        <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                    </div>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <!-- Usuario -->
+                    <li class="nav-item dropdown user-menu">
+                        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img id="userAvatar" src="/dist/images/default_user.jpg" class="user-avatar" alt="Usuario">
+                            <span id="userName" class="d-none d-md-inline ms-2">Usuario</span>
                         </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end user-dropdown">
+                            <!-- Header -->
+                            <li class="user-dropdown-header  text-center px-3 py-3">
+                                <img id="userAvatarDropdown" style="width:150px " src="/dist/images/default_user.jpg"
+                                    alt="Usuario">
+                                <p id="userNameDropdown" class="mb-0 user-name" style="font-size: 18px;">
+                                    Usuario
+                                    <br>
+                                    <small id="userRole" class="text-muted">Rol</small>
+                                </p>
+                            </li>
+                            <!-- Body -->
+                            <li class="user-dropdown-body px-2">
+                                <a href="/miPerfil.html" class="dropdown-item text-start" style="font-size:16px;">
+                                    <i class="fas fa-user me-2"></i> Mis datos
+                                </a>
+
+                                <a href="/cambiar-password.html" class="dropdown-item text-start"
+                                    style="font-size:16px;">
+                                    <i class="fas fa-key me-2"></i> Cambiar contraseña
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!-- Logout -->
+                            <li>
+                                <a href="#" class="dropdown-item text-start" style="font-size:18px; color:#dc3545; /* rojo Bootstrap */"
+                                    data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Salir
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -196,21 +262,6 @@
                         <div class="d-flex gap-3">
                             <h3 class="mb-0">Histórico de mediciones</h3>
                         </div>
-
-                        <!-- 🔹 Avatar asistente alineado a la derecha -->
-                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
-                            <div style="position: relative;">
-                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
-                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
-                                    title="Haz clic para escuchar la explicación" />
-                                <button id="btnDetenerVoz"
-                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
-                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
-                                    ✕
-                                </button>
-                            </div>
-                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
-                        </div>
                     </div>
                     <!--end::Row-->
 
@@ -234,22 +285,6 @@
                                     </div>
 
                                     <table id="tablaMediciones" class="table table-striped table-bordered table-sm">
-                                        <!-- <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Indicador</th>
-                                                <th>Medición</th>
-                                                <th>Periodo</th>
-                                                <th>Año</th>
-                                                <th>Valor</th>
-                                                <th>Unid</th>
-                                                <th>Comentarios</th>
-                                                <th>Plan de Acción</th>
-                                                <th>Respons. Medición</th>
-                                                <th>Respons. Registro</th>
-                                                <th>Fecha Registro</th>
-                                            </tr>
-                                        </thead> -->
                                         <tbody></tbody>
                                     </table>
                                 </div>
@@ -264,26 +299,6 @@
     <footer class="main-footer text-center">
         <strong>© 2025 - myResultIQ 1.0</strong>
     </footer>
-
-    <!-- Modal de Confirmación de Logout -->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    Esta acción cerrará tu sesión actual y volverás a la página de inicio.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
@@ -398,17 +413,13 @@
                     mediciones.map(async m => {
                         const ind = indicadorMap.get(m.med_indicador_id);
 
-                        // const usuario = await obtenerUsuarioPorLegajo(m.med_legajo_resp_medicion);
-                        // const respRegistro = await obtenerUsuarioPorLegajo(m.med_legajo_resp_registro);
-
                         return {
                             ...m,
                             indicador_nombre: ind ? ind.nombre : "(sin nombre)",
                             indicador_codigo: ind ? ind.codigo_id : "(sin código)",
                             nombre_usuario: ' ',
                             nombre_resp_registro: ' '
-                            // nombre_usuario: usuario ? `${usuario.apellido} ${usuario.nombres}` : m.med_legajo_resp_medicion,
-                            // nombre_resp_registro: respRegistro ? `${respRegistro.apellido} ${respRegistro.nombres}` : m.med_legajo_resp_registro
+
                         };
                     })
                 );
@@ -569,146 +580,6 @@
                 alert('Ocurrió un error inesperado.');
             }
         }
-        async function XXXleerMediciones() {
-            try {
-                const response = await fetch('/api/indicadores');
-                indicadores = await response.json();
-            } catch (error) {
-                console.error('Error cargando indicadores:', error);
-                alert('No se pudieron cargar los indicadores.');
-            }
-
-            try {
-                const response = await fetch('/api/mediciones');
-                const data = await response.json();
-
-                // backend devuelve { success, total, data }
-                const filas = data.success ? data.data : [];
-
-                const filasConUsuario = await Promise.all(
-                    filas.map(async m => {
-                        const usuario = await obtenerUsuarioPorLegajo(m.med_legajo_resp_medicion);
-                        const resp_registro = await obtenerUsuarioPorLegajo(m.med_legajo_resp_registro);
-                        return {
-                            ...m,
-                            nombre_usuario: usuario ? usuario.apellido + ' ' + usuario.nombres : m.med_legajo_resp_medicion,
-                            nombre_resp_registro: resp_registro ? resp_registro.apellido + ' ' + resp_registro.nombres : m.med_legajo_resp_registro
-                        };
-                    })
-                );
-
-                // Inicializar la DataTable si aún no existe
-                if (!$.fn.DataTable.isDataTable('#tablaMediciones')) {
-                    tablaMediciones = $('#tablaMediciones').DataTable({
-                        data: filasConUsuario,
-                        columns: [
-                            { data: 'id', title: 'Id' },
-                            {
-                                data: 'med_indicador_id', title: 'Indicador',
-                                render: function (data, type, row) {
-                                    const indicador = indicadores.find(i => i.id === data);
-                                    return indicador ? indicador.codigo_id : data;
-                                }
-                            },
-
-                            {
-                                data: 'med_tipo_periodo', title: 'Medición',
-                                render: function (data, type, row) {
-                                    return CodigosService.getNombreCodigo(data);
-                                }
-                            },
-
-                            {
-                                data: 'med_valor_periodo',
-                                className: 'text-center',
-                                title: `Período 
-                                        <i class="bi bi-info-circle" 
-                                        data-bs-toggle="tooltip" 
-                                        data-bs-html="true"
-                                        style="max-width:400px; color: red;"
-                                        title="
-                                        Según Período:<br>
-                                        - <strong>día:</strong> fecha<br>
-                                        - <strong>semana:</strong> número de semana del año (1 a 52)<br>
-                                        - <strong>quincena:</strong> número de quincena (1 a 24)<br>
-                                        - <strong>mes:</strong> número de mes (1 a 12)<br>
-                                        - <strong>bimestre:</strong> número de bimestre en el año (1 a 6)<br>
-                                        - <strong>trimestre:</strong> número de trimestre en el año (1 a 4)<br>
-                                        - <strong>cuatrimestre:</strong> número de cuatrimestre en el año (1 a 3)<br>
-                                        - <strong>semestre:</strong> número de semestre en el año (1 a 2)
-                                        "
-                                        ></i>`,
-                                render: function (data, type, row) {
-                                    if (row.med_tipo_periodo === '0201') {
-                                        // Caso diario → mostrar la fecha como viene
-                                        return data;
-                                    } else {
-                                        // Otros casos → devolver solo los últimos 2 dígitos
-                                        return data ? String(data).slice(-2) : '';
-                                    }
-                                }
-                            },
-
-                            { data: 'med_anio', title: 'Año' },
-
-                            {
-                                data: 'med_valor', title: 'Valor',
-                                className: 'text-end',
-                                render: function (data, type, row) {
-                                    if (data == null) return '';
-
-                                    const numero = parseFloat(data);  // Cambia Number() por parseFloat()
-
-                                    return numero.toLocaleString('es-ES', {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    });
-                                }
-                            }
-                            ,
-                            {
-                                data: 'med_unidad_medida', title: 'Unid',// propiedad en la fila
-                                render: function (data, type, row) {
-                                    if (!data) return '';
-                                    return CodigosService.getNombreCodigo(data);  // convierte el código a nombre
-                                }
-                            },
-                            { data: 'med_comentarios', title: 'Comentarios' },
-                            { data: 'med_plan_accion', title: 'Plan de acción' },
-                            // { data: 'nombre_usuario' },
-                            // { data: 'nombre_resp_registro' },
-                            {
-                                data: 'med_fecha_registro', title: 'Registrado:',
-                                render: function (data) {
-                                    if (!data) return '';
-                                    return new Date(data).toLocaleDateString('es-ES');
-                                }
-                            }
-                        ],
-                        responsive: true,
-                        autoWidth: false,
-                        pageLength: 10,
-                        language: {
-                            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-                        },
-                        order: [[2, 'desc']], // ordena por fecha_medicion descendente
-
-                        // 🔹 drawCallback: inicializa tooltips después de renderizar
-                        drawCallback: function () {
-                            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                            tooltipTriggerList.map(function (el) {
-                                return new bootstrap.Tooltip(el);
-                            });
-                        }
-                    });
-                } else {
-                    // Si la tabla ya existe, actualizamos los datos
-                    tablaMediciones.clear().rows.add(filas).draw();
-                }
-            } catch (err) {
-                console.error("Error cargando mediciones:", err);
-            }
-        }
 
         function getUltimaMedicionPorIndicador(mediciones, indicadorId) {
             // Filtrar por el indicador
@@ -768,6 +639,9 @@
 
 
     <div id="contenedorModal"></div>
+    <div id="contenedorModalMediciones"></div>
+    <div id="contenedorModalUsuario"></div>
+    <div id="contenedorModalLogout"></div>
 
     <script>
         // Cargar modal de indicadores
@@ -777,11 +651,69 @@
                 document.getElementById('contenedorModal').innerHTML = html;
             });
 
+        // Cargar modal de mediciones
+        fetch('/modal-mediciones.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalMediciones').innerHTML = html;
+            });
+
+        // Cargar modal usuario
+        fetch('/modal-usuario.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalUsuario').innerHTML = html;
+            });
+
+        // Cargar modal logout
+        fetch('/modal-logout.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalLogout').innerHTML = html;
+            });
+
+            //     const btnLogout = document.getElementById('confirmLogout');
+            //     if (!btnLogout) return;
+
+            //     btnLogout.addEventListener('click', async () => {
+            //         // Cerrar modal
+            //         const modalEl = document.getElementById('logoutModal');
+            //         const modal = bootstrap.Modal.getInstance(modalEl);
+            //         if (modal) modal.hide();
+
+            //         // 🔐 Auditoría logout
+            //         const token = localStorage.getItem('token');
+            //         if (token) {
+            //             try {
+            //                 await fetch('/api/auth/logout', {
+            //                     method: 'POST',
+            //                     headers: {
+            //                         Authorization: 'Bearer ' + token
+            //                     }
+            //                 });
+            //             } catch (e) {
+            //                 console.warn('No se pudo registrar logout');
+            //             }
+            //         }
+
+            //         // 🧹 Limpiar sesión
+            //         localStorage.clear();
+            //         sessionStorage.clear();
+
+            //         // 🚀 Redirigir
+            //         window.location.href = '/';
+            //     });
+            // });
+
     </script>
 
-    <!-- Scripts asociados -->
     <script src="/modal-indicador.js"></script>
+    <script src="/modal-mediciones.js"></script>
+    <script src="/modal-usuario.js"></script>
 
+    <script src="/js/layout.js"></script>
+    <script src="/js/navbar-user.js"></script>
+    <script src="/js/logout.js"></script>
 
 </body>
 

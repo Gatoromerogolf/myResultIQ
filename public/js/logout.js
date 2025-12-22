@@ -1,10 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('confirmLogout');
-  if (!btn) return;
+document.addEventListener('click', async (e) => {
+  if (e.target.id !== 'confirmLogout') return;
 
-  btn.addEventListener('click', async () => {
-    const token = localStorage.getItem('token');
+  // cerrar modal
+  const modalEl = document.getElementById('logoutModal');
+  const modal = bootstrap.Modal.getInstance(modalEl);
+  if (modal) modal.hide();
 
+  const token = localStorage.getItem('token');
+
+  // 📋 auditoría backend (UNA sola llamada)
+  if (token) {
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
@@ -12,13 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
           Authorization: 'Bearer ' + token
         }
       });
-    } catch (e) {
-      // no bloquea logout
+    } catch {
+      console.warn('No se pudo registrar logout');
     }
+  }
 
-    localStorage.clear();
-    sessionStorage.clear();
+  // 🧹 limpiar sesión
+  localStorage.removeItem('token');
+  localStorage.removeItem('usuario');
+  localStorage.removeItem('roles');
+  localStorage.removeItem('debeCambiarPassword');
+  sessionStorage.clear();
 
-    window.location.href = '/index.html';
-  });
+  // 🚀 redirigir
+  window.location.href = '/';
 });

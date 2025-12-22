@@ -9,7 +9,6 @@ const verificarToken = require('../middleware/auth');
 
 require("dotenv").config();
 
-
 // ========================================
 // POST /api/login
 // ========================================
@@ -21,10 +20,6 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ error: "Faltan datos" });
 
         // Buscar usuario por username
-        // const [rows] = await pool.query(
-        //     "SELECT * FROM usuarios WHERE username = ? AND estado = 'activo'",
-        //     [username]
-        // );
         const [rows] = await pool.query(
             `SELECT 
                 id,
@@ -83,12 +78,18 @@ router.post("/login", async (req, res) => {
                 success: true,
                 debeCambiarPassword: true,
                 token: jwt.sign(
-                    { id: user.id, rol: user.rol },
+                    {
+                        id: user.id,
+                        legajo: user.legajo,
+                        username: user.username,
+                        rol: user.rol
+                    },
                     process.env.JWT_SECRET,
                     { expiresIn: '15m' } // token corto
                 ),
                 user: {
                     id: user.id,
+                    legajo: user.legajo,
                     username: user.username,
                     rol: user.rol,
                     apellido: user.apellido,
@@ -98,10 +99,11 @@ router.post("/login", async (req, res) => {
             });
         }
 
-        // Generar JWT
+        // 🔐 Generar JWT NORMAL
         const token = jwt.sign(
             {
                 id: user.id,
+                legajo: user.legajo,
                 username: user.username,
                 rol: user.rol
             },
@@ -239,6 +241,15 @@ router.post('/cambiar-password', verificarToken, async (req, res) => {
              WHERE id = ?`,
             [newHash, userId]
         );
+
+
+        await registrarAuditoria({
+            usuario_id: req.user.id,
+            username: req.user.username,
+            evento: 'CHGPASS',
+            resultado: 'OK',
+            req
+        });
 
         res.json({ success: true });
 

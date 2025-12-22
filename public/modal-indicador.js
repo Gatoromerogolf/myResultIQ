@@ -12,7 +12,6 @@ const CodigosService = {
                 this.codigosMap[c.cod_tabla] = c.cod_nombre;
             });
 
-            console.log(`✅ Códigos cargados (${codigos.length})`);
         } catch (err) {
             console.error('Error al inicializar los códigos:', err);
         }
@@ -23,19 +22,15 @@ const CodigosService = {
     }
 };
 
-
 // === Inicialización automática ===
 document.addEventListener('DOMContentLoaded', async () => {
     await CodigosService.init();
 });
 
-
 // =====================================================
 // === FUNCIÓN PRINCIPAL: verDetalleIndicador(codigo)
 // =====================================================
 async function verDetalleIndicador(codigo) {
-
-    console.log(`recibido para consulta ${codigo}`)
 
     try {
         const response = await fetch(`/api/indicadores/${codigo}`);
@@ -63,15 +58,12 @@ async function verDetalleIndicador(codigo) {
             </div>
         `;
 
-
         // ----------------------------------------------------
         // ⭐ NUEVO BLOQUE ELEGANTE: Tarjetas Peso / Global
         // ----------------------------------------------------
         const peso = indicador.peso_porcentual ?? '-';
         const pesoGlobal = indicador.peso_porcentual_global ?? '-';
         const pesoPerspectiva = indicador.dimension_porcentual ?? '-';
-
- 
 
         const bloque = document.getElementById("bloqueInfoIndicador");
         bloque.innerHTML = `
@@ -150,7 +142,6 @@ async function verDetalleIndicador(codigo) {
             "__sep2__": null,
             "Tipo de Meta": `${indicador.meta_tipo} - ${tiposMeta[indicador.meta_tipo]}`
         };
-
 
         // Según meta
         if (indicador.meta_tipo === 1) {

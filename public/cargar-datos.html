@@ -29,6 +29,30 @@
     .nav-item {
         margin-bottom: 0;
     }
+
+        /* Avatar en navbar */
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s;
+        object-fit: cover;
+        margin-top: 5px;
+    }
+
+    .user-avatar:hover {
+        transform: scale(1.05);
+    }
+
+    .user-dropdown-header {
+        padding: 28px 20px; /* Más espacio vertical */
+    }
+
+    .user-dropdown-header img {
+        margin-bottom: 15px; /* Más separación del texto */
+    }
 </style>
 
 
@@ -141,7 +165,6 @@
 
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <nav class="app-header navbar navbar-expand bg-body">
             <div class="container-fluid">
@@ -151,10 +174,7 @@
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
-                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li> -->
-                </ul>
 
-                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
                             <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
@@ -162,17 +182,65 @@
                         </a>
                     </li>
 
-                    <li class="nav-item dropdown1 user-menu">
-                        <span class="nav-link dropdown-toggle">
-                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Juan Pérez</strong></span>
-                            <img src="/dist/images/user8-128x128.jpg" class="user-image rounded-circle shadow"
-                                style="width: 40px; height: 40px;" alt="User Image" />
-                        </span>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
-                            <i class="fas fa-sign-out-alt me-1"></i> Salir
+                    <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                        <div style="position: relative;">
+                            <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:50px; height:50px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                title="Haz clic para escuchar la explicación" />
+                            <button id="btnDetenerVoz"
+                                style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                ✕
+                            </button>
+                        </div>
+                        <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                    </div>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <!-- Usuario -->
+                    <li class="nav-item dropdown user-menu">
+                        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img id="userAvatar" src="/dist/images/default_user.jpg" class="user-avatar" alt="Usuario">
+                            <span id="userName" class="d-none d-md-inline ms-2">Usuario</span>
                         </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end user-dropdown">
+                            <!-- Header -->
+                            <li class="user-dropdown-header  text-center px-3 py-3">
+                                <img id="userAvatarDropdown" style="width:150px " src="/dist/images/default_user.jpg"
+                                    alt="Usuario">
+                                <p id="userNameDropdown" class="mb-0 user-name" style="font-size: 18px;">
+                                    Usuario
+                                    <br>
+                                    <small id="userRole" class="text-muted">Rol</small>
+                                </p>
+                            </li>
+                            <!-- Body -->
+                            <li class="user-dropdown-body px-2">
+                                <a href="/miPerfil.html" class="dropdown-item text-start" style="font-size:16px;">
+                                    <i class="fas fa-user me-2"></i> Mis datos
+                                </a>
+
+                                <a href="/cambiar-password.html" class="dropdown-item text-start"
+                                    style="font-size:16px;">
+                                    <i class="fas fa-key me-2"></i> Cambiar contraseña
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!-- Logout -->
+                            <li>
+                                <a href="#" class="dropdown-item text-start" style="font-size:18px; color:#dc3545; /* rojo Bootstrap */"
+                                    data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Salir
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -206,21 +274,6 @@
                         <!-- 🔸 Filtros -->
                         <div class="d-flex gap-3">
                             <h3 class="mb-0">Registrar mediciones</h3>
-                        </div>
-
-                        <!-- 🔹 Avatar asistente alineado a la derecha -->
-                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
-                            <div style="position: relative;">
-                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
-                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
-                                    title="Haz clic para escuchar la explicación" />
-                                <button id="btnDetenerVoz"
-                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
-                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
-                                    ✕
-                                </button>
-                            </div>
-                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
                         </div>
                     </div>
 
@@ -357,16 +410,6 @@
                                 <div id="spinnerCumplimientoDestinos" class="text-center my-3">
                                     <div class="spinner-grow text-primary" role="status"></div>
                                     <div class="mt-2 fw-semibold text-secondary">Cargando...</div>
-                                    <!-- <div id="overlaySpinner"
-                                class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex flex-column justify-content-center align-items-center">
-
-                                <div class="spinner-border text-primary"></div>
-                                <div class="mt-2 fw-semibold text-secondary">Cargando...</div>
-                            </div>
-                            <div class="icon-spinner"> -->
-                                    <!-- <i class="bi bi-arrow-repeat"></i>
-                                <span class="spinner-text">Cargando...</span>
-                            </div> -->
                                 </div>
 
                                 <div class="table-responsive m-4">
@@ -377,7 +420,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="tbodyIndicadores">
-                                            <!-- Los datos se cargarán dinámicamente aquí -->
+                                            <!-- Los datos aca -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -398,36 +441,6 @@
             </footer>
 
         </main>
-
-        <!-- Modal de Confirmación de Logout -->
-        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        Esta acción cerrará tu sesión actual y volverás a la página de inicio.
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            document.getElementById('confirmLogout').addEventListener('click', function () {
-                // Limpiar lo necesario
-                sessionStorage.clear();
-                localStorage.clear(); // si usás localStorage
-
-                // Redirigir al inicio
-                window.location.href = 'index.html';
-            });
-        </script>
 
     </div>
 
@@ -1952,6 +1965,8 @@
 
     <div id="contenedorModal"></div>
     <div id="contenedorModalMediciones"></div>
+    <div id="contenedorModalUsuario"></div>
+    <div id="contenedorModalLogout"></div>
 
     <script>
         // Cargar modal de indicadores
@@ -1967,11 +1982,63 @@
             .then(html => {
                 document.getElementById('contenedorModalMediciones').innerHTML = html;
             });
+
+        // Cargar modal usuario
+        fetch('/modal-usuario.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalUsuario').innerHTML = html;
+            });
+
+        // Cargar modal logout
+        fetch('/modal-logout.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalLogout').innerHTML = html;
+            });
+
+            //     const btnLogout = document.getElementById('confirmLogout');
+            //     if (!btnLogout) return;
+
+            //     btnLogout.addEventListener('click', async () => {
+            //         // Cerrar modal
+            //         const modalEl = document.getElementById('logoutModal');
+            //         const modal = bootstrap.Modal.getInstance(modalEl);
+            //         if (modal) modal.hide();
+
+            //         // 🔐 Auditoría logout
+            //         const token = localStorage.getItem('token');
+            //         if (token) {
+            //             try {
+            //                 await fetch('/api/auth/logout', {
+            //                     method: 'POST',
+            //                     headers: {
+            //                         Authorization: 'Bearer ' + token
+            //                     }
+            //                 });
+            //             } catch (e) {
+            //                 console.warn('No se pudo registrar logout');
+            //             }
+            //         }
+
+            //         // 🧹 Limpiar sesión
+            //         localStorage.clear();
+            //         sessionStorage.clear();
+
+            //         // 🚀 Redirigir
+            //         window.location.href = '/';
+            //     });
+            // });
+
     </script>
 
-    <!-- Scripts asociados -->
     <script src="/modal-indicador.js"></script>
     <script src="/modal-mediciones.js"></script>
+    <script src="/modal-usuario.js"></script>
+
+    <script src="/js/layout.js"></script>
+    <script src="/js/navbar-user.js"></script>
+    <script src="/js/logout.js"></script>
 
 </body>
 

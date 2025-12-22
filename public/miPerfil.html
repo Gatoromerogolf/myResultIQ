@@ -148,6 +148,14 @@
         margin-bottom: 15px;
         /* Más separación del texto */
     }
+
+    .readonly-field {
+        background-color: #f1f3f5;
+        /* gris claro */
+        color: #6c757d;
+        /* texto apagado */
+        cursor: not-allowed;
+    }
 </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -184,7 +192,6 @@
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
-
                     <!-- Usuario -->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
@@ -302,7 +309,8 @@
                                         <div class="row mt-3">
                                             <div class="col-md-2">
                                                 <label>Legajo</label>
-                                                <input type="text" name="legajo" class="form-control" required>
+                                                <input type="text" name="legajo" class="form-control readonly-field"
+                                                    readonly>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Apellido</label>
@@ -317,8 +325,8 @@
                                         <div class="row mt-3">
                                             <div class="col-md-4">
                                                 <label>Email</label>
-                                                <input type="email" id="email" name="email" class="form-control"
-                                                    required>
+                                                <input type="email" id="email" name="email"
+                                                    class="form-control readonly-field" readonly>
                                                 <small class="text-muted">
                                                     El correo será utilizado como usuario para iniciar sesión
                                                 </small>
@@ -332,48 +340,37 @@
                                         <div class="row mt-3">
                                             <div class="col-md-4">
                                                 <label>Cargo/Función</label>
-                                                <input type="text" name="cargo" class="form-control">
+                                                <input type="text" name="cargo" class="form-control readonly-field"
+                                                    readonly>
                                             </div>
+
                                             <div class="col-md-6">
                                                 <label>Sector</label>
-                                                <select class="form-select" id="unidadFuncional" name="sector" required>
-                                                    <option selected disabled value="">Seleccione sector...
-                                                    </option>
-                                                    <!-- Las opciones se agregarán dinámicamente -->
-                                                </select>
+                                                <input type="text" id="sectorTexto" class="form-control readonly-field"
+                                                    readonly>
+                                                <input type="hidden" name="sector" id="sectorHidden">
+
                                             </div>
                                         </div>
 
                                         <div class="row mt-3">
                                             <div class="col-md-4">
                                                 <label>Reporta a:</label>
-                                                <select class="form-select" id="jefe" name="legajo_jefe" required>
-                                                    <option selected disabled value="">Seleccione superior ...
-                                                    </option>
-                                                    <!-- Las opciones se agregarán dinámicamente -->
-                                                </select>
+                                                <input type="text" id="jefe" class="form-control readonly-field"
+                                                    name="legajo_jefe" readonly>
                                             </div>
                                         </div>
 
                                         <div class="row mt-3">
                                             <div class="col-md-3">
                                                 <label for="estado" class="form-label">Estado</label>
-                                                <select name="estado" class="form-select">
-                                                    <option value="activo">Activo</option>
-                                                    <option value="inactivo">Inactivo</option>
-                                                    <option value="suspendido">Suspendido</option>
-                                                </select>
+                                                <input type="text" name="estado" class="form-control readonly-field"
+                                                    readonly>
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="rol" class="form-label">Rol</label>
-                                                <select id="rol" name="rol" class="form-select" required>
-                                                    <option value="">Seleccione un rol</option>
-                                                    <option value="administrador">Administrador</option>
-                                                    <option value="directivo">Directivo</option>
-                                                    <option value="responsable">Responsable</option>
-                                                    <option value="operador">Operador</option>
-                                                    <option value="otro">Otro</option>
-                                                </select>
+                                                <input type="text" name="rol" class="form-control readonly-field"
+                                                    readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -383,7 +380,7 @@
                                             <i class="fas fa-times"></i> Cancelar
                                         </button>
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-save"></i> Guardar Usuario
+                                            <i class="fas fa-save"></i> Actualizar datos
                                         </button>
                                     </div>
                                 </div>
@@ -416,8 +413,6 @@
 
             usuarioRaw2 = JSON.parse(usuarioRaw);
 
-            console.log(usuarioRaw2)
-
             // 🔹 1. Esperar la respuesta HTTP
             const response = await fetch(`/usuarios/${usuarioRaw2.legajo}`);
             if (!response.ok) {
@@ -427,7 +422,6 @@
 
             // 🔹 2. Convertir la respuesta a JSON
             const usuario = await response.json();
-            console.log('Usuario completo:', usuario);
 
             // 🔹 Obtener sectores
             const respSectores = await fetch('/sectores');
@@ -438,8 +432,27 @@
 
             const sectores = await respSectores.json();
 
+            // Buscar el sector actual del usuario
+            const sectorActual = sectores.find(
+                s => String(s.id) === String(usuario.sector)
+            );
+
+            // Armar nombre legible (con jerarquía)
+            const nombreSector = sectorActual
+                ? obtenerNombreJerarquico(sectorActual, sectores)
+                : '— Sin sector —';
+
+            document.getElementById('sectorTexto').value = nombreSector;
+            document.getElementById('sectorHidden').value = usuario.sector;
+
             // 🔹 Llenar select marcando el sector del usuario
-            llenarSelectUnidades(sectores, usuario.sector);
+            const respUsuarios = await fetch(`/usuarios/${usuario.legajo_jefe}`);
+            if (!respUsuarios.ok) {
+                console.error('Error al obtener usuarios');
+                return;
+            }
+
+            const usuarios = await respUsuarios.json();
 
             // 🔹 3. Cargar datos en el formulario
             document.querySelector('input[name="legajo"]').value = usuario.legajo;
@@ -448,45 +461,44 @@
             document.querySelector('input[name="telefono"]').value = usuario.telefono || '';
             document.querySelector('input[name="email"]').value = usuario.email || '';
             document.querySelector('input[name="cargo"]').value = usuario.cargo || '';
+            document.querySelector('input[name="rol"]').value = usuario.rol || '';
+            document.querySelector('input[name="estado"]').value = usuario.estado || '';
+            document.querySelector('input[name="legajo_jefe"]').value = usuarios.apellido + ', ' + usuarios.nombres || '';
 
+            const sectorSelect = document.querySelector('select[name="sector"]');
+            if (sectorSelect) {
+                sectorSelect.disabled = true;
+                sectorSelect.classList.add('readonly-field');
+            }
 
-            // 🔹 4. Bloquear campos no editables
-            document.querySelector('input[name="legajo"]').readOnly = true;
-            document.querySelector('input[name="email"]').readOnly = true;
+            const fotoPreview = document.getElementById('fotoEmpleado');
+            fotoPreview.src = `/usuarios/foto/${usuarioRaw2.legajo}?t=${Date.now()}`;
 
-            // 🔹 5. Imagen
-            const fotoUrl = usuario.foto
-                ? `/usuarios/foto/${usuario.legajo}?t=${Date.now()}`
-                : '/dist/images/default_user.jpg';
-
-            document.getElementById('fotoEmpleado').src = fotoUrl;
-            document.getElementById('userAvatar').src = fotoUrl;
-            document.getElementById('userAvatarDropdown').src = fotoUrl;
-
-            // 🔹 6. Nombre en navbar
-            const nombreCompleto = `${usuario.nombres} ${usuario.apellido}`;
-            document.getElementById('userName').textContent = nombreCompleto;
-
-            // Para el dropdown (primer nodo de texto)
-            document.getElementById('userNameDropdown').childNodes[0].textContent = nombreCompleto;
+            // document.getElementById('userNameDropdown').childNodes[0].textContent = nombreCompleto;
         }
 
 
         // // 🚫🚫🚫
         function llenarSelectUnidades(sectores, sectorEmpleadoId = null) {
             const select = document.getElementById('unidadFuncional');
-            select.innerHTML = '<option value="" disabled selected>Seleccione sector...</option>';
+            select.innerHTML = '<option value="" disabled>Seleccione sector...</option>';
 
             sectores.forEach(sector => {
                 const opcion = document.createElement('option');
                 opcion.value = sector.id;
                 opcion.textContent = obtenerNombreJerarquico(sector, sectores);
-                if (sectorEmpleadoId && sector.id === sectorEmpleadoId) {
+
+                if (
+                    sectorEmpleadoId !== null &&
+                    String(sector.id) === String(sectorEmpleadoId)
+                ) {
                     opcion.selected = true;
                 }
+
                 select.appendChild(opcion);
             });
         }
+
 
         /* ===============================
            IMAGEN
@@ -512,7 +524,86 @@
             document.getElementById('fotoEmpleado').dataset.eliminar = 'true';
         }
 
+
+
+        // // 🚫🚫🚫
+        // (opcional) Mostrar estructura jerárquica si los sectores tienen padres
+        function obtenerNombreJerarquico(sector, todos) {
+            const cadena = [sector.nombre];
+            let actual = sector;
+            while (actual.sector_padre_id) {
+                actual = todos.find(s => s.id === actual.sector_padre_id);
+                if (actual) cadena.unshift(actual.nombre);
+            }
+            return cadena.join(' > ');
+        }
+
+        document.getElementById('form-usuario').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const usuarioRaw = localStorage.getItem('usuario');
+            if (!usuarioRaw) return;
+
+            const { legajo } = JSON.parse(usuarioRaw);
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Sesión expirada. Inicie sesión nuevamente.');
+                return;
+            }
+
+            const formData = new FormData();
+
+            // 🔹 Campos editables
+            formData.append('apellido', document.querySelector('input[name="apellido"]').value);
+            formData.append('nombres', document.querySelector('input[name="nombres"]').value);
+            formData.append('telefono', document.querySelector('input[name="telefono"]').value);
+
+            // 🔹 Imagen
+            const inputImagen = document.getElementById('inputImagen');
+            if (inputImagen.files.length > 0) {
+                formData.append('imagen', inputImagen.files[0]);
+            }
+
+            // 🔹 Eliminar imagen
+            if (document.getElementById('fotoEmpleado').dataset.eliminar === 'true') {
+                formData.append('eliminarImagen', 'true');
+            }
+            
+            console.log ('telefono enviado', document.querySelector('input[name="telefono"]').value)
+            // 🔐 FETCH CON JWT
+            const response = await fetch(`/usuarios/${legajo}`, {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                body: formData
+            });
+
+
+            // 🔄 ACTUALIZAR LOCALSTORAGE
+            const usuarioLS = JSON.parse(localStorage.getItem('usuario')) || {};
+
+            usuarioLS.apellido = document.querySelector('input[name="apellido"]').value;
+            usuarioLS.nombres = document.querySelector('input[name="nombres"]').value;
+            usuarioLS.telefono = document.querySelector('input[name="telefono"]').value;
+
+            // 👉 Si cambió la imagen, forzamos recarga
+            if (
+                document.getElementById('inputImagen').files.length > 0 ||
+                document.getElementById('fotoEmpleado').dataset.eliminar === 'true'
+            ) {
+                usuarioLS.foto = true; // solo flag, la imagen se pide por endpoint
+            }
+
+            localStorage.setItem('usuario', JSON.stringify(usuarioLS));
+
+            alert('✅ Datos actualizados correctamente');
+            cargarMisDatos();
+        })
+
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
 

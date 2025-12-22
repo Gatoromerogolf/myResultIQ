@@ -43,7 +43,7 @@
         margin-bottom: 20px;
     }
 
-    /* Avatar en navbar */
+        /* Avatar en navbar */
     .user-avatar {
         width: 50px;
         height: 50px;
@@ -60,13 +60,11 @@
     }
 
     .user-dropdown-header {
-        padding: 28px 20px;
-        /* Más espacio vertical */
+        padding: 28px 20px; /* Más espacio vertical */
     }
 
     .user-dropdown-header img {
-        margin-bottom: 15px;
-        /* Más separación del texto */
+        margin-bottom: 15px; /* Más separación del texto */
     }
 </style>
 
@@ -138,6 +136,15 @@
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
+
+
+
+        <!-- <li class="nav-item d-none d-md-block">
+            <a href="#" id="btnReactivarIntro" class="nav-link" title="Volver a escuchar la introducción general">
+                <i class="bi bi-soundwave me-1"></i> Reproducir introducción
+            </a>
+        </li> -->
+
         <nav class="app-header navbar navbar-expand bg-body">
             <div class="container-fluid">
                 <ul class="navbar-nav">
@@ -207,9 +214,8 @@
 
                             <!-- Logout -->
                             <li>
-                                <a href="#" class="dropdown-item text-start"
-                                    style="font-size:18px; color:#dc3545; /* rojo Bootstrap */" data-bs-toggle="modal"
-                                    data-bs-target="#logoutModal">
+                                <a href="#" class="dropdown-item text-start" style="font-size:18px; color:#dc3545; /* rojo Bootstrap */"
+                                    data-bs-toggle="modal" data-bs-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt me-2"></i> Salir
                                 </a>
                             </li>
@@ -242,7 +248,10 @@
 
         <!--begin::App Main-->
         <main class="app-main">
+            <!--begin::App Content Header-->
             <div class="app-content-header">
+                <!--begin::Container-->
+
                 <div class="container-fluid">
 
                     <!-- 🔹 Barra superior de filtros + Asistente -->
@@ -316,7 +325,7 @@
                                                         <thead class="table-light">
                                                             <tr>
                                                                 <th>Perspectiva</th>
-                                                                <th class="text-center">Ind.</th>
+                                                                <th class="text-center">Indicadores</th>
                                                                 <th class="text-center">Cumplimiento</th>
                                                                 <th class="text-center">Estado</th>
                                                             </tr>
@@ -338,11 +347,10 @@
                                                         <thead class="table-light">
                                                             <tr>
                                                                 <th>Indicador</th>
-                                                                <!-- <th>Responsable</th> -->
+                                                                <th>Responsable</th>
                                                                 <th class="text-center">Cumplimiento</th>
                                                                 <th class="text-center">Peso BSC</th>
                                                                 <th>Estado</th>
-                                                                <th>Ver</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody id="tbodyDetalleIndicadores"></tbody>
@@ -356,12 +364,7 @@
 
                             </div>
                         </div>
-                        <!--end::Row-->
                     </div>
-
-
-                    <div id="graficoIndicadorFull"></div>
-                    <div id="kpiTarjetasFull"></div>
 
                     <footer class="main-footer text-center">
                         <strong>© 2025 - myResultIQ 1.0</strong>
@@ -370,32 +373,41 @@
             </div>
         </main>
     </div>
-
+    <!--end::App Wrapper-->
 
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
 
     <!-- Bootstrap (bundle con Popper incluido) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
+    <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
+    <!--end::Required Plugin(AdminLTE)-->
+
+    <!-- OPTIONAL SCRIPTS -->
+    <!-- sortablejs -->
+
 
     <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
         integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+    <!-- ChartJS -->
 
     <!-- ==============================
      BLOQUE: Cumplimiento por Dimensión
      ============================== -->
+
+
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
             await cargarIndicadores();
         });
 
-        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         async function cargarIndicadores() {
             const spinner = document.getElementById("spinnerCarga");
             if (spinner) spinner.style.display = "block"; // Mostrar spinner
@@ -431,7 +443,6 @@
             }
         }
 
-        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function agruparPorDimension(indicadores) {
             const grupos = {};
             indicadores.forEach(ind => {
@@ -442,12 +453,11 @@
 
             return Object.keys(grupos).map(dimension => {
                 const inds = grupos[dimension];
-                const promedio = inds.reduce((acc, ind) => acc + (Number(ind.cumplimiento) || 0), 0) / inds.length;
+                const promedio = inds.reduce((acc, ind) => acc + (ind.cumplimiento || 0), 0) / inds.length;
                 return { dimension, indicadores: inds, promedio: promedio.toFixed(2) };
             });
         }
 
-        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function renderGraficos(resumenPorDimension) {
             const barDiv = document.querySelector("#chartBarDimensiones");
             const radarDiv = document.querySelector("#chartRadarDimensiones");
@@ -493,7 +503,6 @@
             }).render();
         }
 
-        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function renderTabla(resumenPorDimension) {
             const tbody = document.getElementById("tbodyDimensiones");
             if (!tbody) return;
@@ -512,7 +521,6 @@
             });
         }
 
-        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
         function mostrarIndicadoresDeDimension(dimension, resumen) {
             if (!resumen) return;
 
@@ -534,48 +542,15 @@
                 tbody.insertAdjacentHTML('beforeend', `
             <tr>
                 <td>${ind.nombre}</td>
-                <td class="text-center">${Number(ind.cumplimiento).toFixed(1)}%</td>
+                <td>${ind.responsable || '-'}</td>
+                <td class="text-center">${ind.cumplimiento.toFixed(1)}%</td>
                 <td class="text-center">${ind.dimension_porcentual != null ? ind.dimension_porcentual + '%' : '-'}</td>
                 <td>${estado}</td>
-                <td>
-
-                                        <!-- 📈 Ver evolución -->
-                                        <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
-                                            onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
-                                            <i class="fas fa-chart-line text-primary"></i>
-                                        </button>
-
-                                        <!-- ℹ️ Detalle del indicador -->
-                                        <button type="button" class="btn btn-link p-0 ms-1" title="Ver detalle del indicador"
-                                            onclick="verDetalleIndicador('${ind.codigo_id}')">
-                                            <i class="fas fa-info-circle text-secondary"></i>
-                                        </button>
-
-                                        <!-- 🗃️ Mediciones -->
-                                        <button type="button" class="btn btn-link p-0 ms-1" title="Ver mediciones registradas"
-                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}', '${ind.unico_eval}')">
-                                            <i class="fas fa-database text-success"></i>
-                                        </button>
-                                        </td>
-
-
             </tr>
         `);
             });
 
             contenedor.style.display = 'block';
-        }
-
-        // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
-        function verGraficoIndicador(key_id, nombre, meta, descripcion, metodo) {
-            // Guardar en sessionStorage
-            sessionStorage.setItem('indicador_seleccionado', key_id);
-            document.getElementById('grafico-evolucion-Full').style.display = 'block';
-            // Llama a la función que renderiza el gráfico
-            console.log('Renderizando gráfico para indicador:', key_id, 'con metodo', metodo);
-
-            renderIndicadorChart(key_id, nombre, meta, descripcion, metodo)
-
         }
 
     </script>
@@ -675,6 +650,7 @@
         }
     </style>
 
+
     <div id="contenedorModal"></div>
     <div id="contenedorModalMediciones"></div>
     <div id="contenedorModalUsuario"></div>
@@ -707,66 +683,41 @@
             .then(res => res.text())
             .then(html => {
                 document.getElementById('contenedorModalLogout').innerHTML = html;
+
+                const btnLogout = document.getElementById('confirmLogout');
+                if (!btnLogout) return;
+
+                btnLogout.addEventListener('click', async () => {
+                    // Cerrar modal
+                    const modalEl = document.getElementById('logoutModal');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+
+                    // 🔐 Auditoría logout
+                    const token = localStorage.getItem('token');
+                    if (token) {
+                        try {
+                            await fetch('/api/auth/logout', {
+                                method: 'POST',
+                                headers: {
+                                    Authorization: 'Bearer ' + token
+                                }
+                            });
+                        } catch (e) {
+                            console.warn('No se pudo registrar logout');
+                        }
+                    }
+
+                    // 🧹 Limpiar sesión
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    // 🚀 Redirigir
+                    window.location.href = '/';
+                });
             });
 
-                // const btnLogout = document.getElementById('confirmLogout');
-                // if (!btnLogout) return;
-
-                // btnLogout.addEventListener('click', async () => {
-                //     // Cerrar modal
-                //     const modalEl = document.getElementById('logoutModal');
-                //     const modal = bootstrap.Modal.getInstance(modalEl);
-                //     if (modal) modal.hide();
-
-                //     // 🔐 Auditoría logout
-                //     const token = localStorage.getItem('token');
-                //     if (token) {
-                //         try {
-                //             await fetch('/api/auth/logout', {
-                //                 method: 'POST',
-                //                 headers: {
-                //                     Authorization: 'Bearer ' + token
-                //                 }
-                //             });
-                //         } catch (e) {
-                //             console.warn('No se pudo registrar logout');
-                //         }
-                //     }
-
-                //     // 🧹 Limpiar sesión
-                //     localStorage.clear();
-                //     sessionStorage.clear();
-
-                //     // 🚀 Redirigir
-                //     window.location.href = '/';
-                // });
-            // });
-
     </script>
-
-    <script>
-        fetch('/kpi-tools.html')
-            .then(res => res.text())
-            .then(html => {
-                // Crear contenedor temporal para poder querySelectorear
-                const temp = document.createElement("div");
-                temp.innerHTML = html;
-
-                // Seleccionar las secciones del HTML externo
-                const sectionA = temp.querySelector("#grafico-evolucion-Full");
-                const sectionB = temp.querySelector("#analisis-automatico");
-
-                // Insertarlas donde querés
-                document.getElementById("graficoIndicadorFull").appendChild(sectionA);
-                document.getElementById("kpiTarjetasFull").appendChild(sectionB);
-
-                // (Opcional) inicializar scripts, gráficos, etc.
-                if (typeof initGraficos === "function") initGraficos();
-            });
-    </script>
-
-    <script src="/kpi-tools.js"></script>
-
 
     <script src="/modal-indicador.js"></script>
     <script src="/modal-mediciones.js"></script>

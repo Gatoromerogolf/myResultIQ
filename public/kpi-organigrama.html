@@ -162,16 +162,115 @@
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
         margin-bottom: 20px;
     }
+
+    /* Avatar en navbar */
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s;
+        object-fit: cover;
+        margin-top: 5px;
+    }
+
+    .user-avatar:hover {
+        transform: scale(1.05);
+    }
+
+    .user-dropdown-header {
+        padding: 28px 20px;
+    }
+
+    .user-dropdown-header img {
+        margin-bottom: 15px;
+    }
 </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
+        <nav class="app-header navbar navbar-expand bg-body">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="bi bi-list"></i>
+                        </a>
+                    </li>
 
-        <div id="navbarContainer"></div>
-        <!--begin::Header-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-lte-toggle="fullscreen">
+                            <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+                            <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
+                        </a>
+                    </li>
 
-        <!--end::Header-->
+                    <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                        <div style="position: relative;">
+                            <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:50px; height:50px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                title="Haz clic para escuchar la explicación" />
+                            <button id="btnDetenerVoz"
+                                style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                ✕
+                            </button>
+                        </div>
+                        <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                    </div>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <!-- Usuario -->
+                    <li class="nav-item dropdown user-menu">
+                        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img id="userAvatar" src="/dist/images/default_user.jpg" class="user-avatar" alt="Usuario">
+                            <span id="userName" class="d-none d-md-inline ms-2">Usuario</span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end user-dropdown">
+                            <!-- Header -->
+                            <li class="user-dropdown-header  text-center px-3 py-3">
+                                <img id="userAvatarDropdown" style="width:150px " src="/dist/images/default_user.jpg"
+                                    alt="Usuario">
+                                <p id="userNameDropdown" class="mb-0 user-name" style="font-size: 18px;">
+                                    Usuario
+                                    <br>
+                                    <small id="userRole" class="text-muted">Rol</small>
+                                </p>
+                            </li>
+                            <!-- Body -->
+                            <li class="user-dropdown-body px-2">
+                                <a href="/miPerfil.html" class="dropdown-item text-start" style="font-size:16px;">
+                                    <i class="fas fa-user me-2"></i> Mis datos
+                                </a>
+
+                                <a href="/cambiar-password.html" class="dropdown-item text-start"
+                                    style="font-size:16px;">
+                                    <i class="fas fa-key me-2"></i> Cambiar contraseña
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!-- Logout -->
+                            <li>
+                                <a href="#" class="dropdown-item text-start"
+                                    style="font-size:18px; color:#dc3545; /* rojo Bootstrap */" data-bs-toggle="modal"
+                                    data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Salir
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
@@ -204,21 +303,6 @@
                         <div class="d-flex gap-3">
                             <h3 class="mb-0">Destinos</h3>
                         </div>
-
-                        <!-- 🔹 Avatar asistente alineado a la derecha -->
-                        <!-- <div class="avatar-container d-flex align-items-center gap-2 me-2">
-                            <div style="position: relative;">
-                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
-                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
-                                    title="Haz clic para escuchar la explicación" />
-                                <button id="btnDetenerVoz"
-                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
-                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
-                                    ✕
-                                </button>
-                            </div>
-                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
-                        </div> -->
                     </div>
 
                     <div class="mt-2 mb-2">En esta sección se definen las entidades organizativas (área, proceso o
@@ -308,24 +392,7 @@
         </main>
     </div>
 
-    <!-- Modal de Confirmación de Logout -->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    Esta acción cerrará tu sesión actual y volverás a la página de inicio.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Modal de Información para revisar Valoración % -->
     <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
@@ -364,7 +431,7 @@
         </div>
     </div>
 
-    <script>
+    <!-- <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
             sessionStorage.clear();
@@ -373,7 +440,7 @@
             // Redirigir al inicio
             window.location.href = 'index.html';
         });
-    </script>
+    </script> -->
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
@@ -564,18 +631,17 @@
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
 
     <!-- Bootstrap (bundle con Popper incluido) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
+    <script src="/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- <script src="../../dist/js/adminlte.js"></script> -->
     <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)-->
 
-    <!-- OverlayScrollbars (opcional) -->
     <script
         src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"></script>
 
@@ -588,7 +654,7 @@
         Como destino entenderemos unidades funcionales, procesos, áreas, etc., que sean pasibles de medición 
         a través del comportamiento de determinados indicadores. 
         En otras secciones se informará la importancia relativa de cada destino y su incidencia en el destino al que pertenece. 
-        ¡Comencemos! Aguante Juanpi!!!!!
+        ¡Comencemos!
         `;
 
         let XvozSeleccionada = null;
@@ -688,7 +754,6 @@
         // btnDetener.addEventListener('click', detener);
     </script>
 
-
     <style>
         /* Efecto de "hablando" */
         #avatarAudio.speaking {
@@ -713,9 +778,84 @@
         }
     </style>
 
-    <script src="/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/dist/js/adminlte.js"></script>
-    <script src="cargarNavbar.js"></script>
+    <div id="contenedorModal"></div>
+    <div id="contenedorModalMediciones"></div>
+    <div id="contenedorModalUsuario"></div>
+    <div id="contenedorModalLogout"></div>
+
+    <script>
+        // Cargar modal de indicadores
+        fetch('/modal-indicador.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModal').innerHTML = html;
+            });
+
+        // Cargar modal de mediciones
+        fetch('/modal-mediciones.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalMediciones').innerHTML = html;
+            });
+
+        // Cargar modal usuario
+        fetch('/modal-usuario.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalUsuario').innerHTML = html;
+            });
+
+        // Cargar modal logout
+        fetch('/modal-logout.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalLogout').innerHTML = html;
+            });
+
+            //     const btnLogout = document.getElementById('confirmLogout');
+            //     if (!btnLogout) return;
+
+            //     btnLogout.addEventListener('click', async () => {
+            //         // Cerrar modal
+            //         const modalEl = document.getElementById('logoutModal');
+            //         const modal = bootstrap.Modal.getInstance(modalEl);
+            //         if (modal) modal.hide();
+
+            //         // 🔐 Auditoría logout
+            //         const token = localStorage.getItem('token');
+            //         if (token) {
+            //             try {
+            //                 await fetch('/api/auth/logout', {
+            //                     method: 'POST',
+            //                     headers: {
+            //                         Authorization: 'Bearer ' + token
+            //                     }
+            //                 });
+            //             } catch (e) {
+            //                 console.warn('No se pudo registrar logout');
+            //             }
+            //         }
+
+            //         // 🧹 Limpiar sesión
+            //         localStorage.clear();
+            //         sessionStorage.clear();
+
+            //         // 🚀 Redirigir
+            //         window.location.href = '/';
+            //     });
+            // });
+    </script>
+
+    <script src="/modal-indicador.js"></script>
+    <script src="/modal-mediciones.js"></script>
+    <script src="/modal-usuario.js"></script>
+
+    <script src="/js/layout.js"></script>
+    <script src="/js/navbar-user.js"></script>
+    <script src="/js/logout.js"></script>
+
+
+    <!-- <script src="cargarNavbar.js"></script> -->
 
 </body>
 

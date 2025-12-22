@@ -90,339 +90,288 @@
         margin-bottom: 0;
     }
 
+    /* Contenedor de cada nodo */
+    .node-container {
+        border-left: 10px solid #dee2e6;
+        padding: 0.20rem 0.20rem;
+        margin-bottom: 0.05rem;
+        /* border-radius: 10px; */
+        /* border-radius: 0.25rem; */
+        /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); */
+    }
+
+    .node-container.list-group-item {
+        border: none;
+        /* Quita el borde */
+        background: none;
+        /* Opcional: quita el fondo */
+        box-shadow: none;
+        /* Opcional: quita sombra si la hubiera */
+    }
+
+    /* Cabecera con ícono y título */
+    .node-header {
+        display: flex;
+        align-items: center;
+        gap: 0.1rem;
+        flex-wrap: wrap;
+        line-height: 1;
+        font-size: 0.95rem;
+        /* un poquito más grande */
+        /* reduce la altura de línea */
+    }
+
+    /* Ícono de nodo */
+    .node-header i {
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Input de peso */
+    .weight-input {
+        width: 72px;
+        text-align: right;
+    }
+
+    /* Barra de progreso */
+    .progress {
+        height: 2px;
+        background-color: #000407;
+        border-radius: 3px;
+        margin-top: 2px;
+    }
+
+    .progress-bar {
+        height: 30%;
+        transition: width 0.3s ease;
+    }
+
+    /* Mensaje de error */
+    .error-msg {
+        font-size: 1.0rem;
+        color: var(--bs-danger);
+        margin-top: 4px;
+    }
+
+    /* Colores diferenciados */
+    .node-sector .node-header {
+        /* background-color: #f8f3f3; */
+        /* celeste suave */
+        font-weight: 600;
+    }
+
+    .node-indicador .node-header {
+        background-color: #fff;
+    }
+
+    /* Sangría según nivel */
+    .children-container {
+        margin-left: 60px;
+        margin-top: 0.05rem;
+    }
 
 
+    /* Colores personalizados */
+    .text-orange {
+        color: #fd7e14 !important;
+        /* Naranja */
+    }
 
+    .text-purple {
+        color: #6f42c1 !important;
+        /* Violeta */
+    }
 
+    .text-teal {
+        color: #20c997 !important;
+        /* Verde azulado */
+    }
 
-        /* Contenedor de cada nodo */
-        .node-container {
-            border-left: 10px solid #dee2e6;
-            padding: 0.20rem 0.20rem;
-            margin-bottom: 0.05rem;
-            /* border-radius: 10px; */
-            /* border-radius: 0.25rem; */
-            /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); */
-        }
+    /* 🎨 Estilo link para indicadores */
+    .link-indicador {
+        color: #135694;
+        /* Naranja */
+        font-weight: 500;
+        /* Un poquito más grueso */
+        cursor: pointer;
+        /* Mano al pasar */
+        text-decoration: none;
+        /* Sin subrayado */
+        transition: color 0.2s ease;
+    }
 
-        .node-container.list-group-item {
-            border: none;
-            /* Quita el borde */
-            background: none;
-            /* Opcional: quita el fondo */
-            box-shadow: none;
-            /* Opcional: quita sombra si la hubiera */
-        }
+    .link-indicador:hover {
+        color: #c85a00;
+        /* Más oscuro al pasar */
+        text-decoration: underline;
+        /* Opcional: subrayado solo en hover */
+    }
 
-        /* Cabecera con ícono y título */
-        .node-header {
-            display: flex;
-            align-items: center;
-            gap: 0.1rem;
-            flex-wrap: wrap;
-            line-height: 1;
-            font-size: 0.95rem;
-            /* un poquito más grande */
-            /* reduce la altura de línea */
-        }
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
 
-        /* Ícono de nodo */
-        .node-header i {
-            width: 20px;
-            text-align: center;
-        }
+    .badge-global-min {
+        background: #5b58fa !important;
+        font-size: 0.9rem !important;
+        padding: 0.35em 0.55em !important;
+        font-weight: 500;
+        border-radius: 0.35rem;
+        margin-right: 4px;
+        /* separa el globo del texto */
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+        /* sombra leve estilo dashboard */
+    }
 
-        /* Input de peso */
-        .weight-input {
-            width: 72px;
-            text-align: right;
-        }
+    .badge-global-min i {
+        font-size: 1.1rem;
+        margin-left: 4px;
+    }
 
-        /* Barra de progreso */
-        .progress {
-            height: 2px;
-            background-color: #000407;
-            border-radius: 3px;
-            margin-top: 2px;
-        }
+    .badge-global-myriq {
+        background: #1b1e23 !important;
+        /* gris carbón elegante */
+        color: #e9ecef !important;
+        /* blanco suave */
+        font-size: 0.92rem !important;
+        /* un toque más grande */
+        padding: 0.42em 0.62em !important;
+        font-weight: 600;
+        border-radius: 0.45rem;
+        /* borde suave */
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+        /* sombra leve estilo dashboard */
+        letter-spacing: 0.2px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        /* borde sutil */
+    }
 
-        .progress-bar {
-            height: 30%;
-            transition: width 0.3s ease;
-        }
+    .badge-global-myriq i {
+        font-size: 1.18rem;
+        /* icono más visible */
+        margin-left: 2px;
+        opacity: 0.9;
+        transform: translateY(1px);
+        /* alineación perfecta */
+    }
 
-        /* Mensaje de error */
-        .error-msg {
-            font-size: 1.0rem;
-            color: var(--bs-danger);
-            margin-top: 4px;
-        }
+        /* Avatar en navbar */
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s;
+        object-fit: cover;
+        margin-top: 5px;
+    }
 
-        /* Colores diferenciados */
-        .node-sector .node-header {
-            /* background-color: #f8f3f3; */
-            /* celeste suave */
-            font-weight: 600;
-        }
+    .user-avatar:hover {
+        transform: scale(1.05);
+    }
 
-        .node-indicador .node-header {
-            background-color: #fff;
-        }
+    .user-dropdown-header {
+        padding: 28px 20px;
+    }
 
-        /* Sangría según nivel */
-        .children-container {
-            margin-left: 60px;
-            margin-top: 0.05rem;
-        }
+    .user-dropdown-header img {
+        margin-bottom: 15px;
+    }
 
-
-        /* Colores personalizados */
-        .text-orange {
-            color: #fd7e14 !important;
-            /* Naranja */
-        }
-
-        .text-purple {
-            color: #6f42c1 !important;
-            /* Violeta */
-        }
-
-        .text-teal {
-            color: #20c997 !important;
-            /* Verde azulado */
-        }
-
-        /* 🎨 Estilo link para indicadores */
-        .link-indicador {
-            color: #135694;
-            /* Naranja */
-            font-weight: 500;
-            /* Un poquito más grueso */
-            cursor: pointer;
-            /* Mano al pasar */
-            text-decoration: none;
-            /* Sin subrayado */
-            transition: color 0.2s ease;
-        }
-
-        .link-indicador:hover {
-            color: #c85a00;
-            /* Más oscuro al pasar */
-            text-decoration: underline;
-            /* Opcional: subrayado solo en hover */
-        }
-
-        .filters-bar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            background: white;
-            border-radius: 8px;
-            padding: 10px 15px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
-        }
-
-        .badge-global-min {
-            background: #5b58fa !important;
-            font-size: 0.9rem !important;
-            padding: 0.35em 0.55em !important;
-            font-weight: 500;
-            border-radius: 0.35rem;
-            margin-right: 4px;
-            /* separa el globo del texto */
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-            /* sombra leve estilo dashboard */
-        }
-
-        .badge-global-min i {
-            font-size: 1.1rem;
-            margin-left: 4px;
-        }
-
-        .badge-global-myriq {
-            background: #1b1e23 !important;
-            /* gris carbón elegante */
-            color: #e9ecef !important;
-            /* blanco suave */
-            font-size: 0.92rem !important;
-            /* un toque más grande */
-            padding: 0.42em 0.62em !important;
-            font-weight: 600;
-            border-radius: 0.45rem;
-            /* borde suave */
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-            /* sombra leve estilo dashboard */
-            letter-spacing: 0.2px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            /* borde sutil */
-        }
-
-        .badge-global-myriq i {
-            font-size: 1.18rem;
-            /* icono más visible */
-            margin-left: 2px;
-            opacity: 0.9;
-            transform: translateY(1px);
-            /* alineación perfecta */
-        }
-    </style>
+</style>
 
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <!--begin::App Wrapper-->
     <div class="app-wrapper">
-        <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body">
-            <!--begin::Container-->
             <div class="container-fluid">
-                <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
-                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-                    <!-- <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li> -->
-                </ul>
-                <!--end::Start Navbar Links-->
-                <!--begin::End Navbar Links-->
-                <ul class="navbar-nav ms-auto">
 
-
-                    <!--begin::Messages Dropdown Menu-->
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                            <i class="bi bi-chat-text"></i>
-                            <span class="navbar-badge badge text-bg-danger">3</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user1-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            Brad Diesel
-                                            <span class="float-end fs-7 text-danger"><i
-                                                    class="bi bi-star-fill"></i></span>
-                                        </h3>
-                                        <p class="fs-7">Call me whenever you can...</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user8-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            John Pierce
-                                            <span class="float-end fs-7 text-secondary">
-                                                <i class="bi bi-star-fill"></i>
-                                            </span>
-                                        </h3>
-                                        <p class="fs-7">I got your message bro</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <img src="dist/images/user3-128x128.jpg" alt="User Avatar"
-                                            class="img-size-50 rounded-circle me-3" />
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h3 class="dropdown-item-title">
-                                            Nora Silvester
-                                            <span class="float-end fs-7 text-warning">
-                                                <i class="bi bi-star-fill"></i>
-                                            </span>
-                                        </h3>
-                                        <p class="fs-7">The subject goes here</p>
-                                        <p class="fs-7 text-secondary">
-                                            <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                        </div>
-                    </li> -->
-                    <!--end::Messages Dropdown Menu-->
-                    <!--begin::Notifications Dropdown Menu-->
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                            <i class="bi bi-bell-fill"></i>
-                            <span class="navbar-badge badge text-bg-warning">15</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            <span class="dropdown-item dropdown-header">15 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-envelope me-2"></i> 4 new messages
-                                <span class="float-end text-secondary fs-7">3 mins</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-people-fill me-2"></i> 8 friend requests
-                                <span class="float-end text-secondary fs-7">12 hours</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
-                                <span class="float-end text-secondary fs-7">2 days</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
-                        </div>
-                    </li> -->
-                    <!--end::Notifications Dropdown Menu-->
-
-                    <!--begin::Fullscreen Toggle-->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
                             <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
                             <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
                         </a>
                     </li>
-                    <!--end::Fullscreen Toggle-->
 
-                    <!--begin::User Menu Dropdown"-->
-                    <li class="nav-item dropdown1 user-menu">
+                    <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                        <div style="position: relative;">
+                            <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:50px; height:50px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                title="Haz clic para escuchar la explicación" />
+                            <button id="btnDetenerVoz"
+                                style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                ✕
+                            </button>
+                        </div>
+                        <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                    </div>
+                </ul>
 
-                        <span class="nav-link dropdown-toggle">
-                            <span class="nav-link d-none d-md-inline">Bienvenido, <strong>Daniel González
-                                    (ADM)</strong></span>
-                            <img src="/dist/images/user6-128x128.jpg" class="user-image rounded-circle shadow"
-                                style="width: 40px; height: 40px;" alt="User Image" />
-                        </span>
-                    </li>
-
-                    <li>
-                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
-                        <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
-                            <i class="fas fa-sign-out-alt me-1"></i> Salir
+                <ul class="navbar-nav ms-auto">
+                    <!-- Usuario -->
+                    <li class="nav-item dropdown user-menu">
+                        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img id="userAvatar" src="/dist/images/default_user.jpg" class="user-avatar" alt="Usuario">
+                            <span id="userName" class="d-none d-md-inline ms-2">Usuario</span>
                         </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end user-dropdown">
+                            <!-- Header -->
+                            <li class="user-dropdown-header  text-center px-3 py-3">
+                                <img id="userAvatarDropdown" style="width:150px " src="/dist/images/default_user.jpg"
+                                    alt="Usuario">
+                                <p id="userNameDropdown" class="mb-0 user-name" style="font-size: 18px;">
+                                    Usuario
+                                    <br>
+                                    <small id="userRole" class="text-muted">Rol</small>
+                                </p>
+                            </li>
+                            <!-- Body -->
+                            <li class="user-dropdown-body px-2">
+                                <a href="/miPerfil.html" class="dropdown-item text-start" style="font-size:16px;">
+                                    <i class="fas fa-user me-2"></i> Mis datos
+                                </a>
+
+                                <a href="/cambiar-password.html" class="dropdown-item text-start"
+                                    style="font-size:16px;">
+                                    <i class="fas fa-key me-2"></i> Cambiar contraseña
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!-- Logout -->
+                            <li>
+                                <a href="#" class="dropdown-item text-start"
+                                    style="font-size:18px; color:#dc3545; /* rojo Bootstrap */" data-bs-toggle="modal"
+                                    data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Salir
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -465,20 +414,6 @@
                             <h3 class="mb-0">Ponderación por Destino</h3>
                         </div>
 
-                        <!-- 🔹 Avatar asistente alineado a la derecha -->
-                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
-                            <div style="position: relative;">
-                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
-                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
-                                    title="Haz clic para escuchar la explicación" />
-                                <button id="btnDetenerVoz"
-                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
-                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
-                                    ✕
-                                </button>
-                            </div>
-                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
-                        </div>
                     </div>
                     <!--end::Row-->
 
@@ -527,36 +462,6 @@
         </main>
 
     </div>
-
-    <!-- Modal de Confirmación de Logout -->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="logoutModalLabel">¿Desea Salir?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    Esta acción cerrará tu sesión actual y volverás a la página de inicio.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmLogout">Salir</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.getElementById('confirmLogout').addEventListener('click', function () {
-            // Limpiar lo necesario
-            sessionStorage.clear();
-            localStorage.clear(); // si usás localStorage
-
-            // Redirigir al inicio
-            window.location.href = 'index.html';
-        });
-    </script>
 
     <script>
 
@@ -988,7 +893,7 @@
 
         const textoExplicativo = `
             ¡Hola! En esta sección podremos ver los distintos destinos a los que se le han asignado indicadores.  Si no suma 100 te saldrá un mensaje informativo.  Cuando se crea un indicador, se le asigna un porcentaje de ponderación del 100%, por lo que si no es el único en el destino, se necesitará ajustarlo por acá.
-            ¡Comencemos!  Aguante Juanpi!!!!!
+            ¡Comencemos!
     `;
 
         let vozSeleccionada = null;
@@ -1079,6 +984,8 @@
 
     <div id="contenedorModal"></div>
     <div id="contenedorModalMediciones"></div>
+    <div id="contenedorModalUsuario"></div>
+    <div id="contenedorModalLogout"></div>
 
     <script>
         // Cargar modal de indicadores
@@ -1094,13 +1001,63 @@
             .then(html => {
                 document.getElementById('contenedorModalMediciones').innerHTML = html;
             });
+
+        // Cargar modal usuario
+        fetch('/modal-usuario.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalUsuario').innerHTML = html;
+            });
+
+        // Cargar modal logout
+        fetch('/modal-logout.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalLogout').innerHTML = html;
+            });
+
+            //     const btnLogout = document.getElementById('confirmLogout');
+            //     if (!btnLogout) return;
+
+            //     btnLogout.addEventListener('click', async () => {
+            //         // Cerrar modal
+            //         const modalEl = document.getElementById('logoutModal');
+            //         const modal = bootstrap.Modal.getInstance(modalEl);
+            //         if (modal) modal.hide();
+
+            //         // 🔐 Auditoría logout
+            //         const token = localStorage.getItem('token');
+            //         if (token) {
+            //             try {
+            //                 await fetch('/api/auth/logout', {
+            //                     method: 'POST',
+            //                     headers: {
+            //                         Authorization: 'Bearer ' + token
+            //                     }
+            //                 });
+            //             } catch (e) {
+            //                 console.warn('No se pudo registrar logout');
+            //             }
+            //         }
+
+            //         // 🧹 Limpiar sesión
+            //         localStorage.clear();
+            //         sessionStorage.clear();
+
+            //         // 🚀 Redirigir
+            //         window.location.href = '/';
+            //     });
+            // });
     </script>
 
-    <!-- Scripts asociados -->
     <script src="/modal-indicador.js"></script>
     <script src="/modal-mediciones.js"></script>
+    <script src="/modal-usuario.js"></script>
+
+    <script src="/js/layout.js"></script>
+    <script src="/js/navbar-user.js"></script>
+    <script src="/js/logout.js"></script>
 
 </body>
-<!--end::Body-->
 
 </html>

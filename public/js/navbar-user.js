@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (userNameEl) {
         userNameEl.innerHTML = `
-            <strong>${usuario.nombres} ${usuario.apellido}</strong>
+            <strong>${usuario.nombres} ${usuario.apellido}</strong><br>
             <span class="text-muted">(${usuario.rol.toUpperCase()})</span>
         `;
 

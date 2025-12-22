@@ -136,13 +136,11 @@
     }
 
     .user-dropdown-header {
-        padding: 28px 20px;
-        /* Más espacio vertical */
+        padding: 28px 20px; /* Más espacio vertical */
     }
 
     .user-dropdown-header img {
-        margin-bottom: 15px;
-        /* Más separación del texto */
+        margin-bottom: 15px; /* Más separación del texto */
     }
 </style>
 
@@ -180,7 +178,6 @@
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
-
                     <!-- Usuario -->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
@@ -231,7 +228,6 @@
 
         <!--begin::Sidebar-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
-
         <script>
             async function cargarAside() {
                 const res = await fetch('aside.html');
@@ -253,11 +249,8 @@
 
         <!--begin::App Main-->
         <main class="app-main">
-            <!--begin::App Content Header-->
             <div class="app-content-header">
-                <!--begin::Container-->
                 <div class="container-fluid">
-                    <!--begin::Row-->
                     <!-- 🔹 Asistente -->
                     <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
                         <div class="d-flex gap-3">
@@ -868,7 +861,7 @@
 
         const textoExplicativo = `
     Desde acá se crean los usuarios.  Se requiere informar a quien reporta cada usuario, de manera que se permita enviar notificaciones ante situaciones determinadas.  Cada usuario a su vez, tendrá una opcion personalizada para modificar sus datos de correo electrónico, teléfono y contraseña.
-    ¡Comencemos!  Aguante Juanpi!!!!!
+    ¡Comencemos! 
     `;
 
         let vozSeleccionada = null;
@@ -990,39 +983,40 @@
             .then(res => res.text())
             .then(html => {
                 document.getElementById('contenedorModalLogout').innerHTML = html;
-
-                const btnLogout = document.getElementById('confirmLogout');
-                if (!btnLogout) return;
-
-                btnLogout.addEventListener('click', async () => {
-                    // Cerrar modal
-                    const modalEl = document.getElementById('logoutModal');
-                    const modal = bootstrap.Modal.getInstance(modalEl);
-                    if (modal) modal.hide();
-
-                    // 🔐 Auditoría logout
-                    const token = localStorage.getItem('token');
-                    if (token) {
-                        try {
-                            await fetch('/api/auth/logout', {
-                                method: 'POST',
-                                headers: {
-                                    Authorization: 'Bearer ' + token
-                                }
-                            });
-                        } catch (e) {
-                            console.warn('No se pudo registrar logout');
-                        }
-                    }
-
-                    // 🧹 Limpiar sesión
-                    localStorage.clear();
-                    sessionStorage.clear();
-
-                    // 🚀 Redirigir
-                    window.location.href = '/';
-                });
             });
+
+            //     const btnLogout = document.getElementById('confirmLogout');
+            //     if (!btnLogout) return;
+
+            //     btnLogout.addEventListener('click', async () => {
+            //         // Cerrar modal
+            //         const modalEl = document.getElementById('logoutModal');
+            //         const modal = bootstrap.Modal.getInstance(modalEl);
+            //         if (modal) modal.hide();
+
+            //         // 🔐 Auditoría logout
+            //         const token = localStorage.getItem('token');
+            //         if (token) {
+            //             try {
+            //                 await fetch('/api/auth/logout', {
+            //                     method: 'POST',
+            //                     headers: {
+            //                         Authorization: 'Bearer ' + token
+            //                     }
+            //                 });
+            //             } catch (e) {
+            //                 console.warn('No se pudo registrar logout');
+            //             }
+            //         }
+
+            //         // 🧹 Limpiar sesión
+            //         localStorage.clear();
+            //         sessionStorage.clear();
+
+            //         // 🚀 Redirigir
+            //         window.location.href = '/';
+            //     });
+            // });
 
     </script>
 
@@ -1030,16 +1024,9 @@
     <script src="/modal-mediciones.js"></script>
     <script src="/modal-usuario.js"></script>
 
-
     <script src="/js/layout.js"></script>
-
-    <!-- Layout / usuario -->
     <script src="/js/navbar-user.js"></script>
-
-    <!-- Logout -->
     <script src="/js/logout.js"></script>
-
-
 
 </body>
 

@@ -29,7 +29,7 @@ async function cargarNavbar(usuario) {
 
     const audiosExplicativos = {
         destinos: "Los destinos representan las distintas unidades funcionales o áreas donde se asignan los indicadores de gestión. " +
-            "¡Hola! En esta sección vas a encontrar los destinos a los que se asignan los indicadores. Llamamos destino a cada unidad funcional, proceso o área de la organización, cuyo desempeño se evalúa observando el comportamiento de ciertas variables." + " En otras secciones se informará la importancia relativa de cada destino y su incidencia en el destino al que pertenece." + "Ésta es una prueba de reproducción de textos largos y los destinos representan las distintas unidades funcionales o áreas donde se asignan los indicadores de gestión. ¡Comencemos! Aguante Juanpi!!!!!",
+            "¡Hola! En esta sección vas a encontrar los destinos a los que se asignan los indicadores. Llamamos destino a cada unidad funcional, proceso o área de la organización, cuyo desempeño se evalúa observando el comportamiento de ciertas variables." + " En otras secciones se informará la importancia relativa de cada destino y su incidencia en el destino al que pertenece." + "Ésta es una prueba de reproducción de textos largos y los destinos representan las distintas unidades funcionales o áreas donde se asignan los indicadores de gestión. ¡Comencemos! ",
         usuarios: "Aquí podrás gestionar los usuarios del sistema...",
         indicadores: "En esta sección se administran los indicadores que permiten medir el desempeño..."
     };
