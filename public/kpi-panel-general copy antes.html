@@ -1,62 +1,6 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>myResultIQ | Ind Asig</title>
-    <!--begin::Primary Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="AdminLTE v4 | Dashboard" />
-    <meta name="author" content="ColorlibHQ" />
-    <meta name="description"
-        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-    <meta name="keywords"
-        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-
-    <!--begin::Fonts-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
-
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
-
-    <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
-
-    <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../css/estilos-custom.css">
-
-    <!-- apexcharts -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
-
-    <!-- jsvectormap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
-        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <!-- AdminLTE se basa en Bootstrap, así que hay que incluirlo primero:-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!--  Bootstrap Icons (Para que <i class="bi bi-..."> funcione) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-    <!--  AdminLTE CSS (Estilos del template)-->
-    <link rel="stylesheet" href="../css/adminlte.css" />
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
-    <script src="/js/auth-guard.js"></script>
-    <script>
-        authGuard({
-            rolesPermitidos: ['administrador', 'directivo', 'responsable']
-        });
-    </script>
-</head>
+<!--begin::Head-->
 <style>
     .brand-image {
         opacity: 1 !important;
@@ -90,373 +34,327 @@
         border-bottom: 2px solid #dee2e6;
         /* gris bootstrap */
     }
-
-    :root {
-        --bg: #c75509;
-        --card: #3c0de6;
-        --muted: #01050c;
-        --accent: #2563eb;
-    }
-
-    body {
-        background: #f4f6f9;
-        font-family: Inter, ui-sans-serif, system-ui, Arial;
-        color: var(--muted);
-    }
-
-    .card {
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
-    }
-
-    .card-outline-primary {
-        border-top: 3px solid var(--accent) !important;
-    }
-
-    h5 {
-        color: var(--muted);
-        font-weight: 600;
-    }
-
-    /* --- Filtros globales --- */
-    .filters-bar {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 10px;
-        background: white;
-        border-radius: 8px;
-        padding: 10px 15px;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-        margin-bottom: 20px;
-    }
-
-    .filters-bar select {
-        border: 1px solid #dee2e6;
-        border-radius: 6px;
-        padding: 6px 10px;
-        font-size: 0.9rem;
-    }
-
-    .filters-bar button {
-        border-radius: 6px;
-        font-size: 0.9rem;
-    }
-
-    /* --- Tendencias globales --- */
-    .trend-box {
-        display: flex;
-        justify-content: space-around;
-        text-align: center;
-        margin-top: 10px;
-        border-top: 1px solid #dee2e6;
-        padding-top: 10px;
-    }
-
-    .trend-item {
-        flex: 1;
-    }
-
-    .trend-value {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--accent);
-    }
-
-    .trend-label {
-        font-size: 0.8rem;
-        color: #6c757d;
-    }
-
-    /* --- Barras horizontales --- */
-    .destination-row {
-        margin-bottom: 12px;
-    }
-
-    .destination-label {
-        font-size: 0.9rem;
-        margin-bottom: 4px;
-    }
-
-    .bar-container {
-        width: 100%;
-        background-color: #e9ecef;
-        border-radius: 8px;
-        height: 10px;
-        overflow: hidden;
-    }
-
-    .bar-fill {
-        height: 10px;
-        border-radius: 8px;
-        background: linear-gradient(90deg, var(--accent), #66b0ff);
-    }
-
-    /* --- Botones finales --- */
-    .actions-bar {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 15px;
-    }
-
-    .actions-bar button {
-        border-radius: 6px;
-        font-size: 0.9rem;
-    }
-
-    /* --- Insights automáticos --- */
-    .insight-box {
-        background: #fff;
-        border-left: 4px solid var(--accent);
-        border-radius: 10px;
-        padding: 15px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        margin-bottom: 12px;
-    }
-
-    .insight-title {
-        font-weight: 600;
-        color: var(--accent);
-    }
-
-    .insight-text {
-        font-size: 0.9rem;
-        color: #333;
-    }
-
-    .fila-indicador {
-        cursor: pointer;
-    }
-
-    .fila-indicador:hover {
-        background-color: #f0f4ff;
-    }
-
-    #chartContainer {
-        width: 100%;
-        max-width: 900px;
-        margin: 30px auto;
-    }
-
-    /* Contenedor general */
-    .indicador-meta {
-        margin-top: .75rem;
-        font-size: .88rem;
-        color: #444;
-    }
-
-    /* ----- CONTENEDOR GENERAL ----- */
-    .indicador-meta {
-        margin-top: .75rem;
-        font-size: .88rem;
-        color: #444;
-    }
-
-    /* ----- MINI TARJETAS ----- */
-    .mini-card {
-        border-radius: 14px;
-        padding: 14px 16px;
-        min-height: 110px;
-        position: relative;
-        overflow: hidden;
-
-        color: #000;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-
-        /* Sombra suave */
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .mini-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
-    }
-
-    /* ----- ÍCONO DECORATIVO ----- */
-    .mini-card::before {
-        content: attr(data-icon);
-        position: absolute;
-        right: 12px;
-        top: 8px;
-        font-size: 2.4rem;
-        opacity: 0.18;
-    }
-
-    /* ----- TÍTULO ----- */
-    .mini-card h6 {
-        font-size: 0.95rem;
-        font-weight: 700;
-        margin: 0 0 6px 0;
-    }
-
-    /* ----- CANTIDAD ----- */
-    .mini-card strong {
-        font-weight: 600;
-    }
-
-    /* ----- PROMEDIO ----- */
-    .mini-card .value {
-        font-size: 1.4rem;
-        font-weight: 800;
-        text-align: right;
-        margin-top: 4px;
-    }
-
-    /*=========================================================
-    COLORES DE TARJETAS (tipo, categoría, criticidad)
-    =========================================================*/
-
-    /* 1 — Primera columna */
-    .colored-1 {
-        background: linear-gradient(135deg, #3b82f6, #1e40af);
-        /* azul */
-    }
-
-    /* 2 — Segunda columna */
-    .colored-2 {
-        background: linear-gradient(135deg, #10b981, #065f46);
-        /* verde */
-    }
-
-    /* 3 — Tercera columna */
-    .colored-3 {
-        background: linear-gradient(135deg, #f59e0b, #b45309);
-        /* amarillo/naranja */
-    }
-
-    /* Avatar en navbar */
-    .user-avatar {
-        width: 50px;
-        height: 50px;
-        cursor: pointer;
-        border-radius: 50%;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        transition: transform 0.2s;
-        object-fit: cover;
-        margin-top: 5px;
-    }
-
-    .user-avatar:hover {
-        transform: scale(1.05);
-    }
-
-    .user-dropdown-header {
-        padding: 28px 20px;
-        /* Más espacio vertical */
-    }
-
-    .user-dropdown-header img {
-        margin-bottom: 15px;
-        /* Más separación del texto */
-    }
-
-    /* Ajuste de texto en móviles */
-    @media (max-width: 576px) {
-        #globalPercentText {
-            font-size: 1rem !important;
-        }
-
-        #ringGlobal {
-            max-width: 140px !important;
-        }
-    }
 </style>
+
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>myResultIQ | Ind Asig</title>
+    <!--begin::Primary Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="title" content="AdminLTE v4 | Dashboard" />
+    <meta name="author" content="ColorlibHQ" />
+    <meta name="description"
+        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+    <meta name="keywords"
+        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+    <!--end::Primary Meta Tags-->
+
+    <!--begin::Fonts-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
+    <!--end::Fonts-->
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
+    <!--end::Third Party Plugin(Bootstrap Icons)-->
+
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="../css/estilos-custom.css">
+    <!--end::Required Plugin(AdminLTE)-->
+
+    <!-- apexcharts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
+
+    <!-- jsvectormap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- AdminLTE se basa en Bootstrap, así que hay que incluirlo primero:-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--  Bootstrap Icons (Para que <i class="bi bi-..."> funcione) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!--  AdminLTE CSS (Estilos del template)-->
+    <link rel="stylesheet" href="../css/adminlte.css" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <style>
+        :root {
+            --bg: #c75509;
+            --card: #3c0de6;
+            --muted: #01050c;
+            --accent: #2563eb;
+        }
+
+        body {
+            background: #f4f6f9;
+            font-family: Inter, ui-sans-serif, system-ui, Arial;
+            color: var(--muted);
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+        }
+
+        .card-outline-primary {
+            border-top: 3px solid var(--accent) !important;
+        }
+
+        h5 {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        /* --- Filtros globales --- */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .filters-bar select {
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+        }
+
+        .filters-bar button {
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* --- Tendencias globales --- */
+        .trend-box {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-top: 10px;
+            border-top: 1px solid #dee2e6;
+            padding-top: 10px;
+        }
+
+        .trend-item {
+            flex: 1;
+        }
+
+        .trend-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .trend-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        /* --- Barras horizontales --- */
+        .destination-row {
+            margin-bottom: 12px;
+        }
+
+        .destination-label {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .bar-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 10px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, var(--accent), #66b0ff);
+        }
+
+        /* --- Botones finales --- */
+        .actions-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .actions-bar button {
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* --- Insights automáticos --- */
+        .insight-box {
+            background: #fff;
+            border-left: 4px solid var(--accent);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 12px;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .insight-text {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .fila-indicador {
+            cursor: pointer;
+        }
+
+        .fila-indicador:hover {
+            background-color: #f0f4ff;
+        }
+
+        #chartContainer {
+            width: 100%;
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        /* Contenedor general */
+        .indicador-meta {
+            margin-top: .75rem;
+            font-size: .88rem;
+            color: #444;
+        }
+
+        /* ----- CONTENEDOR GENERAL ----- */
+        .indicador-meta {
+            margin-top: .75rem;
+            font-size: .88rem;
+            color: #444;
+        }
+
+        /* ----- MINI TARJETAS ----- */
+        .mini-card {
+            border-radius: 14px;
+            padding: 14px 16px;
+            min-height: 110px;
+            position: relative;
+            overflow: hidden;
+
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            /* Sombra suave */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .mini-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+        }
+
+        /* ----- ÍCONO DECORATIVO ----- */
+        .mini-card::before {
+            content: attr(data-icon);
+            position: absolute;
+            right: 12px;
+            top: 8px;
+            font-size: 2.4rem;
+            opacity: 0.18;
+        }
+
+        /* ----- TÍTULO ----- */
+        .mini-card h6 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+        }
+
+        /* ----- CANTIDAD ----- */
+        .mini-card strong {
+            font-weight: 600;
+        }
+
+        /* ----- PROMEDIO ----- */
+        .mini-card .value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-align: right;
+            margin-top: 4px;
+        }
+
+
+        /*=========================================================
+    COLORES DE TARJETAS (tipo, categoría, criticidad)
+=========================================================*/
+
+        /* 1 — Primera columna */
+        .colored-1 {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            /* azul */
+        }
+
+        /* 2 — Segunda columna */
+        .colored-2 {
+            background: linear-gradient(135deg, #10b981, #065f46);
+            /* verde */
+        }
+
+        /* 3 — Tercera columna */
+        .colored-3 {
+            background: linear-gradient(135deg, #f59e0b, #b45309);
+            /* amarillo/naranja */
+        }
+
+
+        /* .card-outline {
+            border: 1px solid #0d6efd;
+            background-color: #fff;
+        } */
+
+        /* Ajuste de texto en móviles */
+        @media (max-width: 576px) {
+            #globalPercentText {
+                font-size: 1rem !important;
+            }
+
+            #ringGlobal {
+                max-width: 140px !important;
+            }
+        }
+    </style>
 </head>
+<!--end::Head-->
+
+<!--begin::Body-->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
         <nav class="app-header navbar navbar-expand bg-body">
-            <div class="container-fluid">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
-                            <i class="bi bi-list"></i>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-lte-toggle="fullscreen">
-                            <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
-                            <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
-                        </a>
-                    </li>
-
-                    <li class="nav-item d-none d-md-block">
-                        <a href="#" id="btnReactivarIntro" class="nav-link"
-                            title="Volver a escuchar la introducción general">
-                            <i class="bi bi-soundwave me-1"></i> Reproducir introducción
-                        </a>
-                    </li>
-
-                    <div class="avatar-container d-flex align-items-center gap-2 me-2">
-                        <div style="position: relative;">
-                            <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:50px; height:50px; cursor:pointer; border-radius:50%; 
-                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
-                                title="Haz clic para escuchar la explicación" />
-                            <button id="btnDetenerVoz"
-                                style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
-                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
-                                ✕
-                            </button>
-                        </div>
-                        <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
-                    </div>
-                </ul>
-
-                <ul class="navbar-nav ms-auto">
-                    <!-- Usuario -->
-                    <li class="nav-item dropdown user-menu">
-                        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <img id="userAvatar" src="/dist/images/default_user.jpg" class="user-avatar" alt="Usuario">
-                            <span id="userName" class="d-none d-md-inline ms-2">Usuario</span>
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-end user-dropdown">
-                            <!-- Header -->
-                            <li class="user-dropdown-header  text-center px-3 py-3">
-                                <img id="userAvatarDropdown" style="width:150px " src="/dist/images/default_user.jpg"
-                                    alt="Usuario">
-                                <p id="userNameDropdown" class="mb-0 user-name" style="font-size: 18px;">
-                                    Usuario
-                                    <br>
-                                    <small id="userRole" class="text-muted">Rol</small>
-                                </p>
-                            </li>
-                            <!-- Body -->
-                            <li class="user-dropdown-body px-2">
-                                <a href="/miPerfil.html" class="dropdown-item text-start" style="font-size:16px;">
-                                    <i class="fas fa-user me-2"></i> Mis datos
-                                </a>
-
-                                <a href="/cambiar-password.html" class="dropdown-item text-start"
-                                    style="font-size:16px;">
-                                    <i class="fas fa-key me-2"></i> Cambiar contraseña
-                                </a>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-
-                            <!-- Logout -->
-                            <li>
-                                <a href="#" class="dropdown-item text-start"
-                                    style="font-size:18px; color:#dc3545; /* rojo Bootstrap */" data-bs-toggle="modal"
-                                    data-bs-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt me-2"></i> Salir
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <!-- <nav class="app-header navbar navbar-expand bg-body">
             <div class="container-fluid">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -490,13 +388,14 @@
                         </span>
                     </li>
                     <li>
+                        <!-- <a href="#" class="btn btn-default btn-flat float-end"> Salir</a> -->
                         <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#logoutModal">
                             <i class="fas fa-sign-out-alt me-1"></i> Salir
                         </a>
                     </li>
                 </ul>
             </div>
-        </nav> -->
+        </nav>
 
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
         <script>
@@ -558,6 +457,21 @@
                         <!-- 🔸 Filtros -->
                         <div class="d-flex gap-3">
                             <h3 class="mb-0">Panel General</h3>
+                        </div>
+
+                        <!-- 🔹 Avatar asistente alineado a la derecha -->
+                        <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                            <div style="position: relative;">
+                                <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:60px; height:60px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                    title="Haz clic para escuchar la explicación" />
+                                <button id="btnDetenerVoz"
+                                    style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                    ✕
+                                </button>
+                            </div>
+                            <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
                         </div>
                     </div>
 
@@ -846,10 +760,10 @@
                                         </div>
                                     </div>
 
-
-                                    <!-- <div class="content mt-3" id="grafico-evolucion-indicador" style="display: none;">
+                                    <div class="content mt-3" id="grafico-evolucion-indicador" style="display: none;">
                                         <div class="container-fluid">
                                             <div class="card card-primary card-outline">
+                                                <!-- Grafico indicador -->
                                                 <div
                                                     class="card-header d-flex justify-content-between align-items-start flex-wrap">
                                                     <div class="d-flex flex-column">
@@ -862,6 +776,7 @@
                                                         </p>
                                                     </div>
                                                 </div>
+
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col-md-12">
@@ -880,7 +795,7 @@
                                                         </div>
                                                     </div>
 
-
+                                                    <!-- 🔽 KPIs al pie -->
                                                     <div class="content mt-4" id="kpiCards">
                                                     </div>
 
@@ -901,11 +816,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div> -->
-
-                                    <div id="graficoIndicadorFull"></div>
-                                    <div id="kpiTarjetasFull"></div>
-
+                                    </div>
                                 </div>
                             </div>
                             <!-- === Mejores y Peores Indicadores === -->
@@ -1132,7 +1043,7 @@
     <!--end::App Wrapper-->
 
     <!-- begin::Modal del usuario -->
-    <!-- <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
+    <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -1148,10 +1059,10 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Modal de Confirmación de Logout -->
-    <!-- <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1167,7 +1078,7 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Modal Evolucion cumplimiento global -->
     <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
@@ -1203,14 +1114,14 @@
         </div>
     </div>
 
-    <!-- <script>
+    <script>
         document.getElementById('confirmLogout').addEventListener('click', function () {
             // Limpiar lo necesario
             sessionStorage.clear();
             localStorage.clear();
             window.location.href = 'index.html'; // Redirigir al inicio
         });
-    </script> -->
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
         integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
@@ -2822,9 +2733,7 @@
                 // aseguramos datos auxiliares
                 const usuario = ind._usuario || await obtenerUsuarioPorLegajo(ind.responsable).catch(() => null);
                 const sectores = ind._sector || await obtenerSectoresPorUnidad(ind.destino).catch(() => null);
-                const info = await obtenerCumplimientoIndicador(ind.codigo_id).catch(() => ({ porcentaje: 0 }));
-
-                console.log(`recibio indicador ${ind.nombre} con sector ${sectores?.nombre} y cumplimiento ${info?.porcentaje}`);
+                const info = ind._cumplimiento || await obtenerCumplimientoIndicador(ind.codigo_id).catch(() => ({ porcentaje: 0 }));
 
                 // cache
                 ind._usuario = usuario;
@@ -2832,10 +2741,7 @@
                 ind._cumplimiento = info;
                 ind._destinoKey = ind._destinoKey || normalizeKey(ind.destino);
 
-                const porcentaje = Number(info?.porcentaje) || 0;
-
-                console.log(`Indicador ${ind.nombre} tiene cumplimiento de ${porcentaje}%`);
-
+                const porcentaje = (info && typeof info.porcentaje === 'number') ? info.porcentaje : 0;
                 const color = getColorPorCumplimiento(porcentaje);
 
                 const card = document.createElement('div');
@@ -2910,18 +2816,16 @@
         function verGraficoIndicador(key_id, nombre, meta, descripcion, metodo) {
             // Guardar en sessionStorage
             sessionStorage.setItem('indicador_seleccionado', key_id);
-            // document.getElementById('grafico-evolucion-indicador').style.display = 'block';
-            document.getElementById('grafico-evolucion-Full').style.display = 'block';
+            document.getElementById('grafico-evolucion-indicador').style.display = 'block';
 
             // Llama a la función que renderiza el gráfico
-            console.log('Renderizando gráfico para indicador:', key_id, 'con metodo', metodo);
 
             renderIndicadorChart(key_id, nombre, meta, descripcion, metodo)
 
         }
 
         // 📮🤡🎈🏀🔔📮🤡🎈🏀🔔
-        async function XXXrenderIndicadorChart(idIndicador, nombre, meta, descripcion) {
+        async function renderIndicadorChart(idIndicador, nombre, meta, descripcion) {
 
             const chartContainer = document.querySelector('#sales-chart');
             if (!chartContainer) {
@@ -3262,7 +3166,7 @@
         }
 
         // 📊🤖 Generador de análisis automático de cumplimiento
-        function XXXgenerarAnalisisAutomatico(
+        function generarAnalisisAutomatico(
             valores,
             periodos,
             meta,
@@ -3499,9 +3403,7 @@
                     };
                     const sector = await obtenerSectoresPorUnidad(ind.destino);
                     const ultimaMedicion = ultima ? ultima.med_valor : null;
-                    // const porcentaje = ultimaMedicion !== null ? (ultimaMedicion / ind.unico_valor * 100).toFixed(1) : null;
-                    const porcentaje = ultima?.med_cumplimiento ?? 0;
-
+                    const porcentaje = ultimaMedicion !== null ? (ultimaMedicion / ind.unico_valor * 100).toFixed(1) : null;
                     // 🔹 Obtener la descripción de la unidad de medida desde CodigosService
                     const unidad = CodigosService.getNombreCodigo(ind.unidad_medida)
 
@@ -3690,7 +3592,7 @@
                         <td>
                             <!-- 📈 Ver evolución -->
                             <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
-                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}', '${ind.unico_eval}')">
+                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
                                 <i class="fas fa-chart-line text-primary"></i>
                             </button>
 
@@ -3752,7 +3654,7 @@
                         <td>
                             <!-- 📈 Ver evolución -->
                             <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
-                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}' , '${ind.unico_eval}')">
+                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
                                 <i class="fas fa-chart-line text-primary"></i>
                             </button>
 
@@ -4847,23 +4749,15 @@
 
             const ocultarBienvenida = localStorage.getItem('ocultarBienvenida') === 'true';
 
-            console.log(`valor de ocultar ${ocultarBienvenida}`)
-
             if (!ocultarBienvenida) {
                 modal.show();
             }
 
             // Guardar preferencia y cerrar
             btnContinuar.addEventListener('click', () => {
-                if (checkbox.checked) {
-                    localStorage.setItem('ocultarBienvenida', 'true')
-                };
+                if (checkbox.checked) localStorage.setItem('ocultarBienvenida', 'true');
                 modal.hide();
                 speechSynthesis.cancel(); // Detener voz al salir
-                console.log(
-                    'guardando ocultar bienvenida',
-                    localStorage.getItem('ocultarBienvenida')
-                );
             });
 
             // Texto de presentación
@@ -4915,8 +4809,6 @@
 
     <div id="contenedorModal"></div>
     <div id="contenedorModalMediciones"></div>
-    <div id="contenedorModalUsuario"></div>
-    <div id="contenedorModalLogout"></div>
 
     <script>
         // Cargar modal de indicadores
@@ -4932,86 +4824,12 @@
             .then(html => {
                 document.getElementById('contenedorModalMediciones').innerHTML = html;
             });
-
-        // Cargar modal usuario
-        fetch('/modal-usuario.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('contenedorModalUsuario').innerHTML = html;
-            });
-
-        // Cargar modal logout
-        fetch('/modal-logout.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('contenedorModalLogout').innerHTML = html;
-            });
-
-            //     const btnLogout = document.getElementById('confirmLogout');
-            //     if (!btnLogout) return;
-
-            //     btnLogout.addEventListener('click', async () => {
-            //         // Cerrar modal
-            //         const modalEl = document.getElementById('logoutModal');
-            //         const modal = bootstrap.Modal.getInstance(modalEl);
-            //         if (modal) modal.hide();
-
-            //         // 🔐 Auditoría logout
-            //         const token = localStorage.getItem('token');
-            //         if (token) {
-            //             try {
-            //                 await fetch('/api/auth/logout', {
-            //                     method: 'POST',
-            //                     headers: {
-            //                         Authorization: 'Bearer ' + token
-            //                     }
-            //                 });
-            //             } catch (e) {
-            //                 console.warn('No se pudo registrar logout');
-            //             }
-            //         }
-
-            //         // 🧹 Limpiar sesión
-            //         localStorage.clear();
-            //         sessionStorage.clear();
-
-            //         // 🚀 Redirigir
-            //         window.location.href = '/';
-            //     });
-            // });
-
     </script>
 
+    <!-- Scripts asociados -->
     <script src="/modal-indicador.js"></script>
     <script src="/modal-mediciones.js"></script>
-    <script src="/modal-usuario.js"></script>
 
-    <script src="/js/layout.js"></script>
-    <script src="/js/navbar-user.js"></script>
-    <script src="/js/logout.js"></script>
-
-    <script>
-        fetch('/kpi-tools.html')
-            .then(res => res.text())
-            .then(html => {
-                // Crear contenedor temporal para poder querySelectorear
-                const temp = document.createElement("div");
-                temp.innerHTML = html;
-
-                // Seleccionar las secciones del HTML externo
-                const sectionA = temp.querySelector("#grafico-evolucion-Full");
-                const sectionB = temp.querySelector("#analisis-automatico");
-
-                // Insertarlas donde querés
-                document.getElementById("graficoIndicadorFull").appendChild(sectionA);
-                document.getElementById("kpiTarjetasFull").appendChild(sectionB);
-
-                // (Opcional) inicializar scripts, gráficos, etc.
-                if (typeof initGraficos === "function") initGraficos();
-            });
-    </script>
-
-    <script src="/kpi-tools.js"></script>
 
 </body>
 
