@@ -1812,7 +1812,43 @@
             txt.setAttribute('font-weight', '700');
             txt.textContent = percent.toFixed(1) + '%';
             svg.appendChild(txt);
+
+            // =========================
+            // 📌 GUARDAR PNG PARA PDF
+            // =========================
+            guardarSVGComoPNG(svg, 'ringGlobalPNG', 180);
         }
+
+        // 🎯🎯🎯 guardarSVGComoPNG(svgElement, storageKey, size = 180)
+        function guardarSVGComoPNG(svgElement, storageKey, size = 180) {
+            const serializer = new XMLSerializer();
+            const svgStr = serializer.serializeToString(svgElement);
+
+            const svgBlob = new Blob([svgStr], {
+                type: 'image/svg+xml;charset=utf-8'
+            });
+
+            const url = URL.createObjectURL(svgBlob);
+
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, size, size);
+                ctx.drawImage(img, 0, 0, size, size);
+
+                const pngBase64 = canvas.toDataURL('image/png');
+                localStorage.setItem(storageKey, pngBase64);
+
+                URL.revokeObjectURL(url);
+            };
+
+            img.src = url;
+        }
+
 
         // 📌📌 calcularCumplimiento(valor, meta, acepta, riesgo, critico) - // Reutiliza tu función de cálculo de cumplimiento      
         function calcularCumplimiento(valor, meta, acepta, riesgo, critico) {
@@ -2206,6 +2242,33 @@
             // Guardar total de mediciones registradas (antes del filtro)
             localStorage.setItem('totalMediciones', mediciones.length);
 
+            //📮📮📮 Obtiene rango de fechas.📮📮📮
+            let fechaMin = null;
+            let fechaMax = null;
+
+            for (const m of mediciones) {
+                const rango = obtenerRangoFechaDesdePeriodo(
+                    m.med_valor_periodo,
+                    m.med_tipo_periodo
+                );
+
+                if (!rango) continue;
+
+                if (!fechaMin || rango.desde < fechaMin) {
+                    fechaMin = rango.desde;
+                }
+
+                if (!fechaMax || rango.hasta > fechaMax) {
+                    fechaMax = rango.hasta;
+                }
+            }
+
+            if (fechaMin && fechaMax) {
+                localStorage.setItem('fechaDesde', fechaMin.toISOString());
+                localStorage.setItem('fechaHasta', fechaMax.toISOString());
+            }
+            //📮📮📮 fin Obtiene rango de fechas.📮📮📮
+
             const filtradas = mediciones.filter(m => m.med_indicador_id == indicadorId);
 
             if (filtradas.length === 0) return null;
@@ -2439,6 +2502,57 @@
         document.getElementById('valorCorteCriticos').addEventListener('input', async () => {
             await reconstruirTablas(); // función que recalcula y recarga la tabla
         });
+
+
+        // 📌📌 obtener Fecha desde Periodo
+        function obtenerRangoFechaDesdePeriodo(valorPeriodo, tipoPeriodo) {
+            const year = parseInt(valorPeriodo.substring(0, 4), 10);
+            const xx = parseInt(valorPeriodo.substring(4, 6), 10);
+
+            let mesInicio = 1;
+            let mesFin = 12;
+
+            switch (tipoPeriodo) {
+                case '0204': // mes
+                case '0210': // mes
+                    mesInicio = xx;
+                    mesFin = xx;
+                    break;
+
+                case '0205': // bimestre
+                    mesInicio = (xx - 1) * 2 + 1;
+                    mesFin = mesInicio + 1;
+                    break;
+
+                case '0206': // trimestre
+                    mesInicio = (xx - 1) * 3 + 1;
+                    mesFin = mesInicio + 2;
+                    break;
+
+                case '0207': // cuatrimestre
+                    mesInicio = (xx - 1) * 4 + 1;
+                    mesFin = mesInicio + 3;
+                    break;
+
+                case '0208': // semestre
+                    mesInicio = (xx - 1) * 6 + 1;
+                    mesFin = mesInicio + 5;
+                    break;
+
+                case '0209': // año
+                    mesInicio = 1;
+                    mesFin = 12;
+                    break;
+
+                default:
+                    return null;
+            }
+
+            return {
+                desde: new Date(year, mesInicio - 1, 1),
+                hasta: new Date(year, mesFin, 0) // último día del mes
+            };
+        }
 
 
         // 🎯🎯🎯📌📌📌📌📌📌📌
@@ -3755,6 +3869,8 @@
                 // ------------------------------------------
                 await inicializarDatosGlobales();
                 const sectoresData = getSectores();
+                localStorage.setItem('cantSectores', sectoresData.length);
+                console.log('ctdd sectores,', sectoresData.length);
 
                 sectoresData.forEach(sec => {
                     window.destinosMap[Number(sec.id)] = sec.nombre;
@@ -3766,6 +3882,7 @@
                 // ------------------------------------------
                 indicadores = getIndicadores();
                 window.indicadores = indicadores;
+                localStorage.setItem('cantIndicadoresActivos', indicadores.length);
                 console.log("✔ Finalizó 2️⃣ (indicadores)");
 
                 // ------------------------------------------
