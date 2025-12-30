@@ -1116,7 +1116,7 @@
 
                 <!-- === Botones de acción === -->
                 <div class="actions-bar">
-                    <a href="informePDF.html" class="btn btn-outline-primary">
+                    <a href="informePDF.html" target="_blank" class="btn btn-outline-primary">
                         <i class="fas fa-chart-line"></i> Ver formato previo PDF
                     </a>
                     <a href="kpi-conclusiones.html" class="btn btn-outline-primary">
@@ -1253,6 +1253,26 @@
                 return;
             }
 
+
+            // ===============================
+            // 📌 Guardar SIEMPRE el último mes del gráfico para el PDF
+            // ===============================
+            const ultimoEntryGrafico = dataFiltrada[dataFiltrada.length - 1];
+
+            if (ultimoEntryGrafico && ultimoEntryGrafico.detalle) {
+                const detallePDF = prepararDetalleParaPDF(ultimoEntryGrafico);
+
+                if (detallePDF) {
+                    localStorage.setItem(
+                        'detalleUltimoMesPDF',
+                        JSON.stringify(detallePDF)
+                    );
+                    console.log('📦 Detalle del último mes guardado para PDF:', detallePDF.month);
+                }
+            }
+
+
+
             // Preparar datos para Chart.js
             const labels = dataFiltrada.map(d => d.month);
             const valores = dataFiltrada.map(d => d.cumplimiento);
@@ -1335,7 +1355,7 @@
                             }
                         },
                         legend: {
-                            display: true
+                            display: false
                         }
                     }
                 }
@@ -1350,7 +1370,7 @@
                 } catch (e) {
                     console.error("No se pudo convertir el gráfico a imagen:", e);
                 }
-            }, 300);
+            }, 1000);
 
             // Después de crear el gráfico y antes de actualizar el resumen:
             const cumplimientoGlobalActual = valores[valores.length - 1]; // o promedio, según tu preferencia
@@ -1585,6 +1605,49 @@
             modoDetalle = "contribucion";
             mostrarDetalleMes(window.__ultimoEntry);
         });
+
+
+
+        // 📌📌 prepararDetalleParaPDF()
+        function prepararDetalleParaPDF(entry) {
+            if (!entry || !Array.isArray(entry.detalle)) return null;
+
+            const indicadores = entry.detalle.map(d => {
+                const cumplimiento = Number(d.cumplimiento) || 0;
+                const peso = Number(d.peso) || 0;
+                const contribucion = (cumplimiento * peso) / 100;
+
+                return {
+                    destinoId: Number(d.destino),
+                    destinoNombre: window.destinosMap?.[Number(d.destino)] || `Destino ${d.destino}`,
+                    indicador: d.indicador,
+                    cumplimiento,
+                    peso,
+                    contribucion
+                };
+            });
+
+            const totalContribucion = indicadores.reduce(
+                (acc, d) => acc + d.contribucion,
+                0
+            );
+
+            return {
+                month: entry.month,
+                indicadores,
+                totalContribucion
+            };
+        }
+
+
+
+
+
+
+
+
+
+
 
         // 📌📌 generarInsightsAutomaticos()
         function generarInsightsAutomaticos(serie) {

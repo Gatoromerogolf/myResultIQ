@@ -410,6 +410,29 @@
       margin-top: 6px;
     }
 
+    .tabla-indicadores {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 12px;
+    }
+
+    .tabla-indicadores th,
+    .tabla-indicadores td {
+      border: 1px solid #999;
+      padding: 6px;
+    }
+
+    .tabla-indicadores th {
+      background: #f0f0f0;
+    }
+
+    .fila-total td {
+      background: #fafafa;
+      font-size: 13px;
+    }
+
+
     /* 📱 RESPONSIVE: en pantallas pequeñas pasa a 2x2 */
     @media (max-width: 768px) {
       .metrics {
@@ -471,6 +494,7 @@
       top: 100mm;
     }
 
+
     /* Responsive preview scaling */
     @media (max-width:980px) {
       .doc-wrap {
@@ -489,14 +513,34 @@
 
   <div class="doc-wrap">
     <div class="toolbar">
-      <button id="btn-build">Generar documento</button>
+      <!-- <button id="btn-build">Generar documento</button> -->
       <button id="btn-pdf">Exportar a PDF</button>
-      <button id="btn-preview">Vista previa en nueva ventana</button>
-      <label style="margin-left:12px;font-size:13px;color:#555">Plantilla base</label>
+      <!-- <button id="btn-preview">Vista previa en nueva ventana</button> -->
+      <!-- <label style="margin-left:12px;font-size:13px;color:#555">Plantilla base</label> -->
     </div>
 
     <!-- Contenedor donde el script creará las páginas -->
     <div id="documento"></div>
+  </div>
+
+  <!-- Spinner / Modal flotante -->
+  <div id="spinnerOverlay" style="
+                display:none;
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background-color: rgba(0,0,0,0.5);
+                z-index: 2000;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                color: white;
+                font-size: 1.2rem;
+                ">
+    <div class="spinner-border text-light mb-3" role="status">
+      <span class="visually-hidden">Generando PDF...</span>
+    </div>
+    <span id="spinnerText">Generando informe PDF, por favor espere...</span>
   </div>
 
   <!-- Dependencia para exportar a PDF -->
@@ -1027,8 +1071,8 @@
       // =======================
       const p = document.createElement('p');
       p.innerHTML = `
-      El siguiente gráfico muestra el cumplimiento global organizacional, obtenido al ponderar
-      cada indicador por su peso relativo dentro de la estructura total y por su nivel de avance
+      El siguiente gráfico muestra el porcentaje de cumplimiento global organizacional correspondiente al último período evaluado, resultante de ponderar
+      cada indicador por su peso relativo dentro de la estructura total y por su nivel de logro
       respecto al objetivo definido.<br><br>
       `;
       content.appendChild(p);
@@ -1093,7 +1137,7 @@
         `;
       }
 
-      
+
 
       // =======================
       // Métricas (derecha)
@@ -1196,11 +1240,9 @@
       content.appendChild(bloqueResumen);
 
 
-            const p2 = document.createElement('p');
-            p2.innerHTML = `<br><br>
-      El siguiente gráfico muestra el cumplimiento global organizacional, obtenido al ponderar
-      cada indicador por su peso relativo dentro de la estructura total y por su nivel de avance
-      respecto al objetivo definido.<br><br>
+      const p2 = document.createElement('p');
+      p2.innerHTML = `<br><br>
+      A continuación la representación gráfica de la evolución en el tiempo del cumplimiento global organizacional.<br>
       `;
       content.appendChild(p2);
 
@@ -1211,7 +1253,7 @@
       // --- CARD CONTENEDOR ELEGANTE ---
       const card = document.createElement("div");
       card.style.marginTop = "25px";
-      card.style.padding = "20px";
+      card.style.padding = "10px";
       card.style.border = "1px solid #e0e0e0";
       card.style.borderRadius = "10px";
       card.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
@@ -1220,8 +1262,8 @@
       // --- TÍTULO DEL GRÁFICO ---
       const tituloGraf = document.createElement("h3");
       tituloGraf.textContent = "Evolución del Cumplimiento Global";
-      tituloGraf.style.fontSize = "18px";
-      tituloGraf.style.marginBottom = "15px";
+      tituloGraf.style.fontSize = "16px";
+      tituloGraf.style.marginBottom = "5px";
       tituloGraf.style.color = "#333";
       card.appendChild(tituloGraf);
 
@@ -1230,13 +1272,13 @@
       graf2.style.display = "flex";
       graf2.style.alignItems = "center";
       graf2.style.justifyContent = "center";
-      graf2.style.padding = "10px 0";
+      graf2.style.padding = "5px 0";
 
       if (imagenGrafico) {
         graf2.innerHTML = `
       <img src="${imagenGrafico}" 
            style="
-             width: 520px; 
+             width: 530px; 
              max-width: 100%;
              border-radius: 6px;
              border: 1px solid #ddd;
@@ -1264,14 +1306,14 @@
       card.appendChild(graf2);
 
       // --- PIE DE GRÁFICO ---
-      const nota = document.createElement("div");
-      nota.style.marginTop = "10px";
-      nota.style.fontSize = "12px";
-      nota.style.color = "#666";
-      nota.style.textAlign = "center";
-      nota.innerHTML =
-        "Este gráfico representa la evolución mensual del porcentaje de cumplimiento consolidado en toda la organización.";
-      card.appendChild(nota);
+      // const nota = document.createElement("div");
+      // nota.style.marginTop = "10px";
+      // nota.style.fontSize = "12px";
+      // nota.style.color = "#666";
+      // nota.style.textAlign = "center";
+      // nota.innerHTML =
+      //   "Este gráfico representa la evolución mensual del porcentaje de cumplimiento consolidado en toda la organización.";
+      // // card.appendChild(nota);
 
       // Insertar card en el contenido
       content.appendChild(card);
@@ -1282,27 +1324,484 @@
 
 
     //😎😎😎 buildSectores
-    function buildSectores() {
-      ejemplo.sectores.forEach(sec => {
+    //😎😎😎 buildSectores
+    function getSemaforo(valor) {
+      if (valor >= 90) return '🟢';
+      if (valor >= 70) return '🟡';
+      return '🔴';
+    }
+
+    function buildIndicadores() {
+      // =======================
+      // Leer datos del storage
+      // =======================
+      const dataPDF = JSON.parse(
+        localStorage.getItem('detalleUltimoMesPDF')
+      );
+
+      if (!dataPDF || !Array.isArray(dataPDF.indicadores)) {
         const { page, content } = createPage();
-        const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = `Indicadores - ${sec.nombre}`;
+        const h = document.createElement('h2');
+        h.className = 'section-title';
+        h.textContent = 'Detalle del último mes';
         content.appendChild(h);
 
-        const table = document.createElement('table');
-        const rows = sec.indicadores.map(ind => `
-          <tr>
-            <td>${ind.nombre}</td>
-            <td>${ind.meta}</td>
-            <td>${ind.valor}</td>
-            <td>${ind.estado.toUpperCase()}</td>
-          </tr>
-        `).join('');
-        table.innerHTML = `<thead><tr><th>Indicador</th><th>Meta</th><th>Valor</th><th>Estado</th></tr></thead><tbody>${rows}</tbody>`;
-        content.appendChild(table);
-
+        const warn = document.createElement('p');
+        warn.textContent = 'No hay datos disponibles para este período.';
+        content.appendChild(warn);
         documento.appendChild(page);
+        return;
+      }
+
+      // =======================
+      // Agrupar por destino
+      // =======================
+      const grupos = dataPDF.indicadores.reduce((acc, d) => {
+        if (!acc[d.destinoNombre]) acc[d.destinoNombre] = [];
+        acc[d.destinoNombre].push(d);
+        return acc;
+      }, {});
+
+      // Ordenar indicadores por cumplimiento DESC
+      Object.keys(grupos).forEach(destino => {
+        grupos[destino].sort((a, b) => b.cumplimiento - a.cumplimiento);
       });
+
+      // =======================
+      // Variables de paginación
+      // =======================
+      let currentPage = null;
+      let currentContent = null;
+      let alturaAcumulada = 0;
+      const MAX_ALTURA = 950; // Altura máxima antes de crear nueva página (ajustar según necesites)
+      let esPrimeraPagina = true;
+
+      function iniciarNuevaPagina() {
+        const { page, content } = createPage();
+        currentPage = page;
+        currentContent = content;
+        alturaAcumulada = 0;
+
+        // Solo en la primera página agregar título y descripción
+        if (esPrimeraPagina) {
+          const h = document.createElement('h2');
+          h.className = 'section-title';
+          h.textContent = 'Detalle del último mes';
+          currentContent.appendChild(h);
+
+          const p = document.createElement('p');
+          p.innerHTML = `
+              Valor de los indicadores que conforman la última medición<br>
+            `;
+          currentContent.appendChild(p);
+
+          const sub = document.createElement('h4');
+          sub.textContent = `Período: ${dataPDF.month}`;
+          currentContent.appendChild(sub);
+
+          alturaAcumulada = 180; // Altura estimada del encabezado
+          esPrimeraPagina = false;
+        } else {
+          // En páginas siguientes, agregar continuación
+          const cont = document.createElement('h3');
+          cont.textContent = 'Detalle del último mes (continuación)';
+          cont.style.fontSize = '16px';
+          cont.style.marginBottom = '10px';
+          currentContent.appendChild(cont);
+          alturaAcumulada = 60;
+        }
+
+        documento.appendChild(currentPage);
+      }
+
+      // Iniciar primera página
+      iniciarNuevaPagina();
+
+      // =======================
+      // Renderizar por destino
+      // =======================
+      Object.keys(grupos).forEach(destino => {
+        const indicadores = grupos[destino];
+
+        // Calcular altura estimada del destino completo
+        const alturaDestino = 40; // Título del destino
+        const alturaEncabezadoTabla = 35;
+        const alturaFilaPorIndicador = 30;
+        const alturaTotal = alturaDestino + alturaEncabezadoTabla +
+          (indicadores.length * alturaFilaPorIndicador) + 20;
+
+        // Si el destino completo cabe en la página actual
+        if (alturaAcumulada + alturaTotal < MAX_ALTURA) {
+          // Renderizar destino completo
+          renderizarDestino(destino, indicadores);
+          alturaAcumulada += alturaTotal;
+        } else {
+          // Necesitamos dividir o crear nueva página
+
+          // Si apenas empezamos la página, renderizar lo que se pueda
+          if (alturaAcumulada < 200) {
+            renderizarDestino(destino, indicadores);
+            alturaAcumulada += alturaTotal;
+          } else {
+            // Crear nueva página y renderizar ahí
+            iniciarNuevaPagina();
+            renderizarDestino(destino, indicadores);
+            alturaAcumulada += alturaTotal;
+          }
+        }
+      });
+
+      function renderizarDestino(destino, indicadores) {
+        // --- Título del destino ---
+        const hDestino = document.createElement('h4');
+        hDestino.style.marginTop = '16px';
+        hDestino.textContent = destino;
+        currentContent.appendChild(hDestino);
+
+        // --- Tabla del destino ---
+        const table = document.createElement('table');
+        table.className = 'tabla-indicadores';
+
+        table.innerHTML = `
+      <thead>
+        <tr>
+          <th></th>
+          <th>Indicador</th>
+          <th>Cumplimiento</th>
+          <th>Peso</th>
+          <th>Contribución</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    `;
+
+        const tbody = table.querySelector('tbody');
+
+        indicadores.forEach(d => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+        <td style="text-align:center">${getSemaforo(d.cumplimiento)}</td>
+        <td>${d.indicador}</td>
+        <td>${d.cumplimiento.toFixed(2)}%</td>
+        <td>${d.peso.toFixed(2)}%</td>
+        <td><strong>${d.contribucion.toFixed(2)}%</strong></td>
+      `;
+          tbody.appendChild(tr);
+        });
+
+        currentContent.appendChild(table);
+      }
+
+      // =======================
+      // TOTAL GENERAL al final
+      // =======================
+      // Verificar si cabe en la página actual
+      if (alturaAcumulada + 50 > MAX_ALTURA) {
+        iniciarNuevaPagina();
+      }
+
+      const total = document.createElement('p');
+      total.style.marginTop = '12px';
+      total.innerHTML = `
+    <strong>Total contribución del período:</strong>
+    ${dataPDF.totalContribucion.toFixed(2)}%
+  `;
+      currentContent.appendChild(total);
     }
+
+
+
+
+ //😎😎😎 buildIndicadoresPorContribucion
+function buildIndicadoresPorContribucion() {
+  // =======================
+  // Leer datos del storage
+  // =======================
+  const dataPDF = JSON.parse(
+    localStorage.getItem('detalleUltimoMesPDF')
+  );
+
+  if (!dataPDF || !Array.isArray(dataPDF.indicadores)) {
+    const { page, content } = createPage();
+    const h = document.createElement('h2');
+    h.className = 'section-title';
+    h.textContent = 'Indicadores por Contribución';
+    content.appendChild(h);
+    
+    const warn = document.createElement('p');
+    warn.textContent = 'No hay datos disponibles para este período.';
+    content.appendChild(warn);
+    documento.appendChild(page);
+    return;
+  }
+
+  // =======================
+  // Ordenar por contribución DESC
+  // =======================
+  const indicadoresOrdenados = [...dataPDF.indicadores].sort(
+    (a, b) => b.contribucion - a.contribucion
+  );
+
+  // =======================
+  // Variables de paginación
+  // =======================
+  let currentPage = null;
+  let currentContent = null;
+  let alturaAcumulada = 0;
+  const MAX_ALTURA = 950;
+  let esPrimeraPagina = true;
+
+  function iniciarNuevaPagina() {
+    const { page, content } = createPage();
+    currentPage = page;
+    currentContent = content;
+    alturaAcumulada = 0;
+
+    if (esPrimeraPagina) {
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Indicadores por Contribución';
+      currentContent.appendChild(h);
+
+      const p = document.createElement('p');
+      p.innerHTML = `
+        A continuación se presentan todos los indicadores ordenados por su 
+        contribución al cumplimiento global, de mayor a menor impacto.<br>
+      `;
+      currentContent.appendChild(p);
+
+      const sub = document.createElement('h4');
+      sub.textContent = `Período: ${dataPDF.month}`;
+      currentContent.appendChild(sub);
+
+      alturaAcumulada = 180;
+      esPrimeraPagina = false;
+    } else {
+      const cont = document.createElement('h3');
+      cont.textContent = 'Indicadores por Contribución (continuación)';
+      cont.style.fontSize = '16px';
+      cont.style.marginBottom = '10px';
+      currentContent.appendChild(cont);
+      alturaAcumulada = 60;
+    }
+
+    documento.appendChild(currentPage);
+  }
+
+  // Iniciar primera página
+  iniciarNuevaPagina();
+
+  // =======================
+  // Crear tabla única
+  // =======================
+  const table = document.createElement('table');
+  table.className = 'tabla-indicadores';
+
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th></th>
+        <th>Indicador</th>
+        <th>Destino</th>
+        <th>Cumplimiento</th>
+        <th>Peso</th>
+        <th>Contribución</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+
+  const tbody = table.querySelector('tbody');
+  currentContent.appendChild(table);
+  alturaAcumulada += 35; // Encabezado de tabla
+
+  // =======================
+  // Agregar filas
+  // =======================
+  indicadoresOrdenados.forEach((d, index) => {
+    const alturaFila = 30;
+    
+    // Si nos pasamos de altura, crear nueva página
+    if (alturaAcumulada + alturaFila > MAX_ALTURA) {
+      iniciarNuevaPagina();
+      
+      // Crear nueva tabla en la nueva página
+      const nuevaTable = document.createElement('table');
+      nuevaTable.className = 'tabla-indicadores';
+      nuevaTable.innerHTML = `
+        <thead>
+          <tr>
+            <th></th>
+            <th>Indicador</th>
+            <th>Destino</th>
+            <th>Cumplimiento</th>
+            <th>Peso</th>
+            <th>Contribución</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+      currentContent.appendChild(nuevaTable);
+      tbody = nuevaTable.querySelector('tbody');
+      alturaAcumulada += 35;
+    }
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="text-align:center">${getSemaforo(d.cumplimiento)}</td>
+      <td>${d.indicador}</td>
+      <td style="font-size: 0.9em; color: #666;">${d.destinoNombre}</td>
+      <td>${d.cumplimiento.toFixed(2)}%</td>
+      <td>${d.peso.toFixed(2)}%</td>
+      <td><strong>${d.contribucion.toFixed(2)}%</strong></td>
+    `;
+    tbody.appendChild(tr);
+    alturaAcumulada += alturaFila;
+  });
+
+  // =======================
+  // TOTAL GENERAL al final
+  // =======================
+  if (alturaAcumulada + 50 > MAX_ALTURA) {
+    iniciarNuevaPagina();
+  }
+
+  const total = document.createElement('p');
+  total.style.marginTop = '12px';
+  total.innerHTML = `
+    <strong>Total contribución del período:</strong>
+    ${dataPDF.totalContribucion.toFixed(2)}%
+  `;
+  currentContent.appendChild(total);
+}
+
+
+
+
+    function HHHbuildSectores() {
+      const { page, content } = createPage();
+
+      // --- TÍTULO DE SECCIÓN ---
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Detalle del último mes';
+      content.appendChild(h);
+
+      // --- Texto introductorio ---
+      const p = document.createElement('p');
+      p.innerHTML = `
+        Acá aparecen los indicadores y sus valores del último período.<br><br>
+      `;
+      content.appendChild(p);
+
+      // =======================
+      // Leer datos del storage
+      // =======================
+      const dataPDF = JSON.parse(
+        localStorage.getItem('detalleUltimoMesPDF')
+      );
+
+      if (!dataPDF || !Array.isArray(dataPDF.indicadores)) {
+        const warn = document.createElement('p');
+        warn.textContent = 'No hay datos disponibles para este período.';
+        content.appendChild(warn);
+        documento.appendChild(page);
+        return;
+      }
+
+      // =======================
+      // Subtítulo con el mes
+      // =======================
+      const sub = document.createElement('h4');
+      sub.textContent = `Período: ${dataPDF.month}`;
+      content.appendChild(sub);
+
+      // =======================
+      // Agrupar por destino
+      // =======================
+      const grupos = dataPDF.indicadores.reduce((acc, d) => {
+        if (!acc[d.destinoNombre]) acc[d.destinoNombre] = [];
+        acc[d.destinoNombre].push(d);
+        return acc;
+      }, {});
+
+      // =======================
+      // Renderizar por destino
+      // =======================
+      Object.keys(grupos).forEach(destino => {
+
+        // Ordenar por cumplimiento DESC
+        grupos[destino].sort(
+          (a, b) => b.cumplimiento - a.cumplimiento
+        );
+
+        // --- Título del destino ---
+        const hDestino = document.createElement('h4');
+        hDestino.style.marginTop = '16px';
+        hDestino.textContent = destino;
+        content.appendChild(hDestino);
+
+        // --- Tabla del destino ---
+        const table = document.createElement('table');
+        table.className = 'tabla-indicadores';
+
+        table.innerHTML = `
+            <thead>
+              <tr>
+                <th></th>
+                <th>Indicador</th>
+                <th>Cumplimiento</th>
+                <th>Peso</th>
+                <th>Contribución</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          `;
+
+        const tbody = table.querySelector('tbody');
+
+        grupos[destino].forEach(d => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="text-align:center">${getSemaforo(d.cumplimiento)}</td>
+            <td>${d.indicador}</td>
+            <td>${d.cumplimiento.toFixed(2)}%</td>
+            <td>${d.peso.toFixed(2)}%</td>
+            <td><strong>${d.contribucion.toFixed(2)}%</strong></td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        content.appendChild(table);
+      });
+
+      // =======================
+      // TOTAL GENERAL
+      // =======================
+      const total = document.createElement('p');
+      total.style.marginTop = '12px';
+      total.innerHTML = `
+        <strong>Total contribución del período:</strong>
+        ${dataPDF.totalContribucion.toFixed(2)}%
+      `;
+      content.appendChild(total);
+
+      // =======================
+      // Agregar página al doc
+      // =======================
+      documento.appendChild(page);
+    }
+
+
+
+
+    function nuevaPagina() {
+      const { page, content } = createPage();
+      documento.appendChild(page);
+      return { page, content };
+    }
+
+
 
     //😎😎😎 buildAnexos
     function buildAnexos() {
@@ -1335,7 +1834,8 @@
       buildTOC();
       buildResumen();
       buildIndicadoresGlobales();
-      buildSectores();
+      buildIndicadores();
+      buildIndicadoresPorContribucion();
       buildAnexos();
       numerarPaginas();
     }
@@ -1343,9 +1843,14 @@
 
     // 🏀🏀🏀 Exportar a PDF usando html2pdf
     async function exportPDF() {
+
+      const spinner = document.getElementById('spinnerOverlay');
+      const spinnerText = document.getElementById('spinnerText');
+      spinner.style.display = 'flex';
+      spinnerText.textContent = 'Generando informe PDF, por favor espere...';
       // Clonar el nodo para no afectar la vista
       const node = documento.cloneNode(true);
-
+      const filename = `Informe_myResultIQ_${new Date().toISOString().slice(0, 10)}.pdf`
       // Opciones de html2pdf
       const opt = {
         margin: 0,
@@ -1377,21 +1882,24 @@
       } finally {
         document.body.removeChild(holder);
       }
+      spinnerText.textContent = `✅ Informe generado correctamente.<br><br>
+                    El archivo se descargó como: ${filename}`;
+      setTimeout(() => (spinner.style.display = 'none'), 10000);
     }
 
     // 🏀🏀🏀 Abrir vista previa en nueva ventana (serializamos el HTML del documento)
-    function previewNewWindow() {
-      const w = window.open('about:blank', '_blank');
-      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Preview</title>` +
-        '<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">' +
-        '<style>body{margin:0;padding:0;background:#ddd}.page{margin:12px auto}</style></head><body>' + documento.innerHTML + '</body></html>';
-      w.document.open(); w.document.write(html); w.document.close();
-    }
+    // function previewNewWindow() {
+    //   const w = window.open('about:blank', '_blank');
+    //   const html = `<!doctype html><html><head><meta charset="utf-8"><title>Preview</title>` +
+    //     '<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">' +
+    //     '<style>body{margin:0;padding:0;background:#ddd}.page{margin:12px auto}</style></head><body>' + documento.innerHTML + '</body></html>';
+    //   w.document.open(); w.document.write(html); w.document.close();
+    // }
 
     // Eventos
-    document.getElementById('btn-build').addEventListener('click', () => { buildDocument(); window.scrollTo(0, 0); });
+    // document.getElementById('btn-build').addEventListener('click', () => { buildDocument(); window.scrollTo(0, 0); });
     document.getElementById('btn-pdf').addEventListener('click', () => { exportPDF(); });
-    document.getElementById('btn-preview').addEventListener('click', () => { previewNewWindow(); });
+    // document.getElementById('btn-preview').addEventListener('click', () => { previewNewWindow(); });
 
     // Auto-build initial
     buildDocument();
