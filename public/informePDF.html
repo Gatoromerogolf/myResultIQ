@@ -506,6 +506,21 @@
         min-height: 1200px
       }
     }
+
+    .perspectiva-section {
+      margin-bottom: 40px;
+      page-break-after: always;
+    }
+
+    .perspectiva-section:last-child {
+      page-break-after: auto;
+    }
+
+    @media print {
+      .perspectiva-section {
+        page-break-after: always;
+      }
+    }
   </style>
 </head>
 
@@ -730,7 +745,7 @@
 
       documento.appendChild(page);
     }
- 
+
     // 🧲🧲🧲 buildIntrooverview
     function buildMarcoIntroductorio() {
       const { page, content } = createPage();
@@ -1572,7 +1587,9 @@
       const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'BSC - Balanced Scorecard';
 
       content.appendChild(h);
-      const p0 = document.createElement('p'); p0.innerHTML = `
+
+      const p0 = document.createElement('p'); p0.innerHTML = `<br>
+      <b>1. Gráfico de cumplimiento promedio.</b><br><br>
       A continuación se presentan los resultados obtenidos en las distintas perspectivas del BSC durante el período evaluado.
       `;
       content.appendChild(p0);
@@ -1591,16 +1608,21 @@
 
       if (imgBSC) {
         graf2.innerHTML = `
-              <img src="${imgBSC}" 
-                  style="
-                    width: 600px; 
-                    max-width: 100%;
-                    border-radius: 6px;
-                    border: 1px solid #ddd;
-                    padding: 6px;
-                    background: #fafafa;
-                  ">
-            `;
+          <img src="${imgBSC}" 
+              style="
+                width: 1000px;
+                max-width: 100%;
+                max-height: 330px;
+                height: auto;
+                object-fit: contain;
+                border-radius: 6px;
+                border: 1px solid #ddd;
+                padding: 6px;
+                background: #fafafa;
+                display: block;
+                margin: 0 auto;
+              ">
+        `;
       } else {
         graf2.innerHTML = `
             <div style="
@@ -1621,27 +1643,387 @@
       content.appendChild(graf2);
       localStorage.removeItem("graficoBSC_Barras");
 
+      // --- PUNTO 2: TABLA DE PERSPECTIVAS ---
+      const tituloTabla = document.createElement('p');
+      tituloTabla.innerHTML = `<br><br>
+          <b>2. Tabla de perspectivas.</b><br><br>
+          Valores promedios y ponderados según el peso relativo asignado a cada indicador incluido en cada perspectiva.
+          `;
+      content.appendChild(tituloTabla);
 
-      const p1 = document.createElement('p'); p1.innerHTML = `
-      2. Evolución temporal.  Mostrar tendencia de cada perspectiva.<br><br>
-      `;
-      content.appendChild(p1);
+      // insertar tabla
+      const resumenPorDimension = JSON.parse(
+        localStorage.getItem("resumenPorDimension") || "[]"
+      );
+      const tablaPerspectivas = buildTablaPerspectivas(resumenPorDimension);
+      content.appendChild(tablaPerspectivas);
 
-      const p2 = document.createElement('p'); p2.innerHTML = `
-      3. Mostrar los indicadores por perspectiva, con participación de cada uno y ordenado por mejor cumplimiento.<br><br>
-      `;
-      content.appendChild(p2);
+      // const p1 = document.createElement('p'); p1.innerHTML = `
+      // 3. Evolución temporal.  Mostrar tendencia de cada perspectiva.<br><br>
+      // `;
+      // content.appendChild(p1);
+
+      // const p2 = document.createElement('p'); p2.innerHTML = `
+      // 4. Mostrar los indicadores por perspectiva, con participación de cada uno y ordenado por mejor cumplimiento.<br><br>
+      // `;
+      // content.appendChild(p2);
 
 
-      const p3 = document.createElement('p'); p3.innerHTML = `
-      4. En cada pagina los indicadores de cada perspectiva, mostrando el grafico del mejor calificado y el grafico del peor calificado.<br>
-      Cada perspectiva se muestra en una página separada.<br>
-      Poner comentarios y el plan de accion del indicador que se muestra además del gráfico<br>
-      `;
-      content.appendChild(p3);
+      // const p3 = document.createElement('p'); p3.innerHTML = `
+      // 5. En cada pagina los indicadores de cada perspectiva, mostrando el grafico del mejor calificado y el grafico del peor calificado.<br>
+      // Cada perspectiva se muestra en una página separada.<br>
+      // Poner comentarios y el plan de accion del indicador que se muestra además del gráfico<br>
+      // `;
+      // content.appendChild(p3);
 
       documento.appendChild(page);
+
     }
+
+    // 🧲🧲🧲 buildBSCPerspectiva
+    function buildBSCPerspectiva() {
+
+      const { page, content } = createPage();
+
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'BSC - Balanced Scorecard';
+      content.appendChild(h);
+
+      const p0 = document.createElement('p');
+      p0.innerHTML = `
+        <b>3. Detalle de Indicadores por Perspectiva.</b><br><br>
+        A continuación se presentan los indicadores agrupados según la perspectiva del BSC a la que pertenecen,
+        mostrando su desempeño individual y contribución al cumplimiento global.<br><br>
+    `;
+      content.appendChild(p0);
+
+      // 📦 Contenedor del detalle
+      const detalleContainer = document.createElement("div");
+      detalleContainer.id = "detallePerspectivasInforme";
+      content.appendChild(detalleContainer);
+
+      // 🧠 Render directo, SIN document.getElementById
+      renderDetallePorPerspectivaHTML(detalleContainer);
+
+      // 🔴 Recién ahora entra al DOM
+      documento.appendChild(page);
+    }
+
+
+
+
+    //😎😎😎 buildTablaPerspectivas
+    function buildTablaPerspectivas(resumenPorDimension) {
+      const table = document.createElement("table");
+      table.style.width = "100%";
+      table.style.borderCollapse = "collapse";
+      table.style.marginTop = "12px";
+      table.style.fontSize = "12px";
+
+      table.innerHTML = `
+        <thead>
+            <tr style="background:#f0f0f0">
+                <th style="border:1px solid #999; padding:6px">Perspectiva</th>
+                <th style="border:1px solid #999; padding:6px; text-align:center">Indicadores</th>
+                <th style="border:1px solid #999; padding:6px; text-align:center">Promedio</th>
+                <th style="border:1px solid #999; padding:6px; text-align:center">Ponderado</th>
+                <th style="border:1px solid #999; padding:6px; text-align:center">Estado</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+
+      const tbody = table.querySelector("tbody");
+
+      let totalPromedio = 0;
+      let totalPonderado = 0;
+      let totalIndicadores = 0;
+
+      resumenPorDimension.forEach(d => {
+        totalPromedio += Number(d.promedio) || 0;
+        totalPonderado += Number(d.promedioPon) || 0;
+        totalIndicadores += d.indicadores.length;
+
+        const estado = d.promedioPon >= 80 ? 'Alto' :
+          d.promedioPon >= 50 ? 'Medio' : 'Bajo';
+
+        const color = d.promedioPon >= 80 ? '#d4edda' :
+          d.promedioPon >= 50 ? '#fff3cd' : '#f8d7da';
+
+        tbody.insertAdjacentHTML("beforeend", `
+            <tr style="background:${color}">
+                <td style="border:1px solid #999; padding:6px">${d.dimension}</td>
+                <td style="border:1px solid #999; padding:6px; text-align:center">${d.indicadores.length}</td>
+                <td style="border:1px solid #999; padding:6px; text-align:center">${Number(d.promedio).toFixed(1)}%</td>
+                <td style="border:1px solid #999; padding:6px; text-align:center">${Number(d.promedioPon).toFixed(1)}%</td>
+                <td style="border:1px solid #999; padding:6px; text-align:center">${estado}</td>
+            </tr>
+            `);
+      });
+
+      const promedioOrg = resumenPorDimension.length
+        ? (totalPromedio / resumenPorDimension.length).toFixed(1)
+        : 0;
+
+      const ponderadoOrg = (totalPonderado / resumenPorDimension.length).toFixed(1);
+      const estadoOrg = ponderadoOrg >= 80 ? 'Alto' :
+        ponderadoOrg >= 50 ? 'Medio' : 'Bajo';
+
+      const colorOrg = ponderadoOrg >= 80 ? '#c3e6cb' :
+        ponderadoOrg >= 50 ? '#ffeeba' : '#f5c6cb';
+
+      // 🔹 FILA TOTAL ORGANIZACIONAL
+      tbody.insertAdjacentHTML("beforeend", `
+        <tr style="font-weight:bold; background:${colorOrg}">
+            <td style="border:2px solid #555; padding:6px">TOTAL ORGANIZACIONAL</td>
+            <td style="border:2px solid #555; padding:6px; text-align:center">${totalIndicadores}</td>
+            <td style="border:2px solid #555; padding:6px; text-align:center">${promedioOrg}%</td>
+            <td style="border:2px solid #555; padding:6px; text-align:center">${ponderadoOrg}%</td>
+            <td style="border:2px solid #555; padding:6px; text-align:center">${estadoOrg}</td>
+        </tr>
+    `);
+
+      return table;
+
+      localStorage.removeItem("resumenPorDimension");
+    }
+
+
+    //😎😎😎 renderDetallePorPerspectivaHTML
+function renderDetallePorPerspectivaHTML() {
+
+    const detalle = JSON.parse(
+        localStorage.getItem("detalleIndicadoresPorPerspectiva")
+    );
+
+    if (!detalle) return;
+
+    Object.values(detalle).forEach(perspectiva => {
+
+        const { page, content } = createPage();
+
+        const h = document.createElement("h3");
+        h.className = "section-title";
+        h.textContent = perspectiva.titulo;
+        content.appendChild(h);
+
+        const p = document.createElement("p");
+        p.textContent = "Detalle de indicadores asociados a la perspectiva.";
+        content.appendChild(p);
+
+        const tableWrapper = document.createElement("div");
+        tableWrapper.innerHTML = `
+            <table class="table table-sm table-bordered mt-3">
+                <thead class="table-light">
+                    <tr>
+                        <th>Indicador</th>
+                        <th>Sector</th>
+                        <th>Responsable</th>
+                        <th>Valor</th>
+                        <th>Cumpl.</th>
+                        <th>Peso</th>
+                        <th>Pond.</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${perspectiva.html}
+                </tbody>
+            </table>
+        `;
+
+        content.appendChild(tableWrapper);
+        documento.appendChild(page);
+    });
+}
+
+
+
+
+    
+    function XXXXXrenderDetallePorPerspectivaHTML(contenedor) {
+
+      console.log('entro en el render');
+
+      if (!contenedor) {
+        console.log("no hay contenedor");
+        return;
+      }
+
+      const detalle = JSON.parse(
+        localStorage.getItem("detalleIndicadoresPorPerspectiva")
+      );
+
+      if (!detalle) return;
+
+      contenedor.innerHTML = '';
+
+      Object.values(detalle).forEach(perspectiva => {
+
+        const section = document.createElement("section");
+        section.className = "perspectiva-section";
+
+        section.innerHTML = `
+            <h3 class="titulo-perspectiva">${perspectiva.titulo}</h3>
+            <table class="table table-sm table-bordered mt-3">
+                <thead class="table-light">
+                    <tr>
+                        <th>Indicador</th>
+                        <th>Sector</th>
+                        <th>Responsable</th>
+                        <th>Valor</th>
+                        <th>Cumpl.</th>
+                        <th>Peso</th>
+                        <th>Pond.</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${perspectiva.html}
+                </tbody>
+            </table>
+        `;
+
+        contenedor.appendChild(section);
+      });
+    }
+
+
+
+
+
+    function XXXrenderDetallePorPerspectivaHTML() {
+
+      console.log('entro en el render')
+      const contenedor = document.getElementById("detallePerspectivasInforme");
+      if (!contenedor) {
+        console.log("no hay contenedor");
+        return;
+      }
+
+
+      const detalle = JSON.parse(
+        localStorage.getItem("detalleIndicadoresPorPerspectiva")
+      );
+
+      if (!detalle) return;
+      console.log(detalle)
+
+      contenedor.innerHTML = '';
+
+      Object.values(detalle).forEach((perspectiva, index) => {
+
+        // 🧱 Sección por Perspectiva
+        const section = document.createElement("section");
+        section.className = "perspectiva-section";
+
+        // 🧭 Título
+        section.innerHTML += `
+            <h3 class="titulo-perspectiva">${perspectiva.titulo}</h3>
+            <p class="subtitulo-perspectiva">
+                Detalle de indicadores asociados a la perspectiva
+            </p>
+        `;
+
+        // 📊 Tabla
+        section.innerHTML += `
+            <table class="table table-sm table-bordered mt-3">
+                <thead class="table-light">
+                    <tr>
+                        <th>Indicador</th>
+                        <th>Sector</th>
+                        <th>Responsable</th>
+                        <th>Valor</th>
+                        <th>Cumpl.</th>
+                        <th>Peso</th>
+                        <th>Pond.</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${perspectiva.html}
+                </tbody>
+            </table>
+        `;
+
+        contenedor.appendChild(section);
+      });
+    }
+
+
+    //😎😎😎 agregarDetallePorPerspectivaPDF
+    function XXXagregarDetallePorPerspectivaPDF(doc) {
+
+      const detalle = JSON.parse(
+        localStorage.getItem("detalleIndicadoresPorPerspectiva")
+      );
+
+      if (!detalle) return;
+
+      Object.values(detalle).forEach((perspectiva, index) => {
+
+        // 🔹 Nueva página a partir de la segunda
+        if (index > 0) {
+          doc.addPage();
+        }
+
+        let y = 20;
+
+        // 🧭 Título de la perspectiva
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text(perspectiva.titulo, 14, y);
+
+        y += 6;
+
+        // 📊 Subtítulo opcional
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "normal");
+        doc.text("Detalle de indicadores asociados a la perspectiva", 14, y);
+
+        y += 4;
+
+        // 🧱 Crear tabla temporal invisible
+        const table = document.createElement("table");
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Indicador</th>
+                    <th>Sector</th>
+                    <th>Responsable</th>
+                    <th>Valor</th>
+                    <th>Cumpl.</th>
+                    <th>Peso</th>
+                    <th>Pond.</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${perspectiva.html}
+            </tbody>
+        `;
+
+        // 📌 Agregar tabla al PDF
+        doc.autoTable({
+          html: table,
+          startY: y + 4,
+          theme: "grid",
+          styles: {
+            fontSize: 8,
+            cellPadding: 2
+          },
+          headStyles: {
+            fillColor: [230, 230, 230],
+            textColor: 20,
+            fontStyle: "bold"
+          },
+          margin: { left: 14, right: 14 }
+        });
+
+      });
+    }
+
 
     //😎😎😎 nuevaPagina
     function nuevaPagina() {
@@ -1684,6 +2066,7 @@
       buildUltimoMes();
       buildIndicadoresPorContribucion();
       buildBSC()
+      buildBSCPerspectiva()
       buildAnexos();
       numerarPaginas();
     }

@@ -720,8 +720,8 @@
                                                             <tr>
                                                                 <th>Perspectiva</th>
                                                                 <th class="text-center">Ind.</th>
-                                                                <th class="text-center">Cumplimiento</th>
-                                                                <th class="text-center">Ponderado</th>                                                                
+                                                                <th class="text-center">Promedio</th>
+                                                                <th class="text-center">Ponderado</th>
                                                                 <th class="text-center">Estado</th>
                                                             </tr>
                                                         </thead>
@@ -1642,7 +1642,6 @@
         });
 
 
-
         // 📌📌 prepararDetalleParaPDF()
         function prepararDetalleParaPDF(entry) {
             if (!entry || !Array.isArray(entry.detalle)) return null;
@@ -1673,15 +1672,6 @@
                 totalContribucion
             };
         }
-
-
-
-
-
-
-
-
-
 
 
         // 📌📌 generarInsightsAutomaticos()
@@ -2654,14 +2644,16 @@
 
 
         // 🎯🎯🎯📌📌📌📌📌📌📌
-        async function cargarIndicadoresBSC() {
+        async function XXXcargarIndicadoresBSC() {
             const spinner = document.getElementById("spinnerCarga");
             if (spinner) spinner.style.display = "block"; // Mostrar spinner
 
             try {
-                const res = await fetch('/api/indicadores');
-                if (!res.ok) throw new Error('Error al obtener indicadores');
-                const data = await res.json();
+                // const res = await fetch('/api/indicadores');
+                // if (!res.ok) throw new Error('Error al obtener indicadores');
+                // const data = await res.json();
+
+                data = indicadoresConDatos;
 
                 // Traer cumplimiento de cada indicador
                 const indicadoresConCumplimiento = await Promise.all(
@@ -2689,9 +2681,8 @@
             }
         }
 
-
         // 🎯🎯🎯📌📌📌📌📌📌📌
-        function agruparPorDimension(indicadores) {
+        function XXXagruparPorDimension(indicadores) {
             const grupos = {};
             indicadores.forEach(ind => {
                 const dimension = ind.dimension_nombre || "Sin Dimensión";
@@ -2709,7 +2700,7 @@
         }
 
         // 🎯🎯🎯📌📌📌📌📌📌📌
-        function mostrarIndicadoresDeDimension(dimension, resumen) {
+        function XXXmostrarIndicadoresDeDimension(dimension, resumen) {
             if (!resumen) return;
 
             const dimensionData = resumen.find(d => d.dimension === dimension);
@@ -2727,7 +2718,7 @@
                 const estado = ind.cumplimiento >= 80 ? '✅ Alto' :
                     ind.cumplimiento >= 50 ? '⚠️ Medio' : '❌ Bajo';
                 const cumplimiento = ind.cumplimiento * ind.dimension_porcentual / 100;
-                
+
                 // const unidad = CodigosService.getNombreCodigo(ind.unidad_medida)
 
                 tbody.insertAdjacentHTML('beforeend', `
@@ -2769,7 +2760,7 @@
         }
 
         // 🎯🎯🎯📌📌📌📌📌📌📌
-        function verGraficoIndicador(key_id, nombre, meta, descripcion, metodo) {
+        function XXXverGraficoIndicador(key_id, nombre, meta, descripcion, metodo) {
             // Guardar en sessionStorage
             sessionStorage.setItem('indicador_seleccionado', key_id);
             document.getElementById('grafico-evolucion-Full').style.display = 'block';
@@ -2780,13 +2771,12 @@
 
         }
 
-
         // 🎯🎯🎯📌📌📌📌📌📌📌
-        let chartBSC = null;
-        let graficosListos = 0;
-        const TOTAL_GRAFICOS = 1; // ajustá si hay más
+        // let chartBSC = null;
+        // let graficosListos = 0;
+        // const TOTAL_GRAFICOS = 1; // ajustá si hay más
 
-        function renderGraficos(resumenPorDimension) {
+        function XXXrenderGraficos(resumenPorDimension) {
 
             const COLORES_DIMENSIONES = [
                 "#0d6efd", "#198754", "#ffc107", "#dc3545",
@@ -2857,14 +2847,13 @@
             }
         }
 
-
         // 🎯🎯🎯📌📌📌📌📌📌📌
-        function renderTabla(resumenPorDimension) {
+        function XXXrenderTabla(resumenPorDimension) {
             const tbody = document.getElementById("tbodyDimensiones");
             if (!tbody) return;
             tbody.innerHTML = '';
             resumenPorDimension.forEach(d => {
-                console.log (`valor de d: ${d}`)
+                console.log(`valor de d: ${d}`)
 
                 const estado = d.promedioPon >= 80 ? '✅ Alto' :
                     d.promedioPon >= 50 ? '⚠️ Medio' : '❌ Bajo';
@@ -3925,6 +3914,11 @@
                         destino: ind.destino,
                         objetivo: ind.objetivo,
                         descripcion: ind.descripcion,
+
+                        // 🔹 DIMENSIÓN
+                        dimension_id: ind.dimension_id,
+                        dimension: ind.dimension_nombre || 'Sin Dimensión',
+
                         tipo: ind.tipo_id,
                         categoria: ind.categoria_id,
                         criticidad: ind.criticidad_id,
@@ -3982,7 +3976,6 @@
                 // ------------------------------------------
                 mostrarPanelIndicadoresResumen();
                 console.log("✔ Finalizó 9️⃣ (filtros resumen)");
-
 
                 // ------------------------------------------
                 // 🔟 Carga tarjetas de cumplimiento
@@ -4845,6 +4838,325 @@
             }
         }
 
+
+        // 🎯🎯🎯📌📌📌📌📌📌📌
+        async function cargarIndicadoresBSC() {
+            const spinner = document.getElementById("spinnerCarga");
+            if (spinner) spinner.style.display = "block"; // Mostrar spinner
+
+            try {
+                const data = indicadoresConDatos;
+
+                // Traer cumplimiento de cada indicador
+                const indicadoresConCumplimiento = await Promise.all(
+                    data.map(async (ind) => {
+                        try {
+                            const r = await fetch(`/api/indicadores/${ind.codigo_id}/cumplimiento`);
+                            const cumplimientoData = await r.json();
+                            return { ...ind, cumplimiento: cumplimientoData?.porcentaje || 0 };
+                        } catch {
+                            return { ...ind, cumplimiento: 0 };
+                        }
+                    })
+                );
+
+                const resumenPorDimension = agruparPorDimension(indicadoresConCumplimiento);
+
+                localStorage.setItem(
+                    "resumenPorDimension",
+                    JSON.stringify(resumenPorDimension)
+                );
+
+                console.log('guardo el resumen por dimension en local storage')
+
+                renderGraficos(resumenPorDimension);
+                renderTabla(resumenPorDimension);
+
+            } catch (err) {
+                console.error("Error cargando indicadores:", err);
+                alert("❌ No se pudieron cargar los indicadores");
+            } finally {
+                if (spinner) spinner.style.display = "none"; // Ocultar spinner
+            }
+        }
+
+        // 🎯🎯🎯📌📌📌📌📌📌📌
+        function agruparPorDimension(indicadores) {
+            const grupos = {};
+            indicadores.forEach(ind => {
+                const dimension = ind.dimension || "Sin Dimensión";
+                if (!grupos[dimension]) grupos[dimension] = [];
+                grupos[dimension].push(ind);
+            });
+
+            return Object.keys(grupos).map(dimension => {
+                const inds = grupos[dimension];
+                const promedio = inds.reduce((acc, ind) => acc + (Number(ind.cumplimiento) || 0), 0) / inds.length;
+                const promedioPon = inds.reduce((acc, ind) => acc + ((Number(ind.cumplimiento) * (Number(ind.pesoBSC)) / 100) || 0), 0);
+
+                return { dimension, indicadores: inds, promedio: promedio.toFixed(2), promedioPon: promedioPon.toFixed(2) };
+            });
+        }
+
+        // 🎯🎯🎯📌📌📌📌📌📌📌
+        function XXXmostrarIndicadoresDeDimension(dimension, resumen) {
+            if (!resumen) return;
+
+            const dimensionData = resumen.find(d => d.dimension === dimension);
+            if (!dimensionData) return;
+
+            const contenedor = document.getElementById("detalleIndicadoresContainer");
+            const titulo = document.getElementById("detalleIndicadoresTitulo");
+            const tbody = document.getElementById("tbodyDetalleIndicadores");
+            if (!contenedor || !tbody || !titulo) return;
+
+            titulo.textContent = `Indicadores de Perspectiva ${dimension}`;
+            tbody.innerHTML = '';
+
+            let totalPonderado = 0;
+
+            dimensionData.indicadores.forEach(ind => {
+                const estado = ind.cumplimiento >= 80 ? '✅ Alto' :
+                    ind.cumplimiento >= 50 ? '⚠️ Medio' : '❌ Bajo';
+
+                const ponderado = ind.cumplimiento * ind.pesoBSC / 100;
+                totalPonderado += ponderado;   // 🔹 ACUMULA
+
+                tbody.insertAdjacentHTML('beforeend', `
+                <tr>
+                    <td>${ind.nombre}</td>
+                    <td>${ind.sector}</td>
+                    <td class="text-center">${ind.usuario}</td>
+                    <td class="text-center">${ind.unico_valor} ${ind.unidad_desc || ''}</td>
+                    <td class="text-center">${Number(ind.cumplimiento).toFixed(1)} %</td>
+                    <td class="text-center">${ind.pesoBSC != null ? ind.pesoBSC + ' %' : '-'}</td>
+                    <td class="text-center">${ponderado.toFixed(2)} %</td>
+                    <td>${estado}</td>
+                    <td>
+
+                    <!-- 📈 Ver evolución -->
+                    <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
+                        onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                        <i class="fas fa-chart-line text-primary"></i>
+                    </button>
+
+                    <!-- ℹ️ Detalle del indicador -->
+                    <button type="button" class="btn btn-link p-0 ms-1" title="Ver detalle del indicador"
+                        onclick="verDetalleIndicador('${ind.codigo_id}')">
+                        <i class="fas fa-info-circle text-secondary"></i>
+                    </button>
+
+                    <!-- 🗃️ Mediciones -->
+                    <button type="button" class="btn btn-link p-0 ms-1" title="Ver mediciones registradas"
+                        onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}', '${ind.unico_eval}')">
+                        <i class="fas fa-database text-success"></i>
+                    </button>
+                    </td>
+
+                </tr>
+                `);
+            });
+
+            // agrega total de ponderado
+            tbody.insertAdjacentHTML('beforeend', `
+                    <tr class="table-secondary fw-bold">
+                        <td colspan="6" class="text-end">Total ponderado</td>
+                        <td class="text-center">${totalPonderado.toFixed(2)} %</td>
+                        <td colspan="2"></td>
+                    </tr>
+                `);
+
+            contenedor.style.display = 'block';
+        }
+
+
+        // 🎯🎯🎯📌📌📌📌📌📌📌
+        function mostrarIndicadoresDeDimension(dimension, resumen) {
+            if (!resumen) return;
+
+            const dimensionData = resumen.find(d => d.dimension === dimension);
+            if (!dimensionData) return;
+
+            const contenedor = document.getElementById("detalleIndicadoresContainer");
+            const titulo = document.getElementById("detalleIndicadoresTitulo");
+            const tbody = document.getElementById("tbodyDetalleIndicadores");
+            if (!contenedor || !tbody || !titulo) return;
+
+            titulo.textContent = `Indicadores de Perspectiva ${dimension}`;
+            tbody.innerHTML = '';
+
+            const { html } = construirTablaIndicadores(dimensionData);
+            tbody.innerHTML = html;
+
+            contenedor.style.display = 'block';
+        }
+
+
+
+        // 🎯🎯🎯📌📌📌📌📌📌📌
+        function verGraficoIndicador(key_id, nombre, meta, descripcion, metodo) {
+            // Guardar en sessionStorage
+            sessionStorage.setItem('indicador_seleccionado', key_id);
+            document.getElementById('grafico-evolucion-Full').style.display = 'block';
+            // Llama a la función que renderiza el gráfico
+            console.log('Renderizando gráfico para indicador:', key_id, 'con metodo', metodo);
+
+            renderIndicadorChart(key_id, nombre, meta, descripcion, metodo)
+
+        }
+
+        // 🎯🎯🎯📌📌📌📌📌📌📌
+        let chartBSC = null;
+        let graficosListos = 0;
+        const TOTAL_GRAFICOS = 1; // ajustá si hay más
+
+        function renderGraficos(resumenPorDimension) {
+
+            const COLORES_DIMENSIONES = [
+                "#0d6efd", "#198754", "#ffc107", "#dc3545",
+                "#6f42c1", "#20c997", "#fd7e14", "#0dcaf0"
+            ];
+
+            const barVerticalDiv = document.querySelector("#chartBarDimensiones");
+            if (barVerticalDiv) barVerticalDiv.innerHTML = '';
+
+            const valores = resumenPorDimension.map(d => parseFloat(d.promedio));
+            const labels = resumenPorDimension.map(d => d.dimension);
+
+            if (barVerticalDiv) {
+
+                // 👉 GUARDÁS la instancia del gráfico
+                chartBSC = new ApexCharts(barVerticalDiv, {
+                    chart: {
+                        type: 'bar',
+                        height: 350,
+                        toolbar: { show: false },
+                        events: {
+                            mounted: () => {
+                                graficosListos++;
+                                verificarGraficos();
+                            },
+                            dataPointSelection: (e, ctx, config) => {
+                                const dim = labels[config.dataPointIndex];
+                                mostrarIndicadoresDeDimension(dim, resumenPorDimension);
+                            }
+                        }
+                    },
+                    series: [{
+                        name: "Cumplimiento promedio",
+                        data: valores
+                    }],
+                    xaxis: { categories: labels },
+                    yaxis: {
+                        min: 0,
+                        max: 100,
+                        title: { text: "Cumplimiento (%)" }
+                    },
+                    plotOptions: {
+                        bar: {
+                            distributed: true,
+                            borderRadius: 5,
+                            columnWidth: "55%"
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: v => v.toFixed(1) + "%"
+                    },
+                    colors: COLORES_DIMENSIONES
+                });
+
+                chartBSC.render();
+
+            }
+        }
+
+        // 🎯🎯🎯📌📌📌📌📌📌📌
+        function renderTabla(resumenPorDimension) {
+            const tbody = document.getElementById("tbodyDimensiones");
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            resumenPorDimension.forEach(d => {
+
+                const estado = d.promedioPon >= 80 ? '✅ Alto' :
+                    d.promedioPon >= 50 ? '⚠️ Medio' : '❌ Bajo';
+
+                console.log(`valores promedio: ${d.promedioPon}`)
+
+                tbody.insertAdjacentHTML('beforeend', `
+                    <tr style="cursor:pointer" onclick="mostrarIndicadoresDeDimension('${d.dimension}', resumenPorDimension)">
+                        <td>${d.dimension}</td>
+                        <td class="text-center">${d.indicadores.length}</td>
+                        <td class="text-center">${d.promedio}%</td>
+                        <td class="text-center">${d.promedioPon}%</td>
+                        <td class="text-center">${estado}</td>
+                    </tr>
+                `);
+            });
+        }
+
+
+        // 🎯🎯🎯📌📌📌📌📌📌📌
+        function construirTablaIndicadores(dimensionData) {
+            let totalPonderado = 0;
+            let rowsHTML = '';
+
+            dimensionData.indicadores.forEach(ind => {
+                const estado = ind.cumplimiento >= 80 ? '✅ Alto' :
+                    ind.cumplimiento >= 50 ? '⚠️ Medio' : '❌ Bajo';
+
+                const ponderado = ind.cumplimiento * ind.pesoBSC / 100;
+                totalPonderado += ponderado;
+
+                rowsHTML += `
+                    <tr>
+                        <td>${ind.nombre}</td>
+                        <td>${ind.sector}</td>
+                        <td class="text-center">${ind.usuario}</td>
+                        <td class="text-center">${ind.unico_valor} ${ind.unidad_desc || ''}</td>
+                        <td class="text-center">${Number(ind.cumplimiento).toFixed(1)} %</td>
+                        <td class="text-center">${ind.pesoBSC != null ? ind.pesoBSC + ' %' : '-'}</td>
+                        <td class="text-center">${ponderado.toFixed(2)} %</td>
+                        <td>${estado}</td>
+                    </tr>
+                `;
+            });
+
+            rowsHTML += `
+                    <tr class="table-secondary fw-bold">
+                        <td colspan="6" class="text-end">Total ponderado</td>
+                        <td class="text-center">${totalPonderado.toFixed(2)} %</td>
+                        <td></td>
+                    </tr>
+                `;
+
+            return {
+                html: rowsHTML,
+                total: totalPonderado
+            };
+        }
+
+        // 🎯🎯🎯📌📌📌📌📌📌📌
+        function generarDetalleCompletoParaInforme(resumen) {
+            const detallePorDimension = {};
+
+            resumen.forEach(dimensionData => {
+                const { html, total } = construirTablaIndicadores(dimensionData);
+
+                detallePorDimension[dimensionData.dimension] = {
+                    titulo: `Indicadores de Perspectiva ${dimensionData.dimension}`,
+                    html,
+                    total: total.toFixed(2)
+                };
+            });
+
+            localStorage.setItem(
+                "detalleIndicadoresPorPerspectiva",
+                JSON.stringify(detallePorDimension)
+            );
+        }
+
+
         // función auxiliar para escapar texto en inserciones HTML
         function escapeHtml(str) {
             if (str === null || str === undefined) return '';
@@ -4869,13 +5181,23 @@
         };
 
 
-
         document.getElementById("btnPDF").addEventListener("click", async () => {
 
             if (graficosListos !== TOTAL_GRAFICOS) return;
 
             const { imgURI } = await chartBSC.dataURI({ scale: 2 });
             localStorage.setItem("graficoBSC_Barras", imgURI);
+
+            const resumenPorDimension = JSON.parse(
+                localStorage.getItem("resumenPorDimension")
+            );
+
+            if (!resumenPorDimension) {
+                alert("❌ No hay datos de indicadores para generar el informe");
+                return;
+            }
+
+            generarDetalleCompletoParaInforme(resumenPorDimension);
 
             window.open("informePDF.html", "_blank");
         });
