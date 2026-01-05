@@ -364,6 +364,27 @@
             max-width: 140px !important;
         }
     }
+
+    .spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        margin-right: 6px;
+        border: 2px solid #0d6efd;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
 </style>
 </head>
 
@@ -647,7 +668,6 @@
                         </div>
                     </div>
 
-
                     <!--Panel Balance Scorecard-->
                     <div class="row">
                         <!-- <div class="card mt-4 shadow-sm border-0"> -->
@@ -656,8 +676,7 @@
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
                                     <h5 class="card-title">📈 <strong>BALANCE SCORECARD</strong> - Cumplimiento Promedio
-                                        por Perspectiva. Desempeño global según las cuatro Perspectivas del sistema
-                                        de indicadores.
+                                        por Perspectiva.
                                     </h5>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
@@ -684,7 +703,7 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="card border-0 shadow-sm">
                                             <div class="card-body">
-                                                <h6 class="text-center text-muted mb-3">Gráfico de Barras</h6>
+                                                <!-- <h6 class="text-center text-muted mb-3">Gráfico de Barras</h6> -->
                                                 <div id="chartBarDimensiones" style="height: 350px;"></div>
                                             </div>
                                         </div>
@@ -702,6 +721,7 @@
                                                                 <th>Perspectiva</th>
                                                                 <th class="text-center">Ind.</th>
                                                                 <th class="text-center">Cumplimiento</th>
+                                                                <th class="text-center">Ponderado</th>                                                                
                                                                 <th class="text-center">Estado</th>
                                                             </tr>
                                                         </thead>
@@ -718,7 +738,7 @@
                                 <div class="row mt-4">
 
                                     <!-- 🟩 Columna 2: detalle de indicadores -->
-                                    <div class="col-md-7" id="detalleIndicadoresContainer" style="display:none;">
+                                    <div class="col-md-12" id="detalleIndicadoresContainer" style="display:none;">
                                         <div class="card shadow-sm border-0 m-3">
                                             <div class="card-body" style="border-top: 3px solid #1E90FF;">
                                                 <h5 id="detalleIndicadoresTitulo"></h5>
@@ -727,9 +747,12 @@
                                                         <thead class="table-light">
                                                             <tr>
                                                                 <th>Indicador</th>
-                                                                <!-- <th>Responsable</th> -->
+                                                                <th class="text-center">Destino</th>
+                                                                <th class="text-center">Responsable</th>
+                                                                <th class="text-center">Meta</th>
                                                                 <th class="text-center">Cumplimiento</th>
                                                                 <th class="text-center">Peso BSC</th>
+                                                                <th class="text-center">Ponderado</th>
                                                                 <th>Estado</th>
                                                                 <th>Ver</th>
                                                             </tr>
@@ -1116,15 +1139,27 @@
 
                 <!-- === Botones de acción === -->
                 <div class="actions-bar">
-                    <a href="informePDF.html" target="_blank" class="btn btn-outline-primary">
+                    <!-- <a href="informePDF.html" target="_blank" class="btn btn-outline-primary">
                         <i class="fas fa-chart-line"></i> Ver formato previo PDF
-                    </a>
-                    <a href="kpi-conclusiones.html" class="btn btn-outline-primary">
+                    </a> -->
+
+
+                    <button id="btnPreviewPDF" class="btn btn-outline-primary">
+                        <i class="fas fa-chart-line"></i> Ver formato previo PDF
+                    </button>
+                    <div class="actions-bar">
+                        <button id="btnPDF" class="btn btn-outline-primary" disabled>
+                            <span id="iconPDF" class="spinner"></span>
+                            <span id="textPDF">Preparando informe final</span>
+                        </button>
+                    </div>
+
+                    <!-- <a href="kpi-conclusiones.html" class="btn btn-outline-primary">
                         <i class="fas fa-chart-line"></i> Ver conclusiones generales
                     </a>
                     <button id="btnDescargarPDF" class="btn btn-outline-primary">
                         <i class="fas fa-file-pdf"></i> Descargar PDF
-                    </button>
+                    </button> -->
                     <button class="btn btn-primary" onclick="location.reload();"><i class="fas fa-sync"></i>
                         Actualizar
                         Datos</button>
@@ -2667,7 +2702,9 @@
             return Object.keys(grupos).map(dimension => {
                 const inds = grupos[dimension];
                 const promedio = inds.reduce((acc, ind) => acc + (Number(ind.cumplimiento) || 0), 0) / inds.length;
-                return { dimension, indicadores: inds, promedio: promedio.toFixed(2) };
+                const promedioPon = inds.reduce((acc, ind) => acc + ((Number(ind.cumplimiento) * (Number(ind.dimension_porcentual)) / 100) || 0), 0);
+                // console.log(`ind cumplimiento ${ind.cumplimiento}, dimension: ${ind.dimension_porcentual}`)
+                return { dimension, indicadores: inds, promedio: promedio.toFixed(2), promedioPon: promedioPon.toFixed(2) };
             });
         }
 
@@ -2689,37 +2726,43 @@
             dimensionData.indicadores.forEach(ind => {
                 const estado = ind.cumplimiento >= 80 ? '✅ Alto' :
                     ind.cumplimiento >= 50 ? '⚠️ Medio' : '❌ Bajo';
+                const cumplimiento = ind.cumplimiento * ind.dimension_porcentual / 100;
+                
+                // const unidad = CodigosService.getNombreCodigo(ind.unidad_medida)
 
                 tbody.insertAdjacentHTML('beforeend', `
-            <tr>
-                <td>${ind.nombre}</td>
-                <td class="text-center">${Number(ind.cumplimiento).toFixed(1)}%</td>
-                <td class="text-center">${ind.dimension_porcentual != null ? ind.dimension_porcentual + '%' : '-'}</td>
-                <td>${estado}</td>
-                <td>
+                <tr>
+                    <td class="text-center">${ind.nombre}</td>
+                    <td class="text-center">${ind.sector}</td>
+                    <td class="text-center">${ind.usuario}</td>
+                    <td class="text-center">${ind.unico_valor} ${ind.unidad_desc || ''}</td>
+                    <td class="text-center">${Number(ind.cumplimiento).toFixed(1)} %</td>
+                    <td class="text-center">${ind.dimension_porcentual != null ? ind.dimension_porcentual + ' %' : '-'}</td>
+                    <td class="text-center">${cumplimiento.toFixed(1)} %</td>
+                    <td>${estado}</td>
+                    <td>
 
-                                        <!-- 📈 Ver evolución -->
-                                        <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
-                                            onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
-                                            <i class="fas fa-chart-line text-primary"></i>
-                                        </button>
+                    <!-- 📈 Ver evolución -->
+                    <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
+                        onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                        <i class="fas fa-chart-line text-primary"></i>
+                    </button>
 
-                                        <!-- ℹ️ Detalle del indicador -->
-                                        <button type="button" class="btn btn-link p-0 ms-1" title="Ver detalle del indicador"
-                                            onclick="verDetalleIndicador('${ind.codigo_id}')">
-                                            <i class="fas fa-info-circle text-secondary"></i>
-                                        </button>
+                    <!-- ℹ️ Detalle del indicador -->
+                    <button type="button" class="btn btn-link p-0 ms-1" title="Ver detalle del indicador"
+                        onclick="verDetalleIndicador('${ind.codigo_id}')">
+                        <i class="fas fa-info-circle text-secondary"></i>
+                    </button>
 
-                                        <!-- 🗃️ Mediciones -->
-                                        <button type="button" class="btn btn-link p-0 ms-1" title="Ver mediciones registradas"
-                                            onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}', '${ind.unico_eval}')">
-                                            <i class="fas fa-database text-success"></i>
-                                        </button>
-                                        </td>
+                    <!-- 🗃️ Mediciones -->
+                    <button type="button" class="btn btn-link p-0 ms-1" title="Ver mediciones registradas"
+                        onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}', '${ind.unico_eval}')">
+                        <i class="fas fa-database text-success"></i>
+                    </button>
+                    </td>
 
-
-            </tr>
-        `);
+                </tr>
+                `);
             });
 
             contenedor.style.display = 'block';
@@ -2739,46 +2782,36 @@
 
 
         // 🎯🎯🎯📌📌📌📌📌📌📌
+        let chartBSC = null;
+        let graficosListos = 0;
+        const TOTAL_GRAFICOS = 1; // ajustá si hay más
+
         function renderGraficos(resumenPorDimension) {
 
             const COLORES_DIMENSIONES = [
-                "#0d6efd", // Azul
-                "#198754", // Verde
-                "#ffc107", // Amarillo
-                "#dc3545", // Rojo
-                "#6f42c1", // Violeta
-                "#20c997", // Teal
-                "#fd7e14", // Naranja
-                "#0dcaf0"  // Cyan
+                "#0d6efd", "#198754", "#ffc107", "#dc3545",
+                "#6f42c1", "#20c997", "#fd7e14", "#0dcaf0"
             ];
 
             const barVerticalDiv = document.querySelector("#chartBarDimensiones");
-            const barHorizontalDiv = document.querySelector("#chartBarHorizontalDimensiones");
-
             if (barVerticalDiv) barVerticalDiv.innerHTML = '';
-            if (barHorizontalDiv) barHorizontalDiv.innerHTML = '';
 
             const valores = resumenPorDimension.map(d => parseFloat(d.promedio));
             const labels = resumenPorDimension.map(d => d.dimension);
 
-            /* ======================================
-               GRÁFICO BARRAS VERTICAL (PRINCIPAL)
-            ====================================== */
             if (barVerticalDiv) {
-                new ApexCharts(barVerticalDiv, {
+
+                // 👉 GUARDÁS la instancia del gráfico
+                chartBSC = new ApexCharts(barVerticalDiv, {
                     chart: {
                         type: 'bar',
                         height: 350,
-                        animations: {
-                            enabled: true,
-                            easing: 'easeinout',
-                            speed: 800,
-                            animateGradually: {
-                                enabled: true,
-                                delay: 100
-                            }
-                        },
+                        toolbar: { show: false },
                         events: {
+                            mounted: () => {
+                                graficosListos++;
+                                verificarGraficos();
+                            },
                             dataPointSelection: (e, ctx, config) => {
                                 const dim = labels[config.dataPointIndex];
                                 mostrarIndicadoresDeDimension(dim, resumenPorDimension);
@@ -2789,9 +2822,7 @@
                         name: "Cumplimiento promedio",
                         data: valores
                     }],
-                    xaxis: {
-                        categories: labels
-                    },
+                    xaxis: { categories: labels },
                     yaxis: {
                         min: 0,
                         max: 100,
@@ -2806,137 +2837,26 @@
                     },
                     dataLabels: {
                         enabled: true,
-                        formatter: v => v.toFixed(1) + "%",
-                        style: {
-                            fontSize: "12px",
-                            fontWeight: "bold"
-                        }
+                        formatter: v => v.toFixed(1) + "%"
                     },
-                    colors: COLORES_DIMENSIONES,
-                    tooltip: {
-                        y: {
-                            formatter: v => v.toFixed(1) + "%"
-                        }
-                    }
-                }).render();
+                    colors: COLORES_DIMENSIONES
+                });
+
+                chartBSC.render();
+
+                // // 👉 AHORA sí existe
+                // setTimeout(async () => {
+                //     try {
+                //         const { imgURI } = await chartBSC.dataURI({ scale: 2 });
+                //         localStorage.setItem("graficoBSC_Barras", imgURI);
+                //         console.log("Gráfico BSC guardado en localStorage");
+                //     } catch (e) {
+                //         console.error("Error al exportar gráfico BSC", e);
+                //     }
+                // }, 5000);
             }
-
-            /* ======================================
-               GRÁFICO BARRAS HORIZONTAL (REEMPLAZO RADAR)
-            ====================================== */
-            // if (barHorizontalDiv) {
-            //     new ApexCharts(barHorizontalDiv, {
-            //         chart: {
-            //             type: 'bar',
-            //             height: 350,
-            //             animations: {
-            //                 enabled: true,
-            //                 easing: 'easeinout',
-            //                 speed: 900
-            //             },
-            //             events: {
-            //                 dataPointSelection: (e, ctx, config) => {
-            //                     const dim = labels[config.dataPointIndex];
-            //                     mostrarIndicadoresDeDimension(dim, resumenPorDimension);
-            //                 }
-            //             }
-            //         },
-            //         series: [{
-            //             name: "Cumplimiento promedio",
-            //             data: valores
-            //         }],
-            //         plotOptions: {
-            //             bar: {
-            //                 horizontal: true,
-            //                 distributed: true,
-            //                 borderRadius: 5,
-            //                 barHeight: "60%"
-            //             }
-            //         },
-            //         xaxis: {
-            //             max: 100,
-            //             title: { text: "Cumplimiento (%)" }
-            //         },
-            //         yaxis: {
-            //             categories: labels
-            //         },
-            //         dataLabels: {
-            //             enabled: true,
-            //             formatter: v => v.toFixed(1) + "%",
-            //             style: {
-            //                 fontSize: "12px",
-            //                 fontWeight: "bold"
-            //             }
-            //         },
-            //         colors: COLORES_DIMENSIONES,
-            //         tooltip: {
-            //             y: {
-            //                 formatter: v => v.toFixed(1) + "%"
-            //             }
-            //         }
-            //     }).render();
-            // }
         }
 
-
-        function XXXrenderGraficos(resumenPorDimension) {
-            const barDiv = document.querySelector("#chartBarDimensiones");
-            const radarDiv = document.querySelector("#chartRadarDimensiones");
-
-            if (barDiv) barDiv.innerHTML = '';
-            if (radarDiv) radarDiv.innerHTML = '';
-
-            // Gráfico de Barras
-            if (barDiv) new ApexCharts(barDiv, {
-                chart: {
-                    type: 'bar',
-                    height: 350,
-                    events: {
-                        dataPointSelection: (e, ctx, config) => {
-                            const dim = resumenPorDimension[config.dataPointIndex].dimension;
-                            mostrarIndicadoresDeDimension(dim, resumenPorDimension);
-                        }
-                    }
-                },
-                series: [{ name: "Cumplimiento promedio", data: resumenPorDimension.map(d => parseFloat(d.promedio)) }],
-                xaxis: { categories: resumenPorDimension.map(d => d.dimension) },
-                yaxis: { min: 0, max: 100, title: { text: "Cumplimiento (%)" } },
-                dataLabels: { enabled: true, formatter: val => val.toFixed(1) + "%" },
-                plotOptions: {
-                    bar: {
-                        distributed: true,
-                        borderRadius: 4
-                    }
-                },
-                colors: [
-                    "#0d6efd",
-                    "#198754",
-                    "#ffc107",
-                    "#dc3545",
-                    "#6f42c1",
-                    "#20c997",
-                    "#fd7e14"
-                ]
-            }).render();
-
-            // Gráfico Radar
-            if (radarDiv) new ApexCharts(radarDiv, {
-                chart: {
-                    type: 'radar',
-                    height: 350,
-                    events: {
-                        dataPointSelection: (e, ctx, config) => {
-                            const dim = resumenPorDimension[config.dataPointIndex].dimension;
-                            mostrarIndicadoresDeDimension(dim, resumenPorDimension);
-                        }
-                    }
-                },
-                series: [{ name: "Cumplimiento promedio", data: resumenPorDimension.map(d => parseFloat(d.promedio)) }],
-                labels: resumenPorDimension.map(d => d.dimension),
-                yaxis: { max: 100 },
-                colors: ["#28a745"]
-            }).render();
-        }
 
         // 🎯🎯🎯📌📌📌📌📌📌📌
         function renderTabla(resumenPorDimension) {
@@ -2944,16 +2864,22 @@
             if (!tbody) return;
             tbody.innerHTML = '';
             resumenPorDimension.forEach(d => {
-                const estado = d.promedio >= 80 ? '✅ Alto' :
-                    d.promedio >= 50 ? '⚠️ Medio' : '❌ Bajo';
+                console.log (`valor de d: ${d}`)
+
+                const estado = d.promedioPon >= 80 ? '✅ Alto' :
+                    d.promedioPon >= 50 ? '⚠️ Medio' : '❌ Bajo';
+
+                console.log(`valores promedio: ${d.promedioPon}`)
+
                 tbody.insertAdjacentHTML('beforeend', `
-            <tr style="cursor:pointer" onclick="mostrarIndicadoresDeDimension('${d.dimension}', resumenPorDimension)">
-                <td>${d.dimension}</td>
-                <td class="text-center">${d.indicadores.length}</td>
-                <td class="text-center">${d.promedio}%</td>
-                <td class="text-center">${estado}</td>
-            </tr>
-        `);
+                    <tr style="cursor:pointer" onclick="mostrarIndicadoresDeDimension('${d.dimension}', resumenPorDimension)">
+                        <td>${d.dimension}</td>
+                        <td class="text-center">${d.indicadores.length}</td>
+                        <td class="text-center">${d.promedio}%</td>
+                        <td class="text-center">${d.promedioPon}%</td>
+                        <td class="text-center">${estado}</td>
+                    </tr>
+                `);
             });
         }
 
@@ -4014,6 +3940,7 @@
                         porcentaje,
                         resultado,
                         peso: ind.peso_porcentual,
+                        pesoBSC: ind.dimension_porcentual,
                         vigencia
                     };
                 }));
@@ -4928,6 +4855,31 @@
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
         }
+
+        window.verificarGraficos = function () {
+            if (graficosListos === TOTAL_GRAFICOS) {
+                const btn = document.getElementById("btnPDF");
+                const icon = document.getElementById("iconPDF");
+                const text = document.getElementById("textPDF");
+
+                btn.disabled = false;
+                text.textContent = "Ver preliminar de PDF";
+                icon.style.display = "none";
+            }
+        };
+
+
+
+        document.getElementById("btnPDF").addEventListener("click", async () => {
+
+            if (graficosListos !== TOTAL_GRAFICOS) return;
+
+            const { imgURI } = await chartBSC.dataURI({ scale: 2 });
+            localStorage.setItem("graficoBSC_Barras", imgURI);
+
+            window.open("informePDF.html", "_blank");
+        });
+
     </script>
 
     <div class="modal fade" id="modalTarjetaDetalle" tabindex="-1">
@@ -4973,182 +4925,182 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
-        document.getElementById('btnDescargarPDF').addEventListener('click', async () => {
-            const { jsPDF } = window.jspdf;
-            const spinner = document.getElementById('spinnerOverlay');
-            const spinnerText = document.getElementById('spinnerText');
+        // document.getElementById('btnDescargarPDF').addEventListener('click', async () => {
+        //     const { jsPDF } = window.jspdf;
+        //     const spinner = document.getElementById('spinnerOverlay');
+        //     const spinnerText = document.getElementById('spinnerText');
 
-            try {
-                // Mostrar spinner
-                spinner.style.display = 'flex';
-                spinnerText.textContent = 'Generando informe PDF, por favor espere...';
+        //     try {
+        //         // Mostrar spinner
+        //         spinner.style.display = 'flex';
+        //         spinnerText.textContent = 'Generando informe PDF, por favor espere...';
 
-                const fecha = new Date();
-                const fechaISO = fecha.toISOString().slice(0, 10);
-                const nombreArchivo = `Evolucion_Cumplimiento_Global_${fechaISO}.pdf`;
+        //         const fecha = new Date();
+        //         const fechaISO = fecha.toISOString().slice(0, 10);
+        //         const nombreArchivo = `Evolucion_Cumplimiento_Global_${fechaISO}.pdf`;
 
-                // =========================
-                // 🧩 Función modular: Encabezado + Pie
-                // =========================
-                const agregarEncabezadoYPie = (doc, titulo, numeroPagina) => {
-                    const pageWidth = doc.internal.pageSize.getWidth();
-                    const pageHeight = doc.internal.pageSize.getHeight();
+        //         // =========================
+        //         // 🧩 Función modular: Encabezado + Pie
+        //         // =========================
+        //         const agregarEncabezadoYPie = (doc, titulo, numeroPagina) => {
+        //             const pageWidth = doc.internal.pageSize.getWidth();
+        //             const pageHeight = doc.internal.pageSize.getHeight();
 
-                    // Encabezado
-                    doc.setFontSize(16);
-                    doc.setFont('helvetica', 'bold');
-                    doc.text(titulo, pageWidth / 2, 20, { align: 'center' });
+        //             // Encabezado
+        //             doc.setFontSize(16);
+        //             doc.setFont('helvetica', 'bold');
+        //             doc.text(titulo, pageWidth / 2, 20, { align: 'center' });
 
-                    // Pie
-                    doc.setFontSize(10);
-                    doc.setTextColor(120);
-                    doc.text(
-                        `Informe PKI - Página ${numeroPagina}`,
-                        pageWidth / 2,
-                        pageHeight - 15,
-                        { align: 'center' }
-                    );
+        //             // Pie
+        //             doc.setFontSize(10);
+        //             doc.setTextColor(120);
+        //             doc.text(
+        //                 `Informe PKI - Página ${numeroPagina}`,
+        //                 pageWidth / 2,
+        //                 pageHeight - 15,
+        //                 { align: 'center' }
+        //             );
 
-                    // Restaurar color
-                    doc.setTextColor(0, 0, 0);
-                };
+        //             // Restaurar color
+        //             doc.setTextColor(0, 0, 0);
+        //         };
 
-                // =========================
-                // 📄 Crear documento
-                // =========================
-                const doc = new jsPDF();
+        //         // =========================
+        //         // 📄 Crear documento
+        //         // =========================
+        //         const doc = new jsPDF();
 
-                // 🏢 Logo
-                const logoUrl = 'dist/images/leon2.png';
-                try {
-                    const img = new Image();
-                    img.crossOrigin = 'anonymous';
-                    img.src = logoUrl;
-                    await new Promise(resolve => (img.onload = resolve));
-                    doc.addImage(img, 'PNG', 15, 10, 40, 20);
-                } catch (err) {
-                    console.warn('No se pudo cargar el logo:', err);
-                }
+        //         // 🏢 Logo
+        //         const logoUrl = 'dist/images/leon2.png';
+        //         try {
+        //             const img = new Image();
+        //             img.crossOrigin = 'anonymous';
+        //             img.src = logoUrl;
+        //             await new Promise(resolve => (img.onload = resolve));
+        //             doc.addImage(img, 'PNG', 15, 10, 40, 20);
+        //         } catch (err) {
+        //             console.warn('No se pudo cargar el logo:', err);
+        //         }
 
-                // =========================
-                // 🧾 Página 1: Resumen general
-                // =========================
-                agregarEncabezadoYPie(doc, 'Reporte de Evolución del Cumplimiento Global', 1);
+        //         // =========================
+        //         // 🧾 Página 1: Resumen general
+        //         // =========================
+        //         agregarEncabezadoYPie(doc, 'Reporte de Evolución del Cumplimiento Global', 1);
 
-                const fechaStr = fecha.toLocaleDateString('es-AR');
-                doc.setFontSize(12);
-                doc.text(`Fecha de generación: ${fechaStr}`, 60, 35);
+        //         const fechaStr = fecha.toLocaleDateString('es-AR');
+        //         doc.setFontSize(12);
+        //         doc.text(`Fecha de generación: ${fechaStr}`, 60, 35);
 
-                const chart = window.globalChartInstance;
-                if (!chart) {
-                    alert('⚠️ No se encontró el gráfico de evolución global.');
-                    spinner.style.display = 'none';
-                    return;
-                }
+        //         const chart = window.globalChartInstance;
+        //         if (!chart) {
+        //             alert('⚠️ No se encontró el gráfico de evolución global.');
+        //             spinner.style.display = 'none';
+        //             return;
+        //         }
 
-                const valores = chart.data.datasets[0].data;
-                const labels = chart.data.labels;
-                const promedio = (valores.reduce((a, b) => a + b, 0) / valores.length).toFixed(2);
-                const ultimoValor = valores[valores.length - 1];
-                const ultimoMes = labels[labels.length - 1];
+        //         const valores = chart.data.datasets[0].data;
+        //         const labels = chart.data.labels;
+        //         const promedio = (valores.reduce((a, b) => a + b, 0) / valores.length).toFixed(2);
+        //         const ultimoValor = valores[valores.length - 1];
+        //         const ultimoMes = labels[labels.length - 1];
 
-                // Texto resumen
-                doc.setFontSize(14);
-                doc.text('Resumen de datos:', 20, 55);
-                doc.setFontSize(12);
-                doc.text(`• Promedio general de cumplimiento: ${promedio}%`, 25, 65);
-                doc.text(`• Último valor (${ultimoMes}): ${ultimoValor}%`, 25, 73);
+        //         // Texto resumen
+        //         doc.setFontSize(14);
+        //         doc.text('Resumen de datos:', 20, 55);
+        //         doc.setFontSize(12);
+        //         doc.text(`• Promedio general de cumplimiento: ${promedio}%`, 25, 65);
+        //         doc.text(`• Último valor (${ultimoMes}): ${ultimoValor}%`, 25, 73);
 
-                const texto = [
-                    'Este informe refleja la evolución mensual del cumplimiento global de los indicadores PKI.',
-                    'El gráfico de la página siguiente permite analizar las tendencias, avances y áreas que requieren atención.',
-                    '',
-                    'El cumplimiento promedio se calcula como la media de todos los meses registrados, mientras que el último valor corresponde al mes más reciente disponible.'
-                ];
-                doc.text(texto, 20, 90, { maxWidth: 170, align: 'justify' });
+        //         const texto = [
+        //             'Este informe refleja la evolución mensual del cumplimiento global de los indicadores PKI.',
+        //             'El gráfico de la página siguiente permite analizar las tendencias, avances y áreas que requieren atención.',
+        //             '',
+        //             'El cumplimiento promedio se calcula como la media de todos los meses registrados, mientras que el último valor corresponde al mes más reciente disponible.'
+        //         ];
+        //         doc.text(texto, 20, 90, { maxWidth: 170, align: 'justify' });
 
-                // =========================
-                // 📊 Página 2: Gráfico de evolución (canvas)
-                // =========================
-                doc.addPage();
-                agregarEncabezadoYPie(doc, 'Gráfico de Evolución Global', 2);
+        //         // =========================
+        //         // 📊 Página 2: Gráfico de evolución (canvas)
+        //         // =========================
+        //         doc.addPage();
+        //         agregarEncabezadoYPie(doc, 'Gráfico de Evolución Global', 2);
 
-                const canvas = document.getElementById('evolucionChart');
-                await new Promise(r => setTimeout(r, 300)); // asegurar render completo
+        //         const canvas = document.getElementById('evolucionChart');
+        //         await new Promise(r => setTimeout(r, 300)); // asegurar render completo
 
-                const imgData = canvas.toDataURL('image/png', 1.0);
-                const pageWidth = doc.internal.pageSize.getWidth();
-                const pageHeight = doc.internal.pageSize.getHeight();
-                const imgWidth = pageWidth - 30;
-                const imgHeight = (canvas.height / canvas.width) * imgWidth;
-                const yPos = (pageHeight - imgHeight) / 2;
+        //         const imgData = canvas.toDataURL('image/png', 1.0);
+        //         const pageWidth = doc.internal.pageSize.getWidth();
+        //         const pageHeight = doc.internal.pageSize.getHeight();
+        //         const imgWidth = pageWidth - 30;
+        //         const imgHeight = (canvas.height / canvas.width) * imgWidth;
+        //         const yPos = (pageHeight - imgHeight) / 2;
 
-                doc.addImage(imgData, 'PNG', 15, yPos, imgWidth, imgHeight);
+        //         doc.addImage(imgData, 'PNG', 15, yPos, imgWidth, imgHeight);
 
-                // =========================
-                // 🌐 Página 3: Ring Global + tendencias
-                // =========================
-                doc.addPage();
-                agregarEncabezadoYPie(doc, 'Cumplimiento Global de la Organización', 3);
+        //         // =========================
+        //         // 🌐 Página 3: Ring Global + tendencias
+        //         // =========================
+        //         doc.addPage();
+        //         agregarEncabezadoYPie(doc, 'Cumplimiento Global de la Organización', 3);
 
-                // Obtener datos del DOM
-                const ringSvg = document.getElementById('ringGlobal');
-                const vsMesAnterior = document.getElementById('vsMesAnterior')?.textContent || '-';
-                const promHistorico = document.getElementById('promHistorico')?.textContent || '-';
-                const promAnual = document.getElementById('promAnual')?.textContent || '-';
-                const tendencia = document.getElementById('tendencia')?.textContent || '-';
+        //         // Obtener datos del DOM
+        //         const ringSvg = document.getElementById('ringGlobal');
+        //         const vsMesAnterior = document.getElementById('vsMesAnterior')?.textContent || '-';
+        //         const promHistorico = document.getElementById('promHistorico')?.textContent || '-';
+        //         const promAnual = document.getElementById('promAnual')?.textContent || '-';
+        //         const tendencia = document.getElementById('tendencia')?.textContent || '-';
 
-                // Convertir el SVG en PNG válido
-                const svgData = new XMLSerializer().serializeToString(ringSvg);
-                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-                const svgUrl = URL.createObjectURL(svgBlob);
-                const svgImg = new Image();
-                svgImg.src = svgUrl;
-                await new Promise(resolve => (svgImg.onload = resolve));
+        //         // Convertir el SVG en PNG válido
+        //         const svgData = new XMLSerializer().serializeToString(ringSvg);
+        //         const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+        //         const svgUrl = URL.createObjectURL(svgBlob);
+        //         const svgImg = new Image();
+        //         svgImg.src = svgUrl;
+        //         await new Promise(resolve => (svgImg.onload = resolve));
 
-                const canvasTmp = document.createElement('canvas');
-                canvasTmp.width = 1000;
-                canvasTmp.height = 1000;
+        //         const canvasTmp = document.createElement('canvas');
+        //         canvasTmp.width = 1000;
+        //         canvasTmp.height = 1000;
 
-                const ctx = canvasTmp.getContext('2d');
-                ctx.drawImage(svgImg, 0, 0, canvasTmp.width, canvasTmp.height);
-                const pngData = canvasTmp.toDataURL('image/png');
+        //         const ctx = canvasTmp.getContext('2d');
+        //         ctx.drawImage(svgImg, 0, 0, canvasTmp.width, canvasTmp.height);
+        //         const pngData = canvasTmp.toDataURL('image/png');
 
-                // Centrar imagen
-                const imgMaxWidth = pageWidth * 0.7;
-                const imgHeightRing = imgMaxWidth;
-                const imgX = (pageWidth - imgMaxWidth) / 2;
-                const imgY = 50;
+        //         // Centrar imagen
+        //         const imgMaxWidth = pageWidth * 0.7;
+        //         const imgHeightRing = imgMaxWidth;
+        //         const imgX = (pageWidth - imgMaxWidth) / 2;
+        //         const imgY = 50;
 
-                doc.addImage(pngData, 'PNG', imgX, imgY, imgMaxWidth, imgHeightRing);
+        //         doc.addImage(pngData, 'PNG', imgX, imgY, imgMaxWidth, imgHeightRing);
 
-                // Cuadro de datos debajo del gráfico
-                const yBase = imgY + imgHeightRing + 25;
-                const lineSpacing = 10;
+        //         // Cuadro de datos debajo del gráfico
+        //         const yBase = imgY + imgHeightRing + 25;
+        //         const lineSpacing = 10;
 
-                doc.setFillColor(245, 245, 245);
-                doc.roundedRect(40, yBase - 10, pageWidth - 80, 55, 3, 3, 'F');
-                doc.setTextColor(40, 40, 40);
-                doc.setFontSize(12);
-                doc.text(`• vs. Mes Anterior: ${vsMesAnterior}`, 50, yBase + 5);
-                doc.text(`• Promedio Histórico: ${promHistorico}`, 50, yBase + 5 + lineSpacing);
-                doc.text(`• Promedio Anual: ${promAnual}`, 50, yBase + 5 + lineSpacing * 2);
-                doc.text(`• Tendencia: ${tendencia}`, 50, yBase + 5 + lineSpacing * 3);
+        //         doc.setFillColor(245, 245, 245);
+        //         doc.roundedRect(40, yBase - 10, pageWidth - 80, 55, 3, 3, 'F');
+        //         doc.setTextColor(40, 40, 40);
+        //         doc.setFontSize(12);
+        //         doc.text(`• vs. Mes Anterior: ${vsMesAnterior}`, 50, yBase + 5);
+        //         doc.text(`• Promedio Histórico: ${promHistorico}`, 50, yBase + 5 + lineSpacing);
+        //         doc.text(`• Promedio Anual: ${promAnual}`, 50, yBase + 5 + lineSpacing * 2);
+        //         doc.text(`• Tendencia: ${tendencia}`, 50, yBase + 5 + lineSpacing * 3);
 
-                // =========================
-                // 💾 Descargar PDF
-                // =========================
-                doc.save(nombreArchivo);
+        //         // =========================
+        //         // 💾 Descargar PDF
+        //         // =========================
+        //         doc.save(nombreArchivo);
 
-                spinnerText.textContent = `✅ Informe generado correctamente.
-                    El archivo se descargó como: ${nombreArchivo}`;
-                setTimeout(() => (spinner.style.display = 'none'), 2500);
-            } catch (error) {
-                console.error(error);
-                alert('❌ Error al generar el informe.');
-                spinner.style.display = 'none';
-            }
-        });
+        //         spinnerText.textContent = `✅ Informe generado correctamente.
+        //             El archivo se descargó como: ${nombreArchivo}`;
+        //         setTimeout(() => (spinner.style.display = 'none'), 2500);
+        //     } catch (error) {
+        //         console.error(error);
+        //         alert('❌ Error al generar el informe.');
+        //         spinner.style.display = 'none';
+        //     }
+        // });
 
         /*
         🧩 Cómo extender con nuevas secciones

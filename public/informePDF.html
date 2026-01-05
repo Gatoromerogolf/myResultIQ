@@ -579,6 +579,7 @@
     // --- Construcción del documento (DOM) ---
     const documento = document.getElementById('documento');
 
+    // 🧲🧲🧲clearDocument
     function clearDocument() { documento.innerHTML = ''; }
 
     function createPage() {
@@ -680,9 +681,8 @@
       documento.appendChild(page);
     }
 
-
-    //😎😎😎 buildCover2
-    function buildCover2() {
+    // 🧲🧲🧲 buildCover2
+    function buildCaratula() {
       const page = document.createElement('section');
       page.className = 'page cover2-page';
 
@@ -730,9 +730,9 @@
 
       documento.appendChild(page);
     }
-
-    //😎😎😎 buildIntrooverview
-    function buildIntrooverview() {
+ 
+    // 🧲🧲🧲 buildIntrooverview
+    function buildMarcoIntroductorio() {
       const { page, content } = createPage();
       const h = document.createElement('h1');
       h.className = 'section-title';
@@ -801,9 +801,8 @@
       documento.appendChild(page1);
     }
 
-
-    //😎😎😎 buildTOC
-    function buildTOC() {
+    // 🧲🧲🧲 buildTOC
+    function buildIndice() {
       const { page, content } = createPage();
       const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'Índice';
       content.appendChild(h);
@@ -821,8 +820,7 @@
       documento.appendChild(page);
     }
 
-
-    //😎😎😎 buildResumen
+    // 🧲🧲🧲 buildResumen
     async function buildResumen() {
       const { page, content } = createPage();
       const h = document.createElement('h2');
@@ -954,7 +952,7 @@
     }
 
 
-    //😎😎😎 buildIndicadoresGlobales
+    // 🧲🧲🧲 buildIndicadoresGlobales
     function buildIndicadoresGlobales() {
       const { page, content } = createPage();
 
@@ -963,7 +961,6 @@
       h.className = 'section-title';
       h.textContent = 'Indicadores Globales';
       content.appendChild(h);
-
 
       // =======================
       // Texto introductorio
@@ -1008,7 +1005,7 @@
         graf.innerHTML = `
               <div style="
                   width:180px;
-                  height:180px;
+                  height:150px;
                   border-radius:50%;
                   background:#fff;
                   box-shadow:0 4px 12px rgba(0,0,0,0.1);
@@ -1023,7 +1020,7 @@
         graf.innerHTML = `
               <div style="
                   width:180px;
-                  height:180px;
+                  height:150px;
                   border-radius:50%;
                   border:1px dashed #ddd;
                   display:flex;
@@ -1167,24 +1164,24 @@
       graf2.style.display = "flex";
       graf2.style.alignItems = "center";
       graf2.style.justifyContent = "center";
-      graf2.style.padding = "5px 0";
+      graf2.style.padding = "2px 0";
 
       if (imagenGrafico) {
         graf2.innerHTML = `
               <img src="${imagenGrafico}" 
                   style="
-                    width: 530px; 
+                    width: 500px; height: 320px;
                     max-width: 100%;
                     border-radius: 6px;
                     border: 1px solid #ddd;
-                    padding: 6px;
+                    padding: 3px;
                     background: #fafafa;
                   ">
             `;
       } else {
         graf2.innerHTML = `
             <div style="
-              width: 520px; height: 220px;
+              width: 500px; height: 320px;
               border: 1px dashed #bbb; 
               border-radius: 6px;
               display: flex;
@@ -1224,8 +1221,8 @@
       return '🔴';
     }
 
-    //😎😎😎 buildIndicadores
-    function buildIndicadores() {
+    // 🧲🧲🧲 buildIndicadores
+    function buildUltimoMes() {
       // =======================
       // Leer datos del storage
       // =======================
@@ -1270,6 +1267,7 @@
       const MAX_ALTURA = 950; // Altura máxima antes de crear nueva página (ajustar según necesites)
       let esPrimeraPagina = true;
 
+      //😎😎😎 iniciarNuevaPagina
       function iniciarNuevaPagina() {
         const { page, content } = createPage();
         currentPage = page;
@@ -1345,6 +1343,7 @@
         }
       });
 
+      //😎😎😎 renderizarDestino
       function renderizarDestino(destino, indicadores) {
         // --- Título del destino ---
         const hDestino = document.createElement('h4');
@@ -1403,7 +1402,7 @@
       currentContent.appendChild(total);
     }
 
-    //😎😎😎 buildIndicadoresPorContribucion
+    // 🧲🧲🧲 buildIndicadoresPorContribucion
     function buildIndicadoresPorContribucion() {
       // =======================
       // Leer datos del storage
@@ -1567,23 +1566,61 @@
     }
 
 
-    //😎😎😎 buildBSC
+    // 🧲🧲🧲 buildBSC
     function buildBSC() {
       const { page, content } = createPage();
       const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'BSC - Balanced Scorecard';
 
       content.appendChild(h);
       const p0 = document.createElement('p'); p0.innerHTML = `
-      El enfoque de Balanced Scorecard (BSC) permite evaluar el desempeño organizacional desde múltiples perspectivas,
-      integrando indicadores financieros y no financieros para ofrecer una visión equilibrada y completa.<br><br>
       A continuación se presentan los resultados obtenidos en las distintas perspectivas del BSC durante el período evaluado.
       `;
       content.appendChild(p0);
 
-      const p = document.createElement('p'); p.innerHTML = `
-      1. Mostrar grafico con las cuatro barras y el cuadro con la cantidad de indicadores de cada perspectiva.<br><br>
-      `;
-      content.appendChild(p);
+      const imgBSC = localStorage.getItem("graficoBSC_Barras");
+      if (!imgBSC) {
+        console.warn("No se encontró el gráfico BSC en localStorage");
+      }
+
+      // --- CONTENEDOR DEL GRÁFICO ---
+      const graf2 = document.createElement("div");
+      graf2.style.display = "flex";
+      graf2.style.alignItems = "center";
+      graf2.style.justifyContent = "center";
+      graf2.style.padding = "5px 0";
+
+      if (imgBSC) {
+        graf2.innerHTML = `
+              <img src="${imgBSC}" 
+                  style="
+                    width: 600px; 
+                    max-width: 100%;
+                    border-radius: 6px;
+                    border: 1px solid #ddd;
+                    padding: 6px;
+                    background: #fafafa;
+                  ">
+            `;
+      } else {
+        graf2.innerHTML = `
+            <div style="
+              width: 520px; height: 220px;
+              border: 1px dashed #bbb; 
+              border-radius: 6px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: #777;
+              background: #fafafa;
+            ">
+              [Gráfico no disponible]
+            </div>
+          `;
+      }
+
+      content.appendChild(graf2);
+      localStorage.removeItem("graficoBSC_Barras");
+
 
       const p1 = document.createElement('p'); p1.innerHTML = `
       2. Evolución temporal.  Mostrar tendencia de cada perspectiva.<br><br>
@@ -1613,7 +1650,7 @@
       return { page, content };
     }
 
-    //😎😎😎 buildAnexos
+    // 🧲🧲🧲 buildAnexos
     function buildAnexos() {
       const { page, content } = createPage();
       const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'Anexos';
@@ -1626,7 +1663,7 @@
     }
 
     // Cuando se arma el documento numeramos las páginas (footer .page-number)
-    //😎😎😎 numerarPaginas
+    // 🧲🧲🧲 numerarPaginas
     function numerarPaginas() {
       const pages = [...document.querySelectorAll('.page')];
       pages.forEach((p, idx) => {
@@ -1639,12 +1676,12 @@
     function buildDocument() {
       clearDocument();
       // buildCover();
-      buildCover2();
-      buildIntrooverview();
-      buildTOC();
+      buildCaratula();
+      buildMarcoIntroductorio();
+      buildIndice();
       buildResumen();
       buildIndicadoresGlobales();
-      buildIndicadores();
+      buildUltimoMes();
       buildIndicadoresPorContribucion();
       buildBSC()
       buildAnexos();
