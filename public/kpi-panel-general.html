@@ -2722,38 +2722,33 @@
                 // const unidad = CodigosService.getNombreCodigo(ind.unidad_medida)
 
                 tbody.insertAdjacentHTML('beforeend', `
-                <tr>
-                    <td class="text-center">${ind.nombre}</td>
-                    <td class="text-center">${ind.sector}</td>
-                    <td class="text-center">${ind.usuario}</td>
-                    <td class="text-center">${ind.unico_valor} ${ind.unidad_desc || ''}</td>
-                    <td class="text-center">${Number(ind.cumplimiento).toFixed(1)} %</td>
-                    <td class="text-center">${ind.dimension_porcentual != null ? ind.dimension_porcentual + ' %' : '-'}</td>
-                    <td class="text-center">${cumplimiento.toFixed(1)} %</td>
-                    <td>${estado}</td>
-                    <td>
+                    <tr>
+                        <td class="text-center">${ind.nombre}</td>
+                        <td class="text-center">${ind.sector}</td>
+                        <td class="text-center">${ind.usuario}</td>
+                        <td class="text-center">${ind.unico_valor} ${ind.unidad_desc || ''}</td>
+                        <td class="text-center">${Number(ind.cumplimiento).toFixed(1)} %</td>
+                        <td class="text-center">${ind.dimension_porcentual != null ? ind.dimension_porcentual + ' %' : '-'}</td>
+                        <td class="text-center">${cumplimiento.toFixed(1)} %</td>
+                        <td>${estado}</td>
+                        <td>
+                            <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
+                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                <i class="fas fa-chart-line text-primary"></i>
+                            </button>
 
-                    <!-- 📈 Ver evolución -->
-                    <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
-                        onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
-                        <i class="fas fa-chart-line text-primary"></i>
-                    </button>
+                            <button type="button" class="btn btn-link p-0 ms-1" title="Ver detalle del indicador"
+                                onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                <i class="fas fa-info-circle text-secondary"></i>
+                            </button>
 
-                    <!-- ℹ️ Detalle del indicador -->
-                    <button type="button" class="btn btn-link p-0 ms-1" title="Ver detalle del indicador"
-                        onclick="verDetalleIndicador('${ind.codigo_id}')">
-                        <i class="fas fa-info-circle text-secondary"></i>
-                    </button>
-
-                    <!-- 🗃️ Mediciones -->
-                    <button type="button" class="btn btn-link p-0 ms-1" title="Ver mediciones registradas"
-                        onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}', '${ind.unico_eval}')">
-                        <i class="fas fa-database text-success"></i>
-                    </button>
-                    </td>
-
-                </tr>
-                `);
+                            <button type="button" class="btn btn-link p-0 ms-1" title="Ver mediciones registradas"
+                                onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}', '${ind.unico_eval}')">
+                                <i class="fas fa-database text-success"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    `);
             });
 
             contenedor.style.display = 'block';
@@ -3077,7 +3072,7 @@
             // 1️⃣ Mostrar spinner
             if (spinner) {
                 spinner.style.display = 'block';
-                spinnerTexto.textContent = 'Filtrando indicadores...';
+                // spinnerTexto.textContent = 'Filtrando indicadores...';
             }
             if (contenedor) contenedor.innerHTML = '';
 
@@ -5118,6 +5113,25 @@
                         <td class="text-center">${ind.pesoBSC != null ? ind.pesoBSC + ' %' : '-'}</td>
                         <td class="text-center">${ponderado.toFixed(2)} %</td>
                         <td>${estado}</td>
+                        <td>
+                                <!-- 📈 Ver evolución -->
+                                <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
+                                    onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                    <i class="fas fa-chart-line text-primary"></i>
+                                </button>
+
+                                <!-- ℹ️ Detalle del indicador -->
+                                <button type="button" class="btn btn-link p-0 ms-1" title="Ver detalle del indicador"
+                                    onclick="verDetalleIndicador('${ind.codigo_id}')">
+                                    <i class="fas fa-info-circle text-secondary"></i>
+                                </button>
+
+                                <!-- 🗃️ Mediciones -->
+                                <button type="button" class="btn btn-link p-0 ms-1" title="Ver mediciones registradas"
+                                    onclick="mostrarModalMediciones('${ind.id}', '${ind.codigo_id}', '${ind.nombre}', '${ind.freq_medicion}', '${ind.unico_eval}')">
+                                    <i class="fas fa-database text-success"></i>
+                                </button>
+                        </td>
                     </tr>
                 `;
             });
