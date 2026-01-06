@@ -2162,7 +2162,7 @@
         }
 
         // 📌📌 handleClickIndicador(e)  //  Función común para manejar clics
-        function handleClickIndicador(e) {
+        function XXXhandleClickIndicador(e) {
             const link = e.target.closest('.link-indicador');
             if (link) {
                 e.preventDefault();
@@ -2198,12 +2198,12 @@
         }
 
         // ✅ Asociar el evento a las tres tablas
-        ['tbodyPendientes', 'tbodyDestacados', 'tbodyCriticos'].forEach(id => {
-            const tbody = document.getElementById(id);
-            if (tbody) {
-                tbody.addEventListener('click', handleClickIndicador);
-            }
-        });
+        // ['tbodyPendientes', 'tbodyDestacados', 'tbodyCriticos'].forEach(id => {
+        //     const tbody = document.getElementById(id);
+        //     if (tbody) {
+        //         tbody.addEventListener('click', handleClickIndicador);
+        //     }
+        // });
 
         // 📌📌 evaluarTendenciaIndicador(mediciones, umbral = 2)    
         /**
@@ -2733,7 +2733,7 @@
                         <td>${estado}</td>
                         <td>
                             <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
-                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}', '${ind.unico_eval}')">
                                 <i class="fas fa-chart-line text-primary"></i>
                             </button>
 
@@ -3250,7 +3250,7 @@
 
                                         <!-- 📈 Ver evolución -->
                                         <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
-                                            onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                            onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}', '${ind.unico_eval}')">
                                             <i class="fas fa-chart-line text-primary"></i>
                                         </button>
 
@@ -4137,7 +4137,7 @@
                         <td>
                             <!-- 📈 Ver evolución -->
                             <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
-                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}' , '${ind.unico_eval}')">
+                                onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}', '${ind.unico_eval}')">
                                 <i class="fas fa-chart-line text-primary"></i>
                             </button>
 
@@ -4287,7 +4287,7 @@
                                     <td>
                                         <!-- 📈 Ver evolución -->
                                         <button type="button" class="btn btn-link p-0 ms-2" title="Ver evolución"
-                                            onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                            onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}', '${ind.unico_eval}')">
                                             <i class="fas fa-chart-line text-primary"></i>
                                         </button>
 
@@ -4931,7 +4931,7 @@
 
                     <!-- 📈 Ver evolución -->
                     <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
-                        onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                        onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}', '${ind.unico_eval}')">
                         <i class="fas fa-chart-line text-primary"></i>
                     </button>
 
@@ -4989,7 +4989,7 @@
 
 
         // 🎯🎯🎯📌📌📌📌📌📌📌
-        function verGraficoIndicador(key_id, nombre, meta, descripcion, metodo) {
+        function ZZZZverGraficoIndicador(key_id, nombre, meta, descripcion, metodo) {
             // Guardar en sessionStorage
             sessionStorage.setItem('indicador_seleccionado', key_id);
             document.getElementById('grafico-evolucion-Full').style.display = 'block';
@@ -5116,7 +5116,7 @@
                         <td>
                                 <!-- 📈 Ver evolución -->
                                 <button type="button" class="btn btn-link p-0 ms-1" title="Ver evolución"
-                                    onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}')">
+                                    onclick="verGraficoIndicador('${ind.id}', '${ind.nombre}', '${ind.unico_valor}', '${ind.descripcion}', '${ind.unico_eval}')">
                                     <i class="fas fa-chart-line text-primary"></i>
                                 </button>
 

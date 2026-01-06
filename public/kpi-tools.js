@@ -153,11 +153,11 @@ async function renderIndicadorChart(idIndicador, nombre, meta, descripcion, meto
         const peorValor = Math.min(...valores);
         const peorIndice = valores.indexOf(peorValor);
 
-        const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
-        const desviacion = Math.sqrt(varianza);
-        if (desviacion > promedio * 0.2) {
-            recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
-        }
+        // const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
+        // const desviacion = Math.sqrt(varianza);
+        // if (desviacion > promedio * 0.2) {
+        //     recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
+        // }
 
         console.log('Datos para análisis:', {
             valores,
@@ -256,6 +256,11 @@ function generarAnalisisAutomatico(
     // Variabilidad
     const varianza = valores.reduce((sum, val) => sum + Math.pow(val - promedio, 2), 0) / valores.length;
     const desviacion = Math.sqrt(varianza);
+
+
+    if (desviacion > promedio * 0.2) {
+        recomendaciones.push('Alta variabilidad en resultados - considerar estabilizar procesos');
+    }
 
     // -----------------------------
     // OBSERVACIONES SEGÚN MÉTODO
@@ -449,7 +454,7 @@ function generarAnalisisAutomatico(
         }
     }
 
-    if (metodo == "0402") {
+    if (metodo == "0402") {  // no superar meta
         if (porEncimaMeta) {
             recomendaciones.push(`Acciones urgentes para reducir valores debajo del límite máximo`);
         } else {
@@ -463,9 +468,9 @@ function generarAnalisisAutomatico(
 
         // 3️⃣ Comportamiento reciente
         if (ultimoValor > valorAnterior) {
-            recomendaciones.push('Mantener las estrategias recientes que impulsaron la mejora');
+            recomendaciones.push('Observar el crecimiento reciente, ya que puede atentar contra el cumplimiento del objetivo');
         } else if (ultimoValor < valorAnterior) {
-            recomendaciones.push('Investigar causas de la caída reciente y tomar acciones correctivas');
+            recomendaciones.push('La medición reciente favorece el cumplimiento de la meta.  Tendencia deseable');
         }
 
         // 5️⃣ Tendencia reciente positiva
@@ -505,7 +510,7 @@ function generarAnalisisAutomatico(
         }
     }
 
-    if (metodo == "0404") {
+    if (metodo == "0404") {  // PARTIDA ALTA, DEBE BAJAR HASTA META ----
         if (ultimoValor < meta) {
             recomendaciones.push(`Consolidar medidas para sostener la reducción del indicador`);
         } else {
