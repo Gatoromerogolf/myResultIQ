@@ -543,8 +543,6 @@
         </main>
 
     </div>
-
-    
     <!--end::App Wrapper-->
 
     <script>
@@ -583,7 +581,6 @@
                 const sector = map[ind.destino];
                 if (sector) {
                     const peso = Number(ind.peso_porcentual) || 0;
-
                     // Calcular cumplimiento
                     // const cumplimiento = calcularCumplimiento(
                     //     ind.ultimo_valor,    // valor real
@@ -610,8 +607,6 @@
                         target: ind.unico_valor || 100,
                         fechaUltimaMedicion: ind.fecha_ultima_medicion || null,
                         unidadMedida: ind.unidadMedida ?? '',
-
-                        // 👇 propiedades adicionales para el detalle
                         codigo_id: ind.codigo_id ?? '',
                         descripcion: ind.descripcion ?? '',
                         objetivo: ind.objetivo ?? '',
@@ -635,11 +630,8 @@
 
         // // 🚫🚫🚫  loadData
         async function loadData() {
-            //fetch inicial
-            try {
-                // Inicializar códigos ANTES de usar
-                // await CodigosService.init();
 
+            try {
                 const [sectoresRes, indicadoresRes] = await Promise.all([
                     fetch('/api/sectores'),
                     fetch('/api/indicadores')
@@ -662,7 +654,6 @@
                     // Mapeo seguro de unidad (usa nombre si existe, sino el código raw, sino vacío)
                     const unidadNombre = CodigosService.getNombreCodigo(ind.unidad_medida) || (ind.unidad_medida ?? '');
 
-                    // DEBUG: si querés ver en consola qué mapea
                     // console.log('unidad map', ind.id, ind.unidad_medida, '->', unidadNombre);
 
                     return {
@@ -684,7 +675,7 @@
         loadData();
 
         // // 🚫🚫🚫  calcularCumplimiento
-        function calcularCumplimiento(valor, meta, acepta, riesgo, critico) {
+        function XXXcalcularCumplimiento(valor, meta, acepta, riesgo, critico) {
             if (valor === null || meta === null || meta == 0 || valor == 0) return null;
 
             // Porcentaje del valor respecto a la meta
@@ -1532,8 +1523,6 @@
             stack = [orgData];
             render();
         };
-
-        // document.getElementById('btnExport').onclick = exportCSV;  -- se anula el botón
 
         render();
 

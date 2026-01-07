@@ -1288,7 +1288,6 @@
                 return;
             }
 
-
             // ===============================
             // 📌 Guardar SIEMPRE el último mes del gráfico para el PDF
             // ===============================
@@ -1305,8 +1304,6 @@
                     console.log('📦 Detalle del último mes guardado para PDF:', detallePDF.month);
                 }
             }
-
-
 
             // Preparar datos para Chart.js
             const labels = dataFiltrada.map(d => d.month);
@@ -1561,22 +1558,22 @@
                     // Fila de encabezado
                     const headerRow = document.createElement('tr');
                     headerRow.innerHTML = `
-                <td colspan="5" class="fw-bold bg-light" style="border-top: 2px solid #999;">
-                    ${nombreDestino}
-                </td>
-            `;
+                            <td colspan="5" class="fw-bold bg-light" style="border-top: 2px solid #999;">
+                                ${nombreDestino}
+                            </td>
+                        `;
                     tbody.appendChild(headerRow);
 
                     // Filas de indicadores
                     grupos[destinoId].forEach(d => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                    <td>${getStatusIcon(d.cumplimiento)}</td>
-                    <td>${d.indicador}</td>
-                    <td class="${getColorClass(d.cumplimiento)}">${d.cumplimiento.toFixed(2)}%</td>
-                    <td>${d.peso.toFixed(2)}%</td>
-                    <td class="fw-bold">${d.contribucion.toFixed(2)}%</td>
-                `;
+                            <td>${getStatusIcon(d.cumplimiento)}</td>
+                            <td>${d.indicador}</td>
+                            <td class="${getColorClass(d.cumplimiento)}">${d.cumplimiento.toFixed(2)}%</td>
+                            <td>${d.peso.toFixed(2)}%</td>
+                            <td class="fw-bold">${d.contribucion.toFixed(2)}%</td>
+                        `;
                         tbody.appendChild(row);
                     });
                 });
@@ -4173,6 +4170,13 @@
             try {
                 const res = await fetch('/api/cumplimiento-por-destino');
                 const data = await res.json();
+
+                // 📦 Guardar datos para el informe
+                localStorage.setItem(
+                    'cumplimientoPorDestino',
+                    JSON.stringify(data)
+                );
+
                 localStorage.setItem('destinosMedidos', data.length);
 
                 // --- Renderizar tabla con ícono de evolución ---

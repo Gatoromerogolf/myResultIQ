@@ -531,6 +531,21 @@
       border-left: 2px solid #ddd;
       padding-left: 8px;
     }
+
+    .estado-verde {
+  color: #1b7e3c;
+  font-weight: 600;
+}
+
+.estado-amarillo {
+  color: #b38b00;
+  font-weight: 600;
+}
+
+.estado-rojo {
+  color: #b02a37;
+  font-weight: 600;
+}
   </style>
 </head>
 
@@ -1867,10 +1882,6 @@
     }
 
     // 🧲🧲🧲 buildAnexoArbolBSC
-
-
-
-
     function buildAnexoArbolBSC() {
 
       const treeData = JSON.parse(localStorage.getItem('bscTreeData'));
@@ -1965,7 +1976,81 @@
     }
 
 
+    // 🧲🧲🧲 cumplimientoPorDestino
+    function buildCumplimientoPorDestino() {
 
+      function obtenerCumplimientoPorDestino() {
+        const raw = localStorage.getItem('cumplimientoPorDestino');
+        if (!raw) return [];
+        return JSON.parse(raw);
+      }
+
+      function renderCumplimientoPorDestinoInforme(container) {
+        const data = obtenerCumplimientoPorDestino();
+        if (!data.length) return;
+
+        const table = document.createElement('table');
+        table.className = 'table table-sm table-bordered informe-table';
+
+        table.innerHTML = `
+          <thead>
+            <tr>
+              <th>Destino</th>
+              <th>Total KPI´s</th>
+              <th>Cumplimiento</th>
+              <th>En Meta</th>
+              <th>Críticos</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+      ${data.map(d => {
+          const valor = Number(d.promedio_cumplimiento) || 0;
+
+          let estado = 'Crítico';
+          let clase = 'estado-rojo';
+
+          if (valor >= 80) {
+            estado = 'En Meta';
+            clase = 'estado-verde';
+          } else if (valor >= 50) {
+            estado = 'En Riesgo';
+            clase = 'estado-amarillo';
+          }
+
+          return `
+          <tr>
+            <td>${d.destino}</td>
+            <td class="text-center">${d.total_indicadores}</td>
+            <td class="text-center">${valor}%</td>
+            <td class="text-center">${d.en_meta}</td>
+            <td class="text-center">${d.criticos}</td>
+            <td class="text-center ${clase}">${estado}</td>
+          </tr>
+                  `;
+        }).join('')}
+              </tbody>
+            `;
+
+        container.appendChild(table);
+      }
+
+      const { page, content } = createPage();
+      const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'Cumplimiento por Destino';
+      content.appendChild(h);
+
+      const p = document.createElement('p'); p.innerHTML = `
+      Se establece como porcentaje de cumplimiento a la suma de los porcentajes de cumplimiento de cada indicador, calculados como la relación entre el valor alcanzado y la meta establecida, ponderados según el peso porcentual asignado a cada uno.
+      <br><br>
+      El estado de cumplimiento se clasifica en función del porcentaje alcanzado, conforme a los siguientes umbrales: “En Meta” para valores iguales o superiores al 90 %, “Riesgo” para valores comprendidos entre el 70 % y el 89 %, y “Crítico” para valores inferiores al 70 %.`;
+      content.appendChild(p);
+
+      const container = document.createElement('div');
+      renderCumplimientoPorDestinoInforme(container);
+      content.appendChild(container);
+
+      documento.appendChild(page);
+    }
 
 
 
@@ -2200,6 +2285,7 @@
       buildIndice();
       buildResumen();
       buildIndicadoresGlobales();
+      buildCumplimientoPorDestino();
       buildUltimoMes();
       buildIndicadoresPorContribucion();
       buildBSC()
