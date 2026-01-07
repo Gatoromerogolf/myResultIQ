@@ -266,7 +266,7 @@
         /* alineación perfecta */
     }
 
-        /* Avatar en navbar */
+    /* Avatar en navbar */
     .user-avatar {
         width: 50px;
         height: 50px;
@@ -289,7 +289,6 @@
     .user-dropdown-header img {
         margin-bottom: 15px;
     }
-
 </style>
 
 </head>
@@ -626,21 +625,6 @@
             let title = document.createElement('span');
             title.textContent = node.name || node.text;
 
-            // Clases de color por nivel (0 = raíz, 1 = hijos de raíz, etc.)
-            // const colores = ["text-dark", "text-primary", "text-success", "text-dark", "text-purple", "text-teal", "text-orange"];
-            // const colorClase = colores[level % colores.length]; // rota si hay más niveles
-            // title.classList.add(colorClase);
-
-            // if (node.type === 'indicador') {
-            //     // 🔸 Un único color para todos los indicadores
-            //     title.classList.add('text-purple');
-            // } else {
-            //     // 🎨 Colores rotativos para los sectores según nivel
-            //     const colores = ["text-dark", "text-primary", "text-success", "text-dark", "text-purple", "text-teal"];
-            //     const colorClase = colores[level % colores.length];
-            //     title.classList.add(colorClase);
-            // }
-
             if (node.type === 'indicador') {
                 // 🔸 Si es un indicador, usar <a> en lugar de <span>
                 title = document.createElement('a');
@@ -720,6 +704,9 @@
                             actualizarAlerta(0);
                         }
 
+                        // 💾 GUARDAR árbol actualizado para informe
+                        persistTreeForReport();
+
                         // Guardar peso del nodo en BD
                         try {
                             await fetch(`/api/update-weight`, {
@@ -782,6 +769,7 @@
             }
 
             node._progressBar = bar;
+
             return container;
         }
 
@@ -848,6 +836,30 @@
             }
         }
 
+        // 🧩 Serializa el árbol para informes (sin DOM)
+        function serializeTree(node) {
+            return {
+                id: node.id,
+                type: node.type || 'sector',
+                name: node.name || node.text,
+                weight: Number(node.weight) || 0,
+                globalWeight: Number(node.globalWeight) || 0,
+                value: Number(node.value) || 0,
+                codigo_id: node.codigo_id || null,
+                children: node.children
+                    ? node.children.map(child => serializeTree(child))
+                    : []
+            };
+        }
+
+        // 🎲🎲🎲 persistTreeForReport
+        function persistTreeForReport() {
+            const treeData = serializeTree(window.treeRoot);
+            localStorage.setItem('bscTreeData', JSON.stringify(treeData));
+            console.log('actualia tredata', treeData);
+        }
+
+
         // 🎲🎲🎲 MAIN 🎲🎲🎲
         (async () => {
             window.treeRoot = await fetchData();
@@ -867,6 +879,11 @@
             const container = document.getElementById('treeContainer');
             container.innerHTML = '';
             container.appendChild(buildTree(window.treeRoot));
+
+            // ✅ AQUÍ: guardar árbol listo para informe
+            const treeData = serializeTree(window.treeRoot);
+            localStorage.setItem('bscTreeData', JSON.stringify(treeData));
+            console.log('graba treedata ,', treeData);
 
         })();
     </script>
@@ -1016,38 +1033,38 @@
                 document.getElementById('contenedorModalLogout').innerHTML = html;
             });
 
-            //     const btnLogout = document.getElementById('confirmLogout');
-            //     if (!btnLogout) return;
+        //     const btnLogout = document.getElementById('confirmLogout');
+        //     if (!btnLogout) return;
 
-            //     btnLogout.addEventListener('click', async () => {
-            //         // Cerrar modal
-            //         const modalEl = document.getElementById('logoutModal');
-            //         const modal = bootstrap.Modal.getInstance(modalEl);
-            //         if (modal) modal.hide();
+        //     btnLogout.addEventListener('click', async () => {
+        //         // Cerrar modal
+        //         const modalEl = document.getElementById('logoutModal');
+        //         const modal = bootstrap.Modal.getInstance(modalEl);
+        //         if (modal) modal.hide();
 
-            //         // 🔐 Auditoría logout
-            //         const token = localStorage.getItem('token');
-            //         if (token) {
-            //             try {
-            //                 await fetch('/api/auth/logout', {
-            //                     method: 'POST',
-            //                     headers: {
-            //                         Authorization: 'Bearer ' + token
-            //                     }
-            //                 });
-            //             } catch (e) {
-            //                 console.warn('No se pudo registrar logout');
-            //             }
-            //         }
+        //         // 🔐 Auditoría logout
+        //         const token = localStorage.getItem('token');
+        //         if (token) {
+        //             try {
+        //                 await fetch('/api/auth/logout', {
+        //                     method: 'POST',
+        //                     headers: {
+        //                         Authorization: 'Bearer ' + token
+        //                     }
+        //                 });
+        //             } catch (e) {
+        //                 console.warn('No se pudo registrar logout');
+        //             }
+        //         }
 
-            //         // 🧹 Limpiar sesión
-            //         localStorage.clear();
-            //         sessionStorage.clear();
+        //         // 🧹 Limpiar sesión
+        //         localStorage.clear();
+        //         sessionStorage.clear();
 
-            //         // 🚀 Redirigir
-            //         window.location.href = '/';
-            //     });
-            // });
+        //         // 🚀 Redirigir
+        //         window.location.href = '/';
+        //     });
+        // });
     </script>
 
     <script src="/modal-indicador.js"></script>

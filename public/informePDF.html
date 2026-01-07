@@ -521,6 +521,16 @@
         page-break-after: always;
       }
     }
+
+    .tree-report-container {
+      font-size: 14px;
+    }
+
+    .tree-report-row {
+      padding: 2px 0;
+      border-left: 2px solid #ddd;
+      padding-left: 8px;
+    }
   </style>
 </head>
 
@@ -1658,26 +1668,7 @@
       const tablaPerspectivas = buildTablaPerspectivas(resumenPorDimension);
       content.appendChild(tablaPerspectivas);
 
-      // const p1 = document.createElement('p'); p1.innerHTML = `
-      // 3. Evolución temporal.  Mostrar tendencia de cada perspectiva.<br><br>
-      // `;
-      // content.appendChild(p1);
-
-      // const p2 = document.createElement('p'); p2.innerHTML = `
-      // 4. Mostrar los indicadores por perspectiva, con participación de cada uno y ordenado por mejor cumplimiento.<br><br>
-      // `;
-      // content.appendChild(p2);
-
-
-      // const p3 = document.createElement('p'); p3.innerHTML = `
-      // 5. En cada pagina los indicadores de cada perspectiva, mostrando el grafico del mejor calificado y el grafico del peor calificado.<br>
-      // Cada perspectiva se muestra en una página separada.<br>
-      // Poner comentarios y el plan de accion del indicador que se muestra además del gráfico<br>
-      // `;
-      // content.appendChild(p3);
-
       documento.appendChild(page);
-
     }
 
     // 🧲🧲🧲 buildBSCPerspectiva
@@ -1685,18 +1676,18 @@
 
       const { page, content } = createPage();
 
-      const h = document.createElement('h2');
-      h.className = 'section-title';
-      h.textContent = 'BSC - Balanced Scorecard';
-      content.appendChild(h);
+      // const h = document.createElement('h2');
+      // h.className = 'section-title';
+      // h.textContent = 'BSC - Balanced Scorecard';
+      // content.appendChild(h);
 
-      const p0 = document.createElement('p');
-      p0.innerHTML = `
-        <b>3. Detalle de Indicadores por Perspectiva.</b><br><br>
-        A continuación se presentan los indicadores agrupados según la perspectiva del BSC a la que pertenecen,
-        mostrando su desempeño individual y contribución al cumplimiento global.<br><br>
-    `;
-      content.appendChild(p0);
+      // const p0 = document.createElement('p');
+      // p0.innerHTML = `
+      //   <b>3. Detalle de Indicadores por Perspectiva.</b><br><br>
+      //   A continuación se presentan los indicadores agrupados según la perspectiva del BSC a la que pertenecen,
+      //   mostrando su desempeño individual y contribución al cumplimiento global.<br><br>
+      //   `;
+      // content.appendChild(p0);
 
       // 📦 Contenedor del detalle
       const detalleContainer = document.createElement("div");
@@ -1709,7 +1700,6 @@
       // 🔴 Recién ahora entra al DOM
       documento.appendChild(page);
     }
-
 
 
 
@@ -1790,23 +1780,42 @@
     }
 
 
-    //😎😎😎 renderDetallePorPerspectivaHTML
-function renderDetallePorPerspectivaHTML() {
 
-    const detalle = JSON.parse(
+    // 😎😎😎 renderDetallePorPerspectivaHTML
+    function renderDetallePorPerspectivaHTML() {
+
+      const detalle = JSON.parse(
         localStorage.getItem("detalleIndicadoresPorPerspectiva")
-    );
+      );
 
-    if (!detalle) return;
+      if (!detalle) return;
 
-    Object.values(detalle).forEach(perspectiva => {
+      Object.values(detalle).forEach((perspectiva, index) => {
 
         const { page, content } = createPage();
 
-        const h = document.createElement("h3");
-        h.className = "section-title";
-        h.textContent = perspectiva.titulo;
-        content.appendChild(h);
+        // 🟢 SOLO EN LA PRIMERA PÁGINA
+        if (index === 0) {
+
+          const h2 = document.createElement('h2');
+          h2.className = 'section-title';
+          h2.textContent = 'BSC - Balanced Scorecard';
+          content.appendChild(h2);
+
+          const p0 = document.createElement('p');
+          p0.innerHTML = `
+            <b>3. Detalle de Indicadores por Perspectiva.</b><br><br>
+            A continuación se presentan los indicadores agrupados según la perspectiva del BSC a la que pertenecen,
+            mostrando su desempeño individual y contribución al cumplimiento global.<br><br>
+          `;
+          content.appendChild(p0);
+        }
+
+        // 🔹 TÍTULO DE LA PERSPECTIVA
+        const h3 = document.createElement("h3");
+        h3.className = "section-title";
+        h3.textContent = perspectiva.titulo;
+        content.appendChild(h3);
 
         const p = document.createElement("p");
         p.textContent = "Detalle de indicadores asociados a la perspectiva.";
@@ -1835,195 +1844,8 @@ function renderDetallePorPerspectivaHTML() {
 
         content.appendChild(tableWrapper);
         documento.appendChild(page);
-    });
-}
-
-
-
-
-    
-    function XXXXXrenderDetallePorPerspectivaHTML(contenedor) {
-
-      console.log('entro en el render');
-
-      if (!contenedor) {
-        console.log("no hay contenedor");
-        return;
-      }
-
-      const detalle = JSON.parse(
-        localStorage.getItem("detalleIndicadoresPorPerspectiva")
-      );
-
-      if (!detalle) return;
-
-      contenedor.innerHTML = '';
-
-      Object.values(detalle).forEach(perspectiva => {
-
-        const section = document.createElement("section");
-        section.className = "perspectiva-section";
-
-        section.innerHTML = `
-            <h3 class="titulo-perspectiva">${perspectiva.titulo}</h3>
-            <table class="table table-sm table-bordered mt-3">
-                <thead class="table-light">
-                    <tr>
-                        <th>Indicador</th>
-                        <th>Sector</th>
-                        <th>Responsable</th>
-                        <th>Valor</th>
-                        <th>Cumpl.</th>
-                        <th>Peso</th>
-                        <th>Pond.</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${perspectiva.html}
-                </tbody>
-            </table>
-        `;
-
-        contenedor.appendChild(section);
       });
     }
-
-
-
-
-
-    function XXXrenderDetallePorPerspectivaHTML() {
-
-      console.log('entro en el render')
-      const contenedor = document.getElementById("detallePerspectivasInforme");
-      if (!contenedor) {
-        console.log("no hay contenedor");
-        return;
-      }
-
-
-      const detalle = JSON.parse(
-        localStorage.getItem("detalleIndicadoresPorPerspectiva")
-      );
-
-      if (!detalle) return;
-      console.log(detalle)
-
-      contenedor.innerHTML = '';
-
-      Object.values(detalle).forEach((perspectiva, index) => {
-
-        // 🧱 Sección por Perspectiva
-        const section = document.createElement("section");
-        section.className = "perspectiva-section";
-
-        // 🧭 Título
-        section.innerHTML += `
-            <h3 class="titulo-perspectiva">${perspectiva.titulo}</h3>
-            <p class="subtitulo-perspectiva">
-                Detalle de indicadores asociados a la perspectiva
-            </p>
-        `;
-
-        // 📊 Tabla
-        section.innerHTML += `
-            <table class="table table-sm table-bordered mt-3">
-                <thead class="table-light">
-                    <tr>
-                        <th>Indicador</th>
-                        <th>Sector</th>
-                        <th>Responsable</th>
-                        <th>Valor</th>
-                        <th>Cumpl.</th>
-                        <th>Peso</th>
-                        <th>Pond.</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${perspectiva.html}
-                </tbody>
-            </table>
-        `;
-
-        contenedor.appendChild(section);
-      });
-    }
-
-
-    //😎😎😎 agregarDetallePorPerspectivaPDF
-    function XXXagregarDetallePorPerspectivaPDF(doc) {
-
-      const detalle = JSON.parse(
-        localStorage.getItem("detalleIndicadoresPorPerspectiva")
-      );
-
-      if (!detalle) return;
-
-      Object.values(detalle).forEach((perspectiva, index) => {
-
-        // 🔹 Nueva página a partir de la segunda
-        if (index > 0) {
-          doc.addPage();
-        }
-
-        let y = 20;
-
-        // 🧭 Título de la perspectiva
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.text(perspectiva.titulo, 14, y);
-
-        y += 6;
-
-        // 📊 Subtítulo opcional
-        doc.setFontSize(9);
-        doc.setFont("helvetica", "normal");
-        doc.text("Detalle de indicadores asociados a la perspectiva", 14, y);
-
-        y += 4;
-
-        // 🧱 Crear tabla temporal invisible
-        const table = document.createElement("table");
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Indicador</th>
-                    <th>Sector</th>
-                    <th>Responsable</th>
-                    <th>Valor</th>
-                    <th>Cumpl.</th>
-                    <th>Peso</th>
-                    <th>Pond.</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${perspectiva.html}
-            </tbody>
-        `;
-
-        // 📌 Agregar tabla al PDF
-        doc.autoTable({
-          html: table,
-          startY: y + 4,
-          theme: "grid",
-          styles: {
-            fontSize: 8,
-            cellPadding: 2
-          },
-          headStyles: {
-            fillColor: [230, 230, 230],
-            textColor: 20,
-            fontStyle: "bold"
-          },
-          margin: { left: 14, right: 14 }
-        });
-
-      });
-    }
-
 
     //😎😎😎 nuevaPagina
     function nuevaPagina() {
@@ -2043,6 +1865,321 @@ function renderDetallePorPerspectivaHTML() {
 
       documento.appendChild(page);
     }
+
+    // 🧲🧲🧲 buildAnexoArbolBSC
+
+
+
+
+    function buildAnexoArbolBSC() {
+
+      const treeData = JSON.parse(localStorage.getItem('bscTreeData'));
+      if (!treeData) return;
+
+      const PAGE_HEIGHT = 1120;
+      const PAGE_PADDING = 600;
+      const MAX_HEIGHT = PAGE_HEIGHT - PAGE_PADDING;
+
+      let page, content, container;
+      let currentHeight = 0;
+
+      function newPage(withTitle = false) {
+        ({ page, content } = createPage());
+
+        if (withTitle) {
+          const h = document.createElement('h2');
+          h.className = 'section-title';
+          h.textContent = 'Anexo I – Árbol de Destinos e Indicadores';
+          content.appendChild(h);
+
+          const p = document.createElement('p');
+          p.innerHTML = `
+          Se muestra la estructura jerárquica completa de destinos (sectores,
+          dependencias o procesos) y de los indicadores definidos.   Cada destino tiene asignado un peso relativo dentro del destino al que pertenece. Cada indicador incluye su peso relativo dentro del destino al que pertenece y su contribución porcentual al cumplimiento global (combinando su peso dentro del destino y el peso de los destinos que lo contienen.)
+        `;
+          content.appendChild(p);
+        }
+
+        container = document.createElement('div');
+        container.className = 'tree-report-container';
+        content.appendChild(container);
+
+        documento.appendChild(page);
+        currentHeight = 0;
+      }
+
+      // 👉 PRIMERA PÁGINA (con título)
+      newPage(true);
+
+      function renderNode(node, level = 0) {
+
+        const row = document.createElement('div');
+        row.className = 'tree-report-row';
+        row.style.marginLeft = `${level * 18}px`;
+        row.style.display = 'flex';
+        row.style.justifyContent = 'space-between';
+        row.style.alignItems = 'center';
+        row.style.marginBottom = '6px';
+
+        row.innerHTML = `
+      <div>
+        <span style="color:#666; font-size:12px; margin-right:6px;">
+          ${node.weight?.toFixed(2) || 0}%
+        </span>
+        ${node.type === 'sector' || node.id === 'root'
+            ? `<strong>${node.name}</strong>`
+            : node.name
+          }
+      </div>
+      <div>
+        ${node.type === 'indicador'
+            ? `${node.globalWeight?.toFixed(2) || 0}%`
+            : ''
+          }
+      </div>
+    `;
+
+        container.appendChild(row);
+
+        const rowHeight = row.offsetHeight;
+        currentHeight += rowHeight;
+
+        // 🚨 SALTO DE PÁGINA CORRECTO
+        if (currentHeight > MAX_HEIGHT) {
+
+          // nueva página SIN repetir título
+          newPage(false);
+
+          container.appendChild(row);
+          currentHeight = rowHeight;
+        }
+
+        if (node.children && node.children.length > 0) {
+          node.children.forEach(child =>
+            renderNode(child, level + 1)
+          );
+        }
+      }
+
+      renderNode(treeData, 0);
+    }
+
+
+
+
+
+
+
+    function MMMMMbuildAnexoArbolBSC() {
+
+      console.log('entro en buildAnexoArbolBSC')
+      const treeData = JSON.parse(localStorage.getItem('bscTreeData'));
+      console.log('ENCONT4O TREEDATA', treeData)
+      if (!treeData) return;
+
+      console.log(treeData)
+      const { page, content } = createPage();
+
+      // 📌 Título
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Anexo I – Árbol de Dependencias del BSC';
+      content.appendChild(h);
+
+      // 📄 Descripción
+      const p = document.createElement('p');
+      p.innerHTML = `
+          Se muestra la estructura jerárquica completa de destinos (sectores,
+          dependencias o procesos) y de los indicadores definidos.   Cada destino tiene asignado un peso relativo dentro del destino del que depende.  Cada indicador incluye su peso relativo dentro del destino al que pertenece y su contribución porcentual al cumplimiento global (combinando su peso dentro del destino y el peso de los destinos que lo contienen.)
+        `;
+      content.appendChild(p);
+
+      // 📦 Contenedor del árbol
+      const treeContainer = document.createElement('div');
+      treeContainer.className = 'tree-report-container mt-4';
+      content.appendChild(treeContainer);
+
+      // 🌳 Render del árbol
+      renderTreeForReportPaged(treeData);
+
+
+      documento.appendChild(page);
+    }
+
+    //🥼🥼🥼 renderTreeForReport
+
+
+    const PAGE_HEIGHT = 1120; // px aprox A4
+    const PAGE_PADDING = 160; // header + footer + márgenes
+    const MAX_CONTENT_HEIGHT = PAGE_HEIGHT - PAGE_PADDING;
+    const MAX_ROWS = 30;
+    let usedRows = 0;
+
+    function countSectorRows(sector) {
+      let count = 1; // nombre del sector
+
+      sector.children.forEach(child => {
+        if (child.type === 'indicador') {
+          count += 1;
+        }
+      });
+
+      return count;
+    }
+
+
+    function renderTreeForReportPaged(treeData) {
+
+      let { page, content } = createPage();
+      let currentHeight = 0;
+
+      const container = document.createElement('div');
+      container.className = 'tree-report-container';
+      content.appendChild(container);
+
+      documento.appendChild(page);
+
+      function renderNode(node, level = 0) {
+
+        const row = document.createElement('div');
+        row.className = 'tree-report-row';
+        row.style.marginLeft = `${level * 18}px`;
+        row.style.display = 'flex';
+        row.style.justifyContent = 'space-between';
+        row.style.alignItems = 'center';
+        row.style.marginBottom = '6px';
+
+        row.innerHTML = `
+      <div>
+        <span style="color:#666; font-size:12px; margin-right:6px;">
+          ${node.weight?.toFixed(2) || 0}%
+        </span>
+        ${node.type === 'sector' || node.id === 'root'
+            ? `<strong>${node.name}</strong>`
+            : node.name
+          }
+      </div>
+      <div>
+        ${node.type === 'indicador'
+            ? `${node.globalWeight?.toFixed(2) || 0}%`
+            : ''
+          }
+      </div>
+    `;
+
+        container.appendChild(row);
+
+        const rowHeight = row.offsetHeight;
+        currentHeight += rowHeight;
+
+        // 🚨 Salto de página
+        if (currentHeight > MAX_CONTENT_HEIGHT) {
+
+          // crear nueva página
+          ({ page, content } = createPage());
+          documento.appendChild(page);
+
+          // nuevo contenedor
+          container.innerHTML = '';
+          const newContainer = document.createElement('div');
+          newContainer.className = 'tree-report-container';
+          content.appendChild(newContainer);
+
+          // reset
+          currentHeight = 0;
+
+          // mover fila a la nueva página
+          newContainer.appendChild(row);
+        }
+
+        if (node.children && node.children.length > 0) {
+          node.children.forEach(child => renderNode(child, level + 1));
+        }
+      }
+
+      renderNode(treeData, 0);
+    }
+
+
+
+
+
+
+    function renderTreeForReport(node, level = 0, container) {
+
+      const row = document.createElement('div');
+      row.className = 'tree-report-row';
+      row.style.marginLeft = `${level * 18}px`;
+      row.style.marginBottom = '6px';
+      row.style.display = 'flex';
+      row.style.justifyContent = 'space-between';
+      row.style.alignItems = 'center';
+
+      // 🧱 Parte izquierda (nombre + peso relativo)
+      const left = document.createElement('div');
+      left.innerHTML = `
+    <span style="color:#666; font-size:12px; margin-right:6px;">
+      ${node.weight?.toFixed(2) || 0}%
+    </span>
+    ${node.type === 'sector' || node.id === 'root'
+          ? `<strong>${node.name}</strong>`
+          : node.name
+        }
+  `;
+
+      // 🌍 Parte derecha (peso global)
+      const right = document.createElement('div');
+      if (node.type === 'indicador') {
+        right.innerHTML = `
+      <span style="font-size:12px;">
+        ${node.globalWeight?.toFixed(2) || 0}%
+      </span>
+    `;
+      }
+
+      row.appendChild(left);
+      row.appendChild(right);
+      container.appendChild(row);
+
+      if (node.children && node.children.length > 0) {
+        node.children.forEach(child => {
+          renderTreeForReport(child, level + 1, container);
+        });
+      }
+    }
+
+
+
+
+    function XXXXrenderTreeForReport(node, level = 0, container) {
+
+      const row = document.createElement('div');
+      row.className = 'tree-report-row';
+      row.style.marginLeft = `${level * 18}px`;
+      row.style.marginBottom = '6px';
+
+      if (node.type === 'sector' || node.id === 'root') {
+        row.innerHTML = `
+      <strong>${node.name}</strong>
+    `;
+      } else if (node.type === 'indicador') {
+        row.innerHTML = `
+      ${node.name}
+      <span style="float:right">
+        ${node.globalWeight?.toFixed(2) || 0}%
+      </span>
+    `;
+      }
+
+      container.appendChild(row);
+
+      if (node.children && node.children.length > 0) {
+        node.children.forEach(child => {
+          renderTreeForReport(child, level + 1, container);
+        });
+      }
+    }
+
 
     // Cuando se arma el documento numeramos las páginas (footer .page-number)
     // 🧲🧲🧲 numerarPaginas
@@ -2067,6 +2204,7 @@ function renderDetallePorPerspectivaHTML() {
       buildIndicadoresPorContribucion();
       buildBSC()
       buildBSCPerspectiva()
+      buildAnexoArbolBSC();
       buildAnexos();
       numerarPaginas();
     }
