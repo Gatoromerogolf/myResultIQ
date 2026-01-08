@@ -9,6 +9,9 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap"
     rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Abel&family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Courgette&family=Gupter:wght@400;500;700&family=PT+Sans+Narrow:wght@400;700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap"
+    rel="stylesheet">
 
   <style>
     :root {
@@ -26,7 +29,10 @@
     }
 
     body {
-      font-family: 'Roboto', system-ui, sans-serif;
+      /* font-family: 'Roboto', system-ui, sans-serif; */
+      font-family: "Abel", sans-serif;
+      font-weight:500;
+      font-size: 18px;
       color: var(--gris);
       margin: 0;
       background: #efefef;
@@ -533,19 +539,130 @@
     }
 
     .estado-verde {
-  color: #1b7e3c;
-  font-weight: 600;
-}
+      color: #1b7e3c;
+      font-weight: 600;
+    }
 
-.estado-amarillo {
-  color: #b38b00;
-  font-weight: 600;
-}
+    .estado-amarillo {
+      color: #b38b00;
+      font-weight: 600;
+    }
 
-.estado-rojo {
-  color: #b02a37;
-  font-weight: 600;
-}
+    .estado-rojo {
+      color: #b02a37;
+      font-weight: 600;
+    }
+
+    .tabla-informe {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .tabla-informe th,
+    .tabla-informe td {
+      border: 1px solid #ccc;
+      padding: 5px;
+    }
+
+    .tabla-informe th {
+      background-color: #f2f2f2;
+    }
+
+    .fila-usuario {
+      background-color: #f0f0f0;
+    }
+
+    .fila-indicador td {
+      background-color: #fff;
+    }
+
+    .titulo-jefe {
+      margin-top: 24px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .org-linea {
+      font-family: "Courier New", Consolas, monospace;
+      font-size: 16px;
+      line-height: 1.8;
+      white-space: pre;
+    }
+
+    .org-raiz {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .destino-usuario {
+      margin: 4px 0 2px 0;
+      font-style: italic;
+    }
+
+    .lista-indicadores {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    .sin-indicadores {
+      margin-top: 24px;
+      font-weight: bold;
+    }
+
+    .usuario-block {
+      margin-bottom: 20px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* 📄 Reglas de impresión */
+    @media print {
+      table {
+        page-break-inside: auto;
+      }
+
+      h3 {
+        page-break-after: avoid;
+      }
+
+      tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      thead {
+        display: table-header-group;
+        /* 🔥 Repite encabezado */
+      }
+
+      .fila-usuario {
+        background-color: #e0e0e0 !important;
+      }
+
+      .org-linea {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      ul,
+      li {
+        page-break-inside: avoid;
+      }
+
+      .usuario-block {
+        page-break-before: always;
+        break-before: page;
+      }
+
+      .salto-hoja {
+        page-break-before: always;
+        break-before: page;
+      }
+
+
+    }
   </style>
 </head>
 
@@ -578,9 +695,9 @@
                 font-size: 1.2rem;
                 ">
     <div class="spinner-border text-light mb-3" role="status">
-      <span class="visually-hidden">Generando PDF...</span>
+      <span class="visually-hidden mb-3">Generando PDF...</span>
     </div>
-    <span id="spinnerText">Generando informe PDF, por favor espere...</span>
+    <span id="spinnerText">Creando Informe, por favor espere...</span>
   </div>
 
   <!-- Dependencia para exportar a PDF -->
@@ -771,10 +888,52 @@
       documento.appendChild(page);
     }
 
+    // 🧲🧲🧲 buildTOC
+    function buildIndice() {
+      const { page, content } = createPage();
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Tabla de Contenido';
+      h.style.textAlign = 'center';
+      content.appendChild(h);
+
+      const ul = document.createElement('ul'); ul.className = 'toc-list';
+      // Generamos entradas acordes a las secciones previstas
+      const entradas = [
+        'Marco Introductorio y Visión General',
+        'Resumen Ejecutivo',
+        'Indicadores Globales',
+        'Cumplimiento por Destino',
+        'Detalle del último mes',
+        'Indicadores por Contribución',
+        'BSC - Balance Scorecard',
+        '   1. Gráfico de cumplimiento promedio',
+        '   2. Tabla de peerspectivas',
+        '   3. Detalle de indicadorespor perspectiva',
+        '      3.1. Indicadores de Perspectiva Clientes',
+        '      3.2. Indicadores de Perspectiva Financiera',
+        '      3.3. Indicadores de Perspectiva Capital Humano',
+        '      3.4. Indicadores de Perspectiva Procesos',
+        'Anexo 1 - Arbol de Destinos e Indicadores',
+        'Anexo 2 - Usuarios',
+        'Anexo 3 - Organigrama Institucional',
+        'Anexo 4 - Usuarios registrados e indicadores asignados'
+      ];
+      entradas.forEach((e, i) => {
+        const li = document.createElement('li'); li.textContent = `${i + 1}. ${e}`;
+        ul.appendChild(li);
+      });
+
+      content.appendChild(ul);
+
+      documento.appendChild(page);
+    }
+
+
     // 🧲🧲🧲 buildIntrooverview
     function buildMarcoIntroductorio() {
       const { page, content } = createPage();
-      const h = document.createElement('h1');
+      const h = document.createElement('h2');
       h.className = 'section-title';
       h.textContent = 'Marco Introductorio y Visión General';
       content.appendChild(h);
@@ -841,24 +1000,7 @@
       documento.appendChild(page1);
     }
 
-    // 🧲🧲🧲 buildTOC
-    function buildIndice() {
-      const { page, content } = createPage();
-      const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'Índice';
-      content.appendChild(h);
 
-      const ul = document.createElement('ul'); ul.className = 'toc-list';
-      // Generamos entradas acordes a las secciones previstas
-      const entradas = ['Resumen Ejecutivo', 'Indicadores Globales', 'Indicadores por Sector', 'Análisis de Cumplimientos', 'Anexos'];
-      entradas.forEach((e, i) => {
-        const li = document.createElement('li'); li.textContent = `${i + 1}. ${e}`;
-        ul.appendChild(li);
-      });
-
-      content.appendChild(ul);
-
-      documento.appendChild(page);
-    }
 
     // 🧲🧲🧲 buildResumen
     async function buildResumen() {
@@ -1869,6 +2011,373 @@
       return { page, content };
     }
 
+
+    // 🧲🧲🧲 buildUsuariosDatos
+    async function buildUsuariosDatos() {
+      const { page, content } = createPage();
+
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Usuarios';
+      content.appendChild(h);
+
+      const p = document.createElement('p');
+      p.textContent = 'Listado de usuarios registrados en el sistema.';
+      content.appendChild(p);
+
+      // 🔄 Leer usuarios
+      const usuarios = await fetch('/usuarios').then(r => r.json());
+      console.log('usuarios en build con datos', usuarios)
+
+      const mapUsuarios = {};
+      usuarios.forEach(u => {
+        mapUsuarios[u.legajo] = `${u.apellido}, ${u.nombres}`;
+      });
+
+      renderTablaUsuariosPorJefe(content, usuarios);
+
+      documento.appendChild(page);
+
+      //😎😎😎
+      function agruparUsuariosPorJefe(usuarios) {
+        const grupos = {};
+
+        usuarios.forEach(u => {
+          const key = u.legajo_jefe || 'SIN_LIDER';
+          if (!grupos[key]) grupos[key] = [];
+          grupos[key].push(u);
+        });
+
+        return grupos;
+      }
+
+      //😎😎😎
+      function crearMapaUsuarios(usuarios) {
+        const map = {};
+        usuarios.forEach(u => {
+          map[u.legajo] = `${u.apellido}, ${u.nombres}`;
+        });
+        return map;
+      }
+
+      //😎😎😎
+      function renderTablaUsuariosPorJefe(container, usuarios) {
+
+        const mapUsuarios = crearMapaUsuarios(usuarios);
+        const grupos = agruparUsuariosPorJefe(usuarios);
+
+        Object.keys(grupos).forEach(legajoJefe => {
+
+          // 🧑‍💼 Título del jefe
+          const h3 = document.createElement('h3');
+          h3.className = 'titulo-jefe';
+
+          h3.textContent =
+            legajoJefe === 'SIN_LIDER'
+              ? 'Usuarios sin líder asignado'
+              : `Líder: ${mapUsuarios[legajoJefe] || `Legajo ${legajoJefe}`}`;
+
+          container.appendChild(h3);
+
+          // 📊 Tabla del grupo
+          const table = document.createElement('table');
+          table.className = 'tabla-informe';
+
+          table.innerHTML = `
+                <thead>
+                  <tr>
+                    <th>Legajo</th>
+                    <th>Apellido</th>
+                    <th>Nombres</th>
+                    <th>Cargo</th>
+                    <th>Sector</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              `;
+
+          const tbody = table.querySelector('tbody');
+
+          grupos[legajoJefe].forEach(u => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${u.legajo}</td>
+                <td>${u.apellido}</td>
+                <td>${u.nombres}</td>
+                <td>${u.cargo ?? '-'}</td>
+                <td>${u.sector ?? '-'}</td>
+                <td>${u.email ?? '-'}</td>
+                <td>${u.rol ?? '-'}</td>
+                <td>${u.estado ?? '-'}</td>
+              `;
+            tbody.appendChild(tr);
+          });
+
+          container.appendChild(table);
+        });
+      }
+
+    }
+
+
+
+    // 🧲🧲🧲 buildOrganigramaTextual
+    async function buildOrganigramaTextual() {
+      const { page, content } = createPage();
+
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Organigrama Institucional';
+      content.appendChild(h);
+
+      const p = document.createElement('p');
+      p.textContent = 'Representación textual de la estructura jerárquica de la organización.';
+      content.appendChild(p);
+
+      const resp = await fetch('/usuarios').then(r => r.json());
+      const usuarios = Array.isArray(resp) ? resp : resp.data || resp.rows || [];
+      console.log(usuarios)
+
+      const arbol = construirArbolOrganigrama(usuarios);
+
+      const raiz = document.createElement('div');
+      raiz.className = 'org-linea org-raiz';
+      raiz.textContent = 'Dirección General';
+      content.appendChild(raiz);
+
+      renderOrganigramaTextual(content, arbol);
+
+      documento.appendChild(page);
+
+      // 😎😎😎 Render textual recursivo
+      function renderOrganigramaTextual(container, nodos, prefijo = '') {
+        nodos.forEach((nodo, index) => {
+          const esUltimo = index === nodos.length - 1;
+
+          const linea = document.createElement('div');
+          linea.className = 'org-linea';
+
+          const conector = esUltimo ? '└── ' : '├── ';
+          linea.textContent =
+            prefijo +
+            conector +
+            `${nodo.apellido}, ${nodo.nombres}${nodo.cargo ? ' (' + nodo.cargo + ')' : ''}`;
+
+          container.appendChild(linea);
+
+          const nuevoPrefijo = prefijo + (esUltimo ? '    ' : '│   ');
+
+          if (nodo.hijos && nodo.hijos.length > 0) {
+            renderOrganigramaTextual(container, nodo.hijos, nuevoPrefijo);
+          }
+        });
+      }
+
+
+      // 😎😎😎 Construye árbol jerárquico
+      function construirArbolOrganigrama(usuarios) {
+        const map = {};
+        const roots = [];
+
+        // Normalizar legajos
+        usuarios.forEach(u => {
+          const legajo = String(u.legajo);
+          map[legajo] = { ...u, legajo, hijos: [] };
+        });
+
+        usuarios.forEach(u => {
+          const legajo = String(u.legajo);
+          const jefe = u.legajo_jefe ? String(u.legajo_jefe) : null;
+
+          if (jefe && map[jefe]) {
+            map[jefe].hijos.push(map[legajo]);
+          } else {
+            roots.push(map[legajo]);
+          }
+        });
+
+        return roots;
+      }
+
+
+    }
+
+
+    // 🧲🧲🧲 buildUsuarioaIndicadores
+    let lineasActuales = 0;
+    const MAX_LINEAS = 40;
+    let pageActual = null;
+    let contentActual = null;
+
+    function nuevaPagina(titulo = null) {
+
+      const { page, content } = createPage();
+
+      if (titulo) {
+        const h = document.createElement('h2');
+        h.className = 'section-title';
+        h.textContent = titulo;
+        content.appendChild(h);
+      }
+
+      documento.appendChild(page);
+
+      pageActual = page;
+      contentActual = content;
+      lineasActuales = 0;
+    }
+
+
+    function agregarLineas(lineasNecesarias) {
+
+      if (lineasActuales + lineasNecesarias > MAX_LINEAS) {
+        nuevaPagina('Anexos');
+      }
+
+      lineasActuales += lineasNecesarias;
+    }
+
+
+
+    async function buildUsuariosIndicadores() {
+
+      // 📄 Primera página
+      nuevaPagina('Anexos');
+
+      const p = document.createElement('p');
+      p.textContent = 'Usuarios registrados y sus indicadores asignados.';
+      contentActual.appendChild(p);
+      lineasActuales += 2;
+
+      // 🔄 Traemos usuarios e indicadores y sectores
+      const [usuarios, indicadores, sectores] = await Promise.all([
+        fetch('/usuarios').then(r => r.json()),
+        fetch('/api/indicadores').then(r => r.json()),
+        fetch('/sectores').then(r => r.json())
+      ]);
+
+      const mapSectores = {};
+      sectores.forEach(s => {
+        mapSectores[s.id] = s;
+      });
+
+      // 📌 Agrupar indicadores por responsable (legajo)
+      const indicadoresPorUsuario = {};
+      indicadores.forEach(i => {
+        if (!indicadoresPorUsuario[i.responsable]) {
+          indicadoresPorUsuario[i.responsable] = [];
+        }
+        indicadoresPorUsuario[i.responsable].push(i);
+      });
+
+      const usuariosConIndicadores = [];
+      const usuariosSinIndicadores = [];
+
+      usuarios.forEach(u => {
+        if (indicadoresPorUsuario[u.legajo]?.length) {
+          usuariosConIndicadores.push(u);
+        } else {
+          usuariosSinIndicadores.push(u);
+        }
+      });
+
+      renderUsuarios(
+        usuariosConIndicadores,
+        usuariosSinIndicadores,
+        indicadoresPorUsuario,
+        mapSectores
+      );
+      // }
+
+      // 😎😎😎 renderTablaUsuarios
+      function renderUsuarios(
+        usuariosConIndicadores,
+        usuariosSinIndicadores,
+        indicadoresPorUsuario,
+        mapSectores
+      ) {
+
+        /* ===============================
+           USUARIOS CON INDICADORES
+           =============================== */
+        usuariosConIndicadores.forEach(u => {
+
+          const indicadores = indicadoresPorUsuario[u.legajo] || [];
+
+          // 🧮 Líneas necesarias
+          const lineasUsuario =
+            2 +                    // título usuario
+            1 +                    // destino
+            indicadores.length +   // indicadores
+            1;                     // espacio
+
+          agregarLineas(lineasUsuario);
+
+          // 🧍‍♂️ Usuario
+          const h3 = document.createElement('h3');
+          h3.textContent = `Legajo ${u.legajo} – ${u.apellido}, ${u.nombres}`;
+          contentActual.appendChild(h3);
+
+          // 🏷️ Destino
+          const destino = document.createElement('p');
+          const rutaSector = u.sector
+            ? obtenerRutaSector(u.sector, mapSectores)
+            : 'No informado';
+          destino.textContent = `Sector: ${rutaSector}`;
+          contentActual.appendChild(destino);
+
+          // 📋 Indicadores
+          const ul = document.createElement('ul');
+          indicadores.forEach(i => {
+            const li = document.createElement('li');
+            li.textContent = i.nombre;
+            ul.appendChild(li);
+          });
+          contentActual.appendChild(ul);
+        });
+
+        /* ===============================
+           USUARIOS SIN INDICADORES
+           =============================== */
+        if (usuariosSinIndicadores.length > 0) {
+
+          const lineasSin = 2 + usuariosSinIndicadores.length;
+          agregarLineas(lineasSin);
+
+          const h3 = document.createElement('h3');
+          h3.textContent = 'Usuarios sin indicadores asignados';
+          contentActual.appendChild(h3);
+
+          const ul = document.createElement('ul');
+          usuariosSinIndicadores.forEach(u => {
+            const li = document.createElement('li');
+            li.textContent = `${u.apellido}, ${u.nombres} (Legajo ${u.legajo})`;
+            ul.appendChild(li);
+          });
+
+          contentActual.appendChild(ul);
+        }
+      }
+      // 🥼🥼🥼
+      function obtenerRutaSector(idSector, mapSectores) {
+
+        const ruta = [];
+        let actual = mapSectores[idSector];
+
+        while (actual) {
+          ruta.unshift(actual.nombre); // agrega al inicio
+          actual = actual.sector_padre_id ? mapSectores[actual.sector_padre_id] : null;
+        }
+
+        return ruta.join(' > ');
+      }
+
+    }
+
+
     // 🧲🧲🧲 buildAnexos
     function buildAnexos() {
       const { page, content } = createPage();
@@ -2053,46 +2562,7 @@
     }
 
 
-
-
-    function MMMMMbuildAnexoArbolBSC() {
-
-      console.log('entro en buildAnexoArbolBSC')
-      const treeData = JSON.parse(localStorage.getItem('bscTreeData'));
-      console.log('ENCONT4O TREEDATA', treeData)
-      if (!treeData) return;
-
-      console.log(treeData)
-      const { page, content } = createPage();
-
-      // 📌 Título
-      const h = document.createElement('h2');
-      h.className = 'section-title';
-      h.textContent = 'Anexo I – Árbol de Dependencias del BSC';
-      content.appendChild(h);
-
-      // 📄 Descripción
-      const p = document.createElement('p');
-      p.innerHTML = `
-          Se muestra la estructura jerárquica completa de destinos (sectores,
-          dependencias o procesos) y de los indicadores definidos.   Cada destino tiene asignado un peso relativo dentro del destino del que depende.  Cada indicador incluye su peso relativo dentro del destino al que pertenece y su contribución porcentual al cumplimiento global (combinando su peso dentro del destino y el peso de los destinos que lo contienen.)
-        `;
-      content.appendChild(p);
-
-      // 📦 Contenedor del árbol
-      const treeContainer = document.createElement('div');
-      treeContainer.className = 'tree-report-container mt-4';
-      content.appendChild(treeContainer);
-
-      // 🌳 Render del árbol
-      renderTreeForReportPaged(treeData);
-
-
-      documento.appendChild(page);
-    }
-
     //🥼🥼🥼 renderTreeForReport
-
 
     const PAGE_HEIGHT = 1120; // px aprox A4
     const PAGE_PADDING = 160; // header + footer + márgenes
@@ -2113,6 +2583,7 @@
     }
 
 
+    // 🏀🏀🏀 renderTreeForReportPaged
     function renderTreeForReportPaged(treeData) {
 
       let { page, content } = createPage();
@@ -2135,22 +2606,22 @@
         row.style.marginBottom = '6px';
 
         row.innerHTML = `
-      <div>
-        <span style="color:#666; font-size:12px; margin-right:6px;">
-          ${node.weight?.toFixed(2) || 0}%
-        </span>
-        ${node.type === 'sector' || node.id === 'root'
+            <div>
+              <span style="color:#666; font-size:12px; margin-right:6px;">
+                ${node.weight?.toFixed(2) || 0}%
+              </span>
+              ${node.type === 'sector' || node.id === 'root'
             ? `<strong>${node.name}</strong>`
             : node.name
           }
-      </div>
-      <div>
-        ${node.type === 'indicador'
+            </div>
+            <div>
+              ${node.type === 'indicador'
             ? `${node.globalWeight?.toFixed(2) || 0}%`
             : ''
           }
-      </div>
-    `;
+            </div>
+          `;
 
         container.appendChild(row);
 
@@ -2186,10 +2657,7 @@
     }
 
 
-
-
-
-
+    // 🏀🏀🏀 renderTreeForReport
     function renderTreeForReport(node, level = 0, container) {
 
       const row = document.createElement('div');
@@ -2234,38 +2702,6 @@
     }
 
 
-
-
-    function XXXXrenderTreeForReport(node, level = 0, container) {
-
-      const row = document.createElement('div');
-      row.className = 'tree-report-row';
-      row.style.marginLeft = `${level * 18}px`;
-      row.style.marginBottom = '6px';
-
-      if (node.type === 'sector' || node.id === 'root') {
-        row.innerHTML = `
-      <strong>${node.name}</strong>
-    `;
-      } else if (node.type === 'indicador') {
-        row.innerHTML = `
-      ${node.name}
-      <span style="float:right">
-        ${node.globalWeight?.toFixed(2) || 0}%
-      </span>
-    `;
-      }
-
-      container.appendChild(row);
-
-      if (node.children && node.children.length > 0) {
-        node.children.forEach(child => {
-          renderTreeForReport(child, level + 1, container);
-        });
-      }
-    }
-
-
     // Cuando se arma el documento numeramos las páginas (footer .page-number)
     // 🧲🧲🧲 numerarPaginas
     function numerarPaginas() {
@@ -2277,12 +2713,12 @@
     }
 
     //😎😎😎 buildDocumento completo
-    function buildDocument() {
+    async function buildDocument() {
       clearDocument();
       // buildCover();
       buildCaratula();
-      buildMarcoIntroductorio();
       buildIndice();
+      buildMarcoIntroductorio();
       buildResumen();
       buildIndicadoresGlobales();
       buildCumplimientoPorDestino();
@@ -2291,7 +2727,10 @@
       buildBSC()
       buildBSCPerspectiva()
       buildAnexoArbolBSC();
-      buildAnexos();
+      buildUsuariosDatos();
+      await buildOrganigramaTextual();   // 👈 nueva hoja
+      await buildUsuariosIndicadores();
+      // buildAnexos();
       numerarPaginas();
     }
 
@@ -2302,7 +2741,7 @@
       const spinner = document.getElementById('spinnerOverlay');
       const spinnerText = document.getElementById('spinnerText');
       spinner.style.display = 'flex';
-      spinnerText.textContent = 'Generando informe PDF, por favor espere...';
+      spinnerText.textContent = 'Creando informe PDF, por favor espere...';
       // Clonar el nodo para no afectar la vista
       const node = documento.cloneNode(true);
       const filename = `Informe_myResultIQ_${new Date().toISOString().slice(0, 10)}.pdf`
@@ -2332,8 +2771,8 @@
       try {
         await html2pdf().set(opt).from(node).save();
       } catch (e) {
-        console.error('Error generando PDF', e);
-        alert('Error generando PDF — ver consola');
+        console.error('Error gen PDF', e);
+        alert('Error gen PDF — ver consola');
       } finally {
         document.body.removeChild(holder);
       }
