@@ -335,7 +335,8 @@
     .bar-legend-item {
         margin-bottom: 3px;
     }
-        /* Avatar en navbar */
+
+    /* Avatar en navbar */
     .user-avatar {
         width: 50px;
         height: 50px;
@@ -640,7 +641,6 @@
                 const sectores = await sectoresRes.json();
                 const indicadores = await indicadoresRes.json();
 
-                // Añadimos campo de cumplimiento y unidad de medida ya resuelta
                 const indicadoresConCumplimiento = indicadores.map(ind => {
                     // const cumplimiento = calcularCumplimiento(
                     //     ind.ultimo_valor,
@@ -689,7 +689,6 @@
 
         // // 🚫🚫🚫  computeCompliance
         function computeCompliance(node) {
-            // Cálculo recursivo del cumplimiento ponderado
             if (!node) return 0;
 
             // Nodo hoja (indicador)
@@ -708,8 +707,37 @@
                 total += childCompliance * weight;
                 sumWeights += weight;
             }
+            console.log(
+                `Nodo ${node.id}`,
+                node.children.map(c => ({
+                    id: c.id,
+                    type: c.type,
+                    weight: Number(c.weight ?? 0),
+                    cumplimiento: c.cumplimiento ?? null
+                }))
+            );
+
             return sumWeights > 0 ? total / sumWeights : 0;
         }
+
+        // // 🚫🚫🚫  computeAbsoluteCompliance (especifica para el ring)
+        function computeAbsoluteCompliance(node) {
+            if (!node) return 0;
+
+            // Indicador → aporte directo
+            if (!node.children || node.children.length === 0) {
+                const comp = Number(node.cumplimiento) || 0;
+                const weight = Number(node.weight) || 0;
+                return (comp * weight) / 100;
+            }
+
+            // Nodo compuesto → suma de aportes
+            return node.children.reduce(
+                (sum, child) => sum + computeAbsoluteCompliance(child),
+                0
+            );
+        }
+
 
         // // 🚫🚫🚫  render
         function render() {
@@ -718,8 +746,9 @@
             if (!node) return;
 
             // Cumplimiento ponderado de todos los niveles
-            // const comp = computeCompliance(node);
             const comp = Number(computeCompliance(node));
+            // const comp = computeAbsoluteCompliance(node);
+
 
             // Actualizamos globalPercent
             const globalPercentEl = document.getElementById('globalPercent');
@@ -1663,7 +1692,7 @@
             }
         }
     </style>
-   <div id="contenedorModal"></div>
+    <div id="contenedorModal"></div>
     <div id="contenedorModalMediciones"></div>
     <div id="contenedorModalUsuario"></div>
     <div id="contenedorModalLogout"></div>
@@ -1697,38 +1726,38 @@
                 document.getElementById('contenedorModalLogout').innerHTML = html;
             });
 
-            //     const btnLogout = document.getElementById('confirmLogout');
-            //     if (!btnLogout) return;
+        //     const btnLogout = document.getElementById('confirmLogout');
+        //     if (!btnLogout) return;
 
-            //     btnLogout.addEventListener('click', async () => {
-            //         // Cerrar modal
-            //         const modalEl = document.getElementById('logoutModal');
-            //         const modal = bootstrap.Modal.getInstance(modalEl);
-            //         if (modal) modal.hide();
+        //     btnLogout.addEventListener('click', async () => {
+        //         // Cerrar modal
+        //         const modalEl = document.getElementById('logoutModal');
+        //         const modal = bootstrap.Modal.getInstance(modalEl);
+        //         if (modal) modal.hide();
 
-            //         // 🔐 Auditoría logout
-            //         const token = localStorage.getItem('token');
-            //         if (token) {
-            //             try {
-            //                 await fetch('/api/auth/logout', {
-            //                     method: 'POST',
-            //                     headers: {
-            //                         Authorization: 'Bearer ' + token
-            //                     }
-            //                 });
-            //             } catch (e) {
-            //                 console.warn('No se pudo registrar logout');
-            //             }
-            //         }
+        //         // 🔐 Auditoría logout
+        //         const token = localStorage.getItem('token');
+        //         if (token) {
+        //             try {
+        //                 await fetch('/api/auth/logout', {
+        //                     method: 'POST',
+        //                     headers: {
+        //                         Authorization: 'Bearer ' + token
+        //                     }
+        //                 });
+        //             } catch (e) {
+        //                 console.warn('No se pudo registrar logout');
+        //             }
+        //         }
 
-            //         // 🧹 Limpiar sesión
-            //         localStorage.clear();
-            //         sessionStorage.clear();
+        //         // 🧹 Limpiar sesión
+        //         localStorage.clear();
+        //         sessionStorage.clear();
 
-            //         // 🚀 Redirigir
-            //         window.location.href = '/';
-            //     });
-            // });
+        //         // 🚀 Redirigir
+        //         window.location.href = '/';
+        //     });
+        // });
     </script>
 
     <script src="/modal-indicador.js"></script>

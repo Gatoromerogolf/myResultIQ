@@ -1768,13 +1768,14 @@
                 const indicadores = await indicadoresRes.json();
 
                 const indicadoresConCumplimiento = indicadores.map(ind => {
-                    const cumplimiento = calcularCumplimiento(
-                        ind.ultimo_valor,
-                        ind.unico_valor,
-                        ind.unico_acepta,
-                        ind.unico_riesgo,
-                        ind.unico_critico
-                    );
+                    // const cumplimiento = calcularCumplimiento(
+                    //     ind.ultimo_valor,
+                    //     ind.unico_valor,
+                    //     ind.unico_acepta,
+                    //     ind.unico_riesgo,
+                    //     ind.unico_critico
+                    // );
+                    const cumplimiento = ind.ultimo_cumplimiento;
 
                     // 🔹 Mostramos solo si el cálculo es válido
                     if (cumplimiento !== null && !isNaN(cumplimiento)) {
@@ -1844,6 +1845,16 @@
                 total += childComp * weight;
                 sumWeights += weight;
             });
+            console.log(
+                `Nodo ${node.id}`,
+                node.children.map(c => ({
+                    id: c.id,
+                    type: c.type,
+                    weight: Number(c.weight ?? 0),
+                    cumplimiento: c.cumplimiento ?? null
+                }))
+            );
+
             return sumWeights > 0 ? total / sumWeights : 0;
         }
 
