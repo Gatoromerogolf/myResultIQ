@@ -1,0 +1,1402 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>myResultIQ | Usuarios</title>
+    <!--begin::Primary Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="title" content="AdminLTE v4 | Dashboard" />
+    <meta name="author" content="ColorlibHQ" />
+    <meta name="description"
+        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+    <meta name="keywords"
+        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="../css/estilos-custom.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="../css/adminlte.css" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" rel="stylesheet">
+
+    <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
+    <script src="/js/auth-guard.js"></script>
+    <script>
+        authGuard({
+            rolesPermitidos: ['administrador', 'directivo', 'responsble', 'operador', 'otro']
+        });
+    </script>
+
+</head>
+
+<style>
+    .brand-image {
+        opacity: 1 !important;
+        width: 40px;
+        height: auto;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        object-fit: contain;
+    }
+
+    .app-sidebar {
+        height: 100vh;
+        /* que ocupe toda la altura de la ventana */
+        overflow-y: auto;
+        /* permite scroll vertical */
+        overflow-x: hidden;
+        /* evita scroll horizontal */
+    }
+
+    /* ===== ALTURA DE LA NAVBAR ===== */
+    .app-header.navbar {
+        min-height: 70px;
+        padding: 0.75rem 0;
+    }
+
+    .app-header .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+
+    }
+
+    .nav-item .nav-link {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .nav-item {
+        margin-bottom: 0;
+    }
+
+    .index {
+        background: #f8f9fb;
+        border: 1px solid #e0e3e8;
+        padding: 20px 25px;
+        border-radius: 8px;
+        margin: 25px 0 40px;
+    }
+
+    .index h2 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .index-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .index-list li {
+        margin-bottom: 8px;
+    }
+
+    .index-list a {
+        color: #2563eb;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .index-list a:hover {
+        text-decoration: underline;
+    }
+
+
+    /* Agregar margen al selector de registros */
+    .dataTables_length {
+        margin-left: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* También puedes agregar margen al buscador si lo necesitas */
+    .dataTables_filter {
+        margin-right: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* Margen general a todos los controles de DataTables */
+    .dataTables_wrapper .row {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    /* Avatar en navbar */
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s;
+        object-fit: cover;
+        margin-top: 5px;
+    }
+
+    .user-avatar:hover {
+        transform: scale(1.05);
+    }
+
+    .user-dropdown-header {
+        padding: 28px 20px;
+        /* Más espacio vertical */
+    }
+
+    .user-dropdown-header img {
+        margin-bottom: 15px;
+        /* Más separación del texto */
+    }
+
+    .kpi-guide {
+        max-width: 960px;
+        margin: 2rem auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, .15);
+        overflow: hidden;
+    }
+
+    .kpi-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+    }
+
+    .kpi-header h1 {
+        font-size: 2rem;
+        margin-bottom: .5rem;
+    }
+
+    .kpi-header p {
+        opacity: .9;
+    }
+
+    .kpi-content {
+        padding: 40px 30px;
+    }
+
+    /* Reutilizamos tus bloques */
+    .kpi-guide .intro {
+        background: #f8f9fa;
+        border-left: 4px solid #667eea;
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+
+    .kpi-guide .section h2 {
+        color: #667eea;
+        border-bottom: 2px solid #e0e0e0;
+        margin-bottom: 20px;
+    }
+
+    .kpi-guide .recommendation {
+        background: #f8f9fa;
+        border-left: 4px solid #764ba2;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .kpi-guide .example {
+        background: white;
+        border-left: 3px solid #ffc107;
+        padding: 15px;
+        margin-top: 10px;
+    }
+
+    .kpi-guide .alert {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 6px;
+        padding: 15px;
+    }
+
+    .kpi-guide .key-points {
+        background: #e8f5e9;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .kpi-card {
+        background: #ffffff;
+        border: 1px solid #e2e5ea;
+        border-left: 4px solid var(--kpi-color);
+        border-radius: 10px;
+        padding: 24px 28px;
+        margin-bottom: 32px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+        page-break-inside: avoid;
+    }
+
+    .kpi-card h2 {
+        color: var(--kpi-color);
+    }
+
+    .kpi-card[data-kpi="1"] {
+        --kpi-color: #2563eb;
+    }
+
+    /* azul */
+    .kpi-card[data-kpi="2"] {
+        --kpi-color: #16a34a;
+    }
+
+    /* verde */
+    .kpi-card[data-kpi="3"] {
+        --kpi-color: #f59e0b;
+    }
+
+    /* amarillo */
+    .kpi-card[data-kpi="4"] {
+        --kpi-color: #dc2626;
+    }
+
+    /* rojo */
+    .kpi-card[data-kpi="5"] {
+        --kpi-color: #7c3aed;
+    }
+
+    /* violeta */
+    .kpi-card[data-kpi="6"] {
+        --kpi-color: #0891b2;
+    }
+
+    /* cian */
+    .kpi-card[data-kpi="7"] {
+        --kpi-color: #9333ea;
+    }
+
+    /* púrpura */
+    .kpi-card[data-kpi="8"] {
+        --kpi-color: #ea580c;
+    }
+
+    /* naranja */
+
+
+
+    @media print {
+        body {
+            background: white !important;
+        }
+
+        .kpi-guide {
+            box-shadow: none;
+            margin: 0;
+            border-radius: 0;
+        }
+    }
+</style>
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <div class="app-wrapper">
+        <nav class="app-header navbar navbar-expand bg-body">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="bi bi-list"></i>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-lte-toggle="fullscreen">
+                            <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+                            <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
+                        </a>
+                    </li>
+
+                    <div class="avatar-container d-flex align-items-center gap-2 me-2">
+                        <div style="position: relative;">
+                            <img id="avatarAudio" src="/dist/images/avatar-neutral.svg" alt="Asistente KPI" style="width:50px; height:50px; cursor:pointer; border-radius:50%; 
+                                            box-shadow:0 0 6px rgba(0,0,0,0.25); transition:transform 0.2s;"
+                                title="Haz clic para escuchar la explicación" />
+                            <button id="btnDetenerVoz"
+                                style="display:none; position:absolute; bottom:-5px; right:-5px; border:none; border-radius:50%; 
+                                            width:26px; height:26px; background:#dc3545; color:white; font-weight:bold; cursor:pointer;">
+                                ✕
+                            </button>
+                        </div>
+                        <span class="fw-semibold text-secondary small">Tu Asistente personal</span>
+                    </div>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <!-- Usuario -->
+                    <li class="nav-item dropdown user-menu">
+                        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img id="userAvatar" src="/dist/images/default_user.jpg" class="user-avatar" alt="Usuario">
+                            <span id="userName" class="d-none d-md-inline ms-2">Usuario</span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end user-dropdown">
+                            <!-- Header -->
+                            <li class="user-dropdown-header  text-center px-3 py-3">
+                                <img id="userAvatarDropdown" style="width:150px " src="/dist/images/default_user.jpg"
+                                    alt="Usuario">
+                                <p id="userNameDropdown" class="mb-0 user-name" style="font-size: 18px;">
+                                    Usuario
+                                    <br>
+                                    <small id="userRole" class="text-muted">Rol</small>
+                                </p>
+                            </li>
+                            <!-- Body -->
+                            <li class="user-dropdown-body px-2">
+                                <a href="/miPerfil.html" class="dropdown-item text-start" style="font-size:16px;">
+                                    <i class="fas fa-user me-2"></i> Mis datos
+                                </a>
+
+                                <a href="/cambiar-password.html" class="dropdown-item text-start"
+                                    style="font-size:16px;">
+                                    <i class="fas fa-key me-2"></i> Cambiar contraseña
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!-- Logout -->
+                            <li>
+                                <a href="#" class="dropdown-item text-start"
+                                    style="font-size:18px; color:#dc3545; /* rojo Bootstrap */" data-bs-toggle="modal"
+                                    data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Salir
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!--begin::Sidebar-->
+        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light" id="asideContainer"></aside>
+        <script>
+            async function cargarAside() {
+                const res = await fetch('aside.html');
+                const html = await res.text();
+                document.getElementById('asideContainer').innerHTML = html;
+
+                // Marcar activo según la página actual
+                const links = document.querySelectorAll('#asideContainer a');
+                links.forEach(link => {
+                    if (link.href === window.location.href) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            cargarAside();
+        </script>
+        <!--end::Sidebar-->
+
+        <!--begin::App Main-->
+        <main class="app-main">
+            <!--begin::App Content Header-->
+            <div class="app-content-header">
+                <!--begin::Container-->
+
+                <div class="container-fluid">
+                    <!-- 🔹 Asistente -->
+                    <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
+                        <div class="d-flex flex-column">
+                            <h3 class="mb-0">Guía de Buenas Prácticas para Indicadores KPI</h4>
+                                <p class="mb-0 text-muted">
+                                    Maximizando el valor de su sistema de medición de desempeño
+                                </p>
+                        </div>
+                    </div>
+
+
+                    <section class="content" id="listaUsuarios" style="display: block">
+                        <div class="content">
+                            <div class="intro">
+                                <p>El verdadero valor de un sistema de gestión de KPIs no reside en la tecnología que
+                                    presenta los datos, sino en la calidad, relevancia y adecuada definición de los
+                                    indicadores
+                                    que se miden. Esta guía proporciona algunas recomendaciones para asegurar que sus
+                                    indicadores generen información valiosa y accionable para la toma de decisiones.</p>
+                            </div>
+
+                            <div class="section index">
+                                <h2>Índice</h2>
+                                <ul class="index-list">
+                                    <li><a href="#sec-1">1. Características de un Buen Indicador</a></li>
+                                    <li><a href="#sec-2">2. Evaluación y Ajuste de Objetivos</a></li>
+                                    <li><a href="#sec-3">3. Frecuencia y Temporalidad de la Medición</a></li>
+                                    <li><a href="#sec-4">4. Contexto y Factores Externos</a></li>
+                                    <li><a href="#sec-5">5. Balance y Perspectiva Integral</a></li>
+                                    <li><a href="#sec-6">6. Comunicación y Uso de los KPIs</a></li>
+                                    <li><a href="#sec-7">7. Ponderación y Jerarquía de Indicadores</a></li>
+                                    <li><a href="#sec-8">8. Señales de Alerta Comunes</a></li>
+                                </ul>
+                            </div>
+
+
+                            <div class="section">
+                                <div class="kpi-card" id="sec-1" data-kpi="1">
+                                    <h2>1. Características de un Buen Indicador</h2>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Específico y Medible</h4>
+                                        <p>Un indicador debe medir un aspecto concreto del desempeño y expresarse en
+                                            términos
+                                            cuantificables. Evite definiciones ambiguas o subjetivas que dificulten la
+                                            medición
+                                            consistente.</p>
+                                        <div class="example">
+                                            <strong>Ejemplo:</strong> En lugar de "Mejorar la satisfacción del cliente",
+                                            defina
+                                            "Índice de satisfacción del cliente (escala 1-10) basado en encuestas
+                                            post-servicio".
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Práctico y Eficiente en su Medición</h4>
+                                        <p>Un indicador, por más relevante que sea conceptualmente, fracasará si su
+                                            método de medición es excesivamente complejo, costoso o consume recursos
+                                            desproporcionados. La complejidad en la recolección de datos atenta contra
+                                            la eficiencia del sistema y desmotiva a los responsables.</p>
+                                        <div class="alert">
+                                            <span class="alert-icon">⚠️</span>
+                                            <strong>Regla práctica:</strong> Si recopilar los datos de un indicador
+                                            requiere más tiempo o costo que el valor de las decisiones que permite
+                                            tomar, el indicador debe ser rediseñado o eliminado.
+                                        </div>
+                                        <div class="example">
+                                            <strong>Ejemplo de indicador poco práctico:</strong>
+                                            <br>"Tiempo promedio de atención por tipo de consulta discriminado por hora
+                                            del día y perfil demográfico del cliente" podría requerir sistemas complejos
+                                            y análisis extensos.
+                                            <br><br>
+                                            <strong>Alternativa práctica:</strong>
+                                            <br>"Tiempo promedio de atención general" obtenido directamente del sistema
+                                            telefónico, con posibilidad de segmentar por tipo de consulta solo cuando
+                                            sea necesario profundizar.
+                                        </div>
+                                        <div class="key-points">
+                                            <h4>Consecuencias de indicadores impracticables:</h4>
+                                            <p>Los responsables evitan actualizar la información o la postergan. Se
+                                                generan datos poco confiables por mediciones apresuradas. Se crea
+                                                resistencia al sistema de gestión de KPIs. El costo de medición supera
+                                                el beneficio de la información obtenida. La actualización irregular hace
+                                                que los datos pierdan vigencia y utilidad.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Verificable y Objetivo</h4>
+                                        <p>Los datos de los indicadores deben provenir de fuentes verificables y
+                                            objetivas, no de estimaciones personales o percepciones subjetivas. La
+                                            verificabilidad garantiza la confiabilidad del sistema y elimina sesgos.</p>
+                                        <div class="example">
+                                            <strong>Fuentes verificables apropiadas:</strong>
+                                            <br>• Sistemas transaccionales (ERP, CRM, sistemas de producción)
+                                            <br>• Registros automáticos (logs de sistemas, sensores, contadores)
+                                            <br>• Documentos formales (facturas, órdenes de compra, contratos)
+                                            <br>• Encuestas estructuradas con metodología definida
+                                            <br>• Auditorías de terceros o certificaciones
+                                            <br><br>
+                                            <strong>Fuentes NO recomendadas:</strong>
+                                            <br>• Estimaciones del responsable sin respaldo documental
+                                            <br>• "Sensaciones" o percepciones no cuantificadas
+                                            <br>• Datos que solo una persona conoce y no pueden ser validados
+                                            <br>• Información que cambia según quién la reporte
+                                        </div>
+                                        <div class="alert">
+                                            <span class="alert-icon">⚠️</span>
+                                            <strong>Principio de auditoría:</strong> Cualquier persona con acceso a las
+                                            mismas fuentes debe poder llegar al mismo resultado. Si dos personas
+                                            obtienen valores diferentes para el mismo indicador en el mismo período, el
+                                            método de medición tiene un problema.
+                                        </div>
+                                        <div class="key-points">
+                                            <h4>Beneficios de la verificabilidad:</h4>
+                                            <p>Elimina conflictos sobre la validez de los resultados. Permite auditorías
+                                                y revisiones objetivas. Genera confianza en el sistema entre todos los
+                                                niveles. Facilita la identificación de problemas reales versus errores
+                                                de medición. Reduce la manipulación intencional o involuntaria de datos.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Automatización de la Medición</h4>
+                                        <p>Siempre que sea posible, privilegie indicadores que puedan obtenerse de forma
+                                            automática o semiautomática. La automatización reduce errores, ahorra tiempo
+                                            y aumenta la frecuencia con la que puede actualizar la información.</p>
+                                        <div class="example">
+                                            <strong>Niveles de automatización:</strong>
+                                            <br><br>
+                                            <strong>Ideal - Totalmente automático:</strong> El sistema extrae datos
+                                            directamente de las fuentes (bases de datos, APIs) sin intervención humana.
+                                            <br><br>
+                                            <strong>Bueno - Semiautomático:</strong> Los datos se exportan de sistemas
+                                            existentes y se cargan con mínima manipulación.
+                                            <br><br>
+                                            <strong>Aceptable - Manual estructurado:</strong> Se requiere recopilación
+                                            manual pero siguiendo un procedimiento claro y documentado.
+                                            <br><br>
+                                            <strong>Problemático - Manual sin estructura:</strong> Requiere
+                                            interpretación, búsqueda en múltiples lugares o procesamiento complejo.
+                                        </div>
+                                        <div class="alert">
+                                            <span class="alert-icon">⚠️</span>
+                                            <strong>Recomendación:</strong> Si más del 30% de sus indicadores requieren
+                                            recopilación manual problemática, considere rediseñar el sistema de KPIs o
+                                            invertir en automatización. El tiempo ahorrado rápidamente justifica la
+                                            inversión inicial.
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Relevante y Alineado</h4>
+                                        <p>Cada KPI debe estar directamente vinculado a los objetivos estratégicos de la
+                                            organización. Si un indicador no contribuye a la toma de decisiones
+                                            importantes,
+                                            probablemente no debería medirse.</p>
+                                        <div class="alert">
+                                            <span class="alert-icon">⚠️</span>
+                                            <strong>Atención:</strong> Medir por medir genera sobrecarga de información
+                                            sin
+                                            valor
+                                            agregado.
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3 ml-1">
+                                        <h4>Alcanzable pero Desafiante</h4>
+                                        <p>Los objetivos deben ser realistas considerando los recursos disponibles, pero
+                                            suficientemente ambiciosos para impulsar la mejora continua.</p>
+                                        <div class="key-points">
+                                            <h4>Punto Clave:</h4>
+                                            <p>Un objetivo inalcanzable desmotiva al equipo; uno demasiado fácil no
+                                                genera
+                                                progreso.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="kpi-card" id="sec-2" data-kpi="2">
+                                    <h2>2. Evaluación y Ajuste de Objetivos</h2>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Indicadores Constantemente en Máximo</h4>
+                                        <p>Si un indicador permanece consistentemente en su valor máximo u objetivo
+                                            durante
+                                            períodos
+                                            prolongados, esto puede señalar que:</p>
+                                        <div class="example">
+                                            <strong>Señal de alerta:</strong> El objetivo está por debajo del potencial
+                                            real
+                                            del
+                                            proceso o equipo. Es momento de recalibrar y establecer metas más ambiciosas
+                                            que
+                                            impulsen la mejora continua.
+                                        </div>
+                                    </div>
+                                    <div class="recommendation mt-3">
+                                        <div class="key-points">
+                                            <h4>Acción Recomendada:</h4>
+                                            <p>Analice el histórico, identifique el nuevo potencial y ajuste el
+                                                objetivo
+                                                gradualmente (incrementos del 10-20% son razonables para empezar).
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Indicadores Persistentemente Bajos</h4>
+                                        <p>Cuando un KPI muestra resultados consistentemente por debajo del objetivo
+                                            durante
+                                            múltiples períodos, requiere un análisis profundo:</p>
+                                        <div class="example">
+                                            <strong>Posibles causas:</strong>
+                                            <br>• El objetivo es irrealista dado el contexto actual
+                                            <br>• Existen factores externos que impiden alcanzarlo
+                                            <br>• Los recursos asignados son insuficientes
+                                            <br>• El proceso medido requiere rediseño o mejoras estructurales
+                                        </div>
+                                        <div class="alert">
+                                            <span class="alert-icon">⚠️</span>
+                                            <strong>Importante:</strong> No ajuste objetivos a la baja sin antes
+                                            analizar
+                                            las
+                                            causas
+                                            raíz del bajo desempeño. Primero identifique y elimine obstáculos.
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Variabilidad Excesiva</h4>
+                                        <p>Oscilaciones bruscas y frecuentes en los resultados pueden indicar:</p>
+                                        <div class="example">
+                                            <strong>Diagnóstico:</strong> Falta de estabilidad en el proceso,
+                                            influencia
+                                            de
+                                            factores
+                                            externos no controlados, o que el indicador está midiendo algo demasiado
+                                            volátil
+                                            para
+                                            ser útil en la toma de decisiones.
+                                        </div>
+                                        <div class="key-points">
+                                            <strong>Solución:</strong>
+                                            <p>Considere promedios móviles, cambie la frecuencia de medición, o
+                                                segmente
+                                                el
+                                                indicador para identificar las fuentes de variabilidad.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="kpi-card" id="sec-3" data-kpi="3">
+                                    <h2>3. Frecuencia y Temporalidad de la Medición</h2>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Alineación con el Ciclo del Proceso</h4>
+                                        <p>La frecuencia de medición debe corresponder a la naturaleza del proceso
+                                            evaluado.
+                                            Medir
+                                            con demasiada frecuencia genera ruido; medir con poca frecuencia retrasa
+                                            las
+                                            acciones
+                                            correctivas.</p>
+                                        <div class="example">
+                                            <strong>Ejemplos:</strong>
+                                            <br>• Producción diaria → medición diaria o semanal
+                                            <br>• Satisfacción del cliente → medición mensual o trimestral
+                                            <br>• Indicadores estratégicos → revisión trimestral o anual
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Período de Evaluación Suficiente</h4>
+                                        <p>Antes de concluir que un indicador es exitoso o problemático, asegúrese
+                                            de
+                                            tener
+                                            datos de
+                                            un período representativo que considere ciclos estacionales, variaciones
+                                            normales
+                                            del
+                                            negocio y tiempo suficiente para que las acciones implementadas generen
+                                            efecto.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="kpi-card" id="sec-4" data-kpi="4">
+                                    <h2>4. Contexto y Factores Externos</h2>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Considere el Entorno</h4>
+                                        <p>Los indicadores no operan en el vacío. Cambios en el mercado,
+                                            regulaciones,
+                                            competencia,
+                                            economía o tecnología pueden hacer que un objetivo previamente razonable
+                                            se
+                                            vuelva
+                                            inalcanzable o, por el contrario, demasiado conservador.</p>
+                                        <div class="alert">
+                                            <span class="alert-icon">⚠️</span>
+                                            <strong>Recomendación:</strong> Revise periódicamente (al menos
+                                            anualmente)
+                                            si
+                                            el
+                                            contexto ha cambiado significativamente y ajuste los KPIs en
+                                            consecuencia.
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Benchmarking</h4>
+                                        <p>Compare sus indicadores con estándares de la industria o mejores
+                                            prácticas
+                                            del
+                                            sector.
+                                            Esto ayuda a validar si sus objetivos son apropiados y a identificar
+                                            oportunidades
+                                            de
+                                            mejora.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="kpi-card" id="sec-5" data-kpi="5">
+                                    <h2 id="sec-5">5. Balance y Perspectiva Integral</h2>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Evite Optimización Parcial</h4>
+                                        <p>Mejorar un indicador a costa de otros puede ser contraproducente.
+                                            Mantenga un
+                                            balance
+                                            entre diferentes dimensiones del desempeño.</p>
+                                        <div class="example">
+                                            <strong>Ejemplo de conflicto:</strong> Aumentar la velocidad de
+                                            producción
+                                            podría
+                                            reducir la calidad. Aumentar las ventas sin considerar la rentabilidad
+                                            puede
+                                            generar
+                                            pérdidas.
+                                        </div>
+                                        <div class="key-points">
+                                            <h4>Enfoque Balanceado:</h4>
+                                            <p>Utilice un conjunto equilibrado de indicadores que contemplen
+                                                calidad,
+                                                eficiencia,
+                                                satisfacción del cliente, rentabilidad y desarrollo del personal.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Indicadores Líderes y Rezagados</h4>
+                                        <p>Combine indicadores que midan resultados finales (rezagados) con
+                                            indicadores
+                                            que
+                                            anticipen el desempeño futuro (líderes).</p>
+                                        <div class="example">
+                                            <strong>Ejemplo:</strong>
+                                            <br>• Rezagado: Ventas mensuales totales
+                                            <br>• Líder: Número de prospectos calificados, tasa de conversión en
+                                            etapas
+                                            tempranas
+                                            del embudo
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="kpi-card" id="sec-6" data-kpi="6">
+                                    <h2>6. Comunicación y Uso de los KPIs</h2>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Claridad en la Definición</h4>
+                                        <p>Todos los involucrados deben comprender exactamente qué se está midiendo,
+                                            cómo se
+                                            calcula
+                                            y por qué es importante. Documente la fórmula de cálculo, fuente de
+                                            datos y
+                                            frecuencia.
+                                        </p>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Orientación a la Acción</h4>
+                                        <p>Los KPIs deben generar acciones concretas. Si un indicador muestra
+                                            resultados
+                                            pero
+                                            nadie
+                                            toma decisiones basándose en él, no está cumpliendo su propósito.</p>
+                                        <div class="key-points">
+                                            <h4>Pregunta Clave:</h4>
+                                            <p>Para cada KPI pregúntese: "¿Qué haríamos diferente si este indicador
+                                                mejora o
+                                                empeora?"</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Revisión Periódica del Sistema</h4>
+                                        <p>Los KPIs no son estáticos. Realice revisiones periódicas del sistema
+                                            completo de
+                                            indicadores para eliminar los que ya no aportan valor, ajustar objetivos
+                                            y
+                                            agregar
+                                            nuevos indicadores según evolucionen las prioridades estratégicas.</p>
+                                        <div class="alert">
+                                            <span class="alert-icon">⚠️</span>
+                                            <strong>Recomendación:</strong> Programe revisiones trimestrales de
+                                            desempeño y
+                                            revisiones anuales del sistema completo de KPIs.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="kpi-card" id="sec-7" data-kpi="7">
+                                    <h2 id="sec-7">7. Ponderación y Jerarquía de Indicadores</h2>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>El Concepto de Importancia Relativa</h4>
+                                        <p>No todos los indicadores tienen el mismo peso en la evaluación del
+                                            desempeño
+                                            organizacional. Asignar porcentajes de importancia o relevancia permite
+                                            reflejar
+                                            las prioridades estratégicas y obtener una visión más precisa del
+                                            rendimiento
+                                            global.</p>
+                                        <div class="key-points">
+                                            <h4>Fundamento:</h4>
+                                            <p>La ponderación evita que indicadores secundarios distorsionen la
+                                                percepción
+                                                del desempeño real, permitiendo que los factores críticos tengan el
+                                                peso
+                                                que
+                                                merecen en la evaluación.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Ponderación Dentro de Grupos</h4>
+                                        <p>Al definir múltiples indicadores dentro de un mismo grupo o categoría, es
+                                            fundamental establecer qué porcentaje de importancia tiene cada uno. La
+                                            suma
+                                            de
+                                            todos los indicadores de un grupo debe totalizar 100%.</p>
+                                        <div class="example">
+                                            <strong>Ejemplo - Grupo "Calidad de Producción":</strong>
+                                            <br>• Tasa de productos defectuosos: 40%
+                                            <br>• Tiempo promedio de retrabajo: 25%
+                                            <br>• Cumplimiento de especificaciones: 35%
+                                            <br><em>Total del grupo: 100%</em>
+                                        </div>
+                                        <div class="alert">
+                                            <span class="alert-icon">⚠️</span>
+                                            <strong>Criterio de asignación:</strong> Base la ponderación en el
+                                            impacto
+                                            real
+                                            de cada indicador sobre los objetivos del grupo. Los indicadores con
+                                            mayor
+                                            influencia en el resultado final deben tener mayor peso.
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Jerarquía de Grupos: Importancia Global</h4>
+                                        <p>Cuando los grupos de indicadores forman parte de una estructura
+                                            jerárquica
+                                            superior, cada grupo debe tener asignado un porcentaje que represente su
+                                            contribución al desempeño global de la organización.</p>
+                                        <div class="example">
+                                            <strong>Ejemplo - Estructura Organizacional:</strong>
+                                            <br><br><strong>Nivel Global (100%):</strong>
+                                            <br>• Grupo "Operaciones": 35%
+                                            <br>• Grupo "Finanzas": 30%
+                                            <br>• Grupo "Clientes": 25%
+                                            <br>• Grupo "Innovación": 10%
+                                            <br><br>
+                                            <strong>Dentro de "Operaciones" (35% del total):</strong>
+                                            <br>• Subgrupo "Producción": 60% (= 21% del global)
+                                            <br>• Subgrupo "Logística": 40% (= 14% del global)
+                                        </div>
+                                        <div class="key-points">
+                                            <h4>Cálculo en Cascada:</h4>
+                                            <p>El peso final de cada indicador se obtiene multiplicando su
+                                                porcentaje
+                                                dentro
+                                                del grupo por el porcentaje del grupo en el nivel superior, y así
+                                                sucesivamente hasta llegar al nivel global.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Criterios para Establecer Ponderaciones</h4>
+                                        <p>La asignación de porcentajes de importancia no debe ser arbitraria.
+                                            Considere
+                                            los
+                                            siguientes criterios:</p>
+                                        <div class="example">
+                                            <strong>Factores a evaluar:</strong>
+                                            <br>• <strong>Impacto estratégico:</strong> ¿Qué tan crítico es este
+                                            indicador/grupo para los objetivos estratégicos?
+                                            <br>• <strong>Impacto financiero:</strong> ¿Qué peso tiene en los
+                                            resultados
+                                            económicos?
+                                            <br>• <strong>Urgencia actual:</strong> ¿Es una prioridad inmediata de
+                                            la
+                                            organización?
+                                            <br>• <strong>Capacidad de control:</strong> ¿Qué tanto puede la
+                                            organización
+                                            influir en este resultado?
+                                            <br>• <strong>Ventaja competitiva:</strong> ¿Es un diferenciador clave
+                                            frente a
+                                            la competencia?
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Revisión Periódica de Ponderaciones</h4>
+                                        <p>Las prioridades organizacionales cambian con el tiempo. Lo que hoy es
+                                            crítico
+                                            puede ser menos relevante mañana, y viceversa.</p>
+                                        <div class="alert">
+                                            <span class="alert-icon">⚠️</span>
+                                            <strong>Recomendación:</strong> Revise las ponderaciones al menos dos
+                                            veces
+                                            al
+                                            año o cuando haya cambios significativos en la estrategia, el mercado o
+                                            el
+                                            contexto competitivo.
+                                        </div>
+                                        <div class="example">
+                                            <strong>Casos que justifican ajustar ponderaciones:</strong>
+                                            <br>• Lanzamiento de nuevos productos o servicios
+                                            <br>• Cambios en la estrategia corporativa
+                                            <br>• Entrada a nuevos mercados
+                                            <br>• Crisis o situaciones excepcionales
+                                            <br>• Logro sostenido de objetivos en un área (puede reducirse su peso)
+                                            <br>• Identificación de áreas problemáticas que requieren mayor foco
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Beneficios del Sistema de Ponderación</h4>
+                                        <p>Un sistema bien estructurado de ponderación jerárquica proporciona
+                                            múltiples
+                                            ventajas:</p>
+                                        <div class="key-points">
+                                            <h4>Ventajas clave:</h4>
+                                            <p><strong>Claridad estratégica:</strong> Comunica explícitamente qué es
+                                                importante para la organización. <strong>Evaluación
+                                                    objetiva:</strong>
+                                                Permite calcular índices consolidados de desempeño que reflejan la
+                                                realidad
+                                                del negocio. <strong>Toma de decisiones informada:</strong> Facilita
+                                                identificar dónde concentrar recursos y esfuerzos.
+                                                <strong>Alineación
+                                                    organizacional:</strong> Asegura que todos los niveles
+                                                comprendan
+                                                las
+                                                prioridades corporativas. <strong>Flexibilidad:</strong> Permite
+                                                adaptar
+                                                rápidamente el sistema de medición a nuevas realidades.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Equilibrio Entre Flexibilidad y Estabilidad</h4>
+                                        <p>Si bien es importante ajustar las ponderaciones cuando sea necesario,
+                                            cambios
+                                            demasiado frecuentes pueden generar confusión y dificultar el
+                                            seguimiento
+                                            histórico del desempeño.</p>
+                                        <div class="alert">
+                                            <span class="alert-icon">⚠️</span>
+                                            <strong>Mejor práctica:</strong> Establezca un calendario de revisión
+                                            formal
+                                            (semestral o anual) y evite cambios ad-hoc excepto en situaciones
+                                            excepcionales
+                                            debidamente documentadas. Mantenga un registro histórico de los cambios
+                                            en
+                                            ponderaciones para poder interpretar correctamente tendencias pasadas.
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Visualización de la Contribución</h4>
+                                        <p>El sistema de ponderación jerárquica permite generar visualizaciones
+                                            valiosas
+                                            que
+                                            muestran cómo cada área, grupo o indicador individual contribuye al
+                                            desempeño
+                                            global de la organización.</p>
+                                        <div class="example">
+                                            <strong>Análisis posibles:</strong>
+                                            <br>• Identificar qué indicadores tienen mayor impacto en el resultado
+                                            global
+                                            <br>• Detectar grupos que están por debajo de su potencial ponderado
+                                            <br>• Visualizar el efecto de mejoras en indicadores específicos sobre
+                                            el
+                                            índice
+                                            general
+                                            <br>• Simular escenarios: "¿Qué pasaría si mejoramos X indicador en un
+                                            10%?"
+                                        </div>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Participación en la Definición de Ponderaciones</h4>
+                                        <p>La asignación de ponderaciones no debe ser una decisión unilateral de la
+                                            alta
+                                            dirección. Involucre a los responsables de cada área en la discusión
+                                            para
+                                            asegurar que las ponderaciones reflejen tanto la visión estratégica como
+                                            la
+                                            realidad operativa.</p>
+                                        <div class="key-points">
+                                            <h4>Proceso Recomendado:</h4>
+                                            <p>La dirección establece las ponderaciones de grupos principales según
+                                                prioridades estratégicas. Los responsables de cada grupo proponen la
+                                                distribución interna entre sus indicadores. Se realiza una
+                                                validación
+                                                cruzada para asegurar coherencia. Se documenta la justificación de
+                                                cada
+                                                ponderación para futuras referencias.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="kpi-card" id="sec-8" data-kpi="8">
+                                    <h2>8. Señales de Alerta Comunes</h2>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Demasiados Indicadores</h4>
+                                        <p>Tener más de 10-15 KPIs principales puede diluir el foco y dificultar la
+                                            gestión
+                                            efectiva. Priorice los indicadores que realmente impactan en los
+                                            objetivos
+                                            críticos.
+                                        </p>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Indicadores sin Responsable</h4>
+                                        <p>Cada KPI debe tener un responsable claro que pueda influir en su
+                                            resultado y
+                                            rendir
+                                            cuentas. Sin ownership, los indicadores se vuelven meramente
+                                            informativos
+                                            sin
+                                            impulsar
+                                            cambios.</p>
+                                    </div>
+
+                                    <div class="recommendation mt-3">
+                                        <h4>Datos de Baja Calidad</h4>
+                                        <p>Si los datos son inconsistentes, incompletos o poco confiables, las
+                                            decisiones
+                                            basadas en
+                                            ellos serán erróneas. Invierta en asegurar la calidad de los datos antes
+                                            que
+                                            en
+                                            sofisticar los análisis.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="footer">
+                                <p><strong>Recuerde:</strong> Los KPIs son herramientas para impulsar la mejora, no
+                                    fines en
+                                    sí
+                                    mismos. El objetivo final es mejorar el desempeño organizacional y alcanzar los
+                                    objetivos
+                                    estratégicos.</p>
+                                <p style="margin-top: 15px; font-style: italic;">Esta guía debe ser complementada
+                                    con el
+                                    conocimiento específico de su industria y contexto organizacional.</p>
+                            </div>
+                    </section>
+                </div>
+                <!-- </div> -->
+                <!--end::App Content-->
+
+                <footer class="main-footer text-center">
+                    <strong>© 2025 - myResultIQ 1.0</strong>
+                </footer>
+        </main>
+        <!--end::App nain-->
+    </div>
+    <!--end::App Wrapper-->
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+
+    <!-- 🚫🚫🚫 🚫🚫🚫  control de roles-->
+    <script src="/js/auth-guard.js"></script>
+
+    <script>
+
+        let dataTable;
+        function agregarUsuario() {
+            document.getElementById('listaUsuarios').style.display = 'none';
+            document.getElementById('nuevoUsuario').style.display = 'block';
+        }
+
+        function cancelarEdicion() {
+            document.getElementById('form-usuario').reset();
+            document.getElementById('form-usuario').removeAttribute('data-modo');
+            document.getElementById('form-usuario').removeAttribute('data-legajo');
+
+            // Ocultar formulario y mostrar lista
+            document.getElementById('nuevoUsuario').style.display = 'none';
+            document.getElementById('listaUsuarios').style.display = 'block';
+        }
+
+        /*
+        Optimizaciones aplicadas:
+        ✅ Parseo JSON en paralelo: fetch().then(r => r.json()) en el mismo Promise.all
+        ✅ Un solo innerHTML: En lugar de hacer appendChild() por cada usuario (que causa múltiples reflows del DOM),
+        generamos todo el HTML y lo insertamos una sola vez
+        ✅ Timestamp calculado una vez: Date.now() se ejecuta solo una vez en lugar de por cada usuario
+        ✅ Uso de map() + join(): Más funcional y eficiente que un forEach con concatenación
+    
+        Impacto en performance:
+    
+        🚀 Mucho más rápido con listas grandes (100+ usuarios)
+        📉 Menos reflows del DOM = navegador más eficiente
+        🎯 Código más limpio y funcional */
+
+        // // 🚫🚫🚫
+        function llenarSelectUnidades(sectores, sectorEmpleadoId = null) {
+            const select = document.getElementById('unidadFuncional');
+            select.innerHTML = '<option value="" disabled selected>Seleccione sector...</option>';
+
+            sectores.forEach(sector => {
+                const opcion = document.createElement('option');
+                opcion.value = sector.id;
+                opcion.textContent = obtenerNombreJerarquico(sector, sectores);
+                if (sectorEmpleadoId && sector.id === sectorEmpleadoId) {
+                    opcion.selected = true;
+                }
+                select.appendChild(opcion);
+            });
+        }
+
+
+    </script>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script src="../js/adminlte.js"></script>
+
+    <script>
+        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+        const Default = {
+            scrollbarTheme: 'os-theme-light',
+            scrollbarAutoHide: 'leave',
+            scrollbarClickScroll: true,
+        };
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+            if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
+                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                    scrollbars: {
+                        theme: Default.scrollbarTheme,
+                        autoHide: Default.scrollbarAutoHide,
+                        clickScroll: Default.scrollbarClickScroll,
+                    },
+                });
+            }
+        });
+    </script>
+
+
+    <!-- apexcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+    <!-- ChartJS -->
+
+    <script>
+        const avatarAudio = document.getElementById('avatarAudio');
+        const btnDetener = document.getElementById('btnDetenerVoz');
+
+        const textoExplicativo = `
+    Desde acá se crean los usuarios.  Se requiere informar a quien reporta cada usuario, de manera que se permita enviar notificaciones ante situaciones determinadas.  Cada usuario a su vez, tendrá una opcion personalizada para modificar sus datos de correo electrónico, teléfono y contraseña.
+    ¡Comencemos! 
+    `;
+
+        let vozSeleccionada = null;
+
+        // 🔊 Seleccionar voz en español (prioriza Google)
+        function obtenerVozEspañol() {
+            const voces = speechSynthesis.getVoices();
+            if (!voces.length) return null;
+
+            const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
+            const vozEspañol = voces.find(v => v.lang.startsWith("es"));
+            vozSeleccionada = vozGoogle || vozEspañol || voces[0];
+            return vozSeleccionada;
+        }
+
+        // 🎙️ Hablar
+        function hablar(texto = textoExplicativo) {
+            if (!('speechSynthesis' in window)) {
+                alert('Tu navegador no soporta la función de voz.');
+                return;
+            }
+
+            detener(); // Si ya está hablando, detener primero
+
+            const utterance = new SpeechSynthesisUtterance(texto);
+            const voz = obtenerVozEspañol();
+            if (voz) utterance.voice = voz;
+            utterance.lang = "es-ES";
+            utterance.rate = 1;
+            utterance.pitch = 1.05;
+
+
+            utterance.onstart = () => {
+                avatarAudio.classList.add('speaking');
+                btnDetener.style.display = 'block';
+            };
+            utterance.onend = () => detener();
+            utterance.onerror = () => detener();
+
+            speechSynthesis.speak(utterance);
+        }
+
+        // 🛑 Detener voz
+        function detener() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            avatarAudio.classList.remove('speaking');
+            btnDetener.style.display = 'none';
+        }
+
+        // 🎧 Eventos
+        avatarAudio.addEventListener('click', () => hablar());
+        btnDetener.addEventListener('click', detener);
+        window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
+    </script>
+
+    <style>
+        /* Efecto de "hablando" */
+        #avatarAudio.speaking {
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+    </style>
+
+
+    <div id="contenedorModal"></div>
+    <div id="contenedorModalMediciones"></div>
+    <div id="contenedorModalUsuario"></div>
+    <div id="contenedorModalLogout"></div>
+
+    <script>
+        // Cargar modal de indicadores
+        fetch('/modal-indicador.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModal').innerHTML = html;
+            });
+
+        // Cargar modal de mediciones
+        fetch('/modal-mediciones.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalMediciones').innerHTML = html;
+            });
+
+        // Cargar modal usuario
+        fetch('/modal-usuario.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalUsuario').innerHTML = html;
+            });
+
+        // Cargar modal logout
+        fetch('/modal-logout.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenedorModalLogout').innerHTML = html;
+            });
+
+        //     const btnLogout = document.getElementById('confirmLogout');
+        //     if (!btnLogout) return;
+
+        //     btnLogout.addEventListener('click', async () => {
+        //         // Cerrar modal
+        //         const modalEl = document.getElementById('logoutModal');
+        //         const modal = bootstrap.Modal.getInstance(modalEl);
+        //         if (modal) modal.hide();
+
+        //         // 🔐 Auditoría logout
+        //         const token = localStorage.getItem('token');
+        //         if (token) {
+        //             try {
+        //                 await fetch('/api/auth/logout', {
+        //                     method: 'POST',
+        //                     headers: {
+        //                         Authorization: 'Bearer ' + token
+        //                     }
+        //                 });
+        //             } catch (e) {
+        //                 console.warn('No se pudo registrar logout');
+        //             }
+        //         }
+
+        //         // 🧹 Limpiar sesión
+        //         localStorage.clear();
+        //         sessionStorage.clear();
+
+        //         // 🚀 Redirigir
+        //         window.location.href = '/';
+        //     });
+        // });
+
+    </script>
+
+    <script src="/modal-indicador.js"></script>
+    <script src="/modal-mediciones.js"></script>
+    <script src="/modal-usuario.js"></script>
+
+    <script src="/js/layout.js"></script>
+    <script src="/js/navbar-user.js"></script>
+    <script src="/js/logout.js"></script>
+
+</body>
+
+</html>

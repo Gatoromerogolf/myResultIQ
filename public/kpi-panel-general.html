@@ -203,6 +203,15 @@
     .actions-bar button {
         border-radius: 6px;
         font-size: 0.9rem;
+
+        /* 👉 controla la altura */
+        padding: 10px 18px;
+        /* más alto y más ancho */
+        line-height: 1.4;
+        /* centra mejor iconos y texto */
+        display: inline-flex;
+        /* fuerza alineado correcto */
+        align-items: center;
     }
 
     /* --- Insights automáticos --- */
@@ -1139,31 +1148,22 @@
 
                 <!-- === Botones de acción === -->
                 <div class="actions-bar">
-                    <!-- <a href="informePDF.html" target="_blank" class="btn btn-outline-primary">
-                        <i class="fas fa-chart-line"></i> Ver formato previo PDF
-                    </a> -->
 
+                    <!-- <button id="btnPreviewPDF" class="btn btn-outline-primary">
+        <i class="fas fa-chart-line"></i> Ver formato previo PDF
+    </button> -->
 
-                    <button id="btnPreviewPDF" class="btn btn-outline-primary">
-                        <i class="fas fa-chart-line"></i> Ver formato previo PDF
+                    <button id="btnPDF" class="btn btn-outline-primary" disabled>
+                        <span id="iconPDF" class="spinner"></span>
+                        <span id="textPDF"> Preparando informe final</span>
                     </button>
-                    <div class="actions-bar">
-                        <button id="btnPDF" class="btn btn-outline-primary" disabled>
-                            <span id="iconPDF" class="spinner"></span>
-                            <span id="textPDF">Preparando informe final</span>
-                        </button>
-                    </div>
 
-                    <!-- <a href="kpi-conclusiones.html" class="btn btn-outline-primary">
-                        <i class="fas fa-chart-line"></i> Ver conclusiones generales
-                    </a>
-                    <button id="btnDescargarPDF" class="btn btn-outline-primary">
-                        <i class="fas fa-file-pdf"></i> Descargar PDF
-                    </button> -->
-                    <button class="btn btn-primary" onclick="location.reload();"><i class="fas fa-sync"></i>
-                        Actualizar
-                        Datos</button>
+                    <button class="btn btn-primary" onclick="location.reload();">
+                        <i class="fas fa-sync"></i> Actualizar Datos
+                    </button>
+
                 </div>
+
 
                 <footer class="main-footer text-center">
                     <strong>© 2025 - myResultIQ 1.0</strong>
@@ -5204,7 +5204,8 @@
                 const text = document.getElementById("textPDF");
 
                 btn.disabled = false;
-                text.textContent = "Ver preliminar de PDF";
+                text.innerHTML = '<i class="fas fa-file-pdf text-danger"></i> Ver preliminar de PDF';
+
                 icon.style.display = "none";
             }
         };

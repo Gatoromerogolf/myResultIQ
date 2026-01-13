@@ -7,7 +7,6 @@
   <title>Plantilla Informe - myResultIQ</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 
   <link
@@ -40,11 +39,6 @@
       color: var(--gris);
       margin: 0;
       background: #efefef;
-    }
-
-    h4 {
-      font-weight: 700;
-      font-size: 21px;
     }
 
     /* Contenedor que simula el documento */
@@ -85,7 +79,7 @@
     .marco {
       border: 2px solid #007BFF;
       border-radius: 5mm;
-      padding: 8mm;
+      padding: 12mm;
       margin: 20mm 12mm 20mm 12mm;
       /* margen interno superior / inferior */
       height: calc(297mm - 40mm);
@@ -384,11 +378,10 @@
     }
 
     h2.section-title {
-      /* font-family: 'Montserrat'; */
-      font-size: 24px;
-      margin: 0px 0 5px 0;
-      color: var(--azul);
-      font-weight: 700;
+      font-family: 'Montserrat';
+      font-size: 18px;
+      margin: 6px 0 12px 0;
+      color: var(--azul)
     }
 
     /* Contenedor de las métricas: 4 columnas fijas */
@@ -690,23 +683,13 @@
     }
 
     .btn-pdf:hover {
-      background-color: rgb(233, 50, 50);
+      background-color: #1d4ed8;
     }
 
     .btn-pdf:active {
       transform: translateY(1px);
-      box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
-
-    .pdf-icon {
-      color: #c62828;
-      background: white;
-      border-radius: 3px;
-      padding: 2px 4px;
-      margin-left: 8px;
-      font-size: 0.9em;
-    }
-
 
     /* Overlay */
     .pdf-modal {
@@ -779,7 +762,6 @@
     <div class="toolbar">
       <button id="btn-pdf" class="btn-pdf">
         Exportar informe a PDF
-        <i class="fas fa-file-pdf pdf-icon"></i>
       </button>
     </div>
 
@@ -1070,9 +1052,9 @@
       h.textContent = 'Marco Introductorio y Visión General';
       content.appendChild(h);
 
-      const p = document.createElement('div');
+      const p = document.createElement('p');
       p.className = 'cover2-intro';
-      p.innerHTML = `<br>
+      p.innerHTML = `
           <h4>Finalidad</h4>
 
           <p>El presente informe tiene por finalidad ofrecer una visión integral y consolidada del desempeño organizacional mediante el análisis de los indicadores clave de gestión (KPIs). Se presenta una síntesis estructurada de la información disponible en el dashboard interactivo, con el propósito de facilitar la toma de decisiones estratégicas basadas en datos cuantitativos y cualitativos correspondientes al período evaluado.</p>
@@ -1084,8 +1066,7 @@
           <p>El informe resume los principales indicadores estratégicos, analiza su evolución, identifica desviaciones relevantes y evalúa el nivel de cumplimiento respecto de los objetivos establecidos. Además, integra tendencias, comparaciones interperíodos y observaciones contextuales que permiten interpretar el comportamiento de los indicadores.<br>El objetivo central es transformar los datos en insights accionables que apoyen la gestión, la toma de decisiones y el mejoramiento continuo de los procesos institucionales.</p>
 
           <h4>Calidad y Precisión de los Datos</h4>
-          <p>La validez de los resultados presentados depende directamente de la calidad de los datos utilizados. Por ello, se destaca la importancia de los procesos de verificación, consistencia y validación aplicados durante cada etapa de recolección, procesamiento y consolidación.</p>` +
-          `<p>Estos mecanismos aseguran la trazabilidad, la transparencia analítica y la confiabilidad del sistema de medición, permitiendo construir conclusiones sólidas y comparables en el tiempo.</p>`
+          <p>La validez de los resultados presentados depende directamente de la calidad de los datos utilizados. Por ello, se destaca la importancia de los procesos de verificación, consistencia y validación aplicados durante cada etapa de recolección, procesamiento y consolidación.</p>`
 
       content.appendChild(p);
       documento.appendChild(page);
@@ -1098,6 +1079,7 @@
       const p1 = document.createElement('div');
       p1.className = 'cover2-intro';
       p1.innerHTML = `
+            <p>Estos mecanismos aseguran la trazabilidad, la transparencia analítica y la confiabilidad del sistema de medición, permitiendo construir conclusiones sólidas y comparables en el tiempo.</p>
 
             <h4> Evolución y Mejora Continua</h4>
             <p>El sistema de indicadores que sustenta este informe es dinámico y evolutivo. La incorporación progresiva de nuevos KPIs, así como la actualización y el refinamiento de los existentes, permitirá avanzar hacia un monitoreo más detallado y granular del desempeño institucional.<br>Esta ampliación gradual responde al nivel de madurez de los procesos internos y a las necesidades estratégicas detectadas, contribuyendo a una comprensión cada vez más precisa de los factores que influyen en los resultados organizacionales.</p>
@@ -1142,7 +1124,7 @@
       // -----------------------
       // Texto descriptivo
       // -----------------------
-      const p = document.createElement('div');
+      const p = document.createElement('p');
 
       const cantSectores = localStorage.getItem('cantSectores');
       const cantActivos = localStorage.getItem('cantIndicadoresActivos');
@@ -1182,54 +1164,27 @@
       const totalMeses = cantidadMesesEntreFechas(fechaDesdeDate, fechaHastaDate);
 
       let texto =
-        `<br> ` +
-        `<h4>Estructura Organizacional:</h4>
-        La organización ha sido modelada en <strong>${cantSectores}</strong> destinos, que representan las distintas entidades, sectores, procesos o unidades funcionales que componen la estructura de medición.<br><br>` +
-        `De estos destinos, <strong>${cantDestinos}</strong> cuentan con indicadores directamente asignados, mientras que los restantes forman parte de la jerarquía organizacional y su desempeño se evalúa a través de los destinos subordinados.<br><br>` +
+        `Se han declarado un total de <strong> ${cantSectores}</strong> destinos, de los cuales <strong> ${cantDestinos}</strong> tienen indicadores asignados.<br><br>` +
+        `Cada destino posee un peso que representa su importancia estratégica dentro de la organización, definido en función del rol que cumple en la cadena de valor. Estos destinos pueden contar, o no, con indicadores propios asignados.<br><br>` +
+        `Se han definido un total de <strong>${cantActivos}</strong> indicadores activos.<br><br>` +
+        `Los indicadores están asociados a destinos específicos, los cuales a su vez pueden depender jerárquicamente de otros. El cálculo del cumplimiento global se realiza de manera ascendente: primero se determina el cumplimiento de cada indicador, luego el del destino correspondiente y, finalmente, se consolida el resultado hacia los niveles superiores.<br><br>De esta forma, el cumplimiento global expresa el desempeño integral de la organización, ponderado según la relevancia de cada destino dentro de la estructura.<br><br>` +
+        `Este informe Ejecutivo resume las conclusiones de las mediciones registradas en el período comenzado el <strong>${fechaDesdeTexto}</strong> y finalizado el <strong>${fechaHastaTexto}</strong>.<br><br>` +
+        `Durante este período se han realizado y registrado un total de <strong>${cantMediciones}</strong> mediciones.<br><br>`;
 
-        `<h4>Ponderación Estratégica:</h4>
-        Cada destino posee un peso porcentual que refleja su importancia relativa dentro de la estrategia organizacional. Esta ponderación se define considerando el impacto de cada destino en la cadena de valor y permite calcular contribuciones ponderadas al desempeño global.<br><br>` +
-
-        `<h4>Indicadores Activos:</h4>
-        El sistema cuenta con un total de <strong>${cantActivos}</strong> indicadores activos en seguimiento, distribuidos entre los diferentes destinos de la organización.<br><br>` +
-
-        `<h4>Metodología de Cálculo:</h4>
-        Los indicadores están asociados a destinos específicos, los cuales pueden depender jerárquicamente de otros destinos. El cálculo del cumplimiento global se realiza de manera ascendente: primero se determina el cumplimiento de cada indicador individual, luego se consolida el resultado del destino al que pertenece y, finalmente, se propaga hacia los niveles superiores de la jerarquía.<br><br>` +
-        `De esta forma, el cumplimiento global expresa el desempeño integral de la organización, ponderado según la relevancia estratégica de cada destino dentro de la estructura.<br><br>`
+      if (cantDemorados === 0 && cantPendientes === 0) {
+        texto += `Todos los indicadores fueron medidos con la frecuencia establecida y no hay mediciones pendientes para el período definido en este informe.<br><br>`;
+      } else {
+        const cantAlDia = cantActivos - (cantDemorados + cantPendientes);
+        texto += `Solo <strong>${cantAlDia}</strong> indicadores tienen todas sus mediciones informadas en fecha, ` +
+          `mientras que <strong>${cantActivos - cantAlDia}</strong> presentan mediciones pendientes o fuera de término.<br><br>` +
+          `Debido a la ausencia de información completa, los resultados y conclusiones de este informe podrían presentar ` +
+          `variaciones respecto de la situación real. La falta de mediciones vigentes puede generar desviaciones en los ` +
+          `promedios, tendencias y porcentajes de cumplimiento, por lo que las interpretaciones deben realizarse con ` +
+          `precaución.<br><br>`;
+      }
 
       p.innerHTML = texto;
       content.appendChild(p);
-      documento.appendChild(page);
-
-      
-      // Crear segunda hoja
-      const { page: page1, content: content1 } = createPage();
-
-      // Primer bloque
-      const p1 = document.createElement('div');
-      p1.className = 'cover2-intro';
-
-      let texto1 = 
-      `<h4>Período de Análisis:</h4>
-      Este informe ejecutivo resume las conclusiones de las mediciones registradas en el período comprendido entre el <strong>${fechaDesdeTexto}</strong> y el <strong>${fechaHastaTexto}</strong>, durante el cual se han realizado y registrado un total de <strong>${cantMediciones}</strong> mediciones.<br><br>`
-
-      if (cantDemorados === 0 && cantPendientes === 0) {
-        texto1 += `<h4>Calidad de la Información:</h4>
-        Todos los indicadores fueron medidos con la frecuencia establecida y no existen mediciones pendientes para el período analizado. Los resultados presentados en este informe reflejan fielmente el desempeño organizacional.<br><br>`;
-      } else {
-        const cantAlDia = cantActivos - (cantDemorados + cantPendientes);
-        texto1 += `<h4>Calidad de la Información:</h4>
-        Del total de indicadores activos, <strong>${cantAlDia}</strong> cuentan con todas sus mediciones informadas en fecha, ` +
-          `mientras que <strong>${cantActivos - cantAlDia}</strong> presentan mediciones pendientes o registradas fuera de término.<br><br>` +
-          `<strong>Consideraciones sobre los resultados:</strong> Debido a la ausencia de información completa en algunos indicadores, los resultados y conclusiones de este informe podrían presentar ` +
-          `desviaciones respecto de la situación real. La falta de mediciones vigentes puede afectar el cálculo de ` +
-          `promedios, tendencias y porcentajes de cumplimiento, por lo que las interpretaciones deben realizarse con ` +
-          `la debida precaución y considerando estas limitaciones.<br><br>`;
-      }
-
-      p1.innerHTML = texto1;
-      content1.appendChild(p1);
-      // Segundo bloque: métricas clave
 
       const metrics = document.createElement('div');
       metrics.className = 'metrics';
@@ -1259,9 +1214,9 @@
       metrics.appendChild(m3);
       metrics.appendChild(m4);
       metrics.appendChild(m5);
-      content1.appendChild(metrics);
+      content.appendChild(metrics);
 
-      documento.appendChild(page1);
+      documento.appendChild(page);
     }
 
 
