@@ -247,6 +247,7 @@ app.post("/auth/forgot-password", async (req, res) => {
 
   const resetLink = `${process.env.FRONTEND_URL}/reset-password.html?token=${token}`;
 
+  console.log (`link ${resetLink}`)
   await sendMail(
     email,
     "Recuperación de contraseña - myResultIQ",
@@ -281,7 +282,7 @@ app.post("/auth/reset-password", async (req, res) => {
 
   await pool.query(`
     UPDATE usuarios
-    SET password = ?, reset_token = NULL, reset_expires = NULL
+    SET password_hash = ?, reset_token = NULL, reset_expires = NULL
     WHERE id = ?
   `, [hash, rows[0].id]);
 
