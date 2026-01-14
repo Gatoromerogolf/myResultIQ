@@ -136,11 +136,13 @@
     }
 
     .user-dropdown-header {
-        padding: 28px 20px; /* Más espacio vertical */
+        padding: 28px 20px;
+        /* Más espacio vertical */
     }
 
     .user-dropdown-header img {
-        margin-bottom: 15px; /* Más separación del texto */
+        margin-bottom: 15px;
+        /* Más separación del texto */
     }
 </style>
 
@@ -215,8 +217,9 @@
 
                             <!-- Logout -->
                             <li>
-                                <a href="#" class="dropdown-item text-start" style="font-size:18px; color:#dc3545; /* rojo Bootstrap */"
-                                    data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                <a href="#" class="dropdown-item text-start"
+                                    style="font-size:18px; color:#dc3545; /* rojo Bootstrap */" data-bs-toggle="modal"
+                                    data-bs-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt me-2"></i> Salir
                                 </a>
                             </li>
@@ -434,13 +437,9 @@
     </div>
     <!--end::App Wrapper-->
 
-    <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- Bootstrap -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
-    <!-- DataTables -->
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
@@ -732,6 +731,7 @@
             const formData = new FormData(form);
             const modo = form.getAttribute('data-modo');
             const legajo = form.getAttribute('data-legajo');
+            const email = document.getElementById("email").value;
 
             const esEdicion = modo === 'editar';
             const url = esEdicion ? `/usuarios/${legajo}` : '/usuarios';
@@ -759,6 +759,8 @@
                 }
 
                 if (!esEdicion) {
+                    await enviaMailContrasena(email, data.password_temporal);
+                    console.log ('email enviado')
                     alert(`
                             Usuario creado correctamente
 
@@ -767,6 +769,7 @@
 
                             ⚠️ El usuario deberá cambiarla en el primer ingreso
                         `);
+
                 } else {
                     alert('Usuario actualizado correctamente');
                 }
@@ -779,6 +782,45 @@
                 alert('Error al enviar el formulario');
             }
         });
+
+        async function enviaMailContrasena(email, password) {
+
+            console.log(`entro aca con ${email} y ${password}`);
+
+            let htmlContent = ` 
+                <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f4;">
+                    <div style="max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1);">
+                        <h2 style="color: #333;">Bienvenido a la aplicación</h2>
+                        <p>A continuación se informa su clave personal de acceso a la aplicación:</p>
+                            <div style="display: inline-block; padding: 10px 20px; background: #007BFF; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                                ${password}
+                            </div>
+                        <p style="margin-top: 20px;">Debe ingresar con su correo electrónico y la contraseña temporal proporcionada.   En su primer ingreso debe modificar la clave de acceso</p>
+                        <hr style="border: none; height: 1px; background: #ddd;">
+                        <small style="color: #888;">&copy; 2025 myResultIQ. Todos los derechos reservados.</small>
+                    </div>
+                </div>
+                `;
+
+            // Llamar al backend para enviar el mail
+            await fetch('/enviar-correo', {
+                // await fetch('/sendMail', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    // to: email.trim(),
+                    to: Array.isArray(email)
+                        ? [...email.map(e => e.trim())] // Si es array, agrega la cuenta extra
+                        : [email.trim()], // Si es string, lo convierte en array con la cuenta extra
+                    subject: "Bienvenido a myResultIQ - Información de Acceso",
+                    text: `Tu contraseña es protegida ${password}`,
+                    html: htmlContent,
+                    useGmail: false
+                })
+            });
+            console.log(`Enviar email a ${email} con la contraseña temporal: ${password}`);
+        }
+
 
         // // 🚫🚫🚫
         const API_SECTORES = '/api/sectores'; // Reemplazá con la ruta real
@@ -950,7 +992,6 @@
         }
     </style>
 
-
     <div id="contenedorModal"></div>
     <div id="contenedorModalMediciones"></div>
     <div id="contenedorModalUsuario"></div>
@@ -984,39 +1025,6 @@
             .then(html => {
                 document.getElementById('contenedorModalLogout').innerHTML = html;
             });
-
-            //     const btnLogout = document.getElementById('confirmLogout');
-            //     if (!btnLogout) return;
-
-            //     btnLogout.addEventListener('click', async () => {
-            //         // Cerrar modal
-            //         const modalEl = document.getElementById('logoutModal');
-            //         const modal = bootstrap.Modal.getInstance(modalEl);
-            //         if (modal) modal.hide();
-
-            //         // 🔐 Auditoría logout
-            //         const token = localStorage.getItem('token');
-            //         if (token) {
-            //             try {
-            //                 await fetch('/api/auth/logout', {
-            //                     method: 'POST',
-            //                     headers: {
-            //                         Authorization: 'Bearer ' + token
-            //                     }
-            //                 });
-            //             } catch (e) {
-            //                 console.warn('No se pudo registrar logout');
-            //             }
-            //         }
-
-            //         // 🧹 Limpiar sesión
-            //         localStorage.clear();
-            //         sessionStorage.clear();
-
-            //         // 🚀 Redirigir
-            //         window.location.href = '/';
-            //     });
-            // });
 
     </script>
 

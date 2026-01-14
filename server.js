@@ -31,7 +31,266 @@ app.use('/api/auditoria', auditRoutes);
 app.use(express.static('public'));
 app.use('/dist', express.static('public'));
 
+// ⚽⚽⚽⚽⚽⚽ envio de mails ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
 
+// === Transporter para GMAIL con OAuth2 ===
+const oAuth2Client = new google.auth.OAuth2(
+  process.env.CLIENT_ID, // Usar directamente process.env
+  process.env.CLIENT_SECRET, // Usar directamente process.env
+  process.env.REDIRECT_URI // Usar directamente process.env
+);
+
+// Configuración del token de actualización
+oAuth2Client.setCredentials({
+  refresh_token: process.env.REFRESH_TOKEN,
+});
+
+// Transporter SMTP para Ferozo
+const smtpTransporter = nodemailer.createTransport({
+  host: "c1801550.ferozo.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "soporte@bdtadvisory.com",
+    pass: process.env.MAIL_PASS, // poné la contraseña real de soporte@bdtadvisory.com en el .env
+  },
+});
+
+//  🏀🏀🏀😎😎😎  Agregado para mandar dos mails.. 🏀🏀🏀😎😎😎
+async function getGmailTransporter() {
+  const accessTokenObject = await oAuth2Client.getAccessToken();
+  const accessToken = accessTokenObject?.token;
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: process.env.GMAIL_USER,
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      refreshToken: process.env.REFRESH_TOKEN,
+      accessToken: accessToken,
+    },
+  });
+}
+
+//  🏀🏀🏀  Fin Agregado para mandar dos mails.. 🏀🏀🏀
+
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//                       enviar correo
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+app.post("/enviar-correo", async (req, res) => {
+  let { to, subject, text, html, useGmail } = req.body;
+
+  console.log("📥 Datos recibidos en backend:", req.body); // Debugging
+
+  // Si `to` es un string, lo convierte en array para manejar múltiples destinatarios
+  if (typeof to === "string") {
+    to = [to.trim()];
+  } else if (Array.isArray(to)) {
+    to = to.map((email) => email.trim()); // Elimina espacios extra en cada dirección
+  } else {
+    return res
+      .status(400)
+      .json({ success: false, message: "Destinatario no válido" });
+  }
+
+  // Llamada a la función para enviar el correo
+  await sendMail(to, subject, text, html, useGmail)
+    .then(() => {
+      res.send("👍 Correo enviado correctamente");
+    })
+    .catch((error) => {
+      res.status(500).send("❌ Error al enviar el correo");
+    });
+});
+
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// ::::    sendMail
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+async function sendMail(to, subject, text, html, useGmail = true) {
+    console.log(`sendMail llamado con to: ${to}, subject: ${subject}, useGmail: ${useGmail}`);  
+
+    //sendMail llamado con to: [object Object], subject: undefined, useGmail: true
+  try {
+    if (!to) {
+      console.error("❌ No se especificó destinatario.");
+      return;
+    }
+
+    let transporter;
+    let from;
+
+    if (useGmail) {
+      const accessTokenObject = await oAuth2Client.getAccessToken();
+      const accessToken = accessTokenObject?.token;
+
+      transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          type: "OAuth2",
+          user: process.env.GMAIL_USER,
+          clientId: process.env.CLIENT_ID,
+          clientSecret: process.env.CLIENT_SECRET,
+          refreshToken: process.env.REFRESH_TOKEN,
+          accessToken: accessToken,
+        },
+      });
+
+      from = process.env.GMAIL_USER;
+    } else {
+      transporter = smtpTransporter;
+      // from = "soporte@bdtadvisory.com";
+      from = "soporte@myresultiq.com.ar";
+    }
+
+    const mailOptions = {
+      from: from,
+      to: Array.isArray(to) ? to.join(", ") : to,
+      bcc: "rgarcia@consejo.org.ar",
+      subject: subject,
+      text: text,
+      html: html,
+    };
+
+    const result = await transporter.sendMail(mailOptions);
+
+    console.log("✅ Correo enviado correctamente.");
+    console.log("📤 Desde:", from);
+    console.log("📩 Para:", mailOptions.to);
+    console.log("📬 Método:", useGmail ? "Gmail (OAuth2)" : "SMTP (Ferozo)");
+  } catch (error) {
+    console.error("❌ Error al enviar el correo:", error);
+  }
+}
+
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//   ⚽⚽⚽      Definir la tarea cron
+// cron.schedule('0 */4 * * *', () => { cada cuatro horas
+//  * * * * *  # minuto, hora, día del mes, mes, día de la semana
+
+cron.schedule("0 0,12 * * *", () => {
+  const ahora = new Date().toLocaleString();
+  console.log(`[CRON] Ejecutando tarea programada a las ${ahora}`);
+  // Esta expresión ejecutará la tarea cada 2 horas (a las 00:00, 02:00, 04:00, etc.)
+  // a las 15 hs
+  console.log("Ejecutando tarea programada: registrando en la base de datos");
+
+  let textoCron = `
+  <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f4;">
+      <div style="max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1);">
+          <h2 style="color: #333;">Mensaje enviado por Cron</h2>
+          <p>Mensaje automático</p>
+              <div style="display: inline-block; padding: 10px 20px; background: #007BFF; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                  ${ahora}
+              </div>
+          <p style="margin-top: 20px;">Texto genérico</p>
+          <hr style="border: none; height: 1px; background: #ddd;">
+          <small style="color: #888;">&copy; 2025 BDTA. Todos los derechos reservados.</small>
+      </div>
+  </div>
+  `;
+
+  const query = "INSERT INTO tablalogs (logs) VALUES (NOW())";
+
+  pool.query(query, (err, results) => {
+    if (err) {
+      console.error("Error al insertar en la base de datos:", err);
+      return;
+    }
+    console.log("Registro insertado correctamente:", results);
+  });
+
+  // En cron: usar SMTP
+  sendMail(
+    "ruben.e.garcia@gmail.com",
+    "Informe automático",
+    "texto mensaje cron",
+    textoCron,
+    true // false: usar SMTP (soporte@bdtadvisory.com) - true: gmail
+  );
+});
+
+
+
+// :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const crypto = require("crypto");
+
+app.post("/auth/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  console.log(`llega al backend con ${email} `);
+
+  const user = await pool.query(
+    "SELECT id FROM usuarios WHERE email = ?",
+    [email]
+  );
+
+  // No revelar si existe o no (seguridad)
+  if (!user.length) {
+    return res.json({ ok: true });
+  }
+
+  const token = crypto.randomBytes(32).toString("hex");
+  const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
+
+  await pool.query(`
+    UPDATE usuarios
+    SET reset_token = ?, reset_expires = ?
+    WHERE email = ?
+  `, [token, expires, email]);
+
+  console.log (`llega al backend con ${email} y token ${token} `);
+
+  const resetLink = `${process.env.FRONTEND_URL}/reset-password.html?token=${token}`;
+
+  await sendMail(
+    email,
+    "Recuperación de contraseña - myResultIQ",
+    "nada",
+    `
+      <p>Solicitaste restablecer tu contraseña.</p>
+      <p>Haz click en el siguiente enlace (válido por 15 minutos):</p>
+      <a href="${resetLink}">${resetLink}</a>
+    `, 
+    false
+  );
+
+  res.json({ ok: true });
+});
+
+
+// :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+app.post("/auth/reset-password", async (req, res) => {
+  const { token, password } = req.body;
+
+  const rows = await pool.query(`
+    SELECT id FROM usuarios
+    WHERE reset_token = ?
+    AND reset_expires > NOW()
+  `, [token]);
+
+  if (!rows.length) {
+    return res.status(400).json({ error: "Token inválido o expirado" });
+  }
+
+  const hash = await bcrypt.hash(password, 10);
+
+  await pool.query(`
+    UPDATE usuarios
+    SET password = ?, reset_token = NULL, reset_expires = NULL
+    WHERE id = ?
+  `, [hash, rows[0].id]);
+
+  res.json({ ok: true });
+});
+
+
+
+// :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // ✅ Crear un indicador
 app.post('/api/guardar', async (req, res) => {
 

@@ -194,7 +194,7 @@
     /****************************
      * RECUPERAR CONTRASEÑA
      ****************************/
-    document.getElementById('formRecuperar').addEventListener('submit', function (e) {
+    document.getElementById('formRecuperar').addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const email = emailRecuperar.value.trim();
@@ -204,12 +204,62 @@
         return;
       }
 
+      // await enviaMailContrasena(email);
+      await fetch("/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+
+      alert("Si el correo existe, se enviaron las instrucciones.");
+
+
+
+
       // Aquí iría el POST real al backend
       alert('Se enviaron las instrucciones a ' + email);
 
       bootstrap.Modal.getInstance(document.getElementById('recuperarModal')).hide();
       this.reset();
     });
+
+    async function enviaMailContrasena(email) {
+
+      console.log(`entro aca con ${email} `);
+
+      let htmlContent = ` 
+                <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f4;">
+                    <div style="max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1);">
+                        <h2 style="color: #333;">Bienvenido a la aplicación</h2>
+                        <p>A continuación se informa su clave personal de acceso a la aplicación:</p>
+                            <div style="display: inline-block; padding: 10px 20px; background: #007BFF; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                                // bhgvs 6453q  
+                            </div>
+                        <p style="margin-top: 20px;">Debe ingresar con su correo electrónico y la contraseña temporal proporcionada.   En su primer ingreso debe modificar la clave de acceso</p>
+                        <hr style="border: none; height: 1px; background: #ddd;">
+                        <small style="color: #888;">&copy; 2025 myResultIQ. Todos los derechos reservados.</small>
+                    </div>
+                </div>
+                `;
+
+      // Llamar al backend para enviar el mail
+      await fetch('/enviar-correo', {
+        // await fetch('/sendMail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          // to: email.trim(),
+          to: Array.isArray(email)
+            ? [...email.map(e => e.trim())] // Si es array, agrega la cuenta extra
+            : [email.trim()], // Si es string, lo convierte en array con la cuenta extra
+          subject: "Recuperación de acceso - myResultIQ",
+          text: `Tu contraseña es protegida ${email}`,
+          html: htmlContent,
+          useGmail: false
+        })
+      });
+      console.log(`Enviar email a ${email} con la contraseña temporal: ${password}`);
+    }
   </script>
 
 </body>
