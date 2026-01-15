@@ -1040,7 +1040,7 @@
         'Resumen Ejecutivo',
         'Indicadores Globales',
         'Cumplimiento por Destino',
-        'Detalle del último mes',
+        'Composición de los resultados',
         'Indicadores por Contribución',
         'BSC - Balance Scorecard',
         '   1. Gráfico de cumplimiento promedio',
@@ -1664,7 +1664,7 @@
         const { page, content } = createPage();
         const h = document.createElement('h2');
         h.className = 'section-title';
-        h.textContent = 'Detalle del último mes';
+        h.textContent = 'Composición de la última medición';
         content.appendChild(h);
 
         const warn = document.createElement('p');
@@ -1755,7 +1755,7 @@
         if (esPrimeraPagina) {
           const h = document.createElement('h2');
           h.className = 'section-title';
-          h.textContent = 'Detalle del último mes';
+          h.textContent = 'Composición de la última medición';
           currentContent.appendChild(h);
 
           const p = document.createElement('p');
@@ -1773,7 +1773,7 @@
         } else {
           // En páginas siguientes, agregar continuación
           const cont = document.createElement('h3');
-          cont.textContent = 'Detalle del último mes (continuación)';
+          cont.textContent = 'Composición de la última medición(continuación)';
           cont.style.fontSize = '16px';
           cont.style.marginBottom = '10px';
           currentContent.appendChild(cont);
@@ -1996,8 +1996,8 @@
 
       content.appendChild(h);
 
-      const p0 = document.createElement('p'); p0.innerHTML = `<br>
-      <b>1. Gráfico de cumplimiento promedio.</b><br><br>
+      const p0 = document.createElement('p'); p0.innerHTML = `
+      <b>1. Gráfico de cumplimiento promedio.</b><br>
       A continuación se presentan los resultados obtenidos en las distintas perspectivas del BSC durante el período evaluado.
       `;
       content.appendChild(p0);
@@ -2054,7 +2054,7 @@
       // --- PUNTO 2: TABLA DE PERSPECTIVAS ---
       const tituloTabla = document.createElement('p');
       tituloTabla.innerHTML = `<br><br>
-          <b>2. Tabla de perspectivas.</b><br><br>
+          <b>2. Tabla de perspectivas.</b><br>
           Valores promedios y ponderados según el peso relativo asignado a cada indicador incluido en cada perspectiva.
           `;
       content.appendChild(tituloTabla);
@@ -2179,7 +2179,6 @@
 
           // 🟢 SOLO EN LA PRIMERA PÁGINA
           if (index === 0) {
-
             const h2 = document.createElement('h2');
             h2.className = 'section-title';
             h2.textContent = 'BSC - Balanced Scorecard';
@@ -2187,16 +2186,23 @@
 
             const p0 = document.createElement('p');
             p0.innerHTML = `
-            <br>
-            <b>3. Detalle de Indicadores por Perspectiva.</b><br><br>
+            <b>3. Detalle de Indicadores por Perspectiva.</b><br>
             Indicadores agrupados según la perspectiva del BSC a la que pertenecen,
-            mostrando su desempeño individual y contribución al cumplimiento global.<br><br>
+            mostrando su desempeño individual y contribución al cumplimiento global.<br>
           `;
             content.appendChild(p0);
           }
 
           // 🔹 TÍTULO DE LA PERSPECTIVA
-          const h3 = document.createElement("h3");
+
+          if (index !== 0) {
+            const h2 = document.createElement('h2');
+            h2.className = 'section-title';
+            h2.textContent = 'BSC - Balanced Scorecard';
+            content.appendChild(h2);
+          }
+
+          const h3 = document.createElement("h4");
           h3.className = "section-title";
           h3.textContent = perspectiva.titulo;
           content.appendChild(h3);
@@ -2369,7 +2375,7 @@
 
       const h = document.createElement('h2');
       h.className = 'section-title';
-      h.textContent = 'Usuarios';
+      h.textContent = 'Usuarios registrados';
       content.appendChild(h);
 
       const p = document.createElement('p');
@@ -2473,6 +2479,9 @@
 
     }
 
+    // ===============================================================================
+    // 🧲🧲🧲 buildUsuarios
+    // ===============================================================================
     async function buildUsuarios() {
 
       const usuarios = await fetch("/usuarios").then(r => r.json());
@@ -2496,7 +2505,7 @@
         if (pagina === 0) {
           const h = document.createElement("h2");
           h.className = "section-title";
-          h.textContent = "Usuarios";
+          h.textContent = "Usuarios registrados";
           content.appendChild(h);
 
           const p = document.createElement("p");
@@ -2546,7 +2555,6 @@
     }
 
 
-
     async function buildAnexoSectores() {
 
       const sectores = await fetch("/sectores").then(r => r.json());
@@ -2570,11 +2578,11 @@
 
       const h = document.createElement("h2");
       h.className = "section-title";
-      h.textContent = "Estructura Organizacional (Sectores)";
+      h.textContent = "Estructura Organizacional";
       content.appendChild(h);
 
       const p = document.createElement("p");
-      p.textContent = "Relación jerárquica entre sectores y sus códigos.";
+      p.textContent = "Relación jerárquica entre sectores y usuarios.";
       content.appendChild(p);
 
       const ul = document.createElement("ul");
@@ -2632,15 +2640,54 @@
 
       const h = document.createElement("h2");
       h.className = "section-title";
-      h.textContent = "Estructura Organizacional (Sectores)";
+      h.textContent = "Estructura Organizacional";
       content.appendChild(h);
 
       const p = document.createElement("p");
-      p.textContent = "Relación jerárquica entre sectores y personas asignadas.";
+      p.textContent = "Relación funcional de sectores y usuarios registrados.";
       content.appendChild(p);
 
       const ul = document.createElement("ul");
-      ul.style.fontSize = "13px";
+      ul.style.fontSize = "16px";
+
+      function XXXrenderNodo(nodo, parent) {
+        const li = document.createElement("li");
+
+        // 📂 Sector
+        const sectorLine = document.createElement("div");
+        sectorLine.textContent = `${nodo.id} – ${nodo.nombre}`;
+        sectorLine.style.fontWeight = "bold";
+        li.appendChild(sectorLine);
+
+        // 👥 Personas del sector
+        const personas = usuariosPorSector[nodo.id] || [];
+        const lineaPersonas = document.createElement("div");
+        lineaPersonas.style.fontSize = "15px";
+        lineaPersonas.style.marginLeft = "12px";
+        lineaPersonas.style.marginBottom = "4px";
+
+        if (personas.length > 0) {
+          lineaPersonas.textContent = personas.sort().join("  // ");
+        } else {
+          lineaPersonas.textContent = "— Sin usuarios asignados —";
+          lineaPersonas.style.fontStyle = "italic";
+        }
+
+        li.appendChild(lineaPersonas);
+        parent.appendChild(li);
+
+        // 🌱 Hijos
+        if (nodo.hijos.length > 0) {
+          const sub = document.createElement("ul");
+          nodo.hijos.forEach(h => renderNodo(h, sub));
+          li.appendChild(sub);
+        }
+      }
+
+      raiz.forEach(r => renderNodo(r, ul));
+      content.appendChild(ul);
+      documento.appendChild(page);
+
 
       function renderNodo(nodo, parent) {
         const li = document.createElement("li");
@@ -2656,17 +2703,16 @@
         const lineaPersonas = document.createElement("div");
         lineaPersonas.style.fontSize = "15px";
         lineaPersonas.style.marginLeft = "12px";
-        lineaPersonas.style.marginBottom = "6px";
+        lineaPersonas.style.marginBottom = "4px";
 
         if (personas.length > 0) {
-          lineaPersonas.textContent = personas.sort().join("  // "); 
+          lineaPersonas.textContent = personas.sort().join("  // ");
         } else {
           lineaPersonas.textContent = "— Sin usuarios asignados —";
           lineaPersonas.style.fontStyle = "italic";
         }
 
         li.appendChild(lineaPersonas);
-
         parent.appendChild(li);
 
         // 🌱 Hijos
@@ -2677,14 +2723,7 @@
         }
       }
 
-      raiz.forEach(r => renderNodo(r, ul));
-
-      content.appendChild(ul);
-      documento.appendChild(page);
     }
-
-
-
 
 
     async function buildAnexoSectoresConUsuarios() {
@@ -2861,7 +2900,7 @@
     async function buildUsuariosIndicadores() {
 
       // 📄 Primera página
-      nuevaPagina('Usuarios e Indicadores');
+      nuevaPagina('Relación entre usuarios e indicadores');
 
       const p = document.createElement('p');
       p.textContent = 'Usuarios registrados y sus indicadores asignados.';
@@ -2930,7 +2969,9 @@
           agregarLineas(lineasUsuario);
 
           // 🧍‍♂️ Usuario
-          const h3 = document.createElement('h4');
+          const h3 = document.createElement('div');
+          h3.style.fontWeight = 'bold';
+          h3.style.fontSize = '18px';
           h3.textContent = `Legajo ${u.legajo} – ${u.apellido}, ${u.nombres}`;
           contentActual.appendChild(h3);
 
@@ -3004,7 +3045,7 @@
       // 🥼🥼🥼
       function agregarLineas(lineasNecesarias) {
         if (lineasActuales + lineasNecesarias > MAX_LINEAS) {
-          nuevaPagina('Anexos');
+          nuevaPagina('Usuarios e indicadores (cont.)');
         }
         lineasActuales += lineasNecesarias;
       }
@@ -3195,7 +3236,7 @@
       await buildBSCPerspectiva();
       await buildPondeDestinosIndicadores();
       await buildUsuarios();
-      await buildAnexoSectores();
+      // await buildAnexoSectores();
       await buildAnexoSectoresII();
       // await buildAnexoSectoresConUsuarios();
       await buildOrganigramaTextual();   // 👈 nueva hoja
