@@ -227,7 +227,7 @@
 
     .kpi-guide .alert {
         background: #fff3cd;
-        border: 1px solid #ffc107;
+        border: 1px solid #ff0f07;
         border-radius: 6px;
         padding: 15px;
     }
@@ -294,7 +294,31 @@
 
     /* naranja */
 
+    h3,
+    h4,
+    h5 {
+        margin-top: 20px;
+        font-weight: 600;
+    }
 
+    h2 {
+        margin-top: 20px;
+        font-weight: 650;
+        font-size: 26px
+    }
+
+    h3 {
+        font-size: 24px;
+    }
+
+    h4 {
+        font-size: 22px;
+        margin-top: 15px;
+    }
+
+    h5 {
+        font-size: 18px;
+    }
 
     @media print {
         body {
@@ -306,6 +330,59 @@
             margin: 0;
             border-radius: 0;
         }
+    }
+
+    .alert {
+        background: #fff3cd;
+        /* border: 1px solid #f9615c; */
+        border-radius: 8px;
+        padding: 15px;
+        width: 60%;
+        margin: 20px auto;
+    }
+
+    .key-points {
+        background: #e8f5e9;
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+    .status-ok {
+        color: #2e7d32;
+        /* verde sobrio, no chillón */
+        font-weight: 700;
+        margin-right: 6px;
+    }
+
+    .recommendation h4 {
+        display: inline-block;
+        margin: 0;
+        margin-top: 15px;
+    }
+
+    .status-ok {
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    .alert2 {
+        display: flex;
+        align-items: center;
+        /* 👈 centra verticalmente el icono */
+        gap: 14px;
+
+        background: #fff3cd;
+        border-radius: 8px;
+        padding: 15px;
+        width: 60%;
+        margin: 20px auto;
+    }
+
+    .alert2-icon {
+        font-size: 22px;
+        line-height: 1;
+        flex-shrink: 0;
+        /* evita que se achique */
     }
 </style>
 
@@ -423,10 +500,10 @@
                     <!-- 🔹 Asistente -->
                     <div class="filters-bar d-flex align-items-center justify-content-between mb-3 px-3">
                         <div class="d-flex flex-column">
-                            <h3 class="mb-0">Guía de Buenas Prácticas para Indicadores KPI</h4>
-                                <p class="mb-0 text-muted">
-                                    Maximizando el valor de su sistema de medición de desempeño
-                                </p>
+                            <h3 class="mb-0">Guía de Buenas Prácticas para Indicadores KPI</h3>
+                            <p class="mb-0 text-muted">
+                                Maximizando el valor de su sistema de medición de desempeño
+                            </p>
                         </div>
                     </div>
 
@@ -434,7 +511,8 @@
                     <section class="content" id="listaUsuarios" style="display: block">
                         <div class="content">
                             <div class="intro">
-                                <p>El verdadero valor de un sistema de gestión de KPIs no reside en la tecnología que
+                                <p>El crecimiento de valor de un sistema de gestión de KPIs no reside en la tecnología
+                                    que
                                     presenta los datos, sino en la calidad, relevancia y adecuada definición de los
                                     indicadores
                                     que se miden. Esta guía proporciona algunas recomendaciones para asegurar que sus
@@ -460,26 +538,69 @@
                                 <div class="kpi-card" id="sec-1" data-kpi="1">
                                     <h2>1. Características de un Buen Indicador</h2>
 
-                                    <div class="recommendation mt-3">
+                                    <div class="recommendation mt-4">
+                                        <span class="status-ok"> ✓ </span>
                                         <h4>Específico y Medible</h4>
                                         <p>Un indicador debe medir un aspecto concreto del desempeño y expresarse en
-                                            términos
-                                            cuantificables. Evite definiciones ambiguas o subjetivas que dificulten la
-                                            medición
-                                            consistente.</p>
+                                            términos cuantificables, evitando definiciones ambiguas o subjetivas que
+                                            dificulten la medición consistente y permitiendo que todos en la
+                                            organización interpreten el indicador de la misma manera y puedan evaluar
+                                            objetivamente el progreso.
+
+                                        <div class="example">
+                                            <strong>Especificidad en la definición:</strong>
+                                            <br>• Define exactamente QUÉ se está midiendo, sin dejar espacio para
+                                            interpretaciones múltiples
+                                            <br>• Establece claramente el ALCANCE: ¿Se mide a nivel global, regional,
+                                            por producto, por cliente?
+                                            <br>• Especifica la UNIDAD de medida: porcentaje, cantidad absoluta, ratio,
+                                            tiempo, dinero
+                                            <br>• Delimita el PERÍODO de medición: diario, semanal, mensual, trimestral,
+                                            anual
+                                            <br><br>
+                                            <strong>Medibilidad objetiva:</strong>
+                                            <br>• Debe poder expresarse numéricamente o en categorías claramente
+                                            definidas
+                                            <br>• La metodología de cálculo debe estar documentada y ser replicable
+                                            <br>• Diferentes personas aplicando el mismo método deben llegar al mismo
+                                            resultado
+                                            <br>• Los datos necesarios para la medición deben estar disponibles o ser
+                                            obtenibles de manera confiable
+                                            <br><br>
+                                            <strong>Evitar la subjetividad:</strong>
+                                            <br>• Elimina términos vagos como "mejorar", "optimizar", "incrementar" sin
+                                            especificar cuánto o cómo se medirá
+                                            <br>• Reemplaza adjetivos ambiguos ("bueno", "satisfactorio", "adecuado")
+                                            por valores numéricos o criterios verificables
+                                            <br>• Define escalas y criterios de evaluación cuando se trabaje con
+                                            percepciones o calificaciones
+                                            <br><br>
+                                            <strong>Componentes de un KPI bien especificado:</strong>
+                                            <br>• Métrica base: El valor que se mide (ej: tiempo de respuesta, número de ventas, tasa de error)
+                                            <br>• Fórmula de cálculo: Cómo se obtiene el número (ej: promedio, suma, ratio)s
+                                            <br>• Fuente de datos: De dónde proviene la información (sistema, encuesta, registro manual)
+                                            <br>• Frecuencia: Con qué periodicidad se mide y reporta
+                                        </div>
+
+
+
+
                                         <div class="example">
                                             <strong>Ejemplo:</strong> En lugar de "Mejorar la satisfacción del cliente",
-                                            defina
-                                            "Índice de satisfacción del cliente (escala 1-10) basado en encuestas
+                                            definir
+                                            "Aumentar la satisfacción del cliente medida en una escala 1-10, basada en
+                                            encuestas
                                             post-servicio".
                                         </div>
                                     </div>
 
-                                    <div class="recommendation mt-3">
+                                    <div class="recommendation mt-4">
+                                        <span class="status-ok"> ✓ </span>
                                         <h4>Práctico y Eficiente en su Medición</h4>
-                                        <p>Un indicador, por más relevante que sea conceptualmente, fracasará si su
-                                            método de medición es excesivamente complejo, costoso o consume recursos
-                                            desproporcionados. La complejidad en la recolección de datos atenta contra
+                                        <p>Un indicador fracasará si su método de medición es excesivamente complejo,
+                                            costoso o consume recursos
+                                            desproporcionados, aunque sea muy relevante conceptualmente. La complejidad
+                                            en la recolección de datos atenta contra
                                             la eficiencia del sistema y desmotiva a los responsables.</p>
                                         <div class="alert">
                                             <span class="alert-icon">⚠️</span>
@@ -498,8 +619,8 @@
                                             telefónico, con posibilidad de segmentar por tipo de consulta solo cuando
                                             sea necesario profundizar.
                                         </div>
-                                        <div class="key-points">
-                                            <h4>Consecuencias de indicadores impracticables:</h4>
+                                        <div class="key-points mt-3">
+                                            <strong>Consecuencias de indicadores impracticables:</strong>
                                             <p>Los responsables evitan actualizar la información o la postergan. Se
                                                 generan datos poco confiables por mediciones apresuradas. Se crea
                                                 resistencia al sistema de gestión de KPIs. El costo de medición supera
@@ -508,7 +629,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="recommendation mt-3">
+                                    <div class="recommendation mt-4">
+                                        <span class="status-ok"> ✓ </span>
                                         <h4>Verificable y Objetivo</h4>
                                         <p>Los datos de los indicadores deben provenir de fuentes verificables y
                                             objetivas, no de estimaciones personales o percepciones subjetivas. La
@@ -527,6 +649,7 @@
                                             <br>• Datos que solo una persona conoce y no pueden ser validados
                                             <br>• Información que cambia según quién la reporte
                                         </div>
+
                                         <div class="alert">
                                             <span class="alert-icon">⚠️</span>
                                             <strong>Principio de auditoría:</strong> Cualquier persona con acceso a las
@@ -534,8 +657,8 @@
                                             obtienen valores diferentes para el mismo indicador en el mismo período, el
                                             método de medición tiene un problema.
                                         </div>
-                                        <div class="key-points">
-                                            <h4>Beneficios de la verificabilidad:</h4>
+                                        <div class="key-points mt-3">
+                                            <strong>Beneficios de la verificabilidad:</strong>
                                             <p>Elimina conflictos sobre la validez de los resultados. Permite auditorías
                                                 y revisiones objetivas. Genera confianza en el sistema entre todos los
                                                 niveles. Facilita la identificación de problemas reales versus errores
@@ -544,25 +667,27 @@
                                         </div>
                                     </div>
 
-                                    <div class="recommendation mt-3">
+                                    <div class="recommendation mt-4">
+                                        <span class="status-ok"> ✓ </span>
                                         <h4>Automatización de la Medición</h4>
-                                        <p>Siempre que sea posible, privilegie indicadores que puedan obtenerse de forma
+                                        <p>Privilegiar indicadores que puedan obtenerse de forma
                                             automática o semiautomática. La automatización reduce errores, ahorra tiempo
                                             y aumenta la frecuencia con la que puede actualizar la información.</p>
                                         <div class="example">
                                             <strong>Niveles de automatización:</strong>
-                                            <br><br>
-                                            <strong>Ideal - Totalmente automático:</strong> El sistema extrae datos
-                                            directamente de las fuentes (bases de datos, APIs) sin intervención humana.
-                                            <br><br>
-                                            <strong>Bueno - Semiautomático:</strong> Los datos se exportan de sistemas
-                                            existentes y se cargan con mínima manipulación.
-                                            <br><br>
-                                            <strong>Aceptable - Manual estructurado:</strong> Se requiere recopilación
-                                            manual pero siguiendo un procedimiento claro y documentado.
-                                            <br><br>
-                                            <strong>Problemático - Manual sin estructura:</strong> Requiere
-                                            interpretación, búsqueda en múltiples lugares o procesamiento complejo.
+                                            <ul class="kpi-list">
+                                                <li><strong>Ideal</strong> – Totalmente automático: El sistema extrae
+                                                    datos directamente de las fuentes (bases de datos, APIs) sin
+                                                    intervención humana.</li>
+                                                <li><strong>Bueno</strong> – Semiautomático: Los datos se exportan de
+                                                    sistemas existentes y se cargan con mínima manipulación.</li>
+                                                <li><strong>Aceptable</strong> – Manual estructurado: Se requiere
+                                                    recopilación manual pero siguiendo un procedimiento claro y
+                                                    documentado.</li>
+                                                <li><strong>Problemático</strong> – Manual sin estructura: Requiere
+                                                    interpretación, búsqueda en múltiples lugares o procesamiento
+                                                    complejo.</li>
+                                            </ul>
                                         </div>
                                         <div class="alert">
                                             <span class="alert-icon">⚠️</span>
@@ -573,547 +698,646 @@
                                         </div>
                                     </div>
 
-                                    <div class="recommendation mt-3">
+                                    <div class="recommendation mt-4">
+                                        <span class="status-ok"> ✓ </span>
                                         <h4>Relevante y Alineado</h4>
-                                        <p>Cada KPI debe estar directamente vinculado a los objetivos estratégicos de la
-                                            organización. Si un indicador no contribuye a la toma de decisiones
-                                            importantes,
-                                            probablemente no debería medirse.</p>
+                                        <p>Un indicador solo tiene valor si contribuye directamente a las decisiones y
+                                            prioridades estratégicas de la organización. La relevancia y alineación
+                                            aseguran que los esfuerzos de medición generen impacto real.</p>
+
+                                        <strong>Conexión estratégica clara:</strong>
+                                        <ul>
+                                            <li>Cada KPI debe responder a la pregunta: "¿Cómo contribuye este indicador
+                                                al logro de nuestros objetivos estratégicos?"</li>
+                                            <li>Debe existir una línea directa entre el indicador y las metas de nivel
+                                                corporativo, de unidad de negocio o departamentales</li>
+                                            <li>Los indicadores deben reflejar las prioridades actuales de la
+                                                organización, no solo lo que siempre se ha medido</li>
+                                        </ul>
+
+                                        <strong>Impacto en la toma de decisiones:</strong>
+                                        <ul>
+                                            <li>El indicador debe proporcionar información accionable que influya en
+                                                decisiones concretas</li>
+                                            <li>Si el resultado del KPI no cambia ninguna acción o estrategia, carece de
+                                                utilidad práctica</li>
+                                            <li>Debe ayudar a identificar oportunidades de mejora o señalar problemas
+                                                que requieren atención</li>
+                                        </ul>
+
+                                        <strong>Relevancia contextual:</strong>
+                                        <ul>
+                                            <li>Los KPIs deben adaptarse al contexto específico del negocio, industria y
+                                                etapa de madurez organizacional</li>
+                                            <li>Lo que es relevante para una startup en crecimiento puede no serlo para
+                                                una empresa consolidada</li>
+                                            <li>La relevancia debe revisarse periódicamente, ya que las prioridades
+                                                estratégicas evolucionan</li>
+                                        </ul>
+
+                                        <strong>El costo de medir lo irrelevante:</strong>
+                                        <ul>
+                                            <li>Cada indicador consume recursos: tiempo de recolección, análisis,
+                                                reporting y discusión</li>
+                                            <li>Indicadores irrelevantes generan "ruido" que distrae de lo
+                                                verdaderamente importante</li>
+                                            <li>Pueden crear una falsa sensación de control sin aportar valor real</li>
+                                            <li>Saturan los reportes gerenciales dificultando la identificación de
+                                                información crítica</li>
+                                        </ul>
+
+                                        <!-- <div class="highlight">
+                                            <h3>Criterio de validación:</h3>
+                                            <p>Ante la pregunta: "Si este indicador mejora o empeora significativamente,
+                                                ¿se tomaría alguna decisión diferente?" Si la respuesta es no, o se 
+                                                desconoce qué acción específica se tomaría, ese indicador
+                                                probablemente no es relevante y debería eliminarse o reemplazarse.</p>
+                                        </div> -->
+
                                         <div class="alert">
                                             <span class="alert-icon">⚠️</span>
-                                            <strong>Atención:</strong> Medir por medir genera sobrecarga de información
-                                            sin
-                                            valor
-                                            agregado.
+                                            <strong>Criterio de validación:</strong>
+                                            Si una variación significativa, favorable o desfavorable, en el KPI no
+                                            genera una acción específica o se desconoce qué medidas tomar, probablemente
+                                            ese indicador no es relevante y debería ser eliminado o reemplazado.
                                         </div>
+
+
+                                        <div class="key-points mt-3">
+                                            <strong>Alineación vertical y horizontal:</strong>
+                                            <ul>
+                                                <li><strong>Vertical:</strong> Los KPIs operativos deben conectarse con
+                                                    indicadores tácticos, y estos con los estratégicos, creando una
+                                                    cascada
+                                                    coherente</li>
+                                                <li><strong>Horizontal:</strong> Los indicadores de diferentes áreas
+                                                    deben
+                                                    complementarse sin contradecirse, evitando optimizaciones locales
+                                                    que
+                                                    perjudiquen el resultado global</li>
+                                            </ul>
+                                        </div>
+
+
                                     </div>
 
-                                    <div class="recommendation mt-3 ml-1">
+                                    <div class="recommendation mt-4">
+                                        <span class="status-ok"> ✓ </span>
                                         <h4>Alcanzable pero Desafiante</h4>
-                                        <p>Los objetivos deben ser realistas considerando los recursos disponibles, pero
-                                            suficientemente ambiciosos para impulsar la mejora continua.</p>
-                                        <div class="key-points">
-                                            <h4>Punto Clave:</h4>
-                                            <p>Un objetivo inalcanzable desmotiva al equipo; uno demasiado fácil no
-                                                genera
-                                                progreso.
+                                        <p>Los indicadores efectivos deben encontrar el equilibrio óptimo entre lo
+                                            posible y lo aspiracional. Un objetivo bien diseñado se caracteriza por:</p>
+
+                                        <strong>Realismo fundamentado en datos:</strong>
+                                        <ul>
+                                            <li>Basarse en el desempeño histórico y capacidades actuales de la
+                                                organización</li>
+                                            <li>Considerar los recursos realmente disponibles (presupuesto, personal,
+                                                tecnología, tiempo)</li>
+                                            <li>Tomar en cuenta las condiciones del mercado y el contexto operativo</li>
+                                            <li>Incorporar benchmarks de la industria como referencia</li>
+                                        </ul>
+
+                                        <strong>Ambición estratégica:</strong>
+                                        <ul>
+                                            <li>Requerir esfuerzo deliberado y mejora de procesos para alcanzarse</li>
+                                            <li>Impulsar la innovación y el pensamiento creativo en los equipos</li>
+                                            <li>Alinear con la visión de crecimiento a mediano y largo plazo</li>
+                                            <li>Generar un sentido de propósito y motivación en el equipo</li>
+                                        </ul>
+
+                                        <div class="alert2">
+                                            <span class="alert2-icon">⚠️</span>
+
+                                            <div class="alert2-text">
+                                                <div>
+                                                    <strong>Objetivos demasiado fáciles</strong> generan complacencia,
+                                                    subutilizan el potencial del equipo y no impulsan el crecimiento
+                                                    organizacional
+                                                </div>
+                                                <div style="margin-top: 6px;">
+                                                    <strong>Objetivos inalcanzables</strong> provocan frustración,
+                                                    desmotivación y eventualmente el abandono del esfuerzo
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="key-points mt-3">
+                                            <strong>Punto Clave:</strong>
+                                            <p>Un buen objetivo debería tener entre un 60-80% de probabilidad de
+                                                cumplirse
+                                                con esfuerzo sostenido y trabajo inteligente. Debe sentirse como un
+                                                desarío progresivo que está justo más allá de la zona de
+                                                confort, pero no en el terreno de lo imposible.
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="section">
-                                <div class="kpi-card" id="sec-2" data-kpi="2">
-                                    <h2>2. Evaluación y Ajuste de Objetivos</h2>
+                        <div class="section">
+                            <div class="kpi-card" id="sec-2" data-kpi="2">
+                                <h2>2. Evaluación y Ajuste de Objetivos</h2>
 
-                                    <div class="recommendation mt-3">
-                                        <h4>Indicadores Constantemente en Máximo</h4>
-                                        <p>Si un indicador permanece consistentemente en su valor máximo u objetivo
-                                            durante
-                                            períodos
-                                            prolongados, esto puede señalar que:</p>
-                                        <div class="example">
-                                            <strong>Señal de alerta:</strong> El objetivo está por debajo del potencial
-                                            real
-                                            del
-                                            proceso o equipo. Es momento de recalibrar y establecer metas más ambiciosas
+                                <div class="recommendation mt-3">
+                                    <h4>Indicadores Constantemente en Máximo</h4>
+                                    <p>Si un indicador permanece consistentemente en su valor máximo u objetivo
+                                        durante
+                                        períodos
+                                        prolongados, esto puede señalar que:</p>
+                                    <div class="example">
+                                        <strong>Señal de alerta:</strong> El objetivo está por debajo del potencial
+                                        real
+                                        del
+                                        proceso o equipo. Es momento de recalibrar y establecer metas más ambiciosas
+                                        que
+                                        impulsen la mejora continua.
+                                    </div>
+                                </div>
+                                <div class="recommendation mt-3">
+                                    <div class="key-points">
+                                        <h4>Acción Recomendada:</h4>
+                                        <p>Analice el histórico, identifique el nuevo potencial y ajuste el
+                                            objetivo
+                                            gradualmente (incrementos del 10-20% son razonables para empezar).
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Indicadores Persistentemente Bajos</h4>
+                                    <p>Cuando un KPI muestra resultados consistentemente por debajo del objetivo
+                                        durante
+                                        múltiples períodos, requiere un análisis profundo:</p>
+                                    <div class="example">
+                                        <strong>Posibles causas:</strong>
+                                        <br>• El objetivo es irrealista dado el contexto actual
+                                        <br>• Existen factores externos que impiden alcanzarlo
+                                        <br>• Los recursos asignados son insuficientes
+                                        <br>• El proceso medido requiere rediseño o mejoras estructurales
+                                    </div>
+                                    <div class="alert">
+                                        <span class="alert-icon">⚠️</span>
+                                        <strong>Importante:</strong> No ajuste objetivos a la baja sin antes
+                                        analizar
+                                        las
+                                        causas
+                                        raíz del bajo desempeño. Primero identifique y elimine obstáculos.
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Variabilidad Excesiva</h4>
+                                    <p>Oscilaciones bruscas y frecuentes en los resultados pueden indicar:</p>
+                                    <div class="example">
+                                        <strong>Diagnóstico:</strong> Falta de estabilidad en el proceso,
+                                        influencia de factores externos no controlados, o que el indicador está midiendo
+                                        algo demasiado
+                                        volátil para ser útil en la toma de decisiones.
+                                    </div>
+                                    <div class="key-points">
+                                        <strong>Solución:</strong>
+                                        <p>Considere promedios móviles, cambie la frecuencia de medición, o
+                                            segmente el indicador para identificar las fuentes de variabilidad.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="kpi-card" id="sec-3" data-kpi="3">
+                                <h2>3. Frecuencia y Temporalidad de la Medición</h2>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Alineación con el Ciclo del Proceso</h4>
+                                    <p>La frecuencia de medición debe corresponder a la naturaleza del proceso
+                                        evaluado.
+                                        Medir
+                                        con demasiada frecuencia genera ruido; medir con poca frecuencia retrasa
+                                        las
+                                        acciones
+                                        correctivas.</p>
+                                    <div class="example">
+                                        <strong>Ejemplos:</strong>
+                                        <br>• Producción diaria → medición diaria o semanal
+                                        <br>• Satisfacción del cliente → medición mensual o trimestral
+                                        <br>• Indicadores estratégicos → revisión trimestral o anual
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Período de Evaluación Suficiente</h4>
+                                    <p>Antes de concluir que un indicador es exitoso o problemático, asegúrese
+                                        de tener datos de un período representativo que considere ciclos estacionales,
+                                        variaciones
+                                        normales del r455555555negocio y tiempo suficiente para que las acciones
+                                        implementadas generen
+                                        efecto.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="kpi-card" id="sec-4" data-kpi="4">
+                                <h2>4. Contexto y Factores Externos</h2>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Considere el Entorno</h4>
+                                    <p>Los indicadores no operan en el vacío. Cambios en el mercado,
+                                        regulaciones,
+                                        competencia,
+                                        economía o tecnología pueden hacer que un objetivo previamente razonable
+                                        se
+                                        vuelva
+                                        inalcanzable o, por el contrario, demasiado conservador.</p>
+                                    <div class="alert">
+                                        <span class="alert-icon">⚠️</span>
+                                        <strong>Recomendación:</strong> Revise periódicamente (al menos
+                                        anualmente)
+                                        si
+                                        el
+                                        contexto ha cambiado significativamente y ajuste los KPIs en
+                                        consecuencia.
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Benchmarking</h4>
+                                    <p>Compare sus indicadores con estándares de la industria o mejores
+                                        prácticas
+                                        del
+                                        sector.
+                                        Esto ayuda a validar si sus objetivos son apropiados y a identificar
+                                        oportunidades
+                                        de
+                                        mejora.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="kpi-card" id="sec-5" data-kpi="5">
+                                <h2 id="sec-5">5. Balance y Perspectiva Integral</h2>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Evite Optimización Parcial</h4>
+                                    <p>Mejorar un indicador a costa de otros puede ser contraproducente.
+                                        Mantenga un
+                                        balance
+                                        entre diferentes dimensiones del desempeño.</p>
+                                    <div class="example">
+                                        <strong>Ejemplo de conflicto:</strong> Aumentar la velocidad de
+                                        producción
+                                        podría
+                                        reducir la calidad. Aumentar las ventas sin considerar la rentabilidad
+                                        puede
+                                        generar
+                                        pérdidas.
+                                    </div>
+                                    <div class="key-points">
+                                        <h4>Enfoque Balanceado:</h4>
+                                        <p>Utilice un conjunto equilibrado de indicadores que contemplen
+                                            calidad,
+                                            eficiencia,
+                                            satisfacción del cliente, rentabilidad y desarrollo del personal.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Indicadores Líderes y Rezagados</h4>
+                                    <p>Combine indicadores que midan resultados finales (rezagados) con
+                                        indicadores
+                                        que
+                                        anticipen el desempeño futuro (líderes).</p>
+                                    <div class="example">
+                                        <strong>Ejemplo:</strong>
+                                        <br>• Rezagado: Ventas mensuales totales
+                                        <br>• Líder: Número de prospectos calificados, tasa de conversión en
+                                        etapas
+                                        tempranas
+                                        del embudo
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="kpi-card" id="sec-6" data-kpi="6">
+                                <h2>6. Comunicación y Uso de los KPIs</h2>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Claridad en la Definición</h4>
+                                    <p>Todos los involucrados deben comprender exactamente qué se está midiendo,
+                                        cómo se
+                                        calcula
+                                        y por qué es importante. Documente la fórmula de cálculo, fuente de
+                                        datos y
+                                        frecuencia.
+                                    </p>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Orientación a la Acción</h4>
+                                    <p>Los KPIs deben generar acciones concretas. Si un indicador muestra
+                                        resultados
+                                        pero
+                                        nadie
+                                        toma decisiones basándose en él, no está cumpliendo su propósito.</p>
+                                    <div class="key-points">
+                                        <h4>Pregunta Clave:</h4>
+                                        <p>Para cada KPI pregúntese: "¿Qué haríamos diferente si este indicador
+                                            mejora o
+                                            empeora?"</p>
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Revisión Periódica del Sistema</h4>
+                                    <p>Los KPIs no son estáticos. Realice revisiones periódicas del sistema
+                                        completo de
+                                        indicadores para eliminar los que ya no aportan valor, ajustar objetivos
+                                        y
+                                        agregar
+                                        nuevos indicadores según evolucionen las prioridades estratégicas.</p>
+                                    <div class="alert">
+                                        <span class="alert-icon">⚠️</span>
+                                        <strong>Recomendación:</strong> Programe revisiones trimestrales de
+                                        desempeño y
+                                        revisiones anuales del sistema completo de KPIs.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="kpi-card" id="sec-7" data-kpi="7">
+                                <h2 id="sec-7">7. Ponderación y Jerarquía de Indicadores</h2>
+
+                                <div class="recommendation mt-3">
+                                    <h4>El Concepto de Importancia Relativa</h4>
+                                    <p>No todos los indicadores tienen el mismo peso en la evaluación del
+                                        desempeño
+                                        organizacional. Asignar porcentajes de importancia o relevancia permite
+                                        reflejar
+                                        las prioridades estratégicas y obtener una visión más precisa del
+                                        rendimiento
+                                        global.</p>
+                                    <div class="key-points">
+                                        <h4>Fundamento:</h4>
+                                        <p>La ponderación evita que indicadores secundarios distorsionen la
+                                            percepción
+                                            del desempeño real, permitiendo que los factores críticos tengan el
+                                            peso
                                             que
-                                            impulsen la mejora continua.
-                                        </div>
+                                            merecen en la evaluación.</p>
                                     </div>
-                                    <div class="recommendation mt-3">
-                                        <div class="key-points">
-                                            <h4>Acción Recomendada:</h4>
-                                            <p>Analice el histórico, identifique el nuevo potencial y ajuste el
-                                                objetivo
-                                                gradualmente (incrementos del 10-20% son razonables para empezar).
-                                            </p>
-                                        </div>
-                                    </div>
+                                </div>
 
-                                    <div class="recommendation mt-3">
-                                        <h4>Indicadores Persistentemente Bajos</h4>
-                                        <p>Cuando un KPI muestra resultados consistentemente por debajo del objetivo
-                                            durante
-                                            múltiples períodos, requiere un análisis profundo:</p>
-                                        <div class="example">
-                                            <strong>Posibles causas:</strong>
-                                            <br>• El objetivo es irrealista dado el contexto actual
-                                            <br>• Existen factores externos que impiden alcanzarlo
-                                            <br>• Los recursos asignados son insuficientes
-                                            <br>• El proceso medido requiere rediseño o mejoras estructurales
-                                        </div>
-                                        <div class="alert">
-                                            <span class="alert-icon">⚠️</span>
-                                            <strong>Importante:</strong> No ajuste objetivos a la baja sin antes
-                                            analizar
+                                <div class="recommendation mt-3">
+                                    <h4>Ponderación Dentro de Grupos</h4>
+                                    <p>Al definir múltiples indicadores dentro de un mismo grupo o categoría, es
+                                        fundamental establecer qué porcentaje de importancia tiene cada uno. La
+                                        suma
+                                        de
+                                        todos los indicadores de un grupo debe totalizar 100%.</p>
+                                    <div class="example">
+                                        <strong>Ejemplo - Grupo "Calidad de Producción":</strong>
+                                        <br>• Tasa de productos defectuosos: 40%
+                                        <br>• Tiempo promedio de retrabajo: 25%
+                                        <br>• Cumplimiento de especificaciones: 35%
+                                        <br><em>Total del grupo: 100%</em>
+                                    </div>
+                                    <div class="alert">
+                                        <span class="alert-icon">⚠️</span>
+                                        <strong>Criterio de asignación:</strong> Base la ponderación en el
+                                        impacto
+                                        real
+                                        de cada indicador sobre los objetivos del grupo. Los indicadores con
+                                        mayor
+                                        influencia en el resultado final deben tener mayor peso.
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Jerarquía de Grupos: Importancia Global</h4>
+                                    <p>Cuando los grupos de indicadores forman parte de una estructura
+                                        jerárquica
+                                        superior, cada grupo debe tener asignado un porcentaje que represente su
+                                        contribución al desempeño global de la organización.</p>
+                                    <div class="example">
+                                        <strong>Ejemplo - Estructura Organizacional:</strong>
+                                        <br><br><strong>Nivel Global (100%):</strong>
+                                        <br>• Grupo "Operaciones": 35%
+                                        <br>• Grupo "Finanzas": 30%
+                                        <br>• Grupo "Clientes": 25%
+                                        <br>• Grupo "Innovación": 10%
+                                        <br><br>
+                                        <strong>Dentro de "Operaciones" (35% del total):</strong>
+                                        <br>• Subgrupo "Producción": 60% (= 21% del global)
+                                        <br>• Subgrupo "Logística": 40% (= 14% del global)
+                                    </div>
+                                    <div class="key-points">
+                                        <h4>Cálculo en Cascada:</h4>
+                                        <p>El peso final de cada indicador se obtiene multiplicando su
+                                            porcentaje
+                                            dentro
+                                            del grupo por el porcentaje del grupo en el nivel superior, y así
+                                            sucesivamente hasta llegar al nivel global.</p>
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Criterios para Establecer Ponderaciones</h4>
+                                    <p>La asignación de porcentajes de importancia no debe ser arbitraria.
+                                        Considere
+                                        los
+                                        siguientes criterios:</p>
+                                    <div class="example">
+                                        <strong>Factores a evaluar:</strong>
+                                        <br>• <strong>Impacto estratégico:</strong> ¿Qué tan crítico es este
+                                        indicador/grupo para los objetivos estratégicos?
+                                        <br>• <strong>Impacto financiero:</strong> ¿Qué peso tiene en los
+                                        resultados
+                                        económicos?
+                                        <br>• <strong>Urgencia actual:</strong> ¿Es una prioridad inmediata de
+                                        la
+                                        organización?
+                                        <br>• <strong>Capacidad de control:</strong> ¿Qué tanto puede la
+                                        organización
+                                        influir en este resultado?
+                                        <br>• <strong>Ventaja competitiva:</strong> ¿Es un diferenciador clave
+                                        frente a
+                                        la competencia?
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Revisión Periódica de Ponderaciones</h4>
+                                    <p>Las prioridades organizacionales cambian con el tiempo. Lo que hoy es
+                                        crítico
+                                        puede ser menos relevante mañana, y viceversa.</p>
+                                    <div class="alert">
+                                        <span class="alert-icon">⚠️</span>
+                                        <strong>Recomendación:</strong> Revise las ponderaciones al menos dos
+                                        veces
+                                        al
+                                        año o cuando haya cambios significativos en la estrategia, el mercado o
+                                        el
+                                        contexto competitivo.
+                                    </div>
+                                    <div class="example">
+                                        <strong>Casos que justifican ajustar ponderaciones:</strong>
+                                        <br>• Lanzamiento de nuevos productos o servicios
+                                        <br>• Cambios en la estrategia corporativa
+                                        <br>• Entrada a nuevos mercados
+                                        <br>• Crisis o situaciones excepcionales
+                                        <br>• Logro sostenido de objetivos en un área (puede reducirse su peso)
+                                        <br>• Identificación de áreas problemáticas que requieren mayor foco
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Beneficios del Sistema de Ponderación</h4>
+                                    <p>Un sistema bien estructurado de ponderación jerárquica proporciona
+                                        múltiples
+                                        ventajas:</p>
+                                    <div class="key-points">
+                                        <h4>Ventajas clave:</h4>
+                                        <p><strong>Claridad estratégica:</strong> Comunica explícitamente qué es
+                                            importante para la organización. <strong>Evaluación
+                                                objetiva:</strong>
+                                            Permite calcular índices consolidados de desempeño que reflejan la
+                                            realidad
+                                            del negocio. <strong>Toma de decisiones informada:</strong> Facilita
+                                            identificar dónde concentrar recursos y esfuerzos.
+                                            <strong>Alineación
+                                                organizacional:</strong> Asegura que todos los niveles
+                                            comprendan
                                             las
-                                            causas
-                                            raíz del bajo desempeño. Primero identifique y elimine obstáculos.
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Variabilidad Excesiva</h4>
-                                        <p>Oscilaciones bruscas y frecuentes en los resultados pueden indicar:</p>
-                                        <div class="example">
-                                            <strong>Diagnóstico:</strong> Falta de estabilidad en el proceso,
-                                            influencia
-                                            de
-                                            factores
-                                            externos no controlados, o que el indicador está midiendo algo demasiado
-                                            volátil
-                                            para
-                                            ser útil en la toma de decisiones.
-                                        </div>
-                                        <div class="key-points">
-                                            <strong>Solución:</strong>
-                                            <p>Considere promedios móviles, cambie la frecuencia de medición, o
-                                                segmente
-                                                el
-                                                indicador para identificar las fuentes de variabilidad.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="section">
-                                <div class="kpi-card" id="sec-3" data-kpi="3">
-                                    <h2>3. Frecuencia y Temporalidad de la Medición</h2>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Alineación con el Ciclo del Proceso</h4>
-                                        <p>La frecuencia de medición debe corresponder a la naturaleza del proceso
-                                            evaluado.
-                                            Medir
-                                            con demasiada frecuencia genera ruido; medir con poca frecuencia retrasa
-                                            las
-                                            acciones
-                                            correctivas.</p>
-                                        <div class="example">
-                                            <strong>Ejemplos:</strong>
-                                            <br>• Producción diaria → medición diaria o semanal
-                                            <br>• Satisfacción del cliente → medición mensual o trimestral
-                                            <br>• Indicadores estratégicos → revisión trimestral o anual
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Período de Evaluación Suficiente</h4>
-                                        <p>Antes de concluir que un indicador es exitoso o problemático, asegúrese
-                                            de
-                                            tener
-                                            datos de
-                                            un período representativo que considere ciclos estacionales, variaciones
-                                            normales
-                                            del
-                                            negocio y tiempo suficiente para que las acciones implementadas generen
-                                            efecto.
+                                            prioridades corporativas. <strong>Flexibilidad:</strong> Permite
+                                            adaptar
+                                            rápidamente el sistema de medición a nuevas realidades.
                                         </p>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="section">
-                                <div class="kpi-card" id="sec-4" data-kpi="4">
-                                    <h2>4. Contexto y Factores Externos</h2>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Considere el Entorno</h4>
-                                        <p>Los indicadores no operan en el vacío. Cambios en el mercado,
-                                            regulaciones,
-                                            competencia,
-                                            economía o tecnología pueden hacer que un objetivo previamente razonable
-                                            se
-                                            vuelva
-                                            inalcanzable o, por el contrario, demasiado conservador.</p>
-                                        <div class="alert">
-                                            <span class="alert-icon">⚠️</span>
-                                            <strong>Recomendación:</strong> Revise periódicamente (al menos
-                                            anualmente)
-                                            si
-                                            el
-                                            contexto ha cambiado significativamente y ajuste los KPIs en
-                                            consecuencia.
-                                        </div>
+                                <div class="recommendation mt-3">
+                                    <h4>Equilibrio Entre Flexibilidad y Estabilidad</h4>
+                                    <p>Si bien es importante ajustar las ponderaciones cuando sea necesario,
+                                        cambios
+                                        demasiado frecuentes pueden generar confusión y dificultar el
+                                        seguimiento
+                                        histórico del desempeño.</p>
+                                    <div class="alert">
+                                        <span class="alert-icon">⚠️</span>
+                                        <strong>Mejor práctica:</strong> Establezca un calendario de revisión
+                                        formal
+                                        (semestral o anual) y evite cambios ad-hoc excepto en situaciones
+                                        excepcionales
+                                        debidamente documentadas. Mantenga un registro histórico de los cambios
+                                        en
+                                        ponderaciones para poder interpretar correctamente tendencias pasadas.
                                     </div>
+                                </div>
 
-                                    <div class="recommendation mt-3">
-                                        <h4>Benchmarking</h4>
-                                        <p>Compare sus indicadores con estándares de la industria o mejores
-                                            prácticas
-                                            del
-                                            sector.
-                                            Esto ayuda a validar si sus objetivos son apropiados y a identificar
-                                            oportunidades
-                                            de
-                                            mejora.</p>
+                                <div class="recommendation mt-3">
+                                    <h4>Visualización de la Contribución</h4>
+                                    <p>El sistema de ponderación jerárquica permite generar visualizaciones
+                                        valiosas
+                                        que
+                                        muestran cómo cada área, grupo o indicador individual contribuye al
+                                        desempeño
+                                        global de la organización.</p>
+                                    <div class="example">
+                                        <strong>Análisis posibles:</strong>
+                                        <br>• Identificar qué indicadores tienen mayor impacto en el resultado
+                                        global
+                                        <br>• Detectar grupos que están por debajo de su potencial ponderado
+                                        <br>• Visualizar el efecto de mejoras en indicadores específicos sobre
+                                        el
+                                        índice
+                                        general
+                                        <br>• Simular escenarios: "¿Qué pasaría si mejoramos X indicador en un
+                                        10%?"
+                                    </div>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Participación en la Definición de Ponderaciones</h4>
+                                    <p>La asignación de ponderaciones no debe ser una decisión unilateral de la
+                                        alta
+                                        dirección. Involucre a los responsables de cada área en la discusión
+                                        para
+                                        asegurar que las ponderaciones reflejen tanto la visión estratégica como
+                                        la
+                                        realidad operativa.</p>
+                                    <div class="key-points">
+                                        <h4>Proceso Recomendado:</h4>
+                                        <p>La dirección establece las ponderaciones de grupos principales según
+                                            prioridades estratégicas. Los responsables de cada grupo proponen la
+                                            distribución interna entre sus indicadores. Se realiza una
+                                            validación
+                                            cruzada para asegurar coherencia. Se documenta la justificación de
+                                            cada
+                                            ponderación para futuras referencias.</p>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="section">
-                                <div class="kpi-card" id="sec-5" data-kpi="5">
-                                    <h2 id="sec-5">5. Balance y Perspectiva Integral</h2>
+                        <div class="section">
+                            <div class="kpi-card" id="sec-8" data-kpi="8">
+                                <h2>8. Señales de Alerta Comunes</h2>
 
-                                    <div class="recommendation mt-3">
-                                        <h4>Evite Optimización Parcial</h4>
-                                        <p>Mejorar un indicador a costa de otros puede ser contraproducente.
-                                            Mantenga un
-                                            balance
-                                            entre diferentes dimensiones del desempeño.</p>
-                                        <div class="example">
-                                            <strong>Ejemplo de conflicto:</strong> Aumentar la velocidad de
-                                            producción
-                                            podría
-                                            reducir la calidad. Aumentar las ventas sin considerar la rentabilidad
-                                            puede
-                                            generar
-                                            pérdidas.
-                                        </div>
-                                        <div class="key-points">
-                                            <h4>Enfoque Balanceado:</h4>
-                                            <p>Utilice un conjunto equilibrado de indicadores que contemplen
-                                                calidad,
-                                                eficiencia,
-                                                satisfacción del cliente, rentabilidad y desarrollo del personal.
-                                            </p>
-                                        </div>
-                                    </div>
+                                <div class="recommendation mt-3">
+                                    <h4>Demasiados Indicadores</h4>
+                                    <p>Tener más de 10-15 KPIs principales puede diluir el foco y dificultar la
+                                        gestión
+                                        efectiva. Priorice los indicadores que realmente impactan en los
+                                        objetivos
+                                        críticos.
+                                    </p>
+                                </div>
 
-                                    <div class="recommendation mt-3">
-                                        <h4>Indicadores Líderes y Rezagados</h4>
-                                        <p>Combine indicadores que midan resultados finales (rezagados) con
-                                            indicadores
-                                            que
-                                            anticipen el desempeño futuro (líderes).</p>
-                                        <div class="example">
-                                            <strong>Ejemplo:</strong>
-                                            <br>• Rezagado: Ventas mensuales totales
-                                            <br>• Líder: Número de prospectos calificados, tasa de conversión en
-                                            etapas
-                                            tempranas
-                                            del embudo
-                                        </div>
-                                    </div>
+                                <div class="recommendation mt-3">
+                                    <h4>Indicadores sin Responsable</h4>
+                                    <p>Cada KPI debe tener un responsable claro que pueda influir en su
+                                        resultado y
+                                        rendir
+                                        cuentas. Sin ownership, los indicadores se vuelven meramente
+                                        informativos
+                                        sin
+                                        impulsar
+                                        cambios.</p>
+                                </div>
+
+                                <div class="recommendation mt-3">
+                                    <h4>Datos de Baja Calidad</h4>
+                                    <p>Si los datos son inconsistentes, incompletos o poco confiables, las
+                                        decisiones
+                                        basadas en
+                                        ellos serán erróneas. Invierta en asegurar la calidad de los datos antes
+                                        que
+                                        en
+                                        sofisticar los análisis.</p>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="section">
-                                <div class="kpi-card" id="sec-6" data-kpi="6">
-                                    <h2>6. Comunicación y Uso de los KPIs</h2>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Claridad en la Definición</h4>
-                                        <p>Todos los involucrados deben comprender exactamente qué se está midiendo,
-                                            cómo se
-                                            calcula
-                                            y por qué es importante. Documente la fórmula de cálculo, fuente de
-                                            datos y
-                                            frecuencia.
-                                        </p>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Orientación a la Acción</h4>
-                                        <p>Los KPIs deben generar acciones concretas. Si un indicador muestra
-                                            resultados
-                                            pero
-                                            nadie
-                                            toma decisiones basándose en él, no está cumpliendo su propósito.</p>
-                                        <div class="key-points">
-                                            <h4>Pregunta Clave:</h4>
-                                            <p>Para cada KPI pregúntese: "¿Qué haríamos diferente si este indicador
-                                                mejora o
-                                                empeora?"</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Revisión Periódica del Sistema</h4>
-                                        <p>Los KPIs no son estáticos. Realice revisiones periódicas del sistema
-                                            completo de
-                                            indicadores para eliminar los que ya no aportan valor, ajustar objetivos
-                                            y
-                                            agregar
-                                            nuevos indicadores según evolucionen las prioridades estratégicas.</p>
-                                        <div class="alert">
-                                            <span class="alert-icon">⚠️</span>
-                                            <strong>Recomendación:</strong> Programe revisiones trimestrales de
-                                            desempeño y
-                                            revisiones anuales del sistema completo de KPIs.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="section">
-                                <div class="kpi-card" id="sec-7" data-kpi="7">
-                                    <h2 id="sec-7">7. Ponderación y Jerarquía de Indicadores</h2>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>El Concepto de Importancia Relativa</h4>
-                                        <p>No todos los indicadores tienen el mismo peso en la evaluación del
-                                            desempeño
-                                            organizacional. Asignar porcentajes de importancia o relevancia permite
-                                            reflejar
-                                            las prioridades estratégicas y obtener una visión más precisa del
-                                            rendimiento
-                                            global.</p>
-                                        <div class="key-points">
-                                            <h4>Fundamento:</h4>
-                                            <p>La ponderación evita que indicadores secundarios distorsionen la
-                                                percepción
-                                                del desempeño real, permitiendo que los factores críticos tengan el
-                                                peso
-                                                que
-                                                merecen en la evaluación.</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Ponderación Dentro de Grupos</h4>
-                                        <p>Al definir múltiples indicadores dentro de un mismo grupo o categoría, es
-                                            fundamental establecer qué porcentaje de importancia tiene cada uno. La
-                                            suma
-                                            de
-                                            todos los indicadores de un grupo debe totalizar 100%.</p>
-                                        <div class="example">
-                                            <strong>Ejemplo - Grupo "Calidad de Producción":</strong>
-                                            <br>• Tasa de productos defectuosos: 40%
-                                            <br>• Tiempo promedio de retrabajo: 25%
-                                            <br>• Cumplimiento de especificaciones: 35%
-                                            <br><em>Total del grupo: 100%</em>
-                                        </div>
-                                        <div class="alert">
-                                            <span class="alert-icon">⚠️</span>
-                                            <strong>Criterio de asignación:</strong> Base la ponderación en el
-                                            impacto
-                                            real
-                                            de cada indicador sobre los objetivos del grupo. Los indicadores con
-                                            mayor
-                                            influencia en el resultado final deben tener mayor peso.
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Jerarquía de Grupos: Importancia Global</h4>
-                                        <p>Cuando los grupos de indicadores forman parte de una estructura
-                                            jerárquica
-                                            superior, cada grupo debe tener asignado un porcentaje que represente su
-                                            contribución al desempeño global de la organización.</p>
-                                        <div class="example">
-                                            <strong>Ejemplo - Estructura Organizacional:</strong>
-                                            <br><br><strong>Nivel Global (100%):</strong>
-                                            <br>• Grupo "Operaciones": 35%
-                                            <br>• Grupo "Finanzas": 30%
-                                            <br>• Grupo "Clientes": 25%
-                                            <br>• Grupo "Innovación": 10%
-                                            <br><br>
-                                            <strong>Dentro de "Operaciones" (35% del total):</strong>
-                                            <br>• Subgrupo "Producción": 60% (= 21% del global)
-                                            <br>• Subgrupo "Logística": 40% (= 14% del global)
-                                        </div>
-                                        <div class="key-points">
-                                            <h4>Cálculo en Cascada:</h4>
-                                            <p>El peso final de cada indicador se obtiene multiplicando su
-                                                porcentaje
-                                                dentro
-                                                del grupo por el porcentaje del grupo en el nivel superior, y así
-                                                sucesivamente hasta llegar al nivel global.</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Criterios para Establecer Ponderaciones</h4>
-                                        <p>La asignación de porcentajes de importancia no debe ser arbitraria.
-                                            Considere
-                                            los
-                                            siguientes criterios:</p>
-                                        <div class="example">
-                                            <strong>Factores a evaluar:</strong>
-                                            <br>• <strong>Impacto estratégico:</strong> ¿Qué tan crítico es este
-                                            indicador/grupo para los objetivos estratégicos?
-                                            <br>• <strong>Impacto financiero:</strong> ¿Qué peso tiene en los
-                                            resultados
-                                            económicos?
-                                            <br>• <strong>Urgencia actual:</strong> ¿Es una prioridad inmediata de
-                                            la
-                                            organización?
-                                            <br>• <strong>Capacidad de control:</strong> ¿Qué tanto puede la
-                                            organización
-                                            influir en este resultado?
-                                            <br>• <strong>Ventaja competitiva:</strong> ¿Es un diferenciador clave
-                                            frente a
-                                            la competencia?
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Revisión Periódica de Ponderaciones</h4>
-                                        <p>Las prioridades organizacionales cambian con el tiempo. Lo que hoy es
-                                            crítico
-                                            puede ser menos relevante mañana, y viceversa.</p>
-                                        <div class="alert">
-                                            <span class="alert-icon">⚠️</span>
-                                            <strong>Recomendación:</strong> Revise las ponderaciones al menos dos
-                                            veces
-                                            al
-                                            año o cuando haya cambios significativos en la estrategia, el mercado o
-                                            el
-                                            contexto competitivo.
-                                        </div>
-                                        <div class="example">
-                                            <strong>Casos que justifican ajustar ponderaciones:</strong>
-                                            <br>• Lanzamiento de nuevos productos o servicios
-                                            <br>• Cambios en la estrategia corporativa
-                                            <br>• Entrada a nuevos mercados
-                                            <br>• Crisis o situaciones excepcionales
-                                            <br>• Logro sostenido de objetivos en un área (puede reducirse su peso)
-                                            <br>• Identificación de áreas problemáticas que requieren mayor foco
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Beneficios del Sistema de Ponderación</h4>
-                                        <p>Un sistema bien estructurado de ponderación jerárquica proporciona
-                                            múltiples
-                                            ventajas:</p>
-                                        <div class="key-points">
-                                            <h4>Ventajas clave:</h4>
-                                            <p><strong>Claridad estratégica:</strong> Comunica explícitamente qué es
-                                                importante para la organización. <strong>Evaluación
-                                                    objetiva:</strong>
-                                                Permite calcular índices consolidados de desempeño que reflejan la
-                                                realidad
-                                                del negocio. <strong>Toma de decisiones informada:</strong> Facilita
-                                                identificar dónde concentrar recursos y esfuerzos.
-                                                <strong>Alineación
-                                                    organizacional:</strong> Asegura que todos los niveles
-                                                comprendan
-                                                las
-                                                prioridades corporativas. <strong>Flexibilidad:</strong> Permite
-                                                adaptar
-                                                rápidamente el sistema de medición a nuevas realidades.
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Equilibrio Entre Flexibilidad y Estabilidad</h4>
-                                        <p>Si bien es importante ajustar las ponderaciones cuando sea necesario,
-                                            cambios
-                                            demasiado frecuentes pueden generar confusión y dificultar el
-                                            seguimiento
-                                            histórico del desempeño.</p>
-                                        <div class="alert">
-                                            <span class="alert-icon">⚠️</span>
-                                            <strong>Mejor práctica:</strong> Establezca un calendario de revisión
-                                            formal
-                                            (semestral o anual) y evite cambios ad-hoc excepto en situaciones
-                                            excepcionales
-                                            debidamente documentadas. Mantenga un registro histórico de los cambios
-                                            en
-                                            ponderaciones para poder interpretar correctamente tendencias pasadas.
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Visualización de la Contribución</h4>
-                                        <p>El sistema de ponderación jerárquica permite generar visualizaciones
-                                            valiosas
-                                            que
-                                            muestran cómo cada área, grupo o indicador individual contribuye al
-                                            desempeño
-                                            global de la organización.</p>
-                                        <div class="example">
-                                            <strong>Análisis posibles:</strong>
-                                            <br>• Identificar qué indicadores tienen mayor impacto en el resultado
-                                            global
-                                            <br>• Detectar grupos que están por debajo de su potencial ponderado
-                                            <br>• Visualizar el efecto de mejoras en indicadores específicos sobre
-                                            el
-                                            índice
-                                            general
-                                            <br>• Simular escenarios: "¿Qué pasaría si mejoramos X indicador en un
-                                            10%?"
-                                        </div>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Participación en la Definición de Ponderaciones</h4>
-                                        <p>La asignación de ponderaciones no debe ser una decisión unilateral de la
-                                            alta
-                                            dirección. Involucre a los responsables de cada área en la discusión
-                                            para
-                                            asegurar que las ponderaciones reflejen tanto la visión estratégica como
-                                            la
-                                            realidad operativa.</p>
-                                        <div class="key-points">
-                                            <h4>Proceso Recomendado:</h4>
-                                            <p>La dirección establece las ponderaciones de grupos principales según
-                                                prioridades estratégicas. Los responsables de cada grupo proponen la
-                                                distribución interna entre sus indicadores. Se realiza una
-                                                validación
-                                                cruzada para asegurar coherencia. Se documenta la justificación de
-                                                cada
-                                                ponderación para futuras referencias.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="section">
-                                <div class="kpi-card" id="sec-8" data-kpi="8">
-                                    <h2>8. Señales de Alerta Comunes</h2>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Demasiados Indicadores</h4>
-                                        <p>Tener más de 10-15 KPIs principales puede diluir el foco y dificultar la
-                                            gestión
-                                            efectiva. Priorice los indicadores que realmente impactan en los
-                                            objetivos
-                                            críticos.
-                                        </p>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Indicadores sin Responsable</h4>
-                                        <p>Cada KPI debe tener un responsable claro que pueda influir en su
-                                            resultado y
-                                            rendir
-                                            cuentas. Sin ownership, los indicadores se vuelven meramente
-                                            informativos
-                                            sin
-                                            impulsar
-                                            cambios.</p>
-                                    </div>
-
-                                    <div class="recommendation mt-3">
-                                        <h4>Datos de Baja Calidad</h4>
-                                        <p>Si los datos son inconsistentes, incompletos o poco confiables, las
-                                            decisiones
-                                            basadas en
-                                            ellos serán erróneas. Invierta en asegurar la calidad de los datos antes
-                                            que
-                                            en
-                                            sofisticar los análisis.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="footer">
-                                <p><strong>Recuerde:</strong> Los KPIs son herramientas para impulsar la mejora, no
-                                    fines en
-                                    sí
-                                    mismos. El objetivo final es mejorar el desempeño organizacional y alcanzar los
-                                    objetivos
-                                    estratégicos.</p>
-                                <p style="margin-top: 15px; font-style: italic;">Esta guía debe ser complementada
-                                    con el
-                                    conocimiento específico de su industria y contexto organizacional.</p>
-                            </div>
+                        <div class="footer">
+                            <p><strong>Recuerde:</strong> Los KPIs son herramientas para impulsar la mejora, no
+                                fines en
+                                sí
+                                mismos. El objetivo final es mejorar el desempeño organizacional y alcanzar los
+                                objetivos
+                                estratégicos.</p>
+                            <p style="margin-top: 15px; font-style: italic;">Esta guía debe ser complementada
+                                con el
+                                conocimiento específico de su industria y contexto organizacional.</p>
+                        </div>
                     </section>
                 </div>
                 <!-- </div> -->
