@@ -1,3 +1,5 @@
+require("dotenv").config(); //
+
 const express = require('express');
 const bodyParser = require("body-parser");
 const path = require('path');
@@ -5,8 +7,9 @@ const pool = require("./db");
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const cron = require("node-cron");
-
-require("dotenv").config(); //
+require("./cron/logsCron");
+const bcrypt = require('bcrypt');
+const crypto = require("crypto");
 
 const multer = require('multer');
 const upload = multer(); 
@@ -172,52 +175,52 @@ async function sendMail(to, subject, text, html, useGmail = true) {
 // cron.schedule('0 */4 * * *', () => { cada cuatro horas
 //  * * * * *  # minuto, hora, día del mes, mes, día de la semana
 
-cron.schedule("0 0,12 * * *", () => {
-  const ahora = new Date().toLocaleString();
-  console.log(`[CRON] Ejecutando tarea programada a las ${ahora}`);
-  // Esta expresión ejecutará la tarea cada 2 horas (a las 00:00, 02:00, 04:00, etc.)
-  // a las 15 hs
-  console.log("Ejecutando tarea programada: registrando en la base de datos");
+// cron.schedule("0 0,12 * * *", () => {
+//   const ahora = new Date().toLocaleString();
+//   console.log(`[CRON] Ejecutando tarea programada a las ${ahora}`);
+//   // Esta expresión ejecutará la tarea cada 2 horas (a las 00:00, 02:00, 04:00, etc.)
+//   // a las 15 hs
+//   console.log("Ejecutando tarea programada: registrando en la base de datos");
 
-  let textoCron = `
-  <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f4;">
-      <div style="max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1);">
-          <h2 style="color: #333;">Mensaje enviado por Cron</h2>
-          <p>Mensaje automático</p>
-              <div style="display: inline-block; padding: 10px 20px; background: #007BFF; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                  ${ahora}
-              </div>
-          <p style="margin-top: 20px;">Texto genérico</p>
-          <hr style="border: none; height: 1px; background: #ddd;">
-          <small style="color: #888;">&copy; 2025 BDTA. Todos los derechos reservados.</small>
-      </div>
-  </div>
-  `;
+//   let textoCron = `
+//   <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f4;">
+//       <div style="max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1);">
+//           <h2 style="color: #333;">Mensaje enviado por Cron</h2>
+//           <p>Mensaje automático</p>
+//               <div style="display: inline-block; padding: 10px 20px; background: #007BFF; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+//                   ${ahora}
+//               </div>
+//           <p style="margin-top: 20px;">Texto genérico</p>
+//           <hr style="border: none; height: 1px; background: #ddd;">
+//           <small style="color: #888;">&copy; 2025 BDTA. Todos los derechos reservados.</small>
+//       </div>
+//   </div>
+//   `;
 
-  const query = "INSERT INTO tablalogs (logs) VALUES (NOW())";
+//   const query = "INSERT INTO tablalogs (logs) VALUES (NOW())";
 
-  pool.query(query, (err, results) => {
-    if (err) {
-      console.error("Error al insertar en la base de datos:", err);
-      return;
-    }
-    console.log("Registro insertado correctamente:", results);
-  });
+//   await pool.query(query, (err, results) => {
+//     if (err) {
+//       console.error("Error al insertar en la base de datos:", err);
+//       return;
+//     }
+//     console.log("Registro insertado correctamente:", results);
+//   });
 
-  // En cron: usar SMTP
-  sendMail(
-    "ruben.e.garcia@gmail.com",
-    "Informe automático",
-    "texto mensaje cron",
-    textoCron,
-    true // false: usar SMTP (soporte@bdtadvisory.com) - true: gmail
-  );
-});
+//   // En cron: usar SMTP
+//   sendMail(
+//     "ruben.e.garcia@gmail.com",
+//     "Informe automático",
+//     "texto mensaje cron",
+//     textoCron,
+//     true // false: usar SMTP (soporte@bdtadvisory.com) - true: gmail
+//   );
+// });
 
 
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const crypto = require("crypto");
+
 
 app.post("/auth/forgot-password", async (req, res) => {
   const { email } = req.body;
@@ -1199,7 +1202,7 @@ Eje X del gráfico sigue siendo 1..6 (más antiguo → más reciente).
 // const { crearUsuario } = require('../controllers/usuarios.controller');
 // esto queda para despues
 
-const bcrypt = require('bcrypt');
+
 
 app.post(
     '/usuarios',
