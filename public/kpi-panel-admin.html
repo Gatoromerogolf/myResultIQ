@@ -361,6 +361,18 @@
                                         <table class="table m-0">
                                             <tbody>
                                                 <tr>
+                                                    <td>sendmail está definido dentro de server.js, y on
+                                                        (logsCron.js) no debería depender de server.js (ni levantar el
+                                                        server para mandar un mail).
+
+                                                        La solución correcta es extraer sendmail a un módulo
+                                                        reutilizable.
+                                                        Toda lógica reutilizable (mail, DB, helpers, KPIs)
+                                                        👉 va en utils/ o services/
+                                                        👉 nunca dentro de server.js
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <td>En información del indicador, señalar la falta o atraso en las
                                                         mediciones. Inclusive en los gráficos
                                                     </td>
