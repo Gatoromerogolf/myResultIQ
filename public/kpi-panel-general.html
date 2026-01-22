@@ -1845,15 +1845,15 @@
                 total += childComp * weight;
                 sumWeights += weight;
             });
-            console.log(
-                `Nodo ${node.id}`,
-                node.children.map(c => ({
-                    id: c.id,
-                    type: c.type,
-                    weight: Number(c.weight ?? 0),
-                    cumplimiento: c.cumplimiento ?? null
-                }))
-            );
+            // console.log(
+            //     `Nodo ${node.id}`,
+            //     node.children.map(c => ({
+            //         id: c.id,
+            //         type: c.type,
+            //         weight: Number(c.weight ?? 0),
+            //         cumplimiento: c.cumplimiento ?? null
+            //     }))
+            // );
 
             return sumWeights > 0 ? total / sumWeights : 0;
         }
@@ -3851,7 +3851,6 @@
                 await inicializarDatosGlobales();
                 const sectoresData = getSectores();
                 localStorage.setItem('cantSectores', sectoresData.length);
-                console.log('ctdd sectores,', sectoresData.length);
 
                 sectoresData.forEach(sec => {
                     window.destinosMap[Number(sec.id)] = sec.nombre;
@@ -3883,6 +3882,7 @@
                 indicadoresConDatos = await Promise.all(indicadores.map(async ind => {
                     const usuario = await obtenerUsuarioPorLegajo(ind.responsable);
                     const ultima = await getUltimaMedicionPorIndicador(ind.id);
+
                     const siguienteMedicion = getSiguienteMedicion(ultima, ind.freq_medicion);
                     let vigencia;
                     if (ind.freq_medicion == '0210') { // si es eventual, siempre ok
@@ -4015,8 +4015,6 @@
                 const response = await fetch('api/alertas/1/valor');
                 const data = await response.json();
 
-                console.log("DATA RECIBIDA:", data);
-
                 const alerta = document.getElementById('alertaCondicional');
                 alerta.style.display = (data.success && data.valor == 1)
                     ? 'block'
@@ -4043,8 +4041,6 @@
 
             const valorCorteDestacados = Number(document.getElementById('valorCorteDestacados').value);
             const valorCorteCriticos = Number(document.getElementById('valorCorteCriticos').value);
-
-            console.log("Indicadores con datos:", indicadoresConDatos);
 
             // 🔹 Pendientes (sin medición)
             indicadoresConDatos
@@ -5002,7 +4998,6 @@
         }
 
 
-
         // 🎯🎯🎯📌📌📌📌📌📌📌
         function ZZZZverGraficoIndicador(key_id, nombre, meta, descripcion, metodo) {
             // Guardar en sessionStorage
@@ -5621,8 +5616,6 @@
 
             const ocultarBienvenida = localStorage.getItem('ocultarBienvenida') === 'true';
 
-            console.log(`valor de ocultar ${ocultarBienvenida}`)
-
             if (!ocultarBienvenida) {
                 modal.show();
             }
@@ -5785,7 +5778,8 @@
             });
     </script>
 
-    <script src="/kpi-tools.js"></script>
+    <!-- Grafica un indicador y conclusiones -->
+    <script src="/kpi-tools.js"></script> 
 
 </body>
 

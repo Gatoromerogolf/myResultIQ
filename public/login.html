@@ -111,7 +111,7 @@
           <input type="email" class="form-control" id="emailRecuperar" required placeholder="correo@ejemplo.com" />
         </div>
 
-        <div class="modal-footer">
+        <div class="modal-footer d-flex justify-content-between">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           <button type="submit" class="btn btn-primary">Enviar instrucciones</button>
         </div>
@@ -210,11 +210,6 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })
       });
-
-      alert("Si el correo existe, se enviaron las instrucciones.");
-
-
-
 
       // Aquí iría el POST real al backend
       alert('Se enviaron las instrucciones a ' + email);

@@ -1050,10 +1050,10 @@
         '      3.2. Indicadores de Perspectiva Financiera',
         '      3.3. Indicadores de Perspectiva Capital Humano',
         '      3.4. Indicadores de Perspectiva Procesos',
-        'Anexo 1 - Arbol de Destinos e Indicadores',
-        'Anexo 2 - Usuarios',
-        'Anexo 3 - Organigrama Institucional',
-        'Anexo 4 - Usuarios registrados e indicadores asignados'
+        'Anexo 1 - Ponderación de Destinos e Indicadores',
+        'Anexo 2 - Usuarios Registrados',
+        'Anexo 3 - Estructura Organizacional',
+        'Anexo 4 - Dependencias y Roles de Usuarios'
       ];
       entradas.forEach((e, i) => {
         const li = document.createElement('li'); li.textContent = `${i + 1}. ${e}`;
@@ -2582,7 +2582,7 @@
       content.appendChild(h);
 
       const p = document.createElement("p");
-      p.textContent = "Relación jerárquica entre sectores y usuarios.";
+      p.textContent = "Sectores, Procesos o Unidades y los usuarios participantes.";
       content.appendChild(p);
 
       const ul = document.createElement("ul");
@@ -2644,7 +2644,7 @@
       content.appendChild(h);
 
       const p = document.createElement("p");
-      p.textContent = "Relación funcional de sectores y usuarios registrados.";
+      p.textContent = "Sectores, Procesos o Unidades y los usuarios participantes";
       content.appendChild(p);
 
       const ul = document.createElement("ul");
@@ -2816,11 +2816,11 @@
 
       const h = document.createElement('h2');
       h.className = 'section-title';
-      h.textContent = 'Organigrama Institucional';
+      h.textContent = 'Dependencias y Roles de Usuarios';
       content.appendChild(h);
 
       const p = document.createElement('p');
-      p.textContent = 'Representación textual de la estructura jerárquica de la organización.';
+      p.textContent = 'Representación de la relación entre los usuarios y sus roles.';
       content.appendChild(p);
 
       const resp = await fetch('/usuarios').then(r => r.json());
