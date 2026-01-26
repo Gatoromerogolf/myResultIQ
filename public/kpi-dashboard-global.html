@@ -582,14 +582,6 @@
                 const sector = map[ind.destino];
                 if (sector) {
                     const peso = Number(ind.peso_porcentual) || 0;
-                    // Calcular cumplimiento
-                    // const cumplimiento = calcularCumplimiento(
-                    //     ind.ultimo_valor,    // valor real
-                    //     ind.unico_valor,     // meta / objetivo
-                    //     ind.unico_acepta,
-                    //     ind.unico_riesgo,
-                    //     ind.unico_critico
-                    // );
                     const cumplimiento = ind.ultimo_cumplimiento;
 
                     // Color de cumplimiento
@@ -642,13 +634,6 @@
                 const indicadores = await indicadoresRes.json();
 
                 const indicadoresConCumplimiento = indicadores.map(ind => {
-                    // const cumplimiento = calcularCumplimiento(
-                    //     ind.ultimo_valor,
-                    //     ind.unico_valor,
-                    //     ind.unico_acepta,
-                    //     ind.unico_riesgo,
-                    //     ind.unico_critico
-                    // );
                     const cumplimiento = ind.ultimo_cumplimiento;
 
                     // Mapeo seguro de unidad (usa nombre si existe, sino el código raw, sino vacío)
@@ -674,18 +659,23 @@
         // Llamamos al inicio
         loadData();
 
-        // // 🚫🚫🚫  calcularCumplimiento
-        function XXXcalcularCumplimiento(valor, meta, acepta, riesgo, critico) {
-            if (valor === null || meta === null || meta == 0 || valor == 0) return null;
+        function ocultarGraficoFull() {
+            const g = document.getElementById('grafico-evolucion-Full');
+            const k = document.getElementById('kpiTarjetasFull');
 
-            // Porcentaje del valor respecto a la meta
-            const porcentaje = (valor / meta) * 100;
-            return porcentaje;
-            if (porcentaje >= acepta) return 100;   // Cumplimiento óptimo
-            if (porcentaje >= riesgo) return 50;    // Cumplimiento medio
-            if (porcentaje >= critico) return 25;   // Cumplimiento bajo
-            return 0;                               // Crítico
+            if (g) g.style.display = 'none';
+            if (k) k.style.display = 'none';
         }
+
+        function mostrarGraficoFull() {
+            const g = document.getElementById('grafico-evolucion-Full');
+            const k = document.getElementById('kpiTarjetasFull');
+
+            if (g) g.style.display = 'block';
+            if (k) k.style.display = 'block';
+        }
+
+
 
         // // 🚫🚫🚫  computeCompliance
         function computeCompliance(node) {
@@ -744,6 +734,11 @@
             // Renderizado del nodo actual y actualización de globalPercent
             const node = stack[stack.length - 1];
             if (!node) return;
+
+            // 🔒 Si NO es indicador → no puede haber gráfico full
+            if (node.type !== 'indicator') {
+                ocultarGraficoFull();
+            }
 
             // Cumplimiento ponderado de todos los niveles
             const comp = Number(computeCompliance(node));
@@ -869,11 +864,19 @@
                     const a = document.createElement("a");
                     a.href = "#";
                     a.innerText = node.name || "Sin nombre";
+                    // a.addEventListener("click", (e) => {
+                    //     e.preventDefault();
+                    //     stack = stack.slice(0, idx + 1); // recortamos hasta ese nodo
+                    //     render();
+                    // });
                     a.addEventListener("click", (e) => {
                         e.preventDefault();
-                        stack = stack.slice(0, idx + 1); // recortamos hasta ese nodo
+
+                        ocultarGraficoFull();   // 🔥 SIEMPRE que navego hacia arriba
+                        stack = stack.slice(0, idx + 1);
                         render();
                     });
+
                     li.appendChild(a);
                 }
                 breadcrumbEl.appendChild(li);
@@ -940,8 +943,8 @@
                     if (child.type === "indicator") {
                         color = child.colorCumplimiento || "gray";
                     } else {
-                        color = comp >= 100 ? "green" :
-                            comp >= 50 ? "orange" : "red";
+                        color = comp >= 90 ? "green" :
+                            comp >= 70 ? "orange" : "red";
                     }
 
                     const tile = document.createElement("div");
@@ -1081,237 +1084,6 @@
                     }
                 }
             });
-
-        }
-
-
-        // // 🚫🚫🚫  renderChildren(node)
-        function XXXrenderChildren(node) {
-
-            console.log("NODE:", node);
-            console.log("TYPE:", node.type);
-            console.log("CHILDREN:", node.children);
-            console.log("CHILDREN LENGTH:", node.children?.length);
-
-
-            const container = document.getElementById("childrenArea");
-            if (!container) {
-                console.error("❌ No se encontró el contenedor #childrenArea en el DOM");
-                return;
-            }
-
-            container.innerHTML = "";
-
-            node.children.forEach(child => {
-                // Cumplimiento ponderado del sub-nodo
-                const comp = computeCompliance(child);
-                const weight = Number(child.weight) || 0;
-
-                // Determinar color (si es indicador se usa colorCumplimiento, si es sector usamos verde-naranja-rojo según comp)
-                let color = "gray";
-                if (child.type === "indicator") {
-                    color = child.colorCumplimiento || "gray";
-                } else {
-                    color = comp >= 100 ? "green" :
-                        comp >= 50 ? "orange" : "red";
-                }
-
-                const tile = document.createElement("div");
-                tile.className = "mb-2";
-
-                tile.innerHTML = `
-                    <div class="info-box bg-light elevation-2" style="cursor:pointer;">
-                        <div class="info-box-content">
-                            <span class="info-box-text font-weight-bold">${child.name || "Sin nombre"}</span>
-                            <span class="info-box-number">Cumplimiento: ${comp.toFixed(2)}%</span>
-                            <div class="progress" style="height: 12px; border-radius:6px; overflow:hidden;">
-                                <div class="progress-bar" style="width: ${comp.toFixed(2)}%; background:${color};"></div>
-                            </div>
-                            <span class="progress-description">Peso: ${weight.toFixed(1)}%</span>
-                        </div>
-                    </div>
-                `;
-
-                // Drill down → apilamos el nodo hijo en la pila
-                tile.addEventListener("click", () => {
-                    stack.push(child);
-                    render();
-                });
-
-                container.appendChild(tile);
-            });
-
-            // === GRÁFICO CIRCULAR ===
-
-            // const detail = document.getElementById("indicatorDetailCanvas");
-
-            // detail.innerHTML = `
-            //         <div class="chart-box">
-            //             <canvas id="childPie"></canvas>
-            //         </div>
-            //         <div class="chart-box">
-            //             <canvas id="childBar"></canvas>
-            //             <div id="barLegend" class="bar-legend mt-2"></div>
-            //         </div>
-            //     `;
-
-            const detail = document.getElementById("indicatorDetailCanvas");
-
-            // 👉 Si el nodo NO tiene hijos, mostrar los botones y no graficar nada
-            if (!node.children || node.children.length === 0) {
-                detail.innerHTML = `
-                    <div class="text-center mt-3">
-                        <button id="btnMasInfo" class="btn btn-primary btn-sm mb-2">
-                            Más detalles del indicador
-                        </button><br>
-                        <button id="btnEvolucion" class="btn btn-secondary btn-sm">
-                            Ver evolución histórica
-                        </button>
-                    </div>
-                `;
-
-                // Aquí podés enganchar eventos si querés
-                document.getElementById("btnMasInfo")?.addEventListener("click", () => {
-                    abrirModalDetalleIndicador(node);
-                });
-
-                document.getElementById("btnEvolucion")?.addEventListener("click", () => {
-                    abrirModalEvolucion(node);
-                });
-
-                return; // 💥 IMPORTANTE: no seguir, no dibujar gráficos
-            }
-
-
-            const canvas = document.getElementById("childPie");
-
-            canvas.style.border = "2px solid red";
-
-            const ctx = canvas.getContext("2d");
-            console.log("ctx:", ctx);
-
-            // Datos del gráfico
-            // const labels = node.children.map(c => c.name);
-            // const values = node.children.map(c => computeCompliance(c));
-
-            // Datos para gráfico ponderado: comp * weight
-            const labels = node.children.map(c => c.name);
-
-            // Cumplimiento ponderado
-            const values = node.children.map(c => {
-                const comp = computeCompliance(c);
-                const weight = Number(c.weight) || 0;
-                return (comp * weight) / 100;  // 💥 ponderación
-            });
-
-            // Calcular cuánto falta hasta 100%
-            const total = values.reduce((a, b) => a + b, 0);
-            const missing = Math.max(0, 100 - total);
-
-            // Agregar segmento vacío al pie
-            labels.push("Pendiente");
-            values.push(missing);
-
-
-            // 🎨 Paleta de colores distinta para cada valor
-            const fallbackColors = [
-                "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
-                "#9467bd", "#8c564b", "#e377c2", "#7f7f7f",
-                "#bcbd22", "#17becf"
-            ];
-
-            const colors = labels.map((_, i) => `hsl(${(i * 45) % 360}, 70%, 55%)`);
-            // Agregar color gris para el segmento faltante
-            colors.push("#e0e0e0");
-
-
-            // Destruir gráfico previo si existe
-            if (window.childPieChart) {
-                window.childPieChart.destroy();
-            }
-
-            window.childPieChart = new Chart(ctx, {
-                type: "pie",
-                data: {
-                    labels,
-                    datasets: [{
-                        data: values,
-                        backgroundColor: colors
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: "bottom",
-                            labels: {
-                                boxWidth: 16,
-                                font: { size: 12 }
-                            }
-                        },
-
-                        // 👉 DATALABELS: etiqueta dentro de la porción
-                        datalabels: {
-                            color: "#000",
-                            font: {
-                                weight: "bold",
-                                size: 16
-                            },
-                            formatter: (value) => value.toFixed(2) + "%",
-                        }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
-
-
-            // === BAR CHART ===
-
-            const canvasBar = document.getElementById("childBar");
-            canvasBar.style.border = "2px solid green";
-
-            const ctxBar = canvasBar.getContext("2d");
-
-            // Convertimos las etiquetas largas en numéricas
-            const numericLabels = labels.map((_, i) => "Var " + (i + 1));
-
-            // Destruimos si ya existía
-            if (window.childBarChart) {
-                window.childBarChart.destroy();
-            }
-
-            window.childBarChart = new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: numericLabels,
-                    datasets: [{
-                        label: '% Cumplimiento',
-                        data: values,
-                        backgroundColor: colors
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 120
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: (ctx) => `${ctx.raw.toFixed(2)}%`
-                            }
-                        }
-                    }
-                }
-            });
-
-
         }
 
         let evolucionChart = null; // variable global para el gráfico
@@ -1384,7 +1156,8 @@
 
                 // Evento botón evolución
                 document.getElementById('btnEvolucion').onclick = async () => {
-                    document.getElementById('grafico-evolucion-Full').style.display = 'block';
+                    // document.getElementById('grafico-evolucion-Full').style.display = 'block';
+                    mostrarGraficoFull(); // ✅ ÚNICO lugar donde se muestra
 
                     // 🔎 Traemos el indicador completo DESDE backend
                     const resp = await fetch(`/api/indicadores/${node.codigo_id}`);
@@ -1516,7 +1289,7 @@
 
 
         // // 🚫🚫🚫  Exportación CSV
-        function exportCSV() {
+        function XXXexportCSV() {
             const rows = [];
             function walk(n, path) {
                 const comp = computeCompliance(n).percent;
@@ -1730,34 +1503,7 @@
         //     if (!btnLogout) return;
 
         //     btnLogout.addEventListener('click', async () => {
-        //         // Cerrar modal
-        //         const modalEl = document.getElementById('logoutModal');
-        //         const modal = bootstrap.Modal.getInstance(modalEl);
-        //         if (modal) modal.hide();
 
-        //         // 🔐 Auditoría logout
-        //         const token = localStorage.getItem('token');
-        //         if (token) {
-        //             try {
-        //                 await fetch('/api/auth/logout', {
-        //                     method: 'POST',
-        //                     headers: {
-        //                         Authorization: 'Bearer ' + token
-        //                     }
-        //                 });
-        //             } catch (e) {
-        //                 console.warn('No se pudo registrar logout');
-        //             }
-        //         }
-
-        //         // 🧹 Limpiar sesión
-        //         localStorage.clear();
-        //         sessionStorage.clear();
-
-        //         // 🚀 Redirigir
-        //         window.location.href = '/';
-        //     });
-        // });
     </script>
 
     <script src="/modal-indicador.js"></script>
