@@ -4329,7 +4329,7 @@
         let chartBarrasArea = null;
 
         // 📌📌 mostrarEvolucionPorArea(idDestino, nombreDestino)
-        function mostrarEvolucionPorArea(idDestino, nombreDestino) {
+        function XXXmostrarEvolucionPorArea(idDestino, nombreDestino) {
             if (!evolucionGlobal || !evolucionGlobal.length) {
                 console.warn("⚠️ No hay datos globales cargados aún.");
                 return;
@@ -4498,8 +4498,141 @@
             // chartBarrasArea.render();
         }
 
-        // 📌📌 obtenerSeriesPorDestino(data, idDestino)
+        // 📌📌 mostrarEvolucionPorArea(idDestino, nombreDestino)
+        function mostrarEvolucionPorArea(idDestino, nombreDestino) {
+
+            if (!evolucionGlobal || !evolucionGlobal.length) {
+                console.warn("⚠️ No hay datos globales cargados aún.");
+                return;
+            }
+
+            // 🔹 Obtener series temporales reales
+            const indicadoresMap = obtenerSeriesPorDestino(evolucionGlobal, idDestino);
+
+            const seriesLineas = Object.keys(indicadoresMap).map(indicador => ({
+                name: indicador,
+                data: indicadoresMap[indicador]
+            }));
+
+            console.log("Series Apex:", seriesLineas);
+
+            const opcionesEvolucion = {
+                chart: {
+                    type: 'line',
+                    height: 400,
+                    zoom: { enabled: true, type: 'x' },
+                    toolbar: {
+                        show: true
+                    },
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 600
+                    }
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                series: seriesLineas,
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    type: 'datetime',
+                    title: {
+                        text: 'Período'
+                    }
+                },
+                yaxis: {
+                    min: 0,
+                    max: 140,
+                    tickAmount: 5,
+                    title: {
+                        text: '% de Cumplimiento'
+                    }
+                },
+                tooltip: {
+                    shared: true,
+                    x: {
+                        format: 'MMM yyyy'
+                    },
+                    y: {
+                        formatter: val => `${val.toFixed(1)}%`
+                    }
+                },
+                legend: {
+                    position: 'bottom'
+                },
+                grid: {
+                    borderColor: '#e0e0e0',
+                    strokeDashArray: 4
+                }
+            };
+
+            if (chartEvolucionArea) chartEvolucionArea.destroy();
+            chartEvolucionArea = new ApexCharts(
+                document.querySelector("#chartEvolucionArea"),
+                opcionesEvolucion
+            );
+            chartEvolucionArea.render();
+        }
+
         function obtenerSeriesPorDestino(data, idDestino) {
+
+            const indicadoresMap = {};
+
+            console.table('datos recibidos en data' + data)
+
+            data.forEach(item => {
+
+                if (!item.month) {
+                    console.warn("Mes vacío:", item.month);
+                    return;
+                }
+
+                let year, month;
+
+                // ✔ Formato YYYY-MM
+                if (item.month.includes('-')) {
+                    const parts = item.month.split('-');
+                    year = Number(parts[0]);
+                    month = Number(parts[1]) - 1;
+                }
+                // ✔ Formato YYYYMM
+                else if (item.month.length === 6) {
+                    year = Number(item.month.slice(0, 4));
+                    month = Number(item.month.slice(4, 6)) - 1;
+                }
+                else {
+                    console.warn("Mes inválido:", item.month);
+                    return;
+                }
+
+                const fecha = new Date(year, month, 1).getTime();
+
+                item.detalle
+                    .filter(d => d.destino === idDestino)
+                    .forEach(d => {
+
+                        if (!indicadoresMap[d.indicador]) {
+                            indicadoresMap[d.indicador] = [];
+                        }
+
+                        indicadoresMap[d.indicador].push({
+                            x: fecha,
+                            y: Number(d.cumplimiento)
+                        });
+                    });
+            });
+
+            console.log("📊 Series finales:", indicadoresMap);
+            return indicadoresMap;
+        }
+
+
+        // 📌📌 obtenerSeriesPorDestino(data, idDestino)
+        function XXXobtenerSeriesPorDestino(data, idDestino) {
             // Filtrar solo los períodos donde el destino tiene datos
             const dataFiltrada = data.filter(item =>
                 item.detalle.some(d => d.destino === idDestino)
@@ -4525,6 +4658,44 @@
             console.log(`indicadoresMap  ${Object.keys(indicadoresMap).length}`, indicadoresMap);
             return { labels, indicadoresMap };
         }
+
+
+
+
+        // 📌📌 obtenerSeriesPorDestino(data, idDestino)
+        function ZZZobtenerSeriesPorDestino(data, idDestino) {
+
+            const indicadoresMap = {};
+
+            data.forEach(item => {
+                // month viene como YYYYMM → lo convertimos a fecha válida
+                // month viene como YYYYMM (ej: 202401)
+                const year = Number(item.month.slice(0, 4));
+                const month = Number(item.month.slice(4, 6)) - 1; // 👈 JS months 0–11
+
+                const fecha = new Date(year, month, 1).getTime();
+
+
+                item.detalle
+                    .filter(d => d.destino === idDestino)
+                    .forEach(d => {
+
+                        if (!indicadoresMap[d.indicador]) {
+                            indicadoresMap[d.indicador] = [];
+                        }
+
+                        indicadoresMap[d.indicador].push({
+                            x: fecha,
+                            y: d.cumplimiento
+                        });
+                    });
+            });
+
+            console.log("📈 Series generadas:", indicadoresMap);
+            return indicadoresMap;
+        }
+
+
 
         // 📌📌 Función auxiliar para colores aleatorios suaves
         function getRandomColor() {
@@ -5458,20 +5629,17 @@
 
     </script>
 
-    <script>
+    <!-- <script>
         const avatarAudio = document.getElementById('avatarAudio');
         const btnDetener = document.getElementById('btnDetenerVoz');
 
+
         const textoExplicativo = `
-    ¡Hola! Bienvenido a My Result IQ, la herramienta ideal para la gestión de indicadores.
-    Soy tu asistente virtual y estoy aquí para guiarte en el uso de la aplicación y ayudarte a aprovechar todo su potencial.
-    En este sistema trabajamos con dos conceptos clave: usuarios habilitados y destinos. Los destinos representan las diferentes áreas, unidades funcionales o procesos de tu organización.
-    A cada destino se le asignan indicadores que permiten medir su desempeño. Cada indicador tiene una importancia relativa dentro del destino, y la suma de todas estas importancias siempre equivale al 100%.
-    De manera similar, cuando un destino está compuesto por destinos dependientes —por ejemplo, sectores dentro de una gerencia, o gerencias dentro de una dirección— cada uno tiene un porcentaje asociado que también suma 100% en ese nivel.
-    Gracias a esta estructura jerárquica, el sistema calcula automáticamente el porcentaje de cumplimiento global de tu organización, basándose en el rendimiento de cada destino y su relevancia dentro del nivel superior.
-    Estoy aquí para ayudarte a explorar estos conceptos y entender cómo evoluciona el desempeño de tu organización.
-    ¡Comencemos!
-    `;
+            ¡Hola! Este es el panel principal de la aplicación.  La solución ofrece capacidades de exploración dinámica, permitiendo profundizar en la información a través de múltiples niveles de detalle con solo hacer clic en los elementos de interés.  Al finalizar la presentación de la información, se habilita al pie de la pagina un botón para acceder a un informe previo a la generación de un PDF con las conclusiones obtenidas.
+            Gracias a esta estructura jerárquica, el sistema calcula automáticamente el porcentaje de cumplimiento global de tu organización, basándose en el rendimiento de cada destino y su relevancia dentro del nivel superior.
+            Estoy aquí para ayudarte a explorar estos conceptos y entender cómo evoluciona el desempeño de tu organización.
+            ¡Comencemos!
+            `;
 
         let vozSeleccionada = null;
 
@@ -5526,8 +5694,138 @@
         avatarAudio.addEventListener('click', () => hablar());
         btnDetener.addEventListener('click', detener);
         window.speechSynthesis.onvoiceschanged = () => obtenerVozEspañol();
-    </script>
+    </script> -->
 
+
+<script>
+window.addEventListener("load", () => {
+
+    const avatarAudio = document.getElementById('avatarAudio');
+    const btnDetener = document.getElementById('btnDetenerVoz');
+
+    const textoExplicativo = `
+    ¡Hola! Este es el panel principal de la aplicación.
+    La solución ofrece capacidades de exploración dinámica, permitiendo profundizar en la información a través de múltiples niveles de detalle con solo hacer clic en los elementos de interés.
+    Los iconos que ves a la izquierda te permiten ver y ocultar el menu de opciones, ampliar toda la pantalla y reproducir el audio de la presentación general.    
+    Sobre la derecha tenés el acceso a tus datos, al cambio de contraseña de ingreso y a la salida de la aplicación.
+    Al finalizar la presentación de la información, se habilita al pie de la página un botón para acceder a un informe preliminar a la generación de un PDF con las conclusiones obtenidas.
+    ¡Comencemos!
+    `;
+
+    let vozSeleccionada = null;
+    let colaUtterances = [];
+    let reproduciendo = false;
+
+    // 🔊 Obtener voz en español (prioridad Google)
+    function obtenerVozEspañol() {
+        const voces = speechSynthesis.getVoices();
+        if (!voces.length) return null;
+
+        const vozGoogle = voces.find(v =>
+            v.name.toLowerCase().includes("google") && v.lang.startsWith("es")
+        );
+        const vozEsp = voces.find(v => v.lang.startsWith("es"));
+
+        vozSeleccionada = vozGoogle || vozEsp || voces[0];
+        return vozSeleccionada;
+    }
+
+    // ✂️ Dividir texto en bloques seguros
+    function dividirTexto(texto, maxLength = 180) {
+        const frases = texto
+            .replace(/\s+/g, ' ')
+            .split(/(?<=[.!?])\s+/);
+
+        const bloques = [];
+        let actual = "";
+
+        frases.forEach(frase => {
+            if ((actual + frase).length <= maxLength) {
+                actual += frase + " ";
+            } else {
+                bloques.push(actual.trim());
+                actual = frase + " ";
+            }
+        });
+
+        if (actual.trim()) bloques.push(actual.trim());
+        return bloques;
+    }
+
+    // 🎙️ Hablar en cola (NO se corta)
+    function hablar(texto = textoExplicativo) {
+        if (!('speechSynthesis' in window)) return;
+
+        detener();
+
+        const voz = obtenerVozEspañol();
+        if (!voz) {
+            console.warn("⚠️ Voces no disponibles aún");
+            return;
+        }
+
+        const bloques = dividirTexto(texto);
+        colaUtterances = bloques.map(bloque => {
+            const u = new SpeechSynthesisUtterance(bloque);
+            u.voice = voz;
+            u.lang = "es-ES";
+            u.rate = 1;
+            u.pitch = 1.05;
+            return u;
+        });
+
+        reproducirCola();
+    }
+
+    function reproducirCola() {
+        if (!colaUtterances.length) {
+            detener();
+            return;
+        }
+
+        reproduciendo = true;
+        const u = colaUtterances.shift();
+
+        u.onstart = () => {
+            avatarAudio.classList.add('speaking');
+            btnDetener.style.display = 'block';
+        };
+
+        u.onend = () => {
+            reproducirCola();
+        };
+
+        u.onerror = () => {
+            reproducirCola();
+        };
+
+        speechSynthesis.speak(u);
+    }
+
+    // 🛑 Detener
+    function detener() {
+        speechSynthesis.cancel();
+        colaUtterances = [];
+        reproduciendo = false;
+        avatarAudio.classList.remove('speaking');
+        btnDetener.style.display = 'none';
+    }
+
+    // 🎧 Eventos
+    avatarAudio.addEventListener('click', () => hablar());
+    btnDetener.addEventListener('click', detener);
+
+    // ⏳ Esperar voces (CRÍTICO)
+    speechSynthesis.onvoiceschanged = () => {
+        obtenerVozEspañol();
+    };
+
+});
+</script>
+
+
+
+    
     <style>
         /* Efecto de "hablando" */
         #avatarAudio.speaking {
@@ -5556,6 +5854,10 @@
     <div class="modal fade" id="asistenteBienvenidaModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content shadow-lg border-0 rounded-4">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
                 <div class="modal-body p-4 text-center">
 
                     <!-- 🧠 Avatar del asistente con efecto de ondas -->
@@ -5605,7 +5907,8 @@
 
     <!-- ===================== SCRIPT DEL MODAL ===================== -->
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        window.addEventListener("load", () => {
+
             window.modalDetalleMes = new bootstrap.Modal(document.getElementById('detalleModal'));
             const modal = new bootstrap.Modal(document.getElementById('asistenteBienvenidaModal'), { backdrop: 'static' });
             const checkbox = document.getElementById('noMostrarBienvenida');
@@ -5634,11 +5937,32 @@
             });
 
             // Texto de presentación
-            const textoIntro = "Bienvenido al sistema de gestión de indicadores myResult IQ.  En cada sección de la aplicación me encontrarás disponible para comentarte sobre los aspectos particulares a considerar en la sección, que te permitan el mejor uso y aprovechamiento de la aplicación.  Como introducción general, me gustaría comentarte sobre la secuencia de utilización de la aplicación.  La tarea inicial es la definición de lo que denominamos Destinos, que son aquellas áreas, unidades funcionales o procesos de los que queremos monitorear su comportamiento a través de los indicadores.  Definidos los Destinos, corresponde registrar a los usuarios de la aplicación con sus distintos roles y vinculación con el Destino.  Luego corresponde definir los indicadores con sus objetivos, metas, formas de cálculo, asignándolos a un Destino y vinculándolos con un responsable.  Una vez hecho esto, ya podrás registrar las mediciones correspondientes a cada indicador, y el sistema calculará automáticamente el cumplimiento de cada uno, así como el cumplimiento global de la organización, ponderando cada Destino según su importancia relativa en el nivel superior.  Estoy aquí para ayudarte a explorar estos conceptos y entender cómo evoluciona el desempeño de tu organización.  ¡Comencemos!";
+            const textoIntro = "Bienvenido al sistema de gestión de indicadores myResult IQ.  En cada sección de la aplicación me encontrarás disponible para comentarte sobre aquellos aspectos particulares que permitan su mejor uso y aprovechamiento.  Me gustaría comenzar con la secuencia de utilización de la aplicación.  La tarea inicial es la definición de lo que denominamos Destinos, que son aquellas áreas, unidades funcionales o procesos de los que queremos monitorear su comportamiento a través de los indicadores.  Definidos los Destinos, corresponde registrar a los usuarios de la aplicación con su rol y vinculación con el Destino.  Luego corresponde definir los indicadores con sus atributos, asignándolos a un Destino y vinculándolos con un responsable.  Una vez hecho esto, ya podrás registrar las mediciones correspondientes a cada indicador y el sistema calculará automáticamente su cumplimiento, así como el cumplimiento global de la organización, ponderando cada Destino según su importancia.  Estoy aquí para ayudarte a explorar estos conceptos y entender cómo evoluciona el desempeño de tu organización.  ¡Comencemos!";
+
+            // relativa en el nivel superior.
+
+            let speechKeepAlive = null;
+
+            function iniciarSpeechKeepAlive() {
+                if (speechKeepAlive) clearInterval(speechKeepAlive);
+
+                speechKeepAlive = setInterval(() => {
+                    if (speechSynthesis.speaking) {
+                        speechSynthesis.resume();
+                    }
+                }, 1000);
+            }
+
+            function detenerSpeechKeepAlive() {
+                if (speechKeepAlive) {
+                    clearInterval(speechKeepAlive);
+                    speechKeepAlive = null;
+                }
+            }
 
 
             // Reproducir voz
-            function hablarTextoIntro(texto) {
+            function XXXhablarTextoIntro(texto) {
                 if (!('speechSynthesis' in window)) return;
                 speechSynthesis.cancel();
 
@@ -5662,6 +5986,104 @@
                     onda.style.transform = 'translate(-50%, -50%) scale(1)';
                 };
             }
+
+            function dividirTexto(texto, maxLength = 180) {
+                const partes = [];
+                let actual = '';
+
+                texto.split(/\. +/).forEach(frase => {
+                    if ((actual + frase).length > maxLength) {
+                        partes.push(actual.trim());
+                        actual = frase;
+                    } else {
+                        actual += (actual ? '. ' : '') + frase;
+                    }
+                });
+
+                if (actual) partes.push(actual.trim());
+                return partes;
+            }
+
+            function MMMMhablarTextoIntro(texto) {
+                if (!('speechSynthesis' in window)) return;
+
+                speechSynthesis.cancel();
+
+                const bloques = dividirTexto(texto);
+                let indice = 0;
+
+                const voces = speechSynthesis.getVoices();
+                const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
+                const voz = vozGoogle || voces.find(v => v.lang.startsWith("es")) || voces[0];
+
+                function hablarSiguiente() {
+                    if (indice >= bloques.length) {
+                        onda.style.opacity = '0';
+                        onda.style.transform = 'translate(-50%, -50%) scale(1)';
+                        return;
+                    }
+
+                    const utter = new SpeechSynthesisUtterance(bloques[indice]);
+                    utter.lang = 'es-ES';
+                    utter.rate = 1;
+                    utter.pitch = 1.05;
+                    utter.voice = voz;
+
+                    onda.style.opacity = '1';
+                    onda.style.transform = 'translate(-50%, -50%) scale(1.2)';
+
+                    utter.onend = () => {
+                        indice++;
+                        hablarSiguiente();
+                    };
+
+                    speechSynthesis.speak(utter);
+                }
+
+                hablarSiguiente();
+            }
+
+            function hablarTextoIntro(texto) {
+                if (!('speechSynthesis' in window)) return;
+
+                speechSynthesis.cancel();
+                iniciarSpeechKeepAlive();
+
+                const bloques = dividirTexto(texto);
+                let indice = 0;
+
+                const voces = speechSynthesis.getVoices();
+                const vozGoogle = voces.find(v => v.name.toLowerCase().includes("google") && v.lang.startsWith("es"));
+                const voz = vozGoogle || voces.find(v => v.lang.startsWith("es")) || voces[0];
+
+                function hablarSiguiente() {
+                    if (indice >= bloques.length) {
+                        detenerSpeechKeepAlive();
+                        onda.style.opacity = '0';
+                        onda.style.transform = 'translate(-50%, -50%) scale(1)';
+                        return;
+                    }
+
+                    const utter = new SpeechSynthesisUtterance(bloques[indice]);
+                    utter.lang = 'es-ES';
+                    utter.rate = 1;
+                    utter.pitch = 1.05;
+                    utter.voice = voz;
+
+                    utter.onend = () => {
+                        indice++;
+                        hablarSiguiente();
+                    };
+
+                    speechSynthesis.speak(utter);
+                }
+
+                onda.style.opacity = '1';
+                onda.style.transform = 'translate(-50%, -50%) scale(1.2)';
+
+                hablarSiguiente();
+            }
+
 
             // Click en avatar o botón “Escuchar introducción”
             avatar.addEventListener('click', () => hablarTextoIntro(textoIntro));
@@ -5779,7 +6201,7 @@
     </script>
 
     <!-- Grafica un indicador y conclusiones -->
-    <script src="/kpi-tools.js"></script> 
+    <script src="/kpi-tools.js"></script>
 
 </body>
 
