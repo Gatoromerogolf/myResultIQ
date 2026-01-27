@@ -30,7 +30,7 @@
         margin-bottom: 0;
     }
 
-        /* Avatar en navbar */
+    /* Avatar en navbar */
     .user-avatar {
         width: 50px;
         height: 50px;
@@ -47,11 +47,13 @@
     }
 
     .user-dropdown-header {
-        padding: 28px 20px; /* Más espacio vertical */
+        padding: 28px 20px;
+        /* Más espacio vertical */
     }
 
     .user-dropdown-header img {
-        margin-bottom: 15px; /* Más separación del texto */
+        margin-bottom: 15px;
+        /* Más separación del texto */
     }
 </style>
 
@@ -223,8 +225,9 @@
 
                             <!-- Logout -->
                             <li>
-                                <a href="#" class="dropdown-item text-start" style="font-size:18px; color:#dc3545; /* rojo Bootstrap */"
-                                    data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                <a href="#" class="dropdown-item text-start"
+                                    style="font-size:18px; color:#dc3545; /* rojo Bootstrap */" data-bs-toggle="modal"
+                                    data-bs-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt me-2"></i> Salir
                                 </a>
                             </li>
@@ -273,16 +276,16 @@
                                 <div class="card-header">
 
                                     <!--begin::Empty State-->
-                                    <div class="text-center py-5" id="emptyState" style="display: none;">
+                                    <!-- <div class="text-center py-5" id="emptyState" style="display: none;">
                                         <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
                                         <h5 class="text-muted">No hay indicadores registrados</h5>
                                         <p class="text-muted">Comience agregando su primer indicador PKI</p>
-                                    </div>
+                                    </div> -->
                                     <!--end::Empty State-->
 
-                                    <div class="card-tools">
+                                    <!-- <div class="card-tools">
                                         <span class="badge bg-primary" id="totalIndicadores">0 indicadores</span>
-                                    </div>
+                                    </div> -->
 
                                     <table id="tablaMediciones" class="table table-striped table-bordered table-sm">
                                         <tbody></tbody>
@@ -432,6 +435,7 @@
                 if (!$.fn.DataTable.isDataTable('#tablaMediciones')) {
 
                     tablaMediciones = $('#tablaMediciones').DataTable({
+                        info: false,
                         data: filasConExtra,
                         columns: [
                             { data: 'id', title: 'Id' },
@@ -531,7 +535,6 @@
                                 `;
                                 }
                             }
-
                         ],
 
                         responsive: true,
@@ -637,7 +640,6 @@
     </script>
     <script src="dist/js/adminlte.min.js"></script>
 
-
     <div id="contenedorModal"></div>
     <div id="contenedorModalMediciones"></div>
     <div id="contenedorModalUsuario"></div>
@@ -672,39 +674,6 @@
                 document.getElementById('contenedorModalLogout').innerHTML = html;
             });
 
-            //     const btnLogout = document.getElementById('confirmLogout');
-            //     if (!btnLogout) return;
-
-            //     btnLogout.addEventListener('click', async () => {
-            //         // Cerrar modal
-            //         const modalEl = document.getElementById('logoutModal');
-            //         const modal = bootstrap.Modal.getInstance(modalEl);
-            //         if (modal) modal.hide();
-
-            //         // 🔐 Auditoría logout
-            //         const token = localStorage.getItem('token');
-            //         if (token) {
-            //             try {
-            //                 await fetch('/api/auth/logout', {
-            //                     method: 'POST',
-            //                     headers: {
-            //                         Authorization: 'Bearer ' + token
-            //                     }
-            //                 });
-            //             } catch (e) {
-            //                 console.warn('No se pudo registrar logout');
-            //             }
-            //         }
-
-            //         // 🧹 Limpiar sesión
-            //         localStorage.clear();
-            //         sessionStorage.clear();
-
-            //         // 🚀 Redirigir
-            //         window.location.href = '/';
-            //     });
-            // });
-
     </script>
 
     <script src="/modal-indicador.js"></script>
@@ -714,6 +683,155 @@
     <script src="/js/layout.js"></script>
     <script src="/js/navbar-user.js"></script>
     <script src="/js/logout.js"></script>
+
+    <script>
+        window.addEventListener("load", () => {
+
+            const avatarAudio = document.getElementById('avatarAudio');
+            const btnDetener = document.getElementById('btnDetenerVoz');
+
+            const textoExplicativo = `
+    ¡Hola! Aqui se ven reflejadas todas las mediciones registradas para todos los indicadores.
+    El icono azul de la columna derecha permite acceder a la informción de detalle del indicador.
+    El icono rojo permite eliminar la medición seleccionada.  Esta acción es irreversible.
+    Se puede ordenar la presentación de los datos por cualquier columna, haciendo clic en el título de la misma.
+    Se puede buscar cualquier texto ingresandolo en el buscador superior derecho.  Esta búsqueda se realiza sobre el total de movimientos existentes.
+    `;
+
+            let vozSeleccionada = null;
+            let colaUtterances = [];
+            let reproduciendo = false;
+
+            // 🔊 Obtener voz en español (prioridad Google)
+            function obtenerVozEspañol() {
+                const voces = speechSynthesis.getVoices();
+                if (!voces.length) return null;
+
+                const vozGoogle = voces.find(v =>
+                    v.name.toLowerCase().includes("google") && v.lang.startsWith("es")
+                );
+                const vozEsp = voces.find(v => v.lang.startsWith("es"));
+
+                vozSeleccionada = vozGoogle || vozEsp || voces[0];
+                return vozSeleccionada;
+            }
+
+            // ✂️ Dividir texto en bloques seguros
+            function dividirTexto(texto, maxLength = 180) {
+                const frases = texto
+                    .replace(/\s+/g, ' ')
+                    .split(/(?<=[.!?])\s+/);
+
+                const bloques = [];
+                let actual = "";
+
+                frases.forEach(frase => {
+                    if ((actual + frase).length <= maxLength) {
+                        actual += frase + " ";
+                    } else {
+                        bloques.push(actual.trim());
+                        actual = frase + " ";
+                    }
+                });
+
+                if (actual.trim()) bloques.push(actual.trim());
+                return bloques;
+            }
+
+            // 🎙️ Hablar en cola (NO se corta)
+            function hablar(texto = textoExplicativo) {
+                if (!('speechSynthesis' in window)) return;
+
+                detener();
+
+                const voz = obtenerVozEspañol();
+                if (!voz) {
+                    console.warn("⚠️ Voces no disponibles aún");
+                    return;
+                }
+
+                const bloques = dividirTexto(texto);
+                colaUtterances = bloques.map(bloque => {
+                    const u = new SpeechSynthesisUtterance(bloque);
+                    u.voice = voz;
+                    u.lang = "es-ES";
+                    u.rate = 1;
+                    u.pitch = 1.05;
+                    return u;
+                });
+
+                reproducirCola();
+            }
+
+            function reproducirCola() {
+                if (!colaUtterances.length) {
+                    detener();
+                    return;
+                }
+
+                reproduciendo = true;
+                const u = colaUtterances.shift();
+
+                u.onstart = () => {
+                    avatarAudio.classList.add('speaking');
+                    btnDetener.style.display = 'block';
+                };
+
+                u.onend = () => {
+                    reproducirCola();
+                };
+
+                u.onerror = () => {
+                    reproducirCola();
+                };
+
+                speechSynthesis.speak(u);
+            }
+
+            // 🛑 Detener
+            function detener() {
+                speechSynthesis.cancel();
+                colaUtterances = [];
+                reproduciendo = false;
+                avatarAudio.classList.remove('speaking');
+                btnDetener.style.display = 'none';
+            }
+
+            // 🎧 Eventos
+            avatarAudio.addEventListener('click', () => hablar());
+            btnDetener.addEventListener('click', detener);
+
+            // ⏳ Esperar voces (CRÍTICO)
+            speechSynthesis.onvoiceschanged = () => {
+                obtenerVozEspañol();
+            };
+
+        });
+    </script>
+
+    <style>
+        /* Efecto de "hablando" */
+        #avatarAudio.speaking {
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+    </style>
 
 </body>
 

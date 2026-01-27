@@ -397,13 +397,13 @@
                                 </div>
 
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <div class="card-title">
+                                    <!-- <div class="card-title">
                                         <i class="fas fa-chart-line me-2"></i>
                                         Lista de Indicadores
-                                    </div>
-                                    <div class="card-tools">
+                                    </div> -->
+                                    <!-- <div class="card-tools">
                                         <span class="badge bg-primary" id="totalIndicadores">0 indicadores</span>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <!-- Spinner mientras carga -->
@@ -2040,6 +2040,159 @@
     <script src="/js/navbar-user.js"></script>
     <script src="/js/logout.js"></script>
 
+
+        <script>
+        window.addEventListener("load", () => {
+
+            const avatarAudio = document.getElementById('avatarAudio');
+            const btnDetener = document.getElementById('btnDetenerVoz');
+
+            const textoExplicativo = `
+    ¡Hola! Desde aqui se registran las mediciones de cada indicador.
+    En la columna de estado se señala en color rojo si el indicador se encuentra demorado, es decir, si no se ha registrado la medición correspondiente al último período finalizado.
+    En color verde se indica que se ha registrado correctamente la última medición.
+    En color azul se indica que se han registrado mediciones de frecuencia eventual.
+    En color gris se indica que aun no hay mediciones registradas para ese indicador.
+    El ícono azul de la ultima columna permite acceder a los datos del indicador.
+    El ícono amarillo permite registrar una nueva medición.
+    El orden de presentación de la información puede modificarse haciendo clic en los encabezados de cada columna.
+    En el registro de una nueva medición la aplicación propone y habilita automáticamente el período correspondiente al inmediato siguiente a la última medición registrada. No se pueden registrar mediciones fuera de secuencia.
+    `;
+
+            let vozSeleccionada = null;
+            let colaUtterances = [];
+            let reproduciendo = false;
+
+            // 🔊 Obtener voz en español (prioridad Google)
+            function obtenerVozEspañol() {
+                const voces = speechSynthesis.getVoices();
+                if (!voces.length) return null;
+
+                const vozGoogle = voces.find(v =>
+                    v.name.toLowerCase().includes("google") && v.lang.startsWith("es")
+                );
+                const vozEsp = voces.find(v => v.lang.startsWith("es"));
+
+                vozSeleccionada = vozGoogle || vozEsp || voces[0];
+                return vozSeleccionada;
+            }
+
+            // ✂️ Dividir texto en bloques seguros
+            function dividirTexto(texto, maxLength = 180) {
+                const frases = texto
+                    .replace(/\s+/g, ' ')
+                    .split(/(?<=[.!?])\s+/);
+
+                const bloques = [];
+                let actual = "";
+
+                frases.forEach(frase => {
+                    if ((actual + frase).length <= maxLength) {
+                        actual += frase + " ";
+                    } else {
+                        bloques.push(actual.trim());
+                        actual = frase + " ";
+                    }
+                });
+
+                if (actual.trim()) bloques.push(actual.trim());
+                return bloques;
+            }
+
+            // 🎙️ Hablar en cola (NO se corta)
+            function hablar(texto = textoExplicativo) {
+                if (!('speechSynthesis' in window)) return;
+
+                detener();
+
+                const voz = obtenerVozEspañol();
+                if (!voz) {
+                    console.warn("⚠️ Voces no disponibles aún");
+                    return;
+                }
+
+                const bloques = dividirTexto(texto);
+                colaUtterances = bloques.map(bloque => {
+                    const u = new SpeechSynthesisUtterance(bloque);
+                    u.voice = voz;
+                    u.lang = "es-ES";
+                    u.rate = 1;
+                    u.pitch = 1.05;
+                    return u;
+                });
+
+                reproducirCola();
+            }
+
+            function reproducirCola() {
+                if (!colaUtterances.length) {
+                    detener();
+                    return;
+                }
+
+                reproduciendo = true;
+                const u = colaUtterances.shift();
+
+                u.onstart = () => {
+                    avatarAudio.classList.add('speaking');
+                    btnDetener.style.display = 'block';
+                };
+
+                u.onend = () => {
+                    reproducirCola();
+                };
+
+                u.onerror = () => {
+                    reproducirCola();
+                };
+
+                speechSynthesis.speak(u);
+            }
+
+            // 🛑 Detener
+            function detener() {
+                speechSynthesis.cancel();
+                colaUtterances = [];
+                reproduciendo = false;
+                avatarAudio.classList.remove('speaking');
+                btnDetener.style.display = 'none';
+            }
+
+            // 🎧 Eventos
+            avatarAudio.addEventListener('click', () => hablar());
+            btnDetener.addEventListener('click', detener);
+
+            // ⏳ Esperar voces (CRÍTICO)
+            speechSynthesis.onvoiceschanged = () => {
+                obtenerVozEspañol();
+            };
+
+        });
+    </script>
+
+    <style>
+        /* Efecto de "hablando" */
+        #avatarAudio.speaking {
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+    </style>
 </body>
 
 </html>

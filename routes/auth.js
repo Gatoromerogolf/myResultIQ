@@ -150,6 +150,7 @@ async function registrarAuditoria({
     req,
     detalle = null
 }) {
+
     await pool.query(
         `INSERT INTO auditoria_sesiones
      (usuario_id, username, evento, resultado, ip, user_agent, detalle)

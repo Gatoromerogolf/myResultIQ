@@ -5697,13 +5697,13 @@
     </script> -->
 
 
-<script>
-window.addEventListener("load", () => {
+    <script>
+        window.addEventListener("load", () => {
 
-    const avatarAudio = document.getElementById('avatarAudio');
-    const btnDetener = document.getElementById('btnDetenerVoz');
+            const avatarAudio = document.getElementById('avatarAudio');
+            const btnDetener = document.getElementById('btnDetenerVoz');
 
-    const textoExplicativo = `
+            const textoExplicativo = `
     ¡Hola! Este es el panel principal de la aplicación.
     La solución ofrece capacidades de exploración dinámica, permitiendo profundizar en la información a través de múltiples niveles de detalle con solo hacer clic en los elementos de interés.
     Los iconos que ves a la izquierda te permiten ver y ocultar el menu de opciones, ampliar toda la pantalla y reproducir el audio de la presentación general.    
@@ -5712,120 +5712,119 @@ window.addEventListener("load", () => {
     ¡Comencemos!
     `;
 
-    let vozSeleccionada = null;
-    let colaUtterances = [];
-    let reproduciendo = false;
+            let vozSeleccionada = null;
+            let colaUtterances = [];
+            let reproduciendo = false;
 
-    // 🔊 Obtener voz en español (prioridad Google)
-    function obtenerVozEspañol() {
-        const voces = speechSynthesis.getVoices();
-        if (!voces.length) return null;
+            // 🔊 Obtener voz en español (prioridad Google)
+            function obtenerVozEspañol() {
+                const voces = speechSynthesis.getVoices();
+                if (!voces.length) return null;
 
-        const vozGoogle = voces.find(v =>
-            v.name.toLowerCase().includes("google") && v.lang.startsWith("es")
-        );
-        const vozEsp = voces.find(v => v.lang.startsWith("es"));
+                const vozGoogle = voces.find(v =>
+                    v.name.toLowerCase().includes("google") && v.lang.startsWith("es")
+                );
+                const vozEsp = voces.find(v => v.lang.startsWith("es"));
 
-        vozSeleccionada = vozGoogle || vozEsp || voces[0];
-        return vozSeleccionada;
-    }
-
-    // ✂️ Dividir texto en bloques seguros
-    function dividirTexto(texto, maxLength = 180) {
-        const frases = texto
-            .replace(/\s+/g, ' ')
-            .split(/(?<=[.!?])\s+/);
-
-        const bloques = [];
-        let actual = "";
-
-        frases.forEach(frase => {
-            if ((actual + frase).length <= maxLength) {
-                actual += frase + " ";
-            } else {
-                bloques.push(actual.trim());
-                actual = frase + " ";
+                vozSeleccionada = vozGoogle || vozEsp || voces[0];
+                return vozSeleccionada;
             }
+
+            // ✂️ Dividir texto en bloques seguros
+            function dividirTexto(texto, maxLength = 180) {
+                const frases = texto
+                    .replace(/\s+/g, ' ')
+                    .split(/(?<=[.!?])\s+/);
+
+                const bloques = [];
+                let actual = "";
+
+                frases.forEach(frase => {
+                    if ((actual + frase).length <= maxLength) {
+                        actual += frase + " ";
+                    } else {
+                        bloques.push(actual.trim());
+                        actual = frase + " ";
+                    }
+                });
+
+                if (actual.trim()) bloques.push(actual.trim());
+                return bloques;
+            }
+
+            // 🎙️ Hablar en cola (NO se corta)
+            function hablar(texto = textoExplicativo) {
+                if (!('speechSynthesis' in window)) return;
+
+                detener();
+
+                const voz = obtenerVozEspañol();
+                if (!voz) {
+                    console.warn("⚠️ Voces no disponibles aún");
+                    return;
+                }
+
+                const bloques = dividirTexto(texto);
+                colaUtterances = bloques.map(bloque => {
+                    const u = new SpeechSynthesisUtterance(bloque);
+                    u.voice = voz;
+                    u.lang = "es-ES";
+                    u.rate = 1;
+                    u.pitch = 1.05;
+                    return u;
+                });
+
+                reproducirCola();
+            }
+
+            function reproducirCola() {
+                if (!colaUtterances.length) {
+                    detener();
+                    return;
+                }
+
+                reproduciendo = true;
+                const u = colaUtterances.shift();
+
+                u.onstart = () => {
+                    avatarAudio.classList.add('speaking');
+                    btnDetener.style.display = 'block';
+                };
+
+                u.onend = () => {
+                    reproducirCola();
+                };
+
+                u.onerror = () => {
+                    reproducirCola();
+                };
+
+                speechSynthesis.speak(u);
+            }
+
+            // 🛑 Detener
+            function detener() {
+                speechSynthesis.cancel();
+                colaUtterances = [];
+                reproduciendo = false;
+                avatarAudio.classList.remove('speaking');
+                btnDetener.style.display = 'none';
+            }
+
+            // 🎧 Eventos
+            avatarAudio.addEventListener('click', () => hablar());
+            btnDetener.addEventListener('click', detener);
+
+            // ⏳ Esperar voces (CRÍTICO)
+            speechSynthesis.onvoiceschanged = () => {
+                obtenerVozEspañol();
+            };
+
         });
-
-        if (actual.trim()) bloques.push(actual.trim());
-        return bloques;
-    }
-
-    // 🎙️ Hablar en cola (NO se corta)
-    function hablar(texto = textoExplicativo) {
-        if (!('speechSynthesis' in window)) return;
-
-        detener();
-
-        const voz = obtenerVozEspañol();
-        if (!voz) {
-            console.warn("⚠️ Voces no disponibles aún");
-            return;
-        }
-
-        const bloques = dividirTexto(texto);
-        colaUtterances = bloques.map(bloque => {
-            const u = new SpeechSynthesisUtterance(bloque);
-            u.voice = voz;
-            u.lang = "es-ES";
-            u.rate = 1;
-            u.pitch = 1.05;
-            return u;
-        });
-
-        reproducirCola();
-    }
-
-    function reproducirCola() {
-        if (!colaUtterances.length) {
-            detener();
-            return;
-        }
-
-        reproduciendo = true;
-        const u = colaUtterances.shift();
-
-        u.onstart = () => {
-            avatarAudio.classList.add('speaking');
-            btnDetener.style.display = 'block';
-        };
-
-        u.onend = () => {
-            reproducirCola();
-        };
-
-        u.onerror = () => {
-            reproducirCola();
-        };
-
-        speechSynthesis.speak(u);
-    }
-
-    // 🛑 Detener
-    function detener() {
-        speechSynthesis.cancel();
-        colaUtterances = [];
-        reproduciendo = false;
-        avatarAudio.classList.remove('speaking');
-        btnDetener.style.display = 'none';
-    }
-
-    // 🎧 Eventos
-    avatarAudio.addEventListener('click', () => hablar());
-    btnDetener.addEventListener('click', detener);
-
-    // ⏳ Esperar voces (CRÍTICO)
-    speechSynthesis.onvoiceschanged = () => {
-        obtenerVozEspañol();
-    };
-
-});
-</script>
+    </script>
 
 
 
-    
     <style>
         /* Efecto de "hablando" */
         #avatarAudio.speaking {

@@ -22,7 +22,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       columns: [
         {
           data: 'fecha',
-          render: d => new Date(d).toLocaleString()
+          render: {
+            display: d => new Date(d).toLocaleString(),
+            sort: d => new Date(d).getTime()
+          }
         },
         { data: 'username' },
         { data: 'evento' },
