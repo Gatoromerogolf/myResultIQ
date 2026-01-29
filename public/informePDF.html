@@ -226,7 +226,7 @@
       background-position: center !important;
       background-repeat: no-repeat !important;
       color: rgb(65, 138, 247);
-      font-family: 'Montserrat', sans-serif;
+      /* font-family: 'Montserrat', sans-serif; */
     }
 
     /* Overlay degradado premium */
@@ -299,7 +299,7 @@
 
     .cover2-indiGes {
       font-size: 40pt;
-      font-weight: 600;
+      font-weight: 500;
       color: #333333;
       position: absolute;
       top: 130mm;
@@ -509,6 +509,21 @@
       padding: 6px 0;
       border-bottom: 1px dashed #eee
     }
+
+    .toc-level-1 {
+      margin-left: 0;
+      /* font-weight: bold; */
+    }
+
+    .toc-level-2 {
+      margin-left: 20px;
+    }
+
+    .toc-level-3 {
+      margin-left: 40px;
+      font-size: 0.95em;
+    }
+
 
     .separator {
       width: 65%;
@@ -1036,33 +1051,127 @@
       const ul = document.createElement('ul'); ul.className = 'toc-list';
       // Generamos entradas acordes a las secciones previstas
       const entradas = [
-        'Marco Introductorio y Visión General',
-        'Resumen Ejecutivo',
-        'Indicadores Globales',
-        'Cumplimiento por Destino',
-        'Composición de los resultados',
-        'Indicadores por Contribución',
-        'BSC - Balance Scorecard',
-        '   1. Gráfico de cumplimiento promedio',
-        '   2. Tabla de peerspectivas',
-        '   3. Detalle de indicadorespor perspectiva',
-        '      3.1. Indicadores de Perspectiva Clientes',
-        '      3.2. Indicadores de Perspectiva Financiera',
-        '      3.3. Indicadores de Perspectiva Capital Humano',
-        '      3.4. Indicadores de Perspectiva Procesos',
-        'Anexo 1 - Ponderación de Destinos e Indicadores',
-        'Anexo 2 - Usuarios Registrados',
-        'Anexo 3 - Estructura Organizacional',
-        'Anexo 4 - Dependencias y Roles de Usuarios'
+        { id: 'marco-intro', text: 'Marco Introductorio y Visión General', level: 1 },
+        { id: 'resumen-ejecutivo', text: 'Resumen Ejecutivo', level: 1 },
+        { id: 'indicadores-globales', text: 'Indicadores Globales', level: 1 },
+        { id: 'cumplimiento-por-destino', text: 'Cumplimiento por Destino', level: 1 },
+        { id: 'composicion-resultados', text: 'Composición de los resultados', level: 1 },
+        { id: 'indicadores-contribucion', text: 'Indicadores por Contribución', level: 1 },
+        { id: 'bsc-balance-scorecard', text: 'BSC - Balance Scorecard', level: 1 },
+
+        { id: 'bsc-grafico-cumplimiento', text: 'Gráfico de cumplimiento promedio', level: 2 },
+        { id: 'bsc-tabla-perspectivas', text: 'Tabla de perspectivas', level: 2 },
+
+        { text: 'Detalle de indicadores por perspectiva', level: 2 },
+        { text: 'Indicadores de Perspectiva Clientes', level: 3 },
+        { text: 'Indicadores de Perspectiva Financiera', level: 3 },
+        { text: 'Indicadores de Perspectiva Capital Humano', level: 3 },
+        { text: 'Indicadores de Perspectiva Procesos', level: 3 },
+
+        { id: 'ponderacion-destinos-indicadores', text: 'Ponderación de Destinos e Indicadores', level: 1, isAnexo: true },
+        { id: 'usuarios-registrados', text: 'Usuarios Registrados', level: 1, isAnexo: true },
+        { id: 'estructura-organizacional', text: 'Estructura Organizacional', level: 1, isAnexo: true },
+        { id: 'dependencias-roles-usuarios', text: 'Dependencias y Roles de Usuarios', level: 1, isAnexo: true },
+        { id: 'relacion-usuarios-indicadores', text: 'Relación entre usuarios e indicadores', level: 1, isAnexo: true }
       ];
-      entradas.forEach((e, i) => {
-        const li = document.createElement('li'); li.textContent = `${i + 1}. ${e}`;
+
+      // const entradas = Array.from(
+      //   document.querySelectorAll('.section-title[data-toc]')
+      // ).map(h => ({
+      //   id: h.dataset.toc,
+      //   text: h.textContent.trim(),
+      //   level: parseInt(h.dataset.level || '1', 10),
+      //   isAnexo: h.dataset.anexo === 'true',
+      //   element: h
+      // }));
+
+
+      const tocMap = {};
+      let c1 = 0, c2 = 0, c3 = 0;
+      let anexoCount = 0;
+      let enAnexos = false;
+
+      entradas.forEach(item => {
+        const li = document.createElement('li');
+        let numeracion = '';
+
+        if (item.isAnexo) {
+          if (!enAnexos) {
+            enAnexos = true;
+            anexoCount = 0;
+          }
+
+          anexoCount++;
+          numeracion = `Anexo ${toRoman(anexoCount)} - `;
+          li.className = 'toc-anexo';
+
+        } else {
+          if (item.level === 1) {
+            c1++;
+            c2 = 0;
+            c3 = 0;
+            numeracion = `${c1}.`;
+            li.className = 'toc-level-1';
+          }
+
+          if (item.level === 2) {
+            c2++;
+            c3 = 0;
+            numeracion = `${c1}.${c2}.`;
+            li.className = 'toc-level-2';
+          }
+
+          if (item.level === 3) {
+            c3++;
+            numeracion = `${c1}.${c2}.${c3}.`;
+            li.className = 'toc-level-3';
+          }
+        }
+
+        li.textContent = `${numeracion} ${item.text}`;
         ul.appendChild(li);
+
+        if (item.id) {
+          tocMap[item.id] = numeracion.trim();
+        }
       });
+
+      console.log('Índice agregado. Total páginas:', document.querySelectorAll('.page').length);
 
       content.appendChild(ul);
 
       documento.appendChild(page);
+
+      return tocMap;
+
+      // 🥼🥼🥼
+      function toRoman(num) {
+        const map = [
+          { v: 1000, s: 'M' },
+          { v: 900, s: 'CM' },
+          { v: 500, s: 'D' },
+          { v: 400, s: 'CD' },
+          { v: 100, s: 'C' },
+          { v: 90, s: 'XC' },
+          { v: 50, s: 'L' },
+          { v: 40, s: 'XL' },
+          { v: 10, s: 'X' },
+          { v: 9, s: 'IX' },
+          { v: 5, s: 'V' },
+          { v: 4, s: 'IV' },
+          { v: 1, s: 'I' }
+        ];
+
+        let result = '';
+        map.forEach(m => {
+          while (num >= m.v) {
+            result += m.s;
+            num -= m.v;
+          }
+        });
+        return result;
+      }
+
     }
 
     // ===============================================================================
@@ -1073,6 +1182,8 @@
       const h = document.createElement('h2');
       h.className = 'section-title';
       h.textContent = 'Marco Introductorio y Visión General';
+      h.dataset.toc = 'marco-intro';
+      h.dataset.level = '1';      //  marca para el índice
       content.appendChild(h);
 
       const p = document.createElement('div');
@@ -1142,6 +1253,8 @@
       const h = document.createElement('h2');
       h.className = 'section-title';
       h.textContent = 'Resumen Ejecutivo';
+      h.dataset.toc = 'resumen-ejecutivo';
+      h.dataset.level = '1';
       content.appendChild(h);
 
       // -----------------------
@@ -1305,6 +1418,8 @@
       const h = document.createElement('h2');
       h.className = 'section-title';
       h.textContent = 'Indicadores Globales';
+      h.dataset.toc = 'indicadores-globales';
+      h.dataset.level = '1';
       content.appendChild(h);
 
       // =======================
@@ -1566,7 +1681,11 @@
     function buildCumplimientoPorDestino() {
 
       const { page, content } = createPage();
-      const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'Cumplimiento por Destino';
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Cumplimiento por Destino';
+      h.dataset.toc = 'cumplimiento-por-destino';
+      h.dataset.level = '1';
       content.appendChild(h);
 
       const p = document.createElement('p'); p.innerHTML = `
@@ -1665,6 +1784,8 @@
         const h = document.createElement('h2');
         h.className = 'section-title';
         h.textContent = 'Composición de la última medición';
+        h.dataset.toc = 'composicion-resultados';
+        h.dataset.level = '1';
         content.appendChild(h);
 
         const warn = document.createElement('p');
@@ -1843,6 +1964,8 @@
         const h = document.createElement('h2');
         h.className = 'section-title';
         h.textContent = 'Indicadores por Contribución';
+        h.dataset.toc = 'indicadores-contribucion';
+        h.dataset.level = '1';
         content.appendChild(h);
 
         const warn = document.createElement('p');
@@ -1992,15 +2115,27 @@
     // ===============================================================================
     function buildBSC() {
       const { page, content } = createPage();
-      const h = document.createElement('h2'); h.className = 'section-title'; h.textContent = 'BSC - Balanced Scorecard';
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'BSC - Balanced Scorecard';
+      h.dataset.toc = 'bsc-balance-scorecard';
+      h.dataset.level = '1';
 
       content.appendChild(h);
 
-      const p0 = document.createElement('p'); p0.innerHTML = `
-      <b>1. Gráfico de cumplimiento promedio.</b><br>
+      const p0 = document.createElement('p');
+      p0.className = 'section-title';
+      p0.textContent = 'BSC - Gráfico de cumplimiento promedio';
+      p0.dataset.toc = 'bsc-grafico-cumplimiento';
+      p0.dataset.level = '2';
+
+      content.appendChild(p0);
+
+      const p1 = document.createElement('p');
+      p1.innerHTML = `
       A continuación se presentan los resultados obtenidos en las distintas perspectivas del BSC durante el período evaluado.
       `;
-      content.appendChild(p0);
+      content.appendChild(p1);
 
       const imgBSC = localStorage.getItem("graficoBSC_Barras");
       if (!imgBSC) {
@@ -2052,9 +2187,15 @@
       localStorage.removeItem("graficoBSC_Barras");
 
       // --- PUNTO 2: TABLA DE PERSPECTIVAS ---
+      const p3 = document.createElement('p');
+      p3.className = 'section-title';
+      p3.textContent = 'BSC - Tabla de perspectivas';
+      p3.dataset.toc = 'bsc-tabla-perspectivas';
+      p3.dataset.level = '2';
+      content.appendChild(p3);
+
       const tituloTabla = document.createElement('p');
-      tituloTabla.innerHTML = `<br><br>
-          <b>2. Tabla de perspectivas.</b><br>
+      tituloTabla.innerHTML = `
           Valores promedios y ponderados según el peso relativo asignado a cada indicador incluido en cada perspectiva.
           `;
       content.appendChild(tituloTabla);
@@ -2285,6 +2426,9 @@
           const h = document.createElement('h2');
           h.className = 'section-title';
           h.textContent = 'Ponderación de Destinos e Indicadores';
+          h.dataset.toc = 'ponderacion-destinos-indicadores';
+          h.dataset.level = '1';
+
           content.appendChild(h);
 
           const p = document.createElement('p');
@@ -2506,6 +2650,8 @@
           const h = document.createElement("h2");
           h.className = "section-title";
           h.textContent = "Usuarios registrados";
+          h.dataset.toc = 'usuarios-registrados';
+          h.dataset.level = '1';
           content.appendChild(h);
 
           const p = document.createElement("p");
@@ -2641,6 +2787,8 @@
       const h = document.createElement("h2");
       h.className = "section-title";
       h.textContent = "Estructura Organizacional";
+      h.dataset.toc = 'estructura-organizacional';
+      h.dataset.level = '1';      //  marca para el índice
       content.appendChild(h);
 
       const p = document.createElement("p");
@@ -2761,6 +2909,7 @@
       const h = document.createElement("h2");
       h.className = "section-title";
       h.textContent = "Anexo – Sectores y Dotación de Personal";
+
       content.appendChild(h);
 
       const p = document.createElement("p");
@@ -2769,7 +2918,6 @@
       content.appendChild(p);
 
       function renderNodo(nodo, parent) {
-
         const bloque = document.createElement("div");
         bloque.style.marginLeft = "10px";
 
@@ -2817,6 +2965,8 @@
       const h = document.createElement('h2');
       h.className = 'section-title';
       h.textContent = 'Dependencias y Roles de Usuarios';
+      h.dataset.toc = 'dependencias-roles-usuarios';
+      h.dataset.level = '1';      //  marca para el índice
       content.appendChild(h);
 
       const p = document.createElement('p');
@@ -2825,7 +2975,7 @@
 
       const resp = await fetch('/usuarios').then(r => r.json());
       const usuarios = Array.isArray(resp) ? resp : resp.data || resp.rows || [];
-      console.log(usuarios)
+      // console.log(usuarios)
 
       const arbol = construirArbolOrganigrama(usuarios);
 
@@ -3015,15 +3165,12 @@
 
       // 🥼🥼🥼
       function obtenerRutaSector(idSector, mapSectores) {
-
         const ruta = [];
         let actual = mapSectores[idSector];
-
         while (actual) {
           ruta.unshift(actual.nombre); // agrega al inicio
           actual = actual.sector_padre_id ? mapSectores[actual.sector_padre_id] : null;
         }
-
         return ruta.join(' > ');
       }
 
@@ -3046,16 +3193,13 @@
       function agregarLineas(lineasNecesarias) {
         if (lineasActuales + lineasNecesarias > MAX_LINEAS) {
           nuevaPagina('Usuarios e indicadores (cont.)');
-        }n
+        }
         lineasActuales += lineasNecesarias;
       }
-
     }
 
 
-
     //🥼🥼🥼 renderTreeForReport
-
     const PAGE_HEIGHT = 1120; // px aprox A4
     const PAGE_PADDING = 160; // header + footer + márgenes
     const MAX_CONTENT_HEIGHT = PAGE_HEIGHT - PAGE_PADDING;
@@ -3064,134 +3208,14 @@
 
     function countSectorRows(sector) {
       let count = 1; // nombre del sector
-
       sector.children.forEach(child => {
         if (child.type === 'indicador') {
           count += 1;
         }
       });
-
       return count;
     }
 
-
-    // // 🏀🏀🏀 renderTreeForReportPaged
-    // function renderTreeForReportPaged(treeData) {
-
-    //   let { page, content } = createPage();
-    //   let currentHeight = 0;
-
-    //   const container = document.createElement('div');
-    //   container.className = 'tree-report-container';
-    //   content.appendChild(container);
-
-    //   documento.appendChild(page);
-
-    //   function renderNode(node, level = 0) {
-
-    //     const row = document.createElement('div');
-    //     row.className = 'tree-report-row';
-    //     row.style.marginLeft = `${level * 18}px`;
-    //     row.style.display = 'flex';
-    //     row.style.justifyContent = 'space-between';
-    //     row.style.alignItems = 'center';
-    //     row.style.marginBottom = '6px';
-
-    //     row.innerHTML = `
-    //         <div>
-    //           <span style="color:#666; font-size:12px; margin-right:6px;">
-    //             ${node.weight?.toFixed(2) || 0}%
-    //           </span>
-    //           ${node.type === 'sector' || node.id === 'root'
-    //         ? `<strong>${node.name}</strong>`
-    //         : node.name
-    //       }
-    //         </div>
-    //         <div>
-    //           ${node.type === 'indicador'
-    //         ? `${node.globalWeight?.toFixed(2) || 0}%`
-    //         : ''
-    //       }
-    //         </div>
-    //       `;
-
-    //     container.appendChild(row);
-
-    //     const rowHeight = row.offsetHeight;
-    //     currentHeight += rowHeight;
-
-    //     // 🚨 Salto de página
-    //     if (currentHeight > MAX_CONTENT_HEIGHT) {
-
-    //       // crear nueva página
-    //       ({ page, content } = createPage());
-    //       documento.appendChild(page);
-
-    //       // nuevo contenedor
-    //       container.innerHTML = '';
-    //       const newContainer = document.createElement('div');
-    //       newContainer.className = 'tree-report-container';
-    //       content.appendChild(newContainer);
-
-    //       // reset
-    //       currentHeight = 0;
-
-    //       // mover fila a la nueva página
-    //       newContainer.appendChild(row);
-    //     }
-
-    //     if (node.children && node.children.length > 0) {
-    //       node.children.forEach(child => renderNode(child, level + 1));
-    //     }
-    //   }
-
-    //   renderNode(treeData, 0);
-    // }
-
-
-    // 🏀🏀🏀 renderTreeForReport
-    //   function renderTreeForReport(node, level = 0, container) {
-
-    //     const row = document.createElement('div');
-    //     row.className = 'tree-report-row';
-    //     row.style.marginLeft = `${level * 18}px`;
-    //     row.style.marginBottom = '6px';
-    //     row.style.display = 'flex';
-    //     row.style.justifyContent = 'space-between';
-    //     row.style.alignItems = 'center';
-
-    //     // 🧱 Parte izquierda (nombre + peso relativo)
-    //     const left = document.createElement('div');
-    //     left.innerHTML = `
-    //   <span style="color:#666; font-size:12px; margin-right:6px;">
-    //     ${node.weight?.toFixed(2) || 0}%
-    //   </span>
-    //   ${node.type === 'sector' || node.id === 'root'
-    //         ? `<strong>${node.name}</strong>`
-    //         : node.name
-    //       }
-    // `;
-
-    //     // 🌍 Parte derecha (peso global)
-    //     const right = document.createElement('div');
-    //     if (node.type === 'indicador') {
-    //       right.innerHTML = `
-    //     <span style="font-size:12px;">
-    //       ${node.globalWeight?.toFixed(2) || 0}%
-    //     </span>
-    //   `;
-    //     }
-
-    //     row.appendChild(left);
-    //     row.appendChild(right);
-    //     container.appendChild(row);
-
-    //     if (node.children && node.children.length > 0) {
-    //       node.children.forEach(child => {
-    //         renderTreeForReport(child, level + 1, container);
-    //       });
-    //     }
-    //   }
 
     // ===============================================================================
     // 🧲🧲🧲 buildAnexos
@@ -3218,6 +3242,26 @@
       });
     }
 
+
+    // ===============================================================================
+    // 🧲🧲🧲 numerarTitulosDesdeIndice
+    // ===============================================================================
+    function numerarTitulosDesdeIndice(tocMap) {
+      document.querySelectorAll('[data-toc]').forEach(h => {
+        const id = h.dataset.toc;
+        const numero = tocMap[id];
+
+        if (!numero) return;
+
+        // evita duplicar si se vuelve a ejecutar
+        if (h.dataset.numbered) return;
+
+        h.textContent = `${numero} ${h.textContent}`;
+        h.dataset.numbered = 'true';
+      });
+    }
+
+
     // ===============================================================================
     // 🧲🧲🧲 buildDocumento completo 🧲🧲🧲
     // ===============================================================================
@@ -3225,7 +3269,7 @@
       clearDocument();
       // buildCover();
       await buildCaratula();
-      await buildIndice();
+      const tocMap = await buildIndice();
       await buildMarcoIntroductorio();
       await buildResumen();
       await buildIndicadoresGlobales();
@@ -3243,6 +3287,10 @@
       await buildUsuariosIndicadores();
       // buildAnexos();
       numerarPaginas();
+      numerarTitulosDesdeIndice(tocMap);
+
+      console.log('Documento final. Total páginas:', document.querySelectorAll('.page').length);
+
     }
 
 
