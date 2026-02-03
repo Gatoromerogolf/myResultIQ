@@ -485,7 +485,7 @@
       padding: 8px;
       border: 1px solid #eee;
       text-align: left;
-      font-size: 13px
+      font-size: 16px
     }
 
     th {
@@ -1056,23 +1056,24 @@
         { id: 'indicadores-globales', text: 'Indicadores Globales', level: 1 },
         { id: 'cumplimiento-por-destino', text: 'Cumplimiento por Destino', level: 1 },
         { id: 'composicion-resultados', text: 'Composición de los resultados', level: 1 },
-        { id: 'indicadores-contribucion', text: 'Indicadores por Contribución', level: 1 },
+        { id: 'indicadores-contribucion', text: 'Contribución por Indicador', level: 1 },
         { id: 'bsc-balance-scorecard', text: 'BSC - Balance Scorecard', level: 1 },
 
         { id: 'bsc-grafico-cumplimiento', text: 'Gráfico de cumplimiento promedio', level: 2 },
         { id: 'bsc-tabla-perspectivas', text: 'Tabla de perspectivas', level: 2 },
 
-        { text: 'Detalle de indicadores por perspectiva', level: 2 },
-        { text: 'Indicadores de Perspectiva Clientes', level: 3 },
-        { text: 'Indicadores de Perspectiva Financiera', level: 3 },
-        { text: 'Indicadores de Perspectiva Capital Humano', level: 3 },
-        { text: 'Indicadores de Perspectiva Procesos', level: 3 },
+        { id: 'bsc-detalle-perspectivas', text: 'Detalle de indicadores por perspectiva', level: 2 },
+        { id: 'bsc-perspectiva-1', text: 'Indicadores de Perspectiva Clientes', level: 3 },
+        { id: 'bsc-perspectiva-2', text: 'Indicadores de Perspectiva Financiera', level: 3 },
+        { id: 'bsc-perspectiva-3', text: 'Indicadores de Perspectiva Capital Humano', level: 3 },
+        { id: 'bsc-perspectiva-4', text: 'Indicadores de Perspectiva Procesos', level: 3 },
+
 
         { id: 'ponderacion-destinos-indicadores', text: 'Ponderación de Destinos e Indicadores', level: 1, isAnexo: true },
         { id: 'usuarios-registrados', text: 'Usuarios Registrados', level: 1, isAnexo: true },
         { id: 'estructura-organizacional', text: 'Estructura Organizacional', level: 1, isAnexo: true },
-        { id: 'dependencias-roles-usuarios', text: 'Dependencias y Roles de Usuarios', level: 1, isAnexo: true },
-        { id: 'relacion-usuarios-indicadores', text: 'Relación entre usuarios e indicadores', level: 1, isAnexo: true }
+        { id: 'dependencias-roles-usuarios', text: 'Dependencia entre Usuarios y Roles', level: 1, isAnexo: true },
+        { id: 'relacion-usuarios-indicadores', text: 'Usuarios e indicadores asignados', level: 1, isAnexo: true }
       ];
 
       // const entradas = Array.from(
@@ -1175,7 +1176,7 @@
     }
 
     // ===============================================================================
-    // 🧲🧲🧲 buildMarcoIntroductorio
+    // 🧲🧲🧲 buildMarcoIntroductorio  -  1. Marco Introductorio y Visión General
     // ===============================================================================
     function buildMarcoIntroductorio() {
       const { page, content } = createPage();
@@ -1246,7 +1247,7 @@
     }
 
     // ===============================================================================
-    // 🧲🧲🧲 buildResumen
+    // 🧲🧲🧲 buildResumen - 2. Resumen Ejecutivo
     // ===============================================================================
     async function buildResumen() {
       const { page, content } = createPage();
@@ -1409,7 +1410,7 @@
 
 
     // ===============================================================================
-    // 🧲🧲🧲 buildIndicadoresGlobales
+    // 🧲🧲🧲 buildIndicadoresGlobales - 3. Indicadores Globales
     // ===============================================================================
     function buildIndicadoresGlobales() {
       const { page, content } = createPage();
@@ -1676,7 +1677,7 @@
 
 
     // ===============================================================================
-    // 🧲🧲🧲 cumplimientoPorDestino
+    // 🧲🧲🧲 cumplimientoPorDestino - 4. Cumplimiento por Destino
     // ===============================================================================   
     function buildCumplimientoPorDestino() {
 
@@ -1771,7 +1772,7 @@
     }
 
     // ===============================================================================
-    // 🧲🧲🧲 buildUltimoMes
+    // 🧲🧲🧲 buildUltimoMes - 5. Composición de la última medición
     // ===============================================================================
     function buildUltimoMes() {
 
@@ -1779,21 +1780,24 @@
         localStorage.getItem('detalleUltimoMesPDF')
       );
 
-      if (!dataPDF || !Array.isArray(dataPDF.indicadores)) {
-        const { page, content } = createPage();
-        const h = document.createElement('h2');
-        h.className = 'section-title';
-        h.textContent = 'Composición de la última medición';
-        h.dataset.toc = 'composicion-resultados';
-        h.dataset.level = '1';
-        content.appendChild(h);
+      const { page, content } = createPage();
+      const h = document.createElement('h2');
+      h.className = 'section-title';
+      h.textContent = 'Composición de la última medición';
+      h.dataset.toc = 'composicion-resultados';
+      h.dataset.level = '1';
+      content.appendChild(h);
 
-        const warn = document.createElement('p');
-        warn.textContent = 'No hay datos disponibles para este período.';
-        content.appendChild(warn);
-        documento.appendChild(page);
-        return;
-      }
+      const p = document.createElement('p');
+      p.innerHTML = `
+              Valor de los indicadores que conforman la última mediciónnn<br>
+            `;
+      content.appendChild(p);
+
+      const sub = document.createElement('h4');
+      sub.textContent = `Período: ${dataPDF.month}`;
+      content.appendChild(sub);
+
 
       // Agrupar por destino
       const grupos = dataPDF.indicadores.reduce((acc, d) => {
@@ -1835,7 +1839,6 @@
           alturaAcumulada += alturaTotal;
         } else {
           // Necesitamos dividir o crear nueva página
-
           // Si apenas empezamos la página, renderizar lo que se pueda
           if (alturaAcumulada < 200) {
             renderizarDestino(destino, indicadores);
@@ -1859,11 +1862,10 @@
       const total = document.createElement('p');
       total.style.marginTop = '12px';
       total.innerHTML = `
-        <strong>Total contribución del período:</strong>
-        ${dataPDF.totalContribucion.toFixed(2)}%
+        <strong>Total contribución del período:
+        ${dataPDF.totalContribucion.toFixed(2)}%</strong>
       `;
       currentContent.appendChild(total);
-
 
       //😎😎😎 iniciarNuevaPagina
       function iniciarNuevaPagina() {
@@ -1874,20 +1876,24 @@
 
         // Solo en la primera página agregar título y descripción
         if (esPrimeraPagina) {
+
+          // const { page, content } = createPage();
           const h = document.createElement('h2');
           h.className = 'section-title';
           h.textContent = 'Composición de la última medición';
-          currentContent.appendChild(h);
+          h.dataset.toc = 'composicion-resultados';
+          h.dataset.level = '1';
+          content.appendChild(h);
 
           const p = document.createElement('p');
           p.innerHTML = `
               Valor de los indicadores que conforman la última medición<br>
             `;
-          currentContent.appendChild(p);
+          content.appendChild(p);
 
           const sub = document.createElement('h4');
           sub.textContent = `Período: ${dataPDF.month}`;
-          currentContent.appendChild(sub);
+          content.appendChild(sub);
 
           alturaAcumulada = 180; // Altura estimada del encabezado
           esPrimeraPagina = false;
@@ -1903,7 +1909,6 @@
 
         documento.appendChild(currentPage);
       }
-
 
       //😎😎😎 renderizarDestino
       function renderizarDestino(destino, indicadores) {
@@ -1929,7 +1934,6 @@
             </thead>
             <tbody></tbody>
           `;
-
         const tbody = table.querySelector('tbody');
 
         indicadores.forEach(d => {
@@ -1943,37 +1947,18 @@
           `;
           tbody.appendChild(tr);
         });
-
         currentContent.appendChild(table);
       }
-
-
     }
 
     // ===============================================================================
-    // 🧲🧲🧲 buildIndicadoresPorContribucion
+    // 🧲🧲🧲 buildIndicadoresPorContribucion - 6. Contribución por Indicador
     // ===============================================================================
     function buildIndicadoresPorContribucion() {
 
       const dataPDF = JSON.parse(
         localStorage.getItem('detalleUltimoMesPDF')
       );
-
-      if (!dataPDF || !Array.isArray(dataPDF.indicadores)) {
-        const { page, content } = createPage();
-        const h = document.createElement('h2');
-        h.className = 'section-title';
-        h.textContent = 'Indicadores por Contribución';
-        h.dataset.toc = 'indicadores-contribucion';
-        h.dataset.level = '1';
-        content.appendChild(h);
-
-        const warn = document.createElement('p');
-        warn.textContent = 'No hay datos disponibles para este período.';
-        content.appendChild(warn);
-        documento.appendChild(page);
-        return;
-      }
 
       // Ordenar por contribución DESC
       const indicadoresOrdenados = [...dataPDF.indicadores].sort(
@@ -1984,12 +1969,11 @@
       let currentPage = null;
       let currentContent = null;
       let alturaAcumulada = 0;
-      const MAX_ALTURA = 950;
+      const MAX_ALTURA = 700;
       let esPrimeraPagina = true;
 
       // Iniciar primera página
       iniciarNuevaPagina();
-
 
       // Crear tabla única
       const table = document.createElement('table');
@@ -2009,7 +1993,7 @@
           <tbody></tbody>
         `;
 
-      const tbody = table.querySelector('tbody');
+      let tbody = table.querySelector('tbody');
       currentContent.appendChild(table);
       alturaAcumulada += 35; // Encabezado de tabla
 
@@ -2046,10 +2030,10 @@
         tr.innerHTML = `
             <td style="text-align:center">${getSemaforo(d.cumplimiento)}</td>
             <td>${d.indicador}</td>
-            <td style="font-size: 0.9em; color: #666;">${d.destinoNombre}</td>
-            <td>${d.cumplimiento.toFixed(2)}%</td>
-            <td>${d.peso.toFixed(2)}%</td>
-            <td><strong>${d.contribucion.toFixed(2)}%</strong></td>
+            <td style="font-size: 14px; color: #666;">${d.destinoNombre}</td>
+            <td style="text-align:right">${d.cumplimiento.toFixed(2)}%</td>
+            <td style="text-align:right">${d.peso.toFixed(2)}%</td>
+            <td style="text-align:right"><strong>${d.contribucion.toFixed(2)}%</strong></td>
           `;
         tbody.appendChild(tr);
         alturaAcumulada += alturaFila;
@@ -2063,8 +2047,8 @@
       const total = document.createElement('p');
       total.style.marginTop = '12px';
       total.innerHTML = `
-          <strong>Total contribución del período:</strong>
-          ${dataPDF.totalContribucion.toFixed(2)}%
+          <strong>Total contribución del período:
+          ${dataPDF.totalContribucion.toFixed(2)}%</strong>
         `;
       currentContent.appendChild(total);
 
@@ -2077,15 +2061,17 @@
         alturaAcumulada = 0;
 
         if (esPrimeraPagina) {
+
           const h = document.createElement('h2');
           h.className = 'section-title';
-          h.textContent = 'Indicadores por Contribución';
+          h.textContent = 'Contribución por Indicador';
+          h.dataset.toc = 'indicadores-contribucion';
+          h.dataset.level = '1';
           currentContent.appendChild(h);
 
           const p = document.createElement('p');
           p.innerHTML = `
-            A continuación se presentan todos los indicadores ordenados por su 
-            contribución al cumplimiento global, de mayor a menor impacto.<br>
+            Indicadores ordenados por su contribución al cumplimiento global, de mayor a menor impacto.<br>
           `;
           currentContent.appendChild(p);
 
@@ -2111,7 +2097,7 @@
     }
 
     // ===============================================================================
-    // 🧲🧲🧲 buildBSC
+    // 🧲🧲🧲 buildBSC - 7. Balance Scorecard
     // ===============================================================================
     function buildBSC() {
       const { page, content } = createPage();
@@ -2128,12 +2114,15 @@
       p0.textContent = 'BSC - Gráfico de cumplimiento promedio';
       p0.dataset.toc = 'bsc-grafico-cumplimiento';
       p0.dataset.level = '2';
+      p0.style.marginTop = '24px';
+      p0.style.fontWeight = '700';
+      p0.style.fontSize = '20px';
 
       content.appendChild(p0);
 
       const p1 = document.createElement('p');
       p1.innerHTML = `
-      A continuación se presentan los resultados obtenidos en las distintas perspectivas del BSC durante el período evaluado.
+      Resultados obtenidos en las distintas perspectivas del BSC durante el período evaluado.
       `;
       content.appendChild(p1);
 
@@ -2188,10 +2177,14 @@
 
       // --- PUNTO 2: TABLA DE PERSPECTIVAS ---
       const p3 = document.createElement('p');
+
       p3.className = 'section-title';
       p3.textContent = 'BSC - Tabla de perspectivas';
       p3.dataset.toc = 'bsc-tabla-perspectivas';
       p3.dataset.level = '2';
+      p3.style.marginTop = '30px';
+      p3.style.fontWeight = '700';
+      p3.style.fontSize = '20px';
       content.appendChild(p3);
 
       const tituloTabla = document.createElement('p');
@@ -2216,7 +2209,7 @@
         table.style.width = "100%";
         table.style.borderCollapse = "collapse";
         table.style.marginTop = "12px";
-        table.style.fontSize = "12px";
+        table.style.fontSize = "16px";
 
         table.innerHTML = `
         <thead>
@@ -2249,7 +2242,7 @@
             d.promedioPon >= 50 ? '#fff3cd' : '#f8d7da';
 
           tbody.insertAdjacentHTML("beforeend", `
-            <tr style="background:${color}">
+            <tr style="background:${color}; font-size:18px">
                 <td style="border:1px solid #999; padding:6px">${d.dimension}</td>
                 <td style="border:1px solid #999; padding:6px; text-align:center">${d.indicadores.length}</td>
                 <td style="border:1px solid #999; padding:6px; text-align:center">${Number(d.promedio).toFixed(1)}%</td>
@@ -2283,26 +2276,25 @@
         return table;
         localStorage.removeItem("resumenPorDimension");
       }
-
     }
 
     // ===============================================================================
-    // 🧲🧲🧲 buildBSCPerspectiva
+    // 🧲🧲🧲 buildBSCPerspectiva - 8. BSC por Perspectiva
     // ===============================================================================
     function buildBSCPerspectiva() {
 
-      const { page, content } = createPage();
+      // const { page, content } = createPage();
 
-      // 📦 Contenedor del detalle
-      const detalleContainer = document.createElement("div");
-      detalleContainer.id = "detallePerspectivasInforme";
-      content.appendChild(detalleContainer);
+      // // 📦 Contenedor del detalle
+      // const detalleContainer = document.createElement("div");
+      // detalleContainer.id = "detallePerspectivasInforme";
+      // content.appendChild(detalleContainer);
 
       // 🧠 Render directo, SIN document.getElementById
-      renderDetallePorPerspectivaHTML(detalleContainer);
+      renderDetallePorPerspectivaHTML();
 
-      // 🔴 Recién ahora entra al DOM
-      documento.appendChild(page);
+      // // 🔴 Recién ahora entra al DOM
+      // documento.appendChild(page);
 
 
       // 😎😎😎 renderDetallePorPerspectivaHTML
@@ -2320,14 +2312,18 @@
 
           // 🟢 SOLO EN LA PRIMERA PÁGINA
           if (index === 0) {
-            const h2 = document.createElement('h2');
+            const h2 = document.createElement('p');
             h2.className = 'section-title';
-            h2.textContent = 'BSC - Balanced Scorecard';
+            h2.textContent = 'BSC - Detalle de Indicadores por Perspectiva';
+            h2.dataset.toc = 'bsc-detalle-perspectivas';
+            h2.dataset.level = '2';
+            h2.style.marginTop = '24px';
+            h2.style.fontWeight = '700';
+            h2.style.fontSize = '20px';
             content.appendChild(h2);
 
             const p0 = document.createElement('p');
             p0.innerHTML = `
-            <b>3. Detalle de Indicadores por Perspectiva.</b><br>
             Indicadores agrupados según la perspectiva del BSC a la que pertenecen,
             mostrando su desempeño individual y contribución al cumplimiento global.<br>
           `;
@@ -2346,6 +2342,10 @@
           const h3 = document.createElement("h4");
           h3.className = "section-title";
           h3.textContent = perspectiva.titulo;
+          h3.dataset.toc = `bsc-perspectiva-${index + 1}`;
+          h3.dataset.level = '3';
+          h3.style.marginTop = '24px';
+          h3.style.fontWeight = '700';
           content.appendChild(h3);
 
           const p = document.createElement("p");
@@ -2384,28 +2384,25 @@
           }
         });
 
+        // 😎😎😎
         function eliminarUltimaColumna(html) {
           const temp = document.createElement("div");
           temp.innerHTML = `<table><tbody>${html}</tbody></table>`;
-
           const filas = temp.querySelectorAll("tr");
-
           filas.forEach(tr => {
             const celdas = tr.querySelectorAll("td, th");
             if (celdas.length > 0) {
               celdas[celdas.length - 1].remove(); // elimina última celda (iconos)
             }
           });
-
           return temp.querySelector("tbody").innerHTML;
         }
-
       }
     }
 
 
     // ===============================================================================
-    // 🧲🧲🧲 buildPondeDestinosIndicadores
+    // 🧲🧲🧲 buildPondeDestinosIndicadores - Anexo 1. Ponderacón de Dest e Indic
     // ===============================================================================
     function buildPondeDestinosIndicadores() {
 
@@ -2434,7 +2431,8 @@
           const p = document.createElement('p');
           p.innerHTML = `
           Se muestra la estructura jerárquica completa de destinos (sectores,
-          dependencias o procesos) y de los indicadores definidos.   Cada destino tiene asignado un peso relativo dentro del destino al que pertenece. Cada indicador incluye su peso relativo dentro del destino al que pertenece y su contribución porcentual al cumplimiento global (combinando su peso dentro del destino y el peso de los destinos que lo contienen.)
+          dependencias o procesos) y de los indicadores definidos.   Cada destino tiene asignado un peso relativo dentro del destino al que pertenece. Cada indicador incluye su peso relativo dentro del destino al que pertenece y su contribución porcentual al cumplimiento global (combinando su peso dentro del destino y el peso de los destinos que lo contienen.)<br><br>
+          <center>  % importancia en el destino  .||.  Destino / Indicador  .||.  % importancia global  </center>
         `;
           content.appendChild(p);
         }
@@ -2459,10 +2457,11 @@
         row.style.justifyContent = 'space-between';
         row.style.alignItems = 'center';
         row.style.marginBottom = '6px';
+        row.style.fontSize = '18px';
 
         row.innerHTML = `
       <div>
-        <span style="color:#666; font-size:12px; margin-right:6px;">
+        <span style="color:#666; font-size:16px; margin-right:6px;">
           ${node.weight?.toFixed(2) || 0}%
         </span>
         ${node.type === 'sector' || node.id === 'root'
@@ -2624,7 +2623,7 @@
     }
 
     // ===============================================================================
-    // 🧲🧲🧲 buildUsuarios
+    // 🧲🧲🧲 buildUsuarios - Anexo II.  Usuarios registrados
     // ===============================================================================
     async function buildUsuarios() {
 
@@ -2964,7 +2963,7 @@
 
       const h = document.createElement('h2');
       h.className = 'section-title';
-      h.textContent = 'Dependencias y Roles de Usuarios';
+      h.textContent = 'Dependencia entre Usuarios y Roles';
       h.dataset.toc = 'dependencias-roles-usuarios';
       h.dataset.level = '1';      //  marca para el índice
       content.appendChild(h);
@@ -3041,19 +3040,29 @@
 
 
     // ===============================================================================
-    // 🧲🧲🧲 buildUsuariosIndicadores
+    // 🧲🧲🧲 buildUsuariosIndicadores - Relación entre usuarios e indicadores
     // ===============================================================================
     let lineasActuales = 0;
     const MAX_LINEAS = 40;
-    let pageActual = null;
-    let contentActual = null;
+    // let pageActual = null;
+    // let contentActual = null;
     async function buildUsuariosIndicadores() {
 
       // 📄 Primera página
-      nuevaPagina('Relación entre usuarios e indicadores');
+      nuevaPagina('Anexo V - Usuarios e indicadores asignados');
+      // const result = createPage();
+      // pageActual = result.page;
+      // contentActual = result.content;
+
+      // const h = document.createElement('h2');
+      // h.className = 'section-title';
+      // h.textContent = 'Usuarios e indicadores asignados';
+      // h.dataset.toc = 'dependencias-roles-usuarios';
+      // h.dataset.level = '1';      //  marca para el índice
+      // contentActual.appendChild(h);
 
       const p = document.createElement('p');
-      p.textContent = 'Usuarios registrados y sus indicadores asignados.';
+      p.textContent = 'Usuarios e indicadores asignados.';
       contentActual.appendChild(p);
       lineasActuales += 2;
 
@@ -3192,7 +3201,8 @@
       // 🥼🥼🥼
       function agregarLineas(lineasNecesarias) {
         if (lineasActuales + lineasNecesarias > MAX_LINEAS) {
-          nuevaPagina('Usuarios e indicadores (cont.)');
+          // nuevaPagina('Anexo V - Usuarios e indicadores asignados (cont.)');
+          nuevaPagina()
         }
         lineasActuales += lineasNecesarias;
       }
@@ -3218,7 +3228,7 @@
 
 
     // ===============================================================================
-    // 🧲🧲🧲 buildAnexos
+    // 🧲🧲🧲 buildAnexos - NO SE UTILIZA
     // ===============================================================================
     function buildAnexos() {
       const { page, content } = createPage();
