@@ -464,7 +464,9 @@
 
     <script>
 
-        // 🎲🎲🎲 Arma el árbol
+        // ===============================================================================
+        // 🎲🎲🎲 Arma el árbol 
+        // ===============================================================================
         async function fetchData() {
             const response = await fetch('/api/arbol-jstree');
             const flatNodes = await response.json();
@@ -522,21 +524,23 @@
             };
         }
 
-        // 🎯 Calcula el peso global de un nodo (sector o indicador)
+        // ===============================================================================
+        // 🎲🎲🎲 calculateGlobalWeight - Peso global de un nodo (sector o indicador)
+        // ===============================================================================
         function calculateGlobalWeight(node) {
             let global = node.weight; // comienza con su propio peso
             let current = node.parentNode;
-
             while (current) {
                 // multiplica por el peso del padre dividido 100
                 global = global * (current.weight / 100);
                 current = current.parentNode;
             }
-
             return global; // queda como porcentaje global real
         }
 
-        // 🎲🎲🎲 Guarda % en base de datos
+        // ===============================================================================
+        // 🎲🎲🎲 updateWeightInDB - Guarda % en base de datos
+        // ===============================================================================
         async function updateWeightInDB(nodeId, type, newWeight) {
             try {
                 let url;
@@ -552,7 +556,6 @@
                     console.warn("Tipo de nodo desconocido:", type);
                     return;
                 }
-
                 const response = await fetch(url, {
                     method: 'PUT',
                     headers: {
@@ -571,7 +574,9 @@
             }
         }
 
+        // ===============================================================================
         // 🎲🎲🎲 Calcula valores y verifica pesos
+        // ===============================================================================
         function calculateValues(node) {
             if (node.children && node.children.length > 0) {
                 let total = 0;
@@ -583,7 +588,9 @@
             }
         }
 
+        // ===============================================================================
         // 🎲🎲🎲 Chequea pesos
+        // ===============================================================================
         function checkWeights(parentNode) {
             if (!parentNode) return true;
 
@@ -606,7 +613,9 @@
             return Math.abs(sum - 100) < 0.001;
         }
 
+        // ===============================================================================
         // 🎲🎲🎲 Construye el árbol
+        // ===============================================================================
         function buildTree(node, parentNode = null, level = 0) {
             node.parentNode = parentNode;
             const container = document.createElement('div');
@@ -773,7 +782,9 @@
             return container;
         }
 
-        // 🎲🎲🎲 Refresca interfase
+        // ===============================================================================
+        // 🎲🎲🎲 refreshUI -  Refresca interfase
+        // ===============================================================================
         function refreshUI() {
             function updateNode(node) {
                 if (node._progressBar) { node._progressBar.style.width = `${node.value?.toFixed(1) || 0}%`; }
@@ -790,7 +801,9 @@
             updateNode(window.treeRoot);
         }
 
+        // ===============================================================================
         // 🎲🎲🎲 Get Root Node
+        // ===============================================================================
         function getRootNode(node) {
             while (node.parentNode) {
                 node = node.parentNode;
@@ -798,7 +811,9 @@
             return node;
         }
 
+        // ===============================================================================
         // 🎲🎲🎲 Actualizar alertas
+        // ===============================================================================
         function actualizarAlerta(tieneError) {
             (async () => {
                 try {
@@ -813,7 +828,9 @@
             })();
         }
 
-        // 🎲🎲🎲 Controla balance de todos los nodos
+        // ===============================================================================
+        // 🎲🎲🎲 checkAllWeights - Controla balance de todos los nodos
+        // ===============================================================================
         function checkAllWeights(node) {
             if (!node) return true;
             // Verificar este nodo
@@ -827,7 +844,9 @@
             return thisNodeValid;
         }
 
-        // 🎯 Aplica el cálculo global a cada nodo del árbol
+        // ===============================================================================
+        // 🎲🎲🎲 applyGlobalWeights - Aplica el cálculo global a cada nodo del árbol
+        // ===============================================================================
         function applyGlobalWeights(node) {
             node.globalWeight = calculateGlobalWeight(node);
 
@@ -836,7 +855,10 @@
             }
         }
 
-        // 🧩 Serializa el árbol para informes (sin DOM)
+
+        // ===============================================================================
+        // 🎲🎲🎲 serializeTree -  Serializa el árbol para informes (sin DOM)
+        // ===============================================================================
         function serializeTree(node) {
             return {
                 id: node.id,
@@ -852,15 +874,18 @@
             };
         }
 
-        // 🎲🎲🎲 persistTreeForReport
+        // ===============================================================================
+        // 🎲🎲🎲 persistTreeForReport -  
+        // ===============================================================================
         function persistTreeForReport() {
             const treeData = serializeTree(window.treeRoot);
             localStorage.setItem('bscTreeData', JSON.stringify(treeData));
-            console.log('actualia tredata', treeData);
+            console.log('actualiza tredata', treeData);
         }
 
-
-        // 🎲🎲🎲 MAIN 🎲🎲🎲
+        // ===============================================================================
+        // 🎲🎲🎲 MAIN 🎲🎲🎲 
+        // ===============================================================================
         (async () => {
             window.treeRoot = await fetchData();
             calculateValues(window.treeRoot);
@@ -941,13 +966,6 @@
             utterance.lang = "es-ES";
             utterance.rate = 1;
             utterance.pitch = 1.05;
-
-            // Cambiar avatar según tipo de voz
-            // if (voz && voz.name.toLowerCase().includes('female') || voz.name.toLowerCase().includes('woman') || voz.name.toLowerCase().includes('mujer')) {
-            //     avatarAudio.src = "/dist/images/avatar3.png";
-            // } else {
-            //     avatarAudio.src = "/dist/images/avatar4.png";
-            // }
 
             // Eventos visuales
             utterance.onstart = () => {
@@ -1033,38 +1051,6 @@
                 document.getElementById('contenedorModalLogout').innerHTML = html;
             });
 
-        //     const btnLogout = document.getElementById('confirmLogout');
-        //     if (!btnLogout) return;
-
-        //     btnLogout.addEventListener('click', async () => {
-        //         // Cerrar modal
-        //         const modalEl = document.getElementById('logoutModal');
-        //         const modal = bootstrap.Modal.getInstance(modalEl);
-        //         if (modal) modal.hide();
-
-        //         // 🔐 Auditoría logout
-        //         const token = localStorage.getItem('token');
-        //         if (token) {
-        //             try {
-        //                 await fetch('/api/auth/logout', {
-        //                     method: 'POST',
-        //                     headers: {
-        //                         Authorization: 'Bearer ' + token
-        //                     }
-        //                 });
-        //             } catch (e) {
-        //                 console.warn('No se pudo registrar logout');
-        //             }
-        //         }
-
-        //         // 🧹 Limpiar sesión
-        //         localStorage.clear();
-        //         sessionStorage.clear();
-
-        //         // 🚀 Redirigir
-        //         window.location.href = '/';
-        //     });
-        // });
     </script>
 
     <script src="/modal-indicador.js"></script>
