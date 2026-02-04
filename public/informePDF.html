@@ -2471,7 +2471,8 @@
     // ===============================================================================
     async function buildUsuarios() {
 
-      const usuarios = await fetch("/usuarios").then(r => r.json());
+      const usuariosTodos = await fetch("/usuarios").then(r => r.json());
+      const usuarios = usuariosTodos.filter(u => u.estado === "activo");
 
       // 🔤 Orden alfabético
       usuarios.sort((a, b) => {
@@ -2480,7 +2481,7 @@
         return aN.localeCompare(bN, "es");
       });
 
-      const FILAS_POR_PAGINA = 25;   // ← ajustá según tu layout PDF
+      const FILAS_POR_PAGINA = 13;   // ← ajustá según tu layout PDF
       let pagina = 0;
 
       for (let i = 0; i < usuarios.length; i += FILAS_POR_PAGINA) {
@@ -2498,7 +2499,7 @@
           content.appendChild(h);
 
           const p = document.createElement("p");
-          p.textContent = "Listado de usuarios registrados en el sistema (orden alfabético).";
+          p.textContent = "Listado de usuarios activos registrados en el sistema (orden alfabético).";
           content.appendChild(p);
         }
 
@@ -2515,7 +2516,6 @@
           <th>Sector</th>
           <th>Email</th>
           <th>Rol</th>
-          <th>Estado</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -2532,7 +2532,6 @@
         <td>${u.sector ?? "-"}</td>
         <td>${u.email ?? "-"}</td>
         <td>${u.rol ?? "-"}</td>
-        <td>${u.estado ?? "-"}</td>
       `;
           tbody.appendChild(tr);
         });
