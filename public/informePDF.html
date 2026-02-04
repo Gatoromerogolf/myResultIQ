@@ -2247,6 +2247,10 @@
     // ===============================================================================
     function buildPondeDestinosIndicadores() {
 
+      console.log('[Anexo 1] buildPondeDestinosIndicadores ejecutada');
+      const raw = localStorage.getItem('bscTreeData');
+      console.log('[Anexo 1] localStorage bscTreeData:', raw);
+
       const treeData = JSON.parse(localStorage.getItem('bscTreeData'));
       if (!treeData) return;
 
@@ -2256,6 +2260,9 @@
 
       let page, content, container;
       let currentHeight = 0;
+
+      console.log('[Anexo 1] documento:', documento);
+      console.log('[Anexo 1] typeof createPage:', typeof createPage);
 
       // 👉 PRIMERA PÁGINA (con título)
       newPage(true);
