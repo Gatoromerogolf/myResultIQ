@@ -1004,6 +1004,58 @@ app.get('/api/cumplimiento-por-destino', async (req, res) => {
                 FROM mediciones m
             )
             SELECT 
+                s.id AS id_destino,
+                s.nombre AS destino,
+                COUNT(i.id) AS total_indicadores,
+                
+                -- ✅ Cumplimiento ponderado usando med_cumplimiento
+                ROUND(
+                    SUM(m.med_cumplimiento * (i.peso_porcentual / 100))
+                , 2) AS promedio_cumplimiento,
+                
+                -- ✅ Indicadores en meta (>= 90%)
+                SUM(CASE
+                        WHEN m.med_cumplimiento >= 90
+                        THEN 1 ELSE 0
+                    END) AS en_meta,
+
+                -- ✅ Indicadores críticos (< 50%)
+                SUM(CASE
+                        WHEN m.med_cumplimiento < 50
+                        THEN 1 ELSE 0
+                    END) AS criticos,
+
+                MAX(m.med_valor_periodo) AS ultima_medicion
+
+            FROM indicadores i
+            LEFT JOIN sectores s ON s.id = i.destino
+            LEFT JOIN ultimas m 
+                ON m.med_indicador_id = i.id AND m.rn = 1
+
+            GROUP BY s.id, s.nombre
+            ORDER BY promedio_cumplimiento DESC;
+        `);
+
+        res.json(rows);
+    } catch (error) {
+        console.error('Error obteniendo cumplimiento por destino:', error);
+        res.status(500).json({ error: 'Error al obtener el cumplimiento por destino' });
+    }
+});
+
+app.get('ZZZXXX/api/cumplimiento-por-destino', async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            WITH ultimas AS (
+                SELECT 
+                    m.*,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY m.med_indicador_id
+                        ORDER BY m.med_valor_periodo DESC
+                    ) AS rn
+                FROM mediciones m
+            )
+            SELECT 
                 s.id AS id_destino,              -- ✅ Agregado: código del destino                
                 s.nombre AS destino,
                 COUNT(i.id) AS total_indicadores,
@@ -1019,7 +1071,7 @@ app.get('/api/cumplimiento-por-destino', async (req, res) => {
 
                 -- ✅ Indicadores críticos (< 70%)
                 SUM(CASE
-                        WHEN (m.med_valor / NULLIF(m.med_meta, 0)) * 100 < 70
+                        WHEN (m.med_valor / NULLIF(m.med_meta, 0)) * 100 < 50
                         THEN 1 ELSE 0
                     END) AS criticos,
 
