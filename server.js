@@ -2580,6 +2580,205 @@ app.get('/api/evolucion-global', async (req, res) => {
 });
 
 
+// ------------------------------------------------------------
+//  Helpers
+// ------------------------------------------------------------
+function ok(res, data)         { res.json({ ok: true,  data }); }
+function err(res, msg, code=500) { res.status(code).json({ ok: false, error: msg }); }
+
+// ------------------------------------------------------------
+//  RUBROS
+// ------------------------------------------------------------
+
+// GET /api/rubros — lista todos los rubros
+app.get('/api/rubros', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT id, nombre, icono FROM db_rubros ORDER BY nombre'
+    );
+    ok(res, rows);
+  } catch (e) {
+    err(res, e.message);
+  }
+});
+
+// POST /api/rubros — crea un nuevo rubro
+// Body: { nombre, icono }
+app.post('/api/rubros', async (req, res) => {
+  const { nombre, icono = null } = req.body;
+  if (!nombre?.trim()) return err(res, 'El campo nombre es obligatorio.', 400);
+  try {
+    const [result] = await pool.query(
+      'INSERT INTO db_rubros (nombre, icono) VALUES (?, ?)',
+      [nombre.trim(), icono]
+    );
+    ok(res, { id: result.insertId, nombre: nombre.trim(), icono });
+  } catch (e) {
+    if (e.code === 'ER_DUP_ENTRY')
+      return err(res, `Ya existe un rubro llamado "${nombre}".`, 409);
+    err(res, e.message);
+  }
+});
+
+// ------------------------------------------------------------
+//  PROVEEDORES
+// ------------------------------------------------------------
+
+// GET /api/proveedores — lista con calificación promedio
+// Query params opcionales: ?rubro_id=2 &q=fontanero
+app.get('/api/proveedores', async (req, res) => {
+  try {
+    const { rubro_id, q } = req.query;
+    let sql = `
+      SELECT
+        p.id, p.nombre, p.zona, p.telefono, p.descripcion,
+        r.id   AS rubro_id,
+        r.nombre AS rubro,
+        r.icono  AS rubro_icono,
+        ROUND(AVG(re.calificacion), 1)  AS calificacion_promedio,
+        COUNT(DISTINCT re.id)           AS total_resenas,
+        COUNT(DISTINCT rc.id)           AS total_recomendaciones
+      FROM db_proveedores p
+        JOIN  db_rubros r               ON r.id = p.rubro_id
+        LEFT JOIN db_resenas re         ON re.proveedor_id = p.id
+        LEFT JOIN db_recomendaciones rc ON rc.proveedor_id = p.id
+      WHERE 1=1
+    `;
+    const params = [];
+    if (rubro_id) { sql += ' AND p.rubro_id = ?';                     params.push(rubro_id); }
+    if (q)        { sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ?)';
+                    const like = `%${q}%`;
+                    params.push(like, like, like); }
+    sql += ' GROUP BY p.id, p.nombre, p.zona, p.telefono, p.descripcion, r.id, r.nombre, r.icono';
+    sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
+
+    const [rows] = await pool.query(sql, params);
+    ok(res, rows);
+  } catch (e) {
+    err(res, e.message);
+  }
+});
+
+// POST /api/proveedores — agrega un proveedor
+// Body: { nombre, rubro_id, zona, telefono, descripcion }
+app.post('/api/proveedores', async (req, res) => {
+  const { nombre, rubro_id, zona = null, telefono = null, descripcion = null } = req.body;
+  if (!nombre?.trim()) return err(res, 'El nombre es obligatorio.', 400);
+  if (!rubro_id)       return err(res, 'El rubro es obligatorio.',  400);
+  try {
+    const [result] = await pool.query(
+      `INSERT INTO db_proveedores (nombre, rubro_id, zona, telefono, descripcion)
+       VALUES (?, ?, ?, ?, ?)`,
+      [nombre.trim(), rubro_id, zona, telefono, descripcion]
+    );
+    ok(res, { id: result.insertId });
+  } catch (e) {
+    err(res, e.message);
+  }
+});
+
+// ------------------------------------------------------------
+//  RESEÑAS
+// ------------------------------------------------------------
+
+// GET /api/proveedores/:id/resenas
+app.get('/api/proveedores/:id/resenas', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT r.id, r.calificacion, r.comentario,
+              r.fecha_trabajo, r.fecha_publicacion,
+              u.nombre AS autor
+       FROM db_resenas r
+         LEFT JOIN db_usuarios u ON u.id = r.usuario_id
+       WHERE r.proveedor_id = ?
+       ORDER BY r.fecha_publicacion DESC`,
+      [req.params.id]
+    );
+    ok(res, rows);
+  } catch (e) {
+    err(res, e.message);
+  }
+});
+
+// POST /api/proveedores/:id/resenas
+// Body: { autor, calificacion, comentario, fecha_trabajo }
+app.post('/api/proveedores/:id/resenas', async (req, res) => {
+  const { autor, calificacion, comentario, fecha_trabajo = null } = req.body;
+  if (!autor?.trim())     return err(res, 'El nombre es obligatorio.', 400);
+  if (!comentario?.trim())return err(res, 'El comentario es obligatorio.', 400);
+  if (!calificacion || calificacion < 1 || calificacion > 5)
+    return err(res, 'La calificación debe ser entre 1 y 5.', 400);
+
+  try {
+    // Crear o recuperar usuario por nombre (identificación mínima)
+    let userId = null;
+    const [existing] = await pool.query(
+      'SELECT id FROM db_usuarios WHERE nombre = ? LIMIT 1',
+      [autor.trim()]
+    );
+    if (existing.length) {
+      userId = existing[0].id;
+    } else {
+      const [ins] = await pool.query(
+        'INSERT INTO db_usuarios (nombre) VALUES (?)',
+        [autor.trim()]
+      );
+      userId = ins.insertId;
+    }
+
+    const [result] = await pool.query(
+      `INSERT INTO db_resenas
+         (proveedor_id, usuario_id, calificacion, comentario, fecha_trabajo, fecha_publicacion)
+       VALUES (?, ?, ?, ?, ?, CURRENT_DATE)`,
+      [req.params.id, userId, calificacion, comentario.trim(), fecha_trabajo || null]
+    );
+    ok(res, { id: result.insertId });
+  } catch (e) {
+    err(res, e.message);
+  }
+});
+
+// ------------------------------------------------------------
+//  RECOMENDACIONES
+// ------------------------------------------------------------
+
+// POST /api/proveedores/:id/recomendar
+// Body: { usuario_nombre }
+app.post('/api/proveedores/:id/recomendar', async (req, res) => {
+  const { usuario_nombre } = req.body;
+  if (!usuario_nombre?.trim()) return err(res, 'El nombre es obligatorio.', 400);
+
+  try {
+    // Crear o recuperar usuario
+    let userId;
+    const [existing] = await pool.query(
+      'SELECT id FROM db_usuarios WHERE nombre = ? LIMIT 1',
+      [usuario_nombre.trim()]
+    );
+    if (existing.length) {
+      userId = existing[0].id;
+    } else {
+      const [ins] = await pool.query(
+        'INSERT INTO db_usuarios (nombre) VALUES (?)',
+        [usuario_nombre.trim()]
+      );
+      userId = ins.insertId;
+    }
+
+    await pool.query(
+      `INSERT INTO db_recomendaciones (proveedor_id, usuario_id) VALUES (?, ?)`,
+      [req.params.id, userId]
+    );
+    ok(res, { recomendado: true });
+  } catch (e) {
+    if (e.code === 'ER_DUP_ENTRY')
+      return err(res, 'Ya recomendaste este proveedor.', 409);
+    err(res, e.message);
+  }
+});
+
+
+
 const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
@@ -2588,3 +2787,4 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));
 console.log("Puerto usado:", PORT);
+console.log(`Directorio Vecinal API corriendo en http://localhost:${PORT}`);
