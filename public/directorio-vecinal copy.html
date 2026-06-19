@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -816,6 +815,7 @@
     const p = state.providers.find(x => x.id === id);
     if(!p) return;
 
+    // Cargar reseñas desde la API si todavía no las tenemos
     if(!p.reviews.length){
       try {
         const reviews = await apiFetch(`/proveedores/${id}/resenas`);
@@ -826,14 +826,7 @@
           workdate: r.fecha_trabajo,
           date:     r.fecha_publicacion
         }));
-      } catch(e) {}
-    }
-
-    if(!p.images || !p.images.length){
-      try {
-        const imgs = await apiFetch(`/proveedores/${id}/imagenes`);
-        p.images = imgs.map(i => ({ id: i.id, src: i.imagen_b64 }));
-      } catch(e) { p.images = []; }
+      } catch(e) { /* mostramos igual con array vacío */ }
     }
 
     const accent = accentFor(p.rubro);
@@ -849,21 +842,14 @@
             </div>
             <p>${escapeHtml(r.comment)}</p>
             <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:.25rem;">
-              ${r.workdate ? `<time style="color:var(--teal)">🔧 Trabajo: ${r.workdate}</time>` : ""}
+              ${r.workdate ? `<time style="color:var(--teal)">🔧 Trabajo: ${r.workdate}</time>` : ''}
               <time>📅 Publicado: ${r.date}</time>
             </div>
           </div>
-        `).join("")
+        `).join('')
       : `<p class="no-reviews">Todavía no hay recomendaciones. ¡Sé el primero en dejar una!</p>`;
 
-    const galleryThumbs = (p.images || []).map((img, i) => `
-      <div class="gallery-thumb" data-action="view-image" data-src="${img.src}">
-        <img src="${img.src}" alt="Imagen ${i + 1}" loading="lazy">
-        <button class="remove-img" data-action="delete-image" data-img-id="${img.id}" title="Eliminar" aria-label="Eliminar imagen">✕</button>
-      </div>
-    `).join("");
-
-    const modal = document.getElementById("modal-detail");
+    const modal = document.getElementById('modal-detail');
     modal.innerHTML = `
       <button class="modal-close" data-action="close" aria-label="Cerrar">✕</button>
       <div class="tag-row">
@@ -872,28 +858,32 @@
       </div>
       <h2>${p.name}</h2>
       <p class="card-zone">${p.zone} · ${p.phone}</p>
-      <p>${p.desc || "Sin descripción todavía."}</p>
+      <p>${p.desc || 'Sin descripción todavía.'}</p>
 
       <div class="gallery">
         <p class="gallery-label">Folletos e imágenes del proveedor</p>
-        <div class="gallery-grid" id="gallery-grid-${id}">
-          ${galleryThumbs}
-          <button class="gallery-add" data-action="add-images" data-provider-id="${id}" title="Agregar imágenes">＋</button>
-        </div>
-        <input type="file" id="gallery-file-input" accept="image/*" multiple style="display:none">
-        <div id="gallery-upload-status" style="font-size:.8rem;color:var(--ink-soft);margin-top:.4rem;min-height:1.2rem;"></div>
+        ${p.images && p.images.length
+          ? `<div class="gallery-grid">
+              ${p.images.map((src, i) => `
+                <div class="gallery-thumb" data-action="view-image" data-src="${src}">
+                  <img src="${src}" alt="Imagen ${i + 1} de ${escapeHtml(p.name)}" loading="lazy">
+                </div>
+              `).join('')}
+            </div>`
+          : `<p class="gallery-empty">Este proveedor todavía no subió imágenes.</p>`
+        }
       </div>
 
       <div class="stamp-row">
         <div class="stamp stamp--xxl stamp--${rep}">
-          <strong>${p.avgRating > 0 ? p.avgRating.toFixed(1) : "—"}</strong>
+          <strong>${p.avgRating > 0 ? p.avgRating.toFixed(1) : '—'}</strong>
           <small>de 5</small>
         </div>
         <div class="meta">
-          <strong>${p.totalReviews} recomendación${p.totalReviews === 1 ? "" : "es"}</strong>
+          <strong>${p.totalReviews} recomendación${p.totalReviews === 1 ? '' : 'es'}</strong>
           <span>Reputación calculada a partir de las reseñas de vecinos</span>
         </div>
-        <button class="btn-recommend" data-action="recommend" data-id="${p.id}" ${alreadyRecommended ? "disabled" : ""}>👍 Recomendar (${p.recommends})</button>
+        <button class="btn-recommend" data-action="recommend" data-id="${p.id}" ${alreadyRecommended ? 'disabled' : ''}>👍 Recomendar (${p.recommends})</button>
       </div>
 
       <h3>Recomendaciones de vecinos</h3>
@@ -914,7 +904,7 @@
         <div class="field">
           <label for="review-workdate">Fecha en que se realizó el trabajo</label>
           <input type="date" id="review-workdate" name="workdate" max="${todayISO()}">
-          <span style="font-size:.75rem;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;">Opcional</span>
+          <span style="font-size:.75rem;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;">Opcional — ayuda a otros vecinos a contextualizar la recomendación</span>
         </div>
         <div class="field">
           <label for="review-comment">Comentario</label>
@@ -925,32 +915,7 @@
     `;
 
     state.pendingRating = 0;
-
-    const fileInput = modal.querySelector("#gallery-file-input");
-    modal.querySelector("[data-action='add-images']").addEventListener("click", () => {
-      fileInput.value = "";
-      fileInput.click();
-    });
-
-    fileInput.addEventListener("change", async () => {
-      if(!fileInput.files.length) return;
-      const status = modal.querySelector("#gallery-upload-status");
-      status.textContent = "Subiendo imágenes…";
-      try {
-        const urls = await readImagesAsDataURLs(fileInput.files);
-        await apiFetch(`/proveedores/${id}/imagenes`, {
-          method: "POST",
-          body: JSON.stringify({ images: urls })
-        });
-        p.images = [];
-        status.textContent = "";
-        openDetail(id);
-      } catch(e) {
-        status.textContent = "⚠ Error al subir: " + e.message;
-      }
-    });
-
-    showModal("modal-detail");
+    showModal('modal-detail');
   }
 
   function escapeHtml(str){
@@ -1213,4 +1178,3 @@
 </script>
 </body>
 </html>
-
