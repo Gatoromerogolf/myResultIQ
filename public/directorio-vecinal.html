@@ -819,7 +819,10 @@
     // ------------------------------------------------------------
     //  Config — cambiá el puerto si tu servidor corre en otro
     // ------------------------------------------------------------
-    const API = 'http://localhost:3000/api/dv';
+
+    const API = window.location.hostname === 'localhost'
+  ? 'http://localhost:3000/api/dv'
+  : '/api/dv';
 
     const ACCENTS = ['sage', 'amber', 'berry', 'teal'];
 
