@@ -389,7 +389,7 @@
       <span class="barrio-badge"><i class="ti ti-trees" aria-hidden="true"></i> Altos</span>
       <span class="barrio-badge"><i class="ti ti-home" aria-hidden="true"></i> Campo</span>
     </div>
-    <p>El directorio de proveedores de servicios de nuestra comunidad.</p>
+    <p>El directorio de proveedores de bienes y servicios de nuestra comunidad.</p>
   </div>
 
   <div class="card">
@@ -567,20 +567,15 @@
   </footer>
 
   <script>
-    const API = 'http://localhost:3000/api/dv';
+    // const API = 'http://localhost:3000/api/dv';
+    const API = window.location.hostname === 'localhost'
+  ? 'http://localhost:3000/api/dv'
+  : '/api/dv';
 
     // ----------------------------------------------------------
     //  API helper
     // ----------------------------------------------------------
-    // async function apiFetch(path, options = {}) {
-    //   const res = await fetch(API + path, {
-    //     headers: { 'Content-Type': 'application/json' },
-    //     ...options
-    //   });
-    //   const json = await res.json();
-    //   if (!json.ok) throw new Error(json.error || 'Error desconocido');
-    //   return json.data;
-    // }
+
     async function apiFetch(path, options = {}) {
       const token = sessionStorage.getItem('dv_token');
 
