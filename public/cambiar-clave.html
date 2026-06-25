@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cambiar clave — Directorio Vecinal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  :root{
+    --ink:#2a322d;
+    --ink-soft:#6b7268;
+    --paper:#f4efe2;
+    --card:#fffdf6;
+    --line:#ddd3bd;
+    --amber:#d9933f;
+    --sage:#5e7d63;
+    --berry:#9a4f54;
+    --teal:#44707c;
+    --gray:#9a948a;
+    --radius:10px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; min-height:100%; }
+
+  body{
+    margin:0;
+    font-family:'Work Sans', sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.5;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:2rem 1.25rem;
+  }
+
+  .hero{
+    text-align:center;
+    margin-bottom:2rem;
+  }
+  .logo{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(1.8rem, 5vw, 2.6rem);
+    letter-spacing:-0.02em;
+    margin:0 0 .35rem;
+  }
+  .logo .accent{ color:var(--sage); }
+  .hero p{
+    color:var(--ink-soft);
+    font-size:.92rem;
+    margin:.4rem 0 0;
+    max-width:26rem;
+  }
+
+  /* aviso obligatorio */
+  .notice{
+    display:flex;
+    gap:.65rem;
+    align-items:flex-start;
+    background:#fef9ec;
+    border:1px solid #f0d98a;
+    border-radius:8px;
+    padding:.75rem .9rem;
+    font-size:.85rem;
+    color:#7a5c10;
+    margin-bottom:1.25rem;
+    line-height:1.4;
+  }
+  .notice i{ font-size:1.1rem; flex-shrink:0; margin-top:.1rem; }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:0 2px 12px rgba(42,50,45,.07);
+    width:100%;
+    max-width:400px;
+    padding:1.75rem;
+  }
+
+  .card-title{
+    font-family:'Fraunces', serif;
+    font-size:1.25rem;
+    font-weight:600;
+    margin:0 0 .25rem;
+  }
+  .card-sub{
+    font-size:.85rem;
+    color:var(--ink-soft);
+    margin:0 0 1.25rem;
+  }
+  .card-sub strong{ color:var(--ink); }
+
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:.3rem;
+    margin-bottom:.85rem;
+  }
+  label{
+    font-size:.75rem;
+    font-family:'JetBrains Mono', monospace;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .input-icon{ position:relative; }
+  .input-icon input{
+    width:100%;
+    padding:.55rem .75rem .55rem 2.4rem;
+    font-family:'Work Sans', sans-serif;
+    font-size:.92rem;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    color:var(--ink);
+    letter-spacing:.08em;
+  }
+  .input-icon input:focus{
+    outline:2px solid var(--sage);
+    outline-offset:1px;
+  }
+  .input-icon .icon{
+    position:absolute;
+    left:.75rem; top:50%;
+    transform:translateY(-50%);
+    color:var(--ink-soft);
+    font-size:1rem;
+    pointer-events:none;
+  }
+  .input-icon .toggle-pass{
+    position:absolute;
+    right:.75rem; top:50%;
+    transform:translateY(-50%);
+    background:none; border:none;
+    cursor:pointer;
+    color:var(--ink-soft);
+    font-size:1rem; padding:0;
+  }
+  .input-icon .toggle-pass:hover{ color:var(--ink); }
+
+  /* barra de fuerza */
+  .strength-bar{
+    height:4px; border-radius:2px;
+    background:var(--line);
+    margin-top:.35rem; overflow:hidden;
+  }
+  .strength-fill{
+    height:100%; border-radius:2px;
+    width:0;
+    transition:width .3s, background .3s;
+  }
+  .strength-label{
+    font-size:.72rem;
+    font-family:'JetBrains Mono', monospace;
+    color:var(--ink-soft);
+    margin-top:.2rem;
+  }
+
+  /* requisitos */
+  .requisitos{
+    font-size:.78rem;
+    color:var(--ink-soft);
+    margin:.1rem 0 1rem;
+    padding-left:1.1rem;
+    line-height:1.8;
+  }
+  .requisitos li{ list-style:none; margin:0; padding:0; }
+  .requisitos li::before{ content:'○ '; font-size:.65rem; }
+  .requisitos li.ok{ color:var(--sage); }
+  .requisitos li.ok::before{ content:'✓ '; }
+
+  .submit-btn{
+    width:100%;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    border-radius:999px;
+    padding:.7rem 1rem;
+    font-size:.95rem;
+    font-weight:500;
+    font-family:'Work Sans', sans-serif;
+    cursor:pointer;
+    margin-top:.25rem;
+    transition:background .15s;
+  }
+  .submit-btn:hover:not(:disabled){ background:var(--sage); }
+  .submit-btn:disabled{ opacity:.55; cursor:default; }
+
+  .msg{
+    border-radius:8px;
+    padding:.65rem .85rem;
+    font-size:.85rem;
+    margin-bottom:1rem;
+    display:none;
+  }
+  .msg.show{ display:block; }
+  .msg--error{ background:#fdecea; color:var(--berry); border:1px solid #f5c6c6; }
+  .msg--ok{    background:#e8f4ec; color:var(--sage);  border:1px solid #b8d9bf; }
+
+  footer{
+    margin-top:2rem;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1 class="logo">Directorio <span class="accent">Vecinal</span></h1>
+  <p>Altos y Campo</p>
+</div>
+
+<div class="card">
+
+  <div class="notice">
+    <i class="ti ti-shield-lock"></i>
+    <span>Es tu primer ingreso. Por seguridad debés elegir una clave personal antes de continuar.</span>
+  </div>
+
+  <h2 class="card-title">Elegí tu clave</h2>
+  <p class="card-sub" id="saludo">Bienvenido/a.</p>
+
+  <div class="msg msg--error" id="form-error"></div>
+  <div class="msg msg--ok"    id="form-ok"></div>
+
+  <form id="cambio-form" novalidate>
+
+    <div class="field">
+      <label for="clave-actual">Clave actual (provisoria)</label>
+      <div class="input-icon">
+        <i class="ti ti-lock icon"></i>
+        <input type="password" id="clave-actual" required placeholder="••••••••">
+        <button type="button" class="toggle-pass" data-target="clave-actual">
+          <i class="ti ti-eye"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="clave-nueva">Nueva clave</label>
+      <div class="input-icon">
+        <i class="ti ti-lock-open icon"></i>
+        <input type="password" id="clave-nueva" required placeholder="Mínimo 8 caracteres">
+        <button type="button" class="toggle-pass" data-target="clave-nueva">
+          <i class="ti ti-eye"></i>
+        </button>
+      </div>
+      <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+      <div class="strength-label" id="strength-label"></div>
+      <ul class="requisitos" id="requisitos">
+        <li id="req-len">Al menos 8 caracteres</li>
+        <li id="req-may">Una letra mayúscula</li>
+        <li id="req-num">Un número</li>
+      </ul>
+    </div>
+
+    <div class="field">
+      <label for="clave-confirm">Confirmá la nueva clave</label>
+      <div class="input-icon">
+        <i class="ti ti-lock-check icon"></i>
+        <input type="password" id="clave-confirm" required placeholder="Repetí la clave">
+        <button type="button" class="toggle-pass" data-target="clave-confirm">
+          <i class="ti ti-eye"></i>
+        </button>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submit-btn" disabled>
+      <i class="ti ti-check"></i> Guardar clave
+    </button>
+
+  </form>
+</div>
+
+<footer>Directorio Vecinal · Altos y Campo</footer>
+
+<script>
+  const API = 'http://localhost:3000/api/dv';
+
+  // ----------------------------------------------------------
+  //  Verificar que hay sesión activa con cambio pendiente
+  // ----------------------------------------------------------
+  const userRaw = sessionStorage.getItem('dv_user');
+  const token   = sessionStorage.getItem('dv_token');
+
+  if (!userRaw || !token) {
+    // No hay sesión — volver al login
+    window.location.replace('login_dv.html');
+  }
+
+  const user = JSON.parse(userRaw);
+
+  if (!user.debe_cambiar_clave) {
+    // Ya cambió la clave — no tiene nada que hacer acá
+    window.location.replace('directorio-vecinal.html');
+  }
+
+  // Mostrar saludo con el nombre del usuario
+  document.getElementById('saludo').innerHTML =
+    `Hola, <strong>${user.nombre}</strong>. Elegí una clave que solo conozcas vos.`;
+
+  // ----------------------------------------------------------
+  //  Toggle ver/ocultar clave
+  // ----------------------------------------------------------
+  document.querySelectorAll('.toggle-pass').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input   = document.getElementById(btn.dataset.target);
+      const showing = input.type === 'text';
+      input.type = showing ? 'password' : 'text';
+      btn.querySelector('i').className = showing ? 'ti ti-eye' : 'ti ti-eye-off';
+    });
+  });
+
+  // ----------------------------------------------------------
+  //  Barra de fuerza + requisitos + habilitar botón
+  // ----------------------------------------------------------
+  function evaluarClave(val) {
+    const len = val.length >= 8;
+    const may = /[A-Z]/.test(val);
+    const num = /[0-9]/.test(val);
+
+    document.getElementById('req-len').className = len ? 'ok' : '';
+    document.getElementById('req-may').className = may ? 'ok' : '';
+    document.getElementById('req-num').className = num ? 'ok' : '';
+
+    const score = [len, may, num, /[^A-Za-z0-9]/.test(val)].filter(Boolean).length;
+    const levels = [
+      { w:'0%',   bg:'transparent',   txt:'' },
+      { w:'25%',  bg:'var(--berry)',  txt:'Muy débil' },
+      { w:'50%',  bg:'var(--amber)',  txt:'Débil' },
+      { w:'75%',  bg:'var(--teal)',   txt:'Aceptable' },
+      { w:'100%', bg:'var(--sage)',   txt:'Fuerte' },
+    ];
+    document.getElementById('strength-fill').style.width      = levels[score].w;
+    document.getElementById('strength-fill').style.background = levels[score].bg;
+    document.getElementById('strength-label').textContent     = levels[score].txt;
+
+    return len; // mínimo requerido para habilitar el botón
+  }
+
+  function checkBtnState() {
+    const nueva   = document.getElementById('clave-nueva').value;
+    const confirm = document.getElementById('clave-confirm').value;
+    const actual  = document.getElementById('clave-actual').value;
+    const ok = actual.length > 0 && evaluarClave(nueva) && nueva === confirm;
+    document.getElementById('submit-btn').disabled = !ok;
+  }
+
+  document.getElementById('clave-nueva').addEventListener('input', e => {
+    evaluarClave(e.target.value);
+    checkBtnState();
+  });
+  document.getElementById('clave-confirm').addEventListener('input', checkBtnState);
+  document.getElementById('clave-actual').addEventListener('input', checkBtnState);
+
+  // ----------------------------------------------------------
+  //  Envío del formulario
+  // ----------------------------------------------------------
+  document.getElementById('cambio-form').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const actual  = document.getElementById('clave-actual').value;
+    const nueva   = document.getElementById('clave-nueva').value;
+    const confirm = document.getElementById('clave-confirm').value;
+    const btn     = document.getElementById('submit-btn');
+
+    document.getElementById('form-error').classList.remove('show');
+
+    if (nueva !== confirm) {
+      mostrarError('Las claves no coinciden.');
+      return;
+    }
+    if (nueva.length < 8) {
+      mostrarError('La clave debe tener al menos 8 caracteres.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ti ti-loader-2"></i> Guardando…';
+
+    try {
+      const res = await fetch(`${API}/auth/cambiar-clave`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ clave_actual: actual, clave_nueva: nueva })
+      });
+
+      const json = await res.json();
+
+      if (!json.ok) {
+        mostrarError(json.error || 'Error al cambiar la clave.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="ti ti-check"></i> Guardar clave';
+        return;
+      }
+
+      // Actualizar sessionStorage — ya no debe cambiar clave
+      user.debe_cambiar_clave = false;
+      sessionStorage.setItem('dv_user', JSON.stringify(user));
+
+      // Mostrar éxito y redirigir
+      document.getElementById('cambio-form').style.display = 'none';
+      const ok = document.getElementById('form-ok');
+      ok.textContent = '¡Clave actualizada! Redirigiendo al directorio…';
+      ok.classList.add('show');
+
+      setTimeout(() => {
+        window.location.replace('directorio-vecinal.html');
+      }, 2000);
+
+    } catch (err) {
+      mostrarError('No se pudo conectar con el servidor.');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-check"></i> Guardar clave';
+    }
+  });
+
+  function mostrarError(msg) {
+    const el = document.getElementById('form-error');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+</script>
+</body>
+</html>

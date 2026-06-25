@@ -1,791 +1,1050 @@
-
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Directorio Vecinal — Prototipo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#2a322d;
-    --ink-soft:#6b7268;
-    --paper:#f4efe2;
-    --card:#fffdf6;
-    --line:#ddd3bd;
-    --amber:#d9933f;
-    --sage:#5e7d63;
-    --berry:#9a4f54;
-    --teal:#44707c;
-    --gray:#9a948a;
-    --radius:10px;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Directorio Vecinal — Prototipo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    :root {
+      --ink: #2a322d;
+      --ink-soft: #6b7268;
+      --paper: #f4efe2;
+      --card: #fffdf6;
+      --line: #ddd3bd;
+      --amber: #d9933f;
+      --sage: #5e7d63;
+      --berry: #9a4f54;
+      --teal: #44707c;
+      --gray: #9a948a;
+      --radius: 10px;
+    }
 
-  *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
+    * {
+      box-sizing: border-box;
+    }
 
-  body{
-    margin:0;
-    font-family:'Work Sans', sans-serif;
-    background:var(--paper);
-    color:var(--ink);
-    line-height:1.5;
-  }
+    html {
+      scroll-behavior: smooth;
+    }
 
-  /* ---------- Header ---------- */
-  header{
-    text-align:center;
-    padding:2.5rem 1.25rem 1.75rem;
-    border-bottom:1px dashed var(--line);
-    background:linear-gradient(180deg, rgba(255,255,255,.5), transparent);
-  }
-  .logo{
-    font-family:'Fraunces', serif;
-    font-weight:700;
-    font-size:clamp(1.9rem, 5vw, 2.7rem);
-    letter-spacing:-0.02em;
-    margin:0;
-  }
-  .logo .accent{ color:var(--sage); }
-  .tagline{
-    margin:.5rem auto 0;
-    max-width:34rem;
-    color:var(--ink-soft);
-    font-size:.95rem;
-  }
+    body {
+      margin: 0;
+      font-family: 'Work Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+    }
 
-  /* ---------- Layout ---------- */
-  main{
-    max-width:1120px;
-    margin:0 auto;
-    padding:1.5rem 1.25rem 5rem;
-  }
+    /* ---------- Header ---------- */
+    header {
+      text-align: center;
+      padding: 2.5rem 1.25rem 1.75rem;
+      border-bottom: 1px dashed var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .5), transparent);
+    }
 
-  .controls{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.75rem;
-    align-items:center;
-    margin-bottom:1rem;
-  }
-  .search-box{
-    flex:1 1 240px;
-    padding:.65rem .9rem;
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    background:var(--card);
-    font-family:inherit;
-    font-size:.95rem;
-    color:var(--ink);
-  }
-  .search-box:focus{ outline:2px solid var(--sage); outline-offset:1px; }
+    .logo {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: clamp(1.9rem, 5vw, 2.7rem);
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
 
-  .sort-box{
-    padding:.6rem .8rem;
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    background:var(--card);
-    font-family:'JetBrains Mono', monospace;
-    font-size:.78rem;
-    color:var(--ink-soft);
-    cursor:pointer;
-  }
+    .logo .accent {
+      color: var(--sage);
+    }
 
-  .pills{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.5rem;
-    margin-bottom:.75rem;
-  }
-  .pill{
-    font-family:'JetBrains Mono', monospace;
-    font-size:.72rem;
-    text-transform:uppercase;
-    letter-spacing:.05em;
-    padding:.4rem .9rem;
-    border:1px solid var(--line);
-    border-radius:999px;
-    background:var(--card);
-    color:var(--ink-soft);
-    cursor:pointer;
-    transition:background .15s, color .15s, border-color .15s;
-  }
-  .pill:hover{ border-color:var(--sage); }
-  .pill.active{
-    background:var(--ink);
-    color:var(--paper);
-    border-color:var(--ink);
-  }
+    .tagline {
+      margin: .5rem auto 0;
+      max-width: 34rem;
+      color: var(--ink-soft);
+      font-size: .95rem;
+    }
 
-  .stats{
-    font-family:'JetBrains Mono', monospace;
-    font-size:.75rem;
-    color:var(--ink-soft);
-    margin:0 0 1.25rem;
-  }
+    /* ---------- Layout ---------- */
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 5rem;
+    }
 
-  /* ---------- Grid & cards ---------- */
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(270px, 1fr));
-    gap:1.25rem;
-  }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
 
-  .card{
-    position:relative;
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:1.15rem 1.1rem 1rem 2.4rem;
-    box-shadow:0 1px 2px rgba(42,50,45,.04);
-    transition:transform .15s, box-shadow .15s;
-  }
-  .card:hover{
-    transform:translateY(-3px);
-    box-shadow:0 8px 18px rgba(42,50,45,.08);
-  }
-  .hole{
-    position:absolute;
-    left:.95rem;
-    width:11px; height:11px;
-    border-radius:50%;
-    background:var(--paper);
-    border:1px solid var(--line);
-  }
-  .hole-1{ top:1.15rem; }
-  .hole-2{ top:2.35rem; }
+    .search-box {
+      flex: 1 1 240px;
+      padding: .65rem .9rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      font-family: inherit;
+      font-size: .95rem;
+      color: var(--ink);
+    }
 
-  .rubro-tag{
-    display:inline-block;
-    font-family:'JetBrains Mono', monospace;
-    font-size:.68rem;
-    text-transform:uppercase;
-    letter-spacing:.06em;
-    color:#fffdf6;
-    padding:.2rem .55rem;
-    border-radius:4px;
-    margin-bottom:.6rem;
-  }
+    .search-box:focus {
+      outline: 2px solid var(--sage);
+      outline-offset: 1px;
+    }
 
-  .tag-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.4rem;
-    margin-bottom:.6rem;
-  }
-  .tag-row .rubro-tag{ margin-bottom:0; }
+    .sort-box {
+      padding: .6rem .8rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .78rem;
+      color: var(--ink-soft);
+      cursor: pointer;
+    }
 
-  .badge-tipo{
-    display:inline-flex;
-    align-items:center;
-    gap:.3rem;
-    font-family:'JetBrains Mono', monospace;
-    font-size:.68rem;
-    text-transform:uppercase;
-    letter-spacing:.06em;
-    padding:.2rem .55rem;
-    border-radius:4px;
-  }
-  .badge-tipo--vecino{ background:var(--sage); color:#fffdf6; }
-  .badge-tipo--externo{ background:var(--gray); color:#fffdf6; }
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: .75rem;
+    }
 
-  .gallery{
-    border-top:1px dashed var(--line);
-    padding-top:.85rem;
-    margin-top:.85rem;
-  }
-  .gallery-label{
-    font-family:'JetBrains Mono', monospace;
-    font-size:.7rem;
-    text-transform:uppercase;
-    letter-spacing:.05em;
-    color:var(--ink-soft);
-    margin:0 0 .6rem;
-  }
-  .gallery-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(80px, 1fr));
-    gap:.6rem;
-  }
-  .gallery-thumb{
-    position:relative;
-    aspect-ratio:1;
-    border-radius:8px;
-    overflow:hidden;
-    border:1px solid var(--line);
-    background:var(--paper);
-    cursor:pointer;
-  }
-  .gallery-thumb img{
-    width:100%; height:100%;
-    object-fit:cover;
-    display:block;
-  }
-  .gallery-thumb .remove-img{
-    position:absolute;
-    top:3px; right:3px;
-    width:20px; height:20px;
-    border-radius:50%;
-    background:rgba(42,50,45,.75);
-    color:#fff;
-    font-size:.7rem;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    line-height:1;
-  }
-  .gallery-add{
-    aspect-ratio:1;
-    border-radius:8px;
-    border:1px dashed var(--gray);
-    background:transparent;
-    color:var(--ink-soft);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:1.4rem;
-    transition:border-color .15s, color .15s;
-  }
-  .gallery-add:hover{ border-color:var(--sage); color:var(--sage); }
-  .gallery-empty{
-    font-size:.82rem;
-    color:var(--ink-soft);
-    font-style:italic;
-  }
+    .pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: .4rem .9rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s;
+    }
 
-  .lightbox-overlay{
-    position:fixed; inset:0;
-    background:rgba(42,50,45,.85);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:2rem;
-    z-index:200;
-  }
-  .lightbox-overlay.hidden{ display:none; }
-  .lightbox-overlay img{
-    max-width:100%;
-    max-height:85vh;
-    border-radius:8px;
-  }
-  .lightbox-close{
-    position:fixed;
-    top:1.5rem; right:1.5rem;
-    width:2.5rem; height:2.5rem;
-    border-radius:50%;
-    background:#fffdf6;
-    color:var(--ink);
-    font-size:1.2rem;
-  }
+    .pill:hover {
+      border-color: var(--sage);
+    }
 
-  .stamp{
-    position:absolute;
-    top:1rem; right:1rem;
-    width:54px; height:54px;
-    border-radius:50%;
-    border:2px dashed var(--gray);
-    color:var(--gray);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    transform:rotate(-8deg);
-    font-family:'JetBrains Mono', monospace;
-    line-height:1.1;
-  }
-  .stamp strong{ font-size:1rem; }
-  .stamp small{ font-size:.6rem; }
-  .stamp--sage{ border-color:var(--sage); color:var(--sage); }
-  .stamp--amber{ border-color:var(--amber); color:var(--amber); }
-  .stamp--berry{ border-color:var(--berry); color:var(--berry); }
-  .stamp--xxl{ width:72px; height:72px; }
-  .stamp--xxl strong{ font-size:1.3rem; }
-  .stamp--xxl small{ font-size:.65rem; }
+    .pill.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
 
-  .card-title{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:1.1rem;
-    margin:0 4.2rem .15rem 0;
-  }
-  .card-zone{
-    margin:0 0 .5rem;
-    font-size:.8rem;
-    color:var(--ink-soft);
-  }
-  .card-desc{
-    margin:0 0 .85rem;
-    font-size:.88rem;
-    color:var(--ink);
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-  }
+    .stats {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      color: var(--ink-soft);
+      margin: 0 0 1.25rem;
+    }
 
-  .card-footer{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:.5rem;
-    border-top:1px dashed var(--line);
-    padding-top:.7rem;
-  }
-  .stars{ color:var(--amber); font-size:.95rem; letter-spacing:1px; }
-  .stars .empty{ color:var(--line); }
+    /* ---------- Grid & cards ---------- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1.25rem;
+    }
 
-  button{
-    font-family:inherit;
-    cursor:pointer;
-    border:none;
-  }
-  .btn-recommend{
-    background:transparent;
-    border:1px solid var(--line);
-    border-radius:999px;
-    padding:.3rem .65rem;
-    font-size:.78rem;
-    color:var(--ink-soft);
-    transition:border-color .15s, color .15s;
-  }
-  .btn-recommend:hover:not(:disabled){ border-color:var(--sage); color:var(--sage); }
-  .btn-recommend:disabled{ color:var(--sage); border-color:var(--sage); cursor:default; opacity:.85; }
+    .card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.1rem 1rem 2.4rem;
+      box-shadow: 0 1px 2px rgba(42, 50, 45, .04);
+      transition: transform .15s, box-shadow .15s;
+    }
 
-  .btn-more{
-    background:var(--ink);
-    color:var(--paper);
-    border-radius:999px;
-    padding:.35rem .9rem;
-    font-size:.78rem;
-  }
-  .btn-more:hover{ background:var(--sage); }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(42, 50, 45, .08);
+    }
 
-  .empty-state{
-    grid-column:1/-1;
-    text-align:center;
-    padding:3rem 1rem;
-    color:var(--ink-soft);
-    font-family:'Fraunces', serif;
-    font-size:1.1rem;
-  }
+    .hole {
+      position: absolute;
+      left: .95rem;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 1px solid var(--line);
+    }
 
-  /* ---------- FAB ---------- */
-  .fab{
-    position:fixed;
-    bottom:1.5rem; right:1.5rem;
-    background:var(--ink);
-    color:var(--paper);
-    border-radius:999px;
-    padding:.85rem 1.4rem;
-    font-size:.9rem;
-    font-weight:500;
-    box-shadow:0 6px 16px rgba(42,50,45,.25);
-    transition:background .15s, transform .15s;
-    z-index:50;
-  }
-  .fab:hover{ background:var(--sage); transform:translateY(-2px); }
+    .hole-1 {
+      top: 1.15rem;
+    }
 
-  /* ---------- Modal ---------- */
-  .overlay{
-    position:fixed; inset:0;
-    background:rgba(42,50,45,.55);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:1.25rem;
-    z-index:100;
-  }
-  .overlay.hidden{ display:none; }
-  .modal-card{
-    position:relative;
-    background:var(--card);
-    border-radius:var(--radius);
-    padding:1.75rem;
-    max-width:560px;
-    width:100%;
-    max-height:88vh;
-    overflow-y:auto;
-  }
-  .modal-card.hidden{ display:none; }
-  .modal-close{
-    position:absolute;
-    top:.85rem; right:.85rem;
-    background:transparent;
-    font-size:1.1rem;
-    color:var(--ink-soft);
-    width:2rem; height:2rem;
-    border-radius:50%;
-  }
-  .modal-close:hover{ background:var(--paper); }
+    .hole-2 {
+      top: 2.35rem;
+    }
 
-  .modal-card h2{
-    font-family:'Fraunces', serif;
-    font-size:1.5rem;
-    margin:.3rem 0 .25rem;
-    padding-right:2rem;
-  }
-  .modal-card h3{
-    font-family:'Fraunces', serif;
-    font-size:1.05rem;
-    margin:1.5rem 0 .6rem;
-    border-top:1px dashed var(--line);
-    padding-top:1rem;
-  }
-  .modal-card h3:first-of-type{ border-top:none; padding-top:0; }
+    .rubro-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #fffdf6;
+      padding: .2rem .55rem;
+      border-radius: 4px;
+      margin-bottom: .6rem;
+    }
 
-  .stamp-row{
-    display:flex;
-    align-items:center;
-    gap:1rem;
-    margin:1rem 0;
-    flex-wrap:wrap;
-  }
-  .stamp-row .stamp{ position:static; transform:rotate(-6deg); }
-  .stamp-row .meta{ font-size:.9rem; }
-  .stamp-row .meta strong{ font-family:'Fraunces', serif; font-size:1.1rem; }
-  .stamp-row .meta span{ display:block; color:var(--ink-soft); font-size:.8rem; }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-bottom: .6rem;
+    }
 
-  .review{
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:.75rem .9rem;
-    margin-bottom:.6rem;
-    background:var(--paper);
-  }
-  .review-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    gap:.5rem;
-    margin-bottom:.25rem;
-  }
-  .review-head strong{ font-size:.92rem; }
-  .review p{ margin:.25rem 0; font-size:.88rem; }
-  .review time{ font-size:.72rem; color:var(--ink-soft); font-family:'JetBrains Mono', monospace; }
-  .no-reviews{ color:var(--ink-soft); font-size:.88rem; font-style:italic; }
+    .tag-row .rubro-tag {
+      margin-bottom: 0;
+    }
 
-  form .field{ margin-bottom:.85rem; display:flex; flex-direction:column; gap:.35rem; }
-  form label{ font-size:.78rem; font-family:'JetBrains Mono', monospace; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; }
-  form input, form select, form textarea{
-    font-family:inherit;
-    font-size:.92rem;
-    padding:.55rem .7rem;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:#fff;
-    color:var(--ink);
-    resize:vertical;
-  }
-  form input:focus, form select:focus, form textarea:focus{
-    outline:2px solid var(--sage); outline-offset:1px;
-  }
+    .badge-tipo {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: .2rem .55rem;
+      border-radius: 4px;
+    }
 
-  .star-picker{ font-size:1.6rem; color:var(--line); letter-spacing:.15rem; cursor:pointer; }
-  .star-picker .star.filled{ color:var(--amber); }
+    .badge-tipo--vecino {
+      background: var(--sage);
+      color: #fffdf6;
+    }
 
-  .submit-btn{
-    background:var(--ink);
-    color:var(--paper);
-    padding:.6rem 1.2rem;
-    border-radius:999px;
-    font-size:.9rem;
-    font-weight:500;
-  }
-  .submit-btn:hover{ background:var(--sage); }
+    .badge-tipo--externo {
+      background: var(--gray);
+      color: #fffdf6;
+    }
 
-  footer{
-    text-align:center;
-    font-size:.78rem;
-    color:var(--ink-soft);
-    padding:1.5rem 1rem 2.5rem;
-  }
+    .gallery {
+      border-top: 1px dashed var(--line);
+      padding-top: .85rem;
+      margin-top: .85rem;
+    }
 
-  @media (max-width:560px){
-    .controls{ flex-direction:column; align-items:stretch; }
-    .stamp{ width:46px; height:46px; }
-    .stamp strong{ font-size:.85rem; }
-    .card-title{ margin-right:3.6rem; }
-  }
-</style>
+    .gallery-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--ink-soft);
+      margin: 0 0 .6rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: .6rem;
+    }
+
+    .gallery-thumb {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      cursor: pointer;
+    }
+
+    .gallery-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-thumb .remove-img {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(42, 50, 45, .75);
+      color: #fff;
+      font-size: .7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .gallery-add {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      border: 1px dashed var(--gray);
+      background: transparent;
+      color: var(--ink-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      transition: border-color .15s, color .15s;
+    }
+
+    .gallery-add:hover {
+      border-color: var(--sage);
+      color: var(--sage);
+    }
+
+    .gallery-empty {
+      font-size: .82rem;
+      color: var(--ink-soft);
+      font-style: italic;
+    }
+
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(42, 50, 45, .85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 200;
+    }
+
+    .lightbox-overlay.hidden {
+      display: none;
+    }
+
+    .lightbox-overlay img {
+      max-width: 100%;
+      max-height: 85vh;
+      border-radius: 8px;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: #fffdf6;
+      color: var(--ink);
+      font-size: 1.2rem;
+    }
+
+    .stamp {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 2px dashed var(--gray);
+      color: var(--gray);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-8deg);
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.1;
+    }
+
+    .stamp strong {
+      font-size: 1rem;
+    }
+
+    .stamp small {
+      font-size: .6rem;
+    }
+
+    .stamp--sage {
+      border-color: var(--sage);
+      color: var(--sage);
+    }
+
+    .stamp--amber {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
+    .stamp--berry {
+      border-color: var(--berry);
+      color: var(--berry);
+    }
+
+    .stamp--xxl {
+      width: 72px;
+      height: 72px;
+    }
+
+    .stamp--xxl strong {
+      font-size: 1.3rem;
+    }
+
+    .stamp--xxl small {
+      font-size: .65rem;
+    }
+
+    .card-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 0 4.2rem .15rem 0;
+    }
+
+    .card-zone {
+      margin: 0 0 .5rem;
+      font-size: .8rem;
+      color: var(--ink-soft);
+    }
+
+    .card-desc {
+      margin: 0 0 .85rem;
+      font-size: .88rem;
+      color: var(--ink);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .5rem;
+      border-top: 1px dashed var(--line);
+      padding-top: .7rem;
+    }
+
+    .stars {
+      color: var(--amber);
+      font-size: .95rem;
+      letter-spacing: 1px;
+    }
+
+    .stars .empty {
+      color: var(--line);
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-recommend {
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .3rem .65rem;
+      font-size: .78rem;
+      color: var(--ink-soft);
+      transition: border-color .15s, color .15s;
+    }
+
+    .btn-recommend:hover:not(:disabled) {
+      border-color: var(--sage);
+      color: var(--sage);
+    }
+
+    .btn-recommend:disabled {
+      color: var(--sage);
+      border-color: var(--sage);
+      cursor: default;
+      opacity: .85;
+    }
+
+    .btn-more {
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 999px;
+      padding: .35rem .9rem;
+      font-size: .78rem;
+    }
+
+    .btn-more:hover {
+      background: var(--sage);
+    }
+
+    .empty-state {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--ink-soft);
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+    }
+
+    /* ---------- FAB ---------- */
+    .fab {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 999px;
+      padding: .85rem 1.4rem;
+      font-size: .9rem;
+      font-weight: 500;
+      box-shadow: 0 6px 16px rgba(42, 50, 45, .25);
+      transition: background .15s, transform .15s;
+      z-index: 50;
+    }
+
+    .fab:hover {
+      background: var(--sage);
+      transform: translateY(-2px);
+    }
+
+    /* ---------- Modal ---------- */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(42, 50, 45, .55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      z-index: 100;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    .modal-card {
+      position: relative;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      max-width: 560px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .modal-card.hidden {
+      display: none;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: .85rem;
+      right: .85rem;
+      background: transparent;
+      font-size: 1.1rem;
+      color: var(--ink-soft);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+    }
+
+    .modal-close:hover {
+      background: var(--paper);
+    }
+
+    .modal-card h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      margin: .3rem 0 .25rem;
+      padding-right: 2rem;
+    }
+
+    .modal-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.05rem;
+      margin: 1.5rem 0 .6rem;
+      border-top: 1px dashed var(--line);
+      padding-top: 1rem;
+    }
+
+    .modal-card h3:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .stamp-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+
+    .stamp-row .stamp {
+      position: static;
+      transform: rotate(-6deg);
+    }
+
+    .stamp-row .meta {
+      font-size: .9rem;
+    }
+
+    .stamp-row .meta strong {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+    }
+
+    .stamp-row .meta span {
+      display: block;
+      color: var(--ink-soft);
+      font-size: .8rem;
+    }
+
+    .review {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: .75rem .9rem;
+      margin-bottom: .6rem;
+      background: var(--paper);
+    }
+
+    .review-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: .5rem;
+      margin-bottom: .25rem;
+    }
+
+    .review-head strong {
+      font-size: .92rem;
+    }
+
+    .review p {
+      margin: .25rem 0;
+      font-size: .88rem;
+    }
+
+    .review time {
+      font-size: .72rem;
+      color: var(--ink-soft);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .no-reviews {
+      color: var(--ink-soft);
+      font-size: .88rem;
+      font-style: italic;
+    }
+
+    form .field {
+      margin-bottom: .85rem;
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+    }
+
+    form label {
+      font-size: .78rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    form input,
+    form select,
+    form textarea {
+      font-family: inherit;
+      font-size: .92rem;
+      padding: .55rem .7rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      resize: vertical;
+    }
+
+    form input:focus,
+    form select:focus,
+    form textarea:focus {
+      outline: 2px solid var(--sage);
+      outline-offset: 1px;
+    }
+
+    .star-picker {
+      font-size: 1.6rem;
+      color: var(--line);
+      letter-spacing: .15rem;
+      cursor: pointer;
+    }
+
+    .star-picker .star.filled {
+      color: var(--amber);
+    }
+
+    .submit-btn {
+      background: var(--ink);
+      color: var(--paper);
+      padding: .6rem 1.2rem;
+      border-radius: 999px;
+      font-size: .9rem;
+      font-weight: 500;
+    }
+
+    .submit-btn:hover {
+      background: var(--sage);
+    }
+
+    footer {
+      text-align: center;
+      font-size: .78rem;
+      color: var(--ink-soft);
+      padding: 1.5rem 1rem 2.5rem;
+    }
+
+    @media (max-width:560px) {
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .stamp {
+        width: 46px;
+        height: 46px;
+      }
+
+      .stamp strong {
+        font-size: .85rem;
+      }
+
+      .card-title {
+        margin-right: 3.6rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <h1 class="logo">Directorio <span class="accent">Vecinal</span></h1>
-  <p class="tagline">Proveedores de servicios recomendados por gente del barrio. Buscá por rubro o nombre, leé las experiencias de tus vecinos y sumá la tuya.</p>
-</header>
+  <header>
+    <h1 class="logo">Directorio <span class="accent">Vecinal</span></h1>
+    <p class="tagline">Proveedores de servicios recomendados por gente del barrio. Buscá por rubro o nombre, leé las
+      experiencias de tus vecinos y sumá la tuya.</p>
+  </header>
 
-<main>
-  <div class="controls">
-    <input type="text" id="search" class="search-box" placeholder="Buscar por nombre, rubro o descripción…" aria-label="Buscar proveedor">
-    <select id="sort" class="sort-box" aria-label="Ordenar por">
-      <option value="rating">Mejor calificados</option>
-      <option value="recommend">Más recomendados</option>
-      <option value="name">Nombre (A-Z)</option>
-    </select>
+  <main>
+    <div class="controls">
+      <input type="text" id="search" class="search-box" placeholder="Buscar por nombre, rubro o descripción…"
+        aria-label="Buscar proveedor">
+      <select id="sort" class="sort-box" aria-label="Ordenar por">
+        <option value="rating">Mejor calificados</option>
+        <option value="recommend">Más recomendados</option>
+        <option value="name">Nombre (A-Z)</option>
+      </select>
+    </div>
+
+    <div class="pills" id="pills"></div>
+
+    <p class="stats" id="stats"></p>
+
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <button class="fab" id="fab">+ Agregar proveedor</button>
+
+  <div class="overlay hidden" id="overlay">
+    <div class="modal-card hidden" id="modal-detail"></div>
+    <div class="modal-card hidden" id="modal-add">
+      <button class="modal-close" data-action="close" aria-label="Cerrar">✕</button>
+      <h2>Sumar un proveedor</h2>
+      <p style="color:var(--ink-soft); font-size:.9rem;">Compartilo con tus vecinos para que puedan encontrarlo y dejar
+        sus recomendaciones.</p>
+      <form id="add-form">
+        <div class="field">
+          <label for="add-name">Nombre o negocio</label>
+          <input type="text" id="add-name" name="name" required placeholder="Ej: Cerrajería Walter">
+        </div>
+        <div class="field">
+          <label for="add-rubro">Rubro</label>
+          <select id="add-rubro" name="rubro" required></select>
+        </div>
+        <div class="field">
+          <label for="add-tipo">Tipo de proveedor</label>
+          <select id="add-tipo" name="tipo" required>
+            <option value="vecino">Vecino del barrio</option>
+            <option value="externo">Externo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="add-zone">Zona / referencia</label>
+          <input type="text" id="add-zone" name="zone" required placeholder="Ej: Manzana 6, atiende todo el barrio">
+        </div>
+        <div class="field">
+          <label for="add-phone">Teléfono o contacto</label>
+          <input type="text" id="add-phone" name="phone" required placeholder="Ej: 11-2345-6789">
+        </div>
+        <div class="field">
+          <label for="add-desc">Descripción breve</label>
+          <textarea id="add-desc" name="desc" rows="3" placeholder="¿Qué servicios ofrece?"></textarea>
+        </div>
+        <div class="field">
+          <label for="add-images">Folletos o imágenes (opcional)</label>
+          <input type="file" id="add-images" name="images" accept="image/*" multiple>
+          <div class="gallery-grid" id="add-images-preview" style="margin-top:.5rem;"></div>
+        </div>
+        <button type="submit" class="submit-btn">Agregar al directorio</button>
+      </form>
+    </div>
   </div>
 
-  <div class="pills" id="pills"></div>
-
-  <p class="stats" id="stats"></p>
-
-  <div class="grid" id="grid"></div>
-</main>
-
-<button class="fab" id="fab">+ Agregar proveedor</button>
-
-<div class="overlay hidden" id="overlay">
-  <div class="modal-card hidden" id="modal-detail"></div>
-  <div class="modal-card hidden" id="modal-add">
-    <button class="modal-close" data-action="close" aria-label="Cerrar">✕</button>
-    <h2>Sumar un proveedor</h2>
-    <p style="color:var(--ink-soft); font-size:.9rem;">Compartilo con tus vecinos para que puedan encontrarlo y dejar sus recomendaciones.</p>
-    <form id="add-form">
-      <div class="field">
-        <label for="add-name">Nombre o negocio</label>
-        <input type="text" id="add-name" name="name" required placeholder="Ej: Cerrajería Walter">
-      </div>
-      <div class="field">
-        <label for="add-rubro">Rubro</label>
-        <select id="add-rubro" name="rubro" required></select>
-      </div>
-      <div class="field">
-        <label for="add-tipo">Tipo de proveedor</label>
-        <select id="add-tipo" name="tipo" required>
-          <option value="vecino">Vecino del barrio</option>
-          <option value="externo">Externo</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="add-zone">Zona / referencia</label>
-        <input type="text" id="add-zone" name="zone" required placeholder="Ej: Manzana 6, atiende todo el barrio">
-      </div>
-      <div class="field">
-        <label for="add-phone">Teléfono o contacto</label>
-        <input type="text" id="add-phone" name="phone" required placeholder="Ej: 11-2345-6789">
-      </div>
-      <div class="field">
-        <label for="add-desc">Descripción breve</label>
-        <textarea id="add-desc" name="desc" rows="3" placeholder="¿Qué servicios ofrece?"></textarea>
-      </div>
-      <div class="field">
-        <label for="add-images">Folletos o imágenes (opcional)</label>
-        <input type="file" id="add-images" name="images" accept="image/*" multiple>
-        <div class="gallery-grid" id="add-images-preview" style="margin-top:.5rem;"></div>
-      </div>
-      <button type="submit" class="submit-btn">Agregar al directorio</button>
-    </form>
+  <div class="lightbox-overlay hidden" id="lightbox">
+    <button class="lightbox-close" data-action="lightbox-close" aria-label="Cerrar imagen">✕</button>
+    <img id="lightbox-img" src="" alt="">
   </div>
-</div>
 
-<div class="lightbox-overlay hidden" id="lightbox">
-  <button class="lightbox-close" data-action="lightbox-close" aria-label="Cerrar imagen">✕</button>
-  <img id="lightbox-img" src="" alt="">
-</div>
+  <footer>
+    Prototipo funcional · los datos viven en memoria del navegador y se reinician al recargar la página.<br>
+    Para uso real del barrio, conectá esta interfaz a una base de datos (Firebase, Supabase, etc.) o a tu propio
+    backend.
+  </footer>
 
-<footer>
-Este es un servicio gratuito creado para el beneficio de la comunidad.<br> La participación de todos es bienvenida para mantener el directorio actualizado y útil. 
-<br>
-Te invitamos a calificar y comentar con responsabilidad, respeto y objetividad. Las opiniones honestas y constructivas ayudan a otros vecinos a tomar mejores decisiones y contribuyen a fortalecer la convivencia y la colaboración dentro de nuestra comunidad.
-<br>
-Si tenés alguna sugerencia para mejorar el directorio o querés reportar un problema, no dudes en contactarnos. ¡Gracias por ser parte de esta iniciativa vecinal!
-</footer>
+  <script>
+    // ------------------------------------------------------------
+    //  Config — cambiá el puerto si tu servidor corre en otro
+    // ------------------------------------------------------------
+    const API = 'http://localhost:3000/api/dv';
 
-<script>
-  // ------------------------------------------------------------
-  //  Config — cambiá el puerto si tu servidor corre en otro
-  // ------------------------------------------------------------
-  const API = 'http://localhost:3000/api';
+    const ACCENTS = ['sage', 'amber', 'berry', 'teal'];
 
-  const ACCENTS = ['sage','amber','berry','teal'];
+    const state = {
+      providers: [],   // se llena desde la API
+      categories: [],   // { id, nombre, icono } desde db_rubros
+      filter: { query: '', rubro_id: null, sort: 'rating' },
+      recommended: new Set(),
+      pendingRating: 0
+    };
 
-  const state = {
-    providers:  [],   // se llena desde la API
-    categories: [],   // { id, nombre, icono } desde db_rubros
-    filter: { query:'', rubro_id: null, sort:'rating' },
-    recommended: new Set(),
-    pendingRating: 0
-  };
+    // ------------------------------------------------------------
+    //  API helpers
+    // ------------------------------------------------------------
 
-  // ------------------------------------------------------------
-  //  API helpers
-  // ------------------------------------------------------------
-  async function apiFetch(path, options = {}){
-    const res = await fetch(API + path, {
-      headers: { 'Content-Type': 'application/json' },
-      ...options
-    });
-    const json = await res.json();
-    if(!json.ok) throw new Error(json.error || 'Error desconocido');
-    return json.data;
-  }
+    async function apiFetch(path, options = {}) {
+      const token = sessionStorage.getItem('dv_token');
 
-  // ------------------------------------------------------------
-  //  Carga inicial
-  // ------------------------------------------------------------
-  async function loadAll(){
-    setLoading(true);
-    try {
-      const [cats, provs] = await Promise.all([
-        apiFetch('/rubros'),
-        apiFetch('/proveedores')
-      ]);
-      state.categories = cats;
-      state.providers  = provs.map(normalizeProvider);
-      render();
-    } catch(e) {
-      showError('No se pudo conectar con el servidor: ' + e.message);
-    } finally {
-      setLoading(false);
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+      };
+
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const res = await fetch(API + path, {
+        ...options,
+        headers
+      });
+
+      const json = await res.json();
+
+      if (!json.ok) {
+        throw new Error(json.error || json.message || 'Error desconocido');
+      }
+
+      return json.data;
     }
-  }
 
-  async function loadProviders(){
-    try {
-      const params = new URLSearchParams();
-      if(state.filter.rubro_id) params.set('rubro_id', state.filter.rubro_id);
-      if(state.filter.query)    params.set('q', state.filter.query);
-      const provs = await apiFetch('/proveedores?' + params);
-      state.providers = provs.map(normalizeProvider);
+    // ------------------------------------------------------------
+    //  Carga inicial
+    // ------------------------------------------------------------
+    async function loadAll() {
+      setLoading(true);
+      try {
+        const [cats, provs] = await Promise.all([
+          apiFetch('/rubros'),
+          apiFetch('/proveedores')
+        ]);
+        state.categories = cats;
+        state.providers = provs.map(normalizeProvider);
+        render();
+      } catch (e) {
+        showError('No se pudo conectar con el servidor: ' + e.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function loadProviders() {
+      try {
+        const params = new URLSearchParams();
+        if (state.filter.rubro_id) params.set('rubro_id', state.filter.rubro_id);
+        if (state.filter.query) params.set('q', state.filter.query);
+        const provs = await apiFetch('/proveedores?' + params);
+        state.providers = provs.map(normalizeProvider);
+        renderGrid();
+        renderStats();
+      } catch (e) {
+        showError(e.message);
+      }
+    }
+
+    // Normaliza los campos de la API al formato que usa el HTML
+    function normalizeProvider(p) {
+      return {
+        id: p.id,
+        presentadoPor: p.presentado_por,
+        name: p.nombre,
+        rubro: p.rubro,
+        rubro_id: p.rubro_id,
+        zone: p.zona || '',
+        phone: p.telefono || '',
+        desc: p.descripcion || '',
+        tipo: p.tipo || 'externo',   // 'vecino' | 'externo' — pendiente de columna en DB
+        images: p.images || [],         // pendiente de tabla en DB
+        avgRating: parseFloat(p.calificacion_promedio) || 0,
+        totalReviews: parseInt(p.total_resenas) || 0,
+        recommends: parseInt(p.total_recomendaciones) || 0,
+        reviews: []   // se cargan al abrir el detalle
+      };
+    }
+
+    // ------------------------------------------------------------
+    //  UI helpers
+    // ------------------------------------------------------------
+    function setLoading(on) {
+      document.getElementById('grid').innerHTML = on
+        ? `<div class="empty-state">Cargando proveedores…</div>` : '';
+    }
+
+    function showError(msg) {
+      document.getElementById('grid').innerHTML =
+        `<div class="empty-state" style="color:var(--berry)">⚠ ${msg}</div>`;
+    }
+
+    // ------------------------------------------------------------
+    //  Helpers de presentación
+    // ------------------------------------------------------------
+    function reputationLevel(avg) {
+      if (!avg) return 'neutral';
+      if (avg >= 4.5) return 'sage';
+      if (avg >= 3.5) return 'amber';
+      return 'berry';
+    }
+
+    function accentFor(rubroNombre) {
+      const idx = state.categories.findIndex(c => c.nombre === rubroNombre);
+      return ACCENTS[(idx >= 0 ? idx : 0) % ACCENTS.length];
+    }
+
+    function iconoFor(rubroNombre) {
+      const cat = state.categories.find(c => c.nombre === rubroNombre);
+      return cat?.icono || null;
+    }
+
+    function rubroIcon(rubroNombre) {
+      const icono = iconoFor(rubroNombre);
+      return icono ? `<i class="ti ${icono}" aria-hidden="true"></i> ` : '';
+    }
+
+    function badgeTipo(tipo) {
+      if (tipo === 'vecino') {
+        return `<span class="badge-tipo badge-tipo--vecino"><i class="ti ti-home" aria-hidden="true"></i> Vecino</span>`;
+      }
+      return `<span class="badge-tipo badge-tipo--externo"><i class="ti ti-map-pin" aria-hidden="true"></i> Externo</span>`;
+    }
+
+    function renderStars(value) {
+      const rounded = Math.round(value);
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        html += i <= rounded ? '★' : '<span class="empty">★</span>';
+      }
+      return html;
+    }
+
+    function todayISO() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    // Acepta tanto "2026-06-19" como "2026-06-19T03:00:00.000Z"
+    // y devuelve "19-06-2026"
+    function formatFecha(valor) {
+      if (!valor) return null;
+      const iso = valor.slice(0, 10);          // queda "2026-06-19"
+      const [y, m, d] = iso.split('-');
+      return `${d}-${m}-${y}`;
+    }
+
+    // ------------------------------------------------------------
+    //  Filtering & sorting (solo en memoria, el filtro por rubro
+    //  y búsqueda ya viene desde la API; el sort es local)
+    // ------------------------------------------------------------
+    function getSorted() {
+      const list = state.providers.slice();
+      switch (state.filter.sort) {
+        case 'rating':
+          list.sort((a, b) => b.avgRating - a.avgRating || b.totalReviews - a.totalReviews);
+          break;
+        case 'recommend':
+          list.sort((a, b) => b.recommends - a.recommends);
+          break;
+        case 'name':
+          list.sort((a, b) => a.name.localeCompare(b.name, 'es'));
+          break;
+      }
+      return list;
+    }
+
+    // ------------------------------------------------------------
+    //  Rendering
+    // ------------------------------------------------------------
+    function render() {
+      renderPills();
       renderGrid();
       renderStats();
-    } catch(e) {
-      showError(e.message);
+      populateRubroSelect();
     }
-  }
 
-  // Normaliza los campos de la API al formato que usa el HTML
-  function normalizeProvider(p){
-    return {
-      id:         p.id,
-      name:       p.nombre,
-      rubro:      p.rubro,
-      rubro_id:   p.rubro_id,
-      zone:       p.zona       || '',
-      phone:      p.telefono   || '',
-      desc:       p.descripcion || '',
-      tipo:       p.tipo || 'externo',   // 'vecino' | 'externo' — pendiente de columna en DB
-      images:     p.images || [],         // pendiente de tabla en DB
-      avgRating:  parseFloat(p.calificacion_promedio) || 0,
-      totalReviews: parseInt(p.total_resenas) || 0,
-      recommends: parseInt(p.total_recomendaciones) || 0,
-      reviews:    []   // se cargan al abrir el detalle
-    };
-  }
-
-  // ------------------------------------------------------------
-  //  UI helpers
-  // ------------------------------------------------------------
-  function setLoading(on){
-    document.getElementById('grid').innerHTML = on
-      ? `<div class="empty-state">Cargando proveedores…</div>` : '';
-  }
-
-  function showError(msg){
-    document.getElementById('grid').innerHTML =
-      `<div class="empty-state" style="color:var(--berry)">⚠ ${msg}</div>`;
-  }
-
-  // ------------------------------------------------------------
-  //  Helpers de presentación
-  // ------------------------------------------------------------
-  function reputationLevel(avg){
-    if(!avg) return 'neutral';
-    if(avg >= 4.5) return 'sage';
-    if(avg >= 3.5) return 'amber';
-    return 'berry';
-  }
-
-  function accentFor(rubroNombre){
-    const idx = state.categories.findIndex(c => c.nombre === rubroNombre);
-    return ACCENTS[(idx >= 0 ? idx : 0) % ACCENTS.length];
-  }
-
-  function badgeTipo(tipo){
-    if(tipo === 'vecino'){
-      return `<span class="badge-tipo badge-tipo--vecino">🏠 Vecino</span>`;
-    }
-    return `<span class="badge-tipo badge-tipo--externo">Externo</span>`;
-  }
-
-  function renderStars(value){
-    const rounded = Math.round(value);
-    let html = '';
-    for(let i=1;i<=5;i++){
-      html += i <= rounded ? '★' : '<span class="empty">★</span>';
-    }
-    return html;
-  }
-
-  function todayISO(){
-    return new Date().toISOString().slice(0,10);
-  }
-
-  // ------------------------------------------------------------
-  //  Filtering & sorting (solo en memoria, el filtro por rubro
-  //  y búsqueda ya viene desde la API; el sort es local)
-  // ------------------------------------------------------------
-  function getSorted(){
-    const list = state.providers.slice();
-    switch(state.filter.sort){
-      case 'rating':
-        list.sort((a,b) => b.avgRating - a.avgRating || b.totalReviews - a.totalReviews);
-        break;
-      case 'recommend':
-        list.sort((a,b) => b.recommends - a.recommends);
-        break;
-      case 'name':
-        list.sort((a,b) => a.name.localeCompare(b.name, 'es'));
-        break;
-    }
-    return list;
-  }
-
-  // ------------------------------------------------------------
-  //  Rendering
-  // ------------------------------------------------------------
-  function render(){
-    renderPills();
-    renderGrid();
-    renderStats();
-    populateRubroSelect();
-  }
-
-  function renderPills(){
-    const pills = document.getElementById('pills');
-    pills.innerHTML = `<button class="pill ${!state.filter.rubro_id ? 'active' : ''}" data-rubro-id="">Todos</button>` +
-      state.categories.map(c => `
-        <button class="pill ${state.filter.rubro_id == c.id ? 'active' : ''}" data-rubro-id="${c.id}">${c.nombre}</button>
+    function renderPills() {
+      const pills = document.getElementById('pills');
+      pills.innerHTML = `<button class="pill ${!state.filter.rubro_id ? 'active' : ''}" data-rubro-id="">Todos</button>` +
+        state.categories.map(c => `
+        <button class="pill ${state.filter.rubro_id == c.id ? 'active' : ''}" data-rubro-id="${c.id}">${c.icono ? `<i class="ti ${c.icono}" aria-hidden="true"></i> ` : ''}${c.nombre}</button>
       `).join('');
-  }
-
-  function renderStats(){
-    const stats = document.getElementById('stats');
-    const total = state.providers.length;
-    stats.textContent = `Mostrando ${total} proveedor${total !== 1 ? 'es' : ''} · ${state.categories.length} rubros en el directorio`;
-  }
-
-  function renderGrid(){
-    const grid = document.getElementById('grid');
-    const list = getSorted();
-
-    if(list.length === 0){
-      grid.innerHTML = `<div class="empty-state">No encontramos proveedores para esa búsqueda.<br>Probá con otro rubro o nombre, o agregá uno nuevo.</div>`;
-      return;
     }
 
-    grid.innerHTML = list.map(p => {
-      const accent = accentFor(p.rubro);
-      const rep    = reputationLevel(p.avgRating);
-      const alreadyRecommended = state.recommended.has(p.id);
-      return `
+    function renderStats() {
+      const stats = document.getElementById('stats');
+      const total = state.providers.length;
+      stats.textContent = `Mostrando ${total} proveedor${total !== 1 ? 'es' : ''} · ${state.categories.length} rubros en el directorio`;
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('grid');
+      const list = getSorted();
+
+      if (list.length === 0) {
+        grid.innerHTML = `<div class="empty-state">No encontramos proveedores para esa búsqueda.<br>Probá con otro rubro o nombre, o agregá uno nuevo.</div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map(p => {
+        const accent = accentFor(p.rubro);
+        const rep = reputationLevel(p.avgRating);
+        const alreadyRecommended = state.recommended.has(p.id);
+        return `
         <article class="card" data-id="${p.id}">
           <div class="hole hole-1"></div>
           <div class="hole hole-2"></div>
           <div class="tag-row">
-            <span class="rubro-tag" style="background:var(--${accent})">${p.rubro}</span>
+            <span class="rubro-tag" style="background:var(--${accent})">${rubroIcon(p.rubro)}${p.rubro}</span>
             ${badgeTipo(p.tipo)}
           </div>
           <div class="stamp stamp--${rep}">
@@ -802,49 +1061,49 @@ Si tenés alguna sugerencia para mejorar el directorio o querés reportar un pro
           </div>
         </article>
       `;
-    }).join('');
-  }
-
-  function populateRubroSelect(){
-    const sel = document.getElementById('add-rubro');
-    sel.innerHTML = state.categories.map(c =>
-      `<option value="${c.id}">${c.nombre}</option>`
-    ).join('');
-  }
-
-  // ------------------------------------------------------------
-  //  Modal: detalle + reseñas
-  // ------------------------------------------------------------
-  async function openDetail(id){
-    const p = state.providers.find(x => x.id === id);
-    if(!p) return;
-
-    if(!p.reviews.length){
-      try {
-        const reviews = await apiFetch(`/proveedores/${id}/resenas`);
-        p.reviews = reviews.map(r => ({
-          author:   r.autor,
-          rating:   r.calificacion,
-          comment:  r.comentario,
-          workdate: r.fecha_trabajo,
-          date:     r.fecha_publicacion
-        }));
-      } catch(e) {}
+      }).join('');
     }
 
-    if(!p.images || !p.images.length){
-      try {
-        const imgs = await apiFetch(`/proveedores/${id}/imagenes`);
-        p.images = imgs.map(i => ({ id: i.id, src: i.imagen_b64 }));
-      } catch(e) { p.images = []; }
+    function populateRubroSelect() {
+      const sel = document.getElementById('add-rubro');
+      sel.innerHTML = state.categories.map(c =>
+        `<option value="${c.id}">${c.nombre}</option>`
+      ).join('');
     }
 
-    const accent = accentFor(p.rubro);
-    const rep    = reputationLevel(p.avgRating);
-    const alreadyRecommended = state.recommended.has(p.id);
+    // ------------------------------------------------------------
+    //  Modal: detalle + reseñas
+    // ------------------------------------------------------------
+    async function openDetail(id) {
+      const p = state.providers.find(x => x.id === id);
+      if (!p) return;
 
-    const reviewsHtml = p.reviews.length
-      ? p.reviews.map(r => `
+      if (!p.reviews.length) {
+        try {
+          const reviews = await apiFetch(`/proveedores/${id}/resenas`);
+          p.reviews = reviews.map(r => ({
+            author: r.autor,
+            rating: r.calificacion,
+            comment: r.comentario,
+            workdate: formatFecha(r.fecha_trabajo),
+            date: formatFecha(r.fecha_publicacion)
+          }));
+        } catch (e) { }
+      }
+
+      if (!p.images || !p.images.length) {
+        try {
+          const imgs = await apiFetch(`/proveedores/${id}/imagenes`);
+          p.images = imgs.map(i => ({ id: i.id, src: i.imagen_b64 }));
+        } catch (e) { p.images = []; }
+      }
+
+      const accent = accentFor(p.rubro);
+      const rep = reputationLevel(p.avgRating);
+      const alreadyRecommended = state.recommended.has(p.id);
+
+      const reviewsHtml = p.reviews.length
+        ? p.reviews.map(r => `
           <div class="review">
             <div class="review-head">
               <strong>${escapeHtml(r.author)}</strong>
@@ -857,25 +1116,29 @@ Si tenés alguna sugerencia para mejorar el directorio o querés reportar un pro
             </div>
           </div>
         `).join("")
-      : `<p class="no-reviews">Todavía no hay recomendaciones. ¡Sé el primero en dejar una!</p>`;
+        : `<p class="no-reviews">Todavía no hay recomendaciones. ¡Sé el primero en dejar una!</p>`;
 
-    const galleryThumbs = (p.images || []).map((img, i) => `
+      const galleryThumbs = (p.images || []).map((img, i) => `
       <div class="gallery-thumb" data-action="view-image" data-src="${img.src}">
         <img src="${img.src}" alt="Imagen ${i + 1}" loading="lazy">
         <button class="remove-img" data-action="delete-image" data-img-id="${img.id}" title="Eliminar" aria-label="Eliminar imagen">✕</button>
       </div>
     `).join("");
 
-    const modal = document.getElementById("modal-detail");
-    modal.innerHTML = `
+      const modal = document.getElementById("modal-detail");
+
+      modal.innerHTML = `
       <button class="modal-close" data-action="close" aria-label="Cerrar">✕</button>
       <div class="tag-row">
-        <span class="rubro-tag" style="background:var(--${accent})">${p.rubro}</span>
+        <span class="rubro-tag" style="background:var(--${accent})">${rubroIcon(p.rubro)}${p.rubro}</span>
         ${badgeTipo(p.tipo)}
       </div>
       <h2>${p.name}</h2>
-      <p class="card-zone">${p.zone} · ${p.phone}</p>
+      <p class="card-zone">${p.zone} · </p><h2>${p.phone}</h2>
       <p>${p.desc || "Sin descripción todavía."}</p>
+      <p class="card-zone">
+       Presentado por: <span>${p.presentadoPor || "Desconocido"}</span>
+      </p>
 
       <div class="gallery">
         <p class="gallery-label">Folletos e imágenes del proveedor</p>
@@ -915,305 +1178,317 @@ Si tenés alguna sugerencia para mejorar el directorio o querés reportar un pro
           </div>
         </div>
         <div class="field">
-          <label for="review-workdate">Fecha en que se realizó el trabajo/servicio</label>
+          <label for="review-workdate">Fecha en que se realizó el trabajo</label>
           <input type="date" id="review-workdate" name="workdate" max="${todayISO()}">
           <span style="font-size:.75rem;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;">Opcional</span>
         </div>
         <div class="field">
-          <label for="review-comment">Comentario</label>
+          <label for="review-comment">Descripción del trabajo realizado y comentarios</label>
           <textarea id="review-comment" name="comment" rows="3" required placeholder="Contale a tus vecinos cómo te fue con este proveedor..."></textarea>
         </div>
         <button type="submit" class="submit-btn">Publicar recomendación</button>
       </form>
     `;
 
-    state.pendingRating = 0;
+      state.pendingRating = 0;
 
-    const fileInput = modal.querySelector("#gallery-file-input");
-    modal.querySelector("[data-action='add-images']").addEventListener("click", () => {
-      fileInput.value = "";
-      fileInput.click();
-    });
-
-    fileInput.addEventListener("change", async () => {
-      if(!fileInput.files.length) return;
-      const status = modal.querySelector("#gallery-upload-status");
-      status.textContent = "Subiendo imágenes…";
-      try {
-        const urls = await readImagesAsDataURLs(fileInput.files);
-        await apiFetch(`/proveedores/${id}/imagenes`, {
-          method: "POST",
-          body: JSON.stringify({ images: urls })
-        });
-        p.images = [];
-        status.textContent = "";
-        openDetail(id);
-      } catch(e) {
-        status.textContent = "⚠ Error al subir: " + e.message;
-      }
-    });
-
-    showModal("modal-detail");
-  }
-
-  function escapeHtml(str){
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
-  // ------------------------------------------------------------
-  //  Galería de imágenes — lightbox y lectura de archivos
-  // ------------------------------------------------------------
-  let pendingNewImages = [];
-
-  function openLightbox(src){
-    document.getElementById('lightbox-img').src = src;
-    document.getElementById('lightbox').classList.remove('hidden');
-  }
-
-  function closeLightbox(){
-    document.getElementById('lightbox').classList.add('hidden');
-    document.getElementById('lightbox-img').src = '';
-  }
-
-  function readImagesAsDataURLs(fileList){
-    const files = Array.from(fileList);
-    return Promise.all(files.map(file => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    })));
-  }
-
-  // ------------------------------------------------------------
-  //  Modal helpers
-  // ------------------------------------------------------------
-  function showModal(modalId){
-    document.getElementById('overlay').classList.remove('hidden');
-    document.getElementById('modal-detail').classList.add('hidden');
-    document.getElementById('modal-add').classList.add('hidden');
-    document.getElementById(modalId).classList.remove('hidden');
-  }
-
-  function closeModals(){
-    document.getElementById('overlay').classList.add('hidden');
-    document.getElementById('modal-detail').classList.add('hidden');
-    document.getElementById('modal-add').classList.add('hidden');
-  }
-
-  // ------------------------------------------------------------
-  //  Recomendar
-  // ------------------------------------------------------------
-  async function quickRecommend(id){
-    if(state.recommended.has(id)) return;
-
-    // Pedimos el nombre del vecino antes de registrar
-    const nombre = prompt('¿Cómo te llamás? (para registrar tu recomendación)');
-    if(!nombre?.trim()) return;
-
-    try {
-      await apiFetch(`/proveedores/${id}/recomendar`, {
-        method: 'POST',
-        body: JSON.stringify({ usuario_nombre: nombre.trim() })
+      const fileInput = modal.querySelector("#gallery-file-input");
+      modal.querySelector("[data-action='add-images']").addEventListener("click", () => {
+        fileInput.value = "";
+        fileInput.click();
       });
-      state.recommended.add(id);
-      const p = state.providers.find(x => x.id === id);
-      if(p) p.recommends++;
-      renderGrid();
 
-      // Refrescar modal si está abierto para este proveedor
-      const modal = document.getElementById('modal-detail');
-      if(!modal.classList.contains('hidden')){
-        const openId = Number(modal.querySelector('form')?.dataset.id);
-        if(openId === id) openDetail(id);
-      }
-    } catch(e) {
-      if(e.message.includes('Ya recomendaste')){
+      fileInput.addEventListener("change", async () => {
+        if (!fileInput.files.length) return;
+        const status = modal.querySelector("#gallery-upload-status");
+        status.textContent = "Subiendo imágenes…";
+        try {
+          const urls = await readImagesAsDataURLs(fileInput.files);
+          await apiFetch(`/proveedores/${id}/imagenes`, {
+            method: "POST",
+            body: JSON.stringify({ images: urls })
+          });
+          p.images = [];
+          status.textContent = "";
+          openDetail(id);
+        } catch (e) {
+          status.textContent = "⚠ Error al subir: " + e.message;
+        }
+      });
+
+      showModal("modal-detail");
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ------------------------------------------------------------
+    //  Galería de imágenes — lightbox y lectura de archivos
+    // ------------------------------------------------------------
+    let pendingNewImages = [];
+
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.add('hidden');
+      document.getElementById('lightbox-img').src = '';
+    }
+
+    function readImagesAsDataURLs(fileList) {
+      const files = Array.from(fileList);
+      return Promise.all(files.map(file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      })));
+    }
+
+    // ------------------------------------------------------------
+    //  Modal helpers
+    // ------------------------------------------------------------
+    function showModal(modalId) {
+      document.getElementById('overlay').classList.remove('hidden');
+      document.getElementById('modal-detail').classList.add('hidden');
+      document.getElementById('modal-add').classList.add('hidden');
+      document.getElementById(modalId).classList.remove('hidden');
+    }
+
+    function closeModals() {
+      document.getElementById('overlay').classList.add('hidden');
+      document.getElementById('modal-detail').classList.add('hidden');
+      document.getElementById('modal-add').classList.add('hidden');
+    }
+
+    // ------------------------------------------------------------
+    //  Recomendar
+    // ------------------------------------------------------------
+    async function quickRecommend(id) {
+      if (state.recommended.has(id)) return;
+
+      // Pedimos el nombre del vecino antes de registrar
+      const nombre = prompt('¿Cómo te llamás? (para registrar tu recomendación)');
+      if (!nombre?.trim()) return;
+
+      try {
+        await apiFetch(`/proveedores/${id}/recomendar`, {
+          method: 'POST',
+          body: JSON.stringify({ usuario_nombre: nombre.trim() })
+        });
         state.recommended.add(id);
+        const p = state.providers.find(x => x.id === id);
+        if (p) p.recommends++;
         renderGrid();
-      } else {
-        alert('No se pudo registrar la recomendación: ' + e.message);
+
+        // Refrescar modal si está abierto para este proveedor
+        const modal = document.getElementById('modal-detail');
+        if (!modal.classList.contains('hidden')) {
+          const openId = Number(modal.querySelector('form')?.dataset.id);
+          if (openId === id) openDetail(id);
+        }
+      } catch (e) {
+        if (e.message.includes('Ya recomendaste')) {
+          state.recommended.add(id);
+          renderGrid();
+        } else {
+          alert('No se pudo registrar la recomendación: ' + e.message);
+        }
       }
     }
-  }
 
-  // ------------------------------------------------------------
-  //  Init
-  // ------------------------------------------------------------
-  function init(){
-    loadAll();
+    // ------------------------------------------------------------
+    //  Init
+    // ------------------------------------------------------------
+    function init() {
+      loadAll();
 
-    // Búsqueda con debounce
-    let searchTimer;
-    document.getElementById('search').addEventListener('input', e => {
-      state.filter.query = e.target.value;
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(loadProviders, 350);
-    });
+      // Búsqueda con debounce
+      let searchTimer;
+      document.getElementById('search').addEventListener('input', e => {
+        state.filter.query = e.target.value;
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(loadProviders, 350);
+      });
 
-    // Orden (local, no requiere API)
-    document.getElementById('sort').addEventListener('change', e => {
-      state.filter.sort = e.target.value;
-      renderGrid();
-    });
+      // Orden (local, no requiere API)
+      document.getElementById('sort').addEventListener('change', e => {
+        state.filter.sort = e.target.value;
+        renderGrid();
+      });
 
-    // Pills de rubro
-    document.getElementById('pills').addEventListener('click', e => {
-      const btn = e.target.closest('.pill');
-      if(!btn) return;
-      state.filter.rubro_id = btn.dataset.rubroId || null;
-      loadProviders();
-      renderPills();
-    });
+      // Pills de rubro
+      document.getElementById('pills').addEventListener('click', e => {
+        const btn = e.target.closest('.pill');
+        if (!btn) return;
+        state.filter.rubro_id = btn.dataset.rubroId || null;
+        loadProviders();
+        renderPills();
+      });
 
-    // Grid: abrir detalle o recomendar
-    document.getElementById('grid').addEventListener('click', e => {
-      const card = e.target.closest('.card');
-      if(!card) return;
-      const id = Number(card.dataset.id);
-      const action = e.target.closest('[data-action]')?.dataset.action;
-      if(action === 'open')      openDetail(id);
-      if(action === 'recommend') quickRecommend(id);
-    });
+      // Grid: abrir detalle o recomendar
+      document.getElementById('grid').addEventListener('click', e => {
+        const card = e.target.closest('.card');
+        if (!card) return;
+        const id = Number(card.dataset.id);
+        const action = e.target.closest('[data-action]')?.dataset.action;
+        if (action === 'open') openDetail(id);
+        if (action === 'recommend') quickRecommend(id);
+      });
 
-    // FAB: abrir modal de alta
-    document.getElementById('fab').addEventListener('click', () => showModal('modal-add'));
+      // FAB: abrir modal de alta
+      document.getElementById('fab').addEventListener('click', () => showModal('modal-add'));
 
-    // Overlay: cerrar al hacer click afuera o en botones de cierre
-    document.getElementById('overlay').addEventListener('click', e => {
-      if(e.target.id === 'overlay') closeModals();
-      if(e.target.closest('[data-action="close"]')) closeModals();
-      if(e.target.closest('[data-action="recommend"]') && e.target.dataset.id){
-        quickRecommend(Number(e.target.dataset.id));
-      }
-    });
+      // Overlay: cerrar al hacer click afuera o en botones de cierre
+      document.getElementById('overlay').addEventListener('click', e => {
+        if (e.target.id === 'overlay') closeModals();
+        if (e.target.closest('[data-action="close"]')) closeModals();
+        if (e.target.closest('[data-action="recommend"]') && e.target.dataset.id) {
+          quickRecommend(Number(e.target.dataset.id));
+        }
+      });
 
-    // Selector de estrellas
-    document.getElementById('modal-detail').addEventListener('click', e => {
-      const star = e.target.closest('.star');
-      if(star){
-        const value = Number(star.dataset.value);
-        state.pendingRating = value;
-        star.closest('.star-picker').querySelectorAll('.star').forEach(s => {
-          s.classList.toggle('filled', Number(s.dataset.value) <= value);
-        });
-        return;
-      }
-      const thumb = e.target.closest('[data-action="view-image"]');
-      if(thumb){
-        openLightbox(thumb.dataset.src);
-      }
-    });
+      // Selector de estrellas
+      document.getElementById('modal-detail').addEventListener('click', e => {
+        const star = e.target.closest('.star');
+        if (star) {
+          const value = Number(star.dataset.value);
+          state.pendingRating = value;
+          star.closest('.star-picker').querySelectorAll('.star').forEach(s => {
+            s.classList.toggle('filled', Number(s.dataset.value) <= value);
+          });
+          return;
+        }
+        const thumb = e.target.closest('[data-action="view-image"]');
+        if (thumb) {
+          openLightbox(thumb.dataset.src);
+        }
+      });
 
-    // Lightbox: cerrar al click afuera o en la X
-    document.getElementById('lightbox').addEventListener('click', e => {
-      if(e.target.id === 'lightbox' || e.target.closest('[data-action="lightbox-close"]')){
-        closeLightbox();
-      }
-    });
-    document.addEventListener('keydown', e => {
-      if(e.key === 'Escape') closeLightbox();
-    });
+      // Lightbox: cerrar al click afuera o en la X
+      document.getElementById('lightbox').addEventListener('click', e => {
+        if (e.target.id === 'lightbox' || e.target.closest('[data-action="lightbox-close"]')) {
+          closeLightbox();
+        }
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeLightbox();
+      });
 
-    // Preview de imágenes seleccionadas en el formulario de alta
-    document.getElementById('add-images').addEventListener('change', e => {
-      readImagesAsDataURLs(e.target.files).then(urls => {
-        pendingNewImages = urls;
-        const preview = document.getElementById('add-images-preview');
-        preview.innerHTML = urls.map(src => `
+      // Preview de imágenes seleccionadas en el formulario de alta
+      document.getElementById('add-images').addEventListener('change', e => {
+        readImagesAsDataURLs(e.target.files).then(urls => {
+          pendingNewImages = urls;
+          const preview = document.getElementById('add-images-preview');
+          preview.innerHTML = urls.map(src => `
           <div class="gallery-thumb"><img src="${src}" alt="Vista previa"></div>
         `).join('');
+        });
       });
-    });
 
-    // Envío de reseña
-    document.getElementById('modal-detail').addEventListener('submit', async e => {
-      if(e.target.id !== 'review-form') return;
-      e.preventDefault();
-      const id      = Number(e.target.dataset.id);
-      const author  = e.target.author.value.trim();
-      const comment = e.target.comment.value.trim();
-      const workdate = e.target.workdate.value || null;
-      const rating  = state.pendingRating;
+      // Envío de reseña
+      document.getElementById('modal-detail').addEventListener('submit', async e => {
+        if (e.target.id !== 'review-form') return;
+        e.preventDefault();
+        const id = Number(e.target.dataset.id);
+        const author = e.target.author.value.trim();
+        const comment = e.target.comment.value.trim();
+        const workdate = e.target.workdate.value || null;
+        const rating = state.pendingRating;
 
-      if(!author || !comment || rating === 0){
-        alert('Completá tu nombre, comentario y elegí una calificación de estrellas.');
-        return;
-      }
-      if(workdate && workdate > todayISO()){
-        alert('La fecha del trabajo no puede ser en el futuro.');
-        return;
-      }
-
-      const btn = e.target.querySelector('.submit-btn');
-      btn.disabled = true;
-      btn.textContent = 'Guardando…';
-
-      try {
-        await apiFetch(`/proveedores/${id}/resenas`, {
-          method: 'POST',
-          body: JSON.stringify({ autor: author, calificacion: rating, comentario: comment, fecha_trabajo: workdate })
-        });
-        // Limpiar cache de reseñas del proveedor para recargar desde API
-        const p = state.providers.find(x => x.id === id);
-        if(p){
-          p.reviews = [];
-          p.totalReviews++;
+        if (!author || !comment || rating === 0) {
+          alert('Completá tu nombre, comentario y elegí una calificación de estrellas.');
+          return;
         }
-        // Recargar proveedores para actualizar el promedio
-        await loadProviders();
-        openDetail(id);
-      } catch(err) {
-        alert('No se pudo guardar la reseña: ' + err.message);
-        btn.disabled = false;
-        btn.textContent = 'Publicar recomendación';
-      }
-    });
+        if (workdate && workdate > todayISO()) {
+          alert('La fecha del trabajo no puede ser en el futuro.');
+          return;
+        }
 
-    // Alta de nuevo proveedor
-    document.getElementById('add-form').addEventListener('submit', async e => {
-      e.preventDefault();
-      const form = e.target;
-      const btn  = form.querySelector('.submit-btn');
-      btn.disabled = true;
-      btn.textContent = 'Guardando…';
+        const btn = e.target.querySelector('.submit-btn');
+        btn.disabled = true;
+        btn.textContent = 'Guardando…';
 
-      const payload = {
-        nombre:      form.name.value.trim(),
-        rubro_id:    Number(form.rubro.value),
-        tipo:        form.tipo.value,          // 'vecino' | 'externo' — pendiente de columna en DB
-        zona:        form.zone.value.trim(),
-        telefono:    form.phone.value.trim(),
-        descripcion: form.desc.value.trim(),
-        images:      pendingNewImages           // pendiente de tabla en DB
-      };
+        try {
+          await apiFetch(`/proveedores/${id}/resenas`, {
+            method: 'POST',
+            body: JSON.stringify({ autor: author, calificacion: rating, comentario: comment, fecha_trabajo: workdate })
+          });
+          // Limpiar cache de reseñas del proveedor para recargar desde API
+          const p = state.providers.find(x => x.id === id);
+          if (p) {
+            p.reviews = [];
+            p.totalReviews++;
+          }
+          // Recargar proveedores para actualizar el promedio
+          await loadProviders();
+          openDetail(id);
+        } catch (err) {
+          alert('No se pudo guardar la reseña: ' + err.message);
+          btn.disabled = false;
+          btn.textContent = 'Publicar recomendación';
+        }
+      });
 
-      try {
-        await apiFetch('/proveedores', {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
-        form.reset();
-        pendingNewImages = [];
-        document.getElementById('add-images-preview').innerHTML = '';
-        closeModals();
-        state.filter.query = '';
-        document.getElementById('search').value = '';
-        await loadProviders();
-      } catch(err) {
-        alert('No se pudo agregar el proveedor: ' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Agregar al directorio';
-      }
-    });
-  }
+      // Alta de nuevo proveedor
+      document.getElementById('add-form').addEventListener('submit', async e => {
+        e.preventDefault();
 
-  init();
-</script>
-</script>
+        const token = sessionStorage.getItem('dv_token'); // 👈 AGREGAR ESTO
+
+        const form = e.target;
+        const btn = form.querySelector('.submit-btn');
+        btn.disabled = true;
+        btn.textContent = 'Guardando…';
+
+        const payload = {
+          nombre: form.name.value.trim(),
+          rubro_id: Number(form.rubro.value),
+          tipo: form.tipo.value,          // 'vecino' | 'externo' — pendiente de columna en DB
+          zona: form.zone.value.trim(),
+          telefono: form.phone.value.trim(),
+          descripcion: form.desc.value.trim(),
+          images: pendingNewImages           // pendiente de tabla en DB
+        };
+
+        try {
+          await apiFetch('/proveedores', {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          form.reset();
+          pendingNewImages = [];
+          document.getElementById('add-images-preview').innerHTML = '';
+          closeModals();
+          state.filter.query = '';
+          document.getElementById('search').value = '';
+          await loadProviders();
+        } catch (err) {
+
+          console.log("ERROR COMPLETO:", err);
+          console.log("MENSAJE:", err.message);
+
+          if (err.message.includes('autorizado')) {
+            alert('Tu sesión expiró. Volvé a iniciar sesión.');
+            window.location.href = 'login_dv.html';
+            return;
+          }
+          alert('No se pudo agregar el proveedor: ' + err.message);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Agregar al directorio';
+        }
+      });
+    }
+
+    init();
+  </script>
+  </script>
 </body>
-</html>
 
+</html>

@@ -8,7 +8,7 @@ const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const cron = require("node-cron");
 require("./cron/logsCron");
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const crypto = require("crypto");
 
 const multer = require('multer');
@@ -22,7 +22,7 @@ const verificarToken = require('./middleware/auth');
 const soloRoles = require('./middleware/roles');
 
 const app = express();
-app.use(cors());
+// app.use(cors());
 // app.use(express.json());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -2581,20 +2581,290 @@ app.get('/api/evolucion-global', async (req, res) => {
     }
 });
 
+
 // ------------------------------------------------------------
-//  DIRECTORIO VECINAL
+//  Helpers
+// ------------------------------------------------------------
+function ok(res, data)           { res.json({ ok: true,  data }); }
+function err(res, msg, code=500) { res.status(code).json({ ok: false, error: msg }); }
+
+// Extrae el mime type de un data URL  ("data:image/png;base64,..." → "image/png")
+function mimeFromDataURL(dataURL) {
+  const match = dataURL.match(/^data:([^;]+);base64,/);
+  return match ? match[1] : 'image/jpeg';
+}
+
+// ------------------------------------------------------------
+//  RUBROS
 // ------------------------------------------------------------
 
+app.get('/api/rubros', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT id, nombre, icono FROM db_rubros ORDER BY nombre'
+    );
+    ok(res, rows);
+  } catch (e) { err(res, e.message); }
+});
 
+app.post('/api/rubros', async (req, res) => {
+  const { nombre, icono = null } = req.body;
+  if (!nombre?.trim()) return err(res, 'El campo nombre es obligatorio.', 400);
+  try {
+    const [result] = await pool.query(
+      'INSERT INTO db_rubros (nombre, icono) VALUES (?, ?)',
+      [nombre.trim(), icono]
+    );
+    ok(res, { id: result.insertId, nombre: nombre.trim(), icono });
+  } catch (e) {
+    if (e.code === 'ER_DUP_ENTRY')
+      return err(res, `Ya existe un rubro llamado "${nombre}".`, 409);
+    err(res, e.message);
+  }
+});
 
-const routesDV = require('./routes_dv');
-console.log("ROUTES DV:", routesDV);
+// ------------------------------------------------------------
+//  PROVEEDORES
+// ------------------------------------------------------------
 
+app.get('/api/proveedores', async (req, res) => {
+  try {
+    const { rubro_id, q } = req.query;
+    let sql = `
+      SELECT
+        p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo,
+        r.id      AS rubro_id,
+        r.nombre  AS rubro,
+        r.icono   AS rubro_icono,
+        ROUND(AVG(re.calificacion), 1)  AS calificacion_promedio,
+        COUNT(DISTINCT re.id)           AS total_resenas,
+        COUNT(DISTINCT rc.id)           AS total_recomendaciones
+      FROM db_proveedores p
+        JOIN  db_rubros r               ON r.id = p.rubro_id
+        LEFT JOIN db_resenas re         ON re.proveedor_id = p.id
+        LEFT JOIN db_recomendaciones rc ON rc.proveedor_id = p.id
+      WHERE 1=1
+    `;
+    const params = [];
+    if (rubro_id) {
+      sql += ' AND p.rubro_id = ?';
+      params.push(rubro_id);
+    }
+    if (q) {
+      sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ?)';
+      const like = `%${q}%`;
+      params.push(like, like, like);
+    }
+    sql += ' GROUP BY p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, r.id, r.nombre, r.icono';
+    sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
 
-const registerDVRoutes = require('./routes_dv');
-console.log("ANTES DE LLAMAR:", typeof registerDVRoutes);
-registerDVRoutes(app, pool, bcrypt, crypto, sendMail);
-console.log("TIPO registerDVRoutes:", typeof registerDVRoutes);
+    const [rows] = await pool.query(sql, params);
+    ok(res, rows);
+  } catch (e) { err(res, e.message); }
+});
+
+// POST /api/proveedores
+// Body: { nombre, rubro_id, tipo, zona, telefono, descripcion, images[] }
+app.post('/api/proveedores', async (req, res) => {
+  const {
+    nombre, rubro_id,
+    tipo        = 'externo',
+    zona        = null,
+    telefono    = null,
+    descripcion = null,
+    images      = []
+  } = req.body;
+
+  if (!nombre?.trim()) return err(res, 'El nombre es obligatorio.', 400);
+  if (!rubro_id)       return err(res, 'El rubro es obligatorio.',  400);
+  if (!['vecino','externo'].includes(tipo))
+    return err(res, 'El tipo debe ser "vecino" o "externo".', 400);
+
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    const [result] = await conn.query(
+      `INSERT INTO db_proveedores (nombre, rubro_id, tipo, zona, telefono, descripcion)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [nombre.trim(), rubro_id, tipo, zona, telefono, descripcion]
+    );
+    const proveedorId = result.insertId;
+
+    // Guardar imágenes si las hay
+    if (images.length) {
+      const imgRows = images.map((dataURL, i) => [
+        proveedorId,
+        dataURL,
+        mimeFromDataURL(dataURL),
+        i   // orden
+      ]);
+      await conn.query(
+        `INSERT INTO db_proveedor_imagenes (proveedor_id, imagen_b64, mime_type, orden)
+         VALUES ?`,
+        [imgRows]
+      );
+    }
+
+    await conn.commit();
+    ok(res, { id: proveedorId });
+  } catch (e) {
+    await conn.rollback();
+    err(res, e.message);
+  } finally {
+    conn.release();
+  }
+});
+
+// ------------------------------------------------------------
+//  IMÁGENES DE PROVEEDOR
+// ------------------------------------------------------------
+
+// GET /api/proveedores/:id/imagenes
+app.get('/api/proveedores/:id/imagenes', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT id, imagen_b64, mime_type, orden
+       FROM db_proveedor_imagenes
+       WHERE proveedor_id = ?
+       ORDER BY orden ASC, id ASC`,
+      [req.params.id]
+    );
+    ok(res, rows);
+  } catch (e) { err(res, e.message); }
+});
+
+// POST /api/proveedores/:id/imagenes
+// Body: { images: [ 'data:image/...;base64,...', ... ] }
+app.post('/api/proveedores/:id/imagenes', async (req, res) => {
+  const { images = [] } = req.body;
+  if (!images.length) return err(res, 'No se recibieron imágenes.', 400);
+
+  try {
+    // Calcular el próximo orden disponible
+    const [[{ maxOrden }]] = await pool.query(
+      'SELECT COALESCE(MAX(orden), -1) AS maxOrden FROM db_proveedor_imagenes WHERE proveedor_id = ?',
+      [req.params.id]
+    );
+
+    const imgRows = images.map((dataURL, i) => [
+      req.params.id,
+      dataURL,
+      mimeFromDataURL(dataURL),
+      maxOrden + 1 + i
+    ]);
+
+    await pool.query(
+      `INSERT INTO db_proveedor_imagenes (proveedor_id, imagen_b64, mime_type, orden)
+       VALUES ?`,
+      [imgRows]
+    );
+    ok(res, { agregadas: images.length });
+  } catch (e) { err(res, e.message); }
+});
+
+// DELETE /api/imagenes/:id — elimina una imagen por su id
+app.delete('/api/imagenes/:id', async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      'DELETE FROM db_proveedor_imagenes WHERE id = ?',
+      [req.params.id]
+    );
+    if (result.affectedRows === 0)
+      return err(res, 'Imagen no encontrada.', 404);
+    ok(res, { eliminada: true });
+  } catch (e) { err(res, e.message); }
+});
+
+// ------------------------------------------------------------
+//  RESEÑAS
+// ------------------------------------------------------------
+
+app.get('/api/proveedores/:id/resenas', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT r.id, r.calificacion, r.comentario,
+              r.fecha_trabajo, r.fecha_publicacion,
+              u.nombre AS autor
+       FROM db_resenas r
+         LEFT JOIN db_usuarios u ON u.id = r.usuario_id
+       WHERE r.proveedor_id = ?
+       ORDER BY r.fecha_publicacion DESC`,
+      [req.params.id]
+    );
+    ok(res, rows);
+  } catch (e) { err(res, e.message); }
+});
+
+app.post('/api/proveedores/:id/resenas', async (req, res) => {
+  const { autor, calificacion, comentario, fecha_trabajo = null } = req.body;
+  if (!autor?.trim())      return err(res, 'El nombre es obligatorio.', 400);
+  if (!comentario?.trim()) return err(res, 'El comentario es obligatorio.', 400);
+  if (!calificacion || calificacion < 1 || calificacion > 5)
+    return err(res, 'La calificación debe ser entre 1 y 5.', 400);
+
+  try {
+    let userId;
+    const [existing] = await pool.query(
+      'SELECT id FROM db_usuarios WHERE nombre = ? LIMIT 1',
+      [autor.trim()]
+    );
+    if (existing.length) {
+      userId = existing[0].id;
+    } else {
+      const [ins] = await pool.query(
+        'INSERT INTO db_usuarios (nombre) VALUES (?)',
+        [autor.trim()]
+      );
+      userId = ins.insertId;
+    }
+
+    const [result] = await pool.query(
+      `INSERT INTO db_resenas
+         (proveedor_id, usuario_id, calificacion, comentario, fecha_trabajo, fecha_publicacion)
+       VALUES (?, ?, ?, ?, ?, CURRENT_DATE)`,
+      [req.params.id, userId, calificacion, comentario.trim(), fecha_trabajo || null]
+    );
+    ok(res, { id: result.insertId });
+  } catch (e) { err(res, e.message); }
+});
+
+// ------------------------------------------------------------
+//  RECOMENDACIONES
+// ------------------------------------------------------------
+
+app.post('/api/proveedores/:id/recomendar', async (req, res) => {
+  const { usuario_nombre } = req.body;
+  if (!usuario_nombre?.trim()) return err(res, 'El nombre es obligatorio.', 400);
+
+  try {
+    let userId;
+    const [existing] = await pool.query(
+      'SELECT id FROM db_usuarios WHERE nombre = ? LIMIT 1',
+      [usuario_nombre.trim()]
+    );
+    if (existing.length) {
+      userId = existing[0].id;
+    } else {
+      const [ins] = await pool.query(
+        'INSERT INTO db_usuarios (nombre) VALUES (?)',
+        [usuario_nombre.trim()]
+      );
+      userId = ins.insertId;
+    }
+
+    await pool.query(
+      'INSERT INTO db_recomendaciones (proveedor_id, usuario_id) VALUES (?, ?)',
+      [req.params.id, userId]
+    );
+    ok(res, { recomendado: true });
+  } catch (e) {
+    if (e.code === 'ER_DUP_ENTRY')
+      return err(res, 'Ya recomendaste este proveedor.', 409);
+    err(res, e.message);
+  }
+});
+
 
 const PORT = process.env.PORT || 3000;
 
