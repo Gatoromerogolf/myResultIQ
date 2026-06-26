@@ -809,13 +809,17 @@
     <img id="lightbox-img" src="" alt="">
   </div>
 
-<footer>
-Este es un servicio gratuito creado para el beneficio de la comunidad.<br> La participación de todos es bienvenida para mantener el directorio actualizado y útil. 
-<br>
-Te invitamos a calificar y comentar con responsabilidad, respeto y objetividad. Las opiniones honestas y constructivas ayudan a otros vecinos a tomar mejores decisiones y contribuyen a fortalecer la convivencia y la colaboración dentro de nuestra comunidad.
-<br>
-Si tenés alguna sugerencia para mejorar el directorio o querés reportar un problema, no dudes en contactarnos. ¡Gracias por ser parte de esta iniciativa vecinal!
-</footer>
+  <footer>
+    Este es un servicio gratuito creado para el beneficio de la comunidad.<br> La participación de todos es bienvenida
+    para mantener el directorio actualizado y útil.
+    <br>
+    Te invitamos a calificar y comentar con responsabilidad, respeto y objetividad.<br> Las opiniones honestas y
+    constructivas ayudan a otros vecinos a tomar mejores decisiones <br>y contribuyen a fortalecer la convivencia y la
+    colaboración dentro de nuestra comunidad.
+    <br><br>
+    Si tenés alguna sugerencia para mejorar el directorio o querés reportar un problema,<br> no dudes en contactarnos.
+    ¡Gracias por ser parte de esta iniciativa vecinal!
+  </footer>
 
   <script>
     // ------------------------------------------------------------
@@ -823,8 +827,8 @@ Si tenés alguna sugerencia para mejorar el directorio o querés reportar un pro
     // ------------------------------------------------------------
 
     const API = window.location.hostname === 'localhost'
-  ? 'http://localhost:3000/api/dv'
-  : '/api/dv';
+      ? 'http://localhost:3000/api/dv'
+      : '/api/dv';
 
     const ACCENTS = ['sage', 'amber', 'berry', 'teal'];
 
@@ -1083,6 +1087,17 @@ Si tenés alguna sugerencia para mejorar el directorio o querés reportar un pro
       const p = state.providers.find(x => x.id === id);
       if (!p) return;
 
+      // Al inicio de openDetail(), después de recuperar p:
+      const token = sessionStorage.getItem('dv_token');
+      let currentUserName = 'Anónimo';
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          currentUserName = payload.nombre || 'Anónimo';
+        } catch (e) { }
+      }
+      state.currentUserName = currentUserName;
+
       if (!p.reviews.length) {
         try {
           const reviews = await apiFetch(`/proveedores/${id}/resenas`);
@@ -1164,7 +1179,7 @@ Si tenés alguna sugerencia para mejorar el directorio o querés reportar un pro
           <strong>${p.totalReviews} recomendación${p.totalReviews === 1 ? "" : "es"}</strong>
           <span>Reputación calculada a partir de las reseñas de vecinos</span>
         </div>
-        <button class="btn-recommend" data-action="recommend" data-id="${p.id}" ${alreadyRecommended ? "disabled" : ""}>👍 Recomendar (${p.recommends})</button>
+        // <button class="btn-recommend" data-action="recommend" data-id="${p.id}" ${alreadyRecommended ? "disabled" : ""}>👍 Recomendar (${p.recommends})</button>
       </div>
 
       <h3>Recomendaciones de vecinos</h3>
@@ -1172,10 +1187,7 @@ Si tenés alguna sugerencia para mejorar el directorio o querés reportar un pro
 
       <h3>Dejá tu recomendación</h3>
       <form id="review-form" data-id="${p.id}">
-        <div class="field">
-          <label for="review-author">Tu nombre</label>
-          <input type="text" id="review-author" name="author" required placeholder="Ej: Vecino de Manzana 3">
-        </div>
+
         <div class="field">
           <label>Tu calificación</label>
           <div class="star-picker" id="star-picker" data-rating="0">
@@ -1194,6 +1206,13 @@ Si tenés alguna sugerencia para mejorar el directorio o querés reportar un pro
         <button type="submit" class="submit-btn">Publicar recomendación</button>
       </form>
     `;
+
+      //  sacado del formulario debajo de       <form id="review-form" data-id="${p.id}">
+      // <div class="field">
+      //   <label for="review-author">Tu nombre</label>
+      //   <input type="text" id="review-author" name="author" required placeholder="Ej: Vecino de Manzana 3">
+      // </div>
+
 
       state.pendingRating = 0;
 
@@ -1401,13 +1420,13 @@ Si tenés alguna sugerencia para mejorar el directorio o querés reportar un pro
         if (e.target.id !== 'review-form') return;
         e.preventDefault();
         const id = Number(e.target.dataset.id);
-        const author = e.target.author.value.trim();
+        const author = state.currentUserName;
         const comment = e.target.comment.value.trim();
         const workdate = e.target.workdate.value || null;
         const rating = state.pendingRating;
 
         if (!author || !comment || rating === 0) {
-          alert('Completá tu nombre, comentario y elegí una calificación de estrellas.');
+          alert('Elegí una calificación y escribí un comentario.');
           return;
         }
         if (workdate && workdate > todayISO()) {
