@@ -41,27 +41,27 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 
 // === Transporter para GMAIL con OAuth2 ===
-const oAuth2Client = new google.auth.OAuth2(
-    process.env.CLIENT_ID, // Usar directamente process.env
-    process.env.CLIENT_SECRET, // Usar directamente process.env
-    process.env.REDIRECT_URI // Usar directamente process.env
-);
+// const oAuth2Client = new google.auth.OAuth2(
+//     process.env.CLIENT_ID, // Usar directamente process.env
+//     process.env.CLIENT_SECRET, // Usar directamente process.env
+//     process.env.REDIRECT_URI // Usar directamente process.env
+// );
 
 // Configuración del token de actualización
-oAuth2Client.setCredentials({
-    refresh_token: process.env.REFRESH_TOKEN,
-});
+// oAuth2Client.setCredentials({
+//     refresh_token: process.env.REFRESH_TOKEN,
+// });
 
 // Transporter SMTP para Ferozo
-const smtpTransporter = nodemailer.createTransport({
-    host: "c1801550.ferozo.com",
-    port: 465,
-    secure: true,
-    auth: {
-        user: "soporte@bdtadvisory.com",
-        pass: process.env.MAIL_PASS, // poné la contraseña real de soporte@bdtadvisory.com en el .env
-    },
-});
+// const smtpTransporter = nodemailer.createTransport({
+//     host: "c1801550.ferozo.com",
+//     port: 465,
+//     secure: true,
+//     auth: {
+//         user: "soporte@bdtadvisory.com",
+//         pass: process.env.MAIL_PASS, // poné la contraseña real de soporte@bdtadvisory.com en el .env
+//     },
+// });
 
 // Transporter Gmail simple (App Password)
 const gmailSimpleTransporter = nodemailer.createTransport({
@@ -189,45 +189,67 @@ app.post("/enviar-correo", async (req, res) => {
 // }
 
 
-// Transporter Gmail simple (App Password) — reemplaza el OAuth2
-const gmailTransporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
-    },
-});
+// // Transporter Gmail simple (App Password) — reemplaza el OAuth2
+// const gmailTransporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: process.env.GMAIL_USER,
+//         pass: process.env.GMAIL_APP_PASSWORD,
+//     },
+// });
 
-//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// ::::    sendMail
-// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// // ::::    sendMail
+// // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// async function sendMail(to, subject, text, html, useGmail = true) {
+//     console.log(`sendMail llamado con to: ${to}, subject: ${subject}, useGmail: ${useGmail}`);
+//     try {
+//         if (!to) { console.error("❌ No se especificó destinatario."); return; }
+
+//         const transporter = useGmail ? gmailTransporter : smtpTransporter;
+//         const from = useGmail ? process.env.GMAIL_USER : "soporte@bdtadvisory.com";
+
+//         const mailOptions = {
+//             from,
+//             to: Array.isArray(to) ? to.join(", ") : to,
+//             bcc: "rgarcia@consejo.org.ar",
+//             subject,
+//             text,
+//             html,
+//         };
+
+//         await transporter.sendMail(mailOptions);
+//         console.log("✅ Correo enviado correctamente.");
+//         console.log("📤 Desde:", from);
+//         console.log("📩 Para:", mailOptions.to);
+//         console.log("📬 Método:", useGmail ? "Gmail (App Password)" : "SMTP (Ferozo)");
+//     } catch (error) {
+//         console.error("❌ Error al enviar el correo:", error);
+//     }
+// }
+
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 async function sendMail(to, subject, text, html, useGmail = true) {
     console.log(`sendMail llamado con to: ${to}, subject: ${subject}, useGmail: ${useGmail}`);
     try {
         if (!to) { console.error("❌ No se especificó destinatario."); return; }
 
-        const transporter = useGmail ? gmailTransporter : smtpTransporter;
-        const from = useGmail ? process.env.GMAIL_USER : "soporte@bdtadvisory.com";
-
-        const mailOptions = {
-            from,
-            to: Array.isArray(to) ? to.join(", ") : to,
-            bcc: "rgarcia@consejo.org.ar",
+        const { error } = await resend.emails.send({
+            from: 'EntreVecinos <onboarding@resend.dev>',
+            to: Array.isArray(to) ? to : [to],
             subject,
-            text,
             html,
-        };
+        });
 
-        await transporter.sendMail(mailOptions);
-        console.log("✅ Correo enviado correctamente.");
-        console.log("📤 Desde:", from);
-        console.log("📩 Para:", mailOptions.to);
-        console.log("📬 Método:", useGmail ? "Gmail (App Password)" : "SMTP (Ferozo)");
+        if (error) throw new Error(JSON.stringify(error));
+        console.log("✅ Correo enviado correctamente vía Resend.");
+        console.log("📩 Para:", to);
     } catch (error) {
         console.error("❌ Error al enviar el correo:", error);
     }
 }
-
 
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
