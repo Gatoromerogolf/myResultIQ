@@ -85,7 +85,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
          <p><a href="${link}" style="color:#5e7d63;font-weight:bold;">Activar mi cuenta</a></p>
          <p>El enlace expira en 24 horas.</p>
          <p style="color:#9a948a;font-size:12px;">Si no creaste esta cuenta, ignorá este correo.</p>`,
-                false  // false = SMTP Ferozo, true = Gmail — igual que en tu app
+                true  // false = SMTP Ferozo, true = Gmail — igual que en tu app
             );
 
             dvOk(res, { mensaje: 'Cuenta creada. Revisá tu correo para activarla.' });
@@ -95,6 +95,34 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             dvErr(res, e.message);
         }
     });
+
+    // PUT /api/dv/usuarios/perfil  (requiere dvAuth)
+    app.put('/api/dv/usuarios/perfil', dvAuth, async (req, res) => {
+        const { nombre, barrio, lote, whatsapp, foto_b64 } = req.body;
+
+        if (!nombre?.trim()) return dvErr(res, 'El nombre es obligatorio.', 400);
+        if (!['altos', 'campo'].includes(barrio)) return dvErr(res, 'Barrio inválido.', 400);
+        if (!lote?.trim()) return dvErr(res, 'El lote es obligatorio.', 400);
+
+        try {
+            await pool.query(
+                `UPDATE db_usuarios
+             SET nombre = ?, barrio = ?, lote = ?, whatsapp = ?, foto_b64 = ?
+             WHERE id = ?`,
+                [nombre.trim(), barrio, lote.trim(), whatsapp || null, foto_b64 || null, req.dvUser.id]
+            );
+
+            // Devolver el usuario actualizado para refrescar sessionStorage
+            const [[u]] = await pool.query(
+                `SELECT id, nombre, barrio, lote, whatsapp, email, foto_b64
+             FROM db_usuarios WHERE id = ?`,
+                [req.dvUser.id]
+            );
+
+            dvOk(res, { user: u });
+        } catch (e) { dvErr(res, e.message); }
+    });
+
 
     // GET /api/dv/auth/verificar?token=xxx
     app.get('/api/dv/auth/verificar', async (req, res) => {
@@ -221,7 +249,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
            <p>Hacé clic aquí para restablecer tu clave (válido por 2 horas):</p>
            <p><a href="${link}" style="color:#5e7d63;font-weight:bold;">Restablecer clave</a></p>
            <p style="color:#9a948a;font-size:12px;">Si no solicitaste esto, ignorá este correo.</p>`,
-                    false
+                    true  // false = SMTP Ferozo, true = Gmail — igual que en tu app
                 );
             }
             dvOk(res, { mensaje: 'Si el correo existe, recibirás un enlace.' });
@@ -330,152 +358,162 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
             const [rows] = await pool.query(sql, params);
             dvOk(res, rows);
-        }  catch (error) {
-        console.error("ERROR EN /proveedores:", error);
-        res.status(500).json({
-            message: "Error interno",
-            error: error.message
-        });
-    }
+        } catch (error) {
+            console.error("ERROR EN /proveedores:", error);
+            res.status(500).json({
+                message: "Error interno",
+                error: error.message
+            });
+        }
 
-});
+    });
 
-// POST /api/dv/proveedores  (requiere dvAuth)
-app.post('/api/dv/proveedores', dvAuth, async (req, res) => {
-    const { nombre, rubro_id, tipo = 'externo', zona = null,
-        telefono = null, descripcion = null, images = [] } = req.body;
+    // POST /api/dv/proveedores  (requiere dvAuth)
+    app.post('/api/dv/proveedores', dvAuth, async (req, res) => {
+        const { nombre, rubro_id, tipo = 'externo', zona = null,
+            telefono = null, descripcion = null, images = [] } = req.body;
 
-    if (!nombre?.trim()) return dvErr(res, 'El nombre es obligatorio.', 400);
-    if (!rubro_id) return dvErr(res, 'El rubro es obligatorio.', 400);
-    if (!['vecino', 'externo'].includes(tipo))
-        return dvErr(res, 'El tipo debe ser "vecino" o "externo".', 400);
+        if (!nombre?.trim()) return dvErr(res, 'El nombre es obligatorio.', 400);
+        if (!rubro_id) return dvErr(res, 'El rubro es obligatorio.', 400);
+        if (!['vecino', 'externo'].includes(tipo))
+            return dvErr(res, 'El tipo debe ser "vecino" o "externo".', 400);
 
-    const conn = await pool.getConnection();
-    try {
-        await conn.beginTransaction();
+        const conn = await pool.getConnection();
+        try {
+            await conn.beginTransaction();
 
-        const [result] = await conn.query(
-            `INSERT INTO db_proveedores (nombre, rubro_id, creado_por, tipo, zona, telefono, descripcion)
+            const [result] = await conn.query(
+                `INSERT INTO db_proveedores (nombre, rubro_id, creado_por, tipo, zona, telefono, descripcion)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [nombre.trim(), rubro_id, req.dvUser.id, tipo, zona, telefono, descripcion]
-        );
-        const proveedorId = result.insertId;
+                [nombre.trim(), rubro_id, req.dvUser.id, tipo, zona, telefono, descripcion]
+            );
+            const proveedorId = result.insertId;
 
-        if (images.length) {
+            if (images.length) {
+                const imgRows = images.map((dataURL, i) => [
+                    proveedorId, dataURL, mimeFromDataURL(dataURL), i
+                ]);
+                await conn.query(
+                    'INSERT INTO db_proveedor_imagenes (proveedor_id, imagen_b64, mime_type, orden) VALUES ?',
+                    [imgRows]
+                );
+            }
+
+            await conn.commit();
+            dvOk(res, { id: proveedorId });
+        } catch (e) {
+            await conn.rollback();
+            dvErr(res, e.message);
+        } finally {
+            conn.release();
+        }
+    });
+
+    // ----------------------------------------------------------
+    //  IMÁGENES
+    // ----------------------------------------------------------
+
+    app.get('/api/dv/proveedores/:id/imagenes', async (req, res) => {
+        try {
+            const [rows] = await pool.query(
+                'SELECT id, imagen_b64, mime_type, orden FROM db_proveedor_imagenes WHERE proveedor_id = ? ORDER BY orden ASC, id ASC',
+                [req.params.id]
+            );
+            dvOk(res, rows);
+        } catch (e) { dvErr(res, e.message); }
+    });
+
+    app.post('/api/dv/proveedores/:id/imagenes', dvAuth, async (req, res) => {
+        const { images = [] } = req.body;
+        if (!images.length) return dvErr(res, 'No se recibieron imágenes.', 400);
+        try {
+            // Verificar que el proveedor existe y que el usuario es quien lo creó
+            const [[proveedor]] = await pool.query(
+                'SELECT creado_por FROM db_proveedores WHERE id = ?',
+                [req.params.id]
+            );
+            if (!proveedor) return dvErr(res, 'Proveedor no encontrado.', 404);
+            if (proveedor.creado_por !== req.dvUser.id)
+                return dvErr(res, 'Solo el creador del proveedor puede agregar imágenes.', 403);
+
+
+            const [[{ maxOrden }]] = await pool.query(
+                'SELECT COALESCE(MAX(orden), -1) AS maxOrden FROM db_proveedor_imagenes WHERE proveedor_id = ?',
+                [req.params.id]
+            );
             const imgRows = images.map((dataURL, i) => [
-                proveedorId, dataURL, mimeFromDataURL(dataURL), i
+                req.params.id, dataURL, mimeFromDataURL(dataURL), maxOrden + 1 + i
             ]);
-            await conn.query(
+            await pool.query(
                 'INSERT INTO db_proveedor_imagenes (proveedor_id, imagen_b64, mime_type, orden) VALUES ?',
                 [imgRows]
             );
-        }
+            dvOk(res, { agregadas: images.length });
+        } catch (e) { dvErr(res, e.message); }
+    });
 
-        await conn.commit();
-        dvOk(res, { id: proveedorId });
-    } catch (e) {
-        await conn.rollback();
-        dvErr(res, e.message);
-    } finally {
-        conn.release();
-    }
-});
+    app.delete('/api/dv/imagenes/:id', dvAuth, async (req, res) => {
+        try {
+            const [result] = await pool.query(
+                'DELETE FROM db_proveedor_imagenes WHERE id = ?', [req.params.id]
+            );
+            if (result.affectedRows === 0) return dvErr(res, 'Imagen no encontrada.', 404);
+            dvOk(res, { eliminada: true });
+        } catch (e) { dvErr(res, e.message); }
+    });
 
-// ----------------------------------------------------------
-//  IMÁGENES
-// ----------------------------------------------------------
+    // ----------------------------------------------------------
+    //  RESEÑAS
+    // ----------------------------------------------------------
 
-app.get('/api/dv/proveedores/:id/imagenes', async (req, res) => {
-    try {
-        const [rows] = await pool.query(
-            'SELECT id, imagen_b64, mime_type, orden FROM db_proveedor_imagenes WHERE proveedor_id = ? ORDER BY orden ASC, id ASC',
-            [req.params.id]
-        );
-        dvOk(res, rows);
-    } catch (e) { dvErr(res, e.message); }
-});
-
-app.post('/api/dv/proveedores/:id/imagenes', dvAuth, async (req, res) => {
-    const { images = [] } = req.body;
-    if (!images.length) return dvErr(res, 'No se recibieron imágenes.', 400);
-    try {
-        const [[{ maxOrden }]] = await pool.query(
-            'SELECT COALESCE(MAX(orden), -1) AS maxOrden FROM db_proveedor_imagenes WHERE proveedor_id = ?',
-            [req.params.id]
-        );
-        const imgRows = images.map((dataURL, i) => [
-            req.params.id, dataURL, mimeFromDataURL(dataURL), maxOrden + 1 + i
-        ]);
-        await pool.query(
-            'INSERT INTO db_proveedor_imagenes (proveedor_id, imagen_b64, mime_type, orden) VALUES ?',
-            [imgRows]
-        );
-        dvOk(res, { agregadas: images.length });
-    } catch (e) { dvErr(res, e.message); }
-});
-
-app.delete('/api/dv/imagenes/:id', dvAuth, async (req, res) => {
-    try {
-        const [result] = await pool.query(
-            'DELETE FROM db_proveedor_imagenes WHERE id = ?', [req.params.id]
-        );
-        if (result.affectedRows === 0) return dvErr(res, 'Imagen no encontrada.', 404);
-        dvOk(res, { eliminada: true });
-    } catch (e) { dvErr(res, e.message); }
-});
-
-// ----------------------------------------------------------
-//  RESEÑAS
-// ----------------------------------------------------------
-
-app.get('/api/dv/proveedores/:id/resenas', async (req, res) => {
-    try {
-        const [rows] = await pool.query(
-            `SELECT r.id, r.calificacion, r.comentario, r.fecha_trabajo, r.fecha_publicacion,
+    app.get('/api/dv/proveedores/:id/resenas', async (req, res) => {
+        try {
+            const [rows] = await pool.query(
+                `SELECT r.id, r.calificacion, r.comentario, r.fecha_trabajo, r.fecha_publicacion,
                 u.nombre AS autor
          FROM db_resenas r
            LEFT JOIN db_usuarios u ON u.id = r.usuario_id
          WHERE r.proveedor_id = ?
          ORDER BY r.fecha_publicacion DESC`,
-            [req.params.id]
-        );
-        dvOk(res, rows);
-    } catch (e) { dvErr(res, e.message); }
-});
+                [req.params.id]
+            );
+            dvOk(res, rows);
+        } catch (e) { dvErr(res, e.message); }
+    });
 
-app.post('/api/dv/proveedores/:id/resenas', dvAuth, async (req, res) => {
-    const { calificacion, comentario, fecha_trabajo = null } = req.body;
-    if (!comentario?.trim()) return dvErr(res, 'El comentario es obligatorio.', 400);
-    if (!calificacion || calificacion < 1 || calificacion > 5)
-        return dvErr(res, 'La calificación debe ser entre 1 y 5.', 400);
+    app.post('/api/dv/proveedores/:id/resenas', dvAuth, async (req, res) => {
+        const { calificacion, comentario, fecha_trabajo = null } = req.body;
+        if (!comentario?.trim()) return dvErr(res, 'El comentario es obligatorio.', 400);
+        if (!calificacion || calificacion < 1 || calificacion > 5)
+            return dvErr(res, 'La calificación debe ser entre 1 y 5.', 400);
 
-    try {
-        const [result] = await pool.query(
-            `INSERT INTO db_resenas
+        try {
+            const [result] = await pool.query(
+                `INSERT INTO db_resenas
            (proveedor_id, usuario_id, calificacion, comentario, fecha_trabajo, fecha_publicacion)
          VALUES (?, ?, ?, ?, ?, CURRENT_DATE)`,
-            [req.params.id, req.dvUser.id, calificacion, comentario.trim(), fecha_trabajo || null]
-        );
-        dvOk(res, { id: result.insertId });
-    } catch (e) { dvErr(res, e.message); }
-});
+                [req.params.id, req.dvUser.id, calificacion, comentario.trim(), fecha_trabajo || null]
+            );
+            dvOk(res, { id: result.insertId });
+        } catch (e) { dvErr(res, e.message); }
+    });
 
-// ----------------------------------------------------------
-//  RECOMENDACIONES
-// ----------------------------------------------------------
+    // ----------------------------------------------------------
+    //  RECOMENDACIONES
+    // ----------------------------------------------------------
 
-app.post('/api/dv/proveedores/:id/recomendar', dvAuth, async (req, res) => {
-    try {
-        await pool.query(
-            'INSERT INTO db_recomendaciones (proveedor_id, usuario_id) VALUES (?, ?)',
-            [req.params.id, req.dvUser.id]
-        );
-        dvOk(res, { recomendado: true });
-    } catch (e) {
-        if (e.code === 'ER_DUP_ENTRY')
-            return dvErr(res, 'Ya recomendaste este proveedor.', 409);
-        dvErr(res, e.message);
-    }
-});
+    app.post('/api/dv/proveedores/:id/recomendar', dvAuth, async (req, res) => {
+        try {
+            await pool.query(
+                'INSERT INTO db_recomendaciones (proveedor_id, usuario_id) VALUES (?, ?)',
+                [req.params.id, req.dvUser.id]
+            );
+            dvOk(res, { recomendado: true });
+        } catch (e) {
+            if (e.code === 'ER_DUP_ENTRY')
+                return dvErr(res, 'Ya recomendaste este proveedor.', 409);
+            dvErr(res, e.message);
+        }
+    });
 
 }; 

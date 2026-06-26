@@ -63,6 +63,15 @@ const smtpTransporter = nodemailer.createTransport({
     },
 });
 
+// Transporter Gmail simple (App Password)
+const gmailSimpleTransporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,  // App Password de 16 dígitos
+    },
+});
+
 //  🏀🏀🏀😎😎😎  Agregado para mandar dos mails.. 🏀🏀🏀😎😎😎
 async function getGmailTransporter() {
     const accessTokenObject = await oAuth2Client.getAccessToken();
@@ -115,61 +124,110 @@ app.post("/enviar-correo", async (req, res) => {
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // ::::    sendMail
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// async function sendMail(to, subject, text, html, useGmail = true) {
+//     console.log(`sendMail llamado con to: ${to}, subject: ${subject}, useGmail: ${useGmail}`);
+
+//     //sendMail llamado con to: [object Object], subject: undefined, useGmail: true
+//     try {
+//         if (!to) {
+//             console.error("❌ No se especificó destinatario.");
+//             return;
+//         }
+
+//         let transporter;
+//         let from;
+
+//         // if (useGmail) {
+//         //     const accessTokenObject = await oAuth2Client.getAccessToken();
+//         //     const accessToken = accessTokenObject?.token;
+
+//         //     transporter = nodemailer.createTransport({
+//         //         service: "gmail",
+//         //         auth: {
+//         //             type: "OAuth2",
+//         //             user: process.env.GMAIL_USER,
+//         //             clientId: process.env.CLIENT_ID,
+//         //             clientSecret: process.env.CLIENT_SECRET,
+//         //             refreshToken: process.env.REFRESH_TOKEN,
+//         //             accessToken: accessToken,
+//         //         },
+//         //     });
+
+//         //     from = process.env.GMAIL_USER;
+//         // } else {
+//         //     transporter = smtpTransporter;
+//         //     // from = "soporte@bdtadvisory.com";
+//         //     from = "soporte@myresultiq.com.ar";
+//         // }
+
+//         if (useGmail) {
+//             transporter = gmailSimpleTransporter;
+//             from = process.env.GMAIL_USER;
+//         } else {
+//             transporter = smtpTransporter;
+//             from = "dev.bdt.reg@gmail.com";
+//         }
+
+//         const mailOptions = {
+//             from: from,
+//             to: Array.isArray(to) ? to.join(", ") : to,
+//             bcc: "rgarcia@consejo.org.ar",
+//             subject: subject,
+//             text: text,
+//             html: html,
+//         };
+
+//         const result = await transporter.sendMail(mailOptions);
+
+//         console.log("✅ Correo enviado correctamente.");
+//         console.log("📤 Desde:", from);
+//         console.log("📩 Para:", mailOptions.to);
+//         console.log("📬 Método:", useGmail ? "Gmail (App Pass)" : "SMTP (Ferozo)");
+//     } catch (error) {
+//         console.error("❌ Error al enviar el correo:", error);
+//     }
+// }
+
+
+// Transporter Gmail simple (App Password) — reemplaza el OAuth2
+const gmailTransporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+    },
+});
+
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// ::::    sendMail
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 async function sendMail(to, subject, text, html, useGmail = true) {
     console.log(`sendMail llamado con to: ${to}, subject: ${subject}, useGmail: ${useGmail}`);
-
-    //sendMail llamado con to: [object Object], subject: undefined, useGmail: true
     try {
-        if (!to) {
-            console.error("❌ No se especificó destinatario.");
-            return;
-        }
+        if (!to) { console.error("❌ No se especificó destinatario."); return; }
 
-        let transporter;
-        let from;
-
-        if (useGmail) {
-            const accessTokenObject = await oAuth2Client.getAccessToken();
-            const accessToken = accessTokenObject?.token;
-
-            transporter = nodemailer.createTransport({
-                service: "gmail",
-                auth: {
-                    type: "OAuth2",
-                    user: process.env.GMAIL_USER,
-                    clientId: process.env.CLIENT_ID,
-                    clientSecret: process.env.CLIENT_SECRET,
-                    refreshToken: process.env.REFRESH_TOKEN,
-                    accessToken: accessToken,
-                },
-            });
-
-            from = process.env.GMAIL_USER;
-        } else {
-            transporter = smtpTransporter;
-            // from = "soporte@bdtadvisory.com";
-            from = "soporte@myresultiq.com.ar";
-        }
+        const transporter = useGmail ? gmailTransporter : smtpTransporter;
+        const from = useGmail ? process.env.GMAIL_USER : "soporte@bdtadvisory.com";
 
         const mailOptions = {
-            from: from,
+            from,
             to: Array.isArray(to) ? to.join(", ") : to,
             bcc: "rgarcia@consejo.org.ar",
-            subject: subject,
-            text: text,
-            html: html,
+            subject,
+            text,
+            html,
         };
 
-        const result = await transporter.sendMail(mailOptions);
-
+        await transporter.sendMail(mailOptions);
         console.log("✅ Correo enviado correctamente.");
         console.log("📤 Desde:", from);
         console.log("📩 Para:", mailOptions.to);
-        console.log("📬 Método:", useGmail ? "Gmail (OAuth2)" : "SMTP (Ferozo)");
+        console.log("📬 Método:", useGmail ? "Gmail (App Password)" : "SMTP (Ferozo)");
     } catch (error) {
         console.error("❌ Error al enviar el correo:", error);
     }
 }
+
 
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -229,44 +287,44 @@ cron.schedule(
 
 
 app.post("/auth/forgot-password", async (req, res) => {
-  const { email } = req.body;
+    const { email } = req.body;
 
-  console.log(`llega al backend con ${email}`);
+    console.log(`llega al backend con ${email}`);
 
-  const [users] = await pool.query(
-    "SELECT id FROM usuarios WHERE email = ?",
-    [email]
-  );
+    const [users] = await pool.query(
+        "SELECT id FROM usuarios WHERE email = ?",
+        [email]
+    );
 
-  // No revelar si existe o no
-  if (users.length === 0) {
-    return res.json({ ok: true });
-  }
+    // No revelar si existe o no
+    if (users.length === 0) {
+        return res.json({ ok: true });
+    }
 
-  const token = crypto.randomBytes(32).toString("hex");
+    const token = crypto.randomBytes(32).toString("hex");
 
-  await pool.query(`
+    await pool.query(`
     UPDATE usuarios
     SET reset_token = ?,
         reset_expires = DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTE)
     WHERE email = ?
   `, [token, email]);
 
-  const resetLink = `${process.env.FRONTEND_URL}/reset-password.html?token=${token}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password.html?token=${token}`;
 
-  await sendMail(
-    email,
-    "Recuperación de contraseña - myResultIQ",
-    "nada",
-    `
+    await sendMail(
+        email,
+        "Recuperación de contraseña - myResultIQ",
+        "nada",
+        `
       <p>Solicitaste restablecer tu contraseña.</p>
       <p>Haz click en el siguiente enlace (válido por 15 minutos):</p>
       <a href="${resetLink}">${resetLink}</a>
     `,
-    false
-  );
+        true
+    );
 
-  res.json({ ok: true });
+    res.json({ ok: true });
 });
 
 

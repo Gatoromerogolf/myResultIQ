@@ -69,6 +69,60 @@
       font-size: .95rem;
     }
 
+    .header-inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      max-width: 1120px;
+      /* mismo que main */
+      margin: 0 auto;
+      /* centrado */
+      padding: 0 1.25rem;
+      /* mismo padding lateral que main */
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      background: rgba(255, 255, 255, .7);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .35rem .85rem .35rem .35rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .user-avatar {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--sage);
+      background: var(--line);
+      /* placeholder mientras carga */
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .user-welcome {
+      font-size: .7rem;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .user-name {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
     /* ---------- Layout ---------- */
     main {
       max-width: 1120px;
@@ -733,10 +787,27 @@
 
 <body>
 
-  <header>
+  <!-- <header>
     <h1 class="logo">Directorio <span class="accent">Vecinal</span></h1>
     <p class="tagline">Proveedores de servicios recomendados por gente del barrio. Buscá por rubro o nombre, leé las
       experiencias de tus vecinos y sumá la tuya.</p>
+  </header> -->
+
+  <header>
+    <div class="header-inner">
+      <div>
+        <h1 class="logo">Directorio <span class="accent">Vecinal</span></h1>
+        <p class="tagline">Proveedores de servicios recomendados por gente del barrio. Buscá por rubro o nombre, leé las
+          experiencias de tus vecinos y sumá la tuya.</p>
+      </div>
+      <div class="user-badge" id="userBadge" style="cursor:pointer;">
+        <img class="user-avatar" id="userAvatar" src="" alt="foto de perfil" />
+        <div class="user-info">
+          <span class="user-welcome">Bienvenido</span>
+          <span class="user-name" id="userName"></span>
+        </div>
+      </div>
+    </div>
   </header>
 
   <main>
@@ -760,6 +831,7 @@
   <button class="fab" id="fab">+ Agregar proveedor</button>
 
   <div class="overlay hidden" id="overlay">
+
     <div class="modal-card hidden" id="modal-detail"></div>
     <div class="modal-card hidden" id="modal-add">
       <button class="modal-close" data-action="close" aria-label="Cerrar">✕</button>
@@ -802,6 +874,84 @@
         <button type="submit" class="submit-btn">Agregar al directorio</button>
       </form>
     </div>
+
+  <!-- ===== MODAL PERFIL ===== -->
+  <div class="modal" id="modal-perfil" role="dialog" aria-modal="true" aria-labelledby="perfil-title">
+    <button class="modal-close" data-action="close" aria-label="Cerrar">
+      <i class="ti ti-x" aria-hidden="true"></i>
+    </button>
+    <h2 class="modal-title" id="perfil-title">Mi perfil</h2>
+
+    <div class="msg msg--error" id="perfil-error"></div>
+    <div class="msg msg--ok" id="perfil-ok"></div>
+
+    <!-- Avatar -->
+    <div class="avatar-field">
+      <div class="avatar-preview" id="perfil-avatar-preview">
+        <span class="placeholder"><i class="ti ti-user" aria-hidden="true"></i></span>
+      </div>
+      <div class="avatar-label">
+        <label for="perfil-foto"
+          style="cursor:pointer; color:var(--sage); text-decoration:underline; text-underline-offset:2px;">
+          Cambiar fotografía
+        </label>
+        <input type="file" id="perfil-foto" accept="image/*" style="display:none" aria-label="Foto de perfil">
+        <small>Opcional · se muestra en tus reseñas</small>
+      </div>
+    </div>
+
+    <!-- Nombre -->
+    <div class="field">
+      <label for="perfil-nombre">Nombre y apellido</label>
+      <div class="input-icon">
+        <i class="ti ti-user icon" aria-hidden="true"></i>
+        <input type="text" id="perfil-nombre" placeholder="Ej: María García" autocomplete="name">
+      </div>
+    </div>
+
+    <!-- Barrio -->
+    <div class="field">
+      <label for="perfil-barrio">Barrio</label>
+      <select id="perfil-barrio">
+        <option value="altos">Altos</option>
+        <option value="campo">Campo</option>
+      </select>
+    </div>
+
+    <!-- Lote -->
+    <div class="field">
+      <label for="perfil-lote">Número de lote</label>
+      <div class="input-icon">
+        <i class="ti ti-map-pin icon" aria-hidden="true"></i>
+        <input type="text" id="perfil-lote" placeholder="Ej: 42">
+      </div>
+    </div>
+
+    <!-- WhatsApp -->
+    <div class="field">
+      <label for="perfil-wa">WhatsApp</label>
+      <div class="input-icon">
+        <i class="ti ti-brand-whatsapp icon" aria-hidden="true"></i>
+        <input type="tel" id="perfil-wa" placeholder="Ej: 11-2345-6789">
+      </div>
+    </div>
+
+    <!-- Email (solo lectura) -->
+    <div class="field">
+      <label for="perfil-email">Correo electrónico</label>
+      <div class="input-icon">
+        <i class="ti ti-mail icon" aria-hidden="true"></i>
+        <input type="email" id="perfil-email" disabled
+          style="opacity:.55; cursor:not-allowed; background:var(--surface)">
+      </div>
+      <small style="color:var(--ink-soft)">El correo no puede modificarse.</small>
+    </div>
+
+    <button class="submit-btn" id="perfil-save-btn">
+      <i class="ti ti-device-floppy" aria-hidden="true"></i> Guardar cambios
+    </button>
+  </div>
+
   </div>
 
   <div class="lightbox-overlay hidden" id="lightbox">
@@ -820,6 +970,7 @@
     Si tenés alguna sugerencia para mejorar el directorio o querés reportar un problema,<br> no dudes en contactarnos.
     ¡Gracias por ser parte de esta iniciativa vecinal!
   </footer>
+
 
   <script>
     // ------------------------------------------------------------
@@ -1081,6 +1232,107 @@
     }
 
     // ------------------------------------------------------------
+    //  Muestra imagen del usuario
+    // ------------------------------------------------------------
+
+    function mostrarUsuarioHeader(user) {
+      const badge = document.getElementById('userBadge');
+      const avatar = document.getElementById('userAvatar');
+      const name = document.getElementById('userName');
+
+      if (!user) { badge.style.display = 'none'; return; }
+
+      name.textContent = user.nombre;
+      avatar.src = user.foto_b64 || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nombre)}&background=7a9e7e&color=fff&size=96`;
+      badge.style.display = 'flex';
+    }
+
+    // ------------------------------------------------------------
+    //  Actualizausuario
+    // ------------------------------------------------------------
+    function openPerfil() {
+      const user = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
+      if (!user) return;
+
+      // Precargar campos
+      document.getElementById('perfil-nombre').value = user.nombre || '';
+      document.getElementById('perfil-barrio').value = user.barrio || 'altos';
+      document.getElementById('perfil-lote').value = user.lote || '';
+      document.getElementById('perfil-wa').value = user.whatsapp || '';
+      document.getElementById('perfil-email').value = user.email || '';
+
+      // Avatar preview
+      const preview = document.getElementById('perfil-avatar-preview');
+      preview.innerHTML = user.foto_b64
+        ? `<img src="${user.foto_b64}" alt="foto"
+           style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+        : `<span class="placeholder"><i class="ti ti-user" aria-hidden="true"></i></span>`;
+
+      // Reset mensajes
+      document.getElementById('perfil-error').classList.remove('show');
+      document.getElementById('perfil-ok').classList.remove('show');
+
+      showModal('modal-perfil');
+    }
+
+    // Cambio de foto — preview inmediato
+    document.getElementById('perfil-foto').addEventListener('change', async e => {
+      if (!e.target.files.length) return;
+      const [url] = await readImagesAsDataURLs(e.target.files);   // ya la tenés en el proyecto
+      document.getElementById('perfil-avatar-preview').innerHTML =
+        `<img src="${url}" alt="foto"
+          style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    });
+
+    // Guardar
+    document.getElementById('perfil-save-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('perfil-save-btn');
+      const token = sessionStorage.getItem('dv_token');
+
+      // Foto: si se seleccionó una nueva, tomarla; si no, la actual del sessionStorage
+      const fileInput = document.getElementById('perfil-foto');
+      let foto_b64 = JSON.parse(sessionStorage.getItem('dv_user') || '{}').foto_b64 || null;
+      if (fileInput.files.length) {
+        [foto_b64] = await readImagesAsDataURLs(fileInput.files);
+      }
+
+      const payload = {
+        nombre: document.getElementById('perfil-nombre').value.trim(),
+        barrio: document.getElementById('perfil-barrio').value,
+        lote: document.getElementById('perfil-lote').value.trim(),
+        whatsapp: document.getElementById('perfil-wa').value.trim(),
+        foto_b64
+      };
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="ti ti-loader-2 ti-spin"></i> Guardando…';
+
+      try {
+        const res = await fetch(API + '/usuarios/perfil', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || 'Error al guardar.');
+
+        // Actualizar sessionStorage y el badge
+        const updatedUser = { ...data.data.user, email: document.getElementById('perfil-email').value };
+        sessionStorage.setItem('dv_user', JSON.stringify(updatedUser));
+        mostrarUsuarioHeader(updatedUser);
+
+        showMsg('perfil-ok', 'Perfil actualizado correctamente.');
+        setTimeout(() => closeModals(), 1500);
+
+      } catch (err) {
+        showMsg('perfil-error', err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="ti ti-device-floppy"></i> Guardar cambios';
+      }
+    });
+
+    // ------------------------------------------------------------
     //  Modal: detalle + reseñas
     // ------------------------------------------------------------
     async function openDetail(id) {
@@ -1330,7 +1582,15 @@
     //  Init
     // ------------------------------------------------------------
     function init() {
+
+      // Mostrar usuario logueado en el header
+      const storedUser = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
+      mostrarUsuarioHeader(storedUser);
+
       loadAll();
+
+      // Abrir modal de perfil al clickear el badge
+      document.getElementById('userBadge').addEventListener('click', () => openPerfil());
 
       // Búsqueda con debounce
       let searchTimer;
