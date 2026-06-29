@@ -99,6 +99,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     // PUT /api/dv/usuarios/perfil  (requiere dvAuth)
     app.put('/api/dv/usuarios/perfil', dvAuth, async (req, res) => {
         const { nombre, barrio, lote, whatsapp, foto_b64 } = req.body;
+        // console.log('=== PERFIL UPDATE === foto_b64:', foto_b64 ? foto_b64.substring(0, 50) : 'NULL');
 
         if (!nombre?.trim()) return dvErr(res, 'El nombre es obligatorio.', 400);
         if (!['altos', 'campo'].includes(barrio)) return dvErr(res, 'Barrio inválido.', 400);
@@ -112,12 +113,17 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 [nombre.trim(), barrio, lote.trim(), whatsapp || null, foto_b64 || null, req.dvUser.id]
             );
 
+
+            // console.log('=== UPDATE ejecutado para id:', req.dvUser.id);
+
             // Devolver el usuario actualizado para refrescar sessionStorage
             const [[u]] = await pool.query(
-                `SELECT id, nombre, barrio, lote, whatsapp, email, foto_b64
+                `SELECT id, nombre, barrio, lote, whatsapp, email
              FROM db_usuarios WHERE id = ?`,
                 [req.dvUser.id]
             );
+
+            // console.log('=== foto_b64 en BD después del UPDATE:', u.foto_b64 ? u.foto_b64.substring(0, 50) : 'NULL');
 
             dvOk(res, { user: u });
         } catch (e) { dvErr(res, e.message); }
@@ -326,26 +332,27 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
     app.get('/api/dv/proveedores', async (req, res) => {
         try {
-            console.log("Entró a proveedores (routes_dv.js)");
             const { rubro_id, q } = req.query;
             let sql = `
-        SELECT
-          p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo,
-          r.id     AS rubro_id,
-          r.nombre AS rubro,
-          r.icono  AS rubro_icono,
-          u.id     AS presentado_por_id,
-          u.nombre AS presentado_por,
-          ROUND(AVG(re.calificacion), 1)  AS calificacion_promedio,
-          COUNT(DISTINCT re.id)           AS total_resenas,
-          COUNT(DISTINCT rc.id)           AS total_recomendaciones
-        FROM db_proveedores p
-          JOIN  db_rubros r               ON r.id = p.rubro_id
-          LEFT JOIN db_usuarios u         ON u.id = p.creado_por
-          LEFT JOIN db_resenas re         ON re.proveedor_id = p.id
-          LEFT JOIN db_recomendaciones rc ON rc.proveedor_id = p.id
-        WHERE 1=1
-      `;
+                SELECT
+                p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por,
+                r.id     AS rubro_id,
+                r.nombre AS rubro,
+                r.icono  AS rubro_icono,
+                u.id     AS presentado_por_id,
+                u.nombre AS presentado_por,
+                u.barrio AS presentado_por_barrio,
+                u.lote   AS presentado_por_lote,
+                ROUND(AVG(re.calificacion), 1)  AS calificacion_promedio,
+                COUNT(DISTINCT re.id)           AS total_resenas,
+                COUNT(DISTINCT rc.id)           AS total_recomendaciones
+                FROM db_proveedores p
+                JOIN  db_rubros r               ON r.id = p.rubro_id
+                LEFT JOIN db_usuarios u         ON u.id = p.creado_por
+                LEFT JOIN db_resenas re         ON re.proveedor_id = p.id
+                LEFT JOIN db_recomendaciones rc ON rc.proveedor_id = p.id
+                WHERE 1=1
+            `;
             const params = [];
             if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
             if (q) {
@@ -353,7 +360,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 const like = `%${q}%`;
                 params.push(like, like, like);
             }
-            sql += ' GROUP BY p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, r.id, r.nombre, r.icono, u.id, u.nombre';
+            sql += ' GROUP BY p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por, r.id, r.nombre, r.icono, u.id, u.nombre, u.barrio, u.lote';
             sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
 
             const [rows] = await pool.query(sql, params);
@@ -470,11 +477,13 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         try {
             const [rows] = await pool.query(
                 `SELECT r.id, r.calificacion, r.comentario, r.fecha_trabajo, r.fecha_publicacion,
-                u.nombre AS autor
-         FROM db_resenas r
-           LEFT JOIN db_usuarios u ON u.id = r.usuario_id
-         WHERE r.proveedor_id = ?
-         ORDER BY r.fecha_publicacion DESC`,
+                u.nombre AS autor,  
+                u.barrio AS autor_barrio,
+                u.lote   AS autor_lote
+                FROM db_resenas r
+                LEFT JOIN db_usuarios u ON u.id = r.usuario_id
+                WHERE r.proveedor_id = ?
+                ORDER BY r.fecha_publicacion DESC`,
                 [req.params.id]
             );
             dvOk(res, rows);

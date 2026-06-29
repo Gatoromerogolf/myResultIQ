@@ -1,815 +1,885 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Directorio Vecinal — Ingreso</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <style>
-    :root {
-      --ink: #2a322d;
-      --ink-soft: #6b7268;
-      --paper: #f4efe2;
-      --card: #fffdf6;
-      --line: #ddd3bd;
-      --amber: #d9933f;
-      --sage: #5e7d63;
-      --berry: #9a4f54;
-      --teal: #44707c;
-      --gray: #9a948a;
-      --radius: 10px;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Directorio Vecinal — Ingreso</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+    <style>
+        :root {
+            --ink: #2a322d;
+            --ink-soft: #6b7268;
+            --paper: #f4efe2;
+            --card: #fffdf6;
+            --line: #ddd3bd;
+            --amber: #d9933f;
+            --sage: #5e7d63;
+            --berry: #9a4f54;
+            --teal: #44707c;
+            --gray: #9a948a;
+            --radius: 10px;
+        }
 
-    * {
-      box-sizing: border-box;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    html {
-      scroll-behavior: smooth;
-      min-height: 100%;
-    }
+        html {
+            scroll-behavior: smooth;
+            min-height: 100%;
+        }
 
-    body {
-      margin: 0;
-      font-family: 'Work Sans', sans-serif;
-      background: var(--paper);
-      color: var(--ink);
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1.25rem;
-    }
+        body {
+            margin: 0;
+            font-family: "Work Sans", sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.25rem;
+        }
 
-    /* ---------- Logo / hero ---------- */
-    .hero {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+        /* ---------- Logo / hero ---------- */
+        .hero {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-    .logo {
-      font-family: 'Fraunces', serif;
-      font-weight: 700;
-      font-size: clamp(2rem, 6vw, 3rem);
-      letter-spacing: -0.02em;
-      margin: 0 0 .35rem;
-    }
+        .logo {
+            font-family: "Fraunces", serif;
+            font-weight: 700;
+            font-size: clamp(2rem, 6vw, 3rem);
+            letter-spacing: -0.02em;
+            margin: 0 0 0.35rem;
+        }
 
-    .logo .accent {
-      color: var(--sage);
-    }
+        .logo .accent {
+            color: var(--sage);
+        }
 
-    .barrios {
-      display: inline-flex;
-      gap: .5rem;
-      margin: .5rem 0 .75rem;
-    }
+        .barrios {
+            display: inline-flex;
+            gap: 0.5rem;
+            margin: 0.5rem 0 0.75rem;
+        }
 
-    .barrio-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .72rem;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      padding: .25rem .7rem;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      color: var(--ink-soft);
-    }
+        .barrio-badge {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            color: var(--ink-soft);
+        }
 
-    .hero p {
-      color: var(--ink-soft);
-      font-size: .95rem;
-      margin: 0;
-      max-width: 28rem;
-    }
+        .hero p {
+            color: var(--ink-soft);
+            font-size: 0.95rem;
+            margin: 0;
+            max-width: 28rem;
+        }
 
-    /* ---------- Tarjeta principal ---------- */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: 0 2px 12px rgba(42, 50, 45, .07);
-      width: 100%;
-      max-width: 420px;
-      overflow: hidden;
-    }
+        /* ---------- Tarjeta principal ---------- */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 12px rgba(42, 50, 45, 0.07);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+        }
 
-    /* ---------- Tabs ---------- */
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border-bottom: 1px solid var(--line);
-    }
+        /* ---------- Tabs ---------- */
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid var(--line);
+        }
 
-    .tab {
-      padding: .85rem 1rem;
-      text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .78rem;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: var(--ink-soft);
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      border-bottom: 2px solid transparent;
-      transition: color .15s, border-color .15s;
-      font-family: 'Work Sans', sans-serif;
-      font-weight: 500;
-    }
+        .tab {
+            padding: 0.85rem 1rem;
+            text-align: center;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--ink-soft);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            border-bottom: 2px solid transparent;
+            transition:
+                color 0.15s,
+                border-color 0.15s;
+            font-family: "Work Sans", sans-serif;
+            font-weight: 500;
+        }
 
-    .tab.active {
-      color: var(--ink);
-      border-bottom-color: var(--sage);
-    }
+        .tab.active {
+            color: var(--ink);
+            border-bottom-color: var(--sage);
+        }
 
-    .tab:hover:not(.active) {
-      color: var(--ink);
-    }
+        .tab:hover:not(.active) {
+            color: var(--ink);
+        }
 
-    /* ---------- Paneles ---------- */
-    .panel {
-      padding: 1.5rem;
-    }
+        /* ---------- Paneles ---------- */
+        .panel {
+            padding: 1.5rem;
+        }
 
-    .panel.hidden {
-      display: none;
-    }
+        .panel.hidden {
+            display: none;
+        }
 
-    /* ---------- Formularios ---------- */
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: .3rem;
-      margin-bottom: .85rem;
-    }
+        /* ---------- Formularios ---------- */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            margin-bottom: 0.85rem;
+        }
 
-    label {
-      font-size: .75rem;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--ink-soft);
-      text-transform: uppercase;
-      letter-spacing: .04em;
-    }
+        label {
+            font-size: 0.75rem;
+            font-family: "JetBrains Mono", monospace;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
 
-    input,
-    select {
-      font-family: 'Work Sans', sans-serif;
-      font-size: .92rem;
-      padding: .55rem .75rem;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      color: var(--ink);
-      transition: outline .1s;
-    }
+        input,
+        select {
+            font-family: "Work Sans", sans-serif;
+            font-size: 0.92rem;
+            padding: 0.55rem 0.75rem;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            color: var(--ink);
+            transition: outline 0.1s;
+        }
 
-    input:focus,
-    select:focus {
-      outline: 2px solid var(--sage);
-      outline-offset: 1px;
-    }
+        input:focus,
+        select:focus {
+            outline: 2px solid var(--sage);
+            outline-offset: 1px;
+        }
 
-    input[type="password"] {
-      letter-spacing: .1em;
-    }
+        input[type="password"] {
+            letter-spacing: 0.1em;
+        }
 
-    .input-icon {
-      position: relative;
-    }
+        .input-icon {
+            position: relative;
+        }
 
-    .input-icon input {
-      padding-left: 2.4rem;
-      width: 100%;
-    }
+        .input-icon input {
+            padding-left: 2.4rem;
+            width: 100%;
+        }
 
-    .input-icon .icon {
-      position: absolute;
-      left: .75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--ink-soft);
-      font-size: 1rem;
-      pointer-events: none;
-    }
+        .input-icon .icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--ink-soft);
+            font-size: 1rem;
+            pointer-events: none;
+        }
 
-    .input-icon .toggle-pass {
-      position: absolute;
-      right: .75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--ink-soft);
-      font-size: 1rem;
-      padding: 0;
-    }
+        .input-icon .toggle-pass {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--ink-soft);
+            font-size: 1rem;
+            padding: 0;
+        }
 
-    .input-icon .toggle-pass:hover {
-      color: var(--ink);
-    }
+        .input-icon .toggle-pass:hover {
+            color: var(--ink);
+        }
 
-    .submit-btn {
-      width: 100%;
-      background: var(--ink);
-      color: var(--paper);
-      border: none;
-      border-radius: 999px;
-      padding: .7rem 1rem;
-      font-size: .95rem;
-      font-weight: 500;
-      font-family: 'Work Sans', sans-serif;
-      cursor: pointer;
-      margin-top: .25rem;
-      transition: background .15s;
-    }
+        .submit-btn {
+            width: 100%;
+            background: var(--ink);
+            color: var(--paper);
+            border: none;
+            border-radius: 999px;
+            padding: 0.7rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: "Work Sans", sans-serif;
+            cursor: pointer;
+            margin-top: 0.25rem;
+            transition: background 0.15s;
+        }
 
-    .submit-btn:hover {
-      background: var(--sage);
-    }
+        .submit-btn:hover {
+            background: var(--sage);
+        }
 
-    .submit-btn:disabled {
-      opacity: .6;
-      cursor: default;
-    }
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
 
-    .link-btn {
-      background: none;
-      border: none;
-      color: var(--sage);
-      font-family: 'Work Sans', sans-serif;
-      font-size: .88rem;
-      cursor: pointer;
-      padding: 0;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
+        .link-btn {
+            background: none;
+            border: none;
+            color: var(--sage);
+            font-family: "Work Sans", sans-serif;
+            font-size: 0.88rem;
+            cursor: pointer;
+            padding: 0;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
 
-    .link-btn:hover {
-      color: var(--ink);
-    }
+        .link-btn:hover {
+            color: var(--ink);
+        }
 
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: .75rem;
-      margin: .5rem 0 1rem;
-      color: var(--ink-soft);
-      font-size: .78rem;
-    }
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0.5rem 0 1rem;
+            color: var(--ink-soft);
+            font-size: 0.78rem;
+        }
 
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--line);
-    }
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
 
-    /* ---------- Mensajes ---------- */
-    .msg {
-      border-radius: 8px;
-      padding: .65rem .85rem;
-      font-size: .85rem;
-      margin-bottom: 1rem;
-      display: none;
-    }
+        /* ---------- Mensajes ---------- */
+        .msg {
+            border-radius: 8px;
+            padding: 0.65rem 0.85rem;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
 
-    .msg.show {
-      display: block;
-    }
+        .msg.show {
+            display: block;
+        }
 
-    .msg--error {
-      background: #fdecea;
-      color: var(--berry);
-      border: 1px solid #f5c6c6;
-    }
+        .msg--error {
+            background: #fdecea;
+            color: var(--berry);
+            border: 1px solid #f5c6c6;
+        }
 
-    .msg--ok {
-      background: #e8f4ec;
-      color: var(--sage);
-      border: 1px solid #b8d9bf;
-    }
+        .msg--ok {
+            background: #e8f4ec;
+            color: var(--sage);
+            border: 1px solid #b8d9bf;
+        }
 
-    .msg--info {
-      background: #e8f2f5;
-      color: var(--teal);
-      border: 1px solid #b3d0d8;
-    }
+        .msg--info {
+            background: #e8f2f5;
+            color: var(--teal);
+            border: 1px solid #b3d0d8;
+        }
 
-    /* ---------- Avatar preview ---------- */
-    .avatar-field {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: .85rem;
-    }
+        /* ---------- Avatar preview ---------- */
+        .avatar-field {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.85rem;
+        }
 
-    .avatar-preview {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      border: 2px dashed var(--line);
-      object-fit: cover;
-      flex-shrink: 0;
-      background: var(--paper);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
+        .avatar-preview {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 2px dashed var(--line);
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--paper);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
-    .avatar-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-    .avatar-preview .placeholder {
-      color: var(--gray);
-      font-size: 1.5rem;
-    }
+        .avatar-preview .placeholder {
+            color: var(--gray);
+            font-size: 1.5rem;
+        }
 
-    .avatar-label {
-      font-size: .85rem;
-    }
+        .avatar-label {
+            font-size: 0.85rem;
+        }
 
-    .avatar-label small {
-      display: block;
-      color: var(--ink-soft);
-      font-size: .75rem;
-    }
+        .avatar-label small {
+            display: block;
+            color: var(--ink-soft);
+            font-size: 0.75rem;
+        }
 
-    /* ---------- Strength bar ---------- */
-    .strength-bar {
-      height: 4px;
-      border-radius: 2px;
-      background: var(--line);
-      margin-top: .35rem;
-      overflow: hidden;
-    }
+        /* ---------- Strength bar ---------- */
+        .strength-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: var(--line);
+            margin-top: 0.35rem;
+            overflow: hidden;
+        }
 
-    .strength-fill {
-      height: 100%;
-      border-radius: 2px;
-      width: 0;
-      transition: width .3s, background .3s;
-    }
+        .strength-fill {
+            height: 100%;
+            border-radius: 2px;
+            width: 0;
+            transition:
+                width 0.3s,
+                background 0.3s;
+        }
 
-    .strength-label {
-      font-size: .72rem;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--ink-soft);
-      margin-top: .2rem;
-    }
+        .strength-label {
+            font-size: 0.72rem;
+            font-family: "JetBrains Mono", monospace;
+            color: var(--ink-soft);
+            margin-top: 0.2rem;
+        }
 
-    footer {
-      margin-top: 2rem;
-      font-size: .78rem;
-      color: var(--ink-soft);
-      text-align: center;
-    }
-  </style>
+        footer {
+            margin-top: 2rem;
+            font-size: 0.78rem;
+            color: var(--ink-soft);
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
-
-  <div class="hero">
-    <h1 class="logo">Directorio <span class="accent">Vecinal</span></h1>
-    <div class="barrios">
-      <span class="barrio-badge"><i class="ti ti-trees" aria-hidden="true"></i> Altos</span>
-      <span class="barrio-badge"><i class="ti ti-home" aria-hidden="true"></i> Campo</span>
-    </div>
-    <p>El directorio de proveedores de bienes y servicios de nuestra comunidad.</p>
-  </div>
-
-  <div class="card">
-    <div class="tabs">
-      <button class="tab active" data-tab="login">Ingresar</button>
-      <button class="tab" data-tab="register">Registrarse</button>
-    </div>
-
-    <!-- ===== PANEL LOGIN ===== -->
-    <div class="panel" id="panel-login">
-      <div class="msg msg--error" id="login-error"></div>
-      <div class="msg msg--ok" id="login-ok"></div>
-
-      <form id="login-form" novalidate>
-        <div class="field">
-          <label for="login-email">Correo electrónico</label>
-          <div class="input-icon">
-            <i class="ti ti-mail icon" aria-hidden="true"></i>
-            <input type="email" id="login-email" name="email" required placeholder="tu@correo.com" autocomplete="email">
-          </div>
+    <div class="hero">
+        <h1 class="logo">Directorio <span class="accent">Vecinal</span></h1>
+        <div class="barrios">
+            <span class="barrio-badge"><i class="ti ti-trees" aria-hidden="true"></i> Altos</span>
+            <span class="barrio-badge"><i class="ti ti-home" aria-hidden="true"></i> Campo</span>
         </div>
-        <div class="field">
-          <label for="login-pass">Clave</label>
-          <div class="input-icon">
-            <i class="ti ti-lock icon" aria-hidden="true"></i>
-            <input type="password" id="login-pass" name="password" required placeholder="••••••••"
-              autocomplete="current-password">
-            <button type="button" class="toggle-pass" data-target="login-pass" aria-label="Mostrar/ocultar clave">
-              <i class="ti ti-eye" aria-hidden="true"></i>
-            </button>
-          </div>
-        </div>
-
-        <div style="text-align:right; margin-bottom:1rem;">
-          <button type="button" class="link-btn" id="forgot-link">Olvidé mi clave</button>
-        </div>
-
-        <button type="submit" class="submit-btn" id="login-btn">
-          <i class="ti ti-login" aria-hidden="true"></i> Ingresar
-        </button>
-      </form>
-
-      <!-- Panel olvidé clave (oculto por default) -->
-      <div id="forgot-panel" style="display:none; margin-top:1rem;">
-        <div class="divider">recuperar acceso</div>
-        <div class="msg msg--info" id="forgot-msg" style="display:block;">
-          Ingresá tu correo y te enviamos un enlace para restablecer tu clave.
-        </div>
-        <div class="field">
-          <label for="forgot-email">Correo electrónico</label>
-          <div class="input-icon">
-            <i class="ti ti-mail icon" aria-hidden="true"></i>
-            <input type="email" id="forgot-email" placeholder="tu@correo.com">
-          </div>
-        </div>
-        <button type="button" class="submit-btn" id="forgot-btn">
-          <i class="ti ti-send" aria-hidden="true"></i> Enviar enlace
-        </button>
-      </div>
-    </div>
-
-    <!-- ===== PANEL REGISTRO ===== -->
-    <div class="panel hidden" id="panel-register">
-      <div class="msg msg--error" id="reg-error"></div>
-      <div class="msg msg--ok" id="reg-ok"></div>
-
-      <form id="register-form" novalidate>
-
-        <!-- Foto de perfil -->
-        <div class="avatar-field">
-          <div class="avatar-preview" id="avatar-preview">
-            <span class="placeholder"><i class="ti ti-user" aria-hidden="true"></i></span>
-          </div>
-          <div class="avatar-label">
-            <label for="reg-foto"
-              style="cursor:pointer; color:var(--sage); text-decoration:underline; text-underline-offset:2px;">
-              Elegir fotografía
-            </label>
-            <input type="file" id="reg-foto" name="foto" accept="image/*" style="display:none"
-              aria-label="Fotografía de perfil">
-            <small>Opcional · se mostrará en tus reseñas</small>
-          </div>
-        </div>
-
-        <!-- Nombre y apellido -->
-        <div class="field">
-          <label for="reg-nombre">Nombre y apellido</label>
-          <div class="input-icon">
-            <i class="ti ti-user icon" aria-hidden="true"></i>
-            <input type="text" id="reg-nombre" name="nombre" required placeholder="Ej: María García"
-              autocomplete="name">
-          </div>
-        </div>
-
-        <!-- Barrio -->
-        <div class="field">
-          <label for="reg-barrio">Barrio</label>
-          <select id="reg-barrio" name="barrio" required>
-            <option value="">— Seleccioná —</option>
-            <option value="altos">Altos</option>
-            <option value="campo">Campo</option>
-          </select>
-        </div>
-
-        <!-- Número de lote -->
-        <div class="field">
-          <label for="reg-lote">Número de lote</label>
-          <div class="input-icon">
-            <i class="ti ti-map-pin icon" aria-hidden="true"></i>
-            <input type="text" id="reg-lote" name="lote" required placeholder="Ej: 42">
-          </div>
-        </div>
-
-        <!-- WhatsApp -->
-        <div class="field">
-          <label for="reg-wa">Número de WhatsApp</label>
-          <div class="input-icon">
-            <i class="ti ti-brand-whatsapp icon" aria-hidden="true"></i>
-            <input type="tel" id="reg-wa" name="whatsapp" required placeholder="Ej: 11-2345-6789">
-          </div>
-        </div>
-
-        <!-- Email -->
-        <div class="field">
-          <label for="reg-email">Correo electrónico</label>
-          <div class="input-icon">
-            <i class="ti ti-mail icon" aria-hidden="true"></i>
-            <input type="email" id="reg-email" name="email" required placeholder="tu@correo.com" autocomplete="email">
-          </div>
-        </div>
-
-        <!-- Clave -->
-        <div class="field">
-          <label for="reg-pass">Clave</label>
-          <div class="input-icon">
-            <i class="ti ti-lock icon" aria-hidden="true"></i>
-            <input type="password" id="reg-pass" name="password" required placeholder="Mínimo 8 caracteres"
-              autocomplete="new-password">
-            <button type="button" class="toggle-pass" data-target="reg-pass" aria-label="Mostrar/ocultar clave">
-              <i class="ti ti-eye" aria-hidden="true"></i>
-            </button>
-          </div>
-          <div class="strength-bar">
-            <div class="strength-fill" id="strength-fill"></div>
-          </div>
-          <div class="strength-label" id="strength-label"></div>
-        </div>
-
-        <!-- Confirmar clave -->
-        <div class="field">
-          <label for="reg-pass2">Confirmá tu clave</label>
-          <div class="input-icon">
-            <i class="ti ti-lock-check icon" aria-hidden="true"></i>
-            <input type="password" id="reg-pass2" name="password2" required placeholder="Repetí la clave"
-              autocomplete="new-password">
-            <button type="button" class="toggle-pass" data-target="reg-pass2" aria-label="Mostrar/ocultar clave">
-              <i class="ti ti-eye" aria-hidden="true"></i>
-            </button>
-          </div>
-        </div>
-
-        <button type="submit" class="submit-btn" id="reg-btn">
-          <i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta
-        </button>
-
-        <p style="font-size:.8rem; color:var(--ink-soft); margin-top:.85rem; margin-bottom:0;">
-          Al registrarte recibirás un correo de confirmación. Tenés que validarlo antes de poder ingresar.
+        <p>
+            El directorio de proveedores de bienes y servicios de nuestra comunidad.
         </p>
-      </form>
     </div>
-  </div>
 
-  <footer>
-    Directorio Vecinal · Altos y Campo
-  </footer>
+    <div class="card">
+        <div class="tabs">
+            <button class="tab active" data-tab="login">Ingresar</button>
+            <button class="tab" data-tab="register">Registrarse</button>
+        </div>
 
-  <script>
-    // const API = 'http://localhost:3000/api/dv';
-    const API = window.location.hostname === 'localhost'
-  ? 'http://localhost:3000/api/dv'
-  : '/api/dv';
+        <!-- ===== PANEL LOGIN ===== -->
+        <div class="panel" id="panel-login">
+            <div class="msg msg--error" id="login-error"></div>
+            <div class="msg msg--ok" id="login-ok"></div>
 
-    // ----------------------------------------------------------
-    //  API helper
-    // ----------------------------------------------------------
+            <form id="login-form" novalidate>
+                <div class="field">
+                    <label for="login-email">Correo electrónico</label>
+                    <div class="input-icon">
+                        <i class="ti ti-mail icon" aria-hidden="true"></i>
+                        <input type="email" id="login-email" name="email" required placeholder="tu@correo.com"
+                            autocomplete="email" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="login-pass">Clave</label>
+                    <div class="input-icon">
+                        <i class="ti ti-lock icon" aria-hidden="true"></i>
+                        <input type="password" id="login-pass" name="password" required placeholder="••••••••"
+                            autocomplete="current-password" />
+                        <button type="button" class="toggle-pass" data-target="login-pass"
+                            aria-label="Mostrar/ocultar clave">
+                            <i class="ti ti-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
 
-    async function apiFetch(path, options = {}) {
-      const token = sessionStorage.getItem('dv_token');
+                <div style="text-align: right; margin-bottom: 1rem">
+                    <button type="button" class="link-btn" id="forgot-link">
+                        Olvidé mi clave
+                    </button>
+                </div>
 
-      console.log('TOKEN EN APIFETCH:', token);
+                <button type="submit" class="submit-btn" id="login-btn">
+                    <i class="ti ti-login" aria-hidden="true"></i> Ingresar
+                </button>
+            </form>
 
-      const res = await fetch(API + path, {
-        ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...(options.headers || {}),
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
-        }
-      });
+            <!-- Panel olvidé clave (oculto por default) -->
+            <div id="forgot-panel" style="display: none; margin-top: 1rem">
+                <div class="divider">recuperar acceso</div>
+                <div class="msg msg--info" id="forgot-msg" style="display: block">
+                    Ingresá tu correo y te enviamos un enlace para restablecer tu clave.
+                </div>
+                <div class="field">
+                    <label for="forgot-email">Correo electrónico</label>
+                    <div class="input-icon">
+                        <i class="ti ti-mail icon" aria-hidden="true"></i>
+                        <input type="email" id="forgot-email" placeholder="tu@correo.com" />
+                    </div>
+                </div>
+                <button type="button" class="submit-btn" id="forgot-btn">
+                    <i class="ti ti-send" aria-hidden="true"></i> Enviar enlace
+                </button>
+            </div>
+        </div>
 
-      const json = await res.json();
+        <!-- ===== PANEL REGISTRO ===== -->
+        <div class="panel hidden" id="panel-register">
+            <div class="msg msg--error" id="reg-error"></div>
+            <div class="msg msg--ok" id="reg-ok"></div>
 
-      if (!json.ok) {
-        throw new Error(json.error || json.message || 'Error desconocido');
-      }
+            <form id="register-form" novalidate>
+                <!-- Foto de perfil -->
+                <div class="avatar-field">
+                    <div class="avatar-preview" id="avatar-preview">
+                        <span class="placeholder"><i class="ti ti-user" aria-hidden="true"></i></span>
+                    </div>
+                    <div class="avatar-label">
+                        <label for="reg-foto" style="
+                  cursor: pointer;
+                  color: var(--sage);
+                  text-decoration: underline;
+                  text-underline-offset: 2px;
+                ">
+                            Elegir fotografía
+                        </label>
+                        <input type="file" id="reg-foto" name="foto" accept="image/*" style="display: none"
+                            aria-label="Fotografía de perfil" />
+                        <small>Opcional · se mostrará en tus reseñas</small>
+                    </div>
+                </div>
 
-      console.log('HEADERS ENVIADOS:', {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {})
-      });
+                <!-- Nombre y apellido -->
+                <div class="field">
+                    <label for="reg-nombre">Nombre y apellido</label>
+                    <div class="input-icon">
+                        <i class="ti ti-user icon" aria-hidden="true"></i>
+                        <input type="text" id="reg-nombre" name="nombre" required placeholder="Ej: María García"
+                            autocomplete="name" />
+                    </div>
+                </div>
 
-      return json.data;
-    }
+                <!-- Barrio -->
+                <div class="field">
+                    <label for="reg-barrio">Barrio</label>
+                    <select id="reg-barrio" name="barrio" required>
+                        <option value="">— Seleccioná —</option>
+                        <option value="altos">Altos</option>
+                        <option value="campo">Campo</option>
+                    </select>
+                </div>
 
-    // ----------------------------------------------------------
-    //  Tabs
-    // ----------------------------------------------------------
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
-        tab.classList.add('active');
-        document.getElementById('panel-' + tab.dataset.tab).classList.remove('hidden');
-        clearMessages();
-      });
-    });
+                <!-- Número de lote -->
+                <div class="field">
+                    <label for="reg-lote">Número de lote</label>
+                    <div class="input-icon">
+                        <i class="ti ti-map-pin icon" aria-hidden="true"></i>
+                        <input type="text" id="reg-lote" name="lote" required placeholder="Ej: 42" />
+                    </div>
+                </div>
 
-    function clearMessages() {
-      document.querySelectorAll('.msg').forEach(m => {
-        m.classList.remove('show');
-        m.textContent = '';
-      });
-      document.getElementById('forgot-panel').style.display = 'none';
-    }
+                <!-- WhatsApp -->
+                <div class="field">
+                    <label for="reg-wa">Número de WhatsApp</label>
+                    <div class="input-icon">
+                        <i class="ti ti-brand-whatsapp icon" aria-hidden="true"></i>
+                        <input type="tel" id="reg-wa" name="whatsapp" required placeholder="Ej: 11-2345-6789" />
+                    </div>
+                </div>
 
-    function showMsg(id, text) {
-      const el = document.getElementById(id);
-      el.textContent = text;
-      el.classList.add('show');
-    }
+                <!-- Email -->
+                <div class="field">
+                    <label for="reg-email">Correo electrónico</label>
+                    <div class="input-icon">
+                        <i class="ti ti-mail icon" aria-hidden="true"></i>
+                        <input type="email" id="reg-email" name="email" required placeholder="tu@correo.com"
+                            autocomplete="email" />
+                    </div>
+                </div>
 
-    // ----------------------------------------------------------
-    //  Toggle mostrar/ocultar clave
-    // ----------------------------------------------------------
-    document.querySelectorAll('.toggle-pass').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const input = document.getElementById(btn.dataset.target);
-        const showing = input.type === 'text';
-        input.type = showing ? 'password' : 'text';
-        btn.querySelector('i').className = showing ? 'ti ti-eye' : 'ti ti-eye-off';
-      });
-    });
+                <!-- Clave -->
+                <div class="field">
+                    <label for="reg-pass">Clave</label>
+                    <div class="input-icon">
+                        <i class="ti ti-lock icon" aria-hidden="true"></i>
+                        <input type="password" id="reg-pass" name="password" required placeholder="Mínimo 8 caracteres"
+                            autocomplete="new-password" />
+                        <button type="button" class="toggle-pass" data-target="reg-pass"
+                            aria-label="Mostrar/ocultar clave">
+                            <i class="ti ti-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strength-fill"></div>
+                    </div>
+                    <div class="strength-label" id="strength-label"></div>
+                </div>
 
-    // ----------------------------------------------------------
-    //  LOGIN
-    // ----------------------------------------------------------
-    document.getElementById('login-form').addEventListener('submit', async e => {
-      e.preventDefault();
-      const btn = document.getElementById('login-btn');
-      const email = e.target.email.value.trim();
-      const pass = e.target.password.value;
+                <!-- Confirmar clave -->
+                <div class="field">
+                    <label for="reg-pass2">Confirmá tu clave</label>
+                    <div class="input-icon">
+                        <i class="ti ti-lock-check icon" aria-hidden="true"></i>
+                        <input type="password" id="reg-pass2" name="password2" required placeholder="Repetí la clave"
+                            autocomplete="new-password" />
+                        <button type="button" class="toggle-pass" data-target="reg-pass2"
+                            aria-label="Mostrar/ocultar clave">
+                            <i class="ti ti-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
 
-      document.getElementById('login-error').classList.remove('show');
-      btn.disabled = true;
-      btn.textContent = 'Verificando…';
+                <button type="submit" class="submit-btn" id="reg-btn">
+                    <i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta
+                </button>
 
-      try {
-        const res = await fetch(API + '/auth/login', {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ email, password: pass })
-        });
+                <p style="
+              font-size: 0.8rem;
+              color: var(--ink-soft);
+              margin-top: 0.85rem;
+              margin-bottom: 0;
+            ">
+                    Al registrarte recibirás un correo de confirmación. Tenés que
+                    validarlo antes de poder ingresar.
+                </p>
+            </form>
+        </div>
+    </div>
 
-        const data = await res.json();
+    <footer>Directorio Vecinal · Altos y Campo</footer>
 
-        sessionStorage.setItem('dv_user', JSON.stringify(data.data.user));
-        sessionStorage.setItem('dv_token', data.data.token);
+    <script>
+        // const API = 'http://localhost:3000/api/dv';
+        const API =
+            window.location.hostname === "localhost"
+                ? "http://localhost:3000/api/dv"
+                : "/api/dv";
 
-        if (data.data.user.debe_cambiar_clave) {
-          window.location.href = 'cambiar-clave.html';
-        } else {
-          window.location.href = 'directorio-vecinal.html';
-        }
+        // ----------------------------------------------------------
+        //  API helper
+        // ----------------------------------------------------------
 
-        console.log('TOKEN:', sessionStorage.getItem('dv_token'));
+        async function apiFetch(path, options = {}) {
+            const token = sessionStorage.getItem("dv_token");
 
-      } catch (err) {
-        showMsg('login-error', err.message);
-        btn.disabled = false;
-        btn.innerHTML = '<i class="ti ti-login" aria-hidden="true"></i> Ingresar';
-      }
-    });
+            console.log("TOKEN EN APIFETCH:", token);
 
-    // ----------------------------------------------------------
-    //  OLVIDÉ MI CLAVE
-    // ----------------------------------------------------------
-    document.getElementById('forgot-link').addEventListener('click', () => {
-      const panel = document.getElementById('forgot-panel');
-      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    });
+            const res = await fetch(API + path, {
+                ...options,
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(options.headers || {}),
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+            });
 
-    document.getElementById('forgot-btn').addEventListener('click', async () => {
-      const email = document.getElementById('forgot-email').value.trim();
-      if (!email) { showMsg('login-error', 'Ingresá tu correo.'); return; }
-      const btn = document.getElementById('forgot-btn');
-      btn.disabled = true;
-      btn.textContent = 'Enviando…';
-      try {
-        await apiFetch('/auth/recuperar', {
-          method: 'POST',
-          body: JSON.stringify({ email })
-        });
-        document.getElementById('forgot-panel').innerHTML =
-          '<div class="msg msg--ok show">Te enviamos un enlace al correo. Revisá también tu carpeta de spam.</div>';
-      } catch (err) {
-        showMsg('login-error', err.message);
-        btn.disabled = false;
-        btn.innerHTML = '<i class="ti ti-send" aria-hidden="true"></i> Enviar enlace';
-      }
-    });
+            const json = await res.json();
 
-    // ----------------------------------------------------------
-    //  FUERZA DE CLAVE
-    // ----------------------------------------------------------
-    document.getElementById('reg-pass').addEventListener('input', e => {
-      const val = e.target.value;
-      let score = 0;
-      if (val.length >= 8) score++;
-      if (/[A-Z]/.test(val)) score++;
-      if (/[0-9]/.test(val)) score++;
-      if (/[^A-Za-z0-9]/.test(val)) score++;
+            if (!json.ok) {
+                throw new Error(json.error || json.message || "Error desconocido");
+            }
 
-      const fill = document.getElementById('strength-fill');
-      const label = document.getElementById('strength-label');
-      const levels = [
-        { w: '0%', bg: 'transparent', txt: '' },
-        { w: '25%', bg: 'var(--berry)', txt: 'Muy débil' },
-        { w: '50%', bg: 'var(--amber)', txt: 'Débil' },
-        { w: '75%', bg: 'var(--teal)', txt: 'Aceptable' },
-        { w: '100%', bg: 'var(--sage)', txt: 'Fuerte' },
-      ];
-      fill.style.width = levels[score].w;
-      fill.style.background = levels[score].bg;
-      label.textContent = levels[score].txt;
-    });
+            console.log("HEADERS ENVIADOS:", {
+                "Content-Type": "application/json",
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            });
 
-    // ----------------------------------------------------------
-    //  FOTO DE PERFIL — preview
-    // ----------------------------------------------------------
-    document.getElementById('reg-foto').addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const preview = document.getElementById('avatar-preview');
-        preview.innerHTML = `<img src="${ev.target.result}" alt="Foto de perfil">`;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // ----------------------------------------------------------
-    //  REGISTRO
-    // ----------------------------------------------------------
-    document.getElementById('register-form').addEventListener('submit', async e => {
-      e.preventDefault();
-      const btn = document.getElementById('reg-btn');
-      document.getElementById('reg-error').classList.remove('show');
-
-      const nombre = document.getElementById('reg-nombre').value.trim();
-      const barrio = document.getElementById('reg-barrio').value;
-      const lote = document.getElementById('reg-lote').value.trim();
-      const wa = document.getElementById('reg-wa').value.trim();
-      const email = document.getElementById('reg-email').value.trim();
-      const pass = document.getElementById('reg-pass').value;
-      const pass2 = document.getElementById('reg-pass2').value;
-      const fotoEl = document.getElementById('reg-foto');
-
-      // Validaciones del lado cliente
-      if (!nombre) return showMsg('reg-error', 'El nombre y apellido son obligatorios.');
-      if (!barrio) return showMsg('reg-error', 'Seleccioná tu barrio.');
-      if (!lote) return showMsg('reg-error', 'El número de lote es obligatorio.');
-      if (!wa) return showMsg('reg-error', 'El número de WhatsApp es obligatorio.');
-      if (!email) return showMsg('reg-error', 'El correo electrónico es obligatorio.');
-      if (pass.length < 8) return showMsg('reg-error', 'La clave debe tener al menos 8 caracteres.');
-      if (pass !== pass2) return showMsg('reg-error', 'Las claves no coinciden.');
-
-      btn.disabled = true;
-      btn.textContent = 'Creando cuenta…';
-
-      try {
-        // Leer foto como base64 si la eligieron
-        let fotoB64 = null;
-        if (fotoEl.files[0]) {
-          fotoB64 = await new Promise((res, rej) => {
-            const r = new FileReader();
-            r.onload = () => res(r.result);
-            r.onerror = rej;
-            r.readAsDataURL(fotoEl.files[0]);
-          });
+            return json.data;
         }
 
-        await apiFetch('/auth/registro', {
-          method: 'POST',
-          body: JSON.stringify({ nombre, barrio, lote, whatsapp: wa, email, password: pass, foto: fotoB64 })
+        // ----------------------------------------------------------
+        //  Tabs
+        // ----------------------------------------------------------
+        document.querySelectorAll(".tab").forEach((tab) => {
+            tab.addEventListener("click", () => {
+                document
+                    .querySelectorAll(".tab")
+                    .forEach((t) => t.classList.remove("active"));
+                document
+                    .querySelectorAll(".panel")
+                    .forEach((p) => p.classList.add("hidden"));
+                tab.classList.add("active");
+                document
+                    .getElementById("panel-" + tab.dataset.tab)
+                    .classList.remove("hidden");
+                clearMessages();
+            });
         });
 
-        // Mostrar confirmación y ocultar el form
-        document.getElementById('register-form').style.display = 'none';
-        showMsg('reg-ok',
-          `¡Cuenta creada! Te enviamos un correo a ${email}. Hacé clic en el enlace para activar tu cuenta.`
-        );
-      } catch (err) {
-        showMsg('reg-error', err.message);
-        btn.disabled = false;
-        btn.innerHTML = '<i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta';
-      }
-    });
-  </script>
+        function clearMessages() {
+            document.querySelectorAll(".msg").forEach((m) => {
+                m.classList.remove("show");
+                m.textContent = "";
+            });
+            document.getElementById("forgot-panel").style.display = "none";
+        }
+
+        function showMsg(id, text) {
+            const el = document.getElementById(id);
+            el.textContent = text;
+            el.classList.add("show");
+        }
+
+        // ----------------------------------------------------------
+        //  Toggle mostrar/ocultar clave
+        // ----------------------------------------------------------
+        document.querySelectorAll(".toggle-pass").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const input = document.getElementById(btn.dataset.target);
+                const showing = input.type === "text";
+                input.type = showing ? "password" : "text";
+                btn.querySelector("i").className = showing
+                    ? "ti ti-eye"
+                    : "ti ti-eye-off";
+            });
+        });
+
+        // ----------------------------------------------------------
+        //  LOGIN
+        // ----------------------------------------------------------
+        document
+            .getElementById("login-form")
+            .addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById("login-btn");
+                const email = e.target.email.value.trim();
+                const pass = e.target.password.value;
+
+                document.getElementById("login-error").classList.remove("show");
+                btn.disabled = true;
+                btn.textContent = "Verificando…";
+
+                try {
+                    const res = await fetch(API + "/auth/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ email, password: pass }),
+                    });
+
+                    const data = await res.json();
+
+                    if (!data.ok) {
+                        throw new Error(data.error || "Correo o clave incorrectos.");
+                    }
+
+                    sessionStorage.setItem("dv_user", JSON.stringify(data.data.user));
+                    sessionStorage.setItem("dv_token", data.data.token);
+
+                    if (data.data.user.debe_cambiar_clave) {
+                        window.location.href = "cambiar-clave.html";
+                    } else {
+                        window.location.href = "directorio-vecinal.html";
+                    }
+
+                    console.log("TOKEN:", sessionStorage.getItem("dv_token"));
+                } catch (err) {
+                    showMsg("login-error", err.message);
+                    btn.disabled = false;
+                    btn.innerHTML =
+                        '<i class="ti ti-login" aria-hidden="true"></i> Ingresar';
+                }
+            });
+
+        // ----------------------------------------------------------
+        //  OLVIDÉ MI CLAVE
+        // ----------------------------------------------------------
+        document.getElementById("forgot-link").addEventListener("click", () => {
+            const panel = document.getElementById("forgot-panel");
+            panel.style.display = panel.style.display === "none" ? "block" : "none";
+        });
+
+        document
+            .getElementById("forgot-btn")
+            .addEventListener("click", async () => {
+                const email = document.getElementById("forgot-email").value.trim();
+                if (!email) {
+                    showMsg("login-error", "Ingresá tu correo.");
+                    return;
+                }
+                const btn = document.getElementById("forgot-btn");
+                btn.disabled = true;
+                btn.textContent = "Enviando…";
+                try {
+                    await apiFetch("/auth/recuperar", {
+                        method: "POST",
+                        body: JSON.stringify({ email }),
+                    });
+                    document.getElementById("forgot-panel").innerHTML =
+                        '<div class="msg msg--ok show">Te enviamos un enlace al correo. Revisá también tu carpeta de spam.</div>';
+                } catch (err) {
+                    showMsg("login-error", err.message);
+                    btn.disabled = false;
+                    btn.innerHTML =
+                        '<i class="ti ti-send" aria-hidden="true"></i> Enviar enlace';
+                }
+            });
+
+        // ----------------------------------------------------------
+        //  FUERZA DE CLAVE
+        // ----------------------------------------------------------
+        document.getElementById("reg-pass").addEventListener("input", (e) => {
+            const val = e.target.value;
+            let score = 0;
+            if (val.length >= 8) score++;
+            if (/[A-Z]/.test(val)) score++;
+            if (/[0-9]/.test(val)) score++;
+            if (/[^A-Za-z0-9]/.test(val)) score++;
+
+            const fill = document.getElementById("strength-fill");
+            const label = document.getElementById("strength-label");
+            const levels = [
+                { w: "0%", bg: "transparent", txt: "" },
+                { w: "25%", bg: "var(--berry)", txt: "Muy débil" },
+                { w: "50%", bg: "var(--amber)", txt: "Débil" },
+                { w: "75%", bg: "var(--teal)", txt: "Aceptable" },
+                { w: "100%", bg: "var(--sage)", txt: "Fuerte" },
+            ];
+            fill.style.width = levels[score].w;
+            fill.style.background = levels[score].bg;
+            label.textContent = levels[score].txt;
+        });
+
+        // ----------------------------------------------------------
+        //  FOTO DE PERFIL — preview
+        // ----------------------------------------------------------
+        document.getElementById("reg-foto").addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const preview = document.getElementById("avatar-preview");
+                preview.innerHTML = `<img src="${ev.target.result}" alt="Foto de perfil">`;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ----------------------------------------------------------
+        //  REGISTRO
+        // ----------------------------------------------------------
+        document
+            .getElementById("register-form")
+            .addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById("reg-btn");
+                document.getElementById("reg-error").classList.remove("show");
+
+                const nombre = document.getElementById("reg-nombre").value.trim();
+                const barrio = document.getElementById("reg-barrio").value;
+                const lote = document.getElementById("reg-lote").value.trim();
+                const wa = document.getElementById("reg-wa").value.trim();
+                const email = document.getElementById("reg-email").value.trim();
+                const pass = document.getElementById("reg-pass").value;
+                const pass2 = document.getElementById("reg-pass2").value;
+                const fotoEl = document.getElementById("reg-foto");
+
+                // Validaciones del lado cliente
+                if (!nombre)
+                    return showMsg(
+                        "reg-error",
+                        "El nombre y apellido son obligatorios.",
+                    );
+                if (!barrio) return showMsg("reg-error", "Seleccioná tu barrio.");
+                if (!lote)
+                    return showMsg("reg-error", "El número de lote es obligatorio.");
+                if (!wa)
+                    return showMsg(
+                        "reg-error",
+                        "El número de WhatsApp es obligatorio.",
+                    );
+                if (!email)
+                    return showMsg(
+                        "reg-error",
+                        "El correo electrónico es obligatorio.",
+                    );
+                if (pass.length < 8)
+                    return showMsg(
+                        "reg-error",
+                        "La clave debe tener al menos 8 caracteres.",
+                    );
+                if (pass !== pass2)
+                    return showMsg("reg-error", "Las claves no coinciden.");
+
+                btn.disabled = true;
+                btn.textContent = "Creando cuenta…";
+
+                try {
+                    // Leer foto como base64 si la eligieron
+                    let fotoB64 = null;
+                    if (fotoEl.files[0]) {
+                        fotoB64 = await new Promise((res, rej) => {
+                            const r = new FileReader();
+                            r.onload = () => res(r.result);
+                            r.onerror = rej;
+                            r.readAsDataURL(fotoEl.files[0]);
+                        });
+                    }
+
+                    await apiFetch("/auth/registro", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            nombre,
+                            barrio,
+                            lote,
+                            whatsapp: wa,
+                            email,
+                            password: pass,
+                            foto: fotoB64,
+                        }),
+                    });
+
+                    // Mostrar confirmación y ocultar el form
+                    document.getElementById("register-form").style.display = "none";
+                    showMsg(
+                        "reg-ok",
+                        `¡Cuenta creada! Te enviamos un correo a ${email}. Hacé clic en el enlace para activar tu cuenta.`,
+                    );
+                } catch (err) {
+                    showMsg("reg-error", err.message);
+                    btn.disabled = false;
+                    btn.innerHTML =
+                        '<i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta';
+                }
+            });
+    </script>
 </body>
 
 </html>
