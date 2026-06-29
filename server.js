@@ -237,7 +237,7 @@ async function sendMail(to, subject, text, html, useGmail = true) {
         if (!to) { console.error("❌ No se especificó destinatario."); return; }
 
         const { error } = await resend.emails.send({
-            from: 'EntreVecinos <onboarding@resend.dev>',
+            from: 'EntreVecinos <noreply@bolilla-negra.com.ar>',
             to: Array.isArray(to) ? to : [to],
             subject,
             html,

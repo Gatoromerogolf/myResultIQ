@@ -875,82 +875,82 @@
       </form>
     </div>
 
-  <!-- ===== MODAL PERFIL ===== -->
-  <div class="modal" id="modal-perfil" role="dialog" aria-modal="true" aria-labelledby="perfil-title">
-    <button class="modal-close" data-action="close" aria-label="Cerrar">
-      <i class="ti ti-x" aria-hidden="true"></i>
-    </button>
-    <h2 class="modal-title" id="perfil-title">Mi perfil</h2>
+    <!-- ===== MODAL PERFIL ===== -->
+    <div class="modal" id="modal-perfil" role="dialog" aria-modal="true" aria-labelledby="perfil-title">
+      <button class="modal-close" data-action="close" aria-label="Cerrar">
+        <i class="ti ti-x" aria-hidden="true"></i>
+      </button>
+      <h2 class="modal-title" id="perfil-title">Mi perfil</h2>
 
-    <div class="msg msg--error" id="perfil-error"></div>
-    <div class="msg msg--ok" id="perfil-ok"></div>
+      <div class="msg msg--error" id="perfil-error"></div>
+      <div class="msg msg--ok" id="perfil-ok"></div>
 
-    <!-- Avatar -->
-    <div class="avatar-field">
-      <div class="avatar-preview" id="perfil-avatar-preview">
-        <span class="placeholder"><i class="ti ti-user" aria-hidden="true"></i></span>
+      <!-- Avatar -->
+      <div class="avatar-field">
+        <div class="avatar-preview" id="perfil-avatar-preview">
+          <span class="placeholder"><i class="ti ti-user" aria-hidden="true"></i></span>
+        </div>
+        <div class="avatar-label">
+          <label for="perfil-foto"
+            style="cursor:pointer; color:var(--sage); text-decoration:underline; text-underline-offset:2px;">
+            Cambiar fotografía
+          </label>
+          <input type="file" id="perfil-foto" accept="image/*" style="display:none" aria-label="Foto de perfil">
+          <small>Opcional · se muestra en tus reseñas</small>
+        </div>
       </div>
-      <div class="avatar-label">
-        <label for="perfil-foto"
-          style="cursor:pointer; color:var(--sage); text-decoration:underline; text-underline-offset:2px;">
-          Cambiar fotografía
-        </label>
-        <input type="file" id="perfil-foto" accept="image/*" style="display:none" aria-label="Foto de perfil">
-        <small>Opcional · se muestra en tus reseñas</small>
+
+      <!-- Nombre -->
+      <div class="field">
+        <label for="perfil-nombre">Nombre y apellido</label>
+        <div class="input-icon">
+          <i class="ti ti-user icon" aria-hidden="true"></i>
+          <input type="text" id="perfil-nombre" placeholder="Ej: María García" autocomplete="name">
+        </div>
       </div>
-    </div>
 
-    <!-- Nombre -->
-    <div class="field">
-      <label for="perfil-nombre">Nombre y apellido</label>
-      <div class="input-icon">
-        <i class="ti ti-user icon" aria-hidden="true"></i>
-        <input type="text" id="perfil-nombre" placeholder="Ej: María García" autocomplete="name">
+      <!-- Barrio -->
+      <div class="field">
+        <label for="perfil-barrio">Barrio</label>
+        <select id="perfil-barrio">
+          <option value="altos">Altos</option>
+          <option value="campo">Campo</option>
+        </select>
       </div>
-    </div>
 
-    <!-- Barrio -->
-    <div class="field">
-      <label for="perfil-barrio">Barrio</label>
-      <select id="perfil-barrio">
-        <option value="altos">Altos</option>
-        <option value="campo">Campo</option>
-      </select>
-    </div>
-
-    <!-- Lote -->
-    <div class="field">
-      <label for="perfil-lote">Número de lote</label>
-      <div class="input-icon">
-        <i class="ti ti-map-pin icon" aria-hidden="true"></i>
-        <input type="text" id="perfil-lote" placeholder="Ej: 42">
+      <!-- Lote -->
+      <div class="field">
+        <label for="perfil-lote">Número de lote</label>
+        <div class="input-icon">
+          <i class="ti ti-map-pin icon" aria-hidden="true"></i>
+          <input type="text" id="perfil-lote" placeholder="Ej: 42">
+        </div>
       </div>
-    </div>
 
-    <!-- WhatsApp -->
-    <div class="field">
-      <label for="perfil-wa">WhatsApp</label>
-      <div class="input-icon">
-        <i class="ti ti-brand-whatsapp icon" aria-hidden="true"></i>
-        <input type="tel" id="perfil-wa" placeholder="Ej: 11-2345-6789">
+      <!-- WhatsApp -->
+      <div class="field">
+        <label for="perfil-wa">WhatsApp</label>
+        <div class="input-icon">
+          <i class="ti ti-brand-whatsapp icon" aria-hidden="true"></i>
+          <input type="tel" id="perfil-wa" placeholder="Ej: 11-2345-6789">
+        </div>
       </div>
-    </div>
 
-    <!-- Email (solo lectura) -->
-    <div class="field">
-      <label for="perfil-email">Correo electrónico</label>
-      <div class="input-icon">
-        <i class="ti ti-mail icon" aria-hidden="true"></i>
-        <input type="email" id="perfil-email" disabled
-          style="opacity:.55; cursor:not-allowed; background:var(--surface)">
+      <!-- Email (solo lectura) -->
+      <div class="field">
+        <label for="perfil-email">Correo electrónico</label>
+        <div class="input-icon">
+          <i class="ti ti-mail icon" aria-hidden="true"></i>
+          <input type="email" id="perfil-email" disabled
+            style="opacity:.55; cursor:not-allowed; background:var(--surface)">
+        </div>
+        <small style="color:var(--ink-soft)">El correo no puede modificarse.</small>
       </div>
-      <small style="color:var(--ink-soft)">El correo no puede modificarse.</small>
-    </div>
 
-    <button class="submit-btn" id="perfil-save-btn">
-      <i class="ti ti-device-floppy" aria-hidden="true"></i> Guardar cambios
-    </button>
-  </div>
+      <button class="submit-btn" id="perfil-save-btn">
+        <i class="ti ti-device-floppy" aria-hidden="true"></i> Guardar cambios
+      </button>
+    </div>
 
   </div>
 
@@ -960,15 +960,17 @@
   </div>
 
   <footer>
-    Este es un servicio gratuito creado para el beneficio de la comunidad.<br> La participación de todos es bienvenida
-    para mantener el directorio actualizado y útil.
-    <br>
-    Te invitamos a calificar y comentar con responsabilidad, respeto y objetividad.<br> Las opiniones honestas y
-    constructivas ayudan a otros vecinos a tomar mejores decisiones <br>y contribuyen a fortalecer la convivencia y la
-    colaboración dentro de nuestra comunidad.
+    <strong>EntreVecinos es una iniciativa gratuita, construida entre todos.</strong>
     <br><br>
-    Si tenés alguna sugerencia para mejorar el directorio o querés reportar un problema,<br> no dudes en contactarnos.
-    ¡Gracias por ser parte de esta iniciativa vecinal!
+    El directorio crece y mejora con la participación de cada vecino.<br> Si ya usaste un proveedor, contá tu experiencia:
+    describí qué trabajo o servicio tomaste y cómo se hizo,<br> así los demás vecinos pueden evaluar si ese proveedor se ajusta a lo que necesitan.<br>
+    Una opinión honesta y concreta vale mucho más que una simple puntuación.
+    <br><br>
+    Te pedimos que califiques y comentes con responsabilidad y respeto.<br> Las reseñas útiles son las que ayudan a tomar
+    decisiones, no las que solo expresan enojo o entusiasmo.
+    <br><br>
+    Para sugerencias, consultas o reportar algún problema con la aplicación, escribinos a dev.bdt.reg@gmail.com. Toda
+    devolución es bienvenida.
   </footer>
 
 
