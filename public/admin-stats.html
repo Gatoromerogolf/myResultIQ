@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EntreVecinos — Estadísticas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+    <style>
+        :root {
+            --ink: #2a322d;
+            --ink-soft: #6b7268;
+            --paper: #f4efe2;
+            --card: #fffdf6;
+            --line: #ddd3bd;
+            --amber: #d9933f;
+            --sage: #5e7d63;
+            --berry: #9a4f54;
+            --teal: #44707c;
+            --gray: #9a948a;
+            --radius: 10px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Work Sans', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.5;
+        }
+
+        header {
+            border-bottom: 1px dashed var(--line);
+            background: linear-gradient(180deg, rgba(255,255,255,.5), transparent);
+            padding: 1.25rem;
+        }
+
+        .header-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+
+        .logo .accent { color: var(--sage); }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            font-size: .88rem;
+            color: var(--ink-soft);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: .35rem .85rem;
+            background: var(--card);
+            transition: color .15s, border-color .15s;
+        }
+
+        .back-btn:hover {
+            color: var(--ink);
+            border-color: var(--sage);
+        }
+
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 2rem 1.25rem 4rem;
+        }
+
+        h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            margin: 0 0 .25rem;
+        }
+
+        .subtitle {
+            color: var(--ink-soft);
+            font-size: .9rem;
+            margin: 0 0 2rem;
+        }
+
+        /* ---------- Filtro de fechas ---------- */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .75rem;
+            align-items: flex-end;
+            margin-bottom: 2rem;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+        }
+
+        .filter-field {
+            display: flex;
+            flex-direction: column;
+            gap: .3rem;
+        }
+
+        .filter-field label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: var(--ink-soft);
+        }
+
+        .filter-field input[type="date"] {
+            font-family: 'Work Sans', sans-serif;
+            font-size: .92rem;
+            padding: .5rem .75rem;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            color: var(--ink);
+        }
+
+        .filter-field input[type="date"]:focus {
+            outline: 2px solid var(--sage);
+            outline-offset: 1px;
+        }
+
+        .shortcut-btns {
+            display: flex;
+            gap: .4rem;
+            flex-wrap: wrap;
+            align-self: flex-end;
+        }
+
+        .shortcut-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            padding: .4rem .75rem;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--paper);
+            color: var(--ink-soft);
+            cursor: pointer;
+            transition: background .15s, color .15s, border-color .15s;
+        }
+
+        .shortcut-btn:hover {
+            border-color: var(--sage);
+            color: var(--sage);
+        }
+
+        .consult-btn {
+            font-family: 'Work Sans', sans-serif;
+            font-size: .92rem;
+            font-weight: 500;
+            padding: .55rem 1.4rem;
+            border-radius: 999px;
+            background: var(--ink);
+            color: var(--paper);
+            border: none;
+            cursor: pointer;
+            align-self: flex-end;
+            transition: background .15s;
+        }
+
+        .consult-btn:hover { background: var(--sage); }
+        .consult-btn:disabled { opacity: .6; cursor: default; }
+
+        /* ---------- Grilla de stats ---------- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 1.25rem 1.1rem;
+            display: flex;
+            flex-direction: column;
+            gap: .35rem;
+        }
+
+        .stat-card .stat-icon {
+            font-size: 1.4rem;
+            margin-bottom: .1rem;
+        }
+
+        .stat-card .stat-value {
+            font-family: 'Fraunces', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--ink);
+        }
+
+        .stat-card .stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--ink-soft);
+        }
+
+        .stat-card--login .stat-icon { color: var(--sage); }
+        .stat-card--visitante .stat-icon { color: var(--teal); }
+        .stat-card--proveedor .stat-icon { color: var(--amber); }
+        .stat-card--resena .stat-icon { color: var(--berry); }
+        .stat-card--registro .stat-icon { color: var(--gray); }
+
+        /* ---------- Estado vacío / error ---------- */
+        .msg {
+            border-radius: 8px;
+            padding: .75rem 1rem;
+            font-size: .9rem;
+            display: none;
+        }
+
+        .msg.show { display: block; }
+
+        .msg--error {
+            background: #fdecea;
+            color: var(--berry);
+            border: 1px solid #f5c6c6;
+        }
+
+        .msg--info {
+            background: #e8f2f5;
+            color: var(--teal);
+            border: 1px solid #b3d0d8;
+        }
+
+        .loading {
+            display: none;
+            color: var(--ink-soft);
+            font-size: .9rem;
+            padding: 1rem 0;
+        }
+
+        .loading.show { display: block; }
+
+        /* ---------- Rango mostrado ---------- */
+        .range-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .78rem;
+            color: var(--ink-soft);
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .range-label.show { display: block; }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <h1 class="logo">Entre<span class="accent">Vecinos</span></h1>
+            <a href="directorio-vecinal.html" class="back-btn">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i> Volver al directorio
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <h2>Estadísticas de uso</h2>
+        <p class="subtitle">Consultá la actividad del directorio en un rango de fechas.</p>
+
+        <!-- Filtro -->
+        <div class="filter-bar">
+            <div class="filter-field">
+                <label for="desde">Desde</label>
+                <input type="date" id="desde" />
+            </div>
+            <div class="filter-field">
+                <label for="hasta">Hasta</label>
+                <input type="date" id="hasta" />
+            </div>
+            <div class="shortcut-btns">
+                <button class="shortcut-btn" data-range="today">Hoy</button>
+                <button class="shortcut-btn" data-range="week">Esta semana</button>
+                <button class="shortcut-btn" data-range="month">Este mes</button>
+                <button class="shortcut-btn" data-range="all">Todo</button>
+            </div>
+            <button class="consult-btn" id="consult-btn">
+                <i class="ti ti-search" aria-hidden="true"></i> Consultar
+            </button>
+        </div>
+
+        <div class="msg msg--error" id="msg-error"></div>
+        <div class="msg msg--info" id="msg-info"></div>
+        <div class="loading" id="loading">Consultando…</div>
+        <div class="range-label" id="range-label"></div>
+
+        <!-- Grilla de resultados -->
+        <div class="stats-grid" id="stats-grid" style="display:none;">
+            <div class="stat-card stat-card--login">
+                <div class="stat-icon"><i class="ti ti-login"></i></div>
+                <div class="stat-value" id="val-logins">—</div>
+                <div class="stat-label">Ingresos con clave</div>
+            </div>
+            <div class="stat-card stat-card--visitante">
+                <div class="stat-icon"><i class="ti ti-eyeglass"></i></div>
+                <div class="stat-value" id="val-visitantes">—</div>
+                <div class="stat-label">Ingresos como visitante</div>
+            </div>
+            <div class="stat-card stat-card--proveedor">
+                <div class="stat-icon"><i class="ti ti-building-store"></i></div>
+                <div class="stat-value" id="val-proveedores">—</div>
+                <div class="stat-label">Proveedores nuevos</div>
+            </div>
+            <div class="stat-card stat-card--resena">
+                <div class="stat-icon"><i class="ti ti-star"></i></div>
+                <div class="stat-value" id="val-resenas">—</div>
+                <div class="stat-label">Reseñas nuevas</div>
+            </div>
+            <div class="stat-card stat-card--registro">
+                <div class="stat-icon"><i class="ti ti-user-plus"></i></div>
+                <div class="stat-value" id="val-registros">—</div>
+                <div class="stat-label">Usuarios registrados</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000/api/dv'
+            : '/api/dv';
+
+        const ADMIN_IDS = [1];
+
+        // ----------------------------------------------------------
+        //  Verificar que es admin
+        // ----------------------------------------------------------
+        const user = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
+        const token = sessionStorage.getItem('dv_token');
+
+        if (!user || !token || !ADMIN_IDS.includes(user.id)) {
+            window.location.href = 'login_dv.html';
+        }
+
+        // ----------------------------------------------------------
+        //  Helpers de fecha
+        // ----------------------------------------------------------
+        function toISO(date) {
+            return date.toISOString().slice(0, 10);
+        }
+
+        function hoy() { return toISO(new Date()); }
+
+        function inicioSemana() {
+            const d = new Date();
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return toISO(new Date(d.setDate(diff)));
+        }
+
+        function inicioMes() {
+            const d = new Date();
+            return toISO(new Date(d.getFullYear(), d.getMonth(), 1));
+        }
+
+        // Precargar con el mes actual
+        document.getElementById('desde').value = inicioMes();
+        document.getElementById('hasta').value = hoy();
+
+        // ----------------------------------------------------------
+        //  Shortcuts de rango
+        // ----------------------------------------------------------
+        document.querySelectorAll('.shortcut-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const range = btn.dataset.range;
+                const desdeEl = document.getElementById('desde');
+                const hastaEl = document.getElementById('hasta');
+                hastaEl.value = hoy();
+                if (range === 'today') {
+                    desdeEl.value = hoy();
+                } else if (range === 'week') {
+                    desdeEl.value = inicioSemana();
+                } else if (range === 'month') {
+                    desdeEl.value = inicioMes();
+                } else if (range === 'all') {
+                    desdeEl.value = '2024-01-01';
+                    hastaEl.value = hoy();
+                }
+            });
+        });
+
+        // ----------------------------------------------------------
+        //  Consultar stats
+        // ----------------------------------------------------------
+        document.getElementById('consult-btn').addEventListener('click', consultar);
+
+        // Consultar automáticamente al cargar
+        window.addEventListener('DOMContentLoaded', () => setTimeout(consultar, 100));
+
+        async function consultar() {
+            const desde = document.getElementById('desde').value;
+            const hasta = document.getElementById('hasta').value;
+
+            const errorEl = document.getElementById('msg-error');
+            const infoEl = document.getElementById('msg-info');
+            const loadingEl = document.getElementById('loading');
+            const gridEl = document.getElementById('stats-grid');
+            const rangeEl = document.getElementById('range-label');
+            const btn = document.getElementById('consult-btn');
+
+            errorEl.classList.remove('show');
+            infoEl.classList.remove('show');
+
+            if (!desde || !hasta) {
+                errorEl.textContent = 'Seleccioná un rango de fechas.';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            if (desde > hasta) {
+                errorEl.textContent = '"Desde" no puede ser posterior a "Hasta".';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            btn.disabled = true;
+            gridEl.style.display = 'none';
+            rangeEl.classList.remove('show');
+            loadingEl.classList.add('show');
+
+            try {
+                const res = await fetch(`${API}/admin/stats?desde=${desde}&hasta=${hasta}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (!data.ok) throw new Error(data.error || 'Error al consultar.');
+
+                document.getElementById('val-logins').textContent = data.data.logins;
+                document.getElementById('val-visitantes').textContent = data.data.visitantes;
+                document.getElementById('val-proveedores').textContent = data.data.proveedores_nuevos;
+                document.getElementById('val-resenas').textContent = data.data.resenas_nuevas;
+                document.getElementById('val-registros').textContent = data.data.usuarios_registrados;
+
+                gridEl.style.display = 'grid';
+                rangeEl.textContent = `Período: ${formatFecha(desde)} — ${formatFecha(hasta)}`;
+                rangeEl.classList.add('show');
+
+            } catch (err) {
+                errorEl.textContent = err.message;
+                errorEl.classList.add('show');
+            } finally {
+                loadingEl.classList.remove('show');
+                btn.disabled = false;
+            }
+        }
+
+        function formatFecha(iso) {
+            if (!iso) return '';
+            const [y, m, d] = iso.split('-');
+            return `${d}/${m}/${y}`;
+        }
+    </script>
+</body>
+
+</html>

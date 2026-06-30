@@ -46,6 +46,15 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         next();
     }
 
+    const ADMIN_IDS = [1]; // ruben.e.garcia@gmail.com
+
+    function soloAdmin(req, res, next) {
+        if (!ADMIN_IDS.includes(req.dvUser?.id)) {
+            return dvErr(res, 'No tenés permiso para ver esto.', 403);
+        }
+        next();
+    }
+
     // ----------------------------------------------------------
     //  AUTENTICACIÓN DIRECTORIO VECINAL
     // ----------------------------------------------------------
@@ -188,6 +197,11 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 { expiresIn: '8h' }
             );
 
+            await pool.query(
+                'INSERT INTO db_log_ingresos (usuario_id, tipo) VALUES (?, ?)',
+                [u.id, 'login']
+            );
+
             dvOk(res, {
                 token,
                 user: {
@@ -309,6 +323,11 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 { id: 9999, nombre: 'Visitante', barrio: 'altos', email: 'visitante@no-existe.local', rol: 'visitante' },
                 JWT_SECRET,
                 { expiresIn: '8h' }
+            );
+
+            await pool.query(
+                'INSERT INTO db_log_ingresos (usuario_id, tipo) VALUES (?, ?)',
+                [9999, 'visitante']
             );
 
             dvOk(res, {
@@ -553,4 +572,55 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         }
     });
 
+    // ----------------------------------------------------------
+    //  RESTADISTICAS
+    // ---------------------------------------------------
+
+    // GET /api/dv/admin/stats?desde=2026-06-01&hasta=2026-06-30
+    app.get('/api/dv/admin/stats', dvAuth, soloAdmin, async (req, res) => {
+        try {
+            const { desde, hasta } = req.query;
+            if (!desde || !hasta) return dvErr(res, 'Especificá un rango de fechas.', 400);
+
+            const hastaFin = hasta + ' 23:59:59';
+
+            const [[logins]] = await pool.query(
+                `SELECT COUNT(*) AS total FROM db_log_ingresos
+             WHERE tipo = 'login' AND fecha BETWEEN ? AND ?`,
+                [desde, hastaFin]
+            );
+
+            const [[visitantes]] = await pool.query(
+                `SELECT COUNT(*) AS total FROM db_log_ingresos
+             WHERE tipo = 'visitante' AND fecha BETWEEN ? AND ?`,
+                [desde, hastaFin]
+            );
+
+            const [[proveedores]] = await pool.query(
+                `SELECT COUNT(*) AS total FROM db_proveedores
+             WHERE creado_en  BETWEEN ? AND ?`,
+                [desde, hastaFin]
+            );
+
+            const [[resenas]] = await pool.query(
+                `SELECT COUNT(*) AS total FROM db_resenas
+             WHERE fecha_publicacion BETWEEN ? AND ?`,
+                [desde, hastaFin]
+            );
+
+            const [[registros]] = await pool.query(
+                `SELECT COUNT(*) AS total FROM db_usuarios
+             WHERE creado_en BETWEEN ? AND ?`,
+                [desde, hastaFin]
+            );
+
+            dvOk(res, {
+                logins: logins.total,
+                visitantes: visitantes.total,
+                proveedores_nuevos: proveedores.total,
+                resenas_nuevas: resenas.total,
+                usuarios_registrados: registros.total
+            });
+        } catch (e) { dvErr(res, e.message); }
+    });
 }; 

@@ -883,6 +883,18 @@
                     <span class="user-name" id="userName"></span>
                 </div>
             </div> -->
+            <!-- <div class="user-badge-group">
+                <div class="user-badge" id="userBadge" style="cursor:pointer;" title="Mis datos">
+                    <img class="user-avatar" id="userAvatar" src="" alt="foto de perfil" />
+                    <div class="user-info">
+                        <span class="user-welcome">Bienvenido</span>
+                        <span class="user-name" id="userName"></span>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn" title="Salir">
+                    <i class="ti ti-logout" aria-hidden="true"></i>
+                </button>
+            </div> -->
             <div class="user-badge-group">
                 <div class="user-badge" id="userBadge" style="cursor:pointer;" title="Mis datos">
                     <img class="user-avatar" id="userAvatar" src="" alt="foto de perfil" />
@@ -891,6 +903,10 @@
                         <span class="user-name" id="userName"></span>
                     </div>
                 </div>
+                <a href="admin-stats.html" class="logout-btn" id="adminBtn" title="Estadísticas"
+                    style="display:none; text-decoration:none;">
+                    <i class="ti ti-chart-bar" aria-hidden="true"></i>
+                </a>
                 <button class="logout-btn" id="logoutBtn" title="Salir">
                     <i class="ti ti-logout" aria-hidden="true"></i>
                 </button>
@@ -1349,6 +1365,12 @@
             name.textContent = user.nombre;
             avatar.src = user.foto_b64 || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nombre)}&background=7a9e7e&color=fff&size=96`;
             badge.style.display = 'flex';
+
+            // Mostrar botón admin solo si es el admin
+            const adminBtn = document.getElementById('adminBtn');
+            if (adminBtn) {
+                adminBtn.style.display = user?.id === 1 ? 'flex' : 'none';
+            }
         }
 
         function saludoHorario() {
