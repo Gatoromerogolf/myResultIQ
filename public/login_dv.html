@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EntreVecinos — Ingreso</title>
+    <title>EntreVecinos — El directorio del barrio, hecho entre todos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -32,7 +32,6 @@
 
         html {
             scroll-behavior: smooth;
-            min-height: 100%;
         }
 
         body {
@@ -41,26 +40,57 @@
             background: var(--paper);
             color: var(--ink);
             line-height: 1.5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1.25rem;
         }
 
-        /* ---------- Logo / hero ---------- */
-        .hero {
+        /* ============================================================
+           LAYOUT GENERAL — dos columnas en desktop, apilado en mobile
+           ============================================================ */
+        .page {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 920px) {
+            .page {
+                grid-template-columns: 1.15fr 0.85fr;
+                align-items: start;
+                padding-top: 2.5rem;
+            }
+
+            .col-login {
+                order: 2;
+                position: sticky;
+                top: 1.5rem;
+            }
+
+            .col-info {
+                order: 1;
+            }
+        }
+
+        /* ---------- Logo / topbar ---------- */
+        .topbar {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (min-width: 920px) {
+            .topbar {
+                grid-column: 1 / -1;
+                text-align: left;
+            }
         }
 
         .logo {
             font-family: "Fraunces", serif;
             font-weight: 700;
-            font-size: clamp(2rem, 6vw, 3rem);
+            font-size: clamp(1.9rem, 4.5vw, 2.6rem);
             letter-spacing: -0.02em;
-            margin: 0 0 0.35rem;
+            margin: 0 0 0.3rem;
         }
 
         .logo .accent {
@@ -70,28 +100,165 @@
         .barrios {
             display: inline-flex;
             gap: 0.5rem;
-            margin: 0.5rem 0 0.75rem;
+            margin: 0 0 0.4rem;
         }
 
         .barrio-badge {
             font-family: "JetBrains Mono", monospace;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            padding: 0.25rem 0.7rem;
+            padding: 0.22rem 0.65rem;
             border-radius: 999px;
             border: 1px solid var(--line);
             color: var(--ink-soft);
+            background: rgba(255, 255, 255, .5);
         }
 
-        .hero p {
+        /* ============================================================
+           COLUMNA INFO (texto + ilustraciones)
+           ============================================================ */
+        .info-hero h2 {
+            font-family: "Fraunces", serif;
+            font-size: clamp(1.4rem, 3vw, 1.85rem);
+            font-weight: 600;
+            line-height: 1.25;
+            margin: 0 0 0.85rem;
+        }
+
+        .info-hero p {
             color: var(--ink-soft);
-            font-size: 0.95rem;
-            margin: 0;
-            max-width: 28rem;
+            font-size: 0.98rem;
+            margin: 0 0 1rem;
         }
 
-        /* ---------- Tarjeta principal ---------- */
+        .icon-strip {
+            display: flex;
+            gap: 1.1rem;
+            margin: 1.5rem 0 1.75rem;
+            flex-wrap: wrap;
+        }
+
+        .icon-chip {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            width: 64px;
+        }
+
+        .icon-chip svg {
+            width: 52px;
+            height: 52px;
+        }
+
+        .icon-chip span {
+            font-size: 0.68rem;
+            color: var(--ink-soft);
+            text-align: center;
+            font-family: "JetBrains Mono", monospace;
+            letter-spacing: 0.02em;
+        }
+
+        .feature-row {
+            display: flex;
+            gap: 0.85rem;
+            align-items: flex-start;
+            margin-bottom: 1.1rem;
+        }
+
+        .feature-row .ico {
+            flex-shrink: 0;
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 50%;
+            background: var(--card);
+            border: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--sage);
+            font-size: 1.1rem;
+        }
+
+        .feature-row .txt strong {
+            display: block;
+            font-size: 0.92rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .feature-row .txt p {
+            margin: 0;
+            font-size: 0.86rem;
+            color: var(--ink-soft);
+        }
+
+        /* ---------- Ilustración hero ---------- */
+        .hero-illustration {
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto 1.75rem;
+            display: block;
+        }
+
+        @media (min-width: 920px) {
+            .hero-illustration {
+                margin: 0 0 1.75rem;
+            }
+        }
+
+        /* ---------- "Leer más" colapsable ---------- */
+        .more-toggle {
+            background: none;
+            border: none;
+            color: var(--sage);
+            font-family: "Work Sans", sans-serif;
+            font-size: 0.92rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin: 0.5rem 0 0;
+        }
+
+        .more-toggle:hover {
+            color: var(--ink);
+        }
+
+        .more-toggle i {
+            transition: transform 0.2s;
+        }
+
+        .more-toggle.open i {
+            transform: rotate(180deg);
+        }
+
+        .more-content {
+            display: none;
+            margin-top: 1.1rem;
+            padding-top: 1.1rem;
+            border-top: 1px dashed var(--line);
+        }
+
+        .more-content.show {
+            display: block;
+        }
+
+        .more-content p {
+            color: var(--ink-soft);
+            font-size: 0.9rem;
+            margin: 0 0 0.9rem;
+        }
+
+        .more-content a {
+            color: var(--teal);
+        }
+
+        /* ============================================================
+           COLUMNA LOGIN (tarjeta)
+           ============================================================ */
         .card {
             background: var(--card);
             border: 1px solid var(--line);
@@ -100,6 +267,7 @@
             width: 100%;
             max-width: 420px;
             overflow: hidden;
+            margin: 0 auto;
         }
 
         /* ---------- Tabs ---------- */
@@ -112,18 +280,13 @@
         .tab {
             padding: 0.85rem 1rem;
             text-align: center;
-            font-family: "JetBrains Mono", monospace;
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
+            font-size: 0.88rem;
             color: var(--ink-soft);
             cursor: pointer;
             border: none;
             background: transparent;
             border-bottom: 2px solid transparent;
-            transition:
-                color 0.15s,
-                border-color 0.15s;
+            transition: color 0.15s, border-color 0.15s;
             font-family: "Work Sans", sans-serif;
             font-weight: 500;
         }
@@ -264,7 +427,7 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            margin: 0.5rem 0 1rem;
+            margin: 1rem 0;
             color: var(--ink-soft);
             font-size: 0.78rem;
         }
@@ -275,6 +438,35 @@
             flex: 1;
             height: 1px;
             background: var(--line);
+        }
+
+        /* ---------- Botón visitante ---------- */
+        .visitante-btn {
+            width: 100%;
+            background: transparent;
+            color: var(--teal);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 0.65rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: "Work Sans", sans-serif;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .visitante-btn:hover {
+            background: var(--paper);
+            border-color: var(--teal);
+        }
+
+        .visitante-btn:disabled {
+            opacity: 0.6;
+            cursor: default;
         }
 
         /* ---------- Mensajes ---------- */
@@ -364,9 +556,7 @@
             height: 100%;
             border-radius: 2px;
             width: 0;
-            transition:
-                width 0.3s,
-                background 0.3s;
+            transition: width 0.3s, background 0.3s;
         }
 
         .strength-label {
@@ -377,213 +567,358 @@
         }
 
         footer {
-            margin-top: 2rem;
+            margin-top: 1rem;
             font-size: 0.78rem;
             color: var(--ink-soft);
             text-align: center;
+        }
+
+        @media (min-width: 920px) {
+            footer {
+                grid-column: 1 / -1;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="hero">
-        <h1 class="logo">Entre <span class="accent">Vecinos</span></h1>
-        <div class="barrios">
-            <span class="barrio-badge"><i class="ti ti-trees" aria-hidden="true"></i> Altos</span>
-            <span class="barrio-badge"><i class="ti ti-home" aria-hidden="true"></i> Campo</span>
-        </div>
-        <p>
-            El directorio de proveedores de bienes y servicios de nuestra comunidad.
-        </p>
-    </div>
+    <div class="page">
 
-    <div class="card">
-        <div class="tabs">
-            <button class="tab active" data-tab="login">Ingresar</button>
-            <button class="tab" data-tab="register">Registrarse</button>
+        <!-- ===== TOPBAR / LOGO ===== -->
+        <div class="topbar">
+            <h1 class="logo">Entre<span class="accent">Vecinos</span></h1>
+            <div class="barrios">
+                <span class="barrio-badge">Altos</span>
+                <span class="barrio-badge">Campo Grande</span>
+            </div>
+            <p>
+                El directorio de proveedores de bienes y servicios de nuestra comunidad.
+            </p>
         </div>
 
-        <!-- ===== PANEL LOGIN ===== -->
-        <div class="panel" id="panel-login">
-            <div class="msg msg--error" id="login-error"></div>
-            <div class="msg msg--ok" id="login-ok"></div>
 
-            <form id="login-form" novalidate>
-                <div class="field">
-                    <label for="login-email">Correo electrónico</label>
-                    <div class="input-icon">
-                        <i class="ti ti-mail icon" aria-hidden="true"></i>
-                        <input type="email" id="login-email" name="email" required placeholder="tu@correo.com"
-                            autocomplete="email" />
-                    </div>
+        <!-- ===== COLUMNA LOGIN ===== -->
+        <div class="col-login">
+            <div class="card">
+                <div class="tabs">
+                    <button class="tab active" data-tab="login">Ingresar</button>
+                    <button class="tab" data-tab="register">Registrarse</button>
                 </div>
-                <div class="field">
-                    <label for="login-pass">Clave</label>
-                    <div class="input-icon">
-                        <i class="ti ti-lock icon" aria-hidden="true"></i>
-                        <input type="password" id="login-pass" name="password" required placeholder="••••••••"
-                            autocomplete="current-password" />
-                        <button type="button" class="toggle-pass" data-target="login-pass"
-                            aria-label="Mostrar/ocultar clave">
-                            <i class="ti ti-eye" aria-hidden="true"></i>
+
+                <!-- ===== PANEL LOGIN ===== -->
+                <div class="panel" id="panel-login">
+                    <div class="msg msg--error" id="login-error"></div>
+                    <div class="msg msg--ok" id="login-ok"></div>
+
+                    <form id="login-form" novalidate>
+                        <div class="field">
+                            <label for="login-email">Correo electrónico</label>
+                            <div class="input-icon">
+                                <i class="ti ti-mail icon" aria-hidden="true"></i>
+                                <input type="email" id="login-email" name="email" required placeholder="tu@correo.com"
+                                    autocomplete="email" />
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="login-pass">Clave</label>
+                            <div class="input-icon">
+                                <i class="ti ti-lock icon" aria-hidden="true"></i>
+                                <input type="password" id="login-pass" name="password" required placeholder="••••••••"
+                                    autocomplete="current-password" />
+                                <button type="button" class="toggle-pass" data-target="login-pass"
+                                    aria-label="Mostrar/ocultar clave">
+                                    <i class="ti ti-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="text-align: right; margin-bottom: 1rem">
+                            <button type="button" class="link-btn" id="forgot-link">
+                                Olvidé mi clave
+                            </button>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="login-btn">
+                            <i class="ti ti-login" aria-hidden="true"></i> Ingresar
+                        </button>
+                    </form>
+
+                    <!-- Panel olvidé clave (oculto por default) -->
+                    <div id="forgot-panel" style="display: none; margin-top: 1rem">
+                        <div class="divider">recuperar acceso</div>
+                        <div class="msg msg--info" id="forgot-msg" style="display: block">
+                            Ingresá tu correo y te enviamos un enlace para restablecer tu clave.
+                        </div>
+                        <div class="field">
+                            <label for="forgot-email">Correo electrónico</label>
+                            <div class="input-icon">
+                                <i class="ti ti-mail icon" aria-hidden="true"></i>
+                                <input type="email" id="forgot-email" placeholder="tu@correo.com" />
+                            </div>
+                        </div>
+                        <button type="button" class="submit-btn" id="forgot-btn">
+                            <i class="ti ti-send" aria-hidden="true"></i> Enviar enlace
                         </button>
                     </div>
-                </div>
 
-                <div style="text-align: right; margin-bottom: 1rem">
-                    <button type="button" class="link-btn" id="forgot-link">
-                        Olvidé mi clave
+                    <div class="divider">o también</div>
+
+                    <button type="button" class="visitante-btn" id="visitante-btn">
+                        <i class="ti ti-eyeglass" aria-hidden="true"></i> Entrar como visitante
                     </button>
                 </div>
 
-                <button type="submit" class="submit-btn" id="login-btn">
-                    <i class="ti ti-login" aria-hidden="true"></i> Ingresar
-                </button>
-            </form>
+                <!-- ===== PANEL REGISTRO ===== -->
+                <div class="panel hidden" id="panel-register">
+                    <div class="msg msg--error" id="reg-error"></div>
+                    <div class="msg msg--ok" id="reg-ok"></div>
 
-            <!-- Panel olvidé clave (oculto por default) -->
-            <div id="forgot-panel" style="display: none; margin-top: 1rem">
-                <div class="divider">recuperar acceso</div>
-                <div class="msg msg--info" id="forgot-msg" style="display: block">
-                    Ingresá tu correo y te enviamos un enlace para restablecer tu clave.
+                    <form id="register-form" novalidate>
+                        <!-- Foto de perfil -->
+                        <div class="avatar-field">
+                            <div class="avatar-preview" id="avatar-preview">
+                                <span class="placeholder"><i class="ti ti-user" aria-hidden="true"></i></span>
+                            </div>
+                            <div class="avatar-label">
+                                <label for="reg-foto"
+                                    style="cursor:pointer; color:var(--sage); text-decoration:underline; text-underline-offset:2px;">
+                                    Elegir fotografía
+                                </label>
+                                <input type="file" id="reg-foto" name="foto" accept="image/*" style="display: none"
+                                    aria-label="Fotografía de perfil" />
+                                <small>Opcional · se mostrará en tus reseñas</small>
+                            </div>
+                        </div>
+
+                        <!-- Nombre y apellido -->
+                        <div class="field">
+                            <label for="reg-nombre">Nombre y apellido</label>
+                            <div class="input-icon">
+                                <i class="ti ti-user icon" aria-hidden="true"></i>
+                                <input type="text" id="reg-nombre" name="nombre" required placeholder="Ej: María García"
+                                    autocomplete="name" />
+                            </div>
+                        </div>
+
+                        <!-- Barrio -->
+                        <div class="field">
+                            <label for="reg-barrio">Barrio</label>
+                            <select id="reg-barrio" name="barrio" required>
+                                <option value="">— Seleccioná —</option>
+                                <option value="altos">Altos</option>
+                                <option value="campo">Campo</option>
+                            </select>
+                        </div>
+
+                        <!-- Número de lote -->
+                        <div class="field">
+                            <label for="reg-lote">Número de lote</label>
+                            <div class="input-icon">
+                                <i class="ti ti-map-pin icon" aria-hidden="true"></i>
+                                <input type="text" id="reg-lote" name="lote" required placeholder="Ej: 42" />
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp -->
+                        <div class="field">
+                            <label for="reg-wa">Número de WhatsApp</label>
+                            <div class="input-icon">
+                                <i class="ti ti-brand-whatsapp icon" aria-hidden="true"></i>
+                                <input type="tel" id="reg-wa" name="whatsapp" required placeholder="Ej: 11-2345-6789" />
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="field">
+                            <label for="reg-email">Correo electrónico</label>
+                            <div class="input-icon">
+                                <i class="ti ti-mail icon" aria-hidden="true"></i>
+                                <input type="email" id="reg-email" name="email" required placeholder="tu@correo.com"
+                                    autocomplete="email" />
+                            </div>
+                        </div>
+
+                        <!-- Clave -->
+                        <div class="field">
+                            <label for="reg-pass">Clave</label>
+                            <div class="input-icon">
+                                <i class="ti ti-lock icon" aria-hidden="true"></i>
+                                <input type="password" id="reg-pass" name="password" required
+                                    placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+                                <button type="button" class="toggle-pass" data-target="reg-pass"
+                                    aria-label="Mostrar/ocultar clave">
+                                    <i class="ti ti-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strength-fill"></div>
+                            </div>
+                            <div class="strength-label" id="strength-label"></div>
+                        </div>
+
+                        <!-- Confirmar clave -->
+                        <div class="field">
+                            <label for="reg-pass2">Confirmá tu clave</label>
+                            <div class="input-icon">
+                                <i class="ti ti-lock-check icon" aria-hidden="true"></i>
+                                <input type="password" id="reg-pass2" name="password2" required
+                                    placeholder="Repetí la clave" autocomplete="new-password" />
+                                <button type="button" class="toggle-pass" data-target="reg-pass2"
+                                    aria-label="Mostrar/ocultar clave">
+                                    <i class="ti ti-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="reg-btn">
+                            <i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta
+                        </button>
+
+                        <p style="font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.85rem; margin-bottom: 0;">
+                            Al registrarte recibirás un correo de confirmación. Tenés que
+                            validarlo antes de poder ingresar.
+                        </p>
+                    </form>
                 </div>
-                <div class="field">
-                    <label for="forgot-email">Correo electrónico</label>
-                    <div class="input-icon">
-                        <i class="ti ti-mail icon" aria-hidden="true"></i>
-                        <input type="email" id="forgot-email" placeholder="tu@correo.com" />
-                    </div>
-                </div>
-                <button type="button" class="submit-btn" id="forgot-btn">
-                    <i class="ti ti-send" aria-hidden="true"></i> Enviar enlace
-                </button>
             </div>
         </div>
 
-        <!-- ===== PANEL REGISTRO ===== -->
-        <div class="panel hidden" id="panel-register">
-            <div class="msg msg--error" id="reg-error"></div>
-            <div class="msg msg--ok" id="reg-ok"></div>
+        <!-- ===== COLUMNA INFO ===== -->
+        <div class="col-info">
+            <div class="info-hero">
 
-            <form id="register-form" novalidate>
-                <!-- Foto de perfil -->
-                <div class="avatar-field">
-                    <div class="avatar-preview" id="avatar-preview">
-                        <span class="placeholder"><i class="ti ti-user" aria-hidden="true"></i></span>
-                    </div>
-                    <div class="avatar-label">
-                        <label for="reg-foto" style="
-                  cursor: pointer;
-                  color: var(--sage);
-                  text-decoration: underline;
-                  text-underline-offset: 2px;
-                ">
-                            Elegir fotografía
-                        </label>
-                        <input type="file" id="reg-foto" name="foto" accept="image/*" style="display: none"
-                            aria-label="Fotografía de perfil" />
-                        <small>Opcional · se mostrará en tus reseñas</small>
-                    </div>
-                </div>
+                <!-- Ilustración hero: vecino con caja de herramientas + casa -->
+                <svg class="hero-illustration" viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="240" cy="270" rx="200" ry="14" fill="#ddd3bd" opacity="0.4" />
+                    <!-- casa -->
+                    <rect x="60" y="120" width="150" height="110" rx="4" fill="#fffdf6" stroke="#ddd3bd"
+                        stroke-width="2" />
+                    <polygon points="50,125 135,70 220,125" fill="#5e7d63" />
+                    <rect x="100" y="170" width="34" height="60" fill="#44707c" />
+                    <rect x="150" y="150" width="36" height="34" fill="#f4efe2" stroke="#ddd3bd" stroke-width="2" />
+                    <line x1="168" y1="150" x2="168" y2="184" stroke="#ddd3bd" stroke-width="2" />
+                    <line x1="150" y1="167" x2="186" y2="167" stroke="#ddd3bd" stroke-width="2" />
+                    <!-- persona -->
+                    <circle cx="330" cy="120" r="26" fill="#d9933f" />
+                    <rect x="305" y="146" width="50" height="70" rx="14" fill="#44707c" />
+                    <rect x="300" y="160" width="16" height="50" rx="8" fill="#44707c" />
+                    <rect x="344" y="160" width="16" height="50" rx="8" fill="#44707c" />
+                    <rect x="312" y="216" width="16" height="40" rx="6" fill="#2a322d" />
+                    <rect x="336" y="216" width="16" height="40" rx="6" fill="#2a322d" />
+                    <!-- caja de herramientas -->
+                    <rect x="370" y="205" width="56" height="36" rx="4" fill="#9a4f54" />
+                    <rect x="388" y="195" width="20" height="14" rx="3" fill="#9a4f54" />
+                    <rect x="370" y="218" width="56" height="6" fill="#fffdf6" opacity="0.4" />
+                    <!-- llave -->
+                    <circle cx="412" cy="150" r="9" fill="none" stroke="#5e7d63" stroke-width="5" />
+                    <rect x="408" y="155" width="8" height="28" fill="#5e7d63" />
+                </svg>
 
-                <!-- Nombre y apellido -->
-                <div class="field">
-                    <label for="reg-nombre">Nombre y apellido</label>
-                    <div class="input-icon">
-                        <i class="ti ti-user icon" aria-hidden="true"></i>
-                        <input type="text" id="reg-nombre" name="nombre" required placeholder="Ej: María García"
-                            autocomplete="name" />
-                    </div>
-                </div>
+                <h2>El directorio del barrio, hecho entre todos</h2>
+                <p>¿Necesitás un plomero, un electricista, un pintor? Ahora podés consultar qué proveedores ya
+                    usaron tus vecinos de Altos y Campo Grande, y qué les pareció.</p>
+                <p><strong>EntreVecinos</strong> es una aplicación gratuita donde cualquier vecino puede registrar proveedores y
+                    dejar su opinión sobre el trabajo realizado. No es una simple lista de teléfonos: cada reseña
+                    describe qué se hizo exactamente, para que puedas evaluar si ese proveedor se ajusta a lo que
+                    necesitás. No es lo mismo el plomero que cambió un cuerito que el que instaló un termotanque
+                    con albañilería incluida.</p>
 
-                <!-- Barrio -->
-                <div class="field">
-                    <label for="reg-barrio">Barrio</label>
-                    <select id="reg-barrio" name="barrio" required>
-                        <option value="">— Seleccioná —</option>
-                        <option value="altos">Altos</option>
-                        <option value="campo">Campo</option>
-                    </select>
-                </div>
-
-                <!-- Número de lote -->
-                <div class="field">
-                    <label for="reg-lote">Número de lote</label>
-                    <div class="input-icon">
-                        <i class="ti ti-map-pin icon" aria-hidden="true"></i>
-                        <input type="text" id="reg-lote" name="lote" required placeholder="Ej: 42" />
+                <!-- Tira de íconos de rubros típicos -->
+                <div class="icon-strip">
+                    <div class="icon-chip">
+                        <svg viewBox="0 0 64 64">
+                            <circle cx="32" cy="32" r="30" fill="#44707c" opacity="0.12" />
+                            <path d="M22 40c0-8 6-14 10-14s10 6 10 14" stroke="#44707c" stroke-width="3" fill="none"
+                                stroke-linecap="round" />
+                            <circle cx="32" cy="22" r="5" fill="#44707c" />
+                            <line x1="22" y1="40" x2="42" y2="40" stroke="#44707c" stroke-width="3"
+                                stroke-linecap="round" />
+                        </svg>
+                        <span>Plomería</span>
                     </div>
-                </div>
-
-                <!-- WhatsApp -->
-                <div class="field">
-                    <label for="reg-wa">Número de WhatsApp</label>
-                    <div class="input-icon">
-                        <i class="ti ti-brand-whatsapp icon" aria-hidden="true"></i>
-                        <input type="tel" id="reg-wa" name="whatsapp" required placeholder="Ej: 11-2345-6789" />
+                    <div class="icon-chip">
+                        <svg viewBox="0 0 64 64">
+                            <circle cx="32" cy="32" r="30" fill="#d9933f" opacity="0.12" />
+                            <path d="M30 16l-12 18h10l-4 14 16-20h-10z" fill="#d9933f" />
+                        </svg>
+                        <span>Electricidad</span>
                     </div>
-                </div>
-
-                <!-- Email -->
-                <div class="field">
-                    <label for="reg-email">Correo electrónico</label>
-                    <div class="input-icon">
-                        <i class="ti ti-mail icon" aria-hidden="true"></i>
-                        <input type="email" id="reg-email" name="email" required placeholder="tu@correo.com"
-                            autocomplete="email" />
+                    <div class="icon-chip">
+                        <svg viewBox="0 0 64 64">
+                            <circle cx="32" cy="32" r="30" fill="#9a4f54" opacity="0.12" />
+                            <rect x="20" y="26" width="24" height="16" rx="2" fill="#9a4f54" />
+                            <rect x="26" y="18" width="12" height="10" rx="2" fill="#9a4f54" />
+                        </svg>
+                        <span>Alimentos</span>
                     </div>
-                </div>
-
-                <!-- Clave -->
-                <div class="field">
-                    <label for="reg-pass">Clave</label>
-                    <div class="input-icon">
-                        <i class="ti ti-lock icon" aria-hidden="true"></i>
-                        <input type="password" id="reg-pass" name="password" required placeholder="Mínimo 8 caracteres"
-                            autocomplete="new-password" />
-                        <button type="button" class="toggle-pass" data-target="reg-pass"
-                            aria-label="Mostrar/ocultar clave">
-                            <i class="ti ti-eye" aria-hidden="true"></i>
-                        </button>
+                    <div class="icon-chip">
+                        <svg viewBox="0 0 64 64">
+                            <circle cx="32" cy="32" r="30" fill="#5e7d63" opacity="0.12" />
+                            <path d="M18 38c4-10 24-10 28 0" stroke="#5e7d63" stroke-width="3" fill="none"
+                                stroke-linecap="round" />
+                            <circle cx="24" cy="26" r="3" fill="#5e7d63" />
+                            <circle cx="32" cy="22" r="3" fill="#5e7d63" />
+                            <circle cx="40" cy="26" r="3" fill="#5e7d63" />
+                        </svg>
+                        <span>Jardinería</span>
                     </div>
-                    <div class="strength-bar">
-                        <div class="strength-fill" id="strength-fill"></div>
-                    </div>
-                    <div class="strength-label" id="strength-label"></div>
-                </div>
-
-                <!-- Confirmar clave -->
-                <div class="field">
-                    <label for="reg-pass2">Confirmá tu clave</label>
-                    <div class="input-icon">
-                        <i class="ti ti-lock-check icon" aria-hidden="true"></i>
-                        <input type="password" id="reg-pass2" name="password2" required placeholder="Repetí la clave"
-                            autocomplete="new-password" />
-                        <button type="button" class="toggle-pass" data-target="reg-pass2"
-                            aria-label="Mostrar/ocultar clave">
-                            <i class="ti ti-eye" aria-hidden="true"></i>
-                        </button>
+                    <div class="icon-chip">
+                        <svg viewBox="0 0 64 64">
+                            <circle cx="32" cy="32" r="30" fill="#44707c" opacity="0.12" />
+                            <rect x="16" y="34" width="32" height="6" fill="#44707c" />
+                            <path d="M16 34c0-6 32-6 32 0" stroke="#44707c" stroke-width="3" fill="none" />
+                        </svg>
+                        <span>Piletas</span>
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn" id="reg-btn">
-                    <i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta
+                <div class="feature-row">
+                    <div class="ico"><i class="ti ti-eyeglass" aria-hidden="true"></i></div>
+                    <div class="txt">
+                        <strong>¿Querés conocerla antes de registrarte?</strong>
+                        <p>Podés ingresar como visitante y recorrer el directorio libremente. Para agregar
+                            proveedores o dejar opiniones, eso sí, vas a necesitar registrarte con tus propios
+                            datos.</p>
+                    </div>
+                </div>
+
+                <div class="feature-row">
+                    <div class="ico"><i class="ti ti-user-plus" aria-hidden="true"></i></div>
+                    <div class="txt">
+                        <strong>El registro es simple</strong>
+                        <p>Solo necesitás datos básicos y un correo electrónico. Así cada aporte queda asociado a
+                            quien lo hizo, y todos sabemos quién recomienda qué. Cuantos más vecinos participen,
+                            más útil es para todos.</p>
+                    </div>
+                </div>
+
+                <button type="button" class="more-toggle" id="more-toggle">
+                    Conocé más sobre EntreVecinos <i class="ti ti-chevron-down" aria-hidden="true"></i>
                 </button>
 
-                <p style="
-              font-size: 0.8rem;
-              color: var(--ink-soft);
-              margin-top: 0.85rem;
-              margin-bottom: 0;
-            ">
-                    Al registrarte recibirás un correo de confirmación. Tenés que
-                    validarlo antes de poder ingresar.
-                </p>
-            </form>
+                <div class="more-content" id="more-content">
+                    <p><strong>EntreVecinos</strong> está pensado para proveedores de uso habitual y continuo: el electricista, el
+                        plomero, alimentos, jardineros, cloro para piletas, etc. No es el lugar indicado para
+                        publicar ventas puntuales, como la de un auto o un electrodoméstico.</p>
+                    <p>El mayor valor del directorio viene de que seamos los propios vecinos quienes presentemos a
+                        los proveedores que conocemos o usamos. Los datos que aparecen hoy fueron cargados por el
+                        usuario Administrador a partir de las últimas publicaciones en el chat del barrio, solo
+                        como punto de partida. La idea es que, de ahora en adelante, cada proveedor sea presentado
+                        por el vecino que lo conoce o lo recomienda.</p>
+                    <p>Como este registro inicial no fue consultado previamente con los proveedores involucrados,
+                        si alguno prefiere que sus datos no aparezcan en el directorio, puede solicitarlo
+                        escribiendo a <a href="mailto:dev.bdt.reg@gmail.com">dev.bdt.reg@gmail.com</a> y se
+                        eliminarán de inmediato.</p>
+                    <p>Si ya usaste alguno de los proveedores que figuran y querés compartir tu experiencia, podés
+                        hacerlo registrándote e ingresando con tu clave personal.</p>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <footer>Entre Vecinos · Altos y Campo</footer>
+        <!-- <footer>
+            Una iniciativa gratuita, construida entre todos · Altos &amp; Campo Grande
+        </footer> -->
+    </div>
 
     <script>
         // const API = 'http://localhost:3000/api/dv';
@@ -595,11 +930,8 @@
         // ----------------------------------------------------------
         //  API helper
         // ----------------------------------------------------------
-
         async function apiFetch(path, options = {}) {
             const token = sessionStorage.getItem("dv_token");
-
-            console.log("TOKEN EN APIFETCH:", token);
 
             const res = await fetch(API + path, {
                 ...options,
@@ -616,11 +948,6 @@
                 throw new Error(json.error || json.message || "Error desconocido");
             }
 
-            console.log("HEADERS ENVIADOS:", {
-                "Content-Type": "application/json",
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            });
-
             return json.data;
         }
 
@@ -629,16 +956,10 @@
         // ----------------------------------------------------------
         document.querySelectorAll(".tab").forEach((tab) => {
             tab.addEventListener("click", () => {
-                document
-                    .querySelectorAll(".tab")
-                    .forEach((t) => t.classList.remove("active"));
-                document
-                    .querySelectorAll(".panel")
-                    .forEach((p) => p.classList.add("hidden"));
+                document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+                document.querySelectorAll(".panel").forEach((p) => p.classList.add("hidden"));
                 tab.classList.add("active");
-                document
-                    .getElementById("panel-" + tab.dataset.tab)
-                    .classList.remove("hidden");
+                document.getElementById("panel-" + tab.dataset.tab).classList.remove("hidden");
                 clearMessages();
             });
         });
@@ -665,59 +986,64 @@
                 const input = document.getElementById(btn.dataset.target);
                 const showing = input.type === "text";
                 input.type = showing ? "password" : "text";
-                btn.querySelector("i").className = showing
-                    ? "ti ti-eye"
-                    : "ti ti-eye-off";
+                btn.querySelector("i").className = showing ? "ti ti-eye" : "ti ti-eye-off";
             });
+        });
+
+        // ----------------------------------------------------------
+        //  "Conocé más" colapsable
+        // ----------------------------------------------------------
+        document.getElementById("more-toggle").addEventListener("click", () => {
+            const toggle = document.getElementById("more-toggle");
+            const content = document.getElementById("more-content");
+            const opening = !content.classList.contains("show");
+            content.classList.toggle("show");
+            toggle.classList.toggle("open");
+            toggle.innerHTML = opening
+                ? 'Ocultar <i class="ti ti-chevron-down" aria-hidden="true"></i>'
+                : 'Conocé más sobre EntreVecinos <i class="ti ti-chevron-down" aria-hidden="true"></i>';
         });
 
         // ----------------------------------------------------------
         //  LOGIN
         // ----------------------------------------------------------
-        document
-            .getElementById("login-form")
-            .addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById("login-btn");
-                const email = e.target.email.value.trim();
-                const pass = e.target.password.value;
+        document.getElementById("login-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("login-btn");
+            const email = e.target.email.value.trim();
+            const pass = e.target.password.value;
 
-                document.getElementById("login-error").classList.remove("show");
-                btn.disabled = true;
-                btn.textContent = "Verificando…";
+            document.getElementById("login-error").classList.remove("show");
+            btn.disabled = true;
+            btn.textContent = "Verificando…";
 
-                try {
-                    const res = await fetch(API + "/auth/login", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ email, password: pass }),
-                    });
+            try {
+                const res = await fetch(API + "/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password: pass }),
+                });
 
-                    const data = await res.json();
+                const data = await res.json();
 
-                    if (!data.ok) {
-                        throw new Error(data.error || "Correo o clave incorrectos.");
-                    }
-
-                    sessionStorage.setItem("dv_user", JSON.stringify(data.data.user));
-                    sessionStorage.setItem("dv_token", data.data.token);
-
-                    if (data.data.user.debe_cambiar_clave) {
-                        window.location.href = "cambiar-clave.html";
-                    } else {
-                        window.location.href = "directorio-vecinal.html";
-                    }
-
-                    console.log("TOKEN:", sessionStorage.getItem("dv_token"));
-                } catch (err) {
-                    showMsg("login-error", err.message);
-                    btn.disabled = false;
-                    btn.innerHTML =
-                        '<i class="ti ti-login" aria-hidden="true"></i> Ingresar';
+                if (!data.ok) {
+                    throw new Error(data.error || "Correo o clave incorrectos.");
                 }
-            });
+
+                sessionStorage.setItem("dv_user", JSON.stringify(data.data.user));
+                sessionStorage.setItem("dv_token", data.data.token);
+
+                if (data.data.user.debe_cambiar_clave) {
+                    window.location.href = "cambiar-clave.html";
+                } else {
+                    window.location.href = "directorio-vecinal.html";
+                }
+            } catch (err) {
+                showMsg("login-error", err.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ti ti-login" aria-hidden="true"></i> Ingresar';
+            }
+        });
 
         // ----------------------------------------------------------
         //  OLVIDÉ MI CLAVE
@@ -727,31 +1053,28 @@
             panel.style.display = panel.style.display === "none" ? "block" : "none";
         });
 
-        document
-            .getElementById("forgot-btn")
-            .addEventListener("click", async () => {
-                const email = document.getElementById("forgot-email").value.trim();
-                if (!email) {
-                    showMsg("login-error", "Ingresá tu correo.");
-                    return;
-                }
-                const btn = document.getElementById("forgot-btn");
-                btn.disabled = true;
-                btn.textContent = "Enviando…";
-                try {
-                    await apiFetch("/auth/recuperar", {
-                        method: "POST",
-                        body: JSON.stringify({ email }),
-                    });
-                    document.getElementById("forgot-panel").innerHTML =
-                        '<div class="msg msg--ok show">Te enviamos un enlace al correo. Revisá también tu carpeta de spam.</div>';
-                } catch (err) {
-                    showMsg("login-error", err.message);
-                    btn.disabled = false;
-                    btn.innerHTML =
-                        '<i class="ti ti-send" aria-hidden="true"></i> Enviar enlace';
-                }
-            });
+        document.getElementById("forgot-btn").addEventListener("click", async () => {
+            const email = document.getElementById("forgot-email").value.trim();
+            if (!email) {
+                showMsg("login-error", "Ingresá tu correo.");
+                return;
+            }
+            const btn = document.getElementById("forgot-btn");
+            btn.disabled = true;
+            btn.textContent = "Enviando…";
+            try {
+                await apiFetch("/auth/recuperar", {
+                    method: "POST",
+                    body: JSON.stringify({ email }),
+                });
+                document.getElementById("forgot-panel").innerHTML =
+                    '<div class="msg msg--ok show">Te enviamos un enlace al correo. Revisá también tu carpeta de spam.</div>';
+            } catch (err) {
+                showMsg("login-error", err.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ti ti-send" aria-hidden="true"></i> Enviar enlace';
+            }
+        });
 
         // ----------------------------------------------------------
         //  FUERZA DE CLAVE
@@ -795,90 +1118,82 @@
         // ----------------------------------------------------------
         //  REGISTRO
         // ----------------------------------------------------------
-        document
-            .getElementById("register-form")
-            .addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById("reg-btn");
-                document.getElementById("reg-error").classList.remove("show");
+        document.getElementById("register-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("reg-btn");
+            document.getElementById("reg-error").classList.remove("show");
 
-                const nombre = document.getElementById("reg-nombre").value.trim();
-                const barrio = document.getElementById("reg-barrio").value;
-                const lote = document.getElementById("reg-lote").value.trim();
-                const wa = document.getElementById("reg-wa").value.trim();
-                const email = document.getElementById("reg-email").value.trim();
-                const pass = document.getElementById("reg-pass").value;
-                const pass2 = document.getElementById("reg-pass2").value;
-                const fotoEl = document.getElementById("reg-foto");
+            const nombre = document.getElementById("reg-nombre").value.trim();
+            const barrio = document.getElementById("reg-barrio").value;
+            const lote = document.getElementById("reg-lote").value.trim();
+            const wa = document.getElementById("reg-wa").value.trim();
+            const email = document.getElementById("reg-email").value.trim();
+            const pass = document.getElementById("reg-pass").value;
+            const pass2 = document.getElementById("reg-pass2").value;
+            const fotoEl = document.getElementById("reg-foto");
 
-                // Validaciones del lado cliente
-                if (!nombre)
-                    return showMsg(
-                        "reg-error",
-                        "El nombre y apellido son obligatorios.",
-                    );
-                if (!barrio) return showMsg("reg-error", "Seleccioná tu barrio.");
-                if (!lote)
-                    return showMsg("reg-error", "El número de lote es obligatorio.");
-                if (!wa)
-                    return showMsg(
-                        "reg-error",
-                        "El número de WhatsApp es obligatorio.",
-                    );
-                if (!email)
-                    return showMsg(
-                        "reg-error",
-                        "El correo electrónico es obligatorio.",
-                    );
-                if (pass.length < 8)
-                    return showMsg(
-                        "reg-error",
-                        "La clave debe tener al menos 8 caracteres.",
-                    );
-                if (pass !== pass2)
-                    return showMsg("reg-error", "Las claves no coinciden.");
+            if (!nombre) return showMsg("reg-error", "El nombre y apellido son obligatorios.");
+            if (!barrio) return showMsg("reg-error", "Seleccioná tu barrio.");
+            if (!lote) return showMsg("reg-error", "El número de lote es obligatorio.");
+            if (!wa) return showMsg("reg-error", "El número de WhatsApp es obligatorio.");
+            if (!email) return showMsg("reg-error", "El correo electrónico es obligatorio.");
+            if (pass.length < 8) return showMsg("reg-error", "La clave debe tener al menos 8 caracteres.");
+            if (pass !== pass2) return showMsg("reg-error", "Las claves no coinciden.");
 
-                btn.disabled = true;
-                btn.textContent = "Creando cuenta…";
+            btn.disabled = true;
+            btn.textContent = "Creando cuenta…";
 
-                try {
-                    // Leer foto como base64 si la eligieron
-                    let fotoB64 = null;
-                    if (fotoEl.files[0]) {
-                        fotoB64 = await new Promise((res, rej) => {
-                            const r = new FileReader();
-                            r.onload = () => res(r.result);
-                            r.onerror = rej;
-                            r.readAsDataURL(fotoEl.files[0]);
-                        });
-                    }
-
-                    await apiFetch("/auth/registro", {
-                        method: "POST",
-                        body: JSON.stringify({
-                            nombre,
-                            barrio,
-                            lote,
-                            whatsapp: wa,
-                            email,
-                            password: pass,
-                            foto: fotoB64,
-                        }),
+            try {
+                let fotoB64 = null;
+                if (fotoEl.files[0]) {
+                    fotoB64 = await new Promise((res, rej) => {
+                        const r = new FileReader();
+                        r.onload = () => res(r.result);
+                        r.onerror = rej;
+                        r.readAsDataURL(fotoEl.files[0]);
                     });
-
-                    // Mostrar confirmación y ocultar el form
-                    document.getElementById("register-form").style.display = "none";
-                    showMsg(
-                        "reg-ok",
-                        `¡Cuenta creada! Te enviamos un correo a ${email}. Hacé clic en el enlace para activar tu cuenta.`,
-                    );
-                } catch (err) {
-                    showMsg("reg-error", err.message);
-                    btn.disabled = false;
-                    btn.innerHTML =
-                        '<i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta';
                 }
-            });
+
+                await apiFetch("/auth/registro", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        nombre, barrio, lote, whatsapp: wa, email, password: pass, foto: fotoB64,
+                    }),
+                });
+
+                document.getElementById("register-form").style.display = "none";
+                showMsg("reg-ok", `¡Cuenta creada! Te enviamos un correo a ${email}. Hacé clic en el enlace para activar tu cuenta.`);
+            } catch (err) {
+                showMsg("reg-error", err.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta';
+            }
+        });
+
+        // ----------------------------------------------------------
+        //  ENTRAR COMO VISITANTE
+        // ----------------------------------------------------------
+        document.getElementById('visitante-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('visitante-btn');
+            btn.disabled = true;
+            btn.innerHTML = 'Ingresando…';
+
+            try {
+                const res = await fetch(API + '/auth/visitante', { method: 'POST' });
+                const data = await res.json();
+
+                if (!data.ok) throw new Error(data.error || 'No se pudo ingresar como visitante.');
+
+                sessionStorage.setItem('dv_user', JSON.stringify(data.data.user));
+                sessionStorage.setItem('dv_token', data.data.token);
+
+                window.location.href = 'directorio-vecinal.html';
+            } catch (err) {
+                showMsg('login-error', err.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ti ti-eyeglass" aria-hidden="true"></i> Entrar como visitante';
+            }
+        });
     </script>
 </body>
 

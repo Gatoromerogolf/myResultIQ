@@ -29,12 +29,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     function dvAuth(req, res, next) {
         const header = req.headers.authorization;
 
-        // console.log("AUTH HEADER 0 (routes_dv.js):", header);
-        // console.log("AUTH HEADER (routes_dv.js):", req.headers.authorization);
-        // console.log("TOKEN RAW (routes_dv.js):", header);
-        // console.log("SECRET USED (routes_dv.js):", JWT_SECRET);
-        // console.log("VERIFY PAYLOAD (routes_dv.js):", jwt.decode(header?.slice(7)));
-
         if (!header?.startsWith('Bearer '))
             return dvErr(res, 'Acceso no autorizado.', 401);
         try {
@@ -43,6 +37,13 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch {
             dvErr(res, 'Sesión expirada o token inválido.', 401);
         }
+    }
+
+    function bloquearVisitante(req, res, next) {
+        if (req.dvUser?.rol === 'visitante') {
+            return dvErr(res, 'Necesitás una cuenta registrada para hacer esto.', 403);
+        }
+        next();
     }
 
     // ----------------------------------------------------------
@@ -300,6 +301,33 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch (e) { dvErr(res, e.message); }
     });
 
+
+    // POST /api/dv/auth/visitante
+    app.post('/api/dv/auth/visitante', async (req, res) => {
+        try {
+            const token = jwt.sign(
+                { id: 9999, nombre: 'Visitante', barrio: 'altos', email: 'visitante@no-existe.local', rol: 'visitante' },
+                JWT_SECRET,
+                { expiresIn: '8h' }
+            );
+
+            dvOk(res, {
+                token,
+                user: {
+                    id: 9999,
+                    nombre: 'Visitante',
+                    barrio: 'altos',
+                    lote: '0',
+                    whatsapp: '',
+                    email: 'visitante@no-existe.local',
+                    foto_b64: null,
+                    debe_cambiar_clave: false,
+                    rol: 'visitante'
+                }
+            });
+        } catch (e) { dvErr(res, e.message); }
+    });
+
     // ----------------------------------------------------------
     //  RUBROS
     // ----------------------------------------------------------
@@ -376,7 +404,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     });
 
     // POST /api/dv/proveedores  (requiere dvAuth)
-    app.post('/api/dv/proveedores', dvAuth, async (req, res) => {
+    app.post('/api/dv/proveedores', dvAuth, bloquearVisitante, async (req, res) => {
         const { nombre, rubro_id, tipo = 'externo', zona = null,
             telefono = null, descripcion = null, images = [] } = req.body;
 
@@ -430,7 +458,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch (e) { dvErr(res, e.message); }
     });
 
-    app.post('/api/dv/proveedores/:id/imagenes', dvAuth, async (req, res) => {
+    app.post('/api/dv/proveedores/:id/imagenes', dvAuth, bloquearVisitante, async (req, res) => {
         const { images = [] } = req.body;
         if (!images.length) return dvErr(res, 'No se recibieron imágenes.', 400);
         try {
@@ -490,7 +518,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch (e) { dvErr(res, e.message); }
     });
 
-    app.post('/api/dv/proveedores/:id/resenas', dvAuth, async (req, res) => {
+    app.post('/api/dv/proveedores/:id/resenas', dvAuth, bloquearVisitante, async (req, res) => {
         const { calificacion, comentario, fecha_trabajo = null } = req.body;
         if (!comentario?.trim()) return dvErr(res, 'El comentario es obligatorio.', 400);
         if (!calificacion || calificacion < 1 || calificacion > 5)
@@ -511,7 +539,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     //  RECOMENDACIONES
     // ----------------------------------------------------------
 
-    app.post('/api/dv/proveedores/:id/recomendar', dvAuth, async (req, res) => {
+    app.post('/api/dv/proveedores/:id/recomendar', dvAuth, bloquearVisitante, async (req, res) => {
         try {
             await pool.query(
                 'INSERT INTO db_recomendaciones (proveedor_id, usuario_id) VALUES (?, ?)',
