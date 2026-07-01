@@ -261,7 +261,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                     'INSERT INTO db_tokens_recuperacion (usuario_id, token, expira_en) VALUES (?, ?, ?)',
                     [rows[0].id, token, expira]
                 );
-                const link = `${APP_URL}/cambiar-clave_dv.html?token=${token}`;
+                const link = `${APP_URL}/cambiar-clave.html?token=${token}`;
                 await sendMail(
                     email,
                     'Recuperación de clave — Directorio Vecinal',
