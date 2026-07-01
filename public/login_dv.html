@@ -632,9 +632,26 @@
                             </div>
                         </div>
 
-                        <div style="text-align: right; margin-bottom: 1rem">
+                        <div
+                            style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 1rem">
+                            <button type="button" class="link-btn" id="resend-link">
+                                Reenviar verificación
+                            </button>
                             <button type="button" class="link-btn" id="forgot-link">
-                                <!-- Olvidé mi clave -->
+                                Olvidé mi clave
+                            </button>
+                        </div>
+
+                        <div id="resend-panel" style="display:none; margin-bottom: 1rem;">
+                            <div class="field">
+                                <label for="resend-email">Correo electrónico</label>
+                                <div class="input-icon">
+                                    <i class="ti ti-mail icon" aria-hidden="true"></i>
+                                    <input type="email" id="resend-email" placeholder="tu@correo.com" />
+                                </div>
+                            </div>
+                            <button type="button" class="submit-btn" id="resend-btn">
+                                <i class="ti ti-send" aria-hidden="true"></i> Reenviar enlace de verificación
                             </button>
                         </div>
 
@@ -817,7 +834,8 @@
                 <h2>El directorio del barrio, hecho entre todos</h2>
                 <p>¿Necesitás un plomero, un electricista, un pintor? Ahora podés consultar qué proveedores ya
                     usaron tus vecinos de Altos y Campo Grande, y qué les pareció.</p>
-                <p><strong>EntreVecinos</strong> es una aplicación gratuita donde cualquier vecino puede registrar proveedores y
+                <p><strong>EntreVecinos</strong> es una aplicación gratuita donde cualquier vecino puede registrar
+                    proveedores y
                     dejar su opinión sobre el trabajo realizado. No es una simple lista de teléfonos: cada reseña
                     describe qué se hizo exactamente, para que puedas evaluar si ese proveedor se ajusta a lo que
                     necesitás. No es lo mismo el plomero que cambió un cuerito que el que instaló un termotanque
@@ -897,7 +915,8 @@
                 </button>
 
                 <div class="more-content" id="more-content">
-                    <p><strong>EntreVecinos</strong> está pensado para proveedores de uso habitual y continuo: el electricista, el
+                    <p><strong>EntreVecinos</strong> está pensado para proveedores de uso habitual y continuo: el
+                        electricista, el
                         plomero, alimentos, jardineros, cloro para piletas, etc. No es el lugar indicado para
                         publicar ventas puntuales, como la de un auto o un electrodoméstico.</p>
                     <p>El mayor valor del directorio viene de que seamos los propios vecinos quienes presentemos a
@@ -970,6 +989,7 @@
                 m.textContent = "";
             });
             document.getElementById("forgot-panel").style.display = "none";
+            document.getElementById("resend-panel").style.display = "none";
         }
 
         function showMsg(id, text) {
@@ -1073,6 +1093,38 @@
                 showMsg("login-error", err.message);
                 btn.disabled = false;
                 btn.innerHTML = '<i class="ti ti-send" aria-hidden="true"></i> Enviar enlace';
+            }
+        });
+
+
+        // ----------------------------------------------------------
+        //  REENVIAR VERIFICACIÓN
+        // ----------------------------------------------------------
+        document.getElementById("resend-link").addEventListener("click", () => {
+            const panel = document.getElementById("resend-panel");
+            panel.style.display = panel.style.display === "none" ? "block" : "none";
+        });
+
+        document.getElementById("resend-btn").addEventListener("click", async () => {
+            const email = document.getElementById("resend-email").value.trim();
+            if (!email) {
+                showMsg("login-error", "Ingresá tu correo.");
+                return;
+            }
+            const btn = document.getElementById("resend-btn");
+            btn.disabled = true;
+            btn.textContent = "Enviando…";
+            try {
+                await apiFetch("/auth/reenviar-verificacion", {
+                    method: "POST",
+                    body: JSON.stringify({ email }),
+                });
+                document.getElementById("resend-panel").innerHTML =
+                    '<div class="msg msg--ok show">Te reenviamos el enlace de verificación. Revisá también tu carpeta de spam.</div>';
+            } catch (err) {
+                showMsg("login-error", err.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ti ti-send" aria-hidden="true"></i> Reenviar enlace de verificación';
             }
         });
 

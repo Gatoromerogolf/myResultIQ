@@ -367,7 +367,7 @@
     </form>
   </div>
 
-  <footer>EntreVecinos · Altos y Campo</footer>
+  <footer>Directorio Vecinal · Altos y Campo</footer>
 
   <script>
     // const API = 'http://localhost:3000/api/dv';
@@ -401,20 +401,16 @@
         'Elegí una clave que solo conozcas vos.';
 
     } else if (userRaw && sessionToken) {
-      // ---- Flujo: cambio de clave (usuario logueado) ----
+      // ---- Flujo: cambio de clave provisoria (usuario logueado) ----
       user = JSON.parse(userRaw);
-      modo = 'sesion';
 
-      if (user.debe_cambiar_clave) {
-        // Cambio obligatorio (primer ingreso con clave provisoria)
+      if (!user.debe_cambiar_clave) {
+        // Ya cambió la clave — no tiene nada que hacer acá
+        window.location.replace('directorio-vecinal.html');
+      } else {
+        modo = 'sesion';
         document.getElementById('saludo').innerHTML =
           `Hola, <strong>${user.nombre}</strong>. Elegí una clave que solo conozcas vos.`;
-      } else {
-        // Cambio voluntario — el usuario ya tiene clave definitiva
-        document.getElementById('notice-texto').textContent =
-          'Elegí una nueva clave para tu cuenta.';
-        document.getElementById('saludo').innerHTML =
-          `Hola, <strong>${user.nombre}</strong>. Ingresá tu clave actual y elegí una nueva.`;
       }
 
     } else {

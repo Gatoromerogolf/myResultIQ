@@ -74,15 +74,24 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         try {
             const claveHash = await bcrypt.hash(password, SALT);
             const token = crypto.randomBytes(32).toString('hex');
-            const expira = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hs
+            // const expira = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hs
+
+            //     await pool.query(
+            //         `INSERT INTO db_usuarios
+            //    (nombre, barrio, lote, whatsapp, email, clave_hash, foto_b64,
+            //     token_verificacion, token_expira_en, debe_cambiar_clave)
+            //  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+            //         [nombre.trim(), barrio, lote.trim(), whatsapp.trim(),
+            //         email.trim().toLowerCase(), claveHash, foto, token, expira]
+            //     );
 
             await pool.query(
                 `INSERT INTO db_usuarios
-           (nombre, barrio, lote, whatsapp, email, clave_hash, foto_b64,
-            token_verificacion, token_expira_en, debe_cambiar_clave)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+                    (nombre, barrio, lote, whatsapp, email, clave_hash, foto_b64,
+                        token_verificacion, token_expira_en, debe_cambiar_clave)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR), 1)`,
                 [nombre.trim(), barrio, lote.trim(), whatsapp.trim(),
-                email.trim().toLowerCase(), claveHash, foto, token, expira]
+                email.trim().toLowerCase(), claveHash, foto, token]
             );
 
             const link = `${APP_URL}/api/dv/auth/verificar?token=${token}`;
@@ -256,10 +265,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             );
             if (rows.length) {
                 const token = crypto.randomBytes(32).toString('hex');
-                const expira = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hs
                 await pool.query(
-                    'INSERT INTO db_tokens_recuperacion (usuario_id, token, expira_en) VALUES (?, ?, ?)',
-                    [rows[0].id, token, expira]
+                    'INSERT INTO db_tokens_recuperacion (usuario_id, token, expira_en) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 2 HOUR))',
+                    [rows[0].id, token]
                 );
                 const link = `${APP_URL}/cambiar-clave.html?token=${token}`;
                 await sendMail(
@@ -274,6 +282,46 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 );
             }
             dvOk(res, { mensaje: 'Si el correo existe, recibirás un enlace.' });
+        } catch (e) { dvErr(res, e.message); }
+    });
+
+    // POST /api/dv/auth/reenviar-verificacion
+    app.post('/api/dv/auth/reenviar-verificacion', async (req, res) => {
+        const { email } = req.body;
+        if (!email) return dvErr(res, 'El correo es obligatorio.', 400);
+
+        try {
+            const [rows] = await pool.query(
+                `SELECT id, nombre FROM db_usuarios
+             WHERE email = ? AND activo = 1 AND email_verificado = 0 LIMIT 1`,
+                [email.trim().toLowerCase()]
+            );
+
+            if (rows.length) {
+                const token = crypto.randomBytes(32).toString('hex');
+                await pool.query(
+                    `UPDATE db_usuarios
+                    SET token_verificacion = ?, token_expira_en = DATE_ADD(NOW(), INTERVAL 24 HOUR)
+                    WHERE id = ?`,
+                    [token, rows[0].id]
+                );
+
+                const link = `${APP_URL}/api/dv/auth/verificar?token=${token}`;
+                await sendMail(
+                    email,
+                    'Verificá tu cuenta — Directorio Vecinal',
+                    '',
+                    `<p>Hola <strong>${rows[0].nombre}</strong>,</p>
+                    <p>Hacé clic en el siguiente enlace para activar tu cuenta:</p>
+                    <p><a href="${link}" style="color:#5e7d63;font-weight:bold;">Activar mi cuenta</a></p>
+                    <p>El enlace expira en 24 horas.</p>
+                    <p style="color:#9a948a;font-size:12px;">Si no creaste esta cuenta, ignorá este correo.</p>`,
+                    true
+                );
+            }
+
+            // Mismo mensaje exista o no la cuenta, para no filtrar qué mails están registrados
+            dvOk(res, { mensaje: 'Si el correo existe y está pendiente de verificación, te reenviamos el enlace.' });
         } catch (e) { dvErr(res, e.message); }
     });
 

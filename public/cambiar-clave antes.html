@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cambiar clave — EntreVecinos</title>
+  <title>Cambiar clave — Directorio Vecinal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -289,28 +289,24 @@
       color: var(--ink-soft);
       text-align: center;
     }
-
-    .oculto {
-      display: none !important;
-    }
   </style>
 </head>
 
 <body>
 
   <div class="hero">
-    <h1 class="logo">Entre<span class="accent">Vecinos</span></h1>
+    <h1 class="logo">Directorio <span class="accent">Vecinal</span></h1>
     <p>Altos y Campo</p>
   </div>
 
   <div class="card">
 
-    <div class="notice" id="notice">
+    <div class="notice">
       <i class="ti ti-shield-lock"></i>
-      <span id="notice-texto">Es tu primer ingreso. Por seguridad debés elegir una clave personal antes de continuar.</span>
+      <span>Es tu primer ingreso. Por seguridad debés elegir una clave personal antes de continuar.</span>
     </div>
 
-    <h2 class="card-title" id="card-title">Elegí tu clave</h2>
+    <h2 class="card-title">Elegí tu clave</h2>
     <p class="card-sub" id="saludo">Bienvenido/a.</p>
 
     <div class="msg msg--error" id="form-error"></div>
@@ -318,11 +314,11 @@
 
     <form id="cambio-form" novalidate>
 
-      <div class="field" id="campo-clave-actual">
+      <div class="field">
         <label for="clave-actual">Clave actual (provisoria)</label>
         <div class="input-icon">
           <i class="ti ti-lock icon"></i>
-          <input type="password" id="clave-actual" placeholder="••••••••">
+          <input type="password" id="clave-actual" required placeholder="••••••••">
           <button type="button" class="toggle-pass" data-target="clave-actual">
             <i class="ti ti-eye"></i>
           </button>
@@ -367,7 +363,7 @@
     </form>
   </div>
 
-  <footer>EntreVecinos · Altos y Campo</footer>
+  <footer>Directorio Vecinal · Altos y Campo</footer>
 
   <script>
     // const API = 'http://localhost:3000/api/dv';
@@ -377,50 +373,33 @@
         : "/api/dv";
 
     // ----------------------------------------------------------
-    //  Detectar el flujo: recuperación por link de mail (?token=)
-    //  o cambio de clave provisoria con sesión activa
+    //  Verificar que hay sesión activa con cambio pendiente
     // ----------------------------------------------------------
     const urlParams = new URLSearchParams(window.location.search);
     const resetToken = urlParams.get('token');
 
     const userRaw = sessionStorage.getItem('dv_user');
-    const sessionToken = sessionStorage.getItem('dv_token');
+    const token = sessionStorage.getItem('dv_token');
 
-    let modo = null; // 'reset' | 'sesion'
-    let user = null;
 
-    if (resetToken) {
-      // ---- Flujo: recuperación por mail (usuario NO logueado) ----
-      modo = 'reset';
+    console.log("userRaw:", userRaw);
+    console.log("token:", token);
 
-      document.getElementById('campo-clave-actual').classList.add('oculto');
-      document.getElementById('notice-texto').textContent =
-        'Estás restableciendo tu clave a partir del enlace que te enviamos por correo.';
-      document.getElementById('card-title').textContent = 'Elegí tu nueva clave';
-      document.getElementById('saludo').textContent =
-        'Elegí una clave que solo conozcas vos.';
-
-    } else if (userRaw && sessionToken) {
-      // ---- Flujo: cambio de clave (usuario logueado) ----
-      user = JSON.parse(userRaw);
-      modo = 'sesion';
-
-      if (user.debe_cambiar_clave) {
-        // Cambio obligatorio (primer ingreso con clave provisoria)
-        document.getElementById('saludo').innerHTML =
-          `Hola, <strong>${user.nombre}</strong>. Elegí una clave que solo conozcas vos.`;
-      } else {
-        // Cambio voluntario — el usuario ya tiene clave definitiva
-        document.getElementById('notice-texto').textContent =
-          'Elegí una nueva clave para tu cuenta.';
-        document.getElementById('saludo').innerHTML =
-          `Hola, <strong>${user.nombre}</strong>. Ingresá tu clave actual y elegí una nueva.`;
-      }
-
-    } else {
-      // Ni token de recuperación en la URL, ni sesión activa
+    if (!userRaw || !token) {
+      // No hay sesión — volver al login
       window.location.replace('login_dv.html');
     }
+
+    const user = JSON.parse(userRaw);
+
+    if (!user.debe_cambiar_clave) {
+      // Ya cambió la clave — no tiene nada que hacer acá
+      window.location.replace('directorio-vecinal.html');
+    }
+
+    // Mostrar saludo con el nombre del usuario
+    document.getElementById('saludo').innerHTML =
+      `Hola, <strong>${user.nombre}</strong>. Elegí una clave que solo conozcas vos.`;
 
     // ----------------------------------------------------------
     //  Toggle ver/ocultar clave
@@ -464,10 +443,8 @@
     function checkBtnState() {
       const nueva = document.getElementById('clave-nueva').value;
       const confirm = document.getElementById('clave-confirm').value;
-      const actualOk = modo === 'reset'
-        ? true
-        : document.getElementById('clave-actual').value.length > 0;
-      const ok = actualOk && evaluarClave(nueva) && nueva === confirm;
+      const actual = document.getElementById('clave-actual').value;
+      const ok = actual.length > 0 && evaluarClave(nueva) && nueva === confirm;
       document.getElementById('submit-btn').disabled = !ok;
     }
 
@@ -504,26 +481,14 @@
       btn.innerHTML = '<i class="ti ti-loader-2"></i> Guardando…';
 
       try {
-        let res;
-
-        if (modo === 'reset') {
-          // Restablecer clave a partir del link de recuperación
-          res = await fetch(`${API}/auth/resetear-clave`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: resetToken, clave_nueva: nueva })
-          });
-        } else {
-          // Cambiar clave provisoria estando logueado
-          res = await fetch(`${API}/auth/cambiar-clave`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${sessionToken}`
-            },
-            body: JSON.stringify({ clave_actual: actual, clave_nueva: nueva })
-          });
-        }
+        const res = await fetch(`${API}/auth/cambiar-clave`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ clave_actual: actual, clave_nueva: nueva })
+        });
 
         const json = await res.json();
 
@@ -534,22 +499,18 @@
           return;
         }
 
-        // Si veníamos de una sesión activa, actualizar sessionStorage
-        if (modo === 'sesion') {
-          user.debe_cambiar_clave = false;
-          sessionStorage.setItem('dv_user', JSON.stringify(user));
-        }
+        // Actualizar sessionStorage — ya no debe cambiar clave
+        user.debe_cambiar_clave = false;
+        sessionStorage.setItem('dv_user', JSON.stringify(user));
 
         // Mostrar éxito y redirigir
         document.getElementById('cambio-form').style.display = 'none';
         const ok = document.getElementById('form-ok');
-        ok.textContent = modo === 'reset'
-          ? '¡Clave actualizada! Redirigiendo al login…'
-          : '¡Clave actualizada! Redirigiendo al directorio…';
+        ok.textContent = '¡Clave actualizada! Redirigiendo al directorio…';
         ok.classList.add('show');
 
         setTimeout(() => {
-          window.location.replace(modo === 'reset' ? 'login_dv.html' : 'directorio-vecinal.html');
+          window.location.replace('directorio-vecinal.html');
         }, 2000);
 
       } catch (err) {
