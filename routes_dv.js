@@ -35,6 +35,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             req.dvUser = jwt.verify(header.slice(7), JWT_SECRET);
             next();
         } catch {
+            console.error('dvAuth falló:', err.message);   // 👈 agregado temporal
             dvErr(res, 'Sesión expirada o token inválido.', 401);
         }
     }
