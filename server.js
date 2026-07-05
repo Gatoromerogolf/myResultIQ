@@ -2670,7 +2670,6 @@ app.get('/api/evolucion-global', async (req, res) => {
 const routesDV = require('./routes_dv');
 // console.log("ROUTES DV:", routesDV);
 
-
 const registerDVRoutes = require('./routes_dv');
 // console.log("ANTES DE LLAMAR:", typeof registerDVRoutes);
 registerDVRoutes(app, pool, bcrypt, crypto, sendMail);

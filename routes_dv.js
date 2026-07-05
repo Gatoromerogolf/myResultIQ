@@ -55,6 +55,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         next();
     }
 
+    const registrarRutasAdminMail = require('./routes_dv_admin_mail');
+    registrarRutasAdminMail(app, pool, sendMail, dvAuth, soloAdmin);
+
     // ----------------------------------------------------------
     //  AUTENTICACIÓN DIRECTORIO VECINAL
     // ----------------------------------------------------------
