@@ -1066,6 +1066,20 @@
         });
 
         // ----------------------------------------------------------
+        //  Arregla cuando se vuelve con el navegador y queda congelado el LOGIN
+        // ----------------------------------------------------------
+        window.addEventListener('pageshow', function (event) {
+            // event.persisted es true cuando la página se restaura desde el bfcache
+            // (por ejemplo, al volver con "atrás" desde cualquier vista interna del directorio)
+            if (event.persisted) {
+                const btn = document.getElementById('login-btn');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ti ti-login" aria-hidden="true"></i> Ingresar';
+                document.getElementById('login-error').classList.remove('show');
+            }
+        });
+
+        // ----------------------------------------------------------
         //  OLVIDÉ MI CLAVE
         // ----------------------------------------------------------
         document.getElementById("forgot-link").addEventListener("click", () => {
