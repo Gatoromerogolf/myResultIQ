@@ -573,6 +573,100 @@
             text-align: center;
         }
 
+        .landing-carousel {
+            grid-column: 1 / -1;
+            /* si .page es CSS Grid */
+            /* o si es flexbox: */
+            /* width: 100%; flex: 1 1 100%; */
+            position: relative;
+            width: 100%;
+            height: 260px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: -1.75rem 0 1.5rem;
+            background: #2a322d;
+        }
+
+        .landing-carousel-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+            opacity: 1;
+            transition: opacity .6s ease;
+        }
+
+        .landing-carousel-slide.fading {
+            opacity: 0;
+        }
+
+        .landing-carousel-slide::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, .75) 0%, rgba(0, 0, 0, .35) 45%, rgba(0, 0, 0, 0) 80%);
+        }
+
+        .landing-carousel-info {
+            position: relative;
+            z-index: 1;
+            padding: 1.25rem 1.5rem;
+            color: #fffdf6;
+        }
+
+        .landing-carousel-info .lc-provider {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0 0 .2rem;
+        }
+
+        .landing-carousel-info .lc-desc {
+            font-size: .88rem;
+            color: #eae4d4;
+            margin: 0 0 .35rem;
+            max-width: 520px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .landing-carousel-info .lc-meta {
+            font-size: .78rem;
+            color: #d9933f;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+
+        .landing-carousel-dots {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            z-index: 2;
+            display: flex;
+            gap: 5px;
+        }
+
+        .landing-carousel-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .4);
+        }
+
+        .landing-carousel-dots span.active {
+            background: #fffdf6;
+        }
+
+        @media (max-width: 640px) {
+            .landing-carousel {
+                height: 210px;
+            }
+        }
+
         @media (min-width: 920px) {
             footer {
                 grid-column: 1 / -1;
@@ -596,6 +690,10 @@
             </p>
         </div>
 
+        <div class="landing-carousel" id="landingCarousel">
+            <div class="landing-carousel-slide" id="landingSlide"></div>
+            <div class="landing-carousel-dots" id="landingDots"></div>
+        </div>
 
         <!-- ===== COLUMNA LOGIN ===== -->
         <div class="col-login">
@@ -997,6 +1095,77 @@
             el.textContent = text;
             el.classList.add("show");
         }
+
+
+        (function () {
+            const API_BASE = window.location.hostname === 'localhost'
+                ? 'http://localhost:3000'
+                : '';
+
+            let items = [];
+            let current = 0;
+            let timer = null;
+
+            async function cargarCarouselLanding() {
+                try {
+                    const res = await fetch(`${API_BASE}/api/dv/landing/fotos-recientes`);
+                    const data = await res.json();
+                    items = data.data || data;
+                    if (items.length > 0) {
+                        renderSlide(0);
+                        renderDots();
+                        iniciarAutoplay();
+                    } else {
+                        document.getElementById('landingCarousel').style.display = 'none';
+                    }
+                } catch (err) {
+                    console.error('Error cargando carrusel del landing:', err);
+                    document.getElementById('landingCarousel').style.display = 'none';
+                }
+            }
+
+            function renderSlide(index) {
+                const item = items[index];
+                const slide = document.getElementById('landingSlide');
+                const desc = item.descripcion
+                    ? (item.descripcion.length > 130 ? item.descripcion.slice(0, 130) + '…' : item.descripcion)
+                    : 'Sin descripción todavía.';
+
+                slide.style.backgroundImage = `url('${item.imagenUrl}')`;
+                slide.innerHTML = `
+            <div class="landing-carousel-info">
+                <p class="lc-meta">${item.categoria || ''} · ${item.zona || ''}</p>
+                <p class="lc-provider">${item.proveedor}</p>
+                <p class="lc-desc">${desc}</p>
+            </div>
+        `;
+            }
+
+            function renderDots() {
+                const dots = document.getElementById('landingDots');
+                dots.innerHTML = items.map((_, i) =>
+                    `<span class="${i === current ? 'active' : ''}"></span>`
+                ).join('');
+            }
+
+            function siguienteSlide() {
+                const slide = document.getElementById('landingSlide');
+                slide.classList.add('fading');
+                setTimeout(() => {
+                    current = (current + 1) % items.length;
+                    renderSlide(current);
+                    renderDots();
+                    slide.classList.remove('fading');
+                }, 400);
+            }
+
+            function iniciarAutoplay() {
+                if (timer) clearInterval(timer);
+                timer = setInterval(siguienteSlide, 5500);
+            }
+
+            document.addEventListener('DOMContentLoaded', cargarCarouselLanding);
+        })();
 
         // ----------------------------------------------------------
         //  Toggle mostrar/ocultar clave

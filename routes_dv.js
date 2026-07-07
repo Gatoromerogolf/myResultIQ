@@ -678,4 +678,105 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             });
         } catch (e) { dvErr(res, e.message); }
     });
+
+
+    // ----------------------------------------------------------
+    //  //    1. Endpoint para el landing (público, solo fotos)
+    // ---------------------------------------------------
+
+    // GET /api/dv/landing/fotos-recientes  (sin dvAuth, es público)
+    // GET /api/dv/landing/fotos-recientes  (sin dvAuth, es público)
+    app.get('/api/dv/landing/fotos-recientes', async (req, res) => {
+        try {
+            const [rows] = await pool.query(`
+            SELECT 
+                pi.id,
+                pi.imagen_b64,
+                p.id AS proveedor_id,
+                p.nombre AS proveedor_nombre,
+                p.descripcion,
+                p.zona,
+                rb.nombre AS categoria
+            FROM db_proveedor_imagenes pi
+            JOIN db_proveedores p ON p.id = pi.proveedor_id
+            JOIN db_rubros rb ON rb.id = p.rubro_id
+            ORDER BY pi.subida_en DESC
+            LIMIT 12
+        `);
+
+            const items = rows.map(r => ({
+                id: r.id,
+                imagenUrl: r.imagen_b64,
+                proveedor: r.proveedor_nombre,
+                categoria: r.categoria,
+                zona: r.zona,
+                descripcion: r.descripcion
+            }));
+
+            dvOk(res, items);
+        } catch (err) {
+            dvErr(res, err);
+        }
+    });
+    // ----------------------------------------------------------
+    //  //        2. Endpoint para post-login (fotos + comentarios mezclados)
+    // ---------------------------------------------------
+    // GET /api/dv/actividad-reciente  (protegido con dvAuth)
+    app.get('/api/dv/actividad-reciente', dvAuth, async (req, res) => {
+        try {
+            const [rows] = await pool.query(`
+      (SELECT 
+        'foto' AS tipo,
+        pi.id AS item_id,
+        NULL AS texto,
+        pi.imagen_b64,
+        pi.mime_type,
+        p.id AS proveedor_id,
+        p.nombre AS proveedor_nombre,
+        rb.nombre AS categoria,
+        pi.subida_en AS fecha
+      FROM db_proveedor_imagenes pi
+      JOIN db_proveedores p ON p.id = pi.proveedor_id
+      JOIN db_rubros rb ON rb.id = p.rubro_id
+      ORDER BY pi.subida_en DESC
+      LIMIT 10)
+
+      UNION ALL
+
+      (SELECT 
+        'comentario' AS tipo,
+        res.id AS item_id,
+        res.comentario AS texto,
+        NULL AS imagen_b64,
+        NULL AS mime_type,
+        p.id AS proveedor_id,
+        p.nombre AS proveedor_nombre,
+        rb.nombre AS categoria,
+        res.fecha_publicacion AS fecha
+      FROM db_resenas res
+      JOIN db_proveedores p ON p.id = res.proveedor_id
+      JOIN db_rubros rb ON rb.id = p.rubro_id
+      ORDER BY res.fecha_publicacion DESC
+      LIMIT 10)
+
+      ORDER BY fecha DESC
+      LIMIT 15
+    `);
+
+            const items = rows.map(r => ({
+                tipo: r.tipo,
+                texto: r.texto,
+                imagenUrl: r.imagen_b64 || null,  // <-- ya viene completo, sin agregar prefij
+                proveedor: r.proveedor_nombre,
+                proveedorId: r.proveedor_id,
+                categoria: r.categoria,
+                fecha: r.fecha
+            }));
+
+            dvOk(res, items);
+        } catch (err) {
+            dvErr(res, err);
+        }
+    });
+
 }; 
