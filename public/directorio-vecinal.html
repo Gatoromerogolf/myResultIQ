@@ -1465,6 +1465,13 @@
             if (adminBtn) {
                 adminBtn.style.display = user?.id === 1 ? 'flex' : 'none';
             }
+
+            // Ocultar botón "cambiar clave" para el visitante
+            const cambiarClaveBtn = document.getElementById('cambiarClaveBtn');
+            if (cambiarClaveBtn) {
+                cambiarClaveBtn.style.display = user?.id === 9999 ? 'none' : 'flex';
+            }
+
         }
 
         function saludoHorario() {
