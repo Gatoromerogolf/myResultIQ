@@ -960,7 +960,7 @@
                 /* fuerza el ancho en vez de depender del eje flex */
             }
 
-            .user-badge-group {
+            /* .user-badge-group {
                 flex-wrap: wrap;
                 justify-content: flex-end;
             }
@@ -972,7 +972,43 @@
 
             .logout-btn {
                 order: 2;
+            } */
+
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+                /* para que los hijos usen el 100% del ancho */
             }
+
+            .user-badge-group {
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                /* badge a la izq, íconos a la der en su fila */
+            }
+
+            .user-badge {
+                flex: 1 1 100%;
+                min-width: 0;
+                /* clave: permite que el contenido se achique en vez de desbordar */
+            }
+
+            .user-info {
+                min-width: 0;
+                /* mismo fix, un nivel más adentro */
+            }
+
+            .user-name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                display: block;
+            }
+
+            .logout-btn {
+                order: 2;
+            }
+
         }
     </style>
 </head>
@@ -989,7 +1025,7 @@
         <div class="header-inner">
             <div>
                 <h1 class="logo">Entre<span class="accent">Vecinos</span></h1>
-                <p class="tagline">Proveedores de servicios recomendados por gente del barrio. Buscá por rubro o nombre,
+                <p class="tagline">Recomendados por gente del barrio. Buscá por rubro o nombre,
                     leé las
                     experiencias de tus vecinos y sumá la tuya.</p>
             </div>
@@ -1014,7 +1050,6 @@
                     <i class="ti ti-logout" aria-hidden="true"></i>
                 </button>
             </div>
-
         </div>
     </header>
 
