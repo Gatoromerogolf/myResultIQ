@@ -190,7 +190,7 @@
         }
 
         .search-box {
-            flex: 1 1 240px;
+            flex: 1 1 120px;
             padding: .65rem .9rem;
             border: 1px solid var(--line);
             border-radius: var(--radius);
@@ -934,9 +934,6 @@
         }
 
 
-
-
-
         @media (max-width:560px) {
             .controls {
                 flex-direction: column;
@@ -954,6 +951,13 @@
 
             .card-title {
                 margin-right: 3.6rem;
+            }
+
+            .search-box {
+                flex: 1 1 auto;
+                /* saca el basis fijo en px */
+                width: 100%;
+                /* fuerza el ancho en vez de depender del eje flex */
             }
         }
     </style>
