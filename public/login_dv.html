@@ -428,8 +428,10 @@
             align-items: center;
             gap: 0.75rem;
             margin: 1rem 0;
-            color: var(--ink-soft);
-            font-size: 0.78rem;
+            /* color: var(--ink-soft); */
+            color: red;
+            /* font-size: 0.78rem; */
+            font-size: 1.00rem;
         }
 
         .divider::before,
@@ -1237,14 +1239,42 @@
         // ----------------------------------------------------------
         //  Arregla cuando se vuelve con el navegador y queda congelado el LOGIN
         // ----------------------------------------------------------
+        // window.addEventListener('pageshow', function (event) {
+        //     // event.persisted es true cuando la página se restaura desde el bfcache
+        //     // (por ejemplo, al volver con "atrás" desde cualquier vista interna del directorio)
+        //     if (event.persisted) {
+        //         // reset botón login
+        //         const btn = document.getElementById('login-btn');
+        //         btn.disabled = false;
+        //         btn.innerHTML = '<i class="ti ti-login" aria-hidden="true"></i> Ingresar';
+        //         document.getElementById('login-error').classList.remove('show');
+
+        //         // reset botón visitante
+        //         const visitanteBtn = document.getElementById('visitante-btn');
+        //         if (visitanteBtn) {
+        //             visitanteBtn.disabled = false;
+        //             visitanteBtn.innerHTML = '<i class="ti ti-eyeglass" aria-hidden="true"></i> Entrar como visitante';
+        //         }
+        //     }
+
+        // });
         window.addEventListener('pageshow', function (event) {
-            // event.persisted es true cuando la página se restaura desde el bfcache
-            // (por ejemplo, al volver con "atrás" desde cualquier vista interna del directorio)
             if (event.persisted) {
+                // reset botón login
                 const btn = document.getElementById('login-btn');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="ti ti-login" aria-hidden="true"></i> Ingresar';
-                document.getElementById('login-error').classList.remove('show');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="ti ti-login" aria-hidden="true"></i> Ingresar';
+                }
+                const loginError = document.getElementById('login-error');
+                if (loginError) loginError.classList.remove('show');
+
+                // reset botón visitante
+                const visitanteBtn = document.getElementById('visitante-btn');
+                if (visitanteBtn) {
+                    visitanteBtn.disabled = false;
+                    visitanteBtn.innerHTML = '<i class="ti ti-eyeglass" aria-hidden="true"></i> Entrar como visitante';
+                }
             }
         });
 

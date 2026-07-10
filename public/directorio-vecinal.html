@@ -574,6 +574,26 @@
             opacity: .85;
         }
 
+        .btn-recommend-count {
+            display: inline-flex;
+            align-items: center;
+            gap: .25rem;
+            background: transparent;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: .3rem .65rem;
+            font-size: .78rem;
+            color: var(--ink-soft);
+            line-height: 1;
+            user-select: none;
+        }
+
+        .btn-recommend-count.recommended {
+            color: var(--sage);
+            border-color: var(--sage);
+            opacity: .85;
+        }
+
         .btn-more {
             background: var(--ink);
             color: var(--paper);
@@ -1481,7 +1501,7 @@
           <p class="card-desc">${p.desc || 'Sin descripción todavía.'}</p>
           <div class="card-footer">
             <span class="stars">${renderStars(p.avgRating)}</span>
-            <button class="btn-recommend" data-action="recommend" ${alreadyRecommended ? 'disabled' : ''}>👍 ${p.recommends}</button>
+            <span class="btn-recommend-count ${alreadyRecommended ? 'recommended' : ''}">👍 ${p.totalReviews}</span>
             <button class="btn-more" data-action="open">Ver más</button>
           </div>
         </article>
@@ -1763,7 +1783,7 @@
                     <strong>${p.totalReviews} comentario${p.totalReviews === 1 ? "" : "s"}</strong>
                     <span>Reputación calculada a partir de las reseñas de vecinos</span>
                     </div>
-                    // <button class="btn-recommend" data-action="recommend" data-id="${p.id}" ${alreadyRecommended ? "disabled" : ""}>👍 Recomendar (${p.recommends})</button>
+                
                 </div>
 
                 <h3>Comentarios de vecinos</h3>
@@ -1796,6 +1816,9 @@
             //   <label for="review-author">Tu nombre</label>
             //   <input type="text" id="review-author" name="author" required placeholder="Ej: Vecino de Manzana 3">
             // </div>
+
+            // sacado de la sección <div class="stamp-row" ultima linea>
+            // <button class="btn-recommend" data-action="recommend" data-id="${p.id}" ${alreadyRecommended ? "disabled" : ""}>👍 Recomendar (${p.recommends})</button>
 
 
             state.pendingRating = 0;
@@ -1924,7 +1947,6 @@
             }
         }
 
-
         (function () {
             const API_BASE = window.location.hostname === 'localhost'
                 ? 'http://localhost:3000'
@@ -2033,7 +2055,6 @@
             document.addEventListener('DOMContentLoaded', cargarActividad);
         })();
 
-
         // ------------------------------------------------------------
         //  Init
         // ------------------------------------------------------------
@@ -2136,6 +2157,7 @@
                     closeLightbox();
                 }
             });
+
             document.addEventListener('keydown', e => {
                 if (e.key === 'Escape') closeLightbox();
             });
