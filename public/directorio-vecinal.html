@@ -1271,11 +1271,12 @@
         const ACCENTS = ['sage', 'amber', 'berry', 'teal'];
 
         const state = {
-            providers: [],   // se llena desde la API
-            categories: [],   // { id, nombre, icono } desde db_rubros
+            providers: [],
+            categories: [],
             filter: { query: '', rubro_id: null, sort: 'rating' },
             recommended: new Set(),
-            pendingRating: 0
+            pendingRating: 0,
+            usuario: JSON.parse(sessionStorage.getItem('dv_user') || 'null')
         };
 
         // ------------------------------------------------------------
@@ -1339,6 +1340,21 @@
                 renderStats();
             } catch (e) {
                 showError(e.message);
+            }
+        }
+
+        async function eliminarProveedor(id) {
+            const p = state.providers.find(x => x.id === id);
+            if (!p) return;
+
+            const confirmar = confirm(`¿Seguro que querés eliminar "${p.name}" del directorio?`);
+            if (!confirmar) return;
+
+            try {
+                await apiFetch(`/proveedores/${id}`, { method: 'DELETE' });
+                await loadProviders();
+            } catch (err) {
+                alert('No se pudo eliminar el proveedor: ' + err.message);
             }
         }
 
@@ -1489,28 +1505,35 @@
                 const accent = accentFor(p.rubro);
                 const rep = reputationLevel(p.avgRating);
                 const alreadyRecommended = state.recommended.has(p.id);
+                const puedeEditar = state.usuario?.id === p.creadoPor || state.usuario?.id === 1;
                 return `
-        <article class="card" data-id="${p.id}">
-          <div class="hole hole-1"></div>
-          <div class="hole hole-2"></div>
-          <div class="tag-row">
-            <span class="rubro-tag" style="background:var(--${accent})">${rubroIcon(p.rubro)}${p.rubro}</span>
-            ${badgeTipo(p.tipo)}
-          </div>
-          <div class="stamp stamp--${rep}">
-            <strong>${p.avgRating > 0 ? p.avgRating.toFixed(1) : '—'}</strong>
-            <small>${p.totalReviews} reseña${p.totalReviews === 1 ? '' : 's'}</small>
-          </div>
-          <h3 class="card-title">${p.name}</h3>
-          <p class="card-zone">${p.zone}</p>
-          <p class="card-desc">${p.desc || 'Sin descripción todavía.'}</p>
-          <div class="card-footer">
-            <span class="stars">${renderStars(p.avgRating)}</span>
-            <span class="btn-recommend-count ${alreadyRecommended ? 'recommended' : ''}">👍 ${p.totalReviews}</span>
-            <button class="btn-more" data-action="open">Ver más</button>
-          </div>
-        </article>
-      `;
+                <article class="card" data-id="${p.id}">
+                <div class="hole hole-1"></div>
+                <div class="hole hole-2"></div>
+                <div class="tag-row">
+                    <span class="rubro-tag" style="background:var(--${accent})">${rubroIcon(p.rubro)}${p.rubro}</span>
+                    ${badgeTipo(p.tipo)}
+                </div>
+                <div class="stamp stamp--${rep}">
+                    <strong>${p.avgRating > 0 ? p.avgRating.toFixed(1) : '—'}</strong>
+                    <small>${p.totalReviews} reseña${p.totalReviews === 1 ? '' : 's'}</small>
+                </div>
+                <h3 class="card-title">${p.name}</h3>
+                <p class="card-zone">${p.zone}</p>
+                <p class="card-desc">${p.desc || 'Sin descripción todavía.'}</p>
+                ${puedeEditar ? `
+                <div class="card-owner-actions">
+                    <button class="btn-editar" data-action="editar-proveedor" data-id="${p.id}">✏️ Editar</button>
+                    <button class="btn-eliminar" data-action="eliminar-proveedor" data-id="${p.id}">🗑️ Eliminar</button>
+                </div>
+                ` : ''}
+                <div class="card-footer">
+                    <span class="stars">${renderStars(p.avgRating)}</span>
+                    <span class="btn-recommend-count ${alreadyRecommended ? 'recommended' : ''}">👍 ${p.totalReviews}</span>
+                    <button class="btn-more" data-action="open">Ver más</button>
+                </div>
+                </article>
+            `;
             }).join('');
         }
 
@@ -1865,6 +1888,7 @@
         //  Galería de imágenes — lightbox y lectura de archivos
         // ------------------------------------------------------------
         let pendingNewImages = [];
+        let editandoProveedorId = null; // null = modo alta, número = modo edición
 
         function openLightbox(src) {
             document.getElementById('lightbox-img').src = src;
@@ -2057,9 +2081,50 @@
                 return `hace ${Math.floor(diff / 86400)} días`;
             }
 
+            // function editarProveedor(id) {
+            //     const p = state.providers.find(x => x.id === id);
+            //     if (!p) return;
+
+            //     editandoProveedorId = id;
+
+            //     const form = document.getElementById('add-form');
+            //     form.name.value = p.name;
+            //     form.rubro.value = p.rubro_id;
+            //     form.tipo.value = p.tipo;
+            //     form.zone.value = p.zone;
+            //     form.phone.value = p.phone;
+            //     form.desc.value = p.desc;
+
+            //     // Cambia el texto del formulario para dejar claro que es edición
+            //     form.querySelector('.submit-btn').textContent = 'Guardar cambios';
+            //     document.querySelector('#modal-add h2').textContent = 'Editar proveedor'; // ajustar selector según tu modal
+
+            //     showModal('modal-add');
+            // }
+
             document.addEventListener('DOMContentLoaded', cargarActividad);
         })();
 
+                    function editarProveedor(id) {
+                const p = state.providers.find(x => x.id === id);
+                if (!p) return;
+
+                editandoProveedorId = id;
+
+                const form = document.getElementById('add-form');
+                form.name.value = p.name;
+                form.rubro.value = p.rubro_id;
+                form.tipo.value = p.tipo;
+                form.zone.value = p.zone;
+                form.phone.value = p.phone;
+                form.desc.value = p.desc;
+
+                // Cambia el texto del formulario para dejar claro que es edición
+                form.querySelector('.submit-btn').textContent = 'Guardar cambios';
+                document.querySelector('#modal-add h2').textContent = 'Editar proveedor'; // ajustar selector según tu modal
+
+                showModal('modal-add');
+            }
         // ------------------------------------------------------------
         //  Init
         // ------------------------------------------------------------
@@ -2109,7 +2174,7 @@
                 grid.focus({ preventScroll: true });
             });
 
-            // Grid: abrir detalle o recomendar
+            // Grid: abrir detalle, recomendar, editar o eliminar
             document.getElementById('grid').addEventListener('click', e => {
                 const card = e.target.closest('.card');
                 if (!card) return;
@@ -2117,10 +2182,21 @@
                 const action = e.target.closest('[data-action]')?.dataset.action;
                 if (action === 'open') openDetail(id);
                 if (action === 'recommend') quickRecommend(id);
+                if (action === 'editar-proveedor') editarProveedor(id);
+                if (action === 'eliminar-proveedor') eliminarProveedor(id);
             });
 
             // FAB: abrir modal de alta
-            document.getElementById('fab').addEventListener('click', () => showModal('modal-add'));
+            // FAB: abrir modal de alta
+            document.getElementById('fab').addEventListener('click', () => {
+                editandoProveedorId = null;
+                document.getElementById('add-form').reset();
+                document.getElementById('add-form').querySelector('.submit-btn').textContent = 'Agregar al directorio';
+                document.querySelector('#modal-add h2').textContent = 'Sumar un proveedor';
+                pendingNewImages = [];
+                document.getElementById('add-images-preview').innerHTML = '';
+                showModal('modal-add');
+            });
 
             // Overlay: cerrar al hacer click afuera o en botones de cierre
             document.getElementById('overlay').addEventListener('click', e => {
@@ -2233,7 +2309,7 @@
                 }
             });
 
-            // Alta de nuevo proveedor
+            // Alta y edición de nuevo proveedor
             document.getElementById('add-form').addEventListener('submit', async e => {
                 e.preventDefault();
 
@@ -2242,49 +2318,53 @@
                     return;
                 }
 
-                const token = sessionStorage.getItem('dv_token'); // 👈 AGREGAR ESTO
-
                 const form = e.target;
                 const btn = form.querySelector('.submit-btn');
                 btn.disabled = true;
-                btn.textContent = 'Guardando…';
+                btn.textContent = editandoProveedorId ? 'Guardando…' : 'Guardando…';
 
                 const payload = {
                     nombre: form.name.value.trim(),
                     rubro_id: Number(form.rubro.value),
-                    tipo: form.tipo.value,          // 'vecino' | 'externo' — pendiente de columna en DB
+                    tipo: form.tipo.value,
                     zona: form.zone.value.trim(),
                     telefono: form.phone.value.trim(),
                     descripcion: form.desc.value.trim(),
-                    images: pendingNewImages           // pendiente de tabla en DB
+                    images: pendingNewImages
                 };
 
                 try {
-                    await apiFetch('/proveedores', {
-                        method: 'POST',
-                        body: JSON.stringify(payload)
-                    });
+                    if (editandoProveedorId) {
+                        await apiFetch(`/proveedores/${editandoProveedorId}`, {
+                            method: 'PUT',
+                            body: JSON.stringify(payload)
+                        });
+                    } else {
+                        await apiFetch('/proveedores', {
+                            method: 'POST',
+                            body: JSON.stringify(payload)
+                        });
+                    }
+
                     form.reset();
                     pendingNewImages = [];
+                    editandoProveedorId = null;
+                    form.querySelector('.submit-btn').textContent = 'Agregar al directorio';
                     document.getElementById('add-images-preview').innerHTML = '';
                     closeModals();
                     state.filter.query = '';
                     document.getElementById('search').value = '';
                     await loadProviders();
                 } catch (err) {
-
-                    console.log("ERROR COMPLETO:", err);
-                    console.log("MENSAJE:", err.message);
-
                     if (err.message.includes('autorizado')) {
                         alert('Tu sesión expiró. Volvé a iniciar sesión.');
                         window.location.href = 'login_dv.html';
                         return;
                     }
-                    alert('No se pudo agregar el proveedor: ' + err.message);
+                    alert('No se pudo guardar el proveedor: ' + err.message);
                 } finally {
                     btn.disabled = false;
-                    btn.textContent = 'Agregar al directorio';
+                    if (!editandoProveedorId) btn.textContent = 'Agregar al directorio';
                 }
             });
         }

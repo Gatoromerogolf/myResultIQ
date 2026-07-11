@@ -59,6 +59,28 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         next();
     }
 
+    // Nuevo middleware
+    function esAutorOAdmin(getPropietarioId) {
+        return async (req, res, next) => {
+            try {
+                const propietarioId = await getPropietarioId(req);
+                if (propietarioId === null) {
+                    return res.status(404).json({ error: 'Recurso no encontrado.' });
+                }
+                const esAdmin = req.dvUser?.id === 1;
+                const esAutor = req.dvUser?.id === propietarioId;
+                if (!esAdmin && !esAutor) {
+                    return res.status(403).json({ error: 'No tenés permiso para modificar este recurso.' });
+                }
+                next();
+            } catch (e) {
+                console.error('ERROR en esAutorOAdmin:', e);
+                res.status(500).json({ error: 'Error verificando permisos.' });
+            }
+        };
+    }
+
+
     const registrarRutasAdminMail = require('./routes_dv_admin_mail');
     registrarRutasAdminMail(app, pool, sendMail, dvAuth, soloAdmin);
 
@@ -451,9 +473,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 FROM db_proveedores p
                 JOIN  db_rubros r               ON r.id = p.rubro_id
                 LEFT JOIN db_usuarios u         ON u.id = p.creado_por
-                LEFT JOIN db_resenas re         ON re.proveedor_id = p.id
+                LEFT JOIN db_resenas re         ON re.proveedor_id = p.id AND re.activo = 1
                 LEFT JOIN db_recomendaciones rc ON rc.proveedor_id = p.id
-                WHERE 1=1
+                WHERE p.activo =1
             `;
             const params = [];
             if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
@@ -518,6 +540,48 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         }
     });
 
+    // Traer el propietario de un proveedor
+    async function getPropietarioProveedor(req) {
+        const [[row]] = await pool.query(
+            'SELECT creado_por FROM db_proveedores WHERE id = ? AND activo = 1',
+            [req.params.id]
+        );
+        return row ? row.creado_por : null;
+    }
+
+    app.put('/api/dv/proveedores/:id', dvAuth, bloquearVisitante, esAutorOAdmin(getPropietarioProveedor), async (req, res) => {
+        const { nombre, rubro_id, tipo, zona = null, telefono = null, descripcion = null } = req.body;
+
+        if (!nombre?.trim()) return dvErr(res, 'El nombre es obligatorio.', 400);
+        if (!rubro_id) return dvErr(res, 'El rubro es obligatorio.', 400);
+        if (tipo && !['vecino', 'externo'].includes(tipo))
+            return dvErr(res, 'El tipo debe ser "vecino" o "externo".', 400);
+
+        try {
+            await pool.query(
+                `UPDATE db_proveedores
+             SET nombre = ?, rubro_id = ?, tipo = ?, zona = ?, telefono = ?, descripcion = ?
+             WHERE id = ?`,
+                [nombre.trim(), rubro_id, tipo || 'externo', zona, telefono, descripcion, req.params.id]
+            );
+            dvOk(res, { mensaje: 'Proveedor actualizado.' });
+        } catch (e) {
+            dvErr(res, e.message);
+        }
+    });
+
+    app.delete('/api/dv/proveedores/:id', dvAuth, bloquearVisitante, esAutorOAdmin(getPropietarioProveedor), async (req, res) => {
+        try {
+            await pool.query(
+                'UPDATE db_proveedores SET activo = 0, fecha_baja = NOW() WHERE id = ?',
+                [req.params.id]
+            );
+            dvOk(res, { mensaje: 'Proveedor dado de baja.' });
+        } catch (e) {
+            dvErr(res, e.message);
+        }
+    });
+
     // ----------------------------------------------------------
     //  IMÁGENES
     // ----------------------------------------------------------
@@ -578,14 +642,14 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     app.get('/api/dv/proveedores/:id/resenas', async (req, res) => {
         try {
             const [rows] = await pool.query(
-                `SELECT r.id, r.calificacion, r.comentario, r.fecha_trabajo, r.fecha_publicacion,
-                u.nombre AS autor,  
-                u.barrio AS autor_barrio,
-                u.lote   AS autor_lote
-                FROM db_resenas r
-                LEFT JOIN db_usuarios u ON u.id = r.usuario_id
-                WHERE r.proveedor_id = ?
-                ORDER BY r.fecha_publicacion DESC`,
+                `SELECT r.id, r.usuario_id, r.calificacion, r.comentario, r.fecha_trabajo, r.fecha_publicacion,
+            u.nombre AS autor,  
+            u.barrio AS autor_barrio,
+            u.lote   AS autor_lote
+            FROM db_resenas r
+            LEFT JOIN db_usuarios u ON u.id = r.usuario_id
+            WHERE r.proveedor_id = ? AND r.activo = 1
+            ORDER BY r.fecha_publicacion DESC`,
                 [req.params.id]
             );
             dvOk(res, rows);
@@ -608,6 +672,44 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             dvOk(res, { id: result.insertId });
         } catch (e) { dvErr(res, e.message); }
     });
+
+    async function getPropietarioResena(req) {
+        const [[row]] = await pool.query(
+            'SELECT usuario_id FROM db_resenas WHERE id = ? AND activo = 1',
+            [req.params.id]
+        );
+        return row ? row.usuario_id : null;
+    }
+
+    app.put('/api/dv/resenas/:id', bloquearVisitante, esAutorOAdmin(getPropietarioResena), async (req, res) => {
+        try {
+            const { calificacion, comentario, fecha_trabajo } = req.body;
+            await pool.query(
+                `UPDATE db_resenas
+       SET calificacion = ?, comentario = ?, fecha_trabajo = ?
+       WHERE id = ?`,
+                [calificacion, comentario, fecha_trabajo, req.params.id]
+            );
+            dvOk(res, { mensaje: 'Reseña actualizada.' });
+        } catch (error) {
+            console.error('ERROR EN PUT /resenas/:id:', error);
+            res.status(500).json({ message: 'Error interno', error: error.message });
+        }
+    });
+
+    app.delete('/api/dv/resenas/:id', bloquearVisitante, esAutorOAdmin(getPropietarioResena), async (req, res) => {
+        try {
+            await pool.query(
+                'UPDATE db_resenas SET activo = 0, fecha_baja = NOW() WHERE id = ?',
+                [req.params.id]
+            );
+            dvOk(res, { mensaje: 'Reseña dada de baja.' });
+        } catch (error) {
+            console.error('ERROR EN DELETE /resenas/:id:', error);
+            res.status(500).json({ message: 'Error interno', error: error.message });
+        }
+    });
+
 
     // ----------------------------------------------------------
     //  RECOMENDACIONES
