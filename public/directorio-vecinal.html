@@ -261,6 +261,11 @@
             gap: 1.25rem;
         }
 
+        #grid {
+            scroll-margin-top: 80px;
+            /* ajustá según la altura de tu header sticky */
+        }
+
         .card {
             position: relative;
             background: var(--card);
@@ -2097,6 +2102,11 @@
                 state.filter.rubro_id = btn.dataset.rubroId || null;
                 loadProviders();
                 renderPills();
+
+                const grid = document.getElementById('grid');
+                grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                grid.setAttribute('tabindex', '-1');
+                grid.focus({ preventScroll: true });
             });
 
             // Grid: abrir detalle o recomendar
