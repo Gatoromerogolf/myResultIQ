@@ -32,6 +32,17 @@ app.use('/api/auth', authRoutes);
 app.use('/api/sectores', sectoresRoutes);
 app.use('/api/auditoria', auditRoutes);
 
+// Redirect condicional según dominio: EntreVecinos entra directo a login_dv.html
+app.get('/', (req, res, next) => {
+    const host = req.hostname; // ya viene sin puerto
+
+    if (host === 'entrevecinos-cc.com.ar' || host === 'www.entrevecinos-cc.com.ar') {
+        return res.sendFile(path.join(__dirname, 'public', 'login_dv.html'));
+    }
+
+    next(); // si no es EntreVecinos, sigue el flujo normal hacia myResultIQ
+});
+
 // Archivos estáticos
 app.use(express.static('public'));
 app.use('/dist', express.static('public'));
