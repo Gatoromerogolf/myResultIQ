@@ -1144,7 +1144,11 @@
                     <textarea id="add-desc" name="desc" rows="3" placeholder="¿Qué servicios ofrece?"></textarea>
                 </div>
                 <div class="field">
+                    <!-- <label for="add-images">Folletos o imágenes (opcional)</label>
+                    <input type="file" id="add-images" name="images" accept="image/*" multiple>
+                    <div class="gallery-grid" id="add-images-preview" style="margin-top:.5rem;"></div> -->
                     <label for="add-images">Folletos o imágenes (opcional)</label>
+                    <div class="gallery-grid" id="edit-images-existing" style="margin-top:.5rem;"></div>
                     <input type="file" id="add-images" name="images" accept="image/*" multiple>
                     <div class="gallery-grid" id="add-images-preview" style="margin-top:.5rem;"></div>
                 </div>
@@ -2105,26 +2109,26 @@
             document.addEventListener('DOMContentLoaded', cargarActividad);
         })();
 
-                    function editarProveedor(id) {
-                const p = state.providers.find(x => x.id === id);
-                if (!p) return;
+        function editarProveedor(id) {
+            const p = state.providers.find(x => x.id === id);
+            if (!p) return;
 
-                editandoProveedorId = id;
+            editandoProveedorId = id;
 
-                const form = document.getElementById('add-form');
-                form.name.value = p.name;
-                form.rubro.value = p.rubro_id;
-                form.tipo.value = p.tipo;
-                form.zone.value = p.zone;
-                form.phone.value = p.phone;
-                form.desc.value = p.desc;
+            const form = document.getElementById('add-form');
+            form.name.value = p.name;
+            form.rubro.value = p.rubro_id;
+            form.tipo.value = p.tipo;
+            form.zone.value = p.zone;
+            form.phone.value = p.phone;
+            form.desc.value = p.desc;
 
-                // Cambia el texto del formulario para dejar claro que es edición
-                form.querySelector('.submit-btn').textContent = 'Guardar cambios';
-                document.querySelector('#modal-add h2').textContent = 'Editar proveedor'; // ajustar selector según tu modal
+            // Cambia el texto del formulario para dejar claro que es edición
+            form.querySelector('.submit-btn').textContent = 'Guardar cambios';
+            document.querySelector('#modal-add h2').textContent = 'Editar proveedor'; // ajustar selector según tu modal
 
-                showModal('modal-add');
-            }
+            showModal('modal-add');
+        }
         // ------------------------------------------------------------
         //  Init
         // ------------------------------------------------------------
@@ -2138,7 +2142,6 @@
 
             // Abrir modal de perfil al clickear el badge
             document.getElementById('userBadge').addEventListener('click', () => openPerfil());
-
 
             document.getElementById('logoutBtn').addEventListener('click', () => {
                 sessionStorage.removeItem('dv_user');
@@ -2187,7 +2190,6 @@
             });
 
             // FAB: abrir modal de alta
-            // FAB: abrir modal de alta
             document.getElementById('fab').addEventListener('click', () => {
                 editandoProveedorId = null;
                 document.getElementById('add-form').reset();
@@ -2235,6 +2237,20 @@
                         .catch(err => alert('No se pudo eliminar: ' + err.message));
                 }
 
+            });
+
+            document.getElementById('edit-images-existing').addEventListener('click', e => {
+                const deleteBtn = e.target.closest('[data-action="delete-existing-image"]');
+                if (!deleteBtn) return;
+                const imgId = deleteBtn.dataset.imgId;
+                if (!confirm('¿Eliminás esta imagen?')) return;
+                apiFetch(`/imagenes/${imgId}`, { method: 'DELETE' })
+                    .then(() => {
+                        deleteBtn.closest('.gallery-thumb').remove();
+                        const p = state.providers.find(x => x.id === editandoProveedorId);
+                        if (p) p.images = p.images.filter(img => String(img.id) !== imgId);
+                    })
+                    .catch(err => alert('No se pudo eliminar: ' + err.message));
             });
 
             // Lightbox: cerrar al click afuera o en la X

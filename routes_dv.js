@@ -606,7 +606,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 [req.params.id]
             );
             if (!proveedor) return dvErr(res, 'Proveedor no encontrado.', 404);
-            if (proveedor.creado_por !== req.dvUser.id)
+            if (proveedor.creado_por !== req.dvUser.id && req.dvUser.id !== 1)
                 return dvErr(res, 'Solo el creador del proveedor puede agregar imágenes.', 403);
 
 
@@ -625,7 +625,18 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch (e) { dvErr(res, e.message); }
     });
 
-    app.delete('/api/dv/imagenes/:id', dvAuth, async (req, res) => {
+    async function getPropietarioImagen(req) {
+        const [[row]] = await pool.query(
+            `SELECT p.creado_por
+     FROM db_proveedor_imagenes i
+     JOIN db_proveedores p ON p.id = i.proveedor_id
+     WHERE i.id = ?`,
+            [req.params.id]
+        );
+        return row ? row.creado_por : null;
+    }
+
+    app.delete('/api/dv/imagenes/:id', dvAuth, esAutorOAdmin(getPropietarioImagen), async (req, res) => {
         try {
             const [result] = await pool.query(
                 'DELETE FROM db_proveedor_imagenes WHERE id = ?', [req.params.id]
