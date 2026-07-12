@@ -62,6 +62,18 @@
             color: var(--sage);
         }
 
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            height: 70px;
+            width: auto;
+        }
+
         .tagline {
             margin: .5rem auto 0;
             max-width: 34rem;
@@ -1048,8 +1060,18 @@
 
     <header>
         <div class="header-inner">
-            <div>
+            <!-- <div>
                 <h1 class="logo">Entre<span class="accent">Vecinos-cc</span></h1>
+                <p class="tagline">Recomendados por gente del barrio. Buscá por rubro o nombre,
+                    leé las
+                    experiencias de tus vecinos y sumá la tuya.</p>
+            </div> -->
+
+            <div>
+                <div class="logo-wrap">
+                    <img src="assets/vecinos.png" alt="EntreVecinos-cc" class="logo-icon">
+                    <h1 class="logo">Entre<span class="accent">Vecinos-cc</span></h1>
+                </div>
                 <p class="tagline">Recomendados por gente del barrio. Buscá por rubro o nombre,
                     leé las
                     experiencias de tus vecinos y sumá la tuya.</p>
