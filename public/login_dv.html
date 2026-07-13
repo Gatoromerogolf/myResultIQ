@@ -686,6 +686,25 @@
                 grid-column: 1 / -1;
             }
         }
+
+        .landing-carousel.loading::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #2a322d 25%, #333d36 50%, #2a322d 75%);
+            background-size: 200% 100%;
+            animation: lc-shimmer 1.4s infinite;
+        }
+
+        @keyframes lc-shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
     </style>
 </head>
 

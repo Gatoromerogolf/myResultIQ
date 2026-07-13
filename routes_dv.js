@@ -646,6 +646,28 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch (e) { dvErr(res, e.message); }
     });
 
+
+    // GET binario de una imagen puntual, cacheable por el navegador/CDN
+    app.get('/api/dv/imagen/:id', async (req, res) => {
+        try {
+            const [[row]] = await pool.query(
+                'SELECT imagen_b64 FROM db_proveedor_imagenes WHERE id = ?',
+                [req.params.id]
+            );
+            if (!row) return res.status(404).end();
+
+            // por si guardaste el data-uri completo (data:image/jpeg;base64,....)
+            const matches = row.imagen_b64.match(/^data:(image\/\w+);base64,(.+)$/);
+            const mime = matches ? matches[1] : 'image/jpeg';
+            const b64 = matches ? matches[2] : row.imagen_b64;
+
+            res.set('Content-Type', mime);
+            res.set('Cache-Control', 'public, max-age=604800, immutable');
+            res.send(Buffer.from(b64, 'base64'));
+        } catch (err) {
+            dvErr(res, err);
+        }
+    });
     // ----------------------------------------------------------
     //  RESEÑAS
     // ----------------------------------------------------------
@@ -814,12 +836,12 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             JOIN db_proveedores p ON p.id = pi.proveedor_id
             JOIN db_rubros rb ON rb.id = p.rubro_id
             ORDER BY pi.subida_en DESC
-            LIMIT 12
+            LIMIT 10
         `);
 
             const items = rows.map(r => ({
                 id: r.id,
-                imagenUrl: r.imagen_b64,
+                imagenUrl: `${req.protocol}://${req.get('host')}/api/dv/imagen/${r.id}`,
                 proveedor: r.proveedor_nombre,
                 categoria: r.categoria,
                 zona: r.zona,
@@ -852,7 +874,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
       JOIN db_proveedores p ON p.id = pi.proveedor_id
       JOIN db_rubros rb ON rb.id = p.rubro_id
       ORDER BY pi.subida_en DESC
-      LIMIT 10)
+      LIMIT 6)
 
       UNION ALL
 
@@ -870,10 +892,10 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
       JOIN db_proveedores p ON p.id = res.proveedor_id
       JOIN db_rubros rb ON rb.id = p.rubro_id
       ORDER BY res.fecha_publicacion DESC
-      LIMIT 10)
+      LIMIT 6)
 
       ORDER BY fecha DESC
-      LIMIT 15
+      LIMIT 6
     `);
 
             const items = rows.map(r => ({
