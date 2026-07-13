@@ -997,20 +997,6 @@
                 /* fuerza el ancho en vez de depender del eje flex */
             }
 
-            /* .user-badge-group {
-                flex-wrap: wrap;
-                justify-content: flex-end;
-            }
-
-            .user-badge {
-                flex: 1 1 100%;
-                order: 1;
-            }
-
-            .logout-btn {
-                order: 2;
-            } */
-
             .header-inner {
                 flex-direction: column;
                 align-items: stretch;
@@ -1019,13 +1005,13 @@
 
             .user-badge-group {
                 width: 100%;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
                 justify-content: space-between;
                 /* badge a la izq, íconos a la der en su fila */
             }
 
             .user-badge {
-                flex: 1 1 100%;
+                flex: 1 1 auto;
                 min-width: 0;
                 /* clave: permite que el contenido se achique en vez de desbordar */
             }
