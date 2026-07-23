@@ -117,8 +117,8 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             await pool.query(
                 `INSERT INTO db_usuarios
                     (nombre, barrio, lote, whatsapp, email, clave_hash, foto_b64,
-                        token_verificacion, token_expira_en, debe_cambiar_clave)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR), 1)`,
+                        token_verificacion, token_expira_en, debe_cambiar_clave, sitio_web, instagram)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? DATE_ADD(NOW(), INTERVAL 24 HOUR), 1)`,
                 [nombre.trim(), barrio, lote.trim(), whatsapp.trim(),
                 email.trim().toLowerCase(), claveHash, foto, token]
             );
@@ -460,6 +460,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             let sql = `
                 SELECT
                 p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por,
+                p.sitio_web, p.instagram,
                 r.id     AS rubro_id,
                 r.nombre AS rubro,
                 r.icono  AS rubro_icono,
@@ -484,7 +485,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 const like = `%${q}%`;
                 params.push(like, like, like);
             }
-            sql += ' GROUP BY p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por, r.id, r.nombre, r.icono, u.id, u.nombre, u.barrio, u.lote';
+            sql += ' GROUP BY p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por, p.sitio_web, p.instagram, r.id, r.nombre, r.icono, u.id, u.nombre, u.barrio, u.lote';
             sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
 
             const [rows] = await pool.query(sql, params);
@@ -502,21 +503,24 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     // POST /api/dv/proveedores  (requiere dvAuth)
     app.post('/api/dv/proveedores', dvAuth, bloquearVisitante, async (req, res) => {
         const { nombre, rubro_id, tipo = 'externo', zona = null,
-            telefono = null, descripcion = null, images = [] } = req.body;
+            telefono = null, descripcion = null,  images = [] } = req.body;
 
         if (!nombre?.trim()) return dvErr(res, 'El nombre es obligatorio.', 400);
         if (!rubro_id) return dvErr(res, 'El rubro es obligatorio.', 400);
         if (!['vecino', 'externo'].includes(tipo))
             return dvErr(res, 'El tipo debe ser "vecino" o "externo".', 400);
 
+        const sitio_web = limpiarSitioWeb(req.body.sitio_web);
+        const instagram = limpiarInstagram(req.body.instagram);
+
         const conn = await pool.getConnection();
         try {
             await conn.beginTransaction();
 
             const [result] = await conn.query(
-                `INSERT INTO db_proveedores (nombre, rubro_id, creado_por, tipo, zona, telefono, descripcion)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-                [nombre.trim(), rubro_id, req.dvUser.id, tipo, zona, telefono, descripcion]
+                `INSERT INTO db_proveedores (nombre, rubro_id, creado_por, tipo, zona, telefono, descripcion, sitio_web, instagram)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [nombre.trim(), rubro_id, req.dvUser.id, tipo, zona, telefono, descripcion, sitio_web, instagram]
             );
             const proveedorId = result.insertId;
 
@@ -540,6 +544,26 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         }
     });
 
+
+    function limpiarInstagram(valor) {
+        if (!valor) return null;
+        return valor
+            .trim()
+            .replace(/^@/, '')                          // saca @ si lo pusieron
+            .replace(/^https?:\/\/(www\.)?instagram\.com\//i, '') // saca URL si pegaron el link completo
+            .replace(/\/$/, '')                          // saca barra final
+            .split('/')[0];                              // por si quedó algo después del usuario
+    }
+
+    function limpiarSitioWeb(valor) {
+        if (!valor) return null;
+        let url = valor.trim();
+        if (!/^https?:\/\//i.test(url)) {
+            url = `https://${url}`;
+        }
+        return url;
+    }
+
     // Traer el propietario de un proveedor
     async function getPropietarioProveedor(req) {
         const [[row]] = await pool.query(
@@ -557,12 +581,15 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         if (tipo && !['vecino', 'externo'].includes(tipo))
             return dvErr(res, 'El tipo debe ser "vecino" o "externo".', 400);
 
+        const sitio_web = limpiarSitioWeb(req.body.sitio_web);
+        const instagram = limpiarInstagram(req.body.instagram);
+
         try {
             await pool.query(
                 `UPDATE db_proveedores
-             SET nombre = ?, rubro_id = ?, tipo = ?, zona = ?, telefono = ?, descripcion = ?
+             SET nombre = ?, rubro_id = ?, tipo = ?, zona = ?, telefono = ?, descripcion = ?, sitio_web = ?, instagram = ?
              WHERE id = ?`,
-                [nombre.trim(), rubro_id, tipo || 'externo', zona, telefono, descripcion, req.params.id]
+                [nombre.trim(), rubro_id, tipo || 'externo', zona, telefono, descripcion, sitio_web, instagram, req.params.id]
             );
             dvOk(res, { mensaje: 'Proveedor actualizado.' });
         } catch (e) {

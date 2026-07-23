@@ -357,7 +357,7 @@
         }
 
         .gallery {
-            border-top: 1px dashed var(--line);
+            /* border-top: 1px dashed var(--line); */
             padding-top: .85rem;
             margin-top: .85rem;
         }
@@ -468,6 +468,7 @@
         }
 
         .stamp {
+            border-top: 1px dashed var(--line);
             position: absolute;
             top: 1rem;
             right: 1rem;
@@ -964,6 +965,31 @@
             background: var(--sage, #6b8e5a);
         }
 
+        .proveedor-contactos {
+            display: flex;
+            gap: .6rem;
+            margin: .75rem 0;
+            flex-wrap: wrap;
+        }
+
+        .contacto-link {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            padding: .35rem .7rem;
+            border-radius: 999px;
+            background: var(--teal-soft, #e0f2f1);
+            color: var(--ink, #333);
+            text-decoration: none;
+            font-size: .85rem;
+            transition: background .15s;
+        }
+
+        .contacto-link:hover {
+            background: var(--teal, #4db6ac);
+            color: #fff;
+        }
+
         @media (max-width: 480px) {
             .activity-text span {
                 display: none;
@@ -1150,6 +1176,20 @@
                     <label for="add-desc">Descripción breve</label>
                     <textarea id="add-desc" name="desc" rows="3" placeholder="¿Qué servicios ofrece?"></textarea>
                 </div>
+
+                <div class="field">
+                    <label for="sitio_web">Sitio web (opcional)</label>
+                    <input type="text" id="sitio_web" placeholder="www.miempresa.com.ar">
+                </div>
+
+                <div class="field">
+                    <label for="instagram">Instagram (opcional)</label>
+                    <div class="input-with-prefix">
+                        <span class="prefix">@</span>
+                        <input type="text" id="instagram" placeholder="usuario">
+                    </div>
+                </div>
+
                 <div class="field">
                     <!-- <label for="add-images">Folletos o imágenes (opcional)</label>
                     <input type="file" id="add-images" name="images" accept="image/*" multiple>
@@ -1383,13 +1423,17 @@
                 zone: p.zona || '',
                 phone: p.telefono || '',
                 desc: p.descripcion || '',
+                sitio_web: p.sitio_web || '',
+                instagram: p.instagram || '',
                 tipo: p.tipo || 'externo',   // 'vecino' | 'externo' — pendiente de columna en DB
                 images: p.images || [],         // pendiente de tabla en DB
                 avgRating: parseFloat(p.calificacion_promedio) || 0,
                 totalReviews: parseInt(p.total_resenas) || 0,
                 recommends: parseInt(p.total_recomendaciones) || 0,
-                reviews: []   // se cargan al abrir el detalle
+                reviews: []  // se cargan al abrir el detalle
+
             };
+            console.log('normalizado' + instagram)
         }
 
         // ------------------------------------------------------------
@@ -1799,12 +1843,22 @@
                 <h2>${p.name}</h2>
                 <p class="card-zone">${p.zone} · </p><h2>${p.phone}</h2>
                 <p>${p.desc || "Sin descripción todavía."}</p>
-                <p class="card-zone">
-                Presentado por: <span>${p.presentadoPor} - ${p.presentadoPorBarrio} - ${p.presentadoPorLote || "Desconocido"}</span>
-                </p>
+
+                ${(p.sitio_web || p.instagram) ? `
+                <div class="proveedor-contactos">
+                    ${p.sitio_web ? `
+                    <a href="${p.sitio_web}" target="_blank" rel="noopener noreferrer" class="contacto-link" title="Sitio web">
+                        <i class="ti ti-world"></i> Sitio web
+                    </a>` : ''}
+                    ${p.instagram ? `
+                    <a href="https://instagram.com/${p.instagram}" target="_blank" rel="noopener noreferrer" class="contacto-link" title="Instagram">
+                        <i class="ti ti-brand-instagram"></i> @${p.instagram}
+                    </a>` : ''}
+                </div>
+                ` : ''}
 
                 <div class="gallery">
-                    <p class="gallery-label">Folletos e imágenes del proveedor</p>
+
                     <div class="gallery-grid" id="gallery-grid-${id}">
                     ${galleryThumbs}
                     <button class="gallery-add" data-action="add-images" data-provider-id="${id}" title="Agregar imágenes">＋</button>
@@ -1812,6 +1866,12 @@
                     <input type="file" id="gallery-file-input" accept="image/*" multiple style="display:none">
                     <div id="gallery-upload-status" style="font-size:.8rem;color:var(--ink-soft);margin-top:.4rem;min-height:1.2rem;"></div>
                 </div>
+
+                <p class="card-zone">
+                Presentado por: <span>${p.presentadoPor} - ${p.presentadoPorBarrio} - ${p.presentadoPorLote || "Desconocido"}</span>
+                </p>
+
+                <hr class="divider-dashed">
 
                 <div class="stamp-row">
                     <div class="stamp stamp--xxl stamp--${rep}">
@@ -2086,6 +2146,8 @@
             form.zone.value = p.zone;
             form.phone.value = p.phone;
             form.desc.value = p.desc;
+            form.sitio_web.value = p.sitio_web || '';
+            form.instagram.value = p.instagram || '';
 
             // Cambia el texto del formulario para dejar claro que es edición
             form.querySelector('.submit-btn').textContent = 'Guardar cambios';
@@ -2310,6 +2372,8 @@
                     zona: form.zone.value.trim(),
                     telefono: form.phone.value.trim(),
                     descripcion: form.desc.value.trim(),
+                    sitio_web: form.sitio_web.value.trim(),
+                    instagram: form.instagram.value.trim(),
                     images: pendingNewImages
                 };
 
