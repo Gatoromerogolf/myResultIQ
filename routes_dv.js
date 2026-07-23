@@ -454,6 +454,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     //  PROVEEDORES
     // ----------------------------------------------------------
 
+
     app.get('/api/dv/proveedores', async (req, res) => {
         try {
             const { rubro_id, q } = req.query;
@@ -468,6 +469,150 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 u.nombre AS presentado_por,
                 u.barrio AS presentado_por_barrio,
                 u.lote   AS presentado_por_lote,
+                primera_img.img_id AS primera_imagen_id,
+                COALESCE(stats.calificacion_promedio, 0) AS calificacion_promedio,
+                COALESCE(stats.total_resenas, 0)         AS total_resenas,
+                COALESCE(recom.total_recomendaciones, 0) AS total_recomendaciones
+                FROM db_proveedores p
+                JOIN  db_rubros r               ON r.id = p.rubro_id
+                LEFT JOIN db_usuarios u         ON u.id = p.creado_por
+                LEFT JOIN (
+                    SELECT proveedor_id,
+                           ROUND(AVG(calificacion), 1) AS calificacion_promedio,
+                           COUNT(*) AS total_resenas
+                    FROM db_resenas
+                    WHERE activo = 1
+                    GROUP BY proveedor_id
+                ) stats ON stats.proveedor_id = p.id
+                LEFT JOIN (
+                    SELECT proveedor_id, COUNT(*) AS total_recomendaciones
+                    FROM db_recomendaciones
+                    GROUP BY proveedor_id
+                ) recom ON recom.proveedor_id = p.id
+                LEFT JOIN (
+                    SELECT pi1.proveedor_id, pi1.id AS img_id
+                    FROM db_proveedor_imagenes pi1
+                    INNER JOIN (
+                        SELECT proveedor_id, MIN(orden) AS min_orden
+                        FROM db_proveedor_imagenes
+                        GROUP BY proveedor_id
+                    ) pi2 ON pi1.proveedor_id = pi2.proveedor_id AND pi1.orden = pi2.min_orden
+                ) primera_img ON primera_img.proveedor_id = p.id
+                WHERE p.activo = 1
+            `;
+            const params = [];
+            if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
+            if (q) {
+                sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ?)';
+                const like = `%${q}%`;
+                params.push(like, like, like);
+            }
+            sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
+
+            const [rows] = await pool.query(sql, params);
+
+            const items = rows.map(r => ({
+                ...r,
+                primera_imagen: r.primera_imagen_id
+                    ? `${req.protocol}://${req.get('host')}/api/dv/imagen/${r.primera_imagen_id}`
+                    : null
+            }));
+
+            dvOk(res, items);
+        } catch (error) {
+            console.error("ERROR EN /proveedores:", error);
+            res.status(500).json({
+                message: "Error interno",
+                error: error.message
+            });
+        }
+
+    });
+
+    app.get('/api/dv/proveedores-nosirve', async (req, res) => {
+        try {
+            const { rubro_id, q } = req.query;
+            let sql = `
+                SELECT
+                p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por,
+                p.sitio_web, p.instagram,
+                r.id     AS rubro_id,
+                r.nombre AS rubro,
+                r.icono  AS rubro_icono,
+                u.id     AS presentado_por_id,
+                u.nombre AS presentado_por,
+                u.barrio AS presentado_por_barrio,
+                u.lote   AS presentado_por_lote,
+                primera_img.imagen_b64 AS primera_imagen,
+                COALESCE(stats.calificacion_promedio, 0) AS calificacion_promedio,
+                COALESCE(stats.total_resenas, 0)         AS total_resenas,
+                COALESCE(recom.total_recomendaciones, 0) AS total_recomendaciones
+                FROM db_proveedores p
+                JOIN  db_rubros r               ON r.id = p.rubro_id
+                LEFT JOIN db_usuarios u         ON u.id = p.creado_por
+                LEFT JOIN (
+                    SELECT proveedor_id,
+                           ROUND(AVG(calificacion), 1) AS calificacion_promedio,
+                           COUNT(*) AS total_resenas
+                    FROM db_resenas
+                    WHERE activo = 1
+                    GROUP BY proveedor_id
+                ) stats ON stats.proveedor_id = p.id
+                LEFT JOIN (
+                    SELECT proveedor_id, COUNT(*) AS total_recomendaciones
+                    FROM db_recomendaciones
+                    GROUP BY proveedor_id
+                ) recom ON recom.proveedor_id = p.id
+                LEFT JOIN (
+                    SELECT pi1.proveedor_id, pi1.imagen_b64
+                    FROM db_proveedor_imagenes pi1
+                    INNER JOIN (
+                        SELECT proveedor_id, MIN(orden) AS min_orden
+                        FROM db_proveedor_imagenes
+                        GROUP BY proveedor_id
+                    ) pi2 ON pi1.proveedor_id = pi2.proveedor_id AND pi1.orden = pi2.min_orden
+                ) primera_img ON primera_img.proveedor_id = p.id
+                WHERE p.activo = 1
+            `;
+            const params = [];
+            if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
+            if (q) {
+                sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ?)';
+                const like = `%${q}%`;
+                params.push(like, like, like);
+            }
+            sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
+
+            const [rows] = await pool.query(sql, params);
+            dvOk(res, rows);
+        } catch (error) {
+            console.error("ERROR EN /proveedores:", error);
+            res.status(500).json({
+                message: "Error interno",
+                error: error.message
+            });
+        }
+
+    });
+
+
+
+
+    app.get('/api/dv/proveedores-anterior', async (req, res) => {
+        try {
+            const { rubro_id, q } = req.query;
+            let sql = `
+                SELECT
+                p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por,
+                p.sitio_web, p.instagram,
+                r.id     AS rubro_id,
+                r.nombre AS rubro,
+                r.icono  AS rubro_icono,
+                u.id     AS presentado_por_id,
+                u.nombre AS presentado_por,
+                u.barrio AS presentado_por_barrio,
+                u.lote   AS presentado_por_lote,
+                primera_img.imagen_b64 AS primera_imagen,
                 ROUND(AVG(re.calificacion), 1)  AS calificacion_promedio,
                 COUNT(DISTINCT re.id)           AS total_resenas,
                 COUNT(DISTINCT rc.id)           AS total_recomendaciones
@@ -476,6 +621,15 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 LEFT JOIN db_usuarios u         ON u.id = p.creado_por
                 LEFT JOIN db_resenas re         ON re.proveedor_id = p.id AND re.activo = 1
                 LEFT JOIN db_recomendaciones rc ON rc.proveedor_id = p.id
+                LEFT JOIN (
+                    SELECT pi1.proveedor_id, pi1.imagen_b64
+                    FROM db_proveedor_imagenes pi1
+                    INNER JOIN (
+                        SELECT proveedor_id, MIN(orden) AS min_orden
+                        FROM db_proveedor_imagenes
+                        GROUP BY proveedor_id
+                    ) pi2 ON pi1.proveedor_id = pi2.proveedor_id AND pi1.orden = pi2.min_orden
+                ) primera_img ON primera_img.proveedor_id = p.id
                 WHERE p.activo =1
             `;
             const params = [];
@@ -485,7 +639,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 const like = `%${q}%`;
                 params.push(like, like, like);
             }
-            sql += ' GROUP BY p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por, p.sitio_web, p.instagram, r.id, r.nombre, r.icono, u.id, u.nombre, u.barrio, u.lote';
+            sql += ' GROUP BY p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por, p.sitio_web, p.instagram, r.id, r.nombre, r.icono, u.id, u.nombre, u.barrio, u.lote, primera_img.imagen_b64';
             sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
 
             const [rows] = await pool.query(sql, params);
@@ -501,9 +655,10 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     });
 
     // POST /api/dv/proveedores  (requiere dvAuth)
+    // POST /api/dv/proveedores  (requiere dvAuth)
     app.post('/api/dv/proveedores', dvAuth, bloquearVisitante, async (req, res) => {
         const { nombre, rubro_id, tipo = 'externo', zona = null,
-            telefono = null, descripcion = null,  images = [] } = req.body;
+            telefono = null, descripcion = null, images = [] } = req.body;
 
         if (!nombre?.trim()) return dvErr(res, 'El nombre es obligatorio.', 400);
         if (!rubro_id) return dvErr(res, 'El rubro es obligatorio.', 400);
@@ -525,7 +680,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             const proveedorId = result.insertId;
 
             if (images.length) {
-                const imgRows = images.map((dataURL, i) => [
+                const imagesComprimidas = await Promise.all(images.map(comprimirImagen));
+
+                const imgRows = imagesComprimidas.map((dataURL, i) => [
                     proveedorId, dataURL, mimeFromDataURL(dataURL), i
                 ]);
                 await conn.query(
@@ -543,7 +700,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             conn.release();
         }
     });
-
 
     function limpiarInstagram(valor) {
         if (!valor) return null;
@@ -623,6 +779,22 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch (e) { dvErr(res, e.message); }
     });
 
+
+    const sharp = require('sharp');
+
+    async function comprimirImagen(dataURL) {
+        const matches = dataURL.match(/^data:(image\/\w+);base64,(.+)$/);
+        const buffer = matches ? Buffer.from(matches[2], 'base64') : Buffer.from(dataURL, 'base64');
+
+        const comprimido = await sharp(buffer)
+            .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
+            .jpeg({ quality: 75 })
+            .toBuffer();
+
+        return `data:image/jpeg;base64,${comprimido.toString('base64')}`;
+    }
+
+
     app.post('/api/dv/proveedores/:id/imagenes', dvAuth, bloquearVisitante, async (req, res) => {
         const { images = [] } = req.body;
         if (!images.length) return dvErr(res, 'No se recibieron imágenes.', 400);
@@ -641,7 +813,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 'SELECT COALESCE(MAX(orden), -1) AS maxOrden FROM db_proveedor_imagenes WHERE proveedor_id = ?',
                 [req.params.id]
             );
-            const imgRows = images.map((dataURL, i) => [
+            const imagesComprimidas = await Promise.all(images.map(comprimirImagen));
+
+            const imgRows = imagesComprimidas.map((dataURL, i) => [
                 req.params.id, dataURL, mimeFromDataURL(dataURL), maxOrden + 1 + i
             ]);
             await pool.query(
@@ -683,10 +857,12 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             );
             if (!row) return res.status(404).end();
 
-            // por si guardaste el data-uri completo (data:image/jpeg;base64,....)
-            const matches = row.imagen_b64.match(/^data:(image\/\w+);base64,(.+)$/);
-            const mime = matches ? matches[1] : 'image/jpeg';
+            const matches = row.imagen_b64.match(/^data:([\w\/\-\.]+);base64,(.+)$/);
+            let mime = matches ? matches[1] : 'image/jpeg';
             const b64 = matches ? matches[2] : row.imagen_b64;
+
+            // Si el mime guardado es genérico, forzamos a jpeg (los bytes son una imagen real)
+            if (mime === 'application/octet-stream') mime = 'image/jpeg';
 
             res.set('Content-Type', mime);
             res.set('Cache-Control', 'public, max-age=604800, immutable');
@@ -853,7 +1029,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             const [rows] = await pool.query(`
             SELECT 
                 pi.id,
-                pi.imagen_b64,
                 p.id AS proveedor_id,
                 p.nombre AS proveedor_nombre,
                 p.descripcion,
@@ -891,7 +1066,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         'foto' AS tipo,
         pi.id AS item_id,
         NULL AS texto,
-        pi.imagen_b64,
         pi.mime_type,
         p.id AS proveedor_id,
         p.nombre AS proveedor_nombre,
@@ -909,7 +1083,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         'comentario' AS tipo,
         res.id AS item_id,
         res.comentario AS texto,
-        NULL AS imagen_b64,
         NULL AS mime_type,
         p.id AS proveedor_id,
         p.nombre AS proveedor_nombre,
@@ -928,7 +1101,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             const items = rows.map(r => ({
                 tipo: r.tipo,
                 texto: r.texto,
-                imagenUrl: r.imagen_b64 || null,  // <-- ya viene completo, sin agregar prefij
+                imagenUrl: r.tipo === 'foto'
+                    ? `${req.protocol}://${req.get('host')}/api/dv/imagen/${r.item_id}`
+                    : null,
                 proveedor: r.proveedor_nombre,
                 proveedorId: r.proveedor_id,
                 categoria: r.categoria,
@@ -941,4 +1116,4 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         }
     });
 
-}; 
+};
