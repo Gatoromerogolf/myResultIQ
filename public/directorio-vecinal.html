@@ -266,6 +266,94 @@
             margin: 0 0 1.25rem;
         }
 
+        .rubro-hint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .75rem;
+            color: var(--ink-soft);
+            margin: -.25rem 0 1rem;
+        }
+
+        .rubro-hint a {
+            color: var(--sage);
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-box {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: min(420px, 90vw);
+        }
+
+        .modal-box h3 {
+            margin: 0 0 1rem;
+        }
+
+        .modal-box label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--ink-soft);
+            margin: .75rem 0 .3rem;
+        }
+
+        .modal-box input,
+        .modal-box textarea {
+            width: 100%;
+            padding: .5rem .7rem;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: .9rem;
+            box-sizing: border-box;
+        }
+
+        .modal-box input[readonly] {
+            background: #f2f2f2;
+            color: var(--ink-soft);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: .6rem;
+            margin-top: 1.25rem;
+        }
+
+        .modal-actions button {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .75rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            padding: .5rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            border: 1px solid var(--line);
+            background: var(--card);
+        }
+
+        #rubroReqSubmit {
+            background: var(--ink);
+            color: var(--paper);
+            border-color: var(--ink);
+        }
+
+
         /* ---------- Grid & cards ---------- */
         .grid {
             display: grid;
@@ -1155,6 +1243,11 @@
 
         <div class="pills" id="pills"></div>
 
+        <p class="rubro-hint" id="rubroHint" style="display:none;">
+            ¿No está el rubro que buscás? <a href="#" id="rubroHintLink">Pedilo desde acá</a>
+        </p>
+
+
         <p class="stats" id="stats"></p>
 
         <div class="grid" id="grid"></div>
@@ -1306,7 +1399,70 @@
             </form>
         </div>
 
+        <!-- <div class="modal-overlay" id="rubroModalOverlay" style="display:none;">
+            <div class="modal-box" id="rubroModalBox">
+                <h3>Solicitar nuevo rubro</h3>
+
+                <form id="rubroRequestForm">
+                    <label for="rubroReqNombre">Tu nombre</label>
+                    <input type="text" id="rubroReqNombre" readonly>
+
+                    <label for="rubroReqNombreRubro">Rubro sugerido</label>
+                    <input type="text" id="rubroReqNombreRubro" required maxlength="60"
+                        placeholder="Ej: Jardinería, Cerrajería...">
+
+                    <label for="rubroReqDescripcion">Descripción breve</label>
+                    <textarea id="rubroReqDescripcion" required maxlength="250" rows="3"
+                        placeholder="Contanos en pocas palabras de qué se trata"></textarea>
+
+                    <div class="modal-actions">
+                        <button type="button" id="rubroReqCancel">Cancelar</button>
+                        <button type="submit" id="rubroReqSubmit">Enviar solicitud</button>
+                    </div>
+                </form>
+
+                <div id="rubroReqThanks" style="display:none;">
+                    <p>¡Gracias! Recibimos tu sugerencia y la vamos a incorporar. 🙌</p>
+                    <div class="modal-actions">
+                        <button type="button" id="rubroReqClose">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
     </div>
+
+            <div class="modal-overlay" id="rubroModalOverlay" style="display:none;">
+            <div class="modal-box" id="rubroModalBox">
+                <h3>Solicitar nuevo rubro</h3>
+
+                <form id="rubroRequestForm">
+                    <label for="rubroReqNombre">Tu nombre</label>
+                    <input type="text" id="rubroReqNombre" readonly>
+
+                    <label for="rubroReqNombreRubro">Rubro sugerido</label>
+                    <input type="text" id="rubroReqNombreRubro" required maxlength="60"
+                        placeholder="Ej: Jardinería, Cerrajería...">
+
+                    <label for="rubroReqDescripcion">Descripción breve</label>
+                    <textarea id="rubroReqDescripcion" required maxlength="250" rows="3"
+                        placeholder="Contanos en pocas palabras de qué se trata"></textarea>
+
+                    <div class="modal-actions">
+                        <button type="button" id="rubroReqCancel">Cancelar</button>
+                        <button type="submit" id="rubroReqSubmit">Enviar solicitud</button>
+                    </div>
+                </form>
+
+                <div id="rubroReqThanks" style="display:none;">
+                    <p>¡Gracias! Recibimos tu sugerencia y la vamos a incorporar. 🙌</p>
+                    <div class="modal-actions">
+                        <button type="button" id="rubroReqClose">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
 
     <div class="lightbox-overlay hidden" id="lightbox">
         <button class="lightbox-close" data-action="lightbox-close" aria-label="Cerrar imagen">✕</button>
@@ -2185,6 +2341,71 @@
 
             showModal('modal-add');
         }
+
+        // ------------------------------------------------------------
+        //  Solicitar altat de nuevo rubro
+        // ------------------------------------------------------------
+
+        // Mostrar el link solo si hay usuario logueado (no visitante)
+        const dvUser = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
+        const rubroHint = document.getElementById('rubroHint');
+
+        if (dvUser && dvUser.id !== 9999) {
+            rubroHint.style.display = 'block';
+        }
+
+        const rubroModalOverlay = document.getElementById('rubroModalOverlay');
+        const rubroRequestForm = document.getElementById('rubroRequestForm');
+        const rubroReqThanks = document.getElementById('rubroReqThanks');
+
+        document.getElementById('rubroReqCancel').addEventListener('click', () => {
+            rubroModalOverlay.style.display = 'none';
+        });
+
+        document.getElementById('rubroReqClose').addEventListener('click', () => {
+            rubroModalOverlay.style.display = 'none';
+        });
+
+        rubroRequestForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('rubroReqSubmit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            try {
+                const API_URL = `${window.location.protocol}//${window.location.hostname}${window.location.hostname === 'localhost' ? ':3000' : ''}`;
+                const token = sessionStorage.getItem('dv_token');
+
+                const res = await fetch(`${API_URL}/api/dv/rubros/solicitar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        rubro_sugerido: document.getElementById('rubroReqNombreRubro').value.trim(),
+                        descripcion: document.getElementById('rubroReqDescripcion').value.trim()
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.ok) {
+                    rubroRequestForm.style.display = 'none';
+                    rubroReqThanks.style.display = 'block';
+                } else {
+                    alert(data.error || 'No se pudo enviar la solicitud. Probá de nuevo.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error de conexión. Probá de nuevo en un momento.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar solicitud';
+            }
+        });
+
+
         // ------------------------------------------------------------
         //  Init
         // ------------------------------------------------------------
@@ -2441,11 +2662,30 @@
                     if (!editandoProveedorId) btn.textContent = 'Agregar al directorio';
                 }
             });
+
+            // Sugerencia de nuevo rubro (delegado en main, igual que pills/grid)
+            document.querySelector('main').addEventListener('click', e => {
+                if (e.target.id !== 'rubroHintLink') return;
+                e.preventDefault();
+
+                const dvUser = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
+                document.getElementById('rubroReqNombre').value = dvUser?.nombre || '';
+                rubroRequestForm.style.display = 'block';
+                rubroReqThanks.style.display = 'none';
+                rubroRequestForm.reset();
+                document.getElementById('rubroReqNombre').value = dvUser?.nombre || '';
+                rubroModalOverlay.style.display = 'flex';
+            });
+
+
+
+
+
         }
 
         init();
     </script>
-    </script>
+
 </body>
 
 </html>

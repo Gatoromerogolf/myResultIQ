@@ -1017,7 +1017,35 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch (e) { dvErr(res, e.message); }
     });
 
+    // ----------------------------------------------------------
+    //  Solicitud de nuevo rubro (envía mail a admin) - solo usuarios registrados
+    // ----------------------------------------------------------
 
+    app.post('/api/dv/rubros/solicitar', dvAuth, bloquearVisitante, async (req, res) => {
+        const { rubro_sugerido, descripcion } = req.body;
+
+        if (!rubro_sugerido || !descripcion) {
+            return dvErr(res, 'Faltan datos: rubro sugerido y descripción son obligatorios.');
+        }
+
+        try {
+            const subject = `EntreVecinos — Solicitud de nuevo rubro: ${rubro_sugerido}`;
+            const text = `Nueva solicitud de rubro\n\nUsuario: ${req.dvUser.nombre} (${req.dvUser.email || 'sin email'})\nRubro sugerido: ${rubro_sugerido}\nDescripción: ${descripcion}`;
+            const html = `
+            <h3>Nueva solicitud de rubro</h3>
+            <p><strong>Usuario:</strong> ${req.dvUser.nombre} (${req.dvUser.email || 'sin email'})</p>
+            <p><strong>Rubro sugerido:</strong> ${rubro_sugerido}</p>
+            <p><strong>Descripción:</strong> ${descripcion}</p>
+        `;
+
+            await sendMail('ruben.e.garcia@gmail.com', subject, text, html);
+
+            return dvOk(res, { mensaje: 'Solicitud enviada correctamente' });
+        } catch (err) {
+            console.error('Error enviando solicitud de rubro:', err);
+            return dvErr(res, 'No se pudo enviar la solicitud, intentá más tarde.');
+        }
+    });
     // ----------------------------------------------------------
     //  //    1. Endpoint para el landing (público, solo fotos)
     // ---------------------------------------------------
