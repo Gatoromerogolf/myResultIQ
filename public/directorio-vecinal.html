@@ -193,7 +193,7 @@
         main {
             max-width: 1120px;
             margin: 0 auto;
-            padding: 1.5rem 1.25rem 5rem;
+            padding: 1.5rem 1.25rem 1.5rem;
         }
 
         .controls {
@@ -1192,6 +1192,126 @@
             font-size: 1.3rem;
         }
 
+        .site-footer {
+            max-width: 760px;
+            margin: 0 auto 0;
+            /* antes 3rem */
+            padding: 1.5rem 1.5rem 3rem;
+            /* antes 2.5rem arriba */
+        }
+
+        .footer-intro h2 {
+            font-size: 1.75rem;
+            /* antes 1.4rem */
+            margin: 0 0 1rem;
+            color: var(--ink);
+        }
+
+        .footer-intro p {
+            margin: 0 0 .9rem;
+            font-size: 1.05rem;
+            /* nuevo, antes heredaba tamaño base */
+            line-height: 1.65;
+            color: var(--ink-soft);
+        }
+
+        .footer-lead {
+            font-size: 1.3rem;
+            /* antes 1.05rem */
+            font-weight: 600;
+            color: var(--ink) !important;
+        }
+
+        .footer-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin: 2rem 0;
+        }
+
+        .footer-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .footer-card-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .8rem;
+            /* antes .7rem */
+            letter-spacing: .1em;
+            color: var(--sage);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: .2rem .6rem;
+            display: inline-block;
+            margin-bottom: .75rem;
+        }
+
+        .footer-card h3 {
+            font-size: 1.3rem;
+            /* antes 1.05rem */
+            margin: 0 0 .75rem;
+            color: var(--ink);
+        }
+
+        .footer-card p {
+            font-size: 1.05rem;
+            /* antes .9rem */
+            line-height: 1.6;
+            color: var(--ink-soft);
+            margin: 0 0 .75rem;
+        }
+
+        .footer-note {
+            font-size: .95rem !important;
+            /* antes .82rem */
+            font-style: italic;
+            color: var(--ink-soft);
+            opacity: .85;
+        }
+
+        .footer-contact {
+            text-align: center;
+            border-top: 1px dashed var(--line);
+            padding-top: 2rem;
+            margin-top: .5rem;
+        }
+
+        .footer-contact p {
+            margin: 0 0 .6rem;
+            color: var(--ink-soft);
+            font-size: 1.05rem;
+            /* antes .9rem */
+        }
+
+        .footer-email {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            /* antes 1rem */
+            font-weight: 600;
+            color: var(--ink);
+            text-decoration: none;
+            border-bottom: 2px solid var(--sage);
+            padding-bottom: 2px;
+            display: inline-block;
+            margin-bottom: .75rem;
+        }
+
+        .footer-email:hover {
+            color: var(--sage);
+        }
+
+        @media (max-width: 600px) {
+            .footer-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+
         @media (max-width: 480px) {
             .activity-text span {
                 display: none;
@@ -1597,24 +1717,61 @@
         <img id="lightbox-img" src="" alt="" />
     </div>
 
-    <footer>
-        <strong style="font-size: 1.15rem">EntreVecinos es una iniciativa gratuita, construida entre
-            todos.</strong>
-        <br /><br />
-        El directorio crece y mejora con la participación de cada vecino.
-        <br />. . . <br />
-        Si ya usaste un proveedor, contá tu experiencia: describí qué trabajo o
-        servicio tomaste y cómo se hizo,<br />
-        así los demás vecinos pueden evaluar si ese proveedor se ajusta a lo que
-        necesitan.<br />
-        Una opinión honesta y concreta vale mucho más que una simple puntuación.
-        <br />. . . <br />
-        Es importante que califiques y comentes con responsabilidad y respeto.<br />
-        Las reseñas útiles son las que ayudan a tomar decisiones, no las que solo
-        expresan enojo o entusiasmo. <br />. . . <br />
-        Para sugerencias, consultas o reportar algún problema con la aplicación,
-        escribime a dev.bdt.reg@gmail.com.<br />
-        Toda devolución es bienvenida y agradecida.
+    <footer class="site-footer">
+        <div class="footer-intro">
+            <h2>Bienvenido a EntreVecinos</h2>
+            <p class="footer-lead">
+                EntreVecinos nació para que la ayuda que un vecino brinda hoy pueda seguir ayudando a otros mañana.
+            </p>
+            <p>
+                Cada recomendación, cada experiencia y cada nuevo contacto ayudan a construir una comunidad
+                donde encontrar una buena solución sea cada vez más fácil.
+            </p>
+            <p>
+                Muchas de las soluciones que buscamos ya forman parte de nuestra propia comunidad.
+                EntreVecinos nos ayuda a descubrirlas y a compartirlas.
+            </p>
+        </div>
+
+        <div class="footer-cards">
+            <div class="footer-card">
+                <span class="footer-card-tag">01</span>
+                <h3>Una experiencia vale más que un teléfono</h3>
+                <p>
+                    Si utilizaste un producto o contrataste un servicio, una breve descripción puede ayudar
+                    mucho más que una simple calificación.
+                </p>
+                <p>
+                    Contar <strong>qué trabajo realizó</strong>, <strong>qué producto recibiste</strong> o
+                    <strong>qué fue lo más destacable de esa experiencia</strong> ayuda a otros vecinos a
+                    decidir con mayor confianza.
+                </p>
+                <p class="footer-note">
+                    No hace falta escribir mucho. A veces, unas pocas líneas pueden orientar a quien mañana
+                    necesite resolver el mismo problema.
+                </p>
+            </div>
+
+            <div class="footer-card">
+                <span class="footer-card-tag">02</span>
+                <h3>Una comunidad se construye con confianza</h3>
+                <p>
+                    Es importante calificar y comentar con responsabilidad y respeto.
+                </p>
+                <p class="footer-note">
+                    Las reseñas más valiosas son las que describen una experiencia concreta y ayudan a otros
+                    vecinos a tomar mejores decisiones.
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-contact">
+            <p>
+                Para sugerencias, consultas o informar algún inconveniente con la aplicación, escribime a:
+            </p>
+            <a href="mailto:dev.bdt.reg@gmail.com" class="footer-email">dev.bdt.reg@gmail.com</a>
+            <p class="footer-note">Toda propuesta para seguir mejorando EntreVecinos será siempre bienvenida.</p>
+        </div>
     </footer>
 
     <script>
