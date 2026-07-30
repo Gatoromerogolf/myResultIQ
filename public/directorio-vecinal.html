@@ -1167,6 +1167,31 @@
             border-color: var(--ink);
         }
 
+
+        .detalle-contacto-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: .5rem;
+        }
+
+        .detalle-telefono {
+            margin: 0;
+        }
+
+        .detalle-contacto-botones {
+            display: flex;
+            gap: .6rem;
+        }
+
+        .btn-icon--lg {
+            width: 42px;
+            height: 42px;
+            font-size: 1.3rem;
+        }
+
         @media (max-width: 480px) {
             .activity-text span {
                 display: none;
@@ -2201,7 +2226,20 @@
                     ${badgeTipo(p.tipo)}
                 </div>
                 <h2>${p.name}</h2>
-                <p class="card-zone">${p.zone} · </p><h2>${p.phone}</h2>
+                <p class="card-zone">${p.zone}</p>
+                <div class="detalle-contacto-row">
+                    <h2 class="detalle-telefono">${p.phone || 'Sin teléfono cargado'}</h2>
+                    ${p.phone ? `
+                    <div class="detalle-contacto-botones">
+                        <button class="btn-icon btn-icon--lg" data-action="wa-proveedor-detalle" data-id="${p.id}" title="Contactar por WhatsApp">
+                            <i class="ti ti-brand-whatsapp" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn-icon btn-icon--lg" data-action="llamar-proveedor-detalle" data-id="${p.id}" title="Llamar">
+                            <i class="ti ti-phone" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    ` : ''}
+                </div>
                 <p>${p.desc || "Sin descripción todavía."}</p>
 
                 ${p.sitio_web || p.instagram
@@ -2635,7 +2673,19 @@
         }
 
 
+        function contactarWhatsapp(id) {
+            const p = state.providers.find(x => x.id === id);
+            if (!p?.phone) return;
+            const tel = normalizarTelefonoAR(p.phone);
+            const mensaje = `Hola ${p.name}! Te contacto por EntreVecinos, vi tu perfil en el directorio.`;
+            window.open(`https://wa.me/${tel}?text=${encodeURIComponent(mensaje)}`, '_blank');
+        }
 
+        function llamarProveedor(id) {
+            const p = state.providers.find(x => x.id === id);
+            if (!p?.phone) return;
+            window.location.href = `tel:+${normalizarTelefonoAR(p.phone)}`;
+        }
 
 
 
@@ -2751,6 +2801,29 @@
                 "Editar proveedor"; // ajustar selector según tu modal
 
             showModal("modal-add");
+        }
+
+        function normalizarTelefonoAR(raw) {
+            if (!raw) return '';
+            let d = raw.replace(/\D/g, ''); // solo dígitos
+
+            // Quitar prefijo de discado internacional (00)
+            if (d.startsWith('00')) d = d.slice(2);
+
+            // Quitar código de país si ya lo tenía cargado
+            if (d.startsWith('549')) {
+                d = d.slice(3);
+            } else if (d.startsWith('54')) {
+                d = d.slice(2);
+            }
+
+            // Quitar el 0 de discado nacional (ej: "011...")
+            if (d.startsWith('0')) d = d.slice(1);
+
+            // Quitar el "15" de celular local si quedó pegado tras el código de área
+            d = d.replace(/^(\d{2,4})15/, '$1');
+
+            return `549${d}`;
         }
 
         // ------------------------------------------------------------
@@ -2917,6 +2990,17 @@
             document
                 .getElementById("modal-detail")
                 .addEventListener("click", (e) => {
+                    const waBtn = e.target.closest('[data-action="wa-proveedor-detalle"]');
+                    if (waBtn) {
+                        contactarWhatsapp(Number(waBtn.dataset.id));
+                        return;
+                    }
+
+                    const callBtn = e.target.closest('[data-action="llamar-proveedor-detalle"]');
+                    if (callBtn) {
+                        llamarProveedor(Number(callBtn.dataset.id));
+                        return;
+                    }
                     const star = e.target.closest(".star");
                     if (star) {
                         const value = Number(star.dataset.value);
@@ -3177,6 +3261,8 @@
                 if (action === 'recommend') quickRecommend(id);
                 if (action === 'editar-proveedor') editarProveedor(id);
                 if (action === 'eliminar-proveedor') eliminarProveedor(id);
+                if (action === 'wa-proveedor') contactarWhatsapp(id);
+                if (action === 'llamar-proveedor') llamarProveedor(id);
 
                 if (action === 'wa-proveedor') {
                     const p = state.providers.find(x => x.id === id);
