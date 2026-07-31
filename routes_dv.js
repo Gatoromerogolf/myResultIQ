@@ -212,8 +212,8 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         try {
             const [rows] = await pool.query(
                 `SELECT id, nombre, barrio, lote, whatsapp, email, clave_hash,
-                foto_b64, email_verificado, debe_cambiar_clave, activo
-         FROM db_usuarios WHERE email = ? LIMIT 1`,
+                           foto_b64, email_verificado, debe_cambiar_clave, activo
+                FROM db_usuarios WHERE email = ? LIMIT 1`,
                 [email.trim().toLowerCase()]
             );
 
@@ -235,10 +235,33 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 { expiresIn: '8h' }
             );
 
-            await pool.query(
-                'INSERT INTO db_log_ingresos (usuario_id, tipo) VALUES (?, ?)',
-                [u.id, 'login']
-            );
+            // await pool.query(
+            //     'INSERT INTO db_log_ingresos (usuario_id, tipo) VALUES (?, ?)',
+            //     [u.id, 'login']
+            // );
+
+            const id_admin = 1
+            const esAdmin = u.id === id_admin;
+
+            if (!esAdmin) {
+
+                const { visitor_uuid } = req.body; // 👈 nuevo, viene del frontend
+
+                await pool.query(
+                    `INSERT INTO db_log_ingresos (usuario_id, tipo, visitor_uuid, fecha) 
+                     VALUES (?, ?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR))`,
+                    [u.id, u.nombre, visitor_uuid || null]
+                );
+
+                notificarIngresoAdmin({
+                    tipo: 'usuario',
+                    nombre: u.nombre,
+                    email: u.email,
+                    ip: req.headers['x-forwarded-for']?.split(',')[0].trim() || req.ip,
+                    userAgent: req.headers['user-agent'],
+                    visitorUuid: visitor_uuid, // 👈 si querés que también salga en el mail
+                });
+            }
 
             dvOk(res, {
                 token,
@@ -396,6 +419,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     // POST /api/dv/auth/visitante
     app.post('/api/dv/auth/visitante', async (req, res) => {
         try {
+
+            const { visitor_uuid } = req.body; // 👈 viene del frontend
+
             const token = jwt.sign(
                 { id: 9999, nombre: 'Visitante', barrio: 'altos', email: 'visitante@no-existe.local', rol: 'visitante' },
                 JWT_SECRET,
@@ -403,9 +429,17 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             );
 
             await pool.query(
-                'INSERT INTO db_log_ingresos (usuario_id, tipo) VALUES (?, ?)',
-                [9999, 'visitante']
+                `INSERT INTO db_log_ingresos (usuario_id, tipo, visitor_uuid, fecha) 
+                VALUES (?, ?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR))`,
+                [9999, 'visitante', visitor_uuid || null]
             );
+
+            notificarIngresoAdmin({
+                tipo: 'visitante',
+                ip: req.headers['x-forwarded-for']?.split(',')[0].trim() || req.ip,
+                userAgent: req.headers['user-agent'],
+                visitorUuid: visitor_uuid, // 👈 se lo pasás al helper
+            });
 
             dvOk(res, {
                 token,
@@ -1046,6 +1080,40 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             return dvErr(res, 'No se pudo enviar la solicitud, intentá más tarde.');
         }
     });
+
+    // ----------------------------------------------------------
+    //  Notificación de ingreso de usuario o visitante (envía mail a admin) - solo usuarios registrados
+    // ----------------------------------------------------------
+
+    function notificarIngresoAdmin({ tipo, nombre, email, ip, userAgent, visitorUuid }) {
+        const fechaHora = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });
+
+        const asunto = tipo === 'visitante'
+            ? `Ingreso de visitante - ${fechaHora}`
+            : `Ingreso de usuario - ${nombre}`;
+
+        const cuerpo = tipo === 'visitante'
+            ? `
+          <p><b>Tipo:</b> Visitante (sin registro)</p>
+          <p><b>Fecha y hora:</b> ${fechaHora}</p>
+          <p><b>IP:</b> ${ip || 'desconocida'}</p>
+          <p><b>User-Agent:</b> ${userAgent || 'desconocido'}</p>
+          <p><b>ID de visitante (uuid):</b> ${visitorUuid || 'no disponible'}</p>
+        `
+            : `
+          <p><b>Tipo:</b> Usuario registrado</p>
+          <p><b>Nombre:</b> ${nombre}</p>
+          <p><b>Email:</b> ${email}</p>
+          <p><b>Fecha y hora:</b> ${fechaHora}</p>
+          <p><b>IP:</b> ${ip || 'desconocida'}</p>
+        `;
+
+        // 👇 ahora en el orden que tu sendMail real espera: to, subject, text, html
+        sendMail('ruben.e.garcia@gmail.com', asunto, '', cuerpo)
+            .catch(err => console.error('Error enviando notificación de ingreso:', err));
+    }
+
+
     // ----------------------------------------------------------
     //  //    1. Endpoint para el landing (público, solo fotos)
     // ---------------------------------------------------

@@ -1572,7 +1572,7 @@
                 const res = await fetch(API + "/auth/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, password: pass }),
+                    body: JSON.stringify({ email, password: pass, visitor_uuid: getVisitorUuid() }),
                 });
 
                 const data = await res.json();
@@ -1803,13 +1803,28 @@
         // ----------------------------------------------------------
         //  ENTRAR COMO VISITANTE
         // ----------------------------------------------------------
+
+        function getVisitorUuid() {
+            let uuid = localStorage.getItem('dv_visitor_uuid');
+            if (!uuid) {
+                uuid = crypto.randomUUID();
+                localStorage.setItem('dv_visitor_uuid', uuid);
+            }
+            return uuid;
+        }
+
         document.getElementById('visitante-btn').addEventListener('click', async () => {
+
             const btn = document.getElementById('visitante-btn');
             btn.disabled = true;
             btn.innerHTML = 'Ingresando…';
 
             try {
-                const res = await fetch(API + '/auth/visitante', { method: 'POST' });
+                const res = await fetch(API + '/auth/visitante', {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ visitor_uuid: getVisitorUuid() }),
+                });
                 const data = await res.json();
 
                 if (!data.ok) throw new Error(data.error || 'No se pudo ingresar como visitante.');
