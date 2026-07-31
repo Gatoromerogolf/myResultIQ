@@ -18,7 +18,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
 
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-    
+
     <link rel="icon" href="/assets/favicon.ico" sizes="any">
 
     <title>EntreVecinos-cc | El directorio de proveedores construido con las recomendaciones de los vecinos</title>
@@ -29,8 +29,7 @@
     <!-- Open Graph -->
     <meta property="og:title" content="Proveedores de confianza">
 
-    <meta property="og:description"
-        content="Recomendados por los vecinos de Altos y Campo Grande.">
+    <meta property="og:description" content="Recomendados por los vecinos de Altos y Campo Grande.">
 
     <meta property="og:type" content="website">
 
@@ -58,8 +57,7 @@
 
     <meta name="twitter:title" content="Proveedores de confianza">
 
-    <meta name="twitter:description"
-        content="Recomendados por los vecinos de Altos y Campo Grande.">
+    <meta name="twitter:description" content="Recomendados por los vecinos de Altos y Campo Grande.">
 
     <meta name="twitter:image" content="https://entrevecinos-cc.com.ar/assets/opengraph3.jpg">
 
@@ -139,6 +137,10 @@
                 grid-column: 1 / -1;
                 text-align: left;
             }
+        }
+
+        .hidden {
+            display: none;
         }
 
         .logo {
@@ -761,6 +763,53 @@
                 background-position: -200% 0;
             }
         }
+
+
+        /* ---------- Acceso como invitado (primera instancia) ---------- */
+        .acceso-invitado {
+            padding: 1.5rem 1.5rem 0;
+            text-align: center;
+        }
+
+        .acceso-invitado h2 {
+            font-family: "Fraunces", serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem;
+            color: var(--ink);
+        }
+
+        .acceso-invitado p {
+            color: var(--ink-soft);
+            font-size: 0.9rem;
+            margin: 0 0 1.1rem;
+        }
+
+        /* ---------- Toggle login/registro ---------- */
+        .auth-toggle {
+            padding: 0 1.5rem 1.5rem;
+            text-align: center;
+        }
+
+        .auth-toggle p {
+            color: var(--ink-soft);
+            font-size: 0.88rem;
+            margin: 0 0 0.6rem;
+        }
+
+        .auth-toggle #auth-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+        }
+
+        /* El divider ya tiene su propio margin, pero si queda pegado al borde
+   por estar fuera de .panel, le agregamos padding lateral acá también */
+        .card>.divider {
+            margin-left: 1.5rem;
+            margin-right: 1.5rem;
+        }
     </style>
 </head>
 
@@ -799,15 +848,15 @@
         </div>
 
         <!-- ===== COLUMNA LOGIN ===== -->
-        <div class="col-login">
+        <!-- <div class="col-login">
             <div class="card">
                 <div class="tabs">
                     <button class="tab active" data-tab="login">Ingresar</button>
                     <button class="tab" data-tab="register">Registrarse</button>
-                </div>
+                </div> -->
 
-                <!-- ===== PANEL LOGIN ===== -->
-                <div class="panel" id="panel-login">
+        <!-- ===== PANEL LOGIN ===== -->
+        <!-- <div class="panel" id="panel-login">
                     <div class="msg msg--error" id="login-error"></div>
                     <div class="msg msg--ok" id="login-ok"></div>
 
@@ -859,10 +908,10 @@
                         <button type="submit" class="submit-btn" id="login-btn">
                             <i class="ti ti-login" aria-hidden="true"></i> Ingresar
                         </button>
-                    </form>
+                    </form> -->
 
-                    <!-- Panel olvidé clave (oculto por default) -->
-                    <div id="forgot-panel" style="display: none; margin-top: 1rem">
+        <!-- Panel olvidé clave (oculto por default) -->
+        <!-- <div id="forgot-panel" style="display: none; margin-top: 1rem">
                         <div class="divider">recuperar acceso</div>
                         <div class="msg msg--info" id="forgot-msg" style="display: block">
                             Ingresá tu correo y te enviamos un enlace para restablecer tu clave.
@@ -884,16 +933,16 @@
                     <button type="button" class="visitante-btn" id="visitante-btn">
                         <i class="ti ti-eyeglass" aria-hidden="true"></i> Entrar como visitante
                     </button>
-                </div>
+                </div> -->
 
-                <!-- ===== PANEL REGISTRO ===== -->
-                <div class="panel hidden" id="panel-register">
+        <!-- ===== PANEL REGISTRO ===== -->
+        <!-- <div class="panel hidden" id="panel-register">
                     <div class="msg msg--error" id="reg-error"></div>
                     <div class="msg msg--ok" id="reg-ok"></div>
 
-                    <form id="register-form" novalidate>
-                        <!-- Foto de perfil -->
-                        <div class="avatar-field">
+                    <form id="register-form" novalidate> -->
+        <!-- Foto de perfil -->
+        <!-- <div class="avatar-field">
                             <div class="avatar-preview" id="avatar-preview">
                                 <span class="placeholder"><i class="ti ti-user" aria-hidden="true"></i></span>
                             </div>
@@ -906,58 +955,58 @@
                                     aria-label="Fotografía de perfil" />
                                 <small>Opcional · se mostrará en tus reseñas</small>
                             </div>
-                        </div>
+                        </div> -->
 
-                        <!-- Nombre y apellido -->
-                        <div class="field">
+        <!-- Nombre y apellido -->
+        <!-- <div class="field">
                             <label for="reg-nombre">Nombre y apellido</label>
                             <div class="input-icon">
                                 <i class="ti ti-user icon" aria-hidden="true"></i>
                                 <input type="text" id="reg-nombre" name="nombre" required placeholder="Ej: María García"
                                     autocomplete="name" />
                             </div>
-                        </div>
+                        </div> -->
 
-                        <!-- Barrio -->
-                        <div class="field">
+        <!-- Barrio -->
+        <!-- <div class="field">
                             <label for="reg-barrio">Barrio</label>
                             <select id="reg-barrio" name="barrio" required>
                                 <option value="">— Seleccioná —</option>
                                 <option value="altos">Altos</option>
                                 <option value="campo">Campo</option>
                             </select>
-                        </div>
+                        </div> -->
 
-                        <!-- Número de lote -->
-                        <div class="field">
+        <!-- Número de lote -->
+        <!-- <div class="field">
                             <label for="reg-lote">Número de lote</label>
                             <div class="input-icon">
                                 <i class="ti ti-map-pin icon" aria-hidden="true"></i>
                                 <input type="text" id="reg-lote" name="lote" required placeholder="Ej: 42" />
                             </div>
-                        </div>
+                        </div> -->
 
-                        <!-- WhatsApp -->
-                        <div class="field">
+        <!-- WhatsApp -->
+        <!-- <div class="field">
                             <label for="reg-wa">Número de WhatsApp</label>
                             <div class="input-icon">
                                 <i class="ti ti-brand-whatsapp icon" aria-hidden="true"></i>
                                 <input type="tel" id="reg-wa" name="whatsapp" required placeholder="Ej: 11-2345-6789" />
                             </div>
-                        </div>
+                        </div> -->
 
-                        <!-- Email -->
-                        <div class="field">
+        <!-- Email -->
+        <!-- <div class="field">
                             <label for="reg-email">Correo electrónico</label>
                             <div class="input-icon">
                                 <i class="ti ti-mail icon" aria-hidden="true"></i>
                                 <input type="email" id="reg-email" name="email" required placeholder="tu@correo.com"
                                     autocomplete="email" />
                             </div>
-                        </div>
+                        </div> -->
 
-                        <!-- Clave -->
-                        <div class="field">
+        <!-- Clave -->
+        <!-- <div class="field">
                             <label for="reg-pass">Clave</label>
                             <div class="input-icon">
                                 <i class="ti ti-lock icon" aria-hidden="true"></i>
@@ -972,10 +1021,10 @@
                                 <div class="strength-fill" id="strength-fill"></div>
                             </div>
                             <div class="strength-label" id="strength-label"></div>
-                        </div>
+                        </div> -->
 
-                        <!-- Confirmar clave -->
-                        <div class="field">
+        <!-- Confirmar clave -->
+        <!-- <div class="field">
                             <label for="reg-pass2">Confirmá tu clave</label>
                             <div class="input-icon">
                                 <i class="ti ti-lock-check icon" aria-hidden="true"></i>
@@ -996,10 +1045,244 @@
                             Al registrarte recibirás un correo de confirmación. Tenés que
                             validarlo antes de poder ingresar.
                         </p>
-                    </form>
+                    </form> -->
+        <!-- </div>
+            </div>
+        </div> -->
+
+
+
+        <!-- ===== COLUMNA LOGIN ===== -->
+        <div class="col-login">
+            <div class="card">
+
+                <!-- ===== ACCESO COMO INVITADO (PRIMERA INSTANCIA) ===== -->
+                <div class="acceso-invitado">
+                    <h2 style="margin-bottom: 0.35rem;">Explorá el directorio</h2>
+                    <p style="color: var(--ink-soft); font-size: 0.9rem; margin-bottom: 1rem;">
+                        Consultá todos los proveedores recomendados por tus vecinos, sin necesidad de registrarte.
+                    </p>
+                    <button type="button" class="visitante-btn" id="visitante-btn">
+                        <i class="ti ti-eyeglass" aria-hidden="true"></i> Entrar y explorar
+                    </button>
+                </div>
+
+                <div class="divider">o también</div>
+
+                <!-- ===== TOGGLE PARA REGISTRO / LOGIN ===== -->
+                <div class="auth-toggle" id="auth-toggle-block">
+                    <p style="font-size: 0.9rem; color: var(--ink-soft); margin-bottom: 0.6rem;">
+                        ¿Vas a dar de alta un proveedor o dejar una calificación?
+                    </p>
+                    <button type="button" class="link-btn" id="auth-toggle-btn">
+                        Iniciar sesión o registrarme <i class="ti ti-chevron-down" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <!-- ===== BLOQUE LOGIN/REGISTRO (colapsado por defecto) ===== -->
+                <div id="auth-panels" class="hidden" style="margin-top: 1.25rem;">
+
+                    <div class="tabs">
+                        <button class="tab active" data-tab="login">Ingresar</button>
+                        <button class="tab" data-tab="register">Registrarse</button>
+                    </div>
+
+                    <!-- ===== PANEL LOGIN ===== -->
+                    <div class="panel" id="panel-login">
+                        <div class="msg msg--error" id="login-error"></div>
+                        <div class="msg msg--ok" id="login-ok"></div>
+
+                        <form id="login-form" novalidate>
+                            <div class="field">
+                                <label for="login-email">Correo electrónico</label>
+                                <div class="input-icon">
+                                    <i class="ti ti-mail icon" aria-hidden="true"></i>
+                                    <input type="email" id="login-email" name="email" required
+                                        placeholder="tu@correo.com" autocomplete="email" />
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="login-pass">Clave</label>
+                                <div class="input-icon">
+                                    <i class="ti ti-lock icon" aria-hidden="true"></i>
+                                    <input type="password" id="login-pass" name="password" required
+                                        placeholder="••••••••" autocomplete="current-password" />
+                                    <button type="button" class="toggle-pass" data-target="login-pass"
+                                        aria-label="Mostrar/ocultar clave">
+                                        <i class="ti ti-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div
+                                style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 1rem">
+                                <button type="button" class="link-btn" id="resend-link">
+                                    Reenviar verificación
+                                </button>
+                                <button type="button" class="link-btn" id="forgot-link">
+                                    Olvidé mi clave
+                                </button>
+                            </div>
+
+                            <div id="resend-panel" style="display:none; margin-bottom: 1rem;">
+                                <div class="field">
+                                    <label for="resend-email">Correo electrónico</label>
+                                    <div class="input-icon">
+                                        <i class="ti ti-mail icon" aria-hidden="true"></i>
+                                        <input type="email" id="resend-email" placeholder="tu@correo.com" />
+                                    </div>
+                                </div>
+                                <button type="button" class="submit-btn" id="resend-btn">
+                                    <i class="ti ti-send" aria-hidden="true"></i> Reenviar enlace de verificación
+                                </button>
+                            </div>
+
+                            <button type="submit" class="submit-btn" id="login-btn">
+                                <i class="ti ti-login" aria-hidden="true"></i> Ingresar
+                            </button>
+                        </form>
+
+                        <!-- Panel olvidé clave (oculto por default) -->
+                        <div id="forgot-panel" style="display: none; margin-top: 1rem">
+                            <div class="divider">recuperar acceso</div>
+                            <div class="msg msg--info" id="forgot-msg" style="display: block">
+                                Ingresá tu correo y te enviamos un enlace para restablecer tu clave.
+                            </div>
+                            <div class="field">
+                                <label for="forgot-email">Correo electrónico</label>
+                                <div class="input-icon">
+                                    <i class="ti ti-mail icon" aria-hidden="true"></i>
+                                    <input type="email" id="forgot-email" placeholder="tu@correo.com" />
+                                </div>
+                            </div>
+                            <button type="button" class="submit-btn" id="forgot-btn">
+                                <i class="ti ti-send" aria-hidden="true"></i> Enviar enlace
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ===== PANEL REGISTRO ===== -->
+                    <div class="panel hidden" id="panel-register">
+                        <div class="msg msg--error" id="reg-error"></div>
+                        <div class="msg msg--ok" id="reg-ok"></div>
+
+                        <form id="register-form" novalidate>
+                            <!-- Foto de perfil -->
+                            <div class="avatar-field">
+                                <div class="avatar-preview" id="avatar-preview">
+                                    <span class="placeholder"><i class="ti ti-user" aria-hidden="true"></i></span>
+                                </div>
+                                <div class="avatar-label">
+                                    <label for="reg-foto"
+                                        style="cursor:pointer; color:var(--sage); text-decoration:underline; text-underline-offset:2px;">
+                                        Elegir fotografía
+                                    </label>
+                                    <input type="file" id="reg-foto" name="foto" accept="image/*" style="display: none"
+                                        aria-label="Fotografía de perfil" />
+                                    <small>Opcional · se mostrará en tus reseñas</small>
+                                </div>
+                            </div>
+
+                            <!-- Nombre y apellido -->
+                            <div class="field">
+                                <label for="reg-nombre">Nombre y apellido</label>
+                                <div class="input-icon">
+                                    <i class="ti ti-user icon" aria-hidden="true"></i>
+                                    <input type="text" id="reg-nombre" name="nombre" required
+                                        placeholder="Ej: María García" autocomplete="name" />
+                                </div>
+                            </div>
+
+                            <!-- Barrio -->
+                            <div class="field">
+                                <label for="reg-barrio">Barrio</label>
+                                <select id="reg-barrio" name="barrio" required>
+                                    <option value="">— Seleccioná —</option>
+                                    <option value="altos">Altos</option>
+                                    <option value="campo">Campo</option>
+                                </select>
+                            </div>
+
+                            <!-- Número de lote -->
+                            <div class="field">
+                                <label for="reg-lote">Número de lote</label>
+                                <div class="input-icon">
+                                    <i class="ti ti-map-pin icon" aria-hidden="true"></i>
+                                    <input type="text" id="reg-lote" name="lote" required placeholder="Ej: 42" />
+                                </div>
+                            </div>
+
+                            <!-- WhatsApp -->
+                            <div class="field">
+                                <label for="reg-wa">Número de WhatsApp</label>
+                                <div class="input-icon">
+                                    <i class="ti ti-brand-whatsapp icon" aria-hidden="true"></i>
+                                    <input type="tel" id="reg-wa" name="whatsapp" required
+                                        placeholder="Ej: 11-2345-6789" />
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="field">
+                                <label for="reg-email">Correo electrónico</label>
+                                <div class="input-icon">
+                                    <i class="ti ti-mail icon" aria-hidden="true"></i>
+                                    <input type="email" id="reg-email" name="email" required placeholder="tu@correo.com"
+                                        autocomplete="email" />
+                                </div>
+                            </div>
+
+                            <!-- Clave -->
+                            <div class="field">
+                                <label for="reg-pass">Clave</label>
+                                <div class="input-icon">
+                                    <i class="ti ti-lock icon" aria-hidden="true"></i>
+                                    <input type="password" id="reg-pass" name="password" required
+                                        placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+                                    <button type="button" class="toggle-pass" data-target="reg-pass"
+                                        aria-label="Mostrar/ocultar clave">
+                                        <i class="ti ti-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strength-fill"></div>
+                                </div>
+                                <div class="strength-label" id="strength-label"></div>
+                            </div>
+
+                            <!-- Confirmar clave -->
+                            <div class="field">
+                                <label for="reg-pass2">Confirmá tu clave</label>
+                                <div class="input-icon">
+                                    <i class="ti ti-lock-check icon" aria-hidden="true"></i>
+                                    <input type="password" id="reg-pass2" name="password2" required
+                                        placeholder="Repetí la clave" autocomplete="new-password" />
+                                    <button type="button" class="toggle-pass" data-target="reg-pass2"
+                                        aria-label="Mostrar/ocultar clave">
+                                        <i class="ti ti-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="submit-btn" id="reg-btn">
+                                <i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta
+                            </button>
+
+                            <p
+                                style="font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.85rem; margin-bottom: 0;">
+                                Al registrarte recibirás un correo de confirmación. Tenés que
+                                validarlo antes de poder ingresar.
+                            </p>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
+
+
+
+
+
 
         <!-- ===== COLUMNA INFO ===== -->
         <div class="col-info">
@@ -1020,7 +1303,7 @@
 
                 <!-- Tira de íconos de rubros típicos -->
                 <!-- <div class="icon-strip"> -->
-                    <!-- <div class="icon-chip">
+                <!-- <div class="icon-chip">
                         <svg viewBox="0 0 64 64">
                             <circle cx="32" cy="32" r="30" fill="#44707c" opacity="0.12" />
                             <path d="M22 40c0-8 6-14 10-14s10 6 10 14" stroke="#44707c" stroke-width="3" fill="none"
@@ -1057,7 +1340,7 @@
                         </svg>
                         <span>Jardinería</span>
                     </div> -->
-                    <!-- <div class="icon-chip">
+                <!-- <div class="icon-chip">
                         <svg viewBox="0 0 64 64">
                             <circle cx="32" cy="32" r="30" fill="#44707c" opacity="0.12" />
                             <rect x="16" y="34" width="32" height="6" fill="#44707c" />
@@ -1311,6 +1594,11 @@
                 btn.disabled = false;
                 btn.innerHTML = '<i class="ti ti-login" aria-hidden="true"></i> Ingresar';
             }
+        });
+
+        document.getElementById('auth-toggle-btn').addEventListener('click', () => {
+            const panels = document.getElementById('auth-panels');
+            panels.classList.toggle('hidden');
         });
 
         // ----------------------------------------------------------
