@@ -116,9 +116,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
             await pool.query(
                 `INSERT INTO db_usuarios
-                    (nombre, barrio, lote, whatsapp, email, clave_hash, foto_b64,
-                        token_verificacion, token_expira_en, debe_cambiar_clave, sitio_web, instagram)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? DATE_ADD(NOW(), INTERVAL 24 HOUR), 1)`,
+                (nombre, barrio, lote, whatsapp, email, clave_hash, foto_b64,
+                    token_verificacion, token_expira_en, debe_cambiar_clave)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR), 1)`,
                 [nombre.trim(), barrio, lote.trim(), whatsapp.trim(),
                 email.trim().toLowerCase(), claveHash, foto, token]
             );
@@ -129,10 +129,10 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 'Verificá tu cuenta — Directorio Vecinal',
                 '',
                 `<p>Hola <strong>${nombre}</strong>,</p>
-         <p>Hacé clic en el siguiente enlace para activar tu cuenta:</p>
-         <p><a href="${link}" style="color:#5e7d63;font-weight:bold;">Activar mi cuenta</a></p>
-         <p>El enlace expira en 24 horas.</p>
-         <p style="color:#9a948a;font-size:12px;">Si no creaste esta cuenta, ignorá este correo.</p>`,
+                <p>Hacé clic en el siguiente enlace para activar tu cuenta:</p>
+                <p><a href="${link}" style="color:#5e7d63;font-weight:bold;">Activar mi cuenta</a></p>
+                <p>El enlace expira en 24 horas.</p>
+                <p style="color:#9a948a;font-size:12px;">Si no creaste esta cuenta, ignorá este correo.</p>`,
                 true  // false = SMTP Ferozo, true = Gmail — igual que en tu app
             );
 
