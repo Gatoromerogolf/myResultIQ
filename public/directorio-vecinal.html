@@ -845,6 +845,7 @@
             padding-top: 0;
         }
 
+
         .stamp-row {
             display: flex;
             align-items: center;
@@ -1158,6 +1159,25 @@
 
         #compartirRubroBox {
             width: min(480px, 92vw);
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #compartirRubroTitulo {
+            flex-shrink: 0;
+        }
+
+        .compartirRubroScroll {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            margin-bottom: 1rem;
+        }
+
+        .modal-actions {
+            flex-shrink: 0;
         }
 
         #compartirRubroCopiar,
@@ -1692,8 +1712,9 @@
         <div class="modal-box" id="compartirRubroBox">
             <h3 id="compartirRubroTitulo">Compartir rubro</h3>
 
-            <canvas id="compartirRubroCanvas"
-                style="display:block; width:100%; border-radius:10px; margin-bottom:1rem;"></canvas>
+            <div class="compartirRubroScroll">
+                <canvas id="compartirRubroCanvas" style="display:block; width:100%; border-radius:10px;"></canvas>
+            </div>
 
             <div class="modal-actions" style="justify-content: space-between;">
                 <button type="button" id="compartirRubroCerrar">Cerrar</button>
@@ -2807,8 +2828,8 @@
         function armarMensajeTextoRubro() {
             const { rubroNombre, contactos } = getContactosRubroActual();
             const lista = contactos
-                .map(c => `• ${c.nombre} — ${c.telefono} — ⭐ ${c.calificacion}`)
-                .join('\n');
+                .map(c => `• ${c.nombre} — ${c.descripcion}\n ${c.telefono} — ⭐ ${c.calificacion}`)
+                .join('\n\n');
 
             return `🏘️ *EntreVecinos — ${rubroNombre}*\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} registrado${contactos.length === 1 ? '' : 's'}\n\n${lista}\n\nMirá todos los proveedores en https://entrevecinos-cc.com.ar`;
         }
