@@ -564,6 +564,43 @@
             font-size: 1.2rem;
         }
 
+
+        .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,.5);
+    color: #fff;
+    border: none;
+    font-size: 2rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
+
+.lightbox-nav:hover { background: rgba(0,0,0,.75); }
+
+.lightbox-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .85rem;
+    background: rgba(0,0,0,.5);
+    padding: .3rem .8rem;
+    border-radius: 20px;
+}
+
+
         .stamp {
             border-top: 1px dashed var(--line);
             position: absolute;
@@ -1735,7 +1772,14 @@
         <button class="lightbox-close" data-action="lightbox-close" aria-label="Cerrar imagen">
             ✕
         </button>
+        <button class="lightbox-nav lightbox-prev" data-action="lightbox-prev" aria-label="Imagen anterior">
+            ‹
+        </button>
         <img id="lightbox-img" src="" alt="" />
+        <button class="lightbox-nav lightbox-next" data-action="lightbox-next" aria-label="Imagen siguiente">
+            ›
+        </button>
+        <div class="lightbox-counter" id="lightbox-counter"></div>
     </div>
 
     <footer class="site-footer">
@@ -2379,21 +2423,19 @@
             const userId =
                 JSON.parse(sessionStorage.getItem("dv_user") || "{}").id || null;
 
-            const galleryThumbs = (p.images || [])
-                .map(
-                    (img, i) => `
-                    <div class="gallery-thumb" data-action="view-image" data-src="${img.src}">
-                        <img src="${img.src}" alt="Imagen ${i + 1}" loading="lazy">
-                        ${userId === p.creadoPor
-                            ? `
-                        <button class="remove-img" data-action="delete-image" data-img-id="${img.id}" title="Eliminar" aria-label="Eliminar imagen">✕</button>
-                        `
-                            : ""
-                        }
-                    </div>
-                `,
-                )
-                .join("");
+const galleryThumbs = (p.images || [])
+    .map(
+        (img, i) => `
+        <div class="gallery-thumb" data-action="view-image" data-src="${img.src}" data-index="${i}">
+            <img src="${img.src}" alt="Imagen ${i + 1}" loading="lazy">
+            ${userId === p.creadoPor
+                ? `<button class="remove-img" data-action="delete-image" data-img-id="${img.id}" title="Eliminar" aria-label="Eliminar imagen">✕</button>`
+                : ""
+            }
+        </div>
+    `,
+    )
+    .join("");
 
             const modal = document.getElementById("modal-detail");
 
@@ -2442,9 +2484,8 @@
                     : ""
                 }
 
-                <div class="gallery">
-
-                    <div class="gallery-grid" id="gallery-grid-${id}">
+                <div class="gallery"> 
+                    <div class="gallery-grid" id="gallery-grid-${id}" data-provider-id="${id}">
                     ${galleryThumbs}
                     <button class="gallery-add" data-action="add-images" data-provider-id="${id}" title="Agregar imágenes">＋</button>
                     </div>
@@ -2547,10 +2588,38 @@
         let pendingNewImages = [];
         let editandoProveedorId = null; // null = modo alta, número = modo edición
 
-        function openLightbox(src) {
-            document.getElementById("lightbox-img").src = src;
-            document.getElementById("lightbox").classList.remove("hidden");
-        }
+function openLightbox(images, index) {
+    state.lightboxImages = images;
+    state.lightboxIndex = index;
+    renderLightboxImage();
+    document.getElementById("lightbox").classList.remove("hidden");
+}
+
+function renderLightboxImage() {
+    const { lightboxImages, lightboxIndex } = state;
+    const img = lightboxImages[lightboxIndex];
+    document.getElementById("lightbox-img").src = img.src;
+
+    const counter = document.getElementById("lightbox-counter");
+    counter.textContent = lightboxImages.length > 1
+        ? `${lightboxIndex + 1} / ${lightboxImages.length}`
+        : "";
+
+    // Ocultar flechas si hay una sola imagen
+    const showNav = lightboxImages.length > 1;
+    document.querySelector(".lightbox-prev").style.display = showNav ? "flex" : "none";
+    document.querySelector(".lightbox-next").style.display = showNav ? "flex" : "none";
+}
+
+function lightboxPrev() {
+    state.lightboxIndex = (state.lightboxIndex - 1 + state.lightboxImages.length) % state.lightboxImages.length;
+    renderLightboxImage();
+}
+
+function lightboxNext() {
+    state.lightboxIndex = (state.lightboxIndex + 1) % state.lightboxImages.length;
+    renderLightboxImage();
+}
 
         function closeLightbox() {
             document.getElementById("lightbox").classList.add("hidden");
@@ -3214,10 +3283,26 @@
                             });
                         return;
                     }
-                    const thumb = e.target.closest('[data-action="view-image"]');
-                    if (thumb) {
-                        openLightbox(thumb.dataset.src);
-                    }
+const thumb = e.target.closest('[data-action="view-image"]');
+if (thumb) {
+    const index = Number(thumb.dataset.index);
+    const providerId = Number(thumb.closest('.gallery-grid').dataset.providerId);
+    const p = state.providers.find((x) => x.id === providerId);
+    if (p) openLightbox(p.images, index);
+    return;
+}
+
+const prevBtn = e.target.closest('[data-action="lightbox-prev"]');
+if (prevBtn) {
+    lightboxPrev();
+    return;
+}
+
+const nextBtn = e.target.closest('[data-action="lightbox-next"]');
+if (nextBtn) {
+    lightboxNext();
+    return;
+}
 
                     const deleteBtn = e.target.closest('[data-action="delete-image"]');
                     if (deleteBtn) {
@@ -3232,18 +3317,9 @@
                     }
                 });
 
-            // Compartir rubro por WhatsApp
-            // document.getElementById('shareRubroBtn').addEventListener('click', () => {
-            //     const rubroNombre = document.getElementById('shareRubroBtn').dataset.rubroNombre || 'este rubro';
-            //     const lista = state.providers
-            //         .filter(p => p.telefono)
-            //         .map(p => `• ${p.name} — ${p.zone}${p.telefono ? ` — ${p.telefono}` : ''}`)
-            //         .join('\n');
 
-            //     const mensaje = `🏘️ *EntreVecinos — ${rubroNombre}*\n\n${lista}\n\nMirá todos los proveedores en: https://entrevecinos-cc.com.ar`;
-            //     const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
-            //     window.open(url, '_blank');
-            // });
+
+
 
             document.getElementById('shareRubroBtn').addEventListener('click', () => {
                 abrirModalCompartirRubro();
@@ -3277,19 +3353,32 @@
                         .catch((err) => alert("No se pudo eliminar: " + err.message));
                 });
 
-            // Lightbox: cerrar al click afuera o en la X
-            document.getElementById("lightbox").addEventListener("click", (e) => {
-                if (
-                    e.target.id === "lightbox" ||
-                    e.target.closest('[data-action="lightbox-close"]')
-                ) {
-                    closeLightbox();
-                }
-            });
+// Lightbox: cerrar al click afuera o en la X, navegar con flechas
+document.getElementById("lightbox").addEventListener("click", (e) => {
+    if (e.target.closest('[data-action="lightbox-prev"]')) {
+        lightboxPrev();
+        return;
+    }
+    if (e.target.closest('[data-action="lightbox-next"]')) {
+        lightboxNext();
+        return;
+    }
+    if (
+        e.target.id === "lightbox" ||
+        e.target.closest('[data-action="lightbox-close"]')
+    ) {
+        closeLightbox();
+    }
+});
 
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape") closeLightbox();
-            });
+document.addEventListener("keydown", (e) => {
+    const lightbox = document.getElementById("lightbox");
+    if (lightbox.classList.contains("hidden")) return;
+
+    if (e.key === "ArrowLeft") lightboxPrev();
+    if (e.key === "ArrowRight") lightboxNext();
+    if (e.key === "Escape") closeLightbox();
+});
 
             // Preview de imágenes seleccionadas en el formulario de alta
             document
