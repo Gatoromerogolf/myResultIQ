@@ -1120,7 +1120,46 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
     // GET /api/dv/landing/fotos-recientes  (sin dvAuth, es público)
     // GET /api/dv/landing/fotos-recientes  (sin dvAuth, es público)
-    app.get('/api/dv/landing/fotos-recientes', async (req, res) => {
+
+app.get('/api/dv/landing/fotos-recientes', async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT * FROM (
+                SELECT 
+                    pi.id,
+                    p.id AS proveedor_id,
+                    p.nombre AS proveedor_nombre,
+                    p.descripcion,
+                    p.zona,
+                    rb.nombre AS categoria,
+                    pi.subida_en,
+                    ROW_NUMBER() OVER (PARTITION BY p.id ORDER BY pi.subida_en DESC) AS rn
+                FROM db_proveedor_imagenes pi
+                JOIN db_proveedores p ON p.id = pi.proveedor_id
+                JOIN db_rubros rb ON rb.id = p.rubro_id
+            ) AS sub
+            WHERE sub.rn <= 2
+            ORDER BY subida_en DESC
+            LIMIT 10
+        `);
+
+        const items = rows.map(r => ({
+            id: r.id,
+            imagenUrl: `${req.protocol}://${req.get('host')}/api/dv/imagen/${r.id}`,
+            proveedor: r.proveedor_nombre,
+            categoria: r.categoria,
+            zona: r.zona,
+            descripcion: r.descripcion
+        }));
+
+        dvOk(res, items);
+    } catch (err) {
+        dvErr(res, err);
+    }
+});
+
+
+    app.get('/api/dv/landing/fotos-recientes-antes', async (req, res) => {
         try {
             const [rows] = await pool.query(`
             SELECT 
@@ -1155,7 +1194,73 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     //  //        2. Endpoint para post-login (fotos + comentarios mezclados)
     // ---------------------------------------------------
     // GET /api/dv/actividad-reciente  (protegido con dvAuth)
-    app.get('/api/dv/actividad-reciente', dvAuth, async (req, res) => {
+
+app.get('/api/dv/actividad-reciente', dvAuth, async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT * FROM (
+                SELECT 
+                    sub.*,
+                    ROW_NUMBER() OVER (PARTITION BY sub.proveedor_id ORDER BY sub.fecha DESC) AS rn
+                FROM (
+                    (SELECT 
+                        'foto' AS tipo,
+                        pi.id AS item_id,
+                        NULL AS texto,
+                        pi.mime_type,
+                        p.id AS proveedor_id,
+                        p.nombre AS proveedor_nombre,
+                        rb.nombre AS categoria,
+                        pi.subida_en AS fecha
+                    FROM db_proveedor_imagenes pi
+                    JOIN db_proveedores p ON p.id = pi.proveedor_id
+                    JOIN db_rubros rb ON rb.id = p.rubro_id
+                    ORDER BY pi.subida_en DESC
+                    LIMIT 20)
+
+                    UNION ALL
+
+                    (SELECT 
+                        'comentario' AS tipo,
+                        res.id AS item_id,
+                        res.comentario AS texto,
+                        NULL AS mime_type,
+                        p.id AS proveedor_id,
+                        p.nombre AS proveedor_nombre,
+                        rb.nombre AS categoria,
+                        res.fecha_publicacion AS fecha
+                    FROM db_resenas res
+                    JOIN db_proveedores p ON p.id = res.proveedor_id
+                    JOIN db_rubros rb ON rb.id = p.rubro_id
+                    ORDER BY res.fecha_publicacion DESC
+                    LIMIT 20)
+                ) AS sub
+            ) AS ranked
+            WHERE ranked.rn <= 2
+            ORDER BY ranked.fecha DESC
+            LIMIT 6
+        `);
+
+        const items = rows.map(r => ({
+            tipo: r.tipo,
+            texto: r.texto,
+            imagenUrl: r.tipo === 'foto'
+                ? `${req.protocol}://${req.get('host')}/api/dv/imagen/${r.item_id}`
+                : null,
+            proveedor: r.proveedor_nombre,
+            proveedorId: r.proveedor_id,
+            categoria: r.categoria,
+            fecha: r.fecha
+        }));
+
+        dvOk(res, items);
+    } catch (err) {
+        dvErr(res, err);
+    }
+});
+
+
+    app.get('/api/dv/actividad-reciente-antes', dvAuth, async (req, res) => {
         try {
             const [rows] = await pool.query(`
       (SELECT 

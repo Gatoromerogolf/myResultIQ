@@ -2623,6 +2623,15 @@
         // ------------------------------------------------------------
         //  compartir rubro
         // ------------------------------------------------------------
+
+        function truncarDescripcion(texto, maxLen) {
+            if (!texto) return '';
+            const limpio = texto.trim();
+            if (limpio.length <= maxLen) return limpio;
+            return limpio.slice(0, maxLen).trim() + '…';
+        }
+
+
         function getContactosRubroActual() {
             const rubroNombre = document.getElementById('shareRubroBtn').dataset.rubroNombre || 'Proveedores';
             const contactos = state.providers
@@ -2630,7 +2639,8 @@
                 .map(p => ({
                     nombre: p.name,
                     telefono: p.phone,
-                    calificacion: p.avgRating > 0 ? p.avgRating.toFixed(1) : 'Sin calificar'
+                    calificacion: p.avgRating > 0 ? p.avgRating.toFixed(1) : '- - ',
+                    descripcion: truncarDescripcion(p.desc, 60)
                 }));
             return { rubroNombre, contactos };
         }
@@ -2648,7 +2658,7 @@
             const ctx = canvas.getContext('2d');
 
             const width = 640;
-            const rowHeight = 76;        // 👈 antes 56, un poco más de aire por fila
+            const rowHeight = 90;        // 👈 antes 56, un poco más de aire por fila
             const headerHeight = 160;    // 👈 antes 150
             const footerHeight = 55;     // 👈 antes 50
             const height = headerHeight + (contactos.length * rowHeight) + footerHeight;
@@ -2688,15 +2698,25 @@
                     ctx.fillRect(0, y, width, rowHeight);
                 }
 
+                // Nombre
                 ctx.fillStyle = '#1a1a1a';
-                ctx.font = 'bold 24px sans-serif';   // 👈 antes 17px
-                ctx.fillText(c.nombre, 30, y + rowHeight / 2 - 12);
+                ctx.font = 'bold 24px sans-serif';
+                ctx.fillText(c.nombre, 30, y + rowHeight / 2 - 24);
 
-                ctx.font = '22px monospace';         // 👈 antes 14px
+                // Descripción (nueva línea) — con maxWidth para que no invada la calificación
+                if (c.descripcion) {
+                    ctx.font = 'italic 22px sans-serif';
+                    ctx.fillStyle = '#8a8a8a';
+                    ctx.fillText(c.descripcion, 30, y + rowHeight / 2, width - 160);
+                }
+
+                // Teléfono
+                ctx.font = '22px monospace';
                 ctx.fillStyle = '#6b6b6b';
-                ctx.fillText(c.telefono, 30, y + rowHeight / 2 + 14);
+                ctx.fillText(c.telefono, 30, y + rowHeight / 2 + 24);
 
-                ctx.font = '20px sans-serif';        // 👈 antes 14px
+                // Calificación
+                ctx.font = '20px sans-serif';
                 ctx.fillStyle = '#c99a2e';
                 ctx.textAlign = 'right';
                 ctx.fillText(`⭐ ${c.calificacion}`, width - 30, y + rowHeight / 2);
@@ -3276,6 +3296,14 @@
 
                     if (esVisitante()) {
                         avisarVisitante();
+                        return;
+                    }
+
+                    // 👇 Validación de sesión antes de intentar guardar
+                    const token = sessionStorage.getItem('dv_token');
+                    if (!token) {
+                        alert('Tu sesión expiró. Por favor, iniciá sesión nuevamente para publicar tu reseña.');
+                        window.location.href = "login_dv.html";
                         return;
                     }
 
