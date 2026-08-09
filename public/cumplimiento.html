@@ -1,0 +1,93 @@
+<div class="container mt-4">
+    <h4 class="mb-3">Mapa de Cumplimiento Organizacional</h4>
+
+    <div class="table-responsive">
+        <table id="tablaJerarquia" class="table table-bordered table-sm align-middle text-center">
+            <thead class="table-dark">
+                <tr id="headerJerarquia">
+                    <!-- Se genera dinámicamente -->
+                </tr>
+            </thead>
+            <tbody id="bodyJerarquia">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+async function cargarJerarquia() {
+    const response = await fetch('/api/jerarquia-cumplimiento'); // 🔥 tu endpoint nuevo
+    const data = await response.json();
+
+    renderTablaJerarquia(data);
+}
+
+function renderTablaJerarquia(data) {
+    const header = document.getElementById('headerJerarquia');
+    const body = document.getElementById('bodyJerarquia');
+
+    header.innerHTML = '';
+    body.innerHTML = '';
+
+    if (!data || data.length === 0) return;
+
+    // 🔍 detectar niveles dinámicamente
+    const niveles = Object.keys(data[0]).filter(k => k.startsWith('nivel_'));
+    const headers = [...niveles, 'indicador', 'cumplimiento'];
+
+    // 🧱 construir header
+    headers.forEach(h => {
+        const th = document.createElement('th');
+        th.textContent = h.replace('nivel_', 'Nivel ');
+        header.appendChild(th);
+    });
+
+    // 🧠 función de color
+    function getColorClass(valor) {
+        if (valor >= 90) return 'text-success fw-bold';
+        if (valor >= 70) return 'text-warning fw-bold';
+        if (valor >= 50) return 'text-primary fw-bold';
+        return 'text-danger fw-bold';
+    }
+
+    // 🧱 construir filas
+    data.forEach(row => {
+        const tr = document.createElement('tr');
+
+        niveles.forEach(nivel => {
+            const td = document.createElement('td');
+
+            const nombre = row[nivel]?.nombre || '';
+            const cumplimiento = row[nivel]?.cumplimiento;
+
+            if (nombre) {
+                td.innerHTML = `
+                    ${nombre}<br>
+                    <span class="${getColorClass(cumplimiento)}">
+                        ${cumplimiento?.toFixed(1) || '-'}%
+                    </span>
+                `;
+            }
+
+            tr.appendChild(td);
+        });
+
+        // indicador
+        const tdIndicador = document.createElement('td');
+        tdIndicador.textContent = row.indicador || '';
+        tr.appendChild(tdIndicador);
+
+        // cumplimiento indicador
+        const tdCumplimiento = document.createElement('td');
+        tdCumplimiento.innerHTML = `
+            <span class="${getColorClass(row.cumplimiento)}">
+                ${row.cumplimiento?.toFixed(1) || '-'}%
+            </span>
+        `;
+        tr.appendChild(tdCumplimiento);
+
+        body.appendChild(tr);
+    });
+}
+
+// 🚀 inicializar
+document.addEventListener('DOMContentLoaded', cargarJerarquia);
