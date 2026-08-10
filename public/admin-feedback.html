@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EntreVecinos — Sugerencias y Consultas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+    <style>
+        :root {
+            --ink: #2a322d;
+            --ink-soft: #6b7268;
+            --paper: #f4efe2;
+            --card: #fffdf6;
+            --line: #ddd3bd;
+            --amber: #d9933f;
+            --sage: #5e7d63;
+            --berry: #9a4f54;
+            --teal: #44707c;
+            --gray: #9a948a;
+            --radius: 10px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Work Sans', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.5;
+        }
+
+        header {
+            border-bottom: 1px dashed var(--line);
+            background: linear-gradient(180deg, rgba(255,255,255,.5), transparent);
+            padding: 1.25rem;
+        }
+
+        .header-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+
+        .logo .accent { color: var(--sage); }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            font-size: .88rem;
+            color: var(--ink-soft);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: .35rem .85rem;
+            background: var(--card);
+            transition: color .15s, border-color .15s;
+        }
+
+        .back-btn:hover {
+            color: var(--ink);
+            border-color: var(--sage);
+        }
+
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 2rem 1.25rem 4rem;
+        }
+
+        h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            margin: 0 0 .25rem;
+        }
+
+        .subtitle {
+            color: var(--ink-soft);
+            font-size: .9rem;
+            margin: 0 0 2rem;
+        }
+
+        /* ---------- Filtro por tipo ---------- */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            padding: .4rem .9rem;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--card);
+            color: var(--ink-soft);
+            cursor: pointer;
+            transition: background .15s, color .15s, border-color .15s;
+        }
+
+        .filter-chip:hover {
+            border-color: var(--sage);
+            color: var(--sage);
+        }
+
+        .filter-chip.active {
+            background: var(--ink);
+            color: var(--paper);
+            border-color: var(--ink);
+        }
+
+        /* ---------- Estado vacío / error / loading ---------- */
+        .msg {
+            border-radius: 8px;
+            padding: .75rem 1rem;
+            font-size: .9rem;
+            display: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .msg.show { display: block; }
+
+        .msg--error {
+            background: #fdecea;
+            color: var(--berry);
+            border: 1px solid #f5c6c6;
+        }
+
+        .msg--info {
+            background: #e8f2f5;
+            color: var(--teal);
+            border: 1px solid #b3d0d8;
+        }
+
+        .loading {
+            display: none;
+            color: var(--ink-soft);
+            font-size: .9rem;
+            padding: 1rem 0;
+        }
+
+        .loading.show { display: block; }
+
+        /* ---------- Lista de feedback ---------- */
+        .feedback-list {
+            display: flex;
+            flex-direction: column;
+            gap: .9rem;
+        }
+
+        .feedback-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 1.1rem 1.25rem;
+        }
+
+        .feedback-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: .6rem;
+        }
+
+        .feedback-who {
+            display: flex;
+            align-items: baseline;
+            gap: .5rem;
+            flex-wrap: wrap;
+        }
+
+        .feedback-nombre {
+            font-weight: 600;
+            font-size: .95rem;
+        }
+
+        .feedback-fecha {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            color: var(--ink-soft);
+        }
+
+        .badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .68rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            padding: .25rem .65rem;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .badge--consulta { background: #e8f2f5; color: var(--teal); }
+        .badge--sugerencia { background: #eef4ea; color: var(--sage); }
+        .badge--propuesta { background: #f7ecd9; color: var(--amber); }
+        .badge--queja { background: #fdecea; color: var(--berry); }
+
+        .feedback-mensaje {
+            font-size: .92rem;
+            color: var(--ink);
+            white-space: pre-wrap;
+            margin-bottom: .7rem;
+        }
+
+        .feedback-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .archivar-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            padding: .4rem .8rem;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--paper);
+            color: var(--ink-soft);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            transition: background .15s, color .15s, border-color .15s;
+        }
+
+        .archivar-btn:hover {
+            border-color: var(--berry);
+            color: var(--berry);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--ink-soft);
+            font-size: .9rem;
+            padding: 3rem 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <h1 class="logo">Entre<span class="accent">Vecinos</span></h1>
+            <a href="directorio-vecinal.html" class="back-btn">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i> Volver al directorio
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <h2>Sugerencias y consultas</h2>
+        <p class="subtitle">Mensajes enviados por los vecinos a través del formulario de feedback.</p>
+
+        <div class="filter-bar" id="filter-bar">
+            <button class="filter-chip active" data-tipo="">Todos</button>
+            <button class="filter-chip" data-tipo="sugerencia">Sugerencias</button>
+            <button class="filter-chip" data-tipo="consulta">Consultas</button>
+            <button class="filter-chip" data-tipo="propuesta">Propuestas</button>
+            <button class="filter-chip" data-tipo="queja">Quejas</button>
+        </div>
+
+        <div class="msg msg--error" id="msg-error"></div>
+        <div class="msg msg--info" id="msg-info"></div>
+        <div class="loading" id="loading">Cargando…</div>
+
+        <div class="feedback-list" id="feedback-list"></div>
+    </main>
+
+    <script>
+        const API = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000/api/dv'
+            : '/api/dv';
+
+        const ADMIN_IDS = [1];
+
+        const TIPO_LABEL = {
+            consulta: 'Consulta',
+            sugerencia: 'Sugerencia',
+            propuesta: 'Propuesta',
+            queja: 'Queja'
+        };
+
+        // ----------------------------------------------------------
+        //  Verificar que es admin
+        // ----------------------------------------------------------
+        const user = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
+        const token = sessionStorage.getItem('dv_token');
+
+        if (!user || !token || !ADMIN_IDS.includes(user.id)) {
+            window.location.href = 'login_dv.html';
+        }
+
+        let tipoActivo = '';
+
+        // ----------------------------------------------------------
+        //  Filtro por tipo
+        // ----------------------------------------------------------
+        document.getElementById('filter-bar').addEventListener('click', (e) => {
+            const chip = e.target.closest('.filter-chip');
+            if (!chip) return;
+
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            tipoActivo = chip.dataset.tipo;
+            cargarFeedback();
+        });
+
+        // ----------------------------------------------------------
+        //  Cargar feedback
+        // ----------------------------------------------------------
+        window.addEventListener('DOMContentLoaded', cargarFeedback);
+
+        async function cargarFeedback() {
+            const errorEl = document.getElementById('msg-error');
+            const infoEl = document.getElementById('msg-info');
+            const loadingEl = document.getElementById('loading');
+            const listEl = document.getElementById('feedback-list');
+
+            errorEl.classList.remove('show');
+            infoEl.classList.remove('show');
+            listEl.innerHTML = '';
+            loadingEl.classList.add('show');
+
+            try {
+                const url = tipoActivo
+                    ? `${API}/admin/feedback?tipo=${tipoActivo}`
+                    : `${API}/admin/feedback`;
+
+                const res = await fetch(url, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (!data.ok) throw new Error(data.error || 'Error al consultar.');
+
+                renderLista(data.data.feedback);
+
+            } catch (err) {
+                errorEl.textContent = err.message;
+                errorEl.classList.add('show');
+            } finally {
+                loadingEl.classList.remove('show');
+            }
+        }
+
+        function renderLista(items) {
+            const listEl = document.getElementById('feedback-list');
+
+            if (!items || items.length === 0) {
+                listEl.innerHTML = '<div class="empty-state">No hay mensajes para mostrar.</div>';
+                return;
+            }
+
+            listEl.innerHTML = items.map(item => `
+                <div class="feedback-card" data-id="${item.id}">
+                    <div class="feedback-top">
+                        <div class="feedback-who">
+                            <span class="feedback-nombre">${escapeHtml(item.nombre)}</span>
+                            <span class="feedback-fecha">${formatFecha(item.fecha_creacion)}</span>
+                        </div>
+                        <span class="badge badge--${item.tipo}">${TIPO_LABEL[item.tipo] || item.tipo}</span>
+                    </div>
+                    <div class="feedback-mensaje">${escapeHtml(item.mensaje)}</div>
+                    <div class="feedback-actions">
+                        <button class="archivar-btn" onclick="archivar(${item.id})">
+                            <i class="ti ti-archive"></i> Archivar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function archivar(id) {
+            if (!confirm('¿Archivar este mensaje?')) return;
+
+            try {
+                const res = await fetch(`${API}/admin/feedback/${id}/archivar`, {
+                    method: 'PATCH',
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (!data.ok) throw new Error(data.error || 'No se pudo archivar.');
+
+                const card = document.querySelector(`.feedback-card[data-id="${id}"]`);
+                if (card) card.remove();
+
+                const listEl = document.getElementById('feedback-list');
+                if (!listEl.children.length) {
+                    listEl.innerHTML = '<div class="empty-state">No hay mensajes para mostrar.</div>';
+                }
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function formatFecha(fechaStr) {
+            const d = new Date(fechaStr);
+            if (isNaN(d)) return fechaStr;
+            const dd = String(d.getDate()).padStart(2, '0');
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const yyyy = d.getFullYear();
+            const hh = String(d.getHours()).padStart(2, '0');
+            const min = String(d.getMinutes()).padStart(2, '0');
+            return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str ?? '';
+            return div.innerHTML;
+        }
+    </script>
+</body>
+
+</html>

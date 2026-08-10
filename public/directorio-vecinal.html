@@ -1615,6 +1615,10 @@
                 <button id="btn-mis-comentarios" class="btn-secundario">
                     <i class="ti ti-message-circle"></i> Mis Comentarios
                 </button>
+                <button class="menu-item" onclick="abrirModalFeedback()">
+                    <i class="ti ti-message-2"></i>
+                    <span>Sugerencias y Consultas</span>
+                </button>
             </div>
         </div>
     </header>
@@ -1891,6 +1895,39 @@
             </div>
             <div id="mis-comentarios" class="modal-scroll">
                 <!-- se llena por JS -->
+            </div>
+        </div>
+    </div>
+
+    <div id="modalFeedback" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Sugerencias y consultas</h3>
+                <button class="modal-dv-cerrar" onclick="document.getElementById('modalFeedback').style.display='none'">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+
+            <div class="modal-scroll">
+                <p class="ink-soft">Contanos qué te parece la app, qué le falta, o si encontraste algún problema.</p>
+
+                <form id="formFeedback">
+                    <label>Tu nombre</label>
+                    <input type="text" id="feedbackNombre" placeholder="Nombre" />
+
+                    <label>Tipo</label>
+                    <select id="feedbackTipo" required>
+                        <option value="sugerencia">Sugerencia</option>
+                        <option value="consulta">Consulta</option>
+                        <option value="propuesta">Propuesta</option>
+                        <option value="queja">Queja</option>
+                    </select>
+
+                    <label>Mensaje</label>
+                    <textarea id="feedbackMensaje" rows="4" required placeholder="Contanos..."></textarea>
+
+                    <button type="submit" class="btn-primary" style="margin-top:1rem;">Enviar</button>
+                </form>
             </div>
         </div>
     </div>
@@ -2571,7 +2608,47 @@
             }
         }
 
+        function abrirModalFeedback() {
+            const nombreInput = document.getElementById('feedbackNombre');
+            if (state.usuario?.id && state.usuario.id !== 9999) {
+                nombreInput.value = state.usuario.nombre;
+                nombreInput.disabled = true;
+            } else {
+                nombreInput.value = '';
+                nombreInput.disabled = false;
+            }
+            document.getElementById('modalFeedback').style.display = 'flex';
+        }
 
+        document.getElementById('formFeedback').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const tipo = document.getElementById('feedbackTipo').value;
+            const mensaje = document.getElementById('feedbackMensaje').value;
+            const nombre = document.getElementById('feedbackNombre').value;
+
+            const token = sessionStorage.getItem('dv_token');
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
+            const resp = await fetch('/api/dv/feedback', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ tipo, mensaje, nombre })
+            });
+            const data = await resp.json();
+
+            if (data.ok) {
+                document.getElementById('modalFeedback').style.display = 'none';
+                document.getElementById('formFeedback').reset();
+                mostrarToast(
+                    '¡Gracias por tu mensaje!',
+                    'Tu participación es importante para seguir mejorando EntreVecinos.',
+                    '🙏'
+                );
+            } else {
+                alert(data.error || 'No se pudo enviar');
+            }
+        });
 
 
 
@@ -2582,7 +2659,6 @@
             const p = state.providers.find((x) => x.id === id);
             if (!p) return;
 
-            // Al inicio de openDetail(), después de recuperar p:
             const token = sessionStorage.getItem("dv_token");
             let currentUserName = "Anónimo";
             if (token) {

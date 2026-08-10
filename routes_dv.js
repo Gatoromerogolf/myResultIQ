@@ -1215,7 +1215,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     });
 
     // GET /api/dv/mis-comentarios
-    // GET /api/dv/mis-comentarios
     app.get('/api/dv/mis-comentarios', dvAuth, async (req, res) => {
         try {
             const [rows] = await pool.query(
@@ -1233,6 +1232,142 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch (err) {
             console.error('>>> ERROR mis-comentarios:', err);
             return dvErr(res, err.message);
+        }
+    });
+
+    // Sugerencias, comentarios, quejas....()
+
+app.post('/api/dv/feedback', async (req, res) => {
+  try {
+    const { tipo, mensaje, nombre } = req.body;
+
+    if (!['consulta', 'sugerencia', 'propuesta', 'queja'].includes(tipo)) {
+      return dvErr(res, 'Tipo inválido');
+    }
+    if (!mensaje || !mensaje.trim()) {
+      return dvErr(res, 'El mensaje no puede estar vacío');
+    }
+
+    let usuarioId = null;
+    let nombreFinal = (nombre || '').trim();
+
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      try {
+        const token = authHeader.split(' ')[1];
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        if (payload.id && payload.id !== 9999) {
+          usuarioId = payload.id;
+          nombreFinal = payload.nombre;
+        }
+      } catch (_) {}
+    }
+
+    if (!nombreFinal) {
+      return dvErr(res, 'Falta el nombre');
+    }
+
+    await pool.query(
+      `INSERT INTO db_feedback (usuario_id, nombre, tipo, mensaje, fecha_creacion, activo)
+       VALUES (?, ?, ?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR), 1)`,
+      [usuarioId, nombreFinal, tipo, mensaje.trim()]
+    );
+
+    // Notificación por mail — fire-and-forget, no bloquea la respuesta
+    const TIPO_LABEL = {
+      consulta: 'Consulta',
+      sugerencia: 'Sugerencia',
+      propuesta: 'Propuesta',
+      queja: 'Queja'
+    };
+    const etiqueta = TIPO_LABEL[tipo] || tipo;
+
+    sendMail(
+      'ruben.e.garcia@gmail.com',
+      `EntreVecinos — Nueva ${etiqueta.toLowerCase()} de ${nombreFinal}`,
+      `${etiqueta} de ${nombreFinal}:\n\n${mensaje.trim()}`,
+      `<p><strong>${etiqueta}</strong> de <strong>${nombreFinal}</strong></p><p>${mensaje.trim().replace(/\n/g, '<br>')}</p>`
+    ).catch(e => console.error('Error enviando notificación de feedback:', e));
+
+    return dvOk(res, { mensaje: 'Gracias, lo recibimos.' });
+  } catch (e) {
+    console.error(e);
+    return dvErr(res, 'Error al enviar el mensaje');
+  }
+});
+
+
+
+    app.post('/api/dv/feedback-anterior', async (req, res) => {
+        try {
+            const { tipo, mensaje, nombre } = req.body;
+
+            if (!['consulta', 'sugerencia', 'propuesta', 'queja'].includes(tipo)) {
+                return dvErr(res, 'Tipo inválido');
+            }
+            if (!mensaje || !mensaje.trim()) {
+                return dvErr(res, 'El mensaje no puede estar vacío');
+            }
+
+            // Intento resolver usuario desde el JWT si vino, sin exigirlo
+            let usuarioId = null;
+            let nombreFinal = (nombre || '').trim();
+
+            const authHeader = req.headers.authorization;
+            if (authHeader) {
+                try {
+                    const token = authHeader.split(' ')[1];
+                    const payload = jwt.verify(token, process.env.JWT_SECRET);
+                    if (payload.id && payload.id !== 9999) {
+                        usuarioId = payload.id;
+                        nombreFinal = payload.nombre; // ignoro lo que mande el body si está logueado
+                    }
+                } catch (_) {
+                    // token inválido o vencido: lo trato como invitado
+                }
+            }
+
+            if (!nombreFinal) {
+                return dvErr(res, 'Falta el nombre');
+            }
+
+            await pool.query(
+                `INSERT INTO db_feedback (usuario_id, nombre, tipo, mensaje, fecha_creacion, activo)
+                VALUES (?, ?, ?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR), 1)`,
+                [usuarioId, nombreFinal, tipo, mensaje.trim()]
+            );
+
+            return dvOk(res, { mensaje: 'Gracias, lo recibimos.' });
+        } catch (e) {
+            console.error(e);
+            return dvErr(res, 'Error al enviar el mensaje');
+        }
+    });
+
+    app.get('/api/dv/admin/feedback', dvAuth, soloAdmin, async (req, res) => {
+        try {
+            const { tipo } = req.query; // opcional: filtrar por tipo
+
+            let query = `
+      SELECT id, usuario_id, nombre, tipo, mensaje, fecha_creacion
+      FROM db_feedback
+      WHERE activo = 1
+    `;
+            const params = [];
+
+            if (tipo && ['consulta', 'sugerencia', 'propuesta', 'queja'].includes(tipo)) {
+                query += ' AND tipo = ?';
+                params.push(tipo);
+            }
+
+            query += ' ORDER BY fecha_creacion DESC';
+
+            const [rows] = await pool.query(query, params);
+
+            return dvOk(res, { feedback: rows });
+        } catch (e) {
+            console.error(e);
+            return dvErr(res, 'Error al obtener el feedback');
         }
     });
 };
