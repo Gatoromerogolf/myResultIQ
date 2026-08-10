@@ -302,6 +302,34 @@
             border-radius: 12px;
             padding: 1.5rem;
             width: min(420px, 90vw);
+            max-height: 85vh;
+            /* NUEVO */
+            display: flex;
+            /* NUEVO */
+            flex-direction: column;
+            /* NUEVO */
+            overflow: hidden;
+            /* NUEVO */
+        }
+
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+            /* NUEVO — que no se achique */
+        }
+
+        .modal-scroll {
+            overflow-y: auto;
+            padding: 16px;
+            flex: 1 1 auto;
+            /* NUEVO */
+            min-height: 0;
+            /* NUEVO — clave para que funcione el scroll */
         }
 
         .modal-box h3 {
@@ -357,6 +385,38 @@
             background: var(--ink);
             color: var(--paper);
             border-color: var(--ink);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-scroll {
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .mi-item {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .mi-item .acciones {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .vacio {
+            text-align: center;
+            color: #888;
+            padding: 24px 0;
         }
 
         /* ---------- Grid & cards ---------- */
@@ -566,39 +626,46 @@
 
 
         .lightbox-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,.5);
-    color: #fff;
-    border: none;
-    font-size: 2rem;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, .5);
+            color: #fff;
+            border: none;
+            font-size: 2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.lightbox-prev { left: 20px; }
-.lightbox-next { right: 20px; }
+        .lightbox-prev {
+            left: 20px;
+        }
 
-.lightbox-nav:hover { background: rgba(0,0,0,.75); }
+        .lightbox-next {
+            right: 20px;
+        }
 
-.lightbox-counter {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #fff;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .85rem;
-    background: rgba(0,0,0,.5);
-    padding: .3rem .8rem;
-    border-radius: 20px;
-}
+        .lightbox-nav:hover {
+            background: rgba(0, 0, 0, .75);
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .85rem;
+            background: rgba(0, 0, 0, .5);
+            padding: .3rem .8rem;
+            border-radius: 20px;
+        }
 
 
         .stamp {
@@ -1436,6 +1503,62 @@
                 order: 2;
             }
         }
+
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: var(--card);
+            color: var(--ink);
+            border: 2px solid var(--sage);
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            text-align: center;
+            max-width: 340px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .toast .toast-icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .toast .toast-title {
+            font-weight: bold;
+            font-size: 1.05rem;
+            display: block;
+            margin-bottom: 0.3rem;
+            color: var(--sage);
+        }
+
+        /* Fondo oscurecido detrás, opcional pero ayuda a la visibilidad */
+        .toast-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 2999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .toast-backdrop.show {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -1483,6 +1606,14 @@
                 </a>
                 <button class="logout-btn" id="logoutBtn" title="Salir">
                     <i class="ti ti-logout" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="mi-actividad-botones">
+                <button id="btn-mis-proveedores" class="btn-secundario">
+                    <i class="ti ti-list-details"></i> Mis Proveedores
+                </button>
+                <button id="btn-mis-comentarios" class="btn-secundario">
+                    <i class="ti ti-message-circle"></i> Mis Comentarios
                 </button>
             </div>
         </div>
@@ -1682,36 +1813,6 @@
             </form>
         </div>
 
-        <!-- <div class="modal-overlay" id="rubroModalOverlay" style="display:none;">
-            <div class="modal-box" id="rubroModalBox">
-                <h3>Solicitar nuevo rubro</h3>
-
-                <form id="rubroRequestForm">
-                    <label for="rubroReqNombre">Tu nombre</label>
-                    <input type="text" id="rubroReqNombre" readonly>
-
-                    <label for="rubroReqNombreRubro">Rubro sugerido</label>
-                    <input type="text" id="rubroReqNombreRubro" required maxlength="60"
-                        placeholder="Ej: Jardinería, Cerrajería...">
-
-                    <label for="rubroReqDescripcion">Descripción breve</label>
-                    <textarea id="rubroReqDescripcion" required maxlength="250" rows="3"
-                        placeholder="Contanos en pocas palabras de qué se trata"></textarea>
-
-                    <div class="modal-actions">
-                        <button type="button" id="rubroReqCancel">Cancelar</button>
-                        <button type="submit" id="rubroReqSubmit">Enviar solicitud</button>
-                    </div>
-                </form>
-
-                <div id="rubroReqThanks" style="display:none;">
-                    <p>¡Gracias! Recibimos tu sugerencia y la vamos a incorporar. 🙌</p>
-                    <div class="modal-actions">
-                        <button type="button" id="rubroReqClose">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div> -->
     </div>
 
     <div class="modal-overlay" id="rubroModalOverlay" style="display: none">
@@ -1765,6 +1866,32 @@
                 style="font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--sage); display:none; margin-top:.6rem;">
                 ¡Mensaje copiado! Pegalo en WhatsApp.
             </p>
+        </div>
+    </div>
+
+    <!-- Modal Mis Proveedores -->
+    <div id="misProveedoresOverlay" class="overlay" style="display:none;">
+        <div id="misProveedoresBox" class="modal-box">
+            <div class="modal-header">
+                <h3>Mis Proveedores</h3>
+                <button class="btn-cerrar-modal" data-close="misProveedoresOverlay">&times;</button>
+            </div>
+            <div id="mis-proveedores" class="modal-scroll">
+                <!-- se llena por JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Mis Comentarios -->
+    <div id="misComentariosOverlay" class="overlay" style="display:none;">
+        <div id="misComentariosBox" class="modal-box">
+            <div class="modal-header">
+                <h3>Mis Comentarios</h3>
+                <button class="btn-cerrar-modal" data-close="misComentariosOverlay">&times;</button>
+            </div>
+            <div id="mis-comentarios" class="modal-scroll">
+                <!-- se llena por JS -->
+            </div>
         </div>
     </div>
 
@@ -1839,6 +1966,9 @@
         </div>
     </footer>
 
+    <div id="toastBackdrop" class="toast-backdrop"></div>
+    <div id="toast" class="toast"></div>
+
     <script>
         // ------------------------------------------------------------
         //  Config — cambiá el puerto si tu servidor corre en otro
@@ -1859,6 +1989,9 @@
             pendingRating: 0,
             usuario: JSON.parse(sessionStorage.getItem("dv_user") || "null"),
         };
+
+        let ultimosMisProveedores = [];
+        let ultimosComentarios = [];
 
         // ------------------------------------------------------------
         //  API helpers
@@ -1951,7 +2084,7 @@
                 presentadoPorLote: p.presentado_por_lote || "",
                 creadoPor: p.creado_por,
                 name: p.nombre,
-                rubro: p.rubro,
+                rubro: p.rubro_nombre,
                 rubro_id: p.rubro_id,
                 zone: p.zona || "",
                 phone: p.telefono || "",
@@ -1966,7 +2099,7 @@
                 recommends: parseInt(p.total_recomendaciones) || 0,
                 reviews: [], // se cargan al abrir el detalle
             };
-            console.log("normalizado" + instagram);
+
         }
 
         // ------------------------------------------------------------
@@ -1991,6 +2124,11 @@
             if (avg >= 4.5) return "sage";
             if (avg >= 3.5) return "amber";
             return "berry";
+        }
+
+        function authHeaders() {
+            const token = sessionStorage.getItem('dv_token');
+            return token ? { 'Authorization': `Bearer ${token}` } : {};
         }
 
         function accentFor(rubroNombre) {
@@ -2229,6 +2367,7 @@
             );
         }
 
+
         // ------------------------------------------------------------
         //  Actualizausuario
         // ------------------------------------------------------------
@@ -2347,6 +2486,95 @@
                 }
             });
 
+
+        document.getElementById('btn-mis-proveedores').addEventListener('click', () => {
+            document.getElementById('misProveedoresOverlay').style.display = 'flex';
+            cargarMisProveedores();
+        });
+
+        document.getElementById('btn-mis-comentarios').addEventListener('click', () => {
+            document.getElementById('misComentariosOverlay').style.display = 'flex';
+            cargarMisComentarios();
+        });
+
+        document.querySelectorAll('.btn-cerrar-modal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById(btn.dataset.close).style.display = 'none';
+            });
+        });
+
+        async function cargarMisProveedores() {
+            const cont = document.getElementById('mis-proveedores');
+            cont.innerHTML = '<p>Cargando...</p>';
+            try {
+                const res = await fetch('/api/dv/mis-proveedores', { headers: authHeaders() });
+                const json = await res.json();
+                if (!json.ok) throw new Error(json.error || 'Error desconocido');
+                const data = (json.data || []).map(normalizeProvider);
+                ultimosMisProveedores = data; // NUEVO — guardamos para poder editar sin re-pedir
+
+                cont.innerHTML = data.length
+                    ? data.map(p => `
+                    <div class="mi-item" data-id="${p.id}">
+                    <strong>${p.rubro || 'Sin rubro'} - ${p.name}</strong>
+                    <p>${p.desc || ''}</p>
+                    <div class="acciones">
+                        <button class="btn-editar-prov" data-id="${p.id}">Editar</button>
+                        <button class="btn-borrar-prov" data-id="${p.id}">Eliminar</button>
+                    </div>
+                    </div>
+                `).join('')
+                    : `<p class="vacio">Todavía no recomendaste a ningún proveedor.</p>`;
+            } catch (err) {
+                cont.innerHTML = `<p class="vacio" style="color:var(--berry)">Error: ${err.message}</p>`;
+                console.error('Error cargando mis proveedores:', err);
+            }
+        }
+
+
+        async function borrarMiProveedor(id) {
+            if (!confirm('¿Eliminar este proveedor?')) return;
+            try {
+                await apiFetch(`/proveedores/${id}`, { method: 'DELETE' });
+                cargarMisProveedores(); // refresca la lista propia
+                loadProviders(); // opcional: refresca también el grid principal si está visible
+            } catch (err) {
+                alert('Error al eliminar: ' + err.message);
+            }
+        }
+
+        async function cargarMisComentarios() {
+            const cont = document.getElementById('mis-comentarios');
+            cont.innerHTML = '<p>Cargando...</p>';
+            try {
+                const res = await fetch('/api/dv/mis-comentarios', { headers: authHeaders() });
+                const json = await res.json();
+                if (!json.ok) throw new Error(json.error || 'Error desconocido');
+                const data = json.data || [];
+                ultimosComentarios = data; // NUEVO
+
+                cont.innerHTML = data.length
+                    ? data.map(c => `
+                        <div class="mi-item" data-id="${c.id}">
+                        <strong>${c.rubro_nombre || 'Sin rubro'} - ${c.proveedor_nombre}</strong>
+                        <p>⭐ ${c.calificacion} — ${c.comentario}</p>
+                        <div class="acciones">
+                            <button class="btn-editar-com" data-id="${c.id}">Editar</button>
+                            <button class="btn-borrar-com" data-id="${c.id}">Eliminar</button>
+                        </div>
+                        </div>
+                    `).join('')
+                    : `<p class="vacio">Todavía no compartiste una opinión sobre ningún proveedor.</p>`;
+            } catch (err) {
+                cont.innerHTML = `<p class="vacio" style="color:var(--berry)">Error: ${err.message}</p>`;
+                console.error('Error cargando mis comentarios:', err);
+            }
+        }
+
+
+
+
+
         // ------------------------------------------------------------
         //  Modal: detalle + reseñas
         // ------------------------------------------------------------
@@ -2413,29 +2641,23 @@
                     .join("")
                 : `<p class="no-reviews">Todavía no hay recomendaciones. ¡Sé el primero en dejar una!</p>`;
 
-            // const galleryThumbs = (p.images || []).map((img, i) => `
-            //     <div class="gallery-thumb" data-action="view-image" data-src="${img.src}">
-            //         <img src="${img.src}" alt="Imagen ${i + 1}" loading="lazy">
-            //         <button class="remove-img" data-action="delete-image" data-img-id="${img.id}" title="Eliminar" aria-label="Eliminar imagen">✕</button>
-            //     </div>
-            //     `).join("");
 
             const userId =
                 JSON.parse(sessionStorage.getItem("dv_user") || "{}").id || null;
 
-const galleryThumbs = (p.images || [])
-    .map(
-        (img, i) => `
-        <div class="gallery-thumb" data-action="view-image" data-src="${img.src}" data-index="${i}">
-            <img src="${img.src}" alt="Imagen ${i + 1}" loading="lazy">
-            ${userId === p.creadoPor
-                ? `<button class="remove-img" data-action="delete-image" data-img-id="${img.id}" title="Eliminar" aria-label="Eliminar imagen">✕</button>`
-                : ""
-            }
-        </div>
-    `,
-    )
-    .join("");
+            const galleryThumbs = (p.images || [])
+                .map(
+                    (img, i) => `
+                    <div class="gallery-thumb" data-action="view-image" data-src="${img.src}" data-index="${i}">
+                        <img src="${img.src}" alt="Imagen ${i + 1}" loading="lazy">
+                        ${userId === p.creadoPor
+                            ? `<button class="remove-img" data-action="delete-image" data-img-id="${img.id}" title="Eliminar" aria-label="Eliminar imagen">✕</button>`
+                            : ""
+                        }
+                    </div>
+                `,
+                )
+                .join("");
 
             const modal = document.getElementById("modal-detail");
 
@@ -2536,14 +2758,6 @@ const galleryThumbs = (p.images || [])
             </form>
             `;
 
-            //  sacado del formulario debajo de       <form id="review-form" data-id="${p.id}">
-            // <div class="field">
-            //   <label for="review-author">Tu nombre</label>
-            //   <input type="text" id="review-author" name="author" required placeholder="Ej: Vecino de Manzana 3">
-            // </div>
-
-            // sacado de la sección <div class="stamp-row" ultima linea>
-            // <button class="btn-recommend" data-action="recommend" data-id="${p.id}" ${alreadyRecommended ? "disabled" : ""}>👍 Recomendar (${p.recommends})</button>
 
             state.pendingRating = 0;
 
@@ -2588,38 +2802,38 @@ const galleryThumbs = (p.images || [])
         let pendingNewImages = [];
         let editandoProveedorId = null; // null = modo alta, número = modo edición
 
-function openLightbox(images, index) {
-    state.lightboxImages = images;
-    state.lightboxIndex = index;
-    renderLightboxImage();
-    document.getElementById("lightbox").classList.remove("hidden");
-}
+        function openLightbox(images, index) {
+            state.lightboxImages = images;
+            state.lightboxIndex = index;
+            renderLightboxImage();
+            document.getElementById("lightbox").classList.remove("hidden");
+        }
 
-function renderLightboxImage() {
-    const { lightboxImages, lightboxIndex } = state;
-    const img = lightboxImages[lightboxIndex];
-    document.getElementById("lightbox-img").src = img.src;
+        function renderLightboxImage() {
+            const { lightboxImages, lightboxIndex } = state;
+            const img = lightboxImages[lightboxIndex];
+            document.getElementById("lightbox-img").src = img.src;
 
-    const counter = document.getElementById("lightbox-counter");
-    counter.textContent = lightboxImages.length > 1
-        ? `${lightboxIndex + 1} / ${lightboxImages.length}`
-        : "";
+            const counter = document.getElementById("lightbox-counter");
+            counter.textContent = lightboxImages.length > 1
+                ? `${lightboxIndex + 1} / ${lightboxImages.length}`
+                : "";
 
-    // Ocultar flechas si hay una sola imagen
-    const showNav = lightboxImages.length > 1;
-    document.querySelector(".lightbox-prev").style.display = showNav ? "flex" : "none";
-    document.querySelector(".lightbox-next").style.display = showNav ? "flex" : "none";
-}
+            // Ocultar flechas si hay una sola imagen
+            const showNav = lightboxImages.length > 1;
+            document.querySelector(".lightbox-prev").style.display = showNav ? "flex" : "none";
+            document.querySelector(".lightbox-next").style.display = showNav ? "flex" : "none";
+        }
 
-function lightboxPrev() {
-    state.lightboxIndex = (state.lightboxIndex - 1 + state.lightboxImages.length) % state.lightboxImages.length;
-    renderLightboxImage();
-}
+        function lightboxPrev() {
+            state.lightboxIndex = (state.lightboxIndex - 1 + state.lightboxImages.length) % state.lightboxImages.length;
+            renderLightboxImage();
+        }
 
-function lightboxNext() {
-    state.lightboxIndex = (state.lightboxIndex + 1) % state.lightboxImages.length;
-    renderLightboxImage();
-}
+        function lightboxNext() {
+            state.lightboxIndex = (state.lightboxIndex + 1) % state.lightboxImages.length;
+            renderLightboxImage();
+        }
 
         function closeLightbox() {
             document.getElementById("lightbox").classList.add("hidden");
@@ -2954,6 +3168,26 @@ function lightboxNext() {
             window.location.href = `tel:+${normalizarTelefonoAR(p.phone)}`;
         }
 
+        function mostrarToast(titulo, mensaje, icono = '🙌', duracion = 3200) {
+            const toast = document.getElementById('toast');
+            const backdrop = document.getElementById('toastBackdrop');
+
+            toast.innerHTML = `
+        <span class="toast-icon">${icono}</span>
+        <span class="toast-title">${titulo}</span>
+        ${mensaje}
+    `;
+
+            toast.classList.add('show');
+            backdrop.classList.add('show');
+
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.classList.remove('show');
+                backdrop.classList.remove('show');
+            }, duracion);
+        }
+
 
 
         (function () {
@@ -3049,8 +3283,11 @@ function lightboxNext() {
         function editarProveedor(id) {
             const p = state.providers.find((x) => x.id === id);
             if (!p) return;
+            editarProveedorConDatos(p);
+        }
 
-            editandoProveedorId = id;
+        function editarProveedorConDatos(p) {
+            editandoProveedorId = p.id;
 
             const form = document.getElementById("add-form");
             form.name.value = p.name;
@@ -3062,11 +3299,11 @@ function lightboxNext() {
             form.sitio_web.value = p.sitio_web || "";
             form.instagram.value = p.instagram || "";
 
-            // Cambia el texto del formulario para dejar claro que es edición
             form.querySelector(".submit-btn").textContent = "Guardar cambios";
-            document.querySelector("#modal-add h2").textContent =
-                "Editar proveedor"; // ajustar selector según tu modal
+            document.querySelector("#modal-add h2").textContent = "Editar proveedor";
 
+            // Cierra el modal de "Mis Proveedores" si estaba abierto, y abre el de edición
+            document.getElementById('misProveedoresOverlay').style.display = 'none';
             showModal("modal-add");
         }
 
@@ -3094,7 +3331,7 @@ function lightboxNext() {
         }
 
         // ------------------------------------------------------------
-        //  Solicitar altat de nuevo rubro
+        //  Solicitar alta de nuevo rubro
         // ------------------------------------------------------------
 
         // Mostrar el link solo si hay usuario logueado (no visitante)
@@ -3162,6 +3399,11 @@ function lightboxNext() {
                 submitBtn.disabled = false;
                 submitBtn.textContent = "Enviar solicitud";
             }
+        });
+
+        document.getElementById('toastBackdrop').addEventListener('click', () => {
+            document.getElementById('toast').classList.remove('show');
+            document.getElementById('toastBackdrop').classList.remove('show');
         });
 
         // ------------------------------------------------------------
@@ -3283,26 +3525,26 @@ function lightboxNext() {
                             });
                         return;
                     }
-const thumb = e.target.closest('[data-action="view-image"]');
-if (thumb) {
-    const index = Number(thumb.dataset.index);
-    const providerId = Number(thumb.closest('.gallery-grid').dataset.providerId);
-    const p = state.providers.find((x) => x.id === providerId);
-    if (p) openLightbox(p.images, index);
-    return;
-}
+                    const thumb = e.target.closest('[data-action="view-image"]');
+                    if (thumb) {
+                        const index = Number(thumb.dataset.index);
+                        const providerId = Number(thumb.closest('.gallery-grid').dataset.providerId);
+                        const p = state.providers.find((x) => x.id === providerId);
+                        if (p) openLightbox(p.images, index);
+                        return;
+                    }
 
-const prevBtn = e.target.closest('[data-action="lightbox-prev"]');
-if (prevBtn) {
-    lightboxPrev();
-    return;
-}
+                    const prevBtn = e.target.closest('[data-action="lightbox-prev"]');
+                    if (prevBtn) {
+                        lightboxPrev();
+                        return;
+                    }
 
-const nextBtn = e.target.closest('[data-action="lightbox-next"]');
-if (nextBtn) {
-    lightboxNext();
-    return;
-}
+                    const nextBtn = e.target.closest('[data-action="lightbox-next"]');
+                    if (nextBtn) {
+                        lightboxNext();
+                        return;
+                    }
 
                     const deleteBtn = e.target.closest('[data-action="delete-image"]');
                     if (deleteBtn) {
@@ -3353,32 +3595,32 @@ if (nextBtn) {
                         .catch((err) => alert("No se pudo eliminar: " + err.message));
                 });
 
-// Lightbox: cerrar al click afuera o en la X, navegar con flechas
-document.getElementById("lightbox").addEventListener("click", (e) => {
-    if (e.target.closest('[data-action="lightbox-prev"]')) {
-        lightboxPrev();
-        return;
-    }
-    if (e.target.closest('[data-action="lightbox-next"]')) {
-        lightboxNext();
-        return;
-    }
-    if (
-        e.target.id === "lightbox" ||
-        e.target.closest('[data-action="lightbox-close"]')
-    ) {
-        closeLightbox();
-    }
-});
+            // Lightbox: cerrar al click afuera o en la X, navegar con flechas
+            document.getElementById("lightbox").addEventListener("click", (e) => {
+                if (e.target.closest('[data-action="lightbox-prev"]')) {
+                    lightboxPrev();
+                    return;
+                }
+                if (e.target.closest('[data-action="lightbox-next"]')) {
+                    lightboxNext();
+                    return;
+                }
+                if (
+                    e.target.id === "lightbox" ||
+                    e.target.closest('[data-action="lightbox-close"]')
+                ) {
+                    closeLightbox();
+                }
+            });
 
-document.addEventListener("keydown", (e) => {
-    const lightbox = document.getElementById("lightbox");
-    if (lightbox.classList.contains("hidden")) return;
+            document.addEventListener("keydown", (e) => {
+                const lightbox = document.getElementById("lightbox");
+                if (lightbox.classList.contains("hidden")) return;
 
-    if (e.key === "ArrowLeft") lightboxPrev();
-    if (e.key === "ArrowRight") lightboxNext();
-    if (e.key === "Escape") closeLightbox();
-});
+                if (e.key === "ArrowLeft") lightboxPrev();
+                if (e.key === "ArrowRight") lightboxNext();
+                if (e.key === "Escape") closeLightbox();
+            });
 
             // Preview de imágenes seleccionadas en el formulario de alta
             document
@@ -3455,6 +3697,11 @@ document.addEventListener("keydown", (e) => {
                         // Recargar proveedores para actualizar el promedio
                         await loadProviders();
                         openDetail(id);
+                        mostrarToast(
+                            '¡Gracias por tu comentario!',
+                            'Tu opinión ayuda a que más vecinos elijan bien. Seguí sumando recomendaciones cuando quieras.',
+                            '🙌'
+                        );
                     } catch (err) {
                         alert("No se pudo guardar la reseña: " + err.message);
                         btn.disabled = false;
@@ -3513,6 +3760,11 @@ document.addEventListener("keydown", (e) => {
                         state.filter.query = "";
                         document.getElementById("search").value = "";
                         await loadProviders();
+
+                        // NUEVO — si el modal de "Mis Proveedores" existe, refrescamos su lista también
+                        if (document.getElementById('mis-proveedores')) {
+                            await cargarMisProveedores();
+                        }
                     } catch (err) {
                         if (err.message.includes("autorizado")) {
                             alert("Tu sesión expiró. Volvé a iniciar sesión.");
@@ -3573,10 +3825,51 @@ document.addEventListener("keydown", (e) => {
                     window.location.href = `tel:${p.telefono}`;
                 }
             });
+
+            // Mostrar comentarios y proveedores de un usuario
+            document.getElementById('mis-proveedores').addEventListener('click', (e) => {
+                const id = e.target.dataset.id;
+                if (!id) return;
+                if (e.target.classList.contains('btn-editar-prov')) {
+                    const p = ultimosMisProveedores.find(x => x.id == id);
+                    if (p) editarProveedorConDatos(p);
+                }
+                if (e.target.classList.contains('btn-borrar-prov')) {
+                    borrarMiProveedor(id);
+                }
+            });
+
+            document.getElementById('mis-comentarios').addEventListener('click', (e) => {
+                const id = e.target.dataset.id;
+                if (!id) return;
+                if (e.target.classList.contains('btn-editar-com')) {
+                    const c = ultimosComentarios.find(x => x.id == id);
+                    if (c) abrirModalEditarResena(c.id, c.calificacion, c.comentario, c.fecha_trabajo);
+                }
+                if (e.target.classList.contains('btn-borrar-com')) {
+                    borrarResena(id);
+                }
+            });
+
+            async function borrarResena(id) {
+                if (!confirm('¿Eliminar esta reseña?')) return;
+                try {
+                    const res = await fetch(`/api/dv/resenas/${id}`, { method: 'DELETE', headers: authHeaders() });
+                    const json = await res.json();
+                    if (!json.ok) throw new Error(json.error || 'Error al eliminar.');
+                    cargarMisComentarios();
+                } catch (err) {
+                    alert('Error al eliminar: ' + err.message);
+                }
+            }
+
         }
 
         init();
     </script>
+
+    <div id="toast" class="toast"></div>
+
 </body>
 
 </html>

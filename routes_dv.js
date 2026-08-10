@@ -563,132 +563,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
     });
 
-    app.get('/api/dv/proveedores-nosirve', async (req, res) => {
-        try {
-            const { rubro_id, q } = req.query;
-            let sql = `
-                SELECT
-                p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por,
-                p.sitio_web, p.instagram,
-                r.id     AS rubro_id,
-                r.nombre AS rubro,
-                r.icono  AS rubro_icono,
-                u.id     AS presentado_por_id,
-                u.nombre AS presentado_por,
-                u.barrio AS presentado_por_barrio,
-                u.lote   AS presentado_por_lote,
-                primera_img.imagen_b64 AS primera_imagen,
-                COALESCE(stats.calificacion_promedio, 0) AS calificacion_promedio,
-                COALESCE(stats.total_resenas, 0)         AS total_resenas,
-                COALESCE(recom.total_recomendaciones, 0) AS total_recomendaciones
-                FROM db_proveedores p
-                JOIN  db_rubros r               ON r.id = p.rubro_id
-                LEFT JOIN db_usuarios u         ON u.id = p.creado_por
-                LEFT JOIN (
-                    SELECT proveedor_id,
-                           ROUND(AVG(calificacion), 1) AS calificacion_promedio,
-                           COUNT(*) AS total_resenas
-                    FROM db_resenas
-                    WHERE activo = 1
-                    GROUP BY proveedor_id
-                ) stats ON stats.proveedor_id = p.id
-                LEFT JOIN (
-                    SELECT proveedor_id, COUNT(*) AS total_recomendaciones
-                    FROM db_recomendaciones
-                    GROUP BY proveedor_id
-                ) recom ON recom.proveedor_id = p.id
-                LEFT JOIN (
-                    SELECT pi1.proveedor_id, pi1.imagen_b64
-                    FROM db_proveedor_imagenes pi1
-                    INNER JOIN (
-                        SELECT proveedor_id, MIN(orden) AS min_orden
-                        FROM db_proveedor_imagenes
-                        GROUP BY proveedor_id
-                    ) pi2 ON pi1.proveedor_id = pi2.proveedor_id AND pi1.orden = pi2.min_orden
-                ) primera_img ON primera_img.proveedor_id = p.id
-                WHERE p.activo = 1
-            `;
-            const params = [];
-            if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
-            if (q) {
-                sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ?)';
-                const like = `%${q}%`;
-                params.push(like, like, like);
-            }
-            sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
 
-            const [rows] = await pool.query(sql, params);
-            dvOk(res, rows);
-        } catch (error) {
-            console.error("ERROR EN /proveedores:", error);
-            res.status(500).json({
-                message: "Error interno",
-                error: error.message
-            });
-        }
-
-    });
-
-
-
-
-    app.get('/api/dv/proveedores-anterior', async (req, res) => {
-        try {
-            const { rubro_id, q } = req.query;
-            let sql = `
-                SELECT
-                p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por,
-                p.sitio_web, p.instagram,
-                r.id     AS rubro_id,
-                r.nombre AS rubro,
-                r.icono  AS rubro_icono,
-                u.id     AS presentado_por_id,
-                u.nombre AS presentado_por,
-                u.barrio AS presentado_por_barrio,
-                u.lote   AS presentado_por_lote,
-                primera_img.imagen_b64 AS primera_imagen,
-                ROUND(AVG(re.calificacion), 1)  AS calificacion_promedio,
-                COUNT(DISTINCT re.id)           AS total_resenas,
-                COUNT(DISTINCT rc.id)           AS total_recomendaciones
-                FROM db_proveedores p
-                JOIN  db_rubros r               ON r.id = p.rubro_id
-                LEFT JOIN db_usuarios u         ON u.id = p.creado_por
-                LEFT JOIN db_resenas re         ON re.proveedor_id = p.id AND re.activo = 1
-                LEFT JOIN db_recomendaciones rc ON rc.proveedor_id = p.id
-                LEFT JOIN (
-                    SELECT pi1.proveedor_id, pi1.imagen_b64
-                    FROM db_proveedor_imagenes pi1
-                    INNER JOIN (
-                        SELECT proveedor_id, MIN(orden) AS min_orden
-                        FROM db_proveedor_imagenes
-                        GROUP BY proveedor_id
-                    ) pi2 ON pi1.proveedor_id = pi2.proveedor_id AND pi1.orden = pi2.min_orden
-                ) primera_img ON primera_img.proveedor_id = p.id
-                WHERE p.activo =1
-            `;
-            const params = [];
-            if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
-            if (q) {
-                sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ?)';
-                const like = `%${q}%`;
-                params.push(like, like, like);
-            }
-            sql += ' GROUP BY p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por, p.sitio_web, p.instagram, r.id, r.nombre, r.icono, u.id, u.nombre, u.barrio, u.lote, primera_img.imagen_b64';
-            sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
-
-            const [rows] = await pool.query(sql, params);
-            dvOk(res, rows);
-        } catch (error) {
-            console.error("ERROR EN /proveedores:", error);
-            res.status(500).json({
-                message: "Error interno",
-                error: error.message
-            });
-        }
-
-    });
-
-    // POST /api/dv/proveedores  (requiere dvAuth)
     // POST /api/dv/proveedores  (requiere dvAuth)
     app.post('/api/dv/proveedores', dvAuth, bloquearVisitante, async (req, res) => {
         const { nombre, rubro_id, tipo = 'externo', zona = null,
@@ -951,7 +826,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         return row ? row.usuario_id : null;
     }
 
-    app.put('/api/dv/resenas/:id', bloquearVisitante, esAutorOAdmin(getPropietarioResena), async (req, res) => {
+    app.put('/api/dv/resenas/:id', dvAuth, bloquearVisitante, esAutorOAdmin(getPropietarioResena), async (req, res) => {
         try {
             const { calificacion, comentario, fecha_trabajo } = req.body;
             await pool.query(
@@ -967,7 +842,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         }
     });
 
-    app.delete('/api/dv/resenas/:id', bloquearVisitante, esAutorOAdmin(getPropietarioResena), async (req, res) => {
+    app.delete('/api/dv/resenas/:id', dvAuth, bloquearVisitante, esAutorOAdmin(getPropietarioResena), async (req, res) => {
         try {
             await pool.query(
                 'UPDATE db_resenas SET activo = 0, fecha_baja = NOW() WHERE id = ?',
@@ -1121,9 +996,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     // GET /api/dv/landing/fotos-recientes  (sin dvAuth, es público)
     // GET /api/dv/landing/fotos-recientes  (sin dvAuth, es público)
 
-app.get('/api/dv/landing/fotos-recientes', async (req, res) => {
-    try {
-        const [rows] = await pool.query(`
+    app.get('/api/dv/landing/fotos-recientes', async (req, res) => {
+        try {
+            const [rows] = await pool.query(`
             SELECT * FROM (
                 SELECT 
                     pi.id,
@@ -1143,20 +1018,20 @@ app.get('/api/dv/landing/fotos-recientes', async (req, res) => {
             LIMIT 10
         `);
 
-        const items = rows.map(r => ({
-            id: r.id,
-            imagenUrl: `${req.protocol}://${req.get('host')}/api/dv/imagen/${r.id}`,
-            proveedor: r.proveedor_nombre,
-            categoria: r.categoria,
-            zona: r.zona,
-            descripcion: r.descripcion
-        }));
+            const items = rows.map(r => ({
+                id: r.id,
+                imagenUrl: `${req.protocol}://${req.get('host')}/api/dv/imagen/${r.id}`,
+                proveedor: r.proveedor_nombre,
+                categoria: r.categoria,
+                zona: r.zona,
+                descripcion: r.descripcion
+            }));
 
-        dvOk(res, items);
-    } catch (err) {
-        dvErr(res, err);
-    }
-});
+            dvOk(res, items);
+        } catch (err) {
+            dvErr(res, err);
+        }
+    });
 
 
     app.get('/api/dv/landing/fotos-recientes-antes', async (req, res) => {
@@ -1195,9 +1070,9 @@ app.get('/api/dv/landing/fotos-recientes', async (req, res) => {
     // ---------------------------------------------------
     // GET /api/dv/actividad-reciente  (protegido con dvAuth)
 
-app.get('/api/dv/actividad-reciente', dvAuth, async (req, res) => {
-    try {
-        const [rows] = await pool.query(`
+    app.get('/api/dv/actividad-reciente', dvAuth, async (req, res) => {
+        try {
+            const [rows] = await pool.query(`
             SELECT * FROM (
                 SELECT 
                     sub.*,
@@ -1241,23 +1116,23 @@ app.get('/api/dv/actividad-reciente', dvAuth, async (req, res) => {
             LIMIT 6
         `);
 
-        const items = rows.map(r => ({
-            tipo: r.tipo,
-            texto: r.texto,
-            imagenUrl: r.tipo === 'foto'
-                ? `${req.protocol}://${req.get('host')}/api/dv/imagen/${r.item_id}`
-                : null,
-            proveedor: r.proveedor_nombre,
-            proveedorId: r.proveedor_id,
-            categoria: r.categoria,
-            fecha: r.fecha
-        }));
+            const items = rows.map(r => ({
+                tipo: r.tipo,
+                texto: r.texto,
+                imagenUrl: r.tipo === 'foto'
+                    ? `${req.protocol}://${req.get('host')}/api/dv/imagen/${r.item_id}`
+                    : null,
+                proveedor: r.proveedor_nombre,
+                proveedorId: r.proveedor_id,
+                categoria: r.categoria,
+                fecha: r.fecha
+            }));
 
-        dvOk(res, items);
-    } catch (err) {
-        dvErr(res, err);
-    }
-});
+            dvOk(res, items);
+        } catch (err) {
+            dvErr(res, err);
+        }
+    });
 
 
     app.get('/api/dv/actividad-reciente-antes', dvAuth, async (req, res) => {
@@ -1317,4 +1192,47 @@ app.get('/api/dv/actividad-reciente', dvAuth, async (req, res) => {
         }
     });
 
+    // ----------------------------------------------------------
+    //  Mostrar provedores y comentarios  de cadad usuario// 
+    // ----------------------------------------------------------
+
+    // GET /api/dv/mis-proveedores
+    app.get('/api/dv/mis-proveedores', dvAuth, async (req, res) => {
+        try {
+            const [rows] = await pool.query(
+                `SELECT p.*, r.nombre AS rubro_nombre
+                FROM db_proveedores p
+                LEFT JOIN db_rubros r ON r.id = p.rubro_id
+                WHERE p.creado_por = ? AND p.activo = 1
+                ORDER BY p.id DESC`,
+                [req.dvUser.id]
+            );
+            return dvOk(res, rows);
+        } catch (err) {
+            console.error('>>> ERROR mis-proveedores:', err);
+            return dvErr(res, err.message);
+        }
+    });
+
+    // GET /api/dv/mis-comentarios
+    // GET /api/dv/mis-comentarios
+    app.get('/api/dv/mis-comentarios', dvAuth, async (req, res) => {
+        try {
+            const [rows] = await pool.query(
+                `SELECT r.id, r.calificacion, r.comentario, r.fecha_trabajo, r.fecha_publicacion,
+                    p.id AS proveedor_id, p.nombre AS proveedor_nombre,
+                    ru.nombre AS rubro_nombre
+            FROM db_resenas r
+            JOIN db_proveedores p ON p.id = r.proveedor_id
+            LEFT JOIN db_rubros ru ON ru.id = p.rubro_id
+            WHERE r.usuario_id = ? AND r.activo = 1
+            ORDER BY r.fecha_publicacion DESC`,
+                [req.dvUser.id]
+            );
+            return dvOk(res, rows);
+        } catch (err) {
+            console.error('>>> ERROR mis-comentarios:', err);
+            return dvErr(res, err.message);
+        }
+    });
 };
