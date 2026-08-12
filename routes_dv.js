@@ -488,52 +488,52 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     //  PROVEEDORES
     // ----------------------------------------------------------
 
-
     app.get('/api/dv/proveedores', async (req, res) => {
         try {
             const { rubro_id, q } = req.query;
             let sql = `
-                SELECT
-                p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por,
-                p.sitio_web, p.instagram,
-                r.id     AS rubro_id,
-                r.nombre AS rubro,
-                r.icono  AS rubro_icono,
-                u.id     AS presentado_por_id,
-                u.nombre AS presentado_por,
-                u.barrio AS presentado_por_barrio,
-                u.lote   AS presentado_por_lote,
-                primera_img.img_id AS primera_imagen_id,
-                COALESCE(stats.calificacion_promedio, 0) AS calificacion_promedio,
-                COALESCE(stats.total_resenas, 0)         AS total_resenas,
-                COALESCE(recom.total_recomendaciones, 0) AS total_recomendaciones
-                FROM db_proveedores p
-                JOIN  db_rubros r               ON r.id = p.rubro_id
-                LEFT JOIN db_usuarios u         ON u.id = p.creado_por
-                LEFT JOIN (
-                    SELECT proveedor_id,
-                           ROUND(AVG(calificacion), 1) AS calificacion_promedio,
-                           COUNT(*) AS total_resenas
-                    FROM db_resenas
-                    WHERE activo = 1
+            SELECT
+            p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por,
+            p.sitio_web, p.instagram,
+            p.autenticado,
+            COALESCE(u.nombre, p.invitado_nombre, 'Usuario no autenticado') AS presentado_por,
+            COALESCE(u.barrio, p.invitado_barrio_lote) AS presentado_por_barrio,
+            u.lote   AS presentado_por_lote,
+            r.id     AS rubro_id,
+            r.nombre AS rubro,
+            r.icono  AS rubro_icono,
+            u.id     AS presentado_por_id,
+            primera_img.img_id AS primera_imagen_id,
+            COALESCE(stats.calificacion_promedio, 0) AS calificacion_promedio,
+            COALESCE(stats.total_resenas, 0)         AS total_resenas,
+            COALESCE(recom.total_recomendaciones, 0) AS total_recomendaciones
+            FROM db_proveedores p
+            JOIN  db_rubros r               ON r.id = p.rubro_id
+            LEFT JOIN db_usuarios u         ON u.id = p.creado_por
+            LEFT JOIN (
+                SELECT proveedor_id,
+                       ROUND(AVG(calificacion), 1) AS calificacion_promedio,
+                       COUNT(*) AS total_resenas
+                FROM db_resenas
+                WHERE activo = 1
+                GROUP BY proveedor_id
+            ) stats ON stats.proveedor_id = p.id
+            LEFT JOIN (
+                SELECT proveedor_id, COUNT(*) AS total_recomendaciones
+                FROM db_recomendaciones
+                GROUP BY proveedor_id
+            ) recom ON recom.proveedor_id = p.id
+            LEFT JOIN (
+                SELECT pi1.proveedor_id, pi1.id AS img_id
+                FROM db_proveedor_imagenes pi1
+                INNER JOIN (
+                    SELECT proveedor_id, MIN(orden) AS min_orden
+                    FROM db_proveedor_imagenes
                     GROUP BY proveedor_id
-                ) stats ON stats.proveedor_id = p.id
-                LEFT JOIN (
-                    SELECT proveedor_id, COUNT(*) AS total_recomendaciones
-                    FROM db_recomendaciones
-                    GROUP BY proveedor_id
-                ) recom ON recom.proveedor_id = p.id
-                LEFT JOIN (
-                    SELECT pi1.proveedor_id, pi1.id AS img_id
-                    FROM db_proveedor_imagenes pi1
-                    INNER JOIN (
-                        SELECT proveedor_id, MIN(orden) AS min_orden
-                        FROM db_proveedor_imagenes
-                        GROUP BY proveedor_id
-                    ) pi2 ON pi1.proveedor_id = pi2.proveedor_id AND pi1.orden = pi2.min_orden
-                ) primera_img ON primera_img.proveedor_id = p.id
-                WHERE p.activo = 1
-            `;
+                ) pi2 ON pi1.proveedor_id = pi2.proveedor_id AND pi1.orden = pi2.min_orden
+            ) primera_img ON primera_img.proveedor_id = p.id
+            WHERE p.activo = 1
+        `;
             const params = [];
             if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
             if (q) {
@@ -560,12 +560,11 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 error: error.message
             });
         }
-
     });
 
 
     // POST /api/dv/proveedores  (requiere dvAuth)
-    app.post('/api/dv/proveedores', dvAuth, bloquearVisitante, async (req, res) => {
+    app.post('/api/dv/proveedores-anterior-no-sirve', dvAuth, bloquearVisitante, async (req, res) => {
         const { nombre, rubro_id, tipo = 'externo', zona = null,
             telefono = null, descripcion = null, images = [] } = req.body;
 
@@ -609,6 +608,80 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             conn.release();
         }
     });
+
+    app.post('/api/dv/proveedores', async (req, res) => {
+        const { nombre, rubro_id, tipo = 'externo', zona = null,
+            telefono = null, descripcion = null, images = [],
+            invitado_nombre, invitado_barrio_lote } = req.body;
+
+        if (!nombre?.trim()) return dvErr(res, 'El nombre es obligatorio.', 400);
+        if (!rubro_id) return dvErr(res, 'El rubro es obligatorio.', 400);
+        if (!['vecino', 'externo'].includes(tipo))
+            return dvErr(res, 'El tipo debe ser "vecino" o "externo".', 400);
+
+        const sitio_web = limpiarSitioWeb(req.body.sitio_web);
+        const instagram = limpiarInstagram(req.body.instagram);
+
+        // Resolver usuario desde el JWT si vino, sin exigirlo
+        let usuarioId = null;
+        let autenticado = 0;
+        let nombreInvitado = (invitado_nombre || '').trim() || null;
+        let barrioLoteInvitado = (invitado_barrio_lote || '').trim() || null;
+
+        const authHeader = req.headers.authorization;
+        if (authHeader) {
+            try {
+                const token = authHeader.split(' ')[1];
+                const payload = jwt.verify(token, process.env.JWT_SECRET);
+                if (payload.id && payload.id !== 9999) {
+                    usuarioId = payload.id;
+                    autenticado = 1;
+                    nombreInvitado = null;
+                    barrioLoteInvitado = null;
+                }
+            } catch (e) {
+                // Sesión vencida o token corrupto: cortamos, igual que en reseñas
+                return dvErr(res, 'SESION_VENCIDA', 401);
+            }
+        }
+
+        const conn = await pool.getConnection();
+        try {
+            await conn.beginTransaction();
+
+            const [result] = await conn.query(
+                `INSERT INTO db_proveedores
+               (nombre, rubro_id, creado_por, autenticado, invitado_nombre, invitado_barrio_lote,
+                tipo, zona, telefono, descripcion, sitio_web, instagram)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [nombre.trim(), rubro_id, usuarioId, autenticado, nombreInvitado, barrioLoteInvitado,
+                    tipo, zona, telefono, descripcion, sitio_web, instagram]
+            );
+            const proveedorId = result.insertId;
+
+            if (images.length) {
+                const imagesComprimidas = await Promise.all(images.map(comprimirImagen));
+
+                const imgRows = imagesComprimidas.map((dataURL, i) => [
+                    proveedorId, dataURL, mimeFromDataURL(dataURL), i
+                ]);
+                await conn.query(
+                    'INSERT INTO db_proveedor_imagenes (proveedor_id, imagen_b64, mime_type, orden) VALUES ?',
+                    [imgRows]
+                );
+            }
+
+            await conn.commit();
+            dvOk(res, { id: proveedorId });
+        } catch (e) {
+            await conn.rollback();
+            dvErr(res, e.message);
+        } finally {
+            conn.release();
+        }
+    });
+
+
 
     function limpiarInstagram(valor) {
         if (!valor) return null;
@@ -788,20 +861,21 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         try {
             const [rows] = await pool.query(
                 `SELECT r.id, r.usuario_id, r.calificacion, r.comentario, r.fecha_trabajo, r.fecha_publicacion,
-            u.nombre AS autor,  
-            u.barrio AS autor_barrio,
-            u.lote   AS autor_lote
-            FROM db_resenas r
-            LEFT JOIN db_usuarios u ON u.id = r.usuario_id
-            WHERE r.proveedor_id = ? AND r.activo = 1
-            ORDER BY r.fecha_publicacion DESC`,
+        r.autenticado,
+        COALESCE(u.nombre, r.invitado_nombre, 'Usuario no autenticado') AS autor,
+        COALESCE(u.barrio, r.invitado_barrio_lote) AS autor_barrio,
+        u.lote AS autor_lote
+        FROM db_resenas r
+        LEFT JOIN db_usuarios u ON u.id = r.usuario_id
+        WHERE r.proveedor_id = ? AND r.activo = 1
+        ORDER BY r.fecha_publicacion DESC`,
                 [req.params.id]
             );
             dvOk(res, rows);
         } catch (e) { dvErr(res, e.message); }
     });
 
-    app.post('/api/dv/proveedores/:id/resenas', dvAuth, bloquearVisitante, async (req, res) => {
+    app.post('/api/dv/proveedores/:id/resenas-anterior-no-sirve', dvAuth, bloquearVisitante, async (req, res) => {
         const { calificacion, comentario, fecha_trabajo = null } = req.body;
         if (!comentario?.trim()) return dvErr(res, 'El comentario es obligatorio.', 400);
         if (!calificacion || calificacion < 1 || calificacion > 5)
@@ -813,6 +887,48 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
            (proveedor_id, usuario_id, calificacion, comentario, fecha_trabajo, fecha_publicacion)
          VALUES (?, ?, ?, ?, ?, CURRENT_DATE)`,
                 [req.params.id, req.dvUser.id, calificacion, comentario.trim(), fecha_trabajo || null]
+            );
+            dvOk(res, { id: result.insertId });
+        } catch (e) { dvErr(res, e.message); }
+    });
+
+    app.post('/api/dv/proveedores/:id/resenas', async (req, res) => {
+        const { calificacion, comentario, fecha_trabajo = null, invitado_nombre, invitado_barrio_lote } = req.body;
+        if (!comentario?.trim()) return dvErr(res, 'El comentario es obligatorio.', 400);
+        if (!calificacion || calificacion < 1 || calificacion > 5)
+            return dvErr(res, 'La calificación debe ser entre 1 y 5.', 400);
+
+        let usuarioId = null;
+        let autenticado = 0;
+        let nombreInvitado = (invitado_nombre || '').trim() || null;
+        let barrioLoteInvitado = (invitado_barrio_lote || '').trim() || null;
+
+        const authHeader = req.headers.authorization;
+        if (authHeader) {
+            try {
+                const token = authHeader.split(' ')[1];
+                const payload = jwt.verify(token, process.env.JWT_SECRET);
+                if (payload.id && payload.id !== 9999) {
+                    usuarioId = payload.id;
+                    autenticado = 1;
+                    nombreInvitado = null;
+                    barrioLoteInvitado = null;
+                }
+            } catch (e) {
+                // Sesión vencida o token corrupto: NO lo degradamos en silencio a invitado.
+                // Cortamos acá para que el frontend limpie la sesión y le avise al usuario.
+                return dvErr(res, 'SESION_VENCIDA', 401);
+            }
+        }
+
+        try {
+            const [result] = await pool.query(
+                `INSERT INTO db_resenas
+               (proveedor_id, usuario_id, autenticado, invitado_nombre, invitado_barrio_lote,
+                calificacion, comentario, fecha_trabajo, fecha_publicacion)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE)`,
+                [req.params.id, usuarioId, autenticado, nombreInvitado, barrioLoteInvitado,
+                    calificacion, comentario.trim(), fecha_trabajo || null]
             );
             dvOk(res, { id: result.insertId });
         } catch (e) { dvErr(res, e.message); }
@@ -1237,64 +1353,64 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
     // Sugerencias, comentarios, quejas....()
 
-app.post('/api/dv/feedback', async (req, res) => {
-  try {
-    const { tipo, mensaje, nombre } = req.body;
+    app.post('/api/dv/feedback', async (req, res) => {
+        try {
+            const { tipo, mensaje, nombre } = req.body;
 
-    if (!['consulta', 'sugerencia', 'propuesta', 'queja'].includes(tipo)) {
-      return dvErr(res, 'Tipo inválido');
-    }
-    if (!mensaje || !mensaje.trim()) {
-      return dvErr(res, 'El mensaje no puede estar vacío');
-    }
+            if (!['consulta', 'sugerencia', 'propuesta', 'queja'].includes(tipo)) {
+                return dvErr(res, 'Tipo inválido');
+            }
+            if (!mensaje || !mensaje.trim()) {
+                return dvErr(res, 'El mensaje no puede estar vacío');
+            }
 
-    let usuarioId = null;
-    let nombreFinal = (nombre || '').trim();
+            let usuarioId = null;
+            let nombreFinal = (nombre || '').trim();
 
-    const authHeader = req.headers.authorization;
-    if (authHeader) {
-      try {
-        const token = authHeader.split(' ')[1];
-        const payload = jwt.verify(token, process.env.JWT_SECRET);
-        if (payload.id && payload.id !== 9999) {
-          usuarioId = payload.id;
-          nombreFinal = payload.nombre;
-        }
-      } catch (_) {}
-    }
+            const authHeader = req.headers.authorization;
+            if (authHeader) {
+                try {
+                    const token = authHeader.split(' ')[1];
+                    const payload = jwt.verify(token, process.env.JWT_SECRET);
+                    if (payload.id && payload.id !== 9999) {
+                        usuarioId = payload.id;
+                        nombreFinal = payload.nombre;
+                    }
+                } catch (_) { }
+            }
 
-    if (!nombreFinal) {
-      return dvErr(res, 'Falta el nombre');
-    }
+            if (!nombreFinal) {
+                return dvErr(res, 'Falta el nombre');
+            }
 
-    await pool.query(
-      `INSERT INTO db_feedback (usuario_id, nombre, tipo, mensaje, fecha_creacion, activo)
+            await pool.query(
+                `INSERT INTO db_feedback (usuario_id, nombre, tipo, mensaje, fecha_creacion, activo)
        VALUES (?, ?, ?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR), 1)`,
-      [usuarioId, nombreFinal, tipo, mensaje.trim()]
-    );
+                [usuarioId, nombreFinal, tipo, mensaje.trim()]
+            );
 
-    // Notificación por mail — fire-and-forget, no bloquea la respuesta
-    const TIPO_LABEL = {
-      consulta: 'Consulta',
-      sugerencia: 'Sugerencia',
-      propuesta: 'Propuesta',
-      queja: 'Queja'
-    };
-    const etiqueta = TIPO_LABEL[tipo] || tipo;
+            // Notificación por mail — fire-and-forget, no bloquea la respuesta
+            const TIPO_LABEL = {
+                consulta: 'Consulta',
+                sugerencia: 'Sugerencia',
+                propuesta: 'Propuesta',
+                queja: 'Queja'
+            };
+            const etiqueta = TIPO_LABEL[tipo] || tipo;
 
-    sendMail(
-      'ruben.e.garcia@gmail.com',
-      `EntreVecinos — Nueva ${etiqueta.toLowerCase()} de ${nombreFinal}`,
-      `${etiqueta} de ${nombreFinal}:\n\n${mensaje.trim()}`,
-      `<p><strong>${etiqueta}</strong> de <strong>${nombreFinal}</strong></p><p>${mensaje.trim().replace(/\n/g, '<br>')}</p>`
-    ).catch(e => console.error('Error enviando notificación de feedback:', e));
+            sendMail(
+                'ruben.e.garcia@gmail.com',
+                `EntreVecinos — Nueva ${etiqueta.toLowerCase()} de ${nombreFinal}`,
+                `${etiqueta} de ${nombreFinal}:\n\n${mensaje.trim()}`,
+                `<p><strong>${etiqueta}</strong> de <strong>${nombreFinal}</strong></p><p>${mensaje.trim().replace(/\n/g, '<br>')}</p>`
+            ).catch(e => console.error('Error enviando notificación de feedback:', e));
 
-    return dvOk(res, { mensaje: 'Gracias, lo recibimos.' });
-  } catch (e) {
-    console.error(e);
-    return dvErr(res, 'Error al enviar el mensaje');
-  }
-});
+            return dvOk(res, { mensaje: 'Gracias, lo recibimos.' });
+        } catch (e) {
+            console.error(e);
+            return dvErr(res, 'Error al enviar el mensaje');
+        }
+    });
 
 
 

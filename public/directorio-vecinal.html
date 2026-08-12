@@ -1559,6 +1559,72 @@
         .toast-backdrop.show {
             opacity: 1;
         }
+
+        /* ---------- Badge de verificación (tilde / ícono de invitado) ---------- */
+
+        .verif-badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 1rem;
+            vertical-align: middle;
+        }
+
+        .verif-badge--ok {
+            color: #34b7f1;
+            /* mismo celeste del doble tilde de WhatsApp */
+        }
+
+        .verif-badge--invitado {
+            color: var(--gray, #9a948a);
+        }
+
+        .verif-info {
+            display: inline-flex;
+            align-items: center;
+            background: none;
+            border: none;
+            padding: 0;
+            margin-left: .15rem;
+            cursor: pointer;
+            color: var(--ink-soft, #6b7268);
+            font-size: .85rem;
+            vertical-align: middle;
+        }
+
+        .verif-info:hover {
+            color: var(--sage, #5e7d63);
+        }
+
+        /* ---------- Popover ("ventanita") ---------- */
+
+        .verif-popover {
+            position: absolute;
+            z-index: 2000;
+            background: var(--card, #fffdf6);
+            border: 1px solid var(--line, #ddd3bd);
+            border-radius: 8px;
+            padding: .7rem .9rem;
+            width: 240px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+            font-size: .82rem;
+            color: var(--ink, #2a322d);
+        }
+
+        .verif-popover p {
+            margin: 0;
+        }
+
+        .verif-popover-arrow {
+            position: absolute;
+            top: -6px;
+            left: 100px;
+            width: 12px;
+            height: 12px;
+            background: var(--card, #fffdf6);
+            border-left: 1px solid var(--line, #ddd3bd);
+            border-top: 1px solid var(--line, #ddd3bd);
+            transform: rotate(45deg);
+        }
     </style>
 </head>
 
@@ -1932,6 +1998,32 @@
         </div>
     </div>
 
+    <div id="modalInvitado" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Publicar sin registrarte</h3>
+                <button class="modal-dv-cerrar" onclick="document.getElementById('modalInvitado').style.display='none'">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <div class="modal-scroll">
+                <p class="ink-soft">Podés publicar sin crear una cuenta. Se va a mostrar como <strong>usuario no
+                        autenticado</strong>. Si querés, dejá tus datos (no es obligatorio):</p>
+
+                <label>Nombre y apellido</label>
+                <input type="text" id="invitadoNombre" placeholder="Opcional" />
+
+                <label>Barrio y lote</label>
+                <input type="text" id="invitadoBarrioLote" placeholder="Ej: Altos, lote 45 (opcional)" />
+
+                <button type="button" class="btn-primary" style="margin-top:1rem;"
+                    onclick="confirmarPublicacionInvitado()">
+                    Publicar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="lightbox-overlay hidden" id="lightbox">
         <button class="lightbox-close" data-action="lightbox-close" aria-label="Cerrar imagen">
             ✕
@@ -2120,25 +2212,35 @@
                 presentadoPorBarrio: p.presentado_por_barrio || "",
                 presentadoPorLote: p.presentado_por_lote || "",
                 creadoPor: p.creado_por,
+                autenticado: !!p.autenticado,                          // NUEVO
+                invitadoNombre: p.invitado_nombre || "",                // NUEVO
+                invitadoBarrioLote: p.invitado_barrio_lote || "",        // NUEVO
                 name: p.nombre,
-                rubro: p.rubro_nombre,
+                rubro: p.rubro,
                 rubro_id: p.rubro_id,
                 zone: p.zona || "",
                 phone: p.telefono || "",
                 desc: p.descripcion || "",
                 sitio_web: p.sitio_web || "",
                 instagram: p.instagram || "",
-                tipo: p.tipo || "externo", // 'vecino' | 'externo' — pendiente de columna en DB
-                images: p.images || [], // pendiente de tabla en DB
+                tipo: p.tipo || "externo",
+                images: p.images || [],
                 primeraImagen: p.primera_imagen || null,
                 avgRating: parseFloat(p.calificacion_promedio) || 0,
                 totalReviews: parseInt(p.total_resenas) || 0,
                 recommends: parseInt(p.total_recomendaciones) || 0,
-                reviews: [], // se cargan al abrir el detalle
+                reviews: [],
             };
-
         }
 
+        function nombreConUbicacionProveedor(p) {
+            if (p.autenticado) {
+                const ubic = [p.presentadoPorBarrio, p.presentadoPorLote].filter(Boolean).join(" · ");
+                return ubic ? `${p.presentadoPor} – (${ubic})` : p.presentadoPor;
+            }
+            const nombre = p.invitadoNombre?.trim() || "Usuario no autenticado";
+            return p.invitadoBarrioLote?.trim() ? `${nombre} – (${p.invitadoBarrioLote.trim()})` : nombre;
+        }
         // ------------------------------------------------------------
         //  UI helpers
         // ------------------------------------------------------------
@@ -2211,6 +2313,71 @@
             const [y, m, d] = iso.split("-");
             return `${d}-${m}-${y}`;
         }
+
+        // ------------------------------------------------------------
+        //  Helpers de sesión
+        // ------------------------------------------------------------
+        function esUsuarioAutenticado() {
+            const user = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
+            const token = sessionStorage.getItem('dv_token');
+            return !!(user && token && user.id && user.id !== 9999);
+        }
+
+        function limpiarSesionVencida() {
+            sessionStorage.removeItem('dv_token');
+            sessionStorage.removeItem('dv_user');
+            // acá podés disparar tu función de refresco de header/menú si la tenés
+            // ej: actualizarHeaderUsuario();
+        }
+
+
+        // punto de entrada único (lo llamás desde el submit de reseña Y de proveedor)
+        // Guarda temporalmente qué se estaba por publicar, para retomarlo tras confirmar datos de invitado
+        // let publicacionPendiente = null;  // 'resena' | 'proveedor'
+
+        function intentarPublicar(tipo, payload) {
+            if (esUsuarioAutenticado()) {
+                return enviarPublicacion(tipo, payload); // directo, sin pedir nada
+            }
+            publicacionPendiente = { tipo, payload };
+            document.getElementById('invitadoNombre').value = '';
+            document.getElementById('invitadoBarrioLote').value = '';
+            document.getElementById('modalInvitado').style.display = 'flex';
+        }
+
+
+        // envío real, con manejo de SESION_VENCIDA
+        async function enviarPublicacion(tipo, payload) {
+            const url = tipo === 'resena'
+                ? `/api/dv/proveedores/${payload.proveedor_id}/resenas`
+                : '/api/dv/proveedores';
+
+            const token = sessionStorage.getItem('dv_token');
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
+            const resp = await fetch(url, { method: 'POST', headers, body: JSON.stringify(payload) });
+            const data = await resp.json();
+
+            if (data.ok) {
+                mostrarToast(
+                    '¡Listo!',
+                    tipo === 'resena' ? 'Tu comentario ya está publicado.' : 'Tu proveedor ya está publicado.',
+                    '✅'
+                );
+                // acá: cerrar el modal del formulario correspondiente, resetearlo, refrescar el listado
+                return data;
+            }
+
+            if (resp.status === 401 && data.error === 'SESION_VENCIDA') {
+                limpiarSesionVencida();
+                alert('Tu sesión venció. Iniciá sesión nuevamente para publicar como usuario registrado, o volvé a intentarlo para publicar como usuario no autenticado.');
+                return;
+            }
+
+            alert(data.error || 'No se pudo publicar');
+        }
+
 
         // ------------------------------------------------------------
         //  Filtering & sorting (solo en memoria, el filtro por rubro
@@ -2676,6 +2843,7 @@
                         author: r.autor,
                         authorBarrio: r.autor_barrio || "",
                         authorLote: r.autor_lote || "",
+                        autenticado: !!r.autenticado,        // NUEVO
                         rating: r.calificacion,
                         comment: r.comentario,
                         workdate: formatFecha(r.fecha_trabajo),
@@ -2701,22 +2869,24 @@
                 ? p.reviews
                     .map(
                         (r) => `
-                    <div class="review">
-                        <div class="review-head">
-                        <strong>${escapeHtml(r.author)}${r.authorBarrio ? ` - (${escapeHtml(r.authorBarrio)} · Lote ${escapeHtml(r.authorLote)}` : ""})</strong>
-                        <span class="stars">${renderStars(r.rating)}</span>
-                        </div>
-                        <p>${escapeHtml(r.comment)}</p>
-                        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:.25rem;">
-                        ${r.workdate ? `<time style="color:var(--teal)">🔧 Trabajo: ${r.workdate}</time>` : ""}
-                        <time>📅 Publicado: ${r.date}</time>
-                        </div>
-                    </div>
-                    `,
+                <div class="review">
+                <div class="review-head">
+                <strong>
+                    ${escapeHtml(r.author)}${r.authorBarrio ? ` - (${escapeHtml(r.authorBarrio)}${r.authorLote ? ` · Lote ${escapeHtml(r.authorLote)}` : ""})` : ""}
+                    ${badgeVerificacion(r.autenticado)}
+                </strong>
+                <span class="stars">${renderStars(r.rating)}</span>
+                </div>
+                <p>${escapeHtml(r.comment)}</p>
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:.25rem;">
+                ${r.workdate ? `<time style="color:var(--teal)">🔧 Trabajo: ${r.workdate}</time>` : ""}
+                <time>📅 Publicado: ${r.date}</time>
+                </div>
+                </div>
+                `,
                     )
                     .join("")
                 : `<p class="no-reviews">Todavía no hay recomendaciones. ¡Sé el primero en dejar una!</p>`;
-
 
             const userId =
                 JSON.parse(sessionStorage.getItem("dv_user") || "{}").id || null;
@@ -2792,7 +2962,8 @@
                 </div>
 
                 <p class="card-zone">
-                Presentado por: <span>${p.presentadoPor} - ${p.presentadoPorBarrio} - ${p.presentadoPorLote || "Desconocido"}</span>
+                Presentado por: <span>${p.presentadoPor}${p.presentadoPorBarrio ? ` - (${p.presentadoPorBarrio}${p.presentadoPorLote ? ` · Lote ${p.presentadoPorLote}` : ""})` : ""}</span>
+                ${badgeVerificacion(p.autenticado)}
                 </p>
 
                 <hr class="divider-dashed">
@@ -2871,6 +3042,25 @@
             div.textContent = str;
             return div.innerHTML;
         }
+
+
+        function badgeVerificacion(autenticado) {
+            if (autenticado) {
+                return `
+            <span class="verif-badge verif-badge--ok"><i class="ti ti-checks"></i></span>
+            <button type="button" class="verif-info" onclick="mostrarPopoverVerificacion(event, 'registrado')">
+                <i class="ti ti-info-circle"></i>
+            </button>
+        `;
+            }
+            return `
+        <span class="verif-badge verif-badge--invitado"><i class="ti ti-user-question"></i></span>
+        <button type="button" class="verif-info" onclick="mostrarPopoverVerificacion(event, 'invitado')">
+            <i class="ti ti-info-circle"></i>
+        </button>
+    `;
+        }
+
 
         // ------------------------------------------------------------
         //  Galería de imágenes — lightbox y lectura de archivos
@@ -3406,6 +3596,37 @@
             return `549${d}`;
         }
 
+        const TEXTOS_VERIF = {
+            registrado: 'Este comentario fue publicado por un usuario registrado en EntreVecinos.',
+            invitado: 'Este comentario fue publicado por un usuario no registrado. Los datos que se muestran fueron ingresados voluntariamente por quien escribió el comentario.'
+        };
+
+        function mostrarPopoverVerificacion(event, tipo) {
+            event.stopPropagation();
+            const pop = document.getElementById('popoverVerif');
+            const yaAbierto = pop.style.display === 'block' && pop.dataset.tipo === tipo;
+
+            if (yaAbierto) {
+                pop.style.display = 'none';
+                return;
+            }
+
+            document.getElementById('popoverVerifTexto').textContent = TEXTOS_VERIF[tipo];
+            pop.dataset.tipo = tipo;
+
+            const rect = event.currentTarget.getBoundingClientRect();
+            pop.style.display = 'block';
+            pop.style.top = `${window.scrollY + rect.bottom + 8}px`;
+            pop.style.left = `${window.scrollX + rect.left - 100}px`;
+        }
+
+        document.addEventListener('click', (e) => {
+            const pop = document.getElementById('popoverVerif');
+            if (pop.style.display === 'block' && !pop.contains(e.target)) {
+                pop.style.display = 'none';
+            }
+        });
+
         // ------------------------------------------------------------
         //  Solicitar alta de nuevo rubro
         // ------------------------------------------------------------
@@ -3481,6 +3702,71 @@
             document.getElementById('toast').classList.remove('show');
             document.getElementById('toastBackdrop').classList.remove('show');
         });
+
+
+            let publicacionPendiente = null;
+
+            function confirmarPublicacionInvitado() {
+                if (tipoPublicacionPendiente === 'resena') {
+                    confirmarPublicacionInvitadoResena();
+                } else if (tipoPublicacionPendiente === 'proveedor') {
+                    confirmarPublicacionInvitadoProveedor();
+                }
+                tipoPublicacionPendiente = null;
+            }
+
+            function confirmarPublicacionInvitadoResena() {
+                if (!publicacionPendiente) return;
+
+                const invitado_nombre = document.getElementById('invitadoNombre').value.trim();
+                const invitado_barrio_lote = document.getElementById('invitadoBarrioLote').value.trim();
+
+                document.getElementById('modalInvitado').style.display = 'none';
+                guardarResena(publicacionPendiente, { autenticado: false, invitado_nombre, invitado_barrio_lote });
+                publicacionPendiente = null;
+            }
+
+            async function guardarResena({ id, comment, workdate, rating, btn }, datosAutor) {
+                btn.disabled = true;
+                btn.textContent = "Guardando…";
+
+                try {
+                    await apiFetch(`/proveedores/${id}/resenas`, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            calificacion: rating,
+                            comentario: comment,
+                            fecha_trabajo: workdate,
+                            invitado_nombre: datosAutor.autenticado ? undefined : (datosAutor.invitado_nombre || undefined),
+                            invitado_barrio_lote: datosAutor.autenticado ? undefined : (datosAutor.invitado_barrio_lote || undefined),
+                        }),
+                    });
+                    // Limpiar cache de reseñas del proveedor para recargar desde API
+                    const p = state.providers.find((x) => x.id === id);
+                    if (p) {
+                        p.reviews = [];
+                        p.totalReviews++;
+                    }
+                    // Recargar proveedores para actualizar el promedio
+                    await loadProviders();
+                    openDetail(id);
+                    mostrarToast(
+                        '¡Gracias por tu comentario!',
+                        'Tu opinión ayuda a que más vecinos elijan bien. Seguí sumando recomendaciones cuando quieras.',
+                        '🙌'
+                    );
+                } catch (err) {
+                    if (err.message === 'SESION_VENCIDA') {
+                        sessionStorage.removeItem('dv_token');
+                        sessionStorage.removeItem('dv_user');
+                        alert('Tu sesión venció. Iniciá sesión nuevamente, o volvé a intentarlo para publicar como usuario no autenticado.');
+                    } else {
+                        alert("No se pudo guardar la reseña: " + err.message);
+                    }
+                    btn.disabled = false;
+                    btn.textContent = "Publicar comentario";
+                }
+            }
 
         // ------------------------------------------------------------
         //  Init
@@ -3716,32 +4002,88 @@
                 });
 
             // Envío de reseña
+            // document
+            //     .getElementById("modal-detail")
+            //     .addEventListener("submit", async (e) => {
+            //         if (e.target.id !== "review-form") return;
+            //         e.preventDefault();
+
+            //         if (esVisitante()) {
+            //             avisarVisitante();
+            //             return;
+            //         }
+
+            //         // 👇 Validación de sesión antes de intentar guardar
+            //         const token = sessionStorage.getItem('dv_token');
+            //         if (!token) {
+            //             alert('Tu sesión expiró. Por favor, iniciá sesión nuevamente para publicar tu reseña.');
+            //             window.location.href = "login_dv.html";
+            //             return;
+            //         }
+
+            //         const id = Number(e.target.dataset.id);
+            //         const author = state.currentUserName;
+            //         const comment = e.target.comment.value.trim();
+            //         const workdate = e.target.workdate.value || null;
+            //         const rating = state.pendingRating;
+
+            //         if (!author || !comment || rating === 0) {
+            //             alert("Elegí una calificación y escribí un comentario.");
+            //             return;
+            //         }
+            //         if (workdate && workdate > todayISO()) {
+            //             alert("La fecha del trabajo no puede ser en el futuro.");
+            //             return;
+            //         }
+
+            //         const btn = e.target.querySelector(".submit-btn");
+            //         btn.disabled = true;
+            //         btn.textContent = "Guardando…";
+
+            //         try {
+            //             await apiFetch(`/proveedores/${id}/resenas`, {
+            //                 method: "POST",
+            //                 body: JSON.stringify({
+            //                     autor: author,
+            //                     calificacion: rating,
+            //                     comentario: comment,
+            //                     fecha_trabajo: workdate,
+            //                 }),
+            //             });
+            //             // Limpiar cache de reseñas del proveedor para recargar desde API
+            //             const p = state.providers.find((x) => x.id === id);
+            //             if (p) {
+            //                 p.reviews = [];
+            //                 p.totalReviews++;
+            //             }
+            //             // Recargar proveedores para actualizar el promedio
+            //             await loadProviders();
+            //             openDetail(id);
+            //             mostrarToast(
+            //                 '¡Gracias por tu comentario!',
+            //                 'Tu opinión ayuda a que más vecinos elijan bien. Seguí sumando recomendaciones cuando quieras.',
+            //                 '🙌'
+            //             );
+            //         } catch (err) {
+            //             alert("No se pudo guardar la reseña: " + err.message);
+            //             btn.disabled = false;
+            //             btn.textContent = "Publicar comentario";
+            //         }
+            //     });
+
+            // Envío de reseña
             document
                 .getElementById("modal-detail")
                 .addEventListener("submit", async (e) => {
                     if (e.target.id !== "review-form") return;
                     e.preventDefault();
 
-                    if (esVisitante()) {
-                        avisarVisitante();
-                        return;
-                    }
-
-                    // 👇 Validación de sesión antes de intentar guardar
-                    const token = sessionStorage.getItem('dv_token');
-                    if (!token) {
-                        alert('Tu sesión expiró. Por favor, iniciá sesión nuevamente para publicar tu reseña.');
-                        window.location.href = "login_dv.html";
-                        return;
-                    }
-
                     const id = Number(e.target.dataset.id);
-                    const author = state.currentUserName;
                     const comment = e.target.comment.value.trim();
                     const workdate = e.target.workdate.value || null;
                     const rating = state.pendingRating;
 
-                    if (!author || !comment || rating === 0) {
+                    if (!comment || rating === 0) {
                         alert("Elegí una calificación y escribí un comentario.");
                         return;
                     }
@@ -3751,109 +4093,146 @@
                     }
 
                     const btn = e.target.querySelector(".submit-btn");
-                    btn.disabled = true;
-                    btn.textContent = "Guardando…";
+                    const datosResena = { id, comment, workdate, rating, btn };
 
-                    try {
-                        await apiFetch(`/proveedores/${id}/resenas`, {
-                            method: "POST",
-                            body: JSON.stringify({
-                                autor: author,
-                                calificacion: rating,
-                                comentario: comment,
-                                fecha_trabajo: workdate,
-                            }),
-                        });
-                        // Limpiar cache de reseñas del proveedor para recargar desde API
-                        const p = state.providers.find((x) => x.id === id);
-                        if (p) {
-                            p.reviews = [];
-                            p.totalReviews++;
-                        }
-                        // Recargar proveedores para actualizar el promedio
-                        await loadProviders();
-                        openDetail(id);
-                        mostrarToast(
-                            '¡Gracias por tu comentario!',
-                            'Tu opinión ayuda a que más vecinos elijan bien. Seguí sumando recomendaciones cuando quieras.',
-                            '🙌'
-                        );
-                    } catch (err) {
-                        alert("No se pudo guardar la reseña: " + err.message);
-                        btn.disabled = false;
-                        btn.textContent = "Publicar comentario";
+                    // ¿Hay sesión válida? Publicamos directo. Si no, pedimos datos de invitado.
+                    const token = sessionStorage.getItem('dv_token');
+                    const user = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
+
+                    if (token && user && user.id && user.id !== 9999) {
+                        await guardarResena(datosResena, { autenticado: true, nombre: state.currentUserName });
+                    } else {
+                        publicacionPendiente = datosResena;
+                        document.getElementById('invitadoNombre').value = '';
+                        document.getElementById('invitadoBarrioLote').value = '';
+                        document.getElementById('modalInvitado').style.display = 'flex';
+                        tipoPublicacionPendiente = 'resena';
                     }
                 });
 
-            // Alta y edición de nuevo proveedor
+
             document
                 .getElementById("add-form")
                 .addEventListener("submit", async (e) => {
                     e.preventDefault();
 
-                    if (esVisitante()) {
-                        avisarVisitante();
-                        return;
-                    }
-
                     const form = e.target;
-                    const btn = form.querySelector(".submit-btn");
-                    btn.disabled = true;
-                    btn.textContent = editandoProveedorId ? "Guardando…" : "Guardando…";
 
-                    const payload = {
-                        nombre: form.name.value.trim(),
-                        rubro_id: Number(form.rubro.value),
-                        tipo: form.tipo.value,
-                        zona: form.zone.value.trim(),
-                        telefono: form.phone.value.trim(),
-                        descripcion: form.desc.value.trim(),
-                        sitio_web: form.sitio_web.value.trim(),
-                        instagram: form.instagram.value.trim(),
-                        images: pendingNewImages,
-                    };
-
-                    try {
-                        if (editandoProveedorId) {
-                            await apiFetch(`/proveedores/${editandoProveedorId}`, {
-                                method: "PUT",
-                                body: JSON.stringify(payload),
-                            });
-                        } else {
-                            await apiFetch("/proveedores", {
-                                method: "POST",
-                                body: JSON.stringify(payload),
-                            });
-                        }
-
-                        form.reset();
-                        pendingNewImages = [];
-                        editandoProveedorId = null;
-                        form.querySelector(".submit-btn").textContent =
-                            "Agregar al directorio";
-                        document.getElementById("add-images-preview").innerHTML = "";
-                        closeModals();
-                        state.filter.query = "";
-                        document.getElementById("search").value = "";
-                        await loadProviders();
-
-                        // NUEVO — si el modal de "Mis Proveedores" existe, refrescamos su lista también
-                        if (document.getElementById('mis-proveedores')) {
-                            await cargarMisProveedores();
-                        }
-                    } catch (err) {
-                        if (err.message.includes("autorizado")) {
-                            alert("Tu sesión expiró. Volvé a iniciar sesión.");
-                            window.location.href = "login_dv.html";
+                    // Si es EDICIÓN, sigue exigiendo sesión como siempre — no cambia nada acá.
+                    if (editandoProveedorId) {
+                        if (esVisitante()) {
+                            avisarVisitante();
                             return;
                         }
-                        alert("No se pudo guardar el proveedor: " + err.message);
-                    } finally {
-                        btn.disabled = false;
-                        if (!editandoProveedorId)
-                            btn.textContent = "Agregar al directorio";
+                        return guardarProveedor(form, { esEdicion: true });
+                    }
+
+                    // Si es CREACIÓN nueva: con sesión válida, directo. Sin sesión, pedimos datos de invitado.
+                    const token = sessionStorage.getItem('dv_token');
+                    const user = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
+
+                    if (token && user && user.id && user.id !== 9999) {
+                        await guardarProveedor(form, { esEdicion: false, autenticado: true });
+                    } else {
+                        proveedorFormPendiente = form;
+                        document.getElementById('invitadoNombre').value = '';
+                        document.getElementById('invitadoBarrioLote').value = '';
+                        document.getElementById('modalInvitado').style.display = 'flex';
+                        tipoPublicacionPendiente = 'proveedor';
                     }
                 });
+
+            let proveedorFormPendiente = null;
+
+            function confirmarPublicacionInvitadoProveedor() {
+                if (!proveedorFormPendiente) return;
+
+                const invitado_nombre = document.getElementById('invitadoNombre').value.trim();
+                const invitado_barrio_lote = document.getElementById('invitadoBarrioLote').value.trim();
+
+                document.getElementById('modalInvitado').style.display = 'none';
+                guardarProveedor(proveedorFormPendiente, {
+                    esEdicion: false,
+                    autenticado: false,
+                    invitado_nombre,
+                    invitado_barrio_lote
+                });
+                proveedorFormPendiente = null;
+            }
+
+            async function guardarProveedor(form, { esEdicion, autenticado, invitado_nombre, invitado_barrio_lote }) {
+                const btn = form.querySelector(".submit-btn");
+                btn.disabled = true;
+                btn.textContent = "Guardando…";
+
+                const payload = {
+                    nombre: form.name.value.trim(),
+                    rubro_id: Number(form.rubro.value),
+                    tipo: form.tipo.value,
+                    zona: form.zone.value.trim(),
+                    telefono: form.phone.value.trim(),
+                    descripcion: form.desc.value.trim(),
+                    sitio_web: form.sitio_web.value.trim(),
+                    instagram: form.instagram.value.trim(),
+                    images: pendingNewImages,
+                };
+
+                if (!esEdicion && !autenticado) {
+                    payload.invitado_nombre = invitado_nombre || undefined;
+                    payload.invitado_barrio_lote = invitado_barrio_lote || undefined;
+                }
+
+                try {
+                    if (esEdicion) {
+                        await apiFetch(`/proveedores/${editandoProveedorId}`, {
+                            method: "PUT",
+                            body: JSON.stringify(payload),
+                        });
+                    } else {
+                        await apiFetch("/proveedores", {
+                            method: "POST",
+                            body: JSON.stringify(payload),
+                        });
+                    }
+
+                    form.reset();
+                    pendingNewImages = [];
+                    editandoProveedorId = null;
+                    form.querySelector(".submit-btn").textContent = "Agregar al directorio";
+                    document.getElementById("add-images-preview").innerHTML = "";
+                    closeModals();
+                    state.filter.query = "";
+                    document.getElementById("search").value = "";
+                    await loadProviders();
+
+                    if (document.getElementById('mis-proveedores')) {
+                        await cargarMisProveedores();
+                    }
+
+                    mostrarToast(
+                        esEdicion ? '¡Cambios guardados!' : '¡Gracias por sumarlo!',
+                        esEdicion ? 'El proveedor fue actualizado.' : 'Tu publicación ya está disponible en el directorio.',
+                        esEdicion ? '✅' : '🙌'
+                    );
+                } catch (err) {
+                    if (err.message === 'SESION_VENCIDA') {
+                        sessionStorage.removeItem('dv_token');
+                        sessionStorage.removeItem('dv_user');
+                        alert('Tu sesión venció. Iniciá sesión nuevamente, o volvé a intentarlo para publicar como usuario no autenticado.');
+                    } else if (err.message.includes("autorizado")) {
+                        alert("Tu sesión expiró. Volvé a iniciar sesión.");
+                        window.location.href = "login_dv.html";
+                    } else {
+                        alert("No se pudo guardar el proveedor: " + err.message);
+                    }
+                } finally {
+                    btn.disabled = false;
+                    if (!editandoProveedorId) btn.textContent = "Agregar al directorio";
+                }
+            }
+
+
+
 
             // Sugerencia de nuevo rubro (delegado en main, igual que pills/grid)
             document.querySelector("main").addEventListener("click", (e) => {
@@ -3945,6 +4324,12 @@
     </script>
 
     <div id="toast" class="toast"></div>
+
+    <div id="popoverVerif" class="verif-popover" style="display:none;">
+        <div class="verif-popover-arrow"></div>
+        <p id="popoverVerifTexto"></p>
+
+    </div>
 
 </body>
 
