@@ -1486,4 +1486,23 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             return dvErr(res, 'Error al obtener el feedback');
         }
     });
+
+    // Listado de descripciones únicas de vecinos (activos)
+    app.get('/api/dv/proveedores/vecinos-descripciones', dvAuth, soloAdmin, async (req, res) => {
+        console.log('>>> GET /api/dv/proveedores/vecinos-descripciones');
+        
+        try {
+            const [rows] = await pool.query(
+            `SELECT DISTINCT SUBSTRING_INDEX(descripcion, '\n', 1) AS descripcion
+            FROM db_proveedores
+            WHERE tipo = 'vecino' AND activo = 1
+            ORDER BY descripcion ASC`    
+            );
+            const descripciones = rows.map(r => r.descripcion);
+            return dvOk(res, { descripciones });
+        } catch (err) {
+            console.error('Error vecinos-descripciones:', err);
+            return dvErr(res, 500, 'Error al obtener el listado');
+        }
+    });
 };

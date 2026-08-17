@@ -32,7 +32,7 @@
 
         body {
             margin: 0;
-            font-family: 'Work Sans', sans-serif;
+            font-family: "Work Sans", sans-serif;
             background: var(--paper);
             color: var(--ink);
             line-height: 1.5;
@@ -40,7 +40,9 @@
 
         header {
             border-bottom: 1px dashed var(--line);
-            background: linear-gradient(180deg, rgba(255, 255, 255, .5), transparent);
+            background: linear-gradient(180deg,
+                    rgba(255, 255, 255, 0.5),
+                    transparent);
             padding: 1.25rem;
         }
 
@@ -54,7 +56,7 @@
         }
 
         .logo {
-            font-family: 'Fraunces', serif;
+            font-family: "Fraunces", serif;
             font-weight: 700;
             font-size: 1.5rem;
             letter-spacing: -0.02em;
@@ -68,15 +70,17 @@
         .back-btn {
             display: inline-flex;
             align-items: center;
-            gap: .4rem;
-            font-size: .88rem;
+            gap: 0.4rem;
+            font-size: 0.88rem;
             color: var(--ink-soft);
             text-decoration: none;
             border: 1px solid var(--line);
             border-radius: 999px;
-            padding: .35rem .85rem;
+            padding: 0.35rem 0.85rem;
             background: var(--card);
-            transition: color .15s, border-color .15s;
+            transition:
+                color 0.15s,
+                border-color 0.15s;
         }
 
         .back-btn:hover {
@@ -91,14 +95,14 @@
         }
 
         h2 {
-            font-family: 'Fraunces', serif;
+            font-family: "Fraunces", serif;
             font-size: 1.6rem;
-            margin: 0 0 .25rem;
+            margin: 0 0 0.25rem;
         }
 
         .subtitle {
             color: var(--ink-soft);
-            font-size: .9rem;
+            font-size: 0.9rem;
             margin: 0 0 2rem;
         }
 
@@ -106,7 +110,7 @@
         .filter-bar {
             display: flex;
             flex-wrap: wrap;
-            gap: .75rem;
+            gap: 0.75rem;
             align-items: flex-end;
             margin-bottom: 2rem;
             background: var(--card);
@@ -118,21 +122,21 @@
         .filter-field {
             display: flex;
             flex-direction: column;
-            gap: .3rem;
+            gap: 0.3rem;
         }
 
         .filter-field label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: .72rem;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: .04em;
+            letter-spacing: 0.04em;
             color: var(--ink-soft);
         }
 
         .filter-field input[type="date"] {
-            font-family: 'Work Sans', sans-serif;
-            font-size: .92rem;
-            padding: .5rem .75rem;
+            font-family: "Work Sans", sans-serif;
+            font-size: 0.92rem;
+            padding: 0.5rem 0.75rem;
             border: 1px solid var(--line);
             border-radius: 8px;
             background: #fff;
@@ -146,23 +150,26 @@
 
         .shortcut-btns {
             display: flex;
-            gap: .4rem;
+            gap: 0.4rem;
             flex-wrap: wrap;
             align-self: flex-end;
         }
 
         .shortcut-btn {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: .7rem;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: .04em;
-            padding: .4rem .75rem;
+            letter-spacing: 0.04em;
+            padding: 0.4rem 0.75rem;
             border: 1px solid var(--line);
             border-radius: 999px;
             background: var(--paper);
             color: var(--ink-soft);
             cursor: pointer;
-            transition: background .15s, color .15s, border-color .15s;
+            transition:
+                background 0.15s,
+                color 0.15s,
+                border-color 0.15s;
         }
 
         .shortcut-btn:hover {
@@ -171,17 +178,17 @@
         }
 
         .consult-btn {
-            font-family: 'Work Sans', sans-serif;
-            font-size: .92rem;
+            font-family: "Work Sans", sans-serif;
+            font-size: 0.92rem;
             font-weight: 500;
-            padding: .55rem 1.4rem;
+            padding: 0.55rem 1.4rem;
             border-radius: 999px;
             background: var(--ink);
             color: var(--paper);
             border: none;
             cursor: pointer;
             align-self: flex-end;
-            transition: background .15s;
+            transition: background 0.15s;
         }
 
         .consult-btn:hover {
@@ -189,7 +196,7 @@
         }
 
         .consult-btn:disabled {
-            opacity: .6;
+            opacity: 0.6;
             cursor: default;
         }
 
@@ -208,16 +215,16 @@
             padding: 1.25rem 1.1rem;
             display: flex;
             flex-direction: column;
-            gap: .35rem;
+            gap: 0.35rem;
         }
 
         .stat-card .stat-icon {
             font-size: 1.4rem;
-            margin-bottom: .1rem;
+            margin-bottom: 0.1rem;
         }
 
         .stat-card .stat-value {
-            font-family: 'Fraunces', serif;
+            font-family: "Fraunces", serif;
             font-size: 2.2rem;
             font-weight: 700;
             line-height: 1;
@@ -225,10 +232,10 @@
         }
 
         .stat-card .stat-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: .72rem;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: .05em;
+            letter-spacing: 0.05em;
             color: var(--ink-soft);
         }
 
@@ -255,8 +262,8 @@
         /* ---------- Estado vacío / error ---------- */
         .msg {
             border-radius: 8px;
-            padding: .75rem 1rem;
-            font-size: .9rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
             display: none;
         }
 
@@ -279,7 +286,7 @@
         .loading {
             display: none;
             color: var(--ink-soft);
-            font-size: .9rem;
+            font-size: 0.9rem;
             padding: 1rem 0;
         }
 
@@ -289,8 +296,8 @@
 
         /* ---------- Rango mostrado ---------- */
         .range-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: .78rem;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.78rem;
             color: var(--ink-soft);
             margin-bottom: 1rem;
             display: none;
@@ -303,16 +310,17 @@
 </head>
 
 <body>
-
     <header>
         <div class="header-inner">
             <h1 class="logo">Entre<span class="accent">Vecinos</span></h1>
-            <div style="display:flex; gap:.5rem;">
+            <div style="display: flex; gap: 0.5rem">
                 <a href="admin-feedback.html" class="back-btn">
-                    <i class="ti ti-message-2" aria-hidden="true"></i> Sugerencias y consultas
+                    <i class="ti ti-message-2" aria-hidden="true"></i> Sugerencias y
+                    consultas
                 </a>
                 <a href="directorio-vecinal.html" class="back-btn">
-                    <i class="ti ti-arrow-left" aria-hidden="true"></i> Volver al directorio
+                    <i class="ti ti-arrow-left" aria-hidden="true"></i> Volver al
+                    directorio
                 </a>
             </div>
         </div>
@@ -320,7 +328,9 @@
 
     <main>
         <h2>Estadísticas de uso</h2>
-        <p class="subtitle">Consultá la actividad del directorio en un rango de fechas.</p>
+        <p class="subtitle">
+            Consultá la actividad del directorio en un rango de fechas.
+        </p>
 
         <!-- Filtro -->
         <div class="filter-bar">
@@ -349,7 +359,7 @@
         <div class="range-label" id="range-label"></div>
 
         <!-- Grilla de resultados -->
-        <div class="stats-grid" id="stats-grid" style="display:none;">
+        <div class="stats-grid" id="stats-grid" style="display: none">
             <div class="stat-card stat-card--login">
                 <div class="stat-icon"><i class="ti ti-login"></i></div>
                 <div class="stat-value" id="val-logins">—</div>
@@ -376,23 +386,34 @@
                 <div class="stat-label">Usuarios registrados</div>
             </div>
         </div>
+
+        <div class="card" id="vecinosListSection">
+            <h3>Vecinos registrados</h3>
+            <button id="btnCargarVecinos" class="btn">Cargar listado</button>
+            <button id="btnCopiarVecinos" class="btn btn-secondary" style="display: none">
+                📋 Copiar para WhatsApp
+            </button>
+            <ul id="listaVecinos" style="margin-top: 12px"></ul>
+            <span id="copiadoMsg" style="display: none; color: var(--sage)">¡Copiado!</span>
+        </div>
     </main>
 
     <script>
-        const API = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000/api/dv'
-            : '/api/dv';
+        const API =
+            window.location.hostname === "localhost"
+                ? "http://localhost:3000/api/dv"
+                : "/api/dv";
 
         const ADMIN_IDS = [1];
 
         // ----------------------------------------------------------
         //  Verificar que es admin
         // ----------------------------------------------------------
-        const user = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
-        const token = sessionStorage.getItem('dv_token');
+        const user = JSON.parse(sessionStorage.getItem("dv_user") || "null");
+        const token = sessionStorage.getItem("dv_token");
 
         if (!user || !token || !ADMIN_IDS.includes(user.id)) {
-            window.location.href = 'login_dv.html';
+            window.location.href = "login_dv.html";
         }
 
         // ----------------------------------------------------------
@@ -402,7 +423,9 @@
             return date.toISOString().slice(0, 10);
         }
 
-        function hoy() { return toISO(new Date()); }
+        function hoy() {
+            return toISO(new Date());
+        }
 
         function inicioSemana() {
             const d = new Date();
@@ -417,26 +440,26 @@
         }
 
         // Precargar con el mes actual
-        document.getElementById('desde').value = inicioMes();
-        document.getElementById('hasta').value = hoy();
+        document.getElementById("desde").value = inicioMes();
+        document.getElementById("hasta").value = hoy();
 
         // ----------------------------------------------------------
         //  Shortcuts de rango
         // ----------------------------------------------------------
-        document.querySelectorAll('.shortcut-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+        document.querySelectorAll(".shortcut-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
                 const range = btn.dataset.range;
-                const desdeEl = document.getElementById('desde');
-                const hastaEl = document.getElementById('hasta');
+                const desdeEl = document.getElementById("desde");
+                const hastaEl = document.getElementById("hasta");
                 hastaEl.value = hoy();
-                if (range === 'today') {
+                if (range === "today") {
                     desdeEl.value = hoy();
-                } else if (range === 'week') {
+                } else if (range === "week") {
                     desdeEl.value = inicioSemana();
-                } else if (range === 'month') {
+                } else if (range === "month") {
                     desdeEl.value = inicioMes();
-                } else if (range === 'all') {
-                    desdeEl.value = '2024-01-01';
+                } else if (range === "all") {
+                    desdeEl.value = "2024-01-01";
                     hastaEl.value = hoy();
                 }
             });
@@ -445,75 +468,131 @@
         // ----------------------------------------------------------
         //  Consultar stats
         // ----------------------------------------------------------
-        document.getElementById('consult-btn').addEventListener('click', consultar);
+        document
+            .getElementById("consult-btn")
+            .addEventListener("click", consultar);
 
         // Consultar automáticamente al cargar
-        window.addEventListener('DOMContentLoaded', () => setTimeout(consultar, 100));
+        window.addEventListener("DOMContentLoaded", () =>
+            setTimeout(consultar, 100),
+        );
 
         async function consultar() {
-            const desde = document.getElementById('desde').value;
-            const hasta = document.getElementById('hasta').value;
+            const desde = document.getElementById("desde").value;
+            const hasta = document.getElementById("hasta").value;
 
-            const errorEl = document.getElementById('msg-error');
-            const infoEl = document.getElementById('msg-info');
-            const loadingEl = document.getElementById('loading');
-            const gridEl = document.getElementById('stats-grid');
-            const rangeEl = document.getElementById('range-label');
-            const btn = document.getElementById('consult-btn');
+            const errorEl = document.getElementById("msg-error");
+            const infoEl = document.getElementById("msg-info");
+            const loadingEl = document.getElementById("loading");
+            const gridEl = document.getElementById("stats-grid");
+            const rangeEl = document.getElementById("range-label");
+            const btn = document.getElementById("consult-btn");
 
-            errorEl.classList.remove('show');
-            infoEl.classList.remove('show');
+            errorEl.classList.remove("show");
+            infoEl.classList.remove("show");
 
             if (!desde || !hasta) {
-                errorEl.textContent = 'Seleccioná un rango de fechas.';
-                errorEl.classList.add('show');
+                errorEl.textContent = "Seleccioná un rango de fechas.";
+                errorEl.classList.add("show");
                 return;
             }
 
             if (desde > hasta) {
                 errorEl.textContent = '"Desde" no puede ser posterior a "Hasta".';
-                errorEl.classList.add('show');
+                errorEl.classList.add("show");
                 return;
             }
 
             btn.disabled = true;
-            gridEl.style.display = 'none';
-            rangeEl.classList.remove('show');
-            loadingEl.classList.add('show');
+            gridEl.style.display = "none";
+            rangeEl.classList.remove("show");
+            loadingEl.classList.add("show");
 
             try {
-                const res = await fetch(`${API}/admin/stats?desde=${desde}&hasta=${hasta}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const res = await fetch(
+                    `${API}/admin/stats?desde=${desde}&hasta=${hasta}`,
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                    },
+                );
                 const data = await res.json();
 
-                if (!data.ok) throw new Error(data.error || 'Error al consultar.');
+                if (!data.ok) throw new Error(data.error || "Error al consultar.");
 
-                document.getElementById('val-logins').textContent = data.data.logins;
-                document.getElementById('val-visitantes').textContent = data.data.visitantes;
-                document.getElementById('val-proveedores').textContent = data.data.proveedores_nuevos;
-                document.getElementById('val-resenas').textContent = data.data.resenas_nuevas;
-                document.getElementById('val-registros').textContent = data.data.usuarios_registrados;
+                document.getElementById("val-logins").textContent = data.data.logins;
+                document.getElementById("val-visitantes").textContent =
+                    data.data.visitantes;
+                document.getElementById("val-proveedores").textContent =
+                    data.data.proveedores_nuevos;
+                document.getElementById("val-resenas").textContent =
+                    data.data.resenas_nuevas;
+                document.getElementById("val-registros").textContent =
+                    data.data.usuarios_registrados;
 
-                gridEl.style.display = 'grid';
+                gridEl.style.display = "grid";
                 rangeEl.textContent = `Período: ${formatFecha(desde)} — ${formatFecha(hasta)}`;
-                rangeEl.classList.add('show');
-
+                rangeEl.classList.add("show");
             } catch (err) {
                 errorEl.textContent = err.message;
-                errorEl.classList.add('show');
+                errorEl.classList.add("show");
             } finally {
-                loadingEl.classList.remove('show');
+                loadingEl.classList.remove("show");
                 btn.disabled = false;
             }
         }
 
         function formatFecha(iso) {
-            if (!iso) return '';
-            const [y, m, d] = iso.split('-');
+            if (!iso) return "";
+            const [y, m, d] = iso.split("-");
             return `${d}/${m}/${y}`;
         }
+
+
+        let descripcionesVecinos = [];
+
+        document.getElementById('btnCargarVecinos').addEventListener('click', async () => {
+            try {
+                const token = sessionStorage.getItem('dv_token');
+                const resp = await fetch('/api/dv/proveedores/vecinos-descripciones', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await resp.json();
+
+                if (!data.ok) throw new Error(data.error || 'Error');
+
+                descripcionesVecinos = data.data.descripciones;
+
+                const lista = document.getElementById('listaVecinos');
+                lista.innerHTML = descripcionesVecinos
+                    .map(desc => `<li>${desc}</li>`)
+                    .join('');
+
+                document.getElementById('btnCopiarVecinos').style.display =
+                    descripcionesVecinos.length ? 'inline-block' : 'none';
+            } catch (err) {
+                console.error(err);
+                alert('No se pudo cargar el listado');
+            }
+        });
+
+        document.getElementById('btnCopiarVecinos').addEventListener('click', async () => {
+            const titulo = '*🏘️ Ofrecimientos de nuestros vecinos ya registrados en EntreVecinos:*';
+            const cuerpo = descripcionesVecinos.map(d => `• ${d}`).join('\n');
+            const cierre = '*¿Tenés un oficio, profesión o emprendimiento? ¡Sumate vos también! No importa si ya hay alguien con tu mismo rubro — más opciones, mejor para todos.*\n\n👉 entrevecinos-cc.com.ar';
+            const texto = `${titulo}\n\n${cuerpo}\n\n${cierre}`;
+            try {
+                await navigator.clipboard.writeText(texto);
+                const msg = document.getElementById('copiadoMsg');
+                msg.style.display = 'inline';
+                setTimeout(() => (msg.style.display = 'none'), 2000);
+            } catch (err) {
+                console.error('Error al copiar:', err);
+                alert('No se pudo copiar. Copiá manualmente el texto.');
+            }
+        });
+
     </script>
+
 </body>
 
 </html>
