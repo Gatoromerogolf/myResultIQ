@@ -2111,7 +2111,7 @@
                 window.location.href = 'login_dv.html';
             }
         })();
-        
+
         // ------------------------------------------------------------
         //  Config — cambiá el puerto si tu servidor corre en otro
         // ------------------------------------------------------------
@@ -2830,8 +2830,6 @@
             }
         });
 
-
-
         // ------------------------------------------------------------
         //  Modal: detalle + reseñas
         // ------------------------------------------------------------
@@ -3056,7 +3054,6 @@
             return div.innerHTML;
         }
 
-
         function badgeVerificacion(autenticado) {
             if (autenticado) {
                 return `
@@ -3073,7 +3070,6 @@
         </button>
     `;
         }
-
 
         // ------------------------------------------------------------
         //  Galería de imágenes — lightbox y lectura de archivos
@@ -3202,7 +3198,6 @@
             }
         }
 
-
         // ------------------------------------------------------------
         //  compartir rubro
         // ------------------------------------------------------------
@@ -3214,7 +3209,6 @@
             return limpio.slice(0, maxLen).trim() + '…';
         }
 
-
         function getContactosRubroActual() {
             const rubroNombre = document.getElementById('shareRubroBtn').dataset.rubroNombre || 'Proveedores';
             const contactos = state.providers
@@ -3223,7 +3217,7 @@
                     nombre: p.name,
                     telefono: p.phone,
                     calificacion: p.avgRating > 0 ? p.avgRating.toFixed(1) : '- - ',
-                    descripcion: truncarDescripcion(p.desc, 60)
+                    descripcion: truncarDescripcion(p.desc, 90)  // antes (p.desc, 60)
                 }));
             return { rubroNombre, contactos };
         }
@@ -3240,7 +3234,7 @@
             const canvas = document.getElementById('compartirRubroCanvas');
             const ctx = canvas.getContext('2d');
 
-            const width = 640;
+            const width = 700;  // antes 640;
             const rowHeight = 90;        // 👈 antes 56, un poco más de aire por fila
             const headerHeight = 160;    // 👈 antes 150
             const footerHeight = 55;     // 👈 antes 50
@@ -3316,84 +3310,13 @@
             ctx.textAlign = 'left';
         }
 
-        function dibujarImagenRubroAntes(rubroNombre, contactos) {
-            const canvas = document.getElementById('compartirRubroCanvas');
-            const ctx = canvas.getContext('2d');
-
-            const width = 640;
-            const rowHeight = 56;
-            const headerHeight = 150;
-            const footerHeight = 50;
-            const height = headerHeight + (contactos.length * rowHeight) + footerHeight;
-
-            // Escala para pantallas retina
-            const scale = window.devicePixelRatio || 1;
-            canvas.width = width * scale;
-            canvas.height = height * scale;
-            canvas.style.aspectRatio = `${width} / ${height}`;
-            ctx.scale(scale, scale);
-
-            // Fondo
-            ctx.fillStyle = '#faf7f2';
-            ctx.fillRect(0, 0, width, height);
-
-            // Header
-            ctx.fillStyle = '#1a1a1a';
-            ctx.fillRect(0, 0, width, headerHeight);
-
-            ctx.fillStyle = '#faf7f2';
-            ctx.font = 'bold 16px monospace';
-            ctx.fillText('ENTREVECINOS', 30, 40);
-
-            ctx.font = 'bold 28px sans-serif';
-            ctx.fillText(rubroNombre, 30, 78);
-
-            ctx.font = '15px monospace';
-            ctx.fillStyle = '#c9c2b8';
-            ctx.fillText(`${contactos.length} contacto${contactos.length === 1 ? '' : 's'} registrado${contactos.length === 1 ? '' : 's'}`, 30, 108);
-
-            // Filas de contactos
-            ctx.textBaseline = 'middle';
-            contactos.forEach((c, i) => {
-                const y = headerHeight + (i * rowHeight);
-
-                if (i % 2 === 0) {
-                    ctx.fillStyle = '#f0ebe2';
-                    ctx.fillRect(0, y, width, rowHeight);
-                }
-
-                ctx.fillStyle = '#1a1a1a';
-                ctx.font = 'bold 17px sans-serif';
-                ctx.fillText(c.nombre, 30, y + rowHeight / 2 - 10);
-
-                ctx.font = '14px monospace';
-                ctx.fillStyle = '#6b6b6b';
-                ctx.fillText(c.telefono, 30, y + rowHeight / 2 + 12);
-
-                ctx.font = '14px sans-serif';
-                ctx.fillStyle = '#c99a2e';
-                ctx.textAlign = 'right';
-                ctx.fillText(`⭐ ${c.calificacion}`, width - 30, y + rowHeight / 2);
-                ctx.textAlign = 'left';
-            });
-
-            // Footer
-            ctx.fillStyle = '#1a1a1a';
-            ctx.fillRect(0, height - footerHeight, width, footerHeight);
-            ctx.fillStyle = '#c9c2b8';
-            ctx.font = '13px monospace';
-            ctx.textAlign = 'center';
-            ctx.fillText('entrevecinos-cc.com.ar', width / 2, height - footerHeight / 2);
-            ctx.textAlign = 'left';
-        }
-
         function armarMensajeTextoRubro() {
             const { rubroNombre, contactos } = getContactosRubroActual();
             const lista = contactos
                 .map(c => `• ${c.nombre} — ${c.descripcion}\n ${c.telefono} — ⭐ ${c.calificacion}`)
                 .join('\n\n');
 
-            return `🏘️ *EntreVecinos — ${rubroNombre}*\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} registrado${contactos.length === 1 ? '' : 's'}\n\n${lista}\n\nMirá todos los proveedores en https://entrevecinos-cc.com.ar`;
+            return `🏘️ *EntreVecinos — ${rubroNombre}*\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} registrado${contactos.length === 1 ? '' : 's'}\n\n${lista}\n\n➖➖➖➖\n\n*Mirá todos los proveedores en entrevecinos-cc.com.ar*`;
         }
 
         async function copiarMensajeRubro() {
@@ -3432,7 +3355,6 @@
             }, 'image/png');
         }
 
-
         function contactarWhatsapp(id) {
             const p = state.providers.find(x => x.id === id);
             if (!p?.phone) return;
@@ -3452,10 +3374,10 @@
             const backdrop = document.getElementById('toastBackdrop');
 
             toast.innerHTML = `
-        <span class="toast-icon">${icono}</span>
-        <span class="toast-title">${titulo}</span>
-        ${mensaje}
-    `;
+                    <span class="toast-icon">${icono}</span>
+                    <span class="toast-title">${titulo}</span>
+                    ${mensaje}
+                `;
 
             toast.classList.add('show');
             backdrop.classList.add('show');
@@ -3466,7 +3388,6 @@
                 backdrop.classList.remove('show');
             }, duracion);
         }
-
 
 
         (function () {
@@ -3716,7 +3637,6 @@
             document.getElementById('toastBackdrop').classList.remove('show');
         });
 
-
         let publicacionPendiente = null;
 
         function confirmarPublicacionInvitado() {
@@ -3809,13 +3729,25 @@
             document.getElementById("search").addEventListener("input", (e) => {
                 state.filter.query = e.target.value;
                 clearTimeout(searchTimer);
-                searchTimer = setTimeout(loadProviders, 350);
+                searchTimer = setTimeout(() => {
+                    loadProviders();
+
+                    const grid = document.getElementById("grid");
+                    grid.scrollIntoView({ behavior: "smooth", block: "start" });
+                    grid.setAttribute("tabindex", "-1");
+                    grid.focus({ preventScroll: true });
+                }, 350);
             });
 
             // Orden (local, no requiere API)
             document.getElementById("sort").addEventListener("change", (e) => {
                 state.filter.sort = e.target.value;
                 renderGrid();
+
+                const grid = document.getElementById("grid");
+                grid.scrollIntoView({ behavior: "smooth", block: "start" });
+                grid.setAttribute("tabindex", "-1");
+                grid.focus({ preventScroll: true });
             });
 
             // Pills de rubro
@@ -3935,9 +3867,6 @@
                 });
 
 
-
-
-
             document.getElementById('shareRubroBtn').addEventListener('click', () => {
                 abrirModalCompartirRubro();
             });
@@ -4014,75 +3943,6 @@
                     });
                 });
 
-            // Envío de reseña
-            // document
-            //     .getElementById("modal-detail")
-            //     .addEventListener("submit", async (e) => {
-            //         if (e.target.id !== "review-form") return;
-            //         e.preventDefault();
-
-            //         if (esVisitante()) {
-            //             avisarVisitante();
-            //             return;
-            //         }
-
-            //         // 👇 Validación de sesión antes de intentar guardar
-            //         const token = sessionStorage.getItem('dv_token');
-            //         if (!token) {
-            //             alert('Tu sesión expiró. Por favor, iniciá sesión nuevamente para publicar tu reseña.');
-            //             window.location.href = "login_dv.html";
-            //             return;
-            //         }
-
-            //         const id = Number(e.target.dataset.id);
-            //         const author = state.currentUserName;
-            //         const comment = e.target.comment.value.trim();
-            //         const workdate = e.target.workdate.value || null;
-            //         const rating = state.pendingRating;
-
-            //         if (!author || !comment || rating === 0) {
-            //             alert("Elegí una calificación y escribí un comentario.");
-            //             return;
-            //         }
-            //         if (workdate && workdate > todayISO()) {
-            //             alert("La fecha del trabajo no puede ser en el futuro.");
-            //             return;
-            //         }
-
-            //         const btn = e.target.querySelector(".submit-btn");
-            //         btn.disabled = true;
-            //         btn.textContent = "Guardando…";
-
-            //         try {
-            //             await apiFetch(`/proveedores/${id}/resenas`, {
-            //                 method: "POST",
-            //                 body: JSON.stringify({
-            //                     autor: author,
-            //                     calificacion: rating,
-            //                     comentario: comment,
-            //                     fecha_trabajo: workdate,
-            //                 }),
-            //             });
-            //             // Limpiar cache de reseñas del proveedor para recargar desde API
-            //             const p = state.providers.find((x) => x.id === id);
-            //             if (p) {
-            //                 p.reviews = [];
-            //                 p.totalReviews++;
-            //             }
-            //             // Recargar proveedores para actualizar el promedio
-            //             await loadProviders();
-            //             openDetail(id);
-            //             mostrarToast(
-            //                 '¡Gracias por tu comentario!',
-            //                 'Tu opinión ayuda a que más vecinos elijan bien. Seguí sumando recomendaciones cuando quieras.',
-            //                 '🙌'
-            //             );
-            //         } catch (err) {
-            //             alert("No se pudo guardar la reseña: " + err.message);
-            //             btn.disabled = false;
-            //             btn.textContent = "Publicar comentario";
-            //         }
-            //     });
 
             // Envío de reseña
             document
@@ -4244,9 +4104,6 @@
                 }
             }
 
-
-
-
             // Sugerencia de nuevo rubro (delegado en main, igual que pills/grid)
             document.querySelector("main").addEventListener("click", (e) => {
                 if (e.target.id !== "rubroHintLink") return;
@@ -4330,6 +4187,14 @@
                     alert('Error al eliminar: ' + err.message);
                 }
             }
+
+            document.getElementById('search').addEventListener('input', (e) => {
+                const hayTexto = e.target.value.trim().length > 0;
+
+                document.getElementById('pills').style.display = hayTexto ? 'none' : '';
+
+                // aplicarFiltro(e.target.value); // tu función de filtro existente, sin tocar
+            });
 
         }
 
