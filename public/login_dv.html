@@ -99,23 +99,25 @@
         /* ============================================================
            LAYOUT GENERAL — dos columnas en desktop, apilado en mobile
            ============================================================ */
-.page {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 1.5rem 1.25rem 3rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 0.5rem;   /* achicá este valor a gusto para mobile */
-    column-gap: 2rem;
-}
+        .page {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            row-gap: 0.5rem;
+            /* achicá este valor a gusto para mobile */
+            column-gap: 2rem;
+        }
 
         @media (min-width: 920px) {
-    .page {
-        grid-template-columns: 1.15fr 0.85fr;
-        align-items: start;
-        padding-top: 2.5rem;
-        gap: 2rem;   /* vuelve a 2rem parejo en desktop */
-    }
+            .page {
+                grid-template-columns: 1.15fr 0.85fr;
+                align-items: start;
+                padding-top: 2.5rem;
+                gap: 2rem;
+                /* vuelve a 2rem parejo en desktop */
+            }
 
             .col-login {
                 order: 2;
@@ -1072,44 +1074,29 @@
                 <!-- Ilustración hero: vecino con caja de herramientas + casa -->
 
                 <h2>El directorio del barrio, hecho entre todos</h2>
-                <p>¿Necesitás un plomero, un electricista, un pintor? Ahora podés consultar qué proveedores ya usaron tus vecinos de Altos y Campo Grande, y qué les pareció.</p>
-                <p><strong>EntreVecinos-cc</strong> es una aplicación gratuita donde cualquier vecino puede registrar proveedores y
-                    dejar su opinión sobre el trabajo realizado. No es una simple lista de teléfonos: cada reseña puede agregar la descripción del trabajo realizado o características del producto o servicio, para que puedas evaluar si ese proveedor se ajusta a lo que
-                    necesitás. No es lo mismo el plomero que cambió un cuerito que el que instaló un termotanque con albañilería incluida.</p>
+                <p>¿Tenés un oficio, un emprendimiento o una actividad que pueda ser útil para tus vecinos? Anunciala en EntreVecinos para que tus vecinos lo conozcan y descubran que la solución a sus necesidades puede estar a la vuelta de su casa.</p>
+                <p>¿Necesitás un plomero, un electricista, un pintor?Podés consultar qué proveedores ya usaron tus vecinos de Altos y Campo Grande y que opinaron sobre su experiencia.</p>
+                <p><strong>EntreVecinos-cc</strong> es una aplicación gratuita donde cualquier vecino puede anunciar su actividad y registrar proveedores con su opinión sobre el trabajo realizado. No es una simple lista de teléfonos: cada reseña puede agregar la descripción del trabajo realizado o características del producto o servicio, para que puedas evaluar si ese proveedor se ajusta a lo que necesitás. No es lo mismo el plomero que cambió un cuerito que el que instaló un termotanque con albañilería incluida.</p>
 
                 <div class="feature-row">
                     <div class="ico"><i class="ti ti-eyeglass" aria-hidden="true"></i></div>
                     <div class="txt">
                         <strong>¿Querés conocerla antes de registrarte?</strong>
-                        <p>Podés ingresar como visitante y recorrer el directorio libremente, e incluso registrar proveedores o dejar tu opinión sin crear una cuenta. Si te registrás con tus datos, tu aporte queda asociado a tu nombre y podés editarlo o eliminarlo cuando quieras. Cuantos más vecinos participen con su nombre, más útil y confiable es para todos.</p>
+                        <p>Podés ingresar como visitante y recorrer el directorio libremente, e incluso registrar
+                            proveedores o dejar tu opinión sin crear una cuenta. Si te registrás con tus datos, tu
+                            aporte queda asociado a tu nombre y podés editarlo o eliminarlo cuando quieras. Cuantos más
+                            vecinos participen con su nombre, más útil y confiable es para todos.</p>
                     </div>
                 </div>
-
-                <!-- <div class="feature-row">
-                    <div class="ico"><i class="ti ti-user-plus" aria-hidden="true"></i></div>
-                    <div class="txt">
-                        <strong>El registro es simple</strong>
-                        <p>Solo necesitás datos básicos y un correo electrónico. Así cada aporte queda asociado a
-                            quien lo hizo, y todos sabemos quién recomienda qué. Cuantos más vecinos participen con su nombre, más útil  y confiable es para todos.</p>
-                    </div>
-                </div> -->
 
                 <button type="button" class="more-toggle" id="more-toggle">
                     Conocé más sobre EntreVecinos-cc <i class="ti ti-chevron-down" aria-hidden="true"></i>
                 </button>
 
                 <div class="more-content" id="more-content">
-                    <p><strong>EntreVecinos-cc</strong> está pensada para proveedores de servicios o productos de uso
-                        habitual y continuo: el electricista, el plomero, alimentos, jardineros, cloro para piletas,
-                        etc. No es el lugar indicado para publicar ventas puntuales, como la de un auto o un
-                        electrodoméstico.</p>
-                    <p>El mayor valor del directorio viene de que seamos los propios vecinos quienes presentemos a
-                        los proveedores que conocemos o usamos. Muchos de los datos que aparecen hoy fueron cargados por el
-                        usuario Administrador a partir de las últimas publicaciones en el chat del barrio, solo como punto de partida. La idea es que de acá en más cada proveedor sea presentado por el vecino que lo conoce o lo recomienda.</p>
-                    <p>Como este registro inicial no fue consultado previamente con los proveedores involucrados,
-                        si alguno prefiere que sus datos no aparezcan en el directorio, puede solicitarlo
-                        escribiendo a <a href="mailto:dev.bdt.reg@gmail.com">dev.bdt.reg@gmail.com</a> y se
-                        eliminarán de inmediato.</p>
+                    <p><strong>EntreVecinos-cc</strong> está pensada para proveedores de servicios o productos de uso habitual y continuo: el electricista, el plomero, alimentos, jardineros, cloro para piletas, etc. No es el lugar indicado para publicar ventas puntuales, como la de un auto o un electrodoméstico.</p>
+                    <p>El mayor valor del directorio viene de que seamos los propios vecinos quienes presentemos a los proveedores que conocemos o usamos. Muchos de los datos que aparecen hoy fueron cargados por el usuario Administrador a partir de las últimas publicaciones en el chat del barrio, solo como punto de partida. La idea es que cada proveedor sea presentado por el vecino que lo conoce o lo recomienda.</p>
+                    <p>Como este registro inicial no fue consultado previamente con los proveedores involucrados, si alguno prefiere que sus datos no aparezcan en el directorio, puede solicitarlo escribiendo a <a href="mailto:dev.bdt.reg@gmail.com">dev.bdt.reg@gmail.com</a> y se eliminarán de inmediato.</p>
 
                 </div>
             </div>
