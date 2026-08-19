@@ -502,7 +502,7 @@
         }
 
         .badge-tipo--vecino {
-            background: var(--sage);
+            background: var(--berry);
             color: #fffdf6;
         }
 
@@ -3726,18 +3726,7 @@
 
             // Búsqueda con debounce
             let searchTimer;
-            // document.getElementById("search").addEventListener("input", (e) => {
-            //     state.filter.query = e.target.value;
-            //     clearTimeout(searchTimer);
-            //     searchTimer = setTimeout(() => {
-            //         loadProviders();
 
-            //         const grid = document.getElementById("grid");
-            //         grid.scrollIntoView({ behavior: "smooth", block: "start" });
-            //         grid.setAttribute("tabindex", "-1");
-            //         grid.focus({ preventScroll: true });
-            //     }, 350);
-            // });
             let yaHizoScrollBusqueda = false;
 
             document.getElementById("search").addEventListener("input", (e) => {
