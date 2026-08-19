@@ -3726,17 +3726,38 @@
 
             // Búsqueda con debounce
             let searchTimer;
+            // document.getElementById("search").addEventListener("input", (e) => {
+            //     state.filter.query = e.target.value;
+            //     clearTimeout(searchTimer);
+            //     searchTimer = setTimeout(() => {
+            //         loadProviders();
+
+            //         const grid = document.getElementById("grid");
+            //         grid.scrollIntoView({ behavior: "smooth", block: "start" });
+            //         grid.setAttribute("tabindex", "-1");
+            //         grid.focus({ preventScroll: true });
+            //     }, 350);
+            // });
+            let yaHizoScrollBusqueda = false;
+
             document.getElementById("search").addEventListener("input", (e) => {
                 state.filter.query = e.target.value;
                 clearTimeout(searchTimer);
                 searchTimer = setTimeout(() => {
                     loadProviders();
 
-                    const grid = document.getElementById("grid");
-                    grid.scrollIntoView({ behavior: "smooth", block: "start" });
-                    grid.setAttribute("tabindex", "-1");
-                    grid.focus({ preventScroll: true });
-                }, 350);
+                    // Solo hace scroll la primera vez que hay texto, no en cada pausa
+                    if (e.target.value.trim().length > 0 && !yaHizoScrollBusqueda) {
+                        const grid = document.getElementById("grid");
+                        grid.scrollIntoView({ behavior: "smooth", block: "start" });
+                        grid.setAttribute("tabindex", "-1");
+                        grid.focus({ preventScroll: true });
+                        yaHizoScrollBusqueda = true;
+                    }
+                    if (e.target.value.trim().length === 0) {
+                        yaHizoScrollBusqueda = false; // reset si borra todo
+                    }
+                }, 500);
             });
 
             // Orden (local, no requiere API)

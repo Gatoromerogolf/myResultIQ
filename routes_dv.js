@@ -1004,7 +1004,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
             const [[logins]] = await pool.query(
                 `SELECT COUNT(*) AS total FROM db_log_ingresos
-             WHERE tipo = 'login' AND fecha BETWEEN ? AND ? AND usuario_id != 1`,
+             WHERE tipo != 'visitante' AND fecha BETWEEN ? AND ? AND usuario_id != 1`,
                 [desde, hastaFin]
             );
 
