@@ -103,16 +103,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         try {
             const claveHash = await bcrypt.hash(password, SALT);
             const token = crypto.randomBytes(32).toString('hex');
-            // const expira = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hs
-
-            //     await pool.query(
-            //         `INSERT INTO db_usuarios
-            //    (nombre, barrio, lote, whatsapp, email, clave_hash, foto_b64,
-            //     token_verificacion, token_expira_en, debe_cambiar_clave)
-            //  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
-            //         [nombre.trim(), barrio, lote.trim(), whatsapp.trim(),
-            //         email.trim().toLowerCase(), claveHash, foto, token, expira]
-            //     );
 
             await pool.query(
                 `INSERT INTO db_usuarios
@@ -875,22 +865,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch (e) { dvErr(res, e.message); }
     });
 
-    app.post('/api/dv/proveedores/:id/resenas-anterior-no-sirve', dvAuth, bloquearVisitante, async (req, res) => {
-        const { calificacion, comentario, fecha_trabajo = null } = req.body;
-        if (!comentario?.trim()) return dvErr(res, 'El comentario es obligatorio.', 400);
-        if (!calificacion || calificacion < 1 || calificacion > 5)
-            return dvErr(res, 'La calificación debe ser entre 1 y 5.', 400);
 
-        try {
-            const [result] = await pool.query(
-                `INSERT INTO db_resenas
-           (proveedor_id, usuario_id, calificacion, comentario, fecha_trabajo, fecha_publicacion)
-         VALUES (?, ?, ?, ?, ?, CURRENT_DATE)`,
-                [req.params.id, req.dvUser.id, calificacion, comentario.trim(), fecha_trabajo || null]
-            );
-            dvOk(res, { id: result.insertId });
-        } catch (e) { dvErr(res, e.message); }
-    });
 
     app.post('/api/dv/proveedores/:id/resenas', async (req, res) => {
         const { calificacion, comentario, fecha_trabajo = null, invitado_nombre, invitado_barrio_lote } = req.body;
@@ -1490,19 +1465,40 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     // Listado de descripciones únicas de vecinos (activos)
     app.get('/api/dv/proveedores/vecinos-descripciones', dvAuth, soloAdmin, async (req, res) => {
         console.log('>>> GET /api/dv/proveedores/vecinos-descripciones');
-        
+
         try {
             const [rows] = await pool.query(
-            `SELECT DISTINCT SUBSTRING_INDEX(descripcion, '\n', 1) AS descripcion
+                `SELECT DISTINCT SUBSTRING_INDEX(descripcion, '\n', 1) AS descripcion
             FROM db_proveedores
             WHERE tipo = 'vecino' AND activo = 1
-            ORDER BY descripcion ASC`    
+            ORDER BY descripcion ASC`
             );
             const descripciones = rows.map(r => r.descripcion);
             return dvOk(res, { descripciones });
         } catch (err) {
             console.error('Error vecinos-descripciones:', err);
             return dvErr(res, 500, 'Error al obtener el listado');
+        }
+    });
+
+    // GET /api/dv/proveedores/vecinos-resenas
+    // Lista comentarios de reseñas (mín 60 caracteres), ordenados alfabéticamente
+    app.get('/api/dv/proveedores/vecinos-resenas', dvAuth, soloAdmin, async (req, res) => {
+        try {
+            const [rows] = await pool.query(`
+            SELECT DISTINCT comentario
+            FROM db_resenas
+            WHERE activo = 1
+                AND LENGTH(comentario) >= 130
+            ORDER BY comentario ASC
+            `);
+
+            const comentarios = rows.map(r => r.comentario);
+            console.log(`>>> GET /api/dv/proveedores/vecinos-resenas: ${comentarios.length} comentarios encontrados`);
+            return dvOk(res, { comentarios, total: comentarios.length });
+        } catch (err) {
+            console.error('Error vecinos-resenas:', err);
+            return dvErr(res, 'Error al obtener reseñas', 500);
         }
     });
 };

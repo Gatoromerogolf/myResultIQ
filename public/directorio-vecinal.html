@@ -3316,7 +3316,7 @@
                 .map(c => `• ${c.nombre} — ${c.descripcion}\n ${c.telefono} — ⭐ ${c.calificacion}`)
                 .join('\n\n');
 
-            return `🏘️ *EntreVecinos — ${rubroNombre}*\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} registrado${contactos.length === 1 ? '' : 's'}\n\n${lista}\n\n➖➖➖➖\n\n*Mirá todos los proveedores en entrevecinos-cc.com.ar*`;
+            return `🏘️ *EntreVecinos — ${rubroNombre}*\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} registrado${contactos.length === 1 ? '' : 's'}\n\n${lista}\n\n➖➖➖➖\n\nSi tomás alguno de estos servicios, contános tu experiencia.\nSi conocés a otro que no está en la lista, sumalo vos mismo a EntreVecinos. ¡Nos ayuda a todos!\n\n*Consulta el directorio completo en entrevecinos-cc.com.ar*`;
         }
 
         async function copiarMensajeRubro() {

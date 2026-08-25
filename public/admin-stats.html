@@ -396,6 +396,13 @@
             <ul id="listaVecinos" style="margin-top: 12px"></ul>
             <span id="copiadoMsg" style="display: none; color: var(--sage)">¡Copiado!</span>
         </div>
+        <div class="admin-section">
+            <h3>Reseñas de vecinos (mín. 130 caracteres)</h3>
+            <button onclick="cargarVecinosResenas()">Cargar reseñas</button>
+            <button onclick="copiarResenas()">Copiar para WhatsApp</button>
+            <span id="resenasCount"></span>
+            <pre id="resenasOutput" style="white-space: pre-wrap;"></pre>
+        </div>
     </main>
 
     <script>
@@ -590,6 +597,40 @@
                 alert('No se pudo copiar. Copiá manualmente el texto.');
             }
         });
+
+        async function cargarVecinosResenas() {
+            try {
+                const res = await fetch('/api/dv/proveedores/vecinos-resenas', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (!data.ok) throw new Error(data.msg);
+
+                const comentarios = data.data.comentarios;   // 👈 antes decía data.comentarios
+                const total = data.data.total;               // 👈 antes decía data.total
+
+                const titulo = '*🏘️ Algunos comentarios realizados por nuestros vecinos:*';
+                const texto = comentarios
+                    .map((c, i) => `✅ ${c}`)
+                    .join('\n\n');
+                const cierre = '*¿Tenés experiencias para contar? Sumalas. Tu opinión es la que vale.*\n\n👉 entrevecinos-cc.com.ar';
+
+                document.getElementById('resenasOutput').textContent = titulo + '\n\n' + texto + '\n\n' + cierre;
+                // document.getElementById('resenasOutput').textContent = texto;
+                document.getElementById('resenasCount').textContent = `${data.total} reseñas`;
+            } catch (err) {
+                console.error(err);
+                alert('Error al cargar reseñas');
+            }
+        }
+
+        function copiarResenas() {
+            const texto = document.getElementById('resenasOutput').textContent;
+            navigator.clipboard.writeText(texto)
+                .then(() => alert('Copiado al portapapeles ✅'))
+                .catch(() => alert('Error al copiar'));
+        }
 
     </script>
 
