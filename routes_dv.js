@@ -639,14 +639,24 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         try {
             await conn.beginTransaction();
 
+            // const [result] = await conn.query(
+            //     `INSERT INTO db_proveedores
+            //    (nombre, rubro_id, creado_por, autenticado, invitado_nombre, invitado_barrio_lote,
+            //     tipo, zona, telefono, descripcion, sitio_web, instagram)
+            //  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            //     [nombre.trim(), rubro_id, usuarioId, autenticado, nombreInvitado, barrioLoteInvitado,
+            //         tipo, zona, telefono, descripcion, sitio_web, instagram]
+            // );
+
             const [result] = await conn.query(
                 `INSERT INTO db_proveedores
-               (nombre, rubro_id, creado_por, autenticado, invitado_nombre, invitado_barrio_lote,
-                tipo, zona, telefono, descripcion, sitio_web, instagram)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                (nombre, rubro_id, creado_por, autenticado, invitado_nombre, invitado_barrio_lote,
+                    tipo, zona, telefono, descripcion, sitio_web, instagram, creado_en)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR))`,
                 [nombre.trim(), rubro_id, usuarioId, autenticado, nombreInvitado, barrioLoteInvitado,
                     tipo, zona, telefono, descripcion, sitio_web, instagram]
             );
+
             const proveedorId = result.insertId;
 
             if (images.length) {
@@ -1464,7 +1474,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
     // Listado de descripciones únicas de vecinos (activos)
     app.get('/api/dv/proveedores/vecinos-descripciones', dvAuth, soloAdmin, async (req, res) => {
-        console.log('>>> GET /api/dv/proveedores/vecinos-descripciones');
 
         try {
             const [rows] = await pool.query(
@@ -1499,6 +1508,58 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         } catch (err) {
             console.error('Error vecinos-resenas:', err);
             return dvErr(res, 'Error al obtener reseñas', 500);
+        }
+    });
+
+    // Resumen de vecinos participantes por Rubro y nombre, para exportar a CSV o Excel
+    app.get('/api/dv/admin/vecinos-resumen', dvAuth, soloAdmin, async (req, res) => {
+        try {
+            const [rows] = await pool.query(`
+            SELECT r.nombre AS rubro, p.nombre, p.descripcion
+            FROM db_proveedores p
+            JOIN db_rubros r ON p.rubro_id = r.id
+            WHERE p.tipo = 'vecino' AND p.activo = 1
+            ORDER BY r.nombre ASC, p.nombre ASC
+            `);
+            return dvOk(res, { proveedores: rows });
+        } catch (err) {
+            console.error(err);
+            return dvErr(res, 'Error al obtener el listado de vecinos', 500);
+        }
+    });
+
+
+    app.get('/api/dv/admin/informe-altas', dvAuth, soloAdmin, async (req, res) => {
+        const { desde, hasta } = req.query;
+
+        if (!desde || !hasta) {
+            return dvErr(res, 400, 'Faltan parámetros: desde y hasta son requeridos');
+        }
+
+        try {
+            const [rows] = await pool.query(`
+            SELECT p.tipo, r.nombre AS rubro, p.nombre, p.descripcion
+            FROM db_proveedores p
+            JOIN db_rubros r ON r.id = p.rubro_id
+            WHERE p.activo = 1
+                AND p.creado_en BETWEEN ? AND ?
+            ORDER BY
+                FIELD(p.tipo, 'vecino', 'externo'),
+                r.nombre, p.nombre
+            `, [`${desde} 00:00:00`, `${hasta} 23:59:59`]);
+
+            const vecinos = rows.filter(r => r.tipo === 'vecino');
+            const externos = rows.filter(r => r.tipo === 'externo');
+
+            return dvOk(res, {
+                titulo: '\n📣📣 *ULTIMAS INCORPORACIONES A NUESTRO DIRECTORIO: entrevecinos-cc.com.ar 📣📣*',
+                desde, hasta,
+                vecinos,
+                externos,
+                pie: '\n➖➖➖➖\n\n*¿Tenés una profesión, emprendimiento u oficio? ¡Sumate vos también y dejá que tus vecinos te conozcan!\n\n¿Conocés un buen proveedor externo? Recomendalo para que todos puedan aprovecharlo.\n\nMás opciones, mejor para todos.*\n\n👉 entrevecinos-cc.com.ar'
+            });
+        } catch (err) {
+            return dvErr(res, 500, 'Error generando el informe');
         }
     });
 };

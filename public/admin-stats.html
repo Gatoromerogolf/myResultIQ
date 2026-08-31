@@ -403,6 +403,20 @@
             <span id="resenasCount"></span>
             <pre id="resenasOutput" style="white-space: pre-wrap;"></pre>
         </div>
+
+        <div class="informe-novedades">
+            <h3>Informe de novedades</h3>
+            <form id="formInformeAltas" class="informe-filtros">
+                <label>Desde <input type="date" id="informeDesde" required></label>
+                <label>Hasta <input type="date" id="informeHasta" required></label>
+                <button type="submit" id="btnGenerarInforme">Generar</button>
+            </form>
+
+            <!-- <textarea id="informeTexto" rows="15" readonly style="width:100%; display:none;"></textarea> -->
+            <ul id="listaInformeAltas"></ul>
+            <button id="btnCopiarInforme" style="display:none;">Copiar</button>
+        </div>
+
     </main>
 
     <script>
@@ -556,47 +570,48 @@
 
 
         let descripcionesVecinos = [];
+        let informeTextoWhatsapp = '';
 
-        document.getElementById('btnCargarVecinos').addEventListener('click', async () => {
-            try {
-                const token = sessionStorage.getItem('dv_token');
-                const resp = await fetch('/api/dv/proveedores/vecinos-descripciones', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await resp.json();
+        // document.getElementById('btnCargarVecinos').addEventListener('click', async () => {
+        //     try {
+        //         const token = sessionStorage.getItem('dv_token');
+        //         const resp = await fetch('/api/dv/proveedores/vecinos-descripciones', {
+        //             headers: { 'Authorization': `Bearer ${token}` }
+        //         });
+        //         const data = await resp.json();
 
-                if (!data.ok) throw new Error(data.error || 'Error');
+        //         if (!data.ok) throw new Error(data.error || 'Error');
 
-                descripcionesVecinos = data.data.descripciones;
+        //         descripcionesVecinos = data.data.descripciones;
 
-                const lista = document.getElementById('listaVecinos');
-                lista.innerHTML = descripcionesVecinos
-                    .map(desc => `<li>${desc}</li>`)
-                    .join('');
+        //         const lista = document.getElementById('listaVecinos');
+        //         lista.innerHTML = descripcionesVecinos
+        //             .map(desc => `<li>${desc}</li>`)
+        //             .join('');
 
-                document.getElementById('btnCopiarVecinos').style.display =
-                    descripcionesVecinos.length ? 'inline-block' : 'none';
-            } catch (err) {
-                console.error(err);
-                alert('No se pudo cargar el listado');
-            }
-        });
+        //         document.getElementById('btnCopiarVecinos').style.display =
+        //             descripcionesVecinos.length ? 'inline-block' : 'none';
+        //     } catch (err) {
+        //         console.error(err);
+        //         alert('No se pudo cargar el listado');
+        //     }
+        // });
 
-        document.getElementById('btnCopiarVecinos').addEventListener('click', async () => {
-            const titulo = '*🏘️ Ofrecimientos de nuestros vecinos ya registrados en EntreVecinos:*';
-            const cuerpo = descripcionesVecinos.map(d => `• ${d}`).join('\n');
-            const cierre = '*¿Tenés un oficio, profesión o emprendimiento? ¡Sumate vos también! No importa si ya hay alguien con tu mismo rubro — más opciones, mejor para todos.*\n\n👉 entrevecinos-cc.com.ar';
-            const texto = `${titulo}\n\n${cuerpo}\n\n${cierre}`;
-            try {
-                await navigator.clipboard.writeText(texto);
-                const msg = document.getElementById('copiadoMsg');
-                msg.style.display = 'inline';
-                setTimeout(() => (msg.style.display = 'none'), 2000);
-            } catch (err) {
-                console.error('Error al copiar:', err);
-                alert('No se pudo copiar. Copiá manualmente el texto.');
-            }
-        });
+        // document.getElementById('btnCopiarVecinos').addEventListener('click', async () => {
+        //     const titulo = '*🏘️ Ofrecimientos de nuestros vecinos ya registrados en EntreVecinos:*';
+        //     const cuerpo = descripcionesVecinos.map(d => `• ${d}`).join('\n');
+        //     const cierre = '*¿Tenés un oficio, profesión o emprendimiento? ¡Sumate vos también! No importa si ya hay alguien con tu mismo rubro — más opciones, mejor para todos.*\n\n👉 entrevecinos-cc.com.ar';
+        //     const texto = `${titulo}\n\n${cuerpo}\n\n${cierre}`;
+        //     try {
+        //         await navigator.clipboard.writeText(texto);
+        //         const msg = document.getElementById('copiadoMsg');
+        //         msg.style.display = 'inline';
+        //         setTimeout(() => (msg.style.display = 'none'), 2000);
+        //     } catch (err) {
+        //         console.error('Error al copiar:', err);
+        //         alert('No se pudo copiar. Copiá manualmente el texto.');
+        //     }
+        // });
 
         async function cargarVecinosResenas() {
             try {
@@ -631,6 +646,254 @@
                 .then(() => alert('Copiado al portapapeles ✅'))
                 .catch(() => alert('Error al copiar'));
         }
+
+        function truncarDescripcion(texto, max = 90) {
+            if (!texto) return '';
+            const limpio = texto.replace(/\s*\n+\s*/g, ' ').trim();
+            return limpio.length > max ? limpio.slice(0, max - 1).trimEnd() + '…' : limpio;
+        }
+
+        let vecinosTextoWhatsapp = '';
+
+        function agruparPorRubro(proveedores) {
+            const grupos = new Map();
+            for (const p of proveedores) {
+                if (!grupos.has(p.rubro)) grupos.set(p.rubro, []);
+                grupos.get(p.rubro).push(p);
+            }
+
+            // Forzar ".Varios" al final, conservando el orden alfabético del resto
+            if (grupos.has('. Varios')) {
+                const varios = grupos.get('. Varios');
+                grupos.delete('. Varios');
+                grupos.set('. Varios', varios);
+            }
+
+            return grupos;
+        }
+
+        function formatearRubro(rubro) {
+            return `— *${rubro.toUpperCase()}* —`;
+        }
+
+
+        async function cargarVecinosList() {
+            const btn = document.getElementById('btnCargarVecinos');
+            btn.disabled = true;
+            const textoOriginal = btn.textContent;
+            btn.textContent = 'Cargando...';
+
+            try {
+                const res = await fetch('/api/dv/admin/vecinos-resumen', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await res.json();
+                const grupos = agruparPorRubro(data.data.proveedores);
+
+                const ul = document.getElementById('listaVecinos');
+                ul.innerHTML = '';
+
+                const bloques = [];
+
+                for (const [rubro, proveedores] of grupos) {
+
+                    const rubroFormateado = formatearRubro(rubro);
+                    const liRubro = document.createElement('li');
+                    liRubro.style.listStyle = 'none';
+                    liRubro.style.fontWeight = 'bold';
+                    liRubro.style.marginTop = '8px';
+                    liRubro.textContent = rubroFormateado;
+                    ul.appendChild(liRubro);
+
+                    const lineasRubro = [rubroFormateado];
+
+                    for (const p of proveedores) {
+                        const desc = truncarDescripcion(p.descripcion);
+
+                        const li = document.createElement('li');
+                        li.style.listStyle = 'none';
+                        li.style.marginLeft = '16px';
+                        li.innerHTML = `▪ <strong>${p.nombre}</strong> - ${desc}`;
+                        ul.appendChild(li);
+
+                        lineasRubro.push(`    ▪ *${p.nombre}* - ${desc}`);
+                    }
+
+                    bloques.push(lineasRubro.join('\n'));
+                }
+
+                const TITULO_WHATSAPP = '🏘️ *CONOCÉ LO QUE YA OFRECEN NUESTROS VECINOS*\n';
+                const PIE_WHATSAPP = '\n➖➖➖➖\n\n*¿Tenés una profesión, emprendimiento u oficio? ¡Sumate vos también! No importa si ya hay alguien en tu mismo rubro — más opciones, mejor para todos.*\n\n👉 entrevecinos-cc.com.ar';
+
+                vecinosTextoWhatsapp = TITULO_WHATSAPP + '\n' + bloques.join('\n\n') + '\n' + PIE_WHATSAPP;
+
+
+                document.getElementById('btnCopiarVecinos').style.display = 'inline-block';
+            } catch (err) {
+                alert('Error al cargar el listado de vecinos');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = textoOriginal;
+            }
+        }
+
+        async function copiarVecinosList() {
+            try {
+                await navigator.clipboard.writeText(vecinosTextoWhatsapp);
+                const msg = document.getElementById('copiadoMsg');
+                msg.style.display = 'inline';
+                alert('Copiado al portapapeles ✅');
+                setTimeout(() => (msg.style.display = 'none'), 2000);
+            } catch (err) {
+                alert('No se pudo copiar al portapapeles');
+            }
+        }
+
+        document.getElementById('btnCargarVecinos').addEventListener('click', cargarVecinosList);
+        document.getElementById('btnCopiarVecinos').addEventListener('click', copiarVecinosList);
+
+
+        // function armarTextoInforme({ titulo, vecinos, externos, pie }) {
+        //     let out = `*${titulo}*\n\n`;
+
+        //     const bloque = (nombreGrupo, items) => {
+        //         if (!items.length) return '';
+        //         let s = `*${nombreGrupo}*\n`;
+        //         for (const i of items) {
+        //             s += `\n🔹 *${i.rubro}* - ${i.nombre}\n`;
+        //             if (i.descripcion) s += `${i.descripcion}\n`;
+        //         }
+        //         return s + '\n';
+        //     };
+
+        //     out += bloque('VECINOS', vecinos);
+        //     out += bloque('EXTERNOS', externos);
+
+        //     if (pie) out += pie;
+
+        //     return out.trim();
+        // }
+
+        // document.getElementById('formInformeAltas').addEventListener('submit', async (e) => {
+        //     e.preventDefault();
+        //     const desde = document.getElementById('informeDesde').value;
+        //     const hasta = document.getElementById('informeHasta').value;
+
+        //     const resp = await fetch(`/api/dv/admin/informe-altas?desde=${desde}&hasta=${hasta}`, {
+        //         headers: { Authorization: `Bearer ${token}` }
+        //     });
+        //     const json = await resp.json();
+        //     const { vecinos, externos } = json.data;
+
+        //     const textarea = document.getElementById('informeTexto');
+        //     const btnCopiar = document.getElementById('btnCopiarInforme');
+
+        //     if (!vecinos.length && !externos.length) {
+        //         textarea.value = 'No hay incorporaciones en el período seleccionado.';
+        //     } else {
+        //         textarea.value = armarTextoInforme(json.data);
+        //     }
+        //     textarea.style.display = 'block';
+        //     btnCopiar.style.display = 'inline-block';
+        // });
+
+        // document.getElementById('btnCopiarInforme').addEventListener('click', async () => {
+        //     const textarea = document.getElementById('informeTexto');
+        //     await navigator.clipboard.writeText(textarea.value);
+        //     alert('Copiado al portapapeles');
+        // });
+
+        document.getElementById('formInformeAltas').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await cargarInformeAltas();
+        });
+
+        async function cargarInformeAltas() {
+            const desde = document.getElementById('informeDesde').value;
+            const hasta = document.getElementById('informeHasta').value;
+            const btn = document.getElementById('btnGenerarInforme');
+            btn.disabled = true;
+            const textoOriginal = btn.textContent;
+            btn.textContent = 'Cargando...';
+
+            try {
+                const res = await fetch(`/api/dv/admin/informe-altas?desde=${desde}&hasta=${hasta}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await res.json();
+                const { titulo, pie, vecinos, externos } = data.data;
+
+                const ul = document.getElementById('listaInformeAltas');
+                ul.innerHTML = '';
+
+                const bloquesCategorias = [];
+
+                const renderCategoria = (nombreCategoria, items) => {
+                    if (!items.length) return;
+
+                    const liCategoria = document.createElement('li');
+                    liCategoria.style.listStyle = 'none';
+                    liCategoria.style.fontWeight = 'bold';
+                    liCategoria.style.fontSize = '1.1em';
+                    liCategoria.style.marginTop = '12px';
+                    liCategoria.textContent = nombreCategoria;
+                    ul.appendChild(liCategoria);
+
+                    const grupos = agruparPorRubro(items);
+                    const lineasCategoria = [`*${nombreCategoria}*`];
+
+                    for (const [rubro, proveedores] of grupos) {
+                        const rubroFormateado = formatearRubro(rubro);
+
+                        const liRubro = document.createElement('li');
+                        liRubro.style.listStyle = 'none';
+                        liRubro.style.fontWeight = 'bold';
+                        liRubro.style.marginTop = '8px';
+                        liRubro.style.marginLeft = '8px';
+                        liRubro.textContent = rubroFormateado;
+                        ul.appendChild(liRubro);
+
+                        const lineasRubro = [rubroFormateado];
+
+                        for (const p of proveedores) {
+                            const desc = truncarDescripcion(p.descripcion);
+
+                            const li = document.createElement('li');
+                            li.style.listStyle = 'none';
+                            li.style.marginLeft = '16px';
+                            li.innerHTML = `▪ <strong>${p.nombre}</strong> - ${desc}`;
+                            ul.appendChild(li);
+
+                            lineasRubro.push(`    ⭐ *${p.nombre}* - ${desc}`);
+                        }
+
+                        lineasCategoria.push(lineasRubro.join('\n'));
+                    }
+
+                    bloquesCategorias.push(lineasCategoria.join('\n\n'));
+                };
+
+                renderCategoria('✅ VECINOS', vecinos);
+                renderCategoria('✅ EXTERNOS', externos);
+
+                informeTextoWhatsapp = `${titulo}\n\n` + bloquesCategorias.join('\n\n') + '\n' + pie;
+
+                document.getElementById('btnCopiarInforme').style.display = 'inline-block';
+            } catch (err) {
+                    console.error(err);
+                alert('Error al generar el informe');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = textoOriginal;
+            }
+        }
+
+
+
+        document.getElementById('btnCopiarInforme').addEventListener('click', async () => {
+            await navigator.clipboard.writeText(informeTextoWhatsapp);
+            alert('Copiado al portapapeles');
+        });
 
     </script>
 
