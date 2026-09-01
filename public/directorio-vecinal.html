@@ -3064,11 +3064,11 @@
         `;
             }
             return `
-        <span class="verif-badge verif-badge--invitado"><i class="ti ti-user-question"></i></span>
-        <button type="button" class="verif-info" onclick="mostrarPopoverVerificacion(event, 'invitado')">
-            <i class="ti ti-info-circle"></i>
-        </button>
-    `;
+                <span class="verif-badge verif-badge--invitado"><i class="ti ti-user-question"></i></span>
+                <button type="button" class="verif-info" onclick="mostrarPopoverVerificacion(event, 'invitado')">
+                    <i class="ti ti-info-circle"></i>
+                </button>
+            `;
         }
 
         // ------------------------------------------------------------
@@ -3842,6 +3842,20 @@
                             });
                         return;
                     }
+
+                    const deleteBtn = e.target.closest('[data-action="delete-image"]');
+                    if (deleteBtn) {
+                        e.stopPropagation(); // evita que abra el lightbox
+                        const imgId = deleteBtn.dataset.imgId;
+                        if (!confirm("¿Eliminás esta imagen?")) return;
+                        apiFetch(`/imagenes/${imgId}`, { method: "DELETE" })
+                            .then(() => {
+                                deleteBtn.closest(".gallery-thumb").remove();
+                            })
+                            .catch((err) => alert("No se pudo eliminar: " + err.message));
+                            return;
+                    }
+
                     const thumb = e.target.closest('[data-action="view-image"]');
                     if (thumb) {
                         const index = Number(thumb.dataset.index);
@@ -3863,17 +3877,17 @@
                         return;
                     }
 
-                    const deleteBtn = e.target.closest('[data-action="delete-image"]');
-                    if (deleteBtn) {
-                        e.stopPropagation(); // evita que abra el lightbox
-                        const imgId = deleteBtn.dataset.imgId;
-                        if (!confirm("¿Eliminás esta imagen?")) return;
-                        apiFetch(`/imagenes/${imgId}`, { method: "DELETE" })
-                            .then(() => {
-                                deleteBtn.closest(".gallery-thumb").remove();
-                            })
-                            .catch((err) => alert("No se pudo eliminar: " + err.message));
-                    }
+                    // const deleteBtn = e.target.closest('[data-action="delete-image"]');
+                    // if (deleteBtn) {
+                    //     e.stopPropagation(); // evita que abra el lightbox
+                    //     const imgId = deleteBtn.dataset.imgId;
+                    //     if (!confirm("¿Eliminás esta imagen?")) return;
+                    //     apiFetch(`/imagenes/${imgId}`, { method: "DELETE" })
+                    //         .then(() => {
+                    //             deleteBtn.closest(".gallery-thumb").remove();
+                    //         })
+                    //         .catch((err) => alert("No se pudo eliminar: " + err.message));
+                    // }
                 });
 
 
@@ -3946,8 +3960,8 @@
                         preview.innerHTML = urls
                             .map(
                                 (src) => `
-          <div class="gallery-thumb"><img src="${src}" alt="Vista previa"></div>
-        `,
+                                <div class="gallery-thumb"><img src="${src}" alt="Vista previa"></div>
+                                `,
                             )
                             .join("");
                     });

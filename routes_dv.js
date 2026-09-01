@@ -1099,6 +1099,79 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
     app.get('/api/dv/landing/fotos-recientes', async (req, res) => {
         try {
+            const LIMIT = 15;
+            const HORAS_RECIENTE = 48;
+
+            const [rows] = await pool.query(`
+            SELECT * FROM (
+                SELECT 
+                    pi.id,
+                    p.id AS proveedor_id,
+                    p.nombre AS proveedor_nombre,
+                    p.descripcion,
+                    p.zona,
+                    p.tipo,
+                    rb.nombre AS categoria,
+                    pi.subida_en,
+                    ROW_NUMBER() OVER (PARTITION BY p.id ORDER BY pi.subida_en DESC) AS rn
+                FROM db_proveedor_imagenes pi
+                JOIN db_proveedores p ON p.id = pi.proveedor_id
+                JOIN db_rubros rb ON rb.id = p.rubro_id
+            ) AS sub
+            WHERE sub.rn <= 2
+        `);
+
+            const corteMs = HORAS_RECIENTE * 60 * 60 * 1000;
+            const ahora = Date.now();
+
+            const recientes = [];
+            const vecinos = [];
+
+            for (const r of rows) {
+                const edadMs = ahora - new Date(r.subida_en).getTime();
+                if (edadMs <= corteMs) {
+                    recientes.push(r);
+                } else if (r.tipo === 'vecino') {
+                    vecinos.push(r);
+                }
+            }
+
+            recientes.sort((a, b) => new Date(b.subida_en) - new Date(a.subida_en));
+
+            const shuffle = (arr) => {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            };
+            shuffle(vecinos);
+
+            const seleccion = [...recientes, ...vecinos].slice(0, LIMIT);
+
+            const items = seleccion.map(r => ({
+                id: r.id,
+                imagenUrl: `${req.protocol}://${req.get('host')}/api/dv/imagen/${r.id}`,
+                proveedor: r.proveedor_nombre,
+                categoria: r.categoria,
+                zona: r.zona,
+                descripcion: r.descripcion
+            }));
+
+            dvOk(res, items);
+        } catch (err) {
+            dvErr(res, err);
+        }
+    });
+    
+
+
+
+
+
+
+    app.get('/api/dv/landing/fotos-recientes-CAMBIADO', async (req, res) => {
+        try {
             const [rows] = await pool.query(`
             SELECT * FROM (
                 SELECT 
@@ -1212,9 +1285,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                     LIMIT 20)
                 ) AS sub
             ) AS ranked
-            WHERE ranked.rn <= 2
+            WHERE ranked.rn = 1
             ORDER BY ranked.fecha DESC
-            LIMIT 6
+            LIMIT 20
         `);
 
             const items = rows.map(r => ({
