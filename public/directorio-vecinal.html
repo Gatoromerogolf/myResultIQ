@@ -1700,11 +1700,11 @@
         <div class="controls">
             <input type="text" id="search" class="search-box" placeholder="Buscar por nombre, rubro o descripción…"
                 aria-label="Buscar proveedor" />
-            <select id="sort" class="sort-box" aria-label="Ordenar por">
+            <!-- <select id="sort" class="sort-box" aria-label="Ordenar por">
                 <option value="rating">Mejor calificados</option>
                 <option value="recommend">Más recomendados</option>
                 <option value="name">Nombre (A-Z)</option>
-            </select>
+            </select> -->
         </div>
 
         <div class="pills" id="pills"></div>
@@ -3750,15 +3750,15 @@
             });
 
             // Orden (local, no requiere API)
-            document.getElementById("sort").addEventListener("change", (e) => {
-                state.filter.sort = e.target.value;
-                renderGrid();
+            // document.getElementById("sort").addEventListener("change", (e) => {
+            //     state.filter.sort = e.target.value;
+            //     renderGrid();
 
-                const grid = document.getElementById("grid");
-                grid.scrollIntoView({ behavior: "smooth", block: "start" });
-                grid.setAttribute("tabindex", "-1");
-                grid.focus({ preventScroll: true });
-            });
+            //     const grid = document.getElementById("grid");
+            //     grid.scrollIntoView({ behavior: "smooth", block: "start" });
+            //     grid.setAttribute("tabindex", "-1");
+            //     grid.focus({ preventScroll: true });
+            // });
 
             // Pills de rubro
             document.getElementById("pills").addEventListener("click", (e) => {

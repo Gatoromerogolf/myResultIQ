@@ -1374,7 +1374,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     app.get('/api/dv/mis-proveedores', dvAuth, async (req, res) => {
         try {
             const [rows] = await pool.query(
-                `SELECT p.*, r.nombre AS rubro_nombre
+                `SELECT p.*, r.nombre AS rubro
                 FROM db_proveedores p
                 LEFT JOIN db_rubros r ON r.id = p.rubro_id
                 WHERE p.creado_por = ? AND p.activo = 1
