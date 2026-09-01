@@ -1118,7 +1118,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 JOIN db_proveedores p ON p.id = pi.proveedor_id
                 JOIN db_rubros rb ON rb.id = p.rubro_id
             ) AS sub
-            WHERE sub.rn <= 2
+            WHERE sub.rn = 1
         `);
 
             const corteMs = HORAS_RECIENTE * 60 * 60 * 1000;
