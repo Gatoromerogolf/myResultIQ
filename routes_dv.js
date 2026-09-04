@@ -1117,6 +1117,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 FROM db_proveedor_imagenes pi
                 JOIN db_proveedores p ON p.id = pi.proveedor_id
                 JOIN db_rubros rb ON rb.id = p.rubro_id
+                where p.creado_por != 1
             ) AS sub
             WHERE sub.rn = 1
         `);
