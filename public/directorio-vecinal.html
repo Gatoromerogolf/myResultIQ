@@ -3217,7 +3217,7 @@
                     nombre: p.name,
                     telefono: p.phone,
                     calificacion: p.avgRating > 0 ? p.avgRating.toFixed(1) : '- - ',
-                    descripcion: truncarDescripcion(p.desc, 90)  // antes (p.desc, 60)
+                    descripcion: truncarDescripcion(p.desc, 120)  // antes (p.desc, 60)
                 }));
             return { rubroNombre, contactos };
         }
@@ -3313,7 +3313,8 @@
         function armarMensajeTextoRubro() {
             const { rubroNombre, contactos } = getContactosRubroActual();
             const lista = contactos
-                .map(c => `• ${c.nombre} — ${c.descripcion}\n ${c.telefono} — ⭐ ${c.calificacion}`)
+                // .map(c => `• ${c.nombre} — ${c.descripcion}\n ${c.telefono} — ⭐ ${c.calificacion}`)
+                .map(c => `• ${c.nombre} — ${c.descripcion}\n ${c.telefono}`)
                 .join('\n\n');
 
             return `🏘️ *EntreVecinos — ${rubroNombre}*\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} registrado${contactos.length === 1 ? '' : 's'}\n\n${lista}\n\n➖➖➖➖\n\nSi tomás alguno de estos servicios, contános tu experiencia.\nSi conocés a otro que no está en la lista, sumalo vos mismo a EntreVecinos. ¡Nos ayuda a todos!\n\n*Consulta el directorio completo en entrevecinos-cc.com.ar*`;
