@@ -1625,6 +1625,46 @@
             border-top: 1px solid var(--line, #ddd3bd);
             transform: rotate(45deg);
         }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            /* si .controls usa flex/grid */
+        }
+
+        .search-box {
+            width: 100%;
+            padding-right: 40px;
+            /* deja lugar para el ícono */
+        }
+
+        #voiceSearchBtn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+        }
+
+        #voiceSearchBtn.listening {
+            color: #e53935;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
     </style>
 </head>
 
@@ -1698,13 +1738,19 @@
         </section>
 
         <div class="controls">
-            <input type="text" id="search" class="search-box" placeholder="Buscar por nombre, rubro o descripción…"
-                aria-label="Buscar proveedor" />
-            <!-- <select id="sort" class="sort-box" aria-label="Ordenar por">
+            <div class="search-wrap">
+                <input type="text" id="search" class="search-box" placeholder="Buscar por nombre, rubro o descripción…"
+                    aria-label="Buscar proveedor" />
+                <!-- <select id="sort" class="sort-box" aria-label="Ordenar por">
                 <option value="rating">Mejor calificados</option>
                 <option value="recommend">Más recomendados</option>
                 <option value="name">Nombre (A-Z)</option>
             </select> -->
+
+                <button type="button" id="voiceSearchBtn" aria-label="Buscar por voz">
+                    <i class="ti ti-microphone"></i>
+                </button>
+            </div>
         </div>
 
         <div class="pills" id="pills"></div>
@@ -3731,6 +3777,7 @@
             let yaHizoScrollBusqueda = false;
 
             document.getElementById("search").addEventListener("input", (e) => {
+                console.log("input event disparado:", e.target.value); // TEMPORAL
                 state.filter.query = e.target.value;
                 clearTimeout(searchTimer);
                 searchTimer = setTimeout(() => {
@@ -3766,6 +3813,9 @@
                 const btn = e.target.closest(".pill");
                 if (!btn) return;
                 state.filter.rubro_id = btn.dataset.rubroId || null;
+                state.filter.query = "";                          // limpia el filtro de texto
+                document.getElementById("search").value = "";      // limpia visualmente el input
+                yaHizoScrollBusqueda = false;                       // opcional: resetea el flag de scroll
                 loadProviders();
                 renderPills();
 
@@ -3854,7 +3904,7 @@
                                 deleteBtn.closest(".gallery-thumb").remove();
                             })
                             .catch((err) => alert("No se pudo eliminar: " + err.message));
-                            return;
+                        return;
                     }
 
                     const thumb = e.target.closest('[data-action="view-image"]');
@@ -4220,6 +4270,65 @@
 
                 // aplicarFiltro(e.target.value); // tu función de filtro existente, sin tocar
             });
+
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const voiceBtn = document.getElementById("voiceSearchBtn");
+            const searchInput = document.getElementById("search");
+
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.lang = "es-AR";
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                voiceBtn.addEventListener("click", () => {
+                    voiceBtn.classList.add("listening");
+                    recognition.start();
+                });
+
+                const STOPWORDS = ["quiero", "busco", "necesito", "un", "una", "unos", "unas", "el", "la", "los", "las", "de", "para", "en", "con", "y", "o", "por", "al", "del", "a", "es", "son", "está", "están", "trae", "traeme", "buscame", "buscar", "encontrame", "donde", "qué", "cual", "cuál", "cómo", "como", "me", "te", "lo", "la", "le", "les"];
+
+                function limpiarQuery(texto) {
+                    return texto
+                        .toLowerCase()
+                        .split(/\s+/)
+                        .filter(palabra => !STOPWORDS.includes(palabra))
+                        .join(" ")
+                        .trim();
+                }
+
+                recognition.onresult = (event) => {
+                    const transcript = limpiarQuery(event.results[0][0].transcript);
+                    const input = document.getElementById("search");
+                    input.value = transcript;
+                    state.filter.query = transcript;
+                    clearTimeout(searchTimer);
+                    loadProviders();
+
+                    // opcional: replicar el mismo scroll-into-view que hace la búsqueda por texto
+                    if (transcript.length > 0 && !yaHizoScrollBusqueda) {
+                        const grid = document.getElementById("grid");
+                        grid.scrollIntoView({ behavior: "smooth", block: "start" });
+                        grid.setAttribute("tabindex", "-1");
+                        grid.focus({ preventScroll: true });
+                        yaHizoScrollBusqueda = true;
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    voiceBtn.classList.remove("listening");
+                    if (event.error === "not-allowed") {
+                        alert("Necesitás dar permiso de micrófono para buscar por voz.");
+                    }
+                };
+
+                recognition.onend = () => {
+                    voiceBtn.classList.remove("listening");
+                };
+            } else {
+                voiceBtn.style.display = "none";
+            }
 
         }
 

@@ -527,9 +527,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             const params = [];
             if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
             if (q) {
-                sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ?)';
+                sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ? OR r.nombre LIKE ? OR r.palabras_clave LIKE ?)';
                 const like = `%${q}%`;
-                params.push(like, like, like);
+                params.push(like, like, like, like, like);
             }
             sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
 
@@ -1164,7 +1164,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             dvErr(res, err);
         }
     });
-    
+
 
 
 
