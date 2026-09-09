@@ -1665,6 +1665,135 @@
                 opacity: 0.4;
             }
         }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-box {
+            width: 100%;
+            padding-right: 44px;
+        }
+
+
+        #voiceSearchBtn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        #voiceSearchBtn i {
+            position: relative;
+            z-index: 2;
+            font-size: 18px;
+        }
+
+        /* Anillos de ripple detrás del ícono */
+        .ripple-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #4a90d9;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0;
+            animation: ripple 2.4s ease-out infinite;
+            pointer-events: none;
+        }
+
+        .ripple-ring-delay {
+            animation-delay: 1.2s;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(2.2);
+                opacity: 0;
+            }
+        }
+
+        /* Estado activo mientras escucha */
+        #voiceSearchBtn.listening i {
+            color: #e53935;
+        }
+
+        #voiceSearchBtn.listening .ripple-ring {
+            border-color: #e53935;
+            animation-duration: 1s;
+        }
+
+        /* Coachmark */
+        .coachmark {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            right: 0;
+            background: #1a1a1a;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            white-space: 200px;
+            z-index: 20;
+            display: none;
+            animation: fadeInBounce 0.4s ease;
+        }
+
+        .coachmark::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            right: 14px;
+            border-width: 0 6px 6px 6px;
+            border-style: solid;
+            border-color: #1a1a1a transparent transparent transparent;
+        }
+
+        .coachmark button {
+            background: none;
+            border: none;
+            color: #aaa;
+            margin-left: 8px
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        @keyframes fadeInBounce {
+            0% {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            /* antes: translateY(-6px) */
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #voiceSearchBtn.voice-used .ripple-ring {
+            display: none;
+        }
     </style>
 </head>
 
@@ -1748,8 +1877,14 @@
             </select> -->
 
                 <button type="button" id="voiceSearchBtn" aria-label="Buscar por voz">
+                    <span class="ripple-ring"></span>
+                    <span class="ripple-ring ripple-ring-delay"></span>
                     <i class="ti ti-microphone"></i>
                 </button>
+                <div id="voiceCoachmark" class="coachmark">
+                    🎙️ ¡Nuevo! Buscá hablando...<br>Tocá el micrófono y decí qué necesitas
+                    <button id="closeCoachmark" aria-label="Cerrar">×</button>
+                </div>
             </div>
         </div>
 
@@ -4326,9 +4461,41 @@
                 recognition.onend = () => {
                     voiceBtn.classList.remove("listening");
                 };
+
+                // Coachmark: mostrar solo la primera vez
+                const coachmark = document.getElementById("voiceCoachmark");
+                // const voiceBtn = document.getElementById("voiceSearchBtn");
+
+                if (!localStorage.getItem("voiceCoachmarkVisto")) {
+                    coachmark.style.display = "block";
+                }
+
+                document.getElementById("closeCoachmark").addEventListener("click", () => {
+                    coachmark.style.display = "none";
+                    localStorage.setItem("voiceCoachmarkVisto", "1");
+                });
+
+                // Ocultar el ripple permanentemente una vez que el usuario ya usó la función
+                function marcarVozUsada() {
+                    localStorage.setItem("voiceUsada", "1");
+                    voiceBtn.classList.add("voice-used");
+                }
+                if (localStorage.getItem("voiceUsada")) {
+                    voiceBtn.classList.add("voice-used");
+                }
+
+                voiceBtn.addEventListener("click", () => {
+                    coachmark.style.display = "none";
+                    localStorage.setItem("voiceCoachmarkVisto", "1");
+                    marcarVozUsada();
+                    voiceBtn.classList.add("listening");
+                    recognition.start();
+                });
             } else {
                 voiceBtn.style.display = "none";
             }
+
+
 
         }
 
