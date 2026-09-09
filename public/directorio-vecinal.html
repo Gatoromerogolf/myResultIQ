@@ -1772,8 +1772,7 @@
             background: none;
             border: none;
             color: #aaa;
-            margin-left: 8px
-            cursor: pointer;
+            margin-left: 8px cursor: pointer;
             font-size: 14px;
             line-height: 1;
         }
@@ -2376,10 +2375,18 @@
                 state.providers = provs.map(normalizeProvider);
                 renderGrid();
                 renderStats();
+                // revisarLinkCompartido();
             } catch (e) {
                 showError(e.message);
             }
         }
+
+        // function revisarLinkCompartido() {
+        //     const idCompartido = new URLSearchParams(window.location.search).get('p');
+        //     if (idCompartido) {
+        //         openDetail(Number(idCompartido)); // openDetail ya busca en state.providers
+        //     }
+        // }
 
         async function eliminarProveedor(id) {
             const p = state.providers.find((x) => x.id === id);
@@ -3116,6 +3123,9 @@
                         </button>
                         <button class="btn-icon btn-icon--lg" data-action="llamar-proveedor-detalle" data-id="${p.id}" title="Llamar">
                             <i class="ti ti-phone" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn-accion" id="btn-compartir" onclick="compartirProveedor(${p.id})">
+                            <i class="ti ti-share"></i> Compartir
                         </button>
                     </div>
                     ` : ''}
@@ -3883,6 +3893,50 @@
             }
         }
 
+        async function compartirProveedor(id) {
+            const p = state.providers.find((x) => x.id === id);
+            if (!p) return;
+
+            console.log('proveedor a compartir:', p);
+
+            const link = `https://entrevecinos-cc.com.ar/?p=${p.id}`;
+
+            const lineas = [
+                `*${p.name}*`,
+                p.rubro && `📌 ${p.rubro}`,
+                p.phone && `📞 ${p.phone}`,
+                p.desc && `\n${p.desc}`,
+                p.instagram && `📷 ${p.instagram}`,
+                `\nVer ficha completa: ${link}`
+            ].filter(Boolean);
+
+            const texto = lineas.join('\n');
+
+            const esMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+            const primeraImagenUrl = p.imagenes?.[0]?.url; // ajustá al campo real de tu objeto p
+
+            if (esMobile && navigator.share) {
+                if (primeraImagenUrl && navigator.canShare) {
+                    try {
+                        const resp = await fetch(primeraImagenUrl);
+                        const blob = await resp.blob();
+                        const file = new File([blob], 'proveedor.jpg', { type: blob.type });
+                        if (navigator.canShare({ files: [file] })) {
+                            await navigator.share({ text: texto, files: [file] });
+                            return;
+                        }
+                    } catch (e) { console.warn('Share con imagen falló', e); }
+                }
+                try {
+                    await navigator.share({ text: texto });
+                    return;
+                } catch (e) { /* canceló */ }
+            }
+
+            await navigator.clipboard.writeText(texto);
+            mostrarToast('Texto copiado', 'Pegalo en WhatsApp.');
+        }
+
         // ------------------------------------------------------------
         //  Init
         // ------------------------------------------------------------
@@ -4406,7 +4460,6 @@
                 // aplicarFiltro(e.target.value); // tu función de filtro existente, sin tocar
             });
 
-
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const voiceBtn = document.getElementById("voiceSearchBtn");
             const searchInput = document.getElementById("search");
@@ -4495,8 +4548,15 @@
                 voiceBtn.style.display = "none";
             }
 
-
-
+            document.addEventListener('DOMContentLoaded', () => {
+                loadProviders().then(() => {
+                    const idCompartido = new URLSearchParams(location.search).get('p');
+                    console.log('idCompartido:', idCompartido, 'providers cargados:', state.providers.length);
+                    if (idCompartido) {
+                        openDetail(Number(idCompartido));
+                    }
+                });
+            });
         }
 
         init();
