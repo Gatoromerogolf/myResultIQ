@@ -2283,12 +2283,22 @@
         // ----------------------------------------------------------
         //  GUARD: requiere sesión (usuario logeado o visitante)
         // ----------------------------------------------------------
+        // (function () {
+        //     const token = sessionStorage.getItem('dv_token');
+        //     const user = sessionStorage.getItem('dv_user');
+
+        //     if (!token || !user) {
+        //         window.location.href = 'login_dv.html';
+        //     }
+        // })();
+
         (function () {
             const token = sessionStorage.getItem('dv_token');
             const user = sessionStorage.getItem('dv_user');
 
             if (!token || !user) {
-                window.location.href = 'login_dv.html';
+                const destino = window.location.pathname + window.location.search;
+                window.location.href = `login_dv.html?redirect=${encodeURIComponent(destino)}`;
             }
         })();
 
