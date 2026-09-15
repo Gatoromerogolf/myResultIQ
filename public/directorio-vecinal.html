@@ -2197,7 +2197,8 @@
             </div>
             <div class="modal-scroll">
                 <p class="ink-soft">Podés publicar sin crear una cuenta. Se va a mostrar como <strong>usuario no
-                        autenticado</strong>. Si querés, dejá tus datos (no es obligatorio):</p>
+                        autenticado</strong>, y es recomendable que dejes tus datos como referencia para otro vecino:
+                </p>
 
                 <label>Nombre y apellido</label>
                 <input type="text" id="invitadoNombre" placeholder="Opcional" />
@@ -2456,6 +2457,7 @@
                 presentadoPorBarrio: p.presentado_por_barrio || "",
                 presentadoPorLote: p.presentado_por_lote || "",
                 creadoPor: p.creado_por,
+                creadoEn: p.creado_en,
                 autenticado: !!p.autenticado,                          // NUEVO
                 invitadoNombre: p.invitado_nombre || "",                // NUEVO
                 invitadoBarrioLote: p.invitado_barrio_lote || "",        // NUEVO
@@ -2631,9 +2633,11 @@
             const list = state.providers.slice();
             switch (state.filter.sort) {
                 case "rating":
-                    list.sort(
-                        (a, b) =>
-                            b.avgRating - a.avgRating || b.totalReviews - a.totalReviews,
+                    list.sort((a, b) =>
+                        b.avgRating - a.avgRating ||
+                        new Date(b.creadoEn) - new Date(a.creadoEn) ||
+                        b.recommends - a.recommends ||
+                        a.name.localeCompare(b.name, "es")
                     );
                     break;
                 case "recommend":
@@ -3949,6 +3953,97 @@
             publicacionPendiente = null;
         }
 
+        let proveedorFormPendiente = null;
+
+        function confirmarPublicacionInvitadoProveedor() {
+            if (!proveedorFormPendiente) return;
+
+            const invitado_nombre = document.getElementById('invitadoNombre').value.trim();
+            const invitado_barrio_lote = document.getElementById('invitadoBarrioLote').value.trim();
+
+            document.getElementById('modalInvitado').style.display = 'none';
+            guardarProveedor(proveedorFormPendiente, {
+                esEdicion: false,
+                autenticado: false,
+                invitado_nombre,
+                invitado_barrio_lote
+            });
+            proveedorFormPendiente = null;
+        }
+
+        async function guardarProveedor(form, { esEdicion, autenticado, invitado_nombre, invitado_barrio_lote }) {
+            const btn = form.querySelector(".submit-btn");
+            btn.disabled = true;
+            btn.textContent = "Guardando…";
+
+            const payload = {
+                nombre: form.name.value.trim(),
+                rubro_id: Number(form.rubro.value),
+                tipo: form.tipo.value,
+                zona: form.zone.value.trim(),
+                telefono: form.phone.value.trim(),
+                descripcion: form.desc.value.trim(),
+                sitio_web: form.sitio_web.value.trim(),
+                instagram: form.instagram.value.trim(),
+                images: pendingNewImages,
+            };
+
+            if (!esEdicion && !autenticado) {
+                payload.invitado_nombre = invitado_nombre || undefined;
+                payload.invitado_barrio_lote = invitado_barrio_lote || undefined;
+            }
+
+            try {
+                if (esEdicion) {
+                    await apiFetch(`/proveedores/${editandoProveedorId}`, {
+                        method: "PUT",
+                        body: JSON.stringify(payload),
+                    });
+                } else {
+                    await apiFetch("/proveedores", {
+                        method: "POST",
+                        body: JSON.stringify(payload),
+                    });
+                }
+
+                form.reset();
+                pendingNewImages = [];
+                editandoProveedorId = null;
+                form.querySelector(".submit-btn").textContent = "Agregar al directorio";
+                document.getElementById("add-images-preview").innerHTML = "";
+                closeModals();
+                state.filter.query = "";
+                document.getElementById("search").value = "";
+                await loadProviders();
+
+                if (document.getElementById('mis-proveedores')) {
+                    await cargarMisProveedores();
+                }
+
+                mostrarToast(
+                    esEdicion ? '¡Cambios guardados!' : '¡Gracias por sumarlo!',
+                    esEdicion ? 'El proveedor fue actualizado.' : 'Tu publicación ya está disponible en el directorio.',
+                    esEdicion ? '✅' : '🙌'
+                );
+            } catch (err) {
+                if (err.message === 'SESION_VENCIDA') {
+                    sessionStorage.removeItem('dv_token');
+                    sessionStorage.removeItem('dv_user');
+                    alert('Tu sesión venció. Iniciá sesión nuevamente, o volvé a intentarlo para publicar como usuario no autenticado.');
+                } else if (err.message.includes("autorizado")) {
+                    alert("Tu sesión expiró. Volvé a iniciar sesión.");
+                    window.location.href = "login_dv.html";
+                } else {
+                    alert("No se pudo guardar el proveedor: " + err.message);
+                }
+            } finally {
+                btn.disabled = false;
+                if (!editandoProveedorId) btn.textContent = "Agregar al directorio";
+            }
+        }
+
+
+
         async function guardarResena({ id, comment, workdate, rating, btn }, datosAutor) {
             btn.disabled = true;
             btn.textContent = "Guardando…";
@@ -4079,6 +4174,12 @@
                 sessionStorage.getItem("dv_user") || "null",
             );
             mostrarUsuarioHeader(storedUser);
+
+            // Ocultar acciones que requieren identidad persistente (invitados no tienen ownership real)
+            if (storedUser?.rol === 'visitante') {
+                document.getElementById('btn-mis-proveedores').style.display = 'none';
+                document.getElementById('btn-mis-comentarios').style.display = 'none';
+            }
 
             loadAll();
 
@@ -4414,94 +4515,94 @@
                     }
                 });
 
-            let proveedorFormPendiente = null;
+            // let proveedorFormPendiente = null;
 
-            function confirmarPublicacionInvitadoProveedor() {
-                if (!proveedorFormPendiente) return;
+            // function confirmarPublicacionInvitadoProveedor() {
+            //     if (!proveedorFormPendiente) return;
 
-                const invitado_nombre = document.getElementById('invitadoNombre').value.trim();
-                const invitado_barrio_lote = document.getElementById('invitadoBarrioLote').value.trim();
+            //     const invitado_nombre = document.getElementById('invitadoNombre').value.trim();
+            //     const invitado_barrio_lote = document.getElementById('invitadoBarrioLote').value.trim();
 
-                document.getElementById('modalInvitado').style.display = 'none';
-                guardarProveedor(proveedorFormPendiente, {
-                    esEdicion: false,
-                    autenticado: false,
-                    invitado_nombre,
-                    invitado_barrio_lote
-                });
-                proveedorFormPendiente = null;
-            }
+            //     document.getElementById('modalInvitado').style.display = 'none';
+            //     guardarProveedor(proveedorFormPendiente, {
+            //         esEdicion: false,
+            //         autenticado: false,
+            //         invitado_nombre,
+            //         invitado_barrio_lote
+            //     });
+            //     proveedorFormPendiente = null;
+            // }
 
-            async function guardarProveedor(form, { esEdicion, autenticado, invitado_nombre, invitado_barrio_lote }) {
-                const btn = form.querySelector(".submit-btn");
-                btn.disabled = true;
-                btn.textContent = "Guardando…";
+            // async function guardarProveedor(form, { esEdicion, autenticado, invitado_nombre, invitado_barrio_lote }) {
+            //     const btn = form.querySelector(".submit-btn");
+            //     btn.disabled = true;
+            //     btn.textContent = "Guardando…";
 
-                const payload = {
-                    nombre: form.name.value.trim(),
-                    rubro_id: Number(form.rubro.value),
-                    tipo: form.tipo.value,
-                    zona: form.zone.value.trim(),
-                    telefono: form.phone.value.trim(),
-                    descripcion: form.desc.value.trim(),
-                    sitio_web: form.sitio_web.value.trim(),
-                    instagram: form.instagram.value.trim(),
-                    images: pendingNewImages,
-                };
+            //     const payload = {
+            //         nombre: form.name.value.trim(),
+            //         rubro_id: Number(form.rubro.value),
+            //         tipo: form.tipo.value,
+            //         zona: form.zone.value.trim(),
+            //         telefono: form.phone.value.trim(),
+            //         descripcion: form.desc.value.trim(),
+            //         sitio_web: form.sitio_web.value.trim(),
+            //         instagram: form.instagram.value.trim(),
+            //         images: pendingNewImages,
+            //     };
 
-                if (!esEdicion && !autenticado) {
-                    payload.invitado_nombre = invitado_nombre || undefined;
-                    payload.invitado_barrio_lote = invitado_barrio_lote || undefined;
-                }
+            //     if (!esEdicion && !autenticado) {
+            //         payload.invitado_nombre = invitado_nombre || undefined;
+            //         payload.invitado_barrio_lote = invitado_barrio_lote || undefined;
+            //     }
 
-                try {
-                    if (esEdicion) {
-                        await apiFetch(`/proveedores/${editandoProveedorId}`, {
-                            method: "PUT",
-                            body: JSON.stringify(payload),
-                        });
-                    } else {
-                        await apiFetch("/proveedores", {
-                            method: "POST",
-                            body: JSON.stringify(payload),
-                        });
-                    }
+            //     try {
+            //         if (esEdicion) {
+            //             await apiFetch(`/proveedores/${editandoProveedorId}`, {
+            //                 method: "PUT",
+            //                 body: JSON.stringify(payload),
+            //             });
+            //         } else {
+            //             await apiFetch("/proveedores", {
+            //                 method: "POST",
+            //                 body: JSON.stringify(payload),
+            //             });
+            //         }
 
-                    form.reset();
-                    pendingNewImages = [];
-                    editandoProveedorId = null;
-                    form.querySelector(".submit-btn").textContent = "Agregar al directorio";
-                    document.getElementById("add-images-preview").innerHTML = "";
-                    closeModals();
-                    state.filter.query = "";
-                    document.getElementById("search").value = "";
-                    await loadProviders();
+            //         form.reset();
+            //         pendingNewImages = [];
+            //         editandoProveedorId = null;
+            //         form.querySelector(".submit-btn").textContent = "Agregar al directorio";
+            //         document.getElementById("add-images-preview").innerHTML = "";
+            //         closeModals();
+            //         state.filter.query = "";
+            //         document.getElementById("search").value = "";
+            //         await loadProviders();
 
-                    if (document.getElementById('mis-proveedores')) {
-                        await cargarMisProveedores();
-                    }
+            //         if (document.getElementById('mis-proveedores')) {
+            //             await cargarMisProveedores();
+            //         }
 
-                    mostrarToast(
-                        esEdicion ? '¡Cambios guardados!' : '¡Gracias por sumarlo!',
-                        esEdicion ? 'El proveedor fue actualizado.' : 'Tu publicación ya está disponible en el directorio.',
-                        esEdicion ? '✅' : '🙌'
-                    );
-                } catch (err) {
-                    if (err.message === 'SESION_VENCIDA') {
-                        sessionStorage.removeItem('dv_token');
-                        sessionStorage.removeItem('dv_user');
-                        alert('Tu sesión venció. Iniciá sesión nuevamente, o volvé a intentarlo para publicar como usuario no autenticado.');
-                    } else if (err.message.includes("autorizado")) {
-                        alert("Tu sesión expiró. Volvé a iniciar sesión.");
-                        window.location.href = "login_dv.html";
-                    } else {
-                        alert("No se pudo guardar el proveedor: " + err.message);
-                    }
-                } finally {
-                    btn.disabled = false;
-                    if (!editandoProveedorId) btn.textContent = "Agregar al directorio";
-                }
-            }
+            //         mostrarToast(
+            //             esEdicion ? '¡Cambios guardados!' : '¡Gracias por sumarlo!',
+            //             esEdicion ? 'El proveedor fue actualizado.' : 'Tu publicación ya está disponible en el directorio.',
+            //             esEdicion ? '✅' : '🙌'
+            //         );
+            //     } catch (err) {
+            //         if (err.message === 'SESION_VENCIDA') {
+            //             sessionStorage.removeItem('dv_token');
+            //             sessionStorage.removeItem('dv_user');
+            //             alert('Tu sesión venció. Iniciá sesión nuevamente, o volvé a intentarlo para publicar como usuario no autenticado.');
+            //         } else if (err.message.includes("autorizado")) {
+            //             alert("Tu sesión expiró. Volvé a iniciar sesión.");
+            //             window.location.href = "login_dv.html";
+            //         } else {
+            //             alert("No se pudo guardar el proveedor: " + err.message);
+            //         }
+            //     } finally {
+            //         btn.disabled = false;
+            //         if (!editandoProveedorId) btn.textContent = "Agregar al directorio";
+            //     }
+            // }
 
             // Sugerencia de nuevo rubro (delegado en main, igual que pills/grid)
             document.querySelector("main").addEventListener("click", (e) => {

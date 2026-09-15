@@ -483,7 +483,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             const { rubro_id, q } = req.query;
             let sql = `
             SELECT
-            p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por,
+            p.id, p.nombre, p.zona, p.telefono, p.descripcion, p.tipo, p.creado_por, p.creado_en,
             p.sitio_web, p.instagram,
             p.autenticado,
             COALESCE(u.nombre, p.invitado_nombre, 'Usuario no autenticado') AS presentado_por,
@@ -527,9 +527,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             const params = [];
             if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
             if (q) {
-                sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ? OR r.nombre LIKE ? OR r.palabras_clave LIKE ?)';
+                sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ? OR p.palabras_clave LIKE ? OR r.nombre LIKE ? OR r.palabras_clave LIKE ?)';
                 const like = `%${q}%`;
-                params.push(like, like, like, like, like);
+                params.push(like, like, like, like, like, like);
             }
             sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
 
