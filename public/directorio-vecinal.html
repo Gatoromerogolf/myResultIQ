@@ -1901,6 +1901,15 @@
             rubro por WhatsApp
         </button>
 
+        <button class="share-rubro-btn" id="shareSearchBtn" style="display: none">
+            <i class="ti ti-brand-whatsapp" aria-hidden="true"></i> Compartir estos
+            resultados por WhatsApp
+        </button>
+        <p id="compartirBusquedaFeedback"
+            style="font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--sage); display:none; margin-top:.6rem;">
+            ¡Mensaje copiado! Pegalo en WhatsApp.
+        </p>
+
         <div class="grid" id="grid"></div>
     </main>
 
@@ -2375,7 +2384,31 @@
             }
         }
 
+
         async function loadProviders() {
+            try {
+                const params = new URLSearchParams();
+                if (state.filter.rubro_id)
+                    params.set("rubro_id", state.filter.rubro_id);
+                if (state.filter.query) params.set("q", state.filter.query);
+                const provs = await apiFetch("/proveedores?" + params);
+                state.providers = provs.map(normalizeProvider);
+                renderGrid();
+                renderStats();
+
+                const shareSearchBtn = document.getElementById('shareSearchBtn');
+                if (state.filter.query && state.filter.query.trim().length > 0) {
+                    shareSearchBtn.style.display = 'inline-flex';
+                    shareSearchBtn.dataset.query = state.filter.query.trim();
+                } else {
+                    shareSearchBtn.style.display = 'none';
+                }
+            } catch (e) {
+                showError(e.message);
+            }
+        }
+
+        async function loadProvidersAnterior() {
             try {
                 const params = new URLSearchParams();
                 if (state.filter.rubro_id)
@@ -2644,6 +2677,15 @@
             } else {
                 shareBtn.style.display = 'none';
             }
+
+            // Mostrar/ocultar botón de compartir búsqueda
+            // const shareSearchBtn = document.getElementById('shareSearchBtn');
+            // if (state.filter.query && state.filter.query.trim().length > 0) {
+            //     shareSearchBtn.style.display = 'inline-flex';
+            //     shareSearchBtn.dataset.query = state.filter.query.trim();
+            // } else {
+            //     shareSearchBtn.style.display = 'none';
+            // }
         }
 
         function renderStats() {
@@ -3592,6 +3634,52 @@
         }
 
 
+        // ------------------------------------------------------------
+        //  compartir resultado filtrddo
+        // ------------------------------------------------------------
+        function getContactosBusquedaActual() {
+            const query = document.getElementById('shareSearchBtn').dataset.query || '';
+            const contactos = state.providers
+                .filter(p => p.phone)
+                .map(p => ({
+                    nombre: p.name,
+                    telefono: p.phone,
+                    calificacion: p.avgRating > 0 ? p.avgRating.toFixed(1) : '- - ',
+                    descripcion: truncarDescripcion(p.desc, 120)
+                }));
+            return { query, contactos };
+        }
+
+        function armarMensajeTextoBusqueda() {
+            const { query, contactos } = getContactosBusquedaActual();
+            const lista = contactos
+                .map(c => `• ${c.nombre} — ${c.descripcion}\n ${c.telefono}`)
+                .join('\n\n');
+
+            return `🏘️ *EntreVecinos — resultados para "${query}"*\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} encontrado${contactos.length === 1 ? '' : 's'}\n\n${lista}\n\n➖➖➖➖\n\nSi tomás alguno de estos servicios, contános tu experiencia.\nSi conocés a otro que no está en la lista, sumalo vos mismo a EntreVecinos. ¡Nos ayuda a todos!\n\n*Consulta el directorio completo en entrevecinos-cc.com.ar*`;
+        }
+
+        async function copiarMensajeBusqueda() {
+            const mensaje = armarMensajeTextoBusqueda();
+            try {
+                await navigator.clipboard.writeText(mensaje);
+            } catch (err) {
+                const textarea = document.createElement('textarea');
+                textarea.value = mensaje;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+
+            const feedback = document.getElementById('compartirBusquedaFeedback');
+            feedback.style.display = 'block';
+            setTimeout(() => { feedback.style.display = 'none'; }, 3000);
+        }
+
+
         (function () {
             const API_BASE =
                 window.location.hostname === "localhost"
@@ -3948,6 +4036,40 @@
             mostrarToast('Texto copiado', 'Pegalo en WhatsApp.');
         }
 
+        function compartirResultadosFiltrados(proveedores, textoBusqueda) {
+            if (!proveedores.length) return;
+
+            let texto = `🔍 Resultados para "${textoBusqueda}" en EntreVecinos:\n\n`;
+
+            proveedores.forEach(p => {
+                texto += `▪️ ${p.nombre} (${p.rubroNombre})\n`;
+                if (p.desc) texto += `${p.desc}\n`;
+                if (p.phone) texto += `📞 ${p.phone}\n`;
+                texto += `\n`;
+            });
+
+            texto += `👉 Mirá el directorio completo en entrevecinos-cc.com.ar`;
+
+            return texto;
+        }
+
+        async function onCompartirResultadosClick() {
+            const texto = compartirResultadosFiltrados(proveedoresFiltrados, terminoBusquedaActual);
+            if (!texto) return;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({ text: texto });
+                } catch (e) {
+                    // usuario canceló, no hacer nada
+                }
+            } else {
+                await navigator.clipboard.writeText(texto);
+                // mostrar toast: "Copiado, pegalo en WhatsApp"
+                window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
+            }
+        }
+
         // ------------------------------------------------------------
         //  Init
         // ------------------------------------------------------------
@@ -4152,6 +4274,8 @@
 
             document.getElementById('compartirRubroCopiar').addEventListener('click', copiarMensajeRubro);
             document.getElementById('compartirRubroDescargar').addEventListener('click', descargarImagenRubro);
+
+            document.getElementById('shareSearchBtn').addEventListener('click', copiarMensajeBusqueda);
 
             document
                 .getElementById("edit-images-existing")
