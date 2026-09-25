@@ -2635,6 +2635,7 @@
                 case "rating":
                     list.sort((a, b) =>
                         b.avgRating - a.avgRating ||
+                        b.totalReviews - a.totalReviews ||
                         new Date(b.creadoEn) - new Date(a.creadoEn) ||
                         b.recommends - a.recommends ||
                         a.name.localeCompare(b.name, "es")
