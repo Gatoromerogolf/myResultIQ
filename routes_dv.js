@@ -527,9 +527,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             const params = [];
             if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
             if (q) {
-                sql += ' AND (p.nombre LIKE ? OR p.zona LIKE ? OR p.descripcion LIKE ? OR p.palabras_clave LIKE ? OR r.nombre LIKE ? OR r.palabras_clave LIKE ?)';
+                sql += ' AND (p.nombre LIKE ? OR p.descripcion LIKE ? OR p.palabras_clave LIKE ? OR r.nombre LIKE ? OR r.palabras_clave LIKE ?)';
                 const like = `%${q}%`;
-                params.push(like, like, like, like, like, like);
+                params.push(like, like, like, like, like);
             }
             sql += ' ORDER BY calificacion_promedio DESC, total_resenas DESC';
 
@@ -554,50 +554,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
 
     // POST /api/dv/proveedores  (requiere dvAuth)
-    app.post('/api/dv/proveedores-anterior-no-sirve', dvAuth, bloquearVisitante, async (req, res) => {
-        const { nombre, rubro_id, tipo = 'externo', zona = null,
-            telefono = null, descripcion = null, images = [] } = req.body;
-
-        if (!nombre?.trim()) return dvErr(res, 'El nombre es obligatorio.', 400);
-        if (!rubro_id) return dvErr(res, 'El rubro es obligatorio.', 400);
-        if (!['vecino', 'externo'].includes(tipo))
-            return dvErr(res, 'El tipo debe ser "vecino" o "externo".', 400);
-
-        const sitio_web = limpiarSitioWeb(req.body.sitio_web);
-        const instagram = limpiarInstagram(req.body.instagram);
-
-        const conn = await pool.getConnection();
-        try {
-            await conn.beginTransaction();
-
-            const [result] = await conn.query(
-                `INSERT INTO db_proveedores (nombre, rubro_id, creado_por, tipo, zona, telefono, descripcion, sitio_web, instagram)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [nombre.trim(), rubro_id, req.dvUser.id, tipo, zona, telefono, descripcion, sitio_web, instagram]
-            );
-            const proveedorId = result.insertId;
-
-            if (images.length) {
-                const imagesComprimidas = await Promise.all(images.map(comprimirImagen));
-
-                const imgRows = imagesComprimidas.map((dataURL, i) => [
-                    proveedorId, dataURL, mimeFromDataURL(dataURL), i
-                ]);
-                await conn.query(
-                    'INSERT INTO db_proveedor_imagenes (proveedor_id, imagen_b64, mime_type, orden) VALUES ?',
-                    [imgRows]
-                );
-            }
-
-            await conn.commit();
-            dvOk(res, { id: proveedorId });
-        } catch (e) {
-            await conn.rollback();
-            dvErr(res, e.message);
-        } finally {
-            conn.release();
-        }
-    });
 
     app.post('/api/dv/proveedores', async (req, res) => {
         const { nombre, rubro_id, tipo = 'externo', zona = null,
