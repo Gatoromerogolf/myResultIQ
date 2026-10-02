@@ -525,7 +525,13 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             WHERE p.activo = 1
         `;
             const params = [];
-            if (rubro_id) { sql += ' AND p.rubro_id = ?'; params.push(rubro_id); }
+            if (rubro_id) {
+                sql += ` AND (
+                        p.rubro_id = ?
+                        OR p.palabras_clave LIKE CONCAT('%', (SELECT nombre FROM db_rubros WHERE id = ?), '%')
+                    )`;
+                params.push(rubro_id, rubro_id);
+            }
             if (q) {
                 sql += ' AND (p.nombre LIKE ? OR p.descripcion LIKE ? OR p.palabras_clave LIKE ? OR r.nombre LIKE ? OR r.palabras_clave LIKE ?)';
                 const like = `%${q}%`;
