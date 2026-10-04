@@ -1630,12 +1630,18 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         next();
     }
 
+    const ID_ADMIN = 1;   // el administrador no se loguea
+
     app.post('/api/dv/log-nav', dvAuthOpcional, async (req, res) => {
         try {
             const { evento, detalle } = req.body || {};
             if (!EVENTOS_NAV.includes(evento)) return res.status(400).json({ ok: false });
 
             const u = req.dvUserOpt;
+
+            // No registrar la actividad del administrador (se identifica por id, no por nombre)
+            if (u && Number(u.id) === ID_ADMIN) return res.json({ ok: true, omitido: true });
+
             const esVisitante = u ? 0 : 1;
             const usuarioId = u ? (u.id || null) : null;
             const usuario = u ? (u.nombre || u.email || ('user#' + u.id)) : dvIp(req);
