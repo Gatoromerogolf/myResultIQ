@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo video en ficha</title>
+<style>
+  :root { --verde:#2e7d4f; --borde:#e2e8e4; --fondo:#f5f8f6; --texto:#1f2d26; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, sans-serif; background:var(--fondo); color:var(--texto); }
+  .wrap { max-width: 460px; margin: 0 auto; padding: 16px; }
+  .probar { background:#fff; border:1px dashed var(--verde); border-radius:12px; padding:12px; margin-bottom:16px; font-size:14px; }
+  .probar input { width:100%; padding:10px; border:1px solid var(--borde); border-radius:8px; margin:8px 0; font-size:14px; }
+  .probar button { background:var(--verde); color:#fff; border:0; padding:10px 16px; border-radius:8px; font-size:14px; cursor:pointer; }
+  .msg { color:#b3261e; font-size:13px; margin-top:6px; min-height:16px; }
+
+  .ficha { background:#fff; border-radius:16px; padding:16px; box-shadow:0 2px 10px rgba(0,0,0,.06); }
+  .ficha h2 { margin:0 0 2px; font-size:20px; }
+  .rubro { color:var(--verde); font-size:13px; font-weight:600; margin-bottom:10px; }
+  .desc { font-size:14px; line-height:1.4; margin-bottom:12px; }
+  .galeria { display:flex; gap:8px; margin-bottom:14px; }
+  .galeria div { flex:1; aspect-ratio:1; border-radius:10px; background:linear-gradient(135deg,#cfe5d6,#a9d1b7); }
+  .seccion-titulo { font-size:13px; font-weight:600; color:#5b6b62; margin:6px 0 8px; }
+
+  /* ---- bloque de video ---- */
+  .video-box { border-radius:12px; overflow:hidden; background:#000; margin-bottom:14px; }
+  .video-box.yt { aspect-ratio:16/9; }
+  .video-box.ig { aspect-ratio:9/14; max-height:480px; background:#fff; border:1px solid var(--borde); }
+  .video-plegable { margin-bottom:14px; }
+  .video-toggle { width:100%; display:flex; justify-content:space-between; align-items:center; padding:10px 14px;
+    background:#fff; color:var(--verde); border:1px solid var(--verde); border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; }
+  .video-toggle .flecha { transition: transform .2s; }
+  .video-plegable.abierto .flecha { transform: rotate(180deg); }
+  .video-cuerpo { margin-top:8px; }
+  .video-cuerpo .video-box { margin-bottom:0; }
+  .video-box iframe { width:100%; height:100%; border:0; display:block; }
+
+  .acciones { display:flex; gap:8px; }
+  .acciones span { flex:1; text-align:center; padding:10px; border-radius:10px; background:var(--verde); color:#fff; font-size:14px; }
+  .acciones span.sec { background:#fff; color:var(--verde); border:1px solid var(--verde); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="probar">
+    <strong>Probá con cualquier link</strong> (YouTube, Shorts o Instagram post/reel)
+    <input id="url" value="https://www.instagram.com/reel/DRX3NQIkhgM/?stkn=MXcxZXNzaXJmcXpiMw==" placeholder="Pegá el link acá">
+    <button onclick="probar()">Ver en la ficha</button>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <!-- Ficha de ejemplo -->
+  <div class="ficha">
+    <h2>Juan Pérez</h2>
+    <div class="rubro">Plomería</div>
+    <div class="desc">Destapaciones, instalaciones y arreglos de pérdidas. Atiendo en todo el barrio.</div>
+
+    <div class="galeria"><div></div><div></div><div></div></div>
+
+    <div id="videoContenedor"></div>
+
+    <div class="acciones">
+      <span>WhatsApp</span><span class="sec">Llamar</span><span class="sec">Compartir</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Convierte un link común en la URL de embed que sirve para el iframe
+function parseVideo(url) {
+  url = (url || '').trim();
+  let m;
+  // YouTube: youtu.be/ID, watch?v=ID, shorts/ID, embed/ID
+  m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([\w-]{11})/);
+  if (m) return { tipo: 'yt', src: 'https://www.youtube-nocookie.com/embed/' + m[1] };
+  // Instagram: /p/CODE, /reel/CODE, /tv/CODE
+  // acepta /reel/, /reels/ y /usuario/reel/CODE; siempre arma el embed con /reel/
+  m = url.match(/instagram\.com\/(?:[\w.]+\/)?(p|reels?|tv)\/([\w-]+)/);
+  if (m) {
+    const t = m[1].startsWith('reel') ? 'reel' : m[1];
+    return { tipo: 'ig', src: 'https://www.instagram.com/' + t + '/' + m[2] + '/embed' };
+  }
+  return null;
+}
+
+// Arma el bloque que va en la ficha (debajo de la galería de imágenes)
+function renderVideo(url) {
+  const v = parseVideo(url);
+  if (!v) return '';
+  return `
+    <div class="video-plegable" data-src="${v.src}" data-tipo="${v.tipo}">
+      <button type="button" class="video-toggle" onclick="toggleVideo(this)">
+        <span class="etiqueta">▶ Ver video</span><span class="flecha">▾</span>
+      </button>
+      <div class="video-cuerpo"></div>
+    </div>`;
+}
+
+// El iframe se crea recién al tocar el botón y se destruye al cerrar (corta la reproducción)
+function toggleVideo(btn) {
+  const cont = btn.parentElement;
+  const cuerpo = cont.querySelector('.video-cuerpo');
+  const abierto = cont.classList.toggle('abierto');
+  btn.querySelector('.etiqueta').textContent = abierto ? '✕ Cerrar video' : '▶ Ver video';
+  if (abierto) {
+    cuerpo.innerHTML = `
+      <div class="video-box ${cont.dataset.tipo}">
+        <iframe src="${cont.dataset.src}" allowfullscreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+      </div>`;
+  } else {
+    cuerpo.innerHTML = '';
+  }
+}
+
+function probar() {
+  const url = document.getElementById('url').value;
+  const html = renderVideo(url);
+  document.getElementById('msg').textContent = html ? '' : 'Link no válido. Usá YouTube o Instagram (post/reel).';
+  document.getElementById('videoContenedor').innerHTML = html;
+}
+probar();
+</script>
+</body>
+</html>
