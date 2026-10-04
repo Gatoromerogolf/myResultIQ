@@ -314,6 +314,9 @@
         <div class="header-inner">
             <h1 class="logo">Entre<span class="accent">Vecinos</span></h1>
             <div style="display: flex; gap: 0.5rem">
+                <a href="admin-navegacion-dv.html" class="back-btn">
+                    <i class="ti ti-message-2" aria-hidden="true"></i> Log de navegación
+                </a>
                 <a href="admin-feedback.html" class="back-btn">
                     <i class="ti ti-message-2" aria-hidden="true"></i> Sugerencias y
                     consultas
@@ -882,7 +885,7 @@
 
                 document.getElementById('btnCopiarInforme').style.display = 'inline-block';
             } catch (err) {
-                    console.error(err);
+                console.error(err);
                 alert('Error al generar el informe');
             } finally {
                 btn.disabled = false;

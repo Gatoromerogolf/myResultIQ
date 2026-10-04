@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Estadísticas de navegación – EntreVecinos</title>
+    <style>
+        :root {
+            --verde: #2f7d4f;
+            --verde-claro: #e6f2ea;
+            --gris: #6b7280;
+            --borde: #e5e7eb;
+            --fondo: #f7f8f7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+            background: var(--fondo);
+            color: #1f2937;
+        }
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--borde);
+            padding: 14px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        header h1 {
+            margin: 0 0 10px;
+            font-size: 1.1rem;
+            color: var(--verde);
+        }
+
+        .filtros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            font-size: .9rem;
+        }
+
+        .filtros input[type=date] {
+            padding: 6px 8px;
+            border: 1px solid var(--borde);
+            border-radius: 8px;
+        }
+
+        .filtros button {
+            padding: 6px 12px;
+            border: 1px solid var(--borde);
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .filtros button.primario {
+            background: var(--verde);
+            color: #fff;
+            border-color: var(--verde);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 16px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .kpi {
+            background: #fff;
+            border: 1px solid var(--borde);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .kpi b {
+            display: block;
+            font-size: 1.5rem;
+            color: var(--verde);
+        }
+
+        .kpi span {
+            font-size: .8rem;
+            color: var(--gris);
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--borde);
+            border-radius: 12px;
+            padding: 14px;
+            overflow: hidden;
+        }
+
+        .card h2 {
+            margin: 0 0 4px;
+            font-size: 1rem;
+        }
+
+        .card p.nota {
+            margin: 0 0 10px;
+            font-size: .78rem;
+            color: var(--gris);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .86rem;
+        }
+
+        th {
+            text-align: left;
+            font-weight: 600;
+            color: var(--gris);
+            font-size: .75rem;
+            padding: 4px 6px;
+        }
+
+        td {
+            padding: 6px;
+            border-top: 1px solid var(--borde);
+            vertical-align: middle;
+        }
+
+        td.num,
+        th.num {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .barra {
+            position: relative;
+            min-width: 80px;
+        }
+
+        .barra i {
+            display: block;
+            height: 8px;
+            background: var(--verde-claro);
+            border-radius: 4px;
+        }
+
+        .barra i b {
+            display: block;
+            height: 100%;
+            background: var(--verde);
+            border-radius: 4px;
+        }
+
+        .tag {
+            font-size: .7rem;
+            padding: 2px 6px;
+            border-radius: 6px;
+            background: var(--verde-claro);
+            color: var(--verde);
+        }
+
+        .tag.vis {
+            background: #fff4e0;
+            color: #9a6a00;
+        }
+
+        .horas {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 120px;
+        }
+
+        .horas div {
+            flex: 1;
+            background: var(--verde);
+            border-radius: 3px 3px 0 0;
+            position: relative;
+            min-height: 2px;
+        }
+
+        .horas-eje {
+            display: flex;
+            gap: 3px;
+            font-size: .65rem;
+            color: var(--gris);
+            margin-top: 4px;
+        }
+
+        .horas-eje span {
+            flex: 1;
+            text-align: center;
+        }
+
+        .vacio {
+            color: var(--gris);
+            font-size: .85rem;
+            padding: 8px 0;
+        }
+
+        #msg {
+            padding: 12px;
+            color: #b91c1c;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Estadísticas de navegación</h1>
+        <div class="filtros">
+            <label>Desde <input type="date" id="desde"></label>
+            <label>Hasta <input type="date" id="hasta"></label>
+            <button class="primario" id="btnAplicar">Aplicar</button>
+            <button data-dias="7">7 días</button>
+            <button data-dias="30">30 días</button>
+            <button data-dias="90">90 días</button>
+        </div>
+    </header>
+
+    <main>
+        <div id="msg"></div>
+        <div class="kpis" id="kpis"></div>
+
+        <div class="grid2">
+            <section class="card">
+                <h2>Ranking de usuarios</h2>
+                <p class="nota">Registrados por nombre, visitantes por IP. Varios vecinos pueden compartir una misma IP.
+                </p>
+                <div id="t-usuarios"></div>
+            </section>
+            <section class="card">
+                <h2>Ranking de rubros</h2>
+                <p class="nota">Veces que se tocó cada rubro.</p>
+                <div id="t-rubros"></div>
+            </section>
+            <section class="card">
+                <h2>Ranking de fichas</h2>
+                <p class="nota">Visitas y cuántas terminaron en contacto por WhatsApp.</p>
+                <div id="t-fichas"></div>
+            </section>
+            <section class="card">
+                <h2>Uso de WhatsApp</h2>
+                <p class="nota">Toques al botón de WhatsApp dentro de la ficha.</p>
+                <div id="wa-resumen" class="kpis" style="margin-bottom:10px"></div>
+                <div id="t-wa-fichas"></div>
+                <h2 style="margin-top:14px;font-size:.9rem">Por día</h2>
+                <div id="t-wa-dias"></div>
+            </section>
+            <section class="card">
+                <h2>Qué busca la gente</h2>
+                <p class="nota">Términos más buscados (texto y voz). Si alguien frena a mitad de palabra puede quedar
+                    registrado un fragmento.</p>
+                <div id="t-busquedas"></div>
+            </section>
+            <section class="card">
+                <h2>Actividad por hora</h2>
+                <p class="nota">Cuándo usan más el directorio (hora Argentina).</p>
+                <div class="horas" id="horas"></div>
+                <div class="horas-eje" id="horas-eje"></div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const token = sessionStorage.getItem('dv_token');
+        if (!token) window.location.href = 'login_dv.html';
+
+        const $ = (id) => document.getElementById(id);
+        const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
+            ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const n = (v) => Number(v) || 0;
+
+        function fechaAR(offsetDias = 0) {
+            const d = new Date(Date.now() - 3 * 3600 * 1000 - offsetDias * 86400000);
+            return d.toISOString().slice(0, 10);
+        }
+
+        function tabla(el, cols, rows, claveBarra) {
+            if (!rows.length) { $(el).innerHTML = '<div class="vacio">Sin datos en este período.</div>'; return; }
+            const max = claveBarra ? Math.max(...rows.map(r => n(r[claveBarra]))) || 1 : 1;
+            $(el).innerHTML = '<table><thead><tr><th>#</th>' +
+                cols.map(c => `<th class="${c.num ? 'num' : ''}">${esc(c.t)}</th>`).join('') +
+                (claveBarra ? '<th></th>' : '') + '</tr></thead><tbody>' +
+                rows.map((r, i) => '<tr><td>' + (i + 1) + '</td>' +
+                    cols.map(c => `<td class="${c.num ? 'num' : ''}">${c.f ? c.f(r) : esc(r[c.k])}</td>`).join('') +
+                    (claveBarra ? `<td class="barra"><i><b style="width:${(n(r[claveBarra]) / max * 100).toFixed(0)}%"></b></i></td>` : '') +
+                    '</tr>').join('') + '</tbody></table>';
+        }
+
+        function render(d) {
+            const ev = Object.fromEntries(d.resumen.map(r => [r.evento, n(r.total)]));
+            const kpi = (v, t) => `<div class="kpi"><b>${v}</b><span>${t}</span></div>`;
+            $('kpis').innerHTML =
+                kpi(ev.home || 0, 'Ingresos al directorio') +
+                kpi(ev.ficha || 0, 'Fichas abiertas') +
+                kpi(ev.rubro || 0, 'Rubros tocados') +
+                kpi(ev.busqueda_texto || 0, 'Búsquedas por texto') +
+                kpi(ev.busqueda_voz || 0, 'Búsquedas por voz') +
+                kpi(ev.whatsapp || 0, 'Contactos por WhatsApp') +
+                kpi(ev.resena || 0, 'Reseñas publicadas');
+
+            tabla('t-usuarios', [
+                { t: 'Usuario', f: r => esc(r.usuario) + ' <span class="tag ' + (n(r.es_visitante) ? 'vis">visitante' : '">registrado') + '</span>' },
+                { t: 'Acciones', k: 'acciones', num: true },
+                { t: 'Días', k: 'dias_activos', num: true },
+            ], d.usuarios, 'acciones');
+
+            tabla('t-rubros', [
+                { t: 'Rubro', k: 'rubro' },
+                { t: 'Accesos', k: 'accesos', num: true },
+            ], d.rubros, 'accesos');
+
+            tabla('t-fichas', [
+                { t: 'Ficha', k: 'ficha' },
+                { t: 'Visitas', k: 'visitas', num: true },
+                { t: 'WhatsApp', k: 'whatsapps', num: true },
+                { t: 'Reseñas', k: 'resenas', num: true },
+                { t: 'Conv.', num: true, f: r => n(r.visitas) ? Math.round(n(r.whatsapps) / n(r.visitas) * 100) + '%' : '–' },
+            ], d.fichas, 'visitas');
+
+            const wa = Object.fromEntries(d.whatsapp.porTipo.map(r => [n(r.es_visitante), n(r.total)]));
+            $('wa-resumen').innerHTML =
+                kpi((wa[0] || 0) + (wa[1] || 0), 'Total') + kpi(wa[0] || 0, 'De registrados') + kpi(wa[1] || 0, 'De visitantes');
+            tabla('t-wa-fichas', [
+                { t: 'Ficha', k: 'ficha' },
+                { t: 'Contactos', k: 'contactos', num: true },
+            ], d.whatsapp.porFicha, 'contactos');
+            tabla('t-wa-dias', [
+                { t: 'Día', f: r => esc(String(r.dia).slice(0, 10)) },
+                { t: 'Contactos', k: 'contactos', num: true },
+            ], d.whatsapp.porDia.slice().reverse());
+
+            tabla('t-busquedas', [
+                { t: 'Término', k: 'termino' },
+                { t: 'Veces', k: 'veces', num: true },
+                { t: 'Por voz', k: 'por_voz', num: true },
+            ], d.busquedas, 'veces');
+
+            const porHora = Array(24).fill(0);
+            d.horas.forEach(h => { porHora[n(h.hora)] = n(h.total); });
+            const maxH = Math.max(...porHora) || 1;
+            $('horas').innerHTML = porHora.map((v, h) =>
+                `<div style="height:${(v / maxH * 100).toFixed(0)}%" title="${h}:00 — ${v}"></div>`).join('');
+            $('horas-eje').innerHTML = porHora.map((_, h) => `<span>${h % 3 === 0 ? h : ''}</span>`).join('');
+        }
+
+        async function cargar() {
+            $('msg').textContent = '';
+            try {
+                const qs = new URLSearchParams({ desde: $('desde').value, hasta: $('hasta').value });
+                const res = await fetch('/api/dv/admin/stats-nav?' + qs, { headers: { Authorization: 'Bearer ' + token } });
+                if (res.status === 401 || res.status === 403) { $('msg').textContent = 'No tenés permiso para ver esta pantalla.'; return; }
+                const json = await res.json();
+                if (!json.ok) throw new Error(json.error || 'Error al cargar.');
+                render(json.data);
+            } catch (e) {
+                $('msg').textContent = 'No se pudieron cargar las estadísticas: ' + e.message;
+            }
+        }
+
+        $('desde').value = fechaAR(29);
+        $('hasta').value = fechaAR(0);
+        $('btnAplicar').addEventListener('click', cargar);
+        document.querySelectorAll('[data-dias]').forEach(b => b.addEventListener('click', () => {
+            $('desde').value = fechaAR(Number(b.dataset.dias) - 1);
+            $('hasta').value = fechaAR(0);
+            cargar();
+        }));
+        cargar();
+    </script>
+</body>
+
+</html>

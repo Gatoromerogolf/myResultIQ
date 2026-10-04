@@ -847,6 +847,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
         let usuarioId = null;
         let autenticado = 0;
+        let nombreAutor = null;   // <- nueva
         let nombreInvitado = (invitado_nombre || '').trim() || null;
         let barrioLoteInvitado = (invitado_barrio_lote || '').trim() || null;
 
@@ -858,6 +859,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 if (payload.id && payload.id !== 9999) {
                     usuarioId = payload.id;
                     autenticado = 1;
+                    nombreAutor = payload.nombre || null;   // <- nueva
                     nombreInvitado = null;
                     barrioLoteInvitado = null;
                 }
@@ -877,6 +879,15 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                 [req.params.id, usuarioId, autenticado, nombreInvitado, barrioLoteInvitado,
                     calificacion, comentario.trim(), fecha_trabajo || null]
             );
+
+            avisarNuevaResena({                       // <- nueva, sin await
+                provId: Number(req.params.id),
+                calificacion,
+                comentario: comentario.trim(),
+                autor: nombreAutor || nombreInvitado || (autenticado ? 'Usuario registrado #' + usuarioId : 'Anónimo'),
+                barrioLote: barrioLoteInvitado,
+            });
+
             dvOk(res, { id: result.insertId });
         } catch (e) { dvErr(res, e.message); }
     });
@@ -1598,4 +1609,165 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             return dvErr(res, 500, 'Error generando el informe');
         }
     });
+
+    const EVENTOS_NAV = ['home', 'busqueda_texto', 'busqueda_voz', 'rubro', 'ficha', 'whatsapp', 'resena'];
+
+    // IP real (Cloudflare -> Railway)
+    function dvIp(req) {
+        return (req.headers['cf-connecting-ip'] ||
+            (req.headers['x-forwarded-for'] || '').split(',')[0].trim() ||
+            req.ip || '').slice(0, 45);
+    }
+
+    // Auth OPCIONAL: si hay token válido setea usuario, si no, es visitante.
+    // Ajustá JWT_SECRET / jwt al nombre que ya usás en dvAuth.
+    function dvAuthOpcional(req, res, next) {
+        try {
+            const h = req.headers.authorization || '';
+            const token = h.startsWith('Bearer ') ? h.slice(7) : null;
+            if (token) req.dvUserOpt = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (e) { /* token inválido o vencido -> visitante */ }
+        next();
+    }
+
+    app.post('/api/dv/log-nav', dvAuthOpcional, async (req, res) => {
+        try {
+            const { evento, detalle } = req.body || {};
+            if (!EVENTOS_NAV.includes(evento)) return res.status(400).json({ ok: false });
+
+            const u = req.dvUserOpt;
+            const esVisitante = u ? 0 : 1;
+            const usuarioId = u ? (u.id || null) : null;
+            const usuario = u ? (u.nombre || u.email || ('user#' + u.id)) : dvIp(req);
+
+            await pool.query(
+                `INSERT INTO db_log_navegacion
+         (fecha_hora, usuario_id, usuario, es_visitante, evento, detalle)
+       VALUES (DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR), ?, ?, ?, ?, ?)`,
+                [usuarioId, String(usuario).slice(0, 100), esVisitante, evento,
+                    detalle ? String(detalle).slice(0, 255) : null]
+            );
+            res.json({ ok: true });
+        } catch (e) {
+            console.error('log-nav', e.message);
+            res.json({ ok: false });   // el log nunca debe romper la app
+        }
+    });
+
+    // Consulta para admin (soloAdmin después de dvAuth)
+    app.get('/api/dv/admin/log-nav', dvAuth, soloAdmin, async (req, res) => {
+        try {
+            const { desde, hasta, evento } = req.query;
+            const w = [], p = [];
+            if (desde) { w.push('fecha_hora >= ?'); p.push(desde + ' 00:00:00'); }
+            if (hasta) { w.push('fecha_hora <= ?'); p.push(hasta + ' 23:59:59'); }
+            if (evento) { w.push('evento = ?'); p.push(evento); }
+            const [rows] = await pool.query(
+                `SELECT DATE(fecha_hora) AS fecha, TIME(fecha_hora) AS hora,
+              usuario, es_visitante, evento, detalle
+         FROM db_log_navegacion
+         ${w.length ? 'WHERE ' + w.join(' AND ') : ''}
+        ORDER BY fecha_hora DESC LIMIT 1000`, p);
+            dvOk(res, rows);
+        } catch (e) { dvErr(res, e); }
+    });
+
+    // consulta de las estadisticas de logeo 
+    // Pegar dentro de registerDVRoutes() en routes_dv.js, junto al resto de rutas admin.
+    // Devuelve todo el tablero en una sola llamada: GET /api/dv/admin/stats-nav?desde=YYYY-MM-DD&hasta=YYYY-MM-DD
+
+    app.get('/api/dv/admin/stats-nav', dvAuth, soloAdmin, async (req, res) => {
+        try {
+            const rx = /^\d{4}-\d{2}-\d{2}$/;
+            const hoyAR = new Date(Date.now() - 3 * 3600 * 1000);          // hora Argentina
+            const iso = (d) => d.toISOString().slice(0, 10);
+            const hasta = rx.test(req.query.hasta || '') ? req.query.hasta : iso(hoyAR);
+            const desde = rx.test(req.query.desde || '')
+                ? req.query.desde
+                : iso(new Date(hoyAR.getTime() - 29 * 86400000));             // últimos 30 días
+
+            const params = [desde + ' 00:00:00', hasta + ' 23:59:59'];
+            const W = 'fecha_hora BETWEEN ? AND ?';
+            const q = async (sql) => (await pool.query(sql, params))[0];
+
+            const [resumen, usuarios, rubros, fichas, waPorTipo, waPorFicha, waPorDia, busquedas, horas] =
+                await Promise.all([
+                    // 1. Totales por evento
+                    q(`SELECT evento, COUNT(*) AS total
+             FROM db_log_navegacion WHERE ${W}
+            GROUP BY evento`),
+
+                    // 2. Ranking de usuarios (nombre si registrado, IP si visitante)
+                    q(`SELECT usuario, es_visitante,
+                  COUNT(*) AS acciones,
+                  COUNT(DISTINCT DATE(fecha_hora)) AS dias_activos,
+                  MAX(fecha_hora) AS ultima_vez
+             FROM db_log_navegacion WHERE ${W}
+            GROUP BY usuario, es_visitante
+            ORDER BY acciones DESC LIMIT 15`),
+
+                    // 3. Ranking de rubros
+                    q(`SELECT detalle AS rubro, COUNT(*) AS accesos
+             FROM db_log_navegacion
+            WHERE ${W} AND evento = 'rubro' AND detalle IS NOT NULL
+            GROUP BY detalle
+            ORDER BY accesos DESC LIMIT 15`),
+
+                    // 4. Ranking de fichas + conversión a WhatsApp
+                    q(`SELECT detalle AS ficha,
+                  SUM(evento = 'ficha')    AS visitas,
+                  SUM(evento = 'whatsapp') AS whatsapps,
+                  SUM(evento = 'resena')   AS resenas
+             FROM db_log_navegacion
+            WHERE ${W} AND evento IN ('ficha','whatsapp','resena') AND detalle IS NOT NULL
+            GROUP BY detalle
+            ORDER BY visitas DESC, whatsapps DESC LIMIT 15`),
+
+                    // 5a. WhatsApp: registrados vs visitantes
+                    q(`SELECT es_visitante, COUNT(*) AS total
+             FROM db_log_navegacion
+            WHERE ${W} AND evento = 'whatsapp'
+            GROUP BY es_visitante`),
+
+                    // 5b. WhatsApp: fichas más contactadas
+                    q(`SELECT detalle AS ficha, COUNT(*) AS contactos
+             FROM db_log_navegacion
+            WHERE ${W} AND evento = 'whatsapp' AND detalle IS NOT NULL
+            GROUP BY detalle
+            ORDER BY contactos DESC LIMIT 15`),
+
+                    // 5c. WhatsApp: evolución diaria
+                    q(`SELECT DATE(fecha_hora) AS dia, COUNT(*) AS contactos
+             FROM db_log_navegacion
+            WHERE ${W} AND evento = 'whatsapp'
+            GROUP BY DATE(fecha_hora)
+            ORDER BY dia`),
+
+                    // 6. Extra: qué busca la gente (texto + voz)
+                    q(`SELECT LOWER(detalle) AS termino,
+                  COUNT(*) AS veces,
+                  SUM(evento = 'busqueda_voz') AS por_voz
+             FROM db_log_navegacion
+            WHERE ${W} AND evento IN ('busqueda_texto','busqueda_voz') AND detalle IS NOT NULL
+            GROUP BY LOWER(detalle)
+            ORDER BY veces DESC LIMIT 15`),
+
+                    // 7. Extra: actividad por hora del día (la fecha ya está guardada en hora Argentina)
+                    q(`SELECT HOUR(fecha_hora) AS hora, COUNT(*) AS total
+             FROM db_log_navegacion WHERE ${W}
+            GROUP BY HOUR(fecha_hora)
+            ORDER BY hora`),
+                ]);
+
+            dvOk(res, {
+                desde, hasta,
+                resumen, usuarios, rubros, fichas,
+                whatsapp: { porTipo: waPorTipo, porFicha: waPorFicha, porDia: waPorDia },
+                busquedas, horas,
+            });
+        } catch (e) {
+            dvErr(res, e);
+        }
+    });
+
 };

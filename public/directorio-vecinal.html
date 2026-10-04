@@ -2385,7 +2385,6 @@
             }
         }
 
-
         async function loadProviders() {
             try {
                 const params = new URLSearchParams();
@@ -2500,6 +2499,8 @@
             document.getElementById("grid").innerHTML =
                 `<div class="empty-state" style="color:var(--berry)">⚠ ${msg}</div>`;
         }
+
+
 
         // ------------------------------------------------------------
         //  Helpers de presentación
@@ -2831,7 +2832,7 @@
 
 
         // ------------------------------------------------------------
-        //  Actualizausuario
+        //  Actualiza usuario
         // ------------------------------------------------------------
         function openPerfil() {
             const user = JSON.parse(sessionStorage.getItem("dv_user") || "null");
@@ -3081,6 +3082,7 @@
         async function openDetail(id) {
             const p = state.providers.find((x) => x.id === id);
             if (!p) return;
+            dvLog('ficha', id + ' - ' + (p?.name || ''));
 
             const token = sessionStorage.getItem("dv_token");
             let currentUserName = "Anónimo";
@@ -4062,6 +4064,7 @@
                 });
                 // Limpiar cache de reseñas del proveedor para recargar desde API
                 const p = state.providers.find((x) => x.id === id);
+                dvLog('resena', id + ' - ' + (p?.name || ''));   // <- nueva línea
                 if (p) {
                     p.reviews = [];
                     p.totalReviews++;
@@ -4167,6 +4170,26 @@
         }
 
         // ------------------------------------------------------------
+        //  helpers  de  logeo de navegación
+        // ------------------------------------------------------------
+        // Log de navegación: fire-and-forget, nunca bloquea ni tira errores
+        function dvLog(evento, detalle) {
+            try {
+                const user = JSON.parse(sessionStorage.getItem('dv_user') || 'null');
+                const token = (user && user.rol !== 'visitante') ? sessionStorage.getItem('dv_token') : null;
+                fetch('/api/dv/log-nav', {
+                    method: 'POST',
+                    keepalive: true,
+                    headers: Object.assign(
+                        { 'Content-Type': 'application/json' },
+                        token ? { Authorization: 'Bearer ' + token } : {}
+                    ),
+                    body: JSON.stringify({ evento, detalle: detalle || null })
+                }).catch(() => { });
+            } catch (e) { }
+        }
+
+        // ------------------------------------------------------------
         //  Init
         // ------------------------------------------------------------
         function init() {
@@ -4175,6 +4198,7 @@
                 sessionStorage.getItem("dv_user") || "null",
             );
             mostrarUsuarioHeader(storedUser);
+            dvLog('home');
 
             // Ocultar acciones que requieren identidad persistente (invitados no tienen ownership real)
             if (storedUser?.rol === 'visitante') {
@@ -4206,6 +4230,8 @@
                 clearTimeout(searchTimer);
                 searchTimer = setTimeout(() => {
                     loadProviders();
+                    const q = e.target.value.trim();
+                    if (q.length >= 2) dvLog('busqueda_texto', q);
 
                     // Solo hace scroll la primera vez que hay texto, no en cada pausa
                     if (e.target.value.trim().length > 0 && !yaHizoScrollBusqueda) {
@@ -4221,22 +4247,12 @@
                 }, 500);
             });
 
-            // Orden (local, no requiere API)
-            // document.getElementById("sort").addEventListener("change", (e) => {
-            //     state.filter.sort = e.target.value;
-            //     renderGrid();
-
-            //     const grid = document.getElementById("grid");
-            //     grid.scrollIntoView({ behavior: "smooth", block: "start" });
-            //     grid.setAttribute("tabindex", "-1");
-            //     grid.focus({ preventScroll: true });
-            // });
-
             // Pills de rubro
             document.getElementById("pills").addEventListener("click", (e) => {
                 const btn = e.target.closest(".pill");
                 if (!btn) return;
                 state.filter.rubro_id = btn.dataset.rubroId || null;
+                if (state.filter.rubro_id) dvLog('rubro', btn.textContent.trim());
                 state.filter.query = "";                          // limpia el filtro de texto
                 document.getElementById("search").value = "";      // limpia visualmente el input
                 yaHizoScrollBusqueda = false;                       // opcional: resetea el flag de scroll
@@ -4293,6 +4309,8 @@
                 .addEventListener("click", (e) => {
                     const waBtn = e.target.closest('[data-action="wa-proveedor-detalle"]');
                     if (waBtn) {
+                        const pw = state.providers.find(x => x.id === Number(waBtn.dataset.id));
+                        dvLog('whatsapp', waBtn.dataset.id + ' - ' + (pw?.name || ''));
                         contactarWhatsapp(Number(waBtn.dataset.id));
                         return;
                     }
@@ -4352,17 +4370,6 @@
                         return;
                     }
 
-                    // const deleteBtn = e.target.closest('[data-action="delete-image"]');
-                    // if (deleteBtn) {
-                    //     e.stopPropagation(); // evita que abra el lightbox
-                    //     const imgId = deleteBtn.dataset.imgId;
-                    //     if (!confirm("¿Eliminás esta imagen?")) return;
-                    //     apiFetch(`/imagenes/${imgId}`, { method: "DELETE" })
-                    //         .then(() => {
-                    //             deleteBtn.closest(".gallery-thumb").remove();
-                    //         })
-                    //         .catch((err) => alert("No se pudo eliminar: " + err.message));
-                    // }
                 });
 
 
@@ -4516,94 +4523,6 @@
                     }
                 });
 
-            // let proveedorFormPendiente = null;
-
-            // function confirmarPublicacionInvitadoProveedor() {
-            //     if (!proveedorFormPendiente) return;
-
-            //     const invitado_nombre = document.getElementById('invitadoNombre').value.trim();
-            //     const invitado_barrio_lote = document.getElementById('invitadoBarrioLote').value.trim();
-
-            //     document.getElementById('modalInvitado').style.display = 'none';
-            //     guardarProveedor(proveedorFormPendiente, {
-            //         esEdicion: false,
-            //         autenticado: false,
-            //         invitado_nombre,
-            //         invitado_barrio_lote
-            //     });
-            //     proveedorFormPendiente = null;
-            // }
-
-            // async function guardarProveedor(form, { esEdicion, autenticado, invitado_nombre, invitado_barrio_lote }) {
-            //     const btn = form.querySelector(".submit-btn");
-            //     btn.disabled = true;
-            //     btn.textContent = "Guardando…";
-
-            //     const payload = {
-            //         nombre: form.name.value.trim(),
-            //         rubro_id: Number(form.rubro.value),
-            //         tipo: form.tipo.value,
-            //         zona: form.zone.value.trim(),
-            //         telefono: form.phone.value.trim(),
-            //         descripcion: form.desc.value.trim(),
-            //         sitio_web: form.sitio_web.value.trim(),
-            //         instagram: form.instagram.value.trim(),
-            //         images: pendingNewImages,
-            //     };
-
-            //     if (!esEdicion && !autenticado) {
-            //         payload.invitado_nombre = invitado_nombre || undefined;
-            //         payload.invitado_barrio_lote = invitado_barrio_lote || undefined;
-            //     }
-
-            //     try {
-            //         if (esEdicion) {
-            //             await apiFetch(`/proveedores/${editandoProveedorId}`, {
-            //                 method: "PUT",
-            //                 body: JSON.stringify(payload),
-            //             });
-            //         } else {
-            //             await apiFetch("/proveedores", {
-            //                 method: "POST",
-            //                 body: JSON.stringify(payload),
-            //             });
-            //         }
-
-            //         form.reset();
-            //         pendingNewImages = [];
-            //         editandoProveedorId = null;
-            //         form.querySelector(".submit-btn").textContent = "Agregar al directorio";
-            //         document.getElementById("add-images-preview").innerHTML = "";
-            //         closeModals();
-            //         state.filter.query = "";
-            //         document.getElementById("search").value = "";
-            //         await loadProviders();
-
-            //         if (document.getElementById('mis-proveedores')) {
-            //             await cargarMisProveedores();
-            //         }
-
-            //         mostrarToast(
-            //             esEdicion ? '¡Cambios guardados!' : '¡Gracias por sumarlo!',
-            //             esEdicion ? 'El proveedor fue actualizado.' : 'Tu publicación ya está disponible en el directorio.',
-            //             esEdicion ? '✅' : '🙌'
-            //         );
-            //     } catch (err) {
-            //         if (err.message === 'SESION_VENCIDA') {
-            //             sessionStorage.removeItem('dv_token');
-            //             sessionStorage.removeItem('dv_user');
-            //             alert('Tu sesión venció. Iniciá sesión nuevamente, o volvé a intentarlo para publicar como usuario no autenticado.');
-            //         } else if (err.message.includes("autorizado")) {
-            //             alert("Tu sesión expiró. Volvé a iniciar sesión.");
-            //             window.location.href = "login_dv.html";
-            //         } else {
-            //             alert("No se pudo guardar el proveedor: " + err.message);
-            //         }
-            //     } finally {
-            //         btn.disabled = false;
-            //         if (!editandoProveedorId) btn.textContent = "Agregar al directorio";
-            //     }
-            // }
 
             // Sugerencia de nuevo rubro (delegado en main, igual que pills/grid)
             document.querySelector("main").addEventListener("click", (e) => {
@@ -4630,26 +4549,26 @@
                 const id = Number(card.dataset.id);
                 const action = e.target.closest('[data-action]')?.dataset.action;
 
-                if (action === 'open') openDetail(id);
-                if (action === 'recommend') quickRecommend(id);
-                if (action === 'editar-proveedor') editarProveedor(id);
-                if (action === 'eliminar-proveedor') eliminarProveedor(id);
+                // if (action === 'open') openDetail(id);
+                // if (action === 'recommend') quickRecommend(id);
+                // if (action === 'editar-proveedor') editarProveedor(id);
+                // if (action === 'eliminar-proveedor') eliminarProveedor(id);
                 if (action === 'wa-proveedor') contactarWhatsapp(id);
                 if (action === 'llamar-proveedor') llamarProveedor(id);
 
-                if (action === 'wa-proveedor') {
-                    const p = state.providers.find(x => x.id === id);
-                    if (!p?.telefono) return;
-                    const tel = p.telefono.replace(/\D/g, ''); // solo dígitos
-                    const mensaje = `Hola ${p.name}! Te contacto por EntreVecinos, vi tu perfil en el directorio.`;
-                    window.open(`https://wa.me/${tel}?text=${encodeURIComponent(mensaje)}`, '_blank');
-                }
+                // if (action === 'wa-proveedor') {
+                //     const p = state.providers.find(x => x.id === id);
+                //     if (!p?.telefono) return;
+                //     const tel = p.telefono.replace(/\D/g, ''); // solo dígitos
+                //     const mensaje = `Hola ${p.name}! Te contacto por EntreVecinos, vi tu perfil en el directorio.`;
+                //     window.open(`https://wa.me/${tel}?text=${encodeURIComponent(mensaje)}`, '_blank');
+                // }
 
-                if (action === 'llamar-proveedor') {
-                    const p = state.providers.find(x => x.id === id);
-                    if (!p?.telefono) return;
-                    window.location.href = `tel:${p.telefono}`;
-                }
+                // if (action === 'llamar-proveedor') {
+                //     const p = state.providers.find(x => x.id === id);
+                //     if (!p?.telefono) return;
+                //     window.location.href = `tel:${p.telefono}`;
+                // }
             });
 
             // Mostrar comentarios y proveedores de un usuario
@@ -4707,10 +4626,10 @@
                 recognition.continuous = false;
                 recognition.interimResults = false;
 
-                voiceBtn.addEventListener("click", () => {
-                    voiceBtn.classList.add("listening");
-                    recognition.start();
-                });
+                // voiceBtn.addEventListener("click", () => {
+                //     voiceBtn.classList.add("listening");
+                //     recognition.start();
+                // });
 
                 const STOPWORDS = ["quiero", "busco", "necesito", "un", "una", "unos", "unas", "el", "la", "los", "las", "de", "para", "en", "con", "y", "o", "por", "al", "del", "a", "es", "son", "está", "están", "trae", "traeme", "buscame", "buscar", "encontrame", "donde", "qué", "cual", "cuál", "cómo", "como", "me", "te", "lo", "la", "le", "les"];
 
@@ -4730,6 +4649,8 @@
                     state.filter.query = transcript;
                     clearTimeout(searchTimer);
                     loadProviders();
+                    if (transcript) dvLog('busqueda_voz', transcript);
+
 
                     // opcional: replicar el mismo scroll-into-view que hace la búsqueda por texto
                     if (transcript.length > 0 && !yaHizoScrollBusqueda) {
@@ -4797,6 +4718,11 @@
         }
 
         init();
+
+        window.addEventListener('pageshow', (e) => {
+            if (e.persisted) dvLog('home');
+        });
+
     </script>
 
     <div id="toast" class="toast"></div>
