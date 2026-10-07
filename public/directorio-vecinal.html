@@ -4289,31 +4289,54 @@
             });
 
             // Búsqueda con debounce
+            // Búsqueda con debounce
             let searchTimer;
-
+            let logTimer;
+            let ultimoLog = '';
             let yaHizoScrollBusqueda = false;
 
-            document.getElementById("search").addEventListener("input", (e) => {
-                console.log("input event disparado:", e.target.value); // TEMPORAL
+            function registrarBusqueda(q) {
+                q = q.trim();
+                if (q.length >= 2 && q !== ultimoLog) {
+                    dvLog('busqueda_texto', q);
+                    ultimoLog = q;
+                }
+            }
+
+            const campoBusqueda = document.getElementById("search");
+
+            campoBusqueda.addEventListener("input", (e) => {
                 state.filter.query = e.target.value;
+
+                // Búsqueda en pantalla: rápida
                 clearTimeout(searchTimer);
                 searchTimer = setTimeout(() => {
                     loadProviders();
-                    const q = e.target.value.trim();
-                    if (q.length >= 2) dvLog('busqueda_texto', q);
 
-                    // Solo hace scroll la primera vez que hay texto, no en cada pausa
                     if (e.target.value.trim().length > 0 && !yaHizoScrollBusqueda) {
                         const grid = document.getElementById("grid");
                         grid.scrollIntoView({ behavior: "smooth", block: "start" });
-                        grid.setAttribute("tabindex", "-1");
-                        grid.focus({ preventScroll: true });
                         yaHizoScrollBusqueda = true;
                     }
                     if (e.target.value.trim().length === 0) {
-                        yaHizoScrollBusqueda = false; // reset si borra todo
+                        yaHizoScrollBusqueda = false;
                     }
                 }, 500);
+
+                // Log: lento, solo cuando dejó de escribir de verdad
+                clearTimeout(logTimer);
+                logTimer = setTimeout(() => registrarBusqueda(e.target.value), 1500);
+            });
+
+            campoBusqueda.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    clearTimeout(logTimer);
+                    registrarBusqueda(campoBusqueda.value);
+                }
+            });
+            campoBusqueda.addEventListener("blur", () => {
+                clearTimeout(logTimer);
+                registrarBusqueda(campoBusqueda.value);
             });
 
             // Pills de rubro
