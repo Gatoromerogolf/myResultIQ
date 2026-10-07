@@ -1793,6 +1793,45 @@
         #voiceSearchBtn.voice-used .ripple-ring {
             display: none;
         }
+
+        #btnSubir {
+            position: fixed;
+            right: 1.5rem;
+            bottom: calc(1.5rem + env(safe-area-inset-bottom));
+            width: 3rem;
+            height: 3rem;
+            border: none;
+            border-radius: 50%;
+            background: var(--ink);
+            color: var(--paper);
+            font-size: 1.3rem;
+            box-shadow: 0 6px 16px rgba(42, 50, 45, 0.25);
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        #btnSubir.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* El FAB se apila arriba del botón de subir */
+        .fab {
+            bottom: calc(1.5rem + env(safe-area-inset-bottom));
+            transition: background 0.15s, transform 0.15s, bottom 0.2s;
+        }
+
+        body.con-subir .fab {
+            bottom: calc(1.5rem + 3rem + 0.75rem + env(safe-area-inset-bottom));
+        }
+
+        /* Subir el botón "Agregar proveedor" para que quede encima del de subir */
+        .btn-agregar-proveedor {
+            /* ajustá al selector real que tengas */
+            bottom: calc(80px + env(safe-area-inset-bottom));
+        }
     </style>
 </head>
 
@@ -1897,8 +1936,7 @@
         <p class="stats" id="stats"></p>
 
         <button class="share-rubro-btn" id="shareRubroBtn" style="display: none">
-            <i class="ti ti-brand-whatsapp" aria-hidden="true"></i> Compartir este
-            rubro por WhatsApp
+            <i class="ti ti-brand-whatsapp" aria-hidden="true"></i> Compartir este rubro por WhatsApp
         </button>
 
         <button class="share-rubro-btn" id="shareSearchBtn" style="display: none">
@@ -3467,8 +3505,11 @@
                     nombre: p.name,
                     telefono: p.phone,
                     calificacion: p.avgRating > 0 ? p.avgRating.toFixed(1) : '- - ',
-                    descripcion: truncarDescripcion(p.desc, 120)  // antes (p.desc, 60)
-                }));
+                    descripcion: truncarDescripcion(p.desc, 120),  // antes (p.desc, 60)
+                    esVecino: String(p.tipo || '').toLowerCase() === 'vecino'
+                }))
+                // opcional: vecinos primero, respetando el orden previo dentro de cada grupo
+                .sort((a, b) => Number(b.esVecino) - Number(a.esVecino));
             return { rubroNombre, contactos };
         }
 
@@ -3480,14 +3521,31 @@
             document.getElementById('compartirRubroOverlay').style.display = 'flex';
         }
 
+        function dibujarBadgeVecino(ctx, x, y) {
+            const texto = '🏡 VECINO';
+            ctx.save();
+            ctx.font = 'bold 13px sans-serif';
+            const w = ctx.measureText(texto).width + 20;
+            const h = 24;
+            ctx.fillStyle = '#16a34a';          // verde, que contraste con el resto
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, h / 2);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(texto, x + 10, y + h / 2 + 1);
+            ctx.restore();
+            return w; // por si querés ubicar algo a la derecha
+        }
+
         function dibujarImagenRubro(rubroNombre, contactos) {
             const canvas = document.getElementById('compartirRubroCanvas');
             const ctx = canvas.getContext('2d');
 
-            const width = 700;  // antes 640;
-            const rowHeight = 90;        // 👈 antes 56, un poco más de aire por fila
-            const headerHeight = 160;    // 👈 antes 150
-            const footerHeight = 55;     // 👈 antes 50
+            const width = 700;
+            const rowHeight = 90;
+            const headerHeight = 160;
+            const footerHeight = 55;
             const height = headerHeight + (contactos.length * rowHeight) + footerHeight;
 
             const scale = window.devicePixelRatio || 1;
@@ -3505,13 +3563,13 @@
             ctx.fillRect(0, 0, width, headerHeight);
 
             ctx.fillStyle = '#faf7f2';
-            ctx.font = 'bold 18px monospace';        // 👈 antes 16px
+            ctx.font = 'bold 18px monospace';
             ctx.fillText('ENTREVECINOS', 30, 42);
 
-            ctx.font = 'bold 32px sans-serif';       // 👈 antes 28px
+            ctx.font = 'bold 32px sans-serif';
             ctx.fillText(rubroNombre, 30, 86);
 
-            ctx.font = '20px monospace';             // 👈 antes 15px
+            ctx.font = '20px monospace';
             ctx.fillStyle = '#c9c2b8';
             ctx.fillText(`${contactos.length} contacto${contactos.length === 1 ? '' : 's'} registrado${contactos.length === 1 ? '' : 's'}`, 30, 122);
 
@@ -3520,17 +3578,29 @@
             contactos.forEach((c, i) => {
                 const y = headerHeight + (i * rowHeight);
 
-                if (i % 2 === 0) {
+                if (c.esVecino) {
+                    ctx.fillStyle = '#e4f1e1';
+                    ctx.fillRect(0, y, width, rowHeight);
+                    ctx.fillStyle = '#16a34a';
+                    ctx.fillRect(0, y, 6, rowHeight);
+                } else if (i % 2 === 0) {
                     ctx.fillStyle = '#f0ebe2';
                     ctx.fillRect(0, y, width, rowHeight);
                 }
 
                 // Nombre
+                const yNombre = y + rowHeight / 2 - 24;
                 ctx.fillStyle = '#1a1a1a';
                 ctx.font = 'bold 24px sans-serif';
-                ctx.fillText(c.nombre, 30, y + rowHeight / 2 - 24);
+                ctx.fillText(c.nombre, 30, yNombre);
 
-                // Descripción (nueva línea) — con maxWidth para que no invada la calificación
+                // Badge VECINO
+                if (c.esVecino) {
+                    const anchoNombre = ctx.measureText(c.nombre).width;
+                    dibujarBadgeVecino(ctx, 30 + anchoNombre + 12, yNombre - 13);
+                }
+
+                // Descripción
                 if (c.descripcion) {
                     ctx.font = 'italic 22px sans-serif';
                     ctx.fillStyle = '#8a8a8a';
@@ -3554,17 +3624,15 @@
             ctx.fillStyle = '#1a1a1a';
             ctx.fillRect(0, height - footerHeight, width, footerHeight);
             ctx.fillStyle = '#c9c2b8';
-            ctx.font = '20px monospace';             // 👈 antes 13px
+            ctx.font = '20px monospace';
             ctx.textAlign = 'center';
             ctx.fillText('entrevecinos-cc.com.ar', width / 2, height - footerHeight / 2);
             ctx.textAlign = 'left';
         }
-
         function armarMensajeTextoRubro() {
             const { rubroNombre, contactos } = getContactosRubroActual();
             const lista = contactos
-                // .map(c => `• ${c.nombre} — ${c.descripcion}\n ${c.telefono} — ⭐ ${c.calificacion}`)
-                .map(c => `• ${c.nombre} — ${c.descripcion}\n ${c.telefono}`)
+                .map(c => `• ${c.nombre}${c.esVecino ? ' 🏡 *VECINO*' : ''} — ${c.descripcion}\n ${c.telefono}`)
                 .join('\n\n');
 
             return `🏘️ *EntreVecinos — ${rubroNombre}*\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} registrado${contactos.length === 1 ? '' : 's'}\n\n${lista}\n\n➖➖➖➖\n\nSi tomás alguno de estos servicios, contános tu experiencia.\nSi conocés a otro que no está en la lista, sumalo vos mismo a EntreVecinos. ¡Nos ayuda a todos!\n\n*Consulta el directorio completo en entrevecinos-cc.com.ar*`;
@@ -4189,6 +4257,7 @@
             } catch (e) { }
         }
 
+
         // ------------------------------------------------------------
         //  Init
         // ------------------------------------------------------------
@@ -4732,6 +4801,26 @@
         <p id="popoverVerifTexto"></p>
 
     </div>
+
+    <button id="btnSubir" aria-label="Volver arriba" title="Volver arriba">↑</button>
+
+    <script>
+        const btnSubir = document.getElementById('btnSubir');
+
+        window.addEventListener('scroll', () => {
+            btnSubir.classList.toggle('visible', window.scrollY > 300);
+        }, { passive: true });
+
+        btnSubir.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        window.addEventListener('scroll', () => {
+            const visible = window.scrollY > 300;
+            btnSubir.classList.toggle('visible', visible);
+            document.body.classList.toggle('con-subir', visible);
+        }, { passive: true });
+    </script>
 
 </body>
 

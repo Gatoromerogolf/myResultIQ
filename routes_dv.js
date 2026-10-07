@@ -644,7 +644,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     });
 
 
-
     function limpiarInstagram(valor) {
         if (!valor) return null;
         return valor
@@ -836,8 +835,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             dvOk(res, rows);
         } catch (e) { dvErr(res, e.message); }
     });
-
-
 
     app.post('/api/dv/proveedores/:id/resenas', async (req, res) => {
         const { calificacion, comentario, fecha_trabajo = null, invitado_nombre, invitado_barrio_lote } = req.body;
@@ -1062,7 +1059,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             .catch(err => console.error('Error enviando notificación de ingreso:', err));
     }
 
-
     // ----------------------------------------------------------
     //  //    1. Endpoint para el landing (público, solo fotos)
     // ---------------------------------------------------
@@ -1137,11 +1133,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             dvErr(res, err);
         }
     });
-
-
-
-
-
 
 
     app.get('/api/dv/landing/fotos-recientes-CAMBIADO', async (req, res) => {
@@ -1417,7 +1408,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
             await pool.query(
                 `INSERT INTO db_feedback (usuario_id, nombre, tipo, mensaje, fecha_creacion, activo)
-       VALUES (?, ?, ?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR), 1)`,
+                   VALUES (?, ?, ?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR), 1)`,
                 [usuarioId, nombreFinal, tipo, mensaje.trim()]
             );
 
@@ -1443,7 +1434,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             return dvErr(res, 'Error al enviar el mensaje');
         }
     });
-
 
 
     app.post('/api/dv/feedback-anterior', async (req, res) => {
