@@ -1832,6 +1832,158 @@
             /* ajustá al selector real que tengas */
             bottom: calc(80px + env(safe-area-inset-bottom));
         }
+
+        .ev-ayuda-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 9999;
+        }
+
+        .ev-ayuda-overlay.abierto {
+            display: flex;
+        }
+
+        .ev-ayuda-modal {
+            background: #fff;
+            border-radius: 12px;
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+            position: relative;
+            font-family: system-ui, sans-serif;
+            color: #222;
+            line-height: 1.5;
+        }
+
+        .ev-ayuda-cerrar {
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            background: none;
+            border: 0;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            line-height: 1;
+        }
+
+        .ev-ayuda-modal h2 {
+            margin: 0 0 6px;
+            font-size: 1.3rem;
+        }
+
+        .ev-ayuda-modal h3 {
+            margin: 18px 0 4px;
+            font-size: 1rem;
+        }
+
+        .ev-ayuda-modal p {
+            margin: 4px 0;
+        }
+
+        .ev-ayuda-opciones {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .ev-ayuda-opcion {
+            padding: 16px;
+            border: 2px solid #d0d7de;
+            border-radius: 10px;
+            background: #f8fafc;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        .ev-ayuda-opcion:hover,
+        .ev-ayuda-opcion:focus {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .ev-ayuda-opcion strong {
+            display: block;
+            font-size: 1.05rem;
+        }
+
+        .ev-ayuda-opcion span {
+            color: #555;
+            font-size: .9rem;
+        }
+
+        .ev-ayuda-volver {
+            background: none;
+            border: 0;
+            color: #2563eb;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 8px;
+            font-size: .95rem;
+        }
+
+        .ev-ayuda-pie {
+            margin-top: 20px;
+            font-size: .9rem;
+            color: #555;
+        }
+
+        .ev-ayuda-boton {
+            margin-top: 16px;
+            padding: 10px 18px;
+            border: 0;
+            border-radius: 8px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* .ev-ayuda-flotante {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 44px;
+            padding: 0 16px;
+            border: 0;
+            border-radius: 22px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+            z-index: 9000;
+        } */
+/* 
+        @media (max-width: 480px) {
+            .ev-ayuda-flotante .texto {
+                display: none;
+            }
+
+            .ev-ayuda-flotante {
+                width: 44px;
+                padding: 0;
+                justify-content: center;
+            }
+        } */
+
+        @media (max-width: 480px) {
+            #btn-ayuda .texto-ayuda {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -1891,6 +2043,10 @@
                 <button class="menu-item" onclick="abrirModalFeedback()">
                     <i class="ti ti-message-2"></i>
                     <span>Sugerencias y Consultas</span>
+                </button>
+                <button class="menu-item" id="btn-ayuda" onclick="evAyuda.abrir()" aria-label="Ayuda">
+                    <i class="ti ti-help-circle"></i>
+                    <span class="texto-ayuda">¿Necesitás ayuda?</span>
                 </button>
             </div>
         </div>
@@ -2325,6 +2481,87 @@
 
     <div id="toastBackdrop" class="toast-backdrop"></div>
     <div id="toast" class="toast"></div>
+
+
+    <!-- <button class="ev-ayuda-flotante" id="evAyudaFlotante" aria-label="Abrir ayuda">
+        <span aria-hidden="true">?</span><span class="texto">¿Necesitás ayuda?</span>
+    </button> -->
+
+    <div class="ev-ayuda-overlay" id="evAyudaOverlay" role="dialog" aria-modal="true" aria-labelledby="evAyudaTitulo">
+        <div class="ev-ayuda-modal">
+            <button class="ev-ayuda-cerrar" id="evAyudaCerrar" aria-label="Cerrar">&times;</button>
+
+            <!-- Paso 1: elegir -->
+            <section id="evPasoElegir">
+                <h2 id="evAyudaTitulo">¿En qué te podemos ayudar?</h2>
+                <p>EntreVecinos funciona con lo que los vecinos cuentan. Elegí qué vas a hacer:</p>
+                <div class="ev-ayuda-opciones">
+                    <button class="ev-ayuda-opcion" data-paso="evPasoPublicar">
+                        <strong>Voy a publicar</strong>
+                        <span>Un aviso, un producto, un servicio o un comentario</span>
+                    </button>
+                    <button class="ev-ayuda-opcion" data-paso="evPasoConsultar">
+                        <strong>Voy a consultar</strong>
+                        <span>Busco un producto o servicio</span>
+                    </button>
+                </div>
+                <p class="ev-ayuda-pie">
+                    <label><input type="checkbox" id="evAyudaNoMostrar"> No volver a mostrar al ingresar</label>
+                </p>
+            </section>
+
+            <!-- Paso 2a: publicar -->
+            <section id="evPasoPublicar" hidden>
+                <button class="ev-ayuda-volver" data-paso="evPasoElegir">&larr; Volver</button>
+                <h2>Si vas a publicar</h2>
+
+                <h3>🙂 Un comentario o recomendación</h3>
+                <p>Contá qué servicio contrataste o qué producto compraste y qué fue lo más destacable. Unas pocas
+                    líneas orientan al vecino que mañana tenga la misma necesidad.</p>
+                <p>Describí el tipo de trabajo o las características del producto, así otros saben si se adapta a lo que
+                    buscan.</p>
+
+                <p>Los proveedores con más comentarios aparecen mejor
+                    posicionados, así que cada recomendación ayuda a que los buenos servicios sean más fáciles de
+                    encontrar.</p>
+
+                <h3>📢 Un producto o servicio</h3>
+                <p>Escribí una descripción completa: Cuanto más detalles proporciones, mejor será tu visibilidad. Pensá
+                    qué palabras usaría alguien para buscarte, porque la búsqueda mira el texto de la descripción.</p>
+                <p>Sumá una o más imágenes: le dan personalidad al aviso y generan confianza.</p>
+
+                <h3>🧑‍💻 Ingresá con tu usuario</h3>
+                <p>Si publicás como usuario registrado, la publicación queda asociada a tu cuenta y podés modificarla
+                    cuando quieras.</p>
+
+                <button class="ev-ayuda-boton" data-cerrar>Entendido</button>
+            </section>
+
+            <!-- Paso 2b: consultar -->
+            <section id="evPasoConsultar" hidden>
+                <button class="ev-ayuda-volver" data-paso="evPasoElegir">&larr; Volver</button>
+                <h2>Si vas a consultar</h2>
+
+                <h3>Buscá por palabra</h3>
+                <p>Escribí lo que necesitás (pintura, inglés, torta, pizzas) y vas a ver los proveedores de todos los
+                    rubros que lo mencionen en su descripción. Si no aparece nada, probá con otra palabra o una más
+                    general.</p>
+
+                <h3>Explorá por rubro</h3>
+                <p>Elegí una categoría y vas a ver sus proveedores ordenados según las recomendaciones de otros vecinos:
+                    cuantos más comentarios tiene un proveedor, más arriba aparece.</p>
+
+                <h3>Leé los comentarios</h3>
+                <p>La experiencia concreta de un vecino te ayuda a saber si ese proveedor se adapta a lo que necesitás.
+                </p>
+
+                <h3>¿No encontrás el rubro?</h3>
+                <p>Pedí que lo incorporemos. El directorio crece con lo que necesitan los vecinos.</p>
+
+                <button class="ev-ayuda-boton" data-cerrar>Entendido</button>
+            </section>
+        </div>
+    </div>
 
     <script>
 
@@ -4258,11 +4495,61 @@
         }
 
 
+        /* ===== JS de la ayuda (pegar en tu script) ===== */
+        const evAyuda = (() => {
+            const CLAVE = 'ev_ayuda_no_mostrar';
+            const overlay = document.getElementById('evAyudaOverlay');
+            const pasos = ['evPasoElegir', 'evPasoPublicar', 'evPasoConsultar'];
+            const chk = document.getElementById('evAyudaNoMostrar');
+            let ultimoFoco = null;
+
+            const leer = () => { try { return localStorage.getItem(CLAVE) === '1'; } catch (e) { return false; } };
+            const guardar = v => { try { v ? localStorage.setItem(CLAVE, '1') : localStorage.removeItem(CLAVE); } catch (e) { } };
+
+            function irAPaso(id) {
+                pasos.forEach(p => document.getElementById(p).hidden = (p !== id));
+                overlay.querySelector('.ev-ayuda-modal').scrollTop = 0;
+                const primero = document.getElementById(id).querySelector('button, input');
+                if (primero) primero.focus();
+            }
+            function abrir() {
+                ultimoFoco = document.activeElement;
+                chk.checked = leer();
+                irAPaso('evPasoElegir');
+                overlay.classList.add('abierto');
+            }
+            function cerrar() {
+                guardar(chk.checked);
+                overlay.classList.remove('abierto');
+                if (ultimoFoco) ultimoFoco.focus();
+            }
+            // Llamar a esta función justo después de un ingreso exitoso
+            function alIngresar() { if (!leer()) abrir(); }
+
+            overlay.addEventListener('click', e => {
+                if (e.target === overlay) return cerrar();           // clic afuera
+                const paso = e.target.closest('[data-paso]');
+                if (paso) return irAPaso(paso.dataset.paso);
+                if (e.target.closest('[data-cerrar]')) cerrar();
+            });
+            document.getElementById('evAyudaCerrar').addEventListener('click', cerrar);
+            // document.getElementById('evAyudaFlotante').addEventListener('click', abrir);
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && overlay.classList.contains('abierto')) cerrar();
+            });
+
+            return { abrir, cerrar, alIngresar };
+        })();
+
         // ------------------------------------------------------------
         //  Init
         // ------------------------------------------------------------
         function init() {
             // Mostrar usuario logueado en el header
+
+            evAyuda.alIngresar()
+
+
             const storedUser = JSON.parse(
                 sessionStorage.getItem("dv_user") || "null",
             );
