@@ -58,6 +58,7 @@
             font-size: clamp(1.9rem, 5vw, 2.7rem);
             letter-spacing: -0.02em;
             margin: 0;
+            white-space: nowrap;   /* no cortar en el guion */
         }
 
         .logo .accent {
@@ -68,6 +69,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-shrink: 0; 
         }
 
         .logo-icon {
@@ -1966,7 +1968,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
             z-index: 9000;
         } */
-/* 
+        /* 
         @media (max-width: 480px) {
             .ev-ayuda-flotante .texto {
                 display: none;
@@ -2543,9 +2545,9 @@
                 <h2>Si vas a consultar</h2>
 
                 <h3>Buscá por palabra</h3>
-                <p>Escribí lo que necesitás (pintura, inglés, torta, pizzas) y vas a ver los proveedores de todos los
-                    rubros que lo mencionen en su descripción. Si no aparece nada, probá con otra palabra o una más
-                    general.</p>
+                <p>Escribí lo que necesitás (pintura, inglés, torta, pizzas) o tocá el micrófono <i class="ti ti-microphone"></i> y decilo en voz
+                    alta. Vas a ver los proveedores de todos los rubros que lo mencionen en su descripción.</p>
+                <p>¿No aparece nada? Probá con otra palabra o con una más general.</p>
 
                 <h3>Explorá por rubro</h3>
                 <p>Elegí una categoría y vas a ver sus proveedores ordenados según las recomendaciones de otros vecinos:
