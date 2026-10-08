@@ -58,7 +58,8 @@
             font-size: clamp(1.9rem, 5vw, 2.7rem);
             letter-spacing: -0.02em;
             margin: 0;
-            white-space: nowrap;   /* no cortar en el guion */
+            white-space: nowrap;
+            /* no cortar en el guion */
         }
 
         .logo .accent {
@@ -69,7 +70,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            flex-shrink: 0; 
+            flex-shrink: 0;
         }
 
         .logo-icon {
@@ -1981,9 +1982,25 @@
             }
         } */
 
+        #btn-ayuda,
+        #btn-ayuda i,
+        #btn-ayuda span {
+            color: #2563eb;
+            /* azul; podés usar una variable de tu paleta */
+            font-weight: 600;
+        }
+
+        #btn-ayuda .texto-ayuda-corto {
+            display: none;
+        }
+
         @media (max-width: 480px) {
-            #btn-ayuda .texto-ayuda {
+            #btn-ayuda .texto-ayuda-largo {
                 display: none;
+            }
+
+            #btn-ayuda .texto-ayuda-corto {
+                display: inline;
             }
         }
     </style>
@@ -2048,7 +2065,8 @@
                 </button>
                 <button class="menu-item" id="btn-ayuda" onclick="evAyuda.abrir()" aria-label="Ayuda">
                     <i class="ti ti-help-circle"></i>
-                    <span class="texto-ayuda">¿Necesitás ayuda?</span>
+                    <span class="texto-ayuda-largo">¿Necesitás ayuda?</span>
+                    <span class="texto-ayuda-corto">Ayuda</span>
                 </button>
             </div>
         </div>
@@ -2528,8 +2546,8 @@
                     encontrar.</p>
 
                 <h3>📢 Un producto o servicio</h3>
-                <p>Escribí una descripción completa: Cuanto más detalles proporciones, mejor será tu visibilidad. Pensá
-                    qué palabras usaría alguien para buscarte, porque la búsqueda mira el texto de la descripción.</p>
+                <p>Escribí una descripción completa: Cuanto más detalles proporciones, mejor será su visibilidad. Pensá
+                    qué palabras usaría alguien para buscarlo, porque la búsqueda mira el texto de la descripción.</p>
                 <p>Sumá una o más imágenes: le dan personalidad al aviso y generan confianza.</p>
 
                 <h3>🧑‍💻 Ingresá con tu usuario</h3>
@@ -2545,7 +2563,8 @@
                 <h2>Si vas a consultar</h2>
 
                 <h3>Buscá por palabra</h3>
-                <p>Escribí lo que necesitás (pintura, inglés, torta, pizzas) o tocá el micrófono <i class="ti ti-microphone"></i> y decilo en voz
+                <p>Escribí lo que necesitás (pintura, inglés, torta, pizzas) o tocá el micrófono <i
+                        class="ti ti-microphone"></i> y decilo en voz
                     alta. Vas a ver los proveedores de todos los rubros que lo mencionen en su descripción.</p>
                 <p>¿No aparece nada? Probá con otra palabra o con una más general.</p>
 
