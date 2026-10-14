@@ -1622,11 +1622,19 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
 
     const ID_ADMIN = 1;   // el administrador no se loguea
     const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const IPS_EXCLUIDAS = (process.env.DV_IPS_EXCLUIDAS || '190.225.119.201')
+    .split(',').map(s => s.trim()).filter(Boolean);
 
     app.post('/api/dv/log-nav', dvAuthOpcional, async (req, res) => {
         try {
             const { evento, detalle, visitor_uuid } = req.body || {};
             if (!EVENTOS_NAV.includes(evento)) return res.status(400).json({ ok: false });
+
+            const ip = dvIp(req);
+
+            if ((u && Number(u.id) === ID_ADMIN) || IPS_EXCLUIDAS.includes(ip)) {
+                return res.json({ ok: true, omitido: true });
+            }
 
             const u = req.dvUserOpt;
 
