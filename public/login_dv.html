@@ -1512,12 +1512,16 @@
         // ----------------------------------------------------------
 
         function getVisitorUuid() {
-            let uuid = localStorage.getItem('dv_visitor_uuid');
-            if (!uuid) {
-                uuid = crypto.randomUUID();
-                localStorage.setItem('dv_visitor_uuid', uuid);
+            try {
+                let uuid = localStorage.getItem('dv_visitor_uuid');
+                if (!uuid) {
+                    uuid = crypto.randomUUID();
+                    localStorage.setItem('dv_visitor_uuid', uuid);
+                }
+                return uuid;
+            } catch (e) {
+                return null; // o un UUID efímero solo para esta sesión
             }
-            return uuid;
         }
 
         document.getElementById('visitante-btn').addEventListener('click', async () => {

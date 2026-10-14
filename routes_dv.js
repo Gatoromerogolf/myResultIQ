@@ -1621,10 +1621,11 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     }
 
     const ID_ADMIN = 1;   // el administrador no se loguea
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
     app.post('/api/dv/log-nav', dvAuthOpcional, async (req, res) => {
         try {
-            const { evento, detalle } = req.body || {};
+            const { evento, detalle, visitor_uuid } = req.body || {};
             if (!EVENTOS_NAV.includes(evento)) return res.status(400).json({ ok: false });
 
             const u = req.dvUserOpt;
@@ -1636,11 +1637,15 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             const usuarioId = u ? (u.id || null) : null;
             const usuario = u ? (u.nombre || u.email || ('user#' + u.id)) : dvIp(req);
 
+            const visitorUuid = UUID_RE.test(String(visitor_uuid || ''))
+                ? String(visitor_uuid).toLowerCase()
+                : null;
+
             await pool.query(
                 `INSERT INTO db_log_navegacion
-         (fecha_hora, usuario_id, usuario, es_visitante, evento, detalle)
-       VALUES (DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR), ?, ?, ?, ?, ?)`,
-                [usuarioId, String(usuario).slice(0, 100), esVisitante, evento,
+                   (fecha_hora, usuario_id, usuario, es_visitante, visitor_uuid, evento, detalle)
+                     VALUES (DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 HOUR), ?, ?, ?, ?, ?, ?)`,
+                [usuarioId, String(usuario).slice(0, 100), esVisitante, visitorUuid, evento,
                     detalle ? String(detalle).slice(0, 255) : null]
             );
             res.json({ ok: true });
@@ -1649,7 +1654,6 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             res.json({ ok: false });   // el log nunca debe romper la app
         }
     });
-
     // Consulta para admin (soloAdmin después de dvAuth)
     app.get('/api/dv/admin/log-nav', dvAuth, soloAdmin, async (req, res) => {
         try {
