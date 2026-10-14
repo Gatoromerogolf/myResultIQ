@@ -4510,7 +4510,7 @@
                         { 'Content-Type': 'application/json' },
                         token ? { Authorization: 'Bearer ' + token } : {}
                     ),
-                    body: JSON.stringify({ evento, detalle: detalle || null })
+                    body: JSON.stringify({ evento, detalle, visitor_uuid: getVisitorUuid() })
                 }).catch(() => { });
             } catch (e) { }
         }
