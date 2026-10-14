@@ -4,11 +4,13 @@ require("dotenv").config();
 
 // Crear un pool de conexiones usando la URL completa
 const pool = mysql.createPool({
-  uri: process.env.MYSQL_URL,        // Usar la URL completa desde la variable de entorno
-  waitForConnections: true,          // Esperar conexiones si todas están en uso
-  connectionLimit: 10,               // Número máximo de conexiones en el pool
-  queueLimit: 0,                      // Límite de la cola de solicitudes (0 = sin límite)
-  connectTimeout: 10000 // 10 segundos
+  uri: process.env.MYSQL_URL,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,                 // 0 = sin límite de cola
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000,
+  connectTimeout: 10000          // 10 segundos
 });
 
 // Verificar la conexión inicial
