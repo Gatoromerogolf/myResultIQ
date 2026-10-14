@@ -1031,7 +1031,12 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     //  Notificación de ingreso de usuario o visitante (envía mail a admin) - solo usuarios registrados
     // ----------------------------------------------------------
 
+    const IPS_IGNORADAS = ['190.225.119.201'];
+
     function notificarIngresoAdmin({ tipo, nombre, email, ip, userAgent, visitorUuid }) {
+        
+        if (ip && IPS_IGNORADAS.includes(ip.trim())) return;
+        
         const fechaHora = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });
 
         const asunto = tipo === 'visitante'
