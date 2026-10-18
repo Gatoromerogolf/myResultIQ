@@ -1034,9 +1034,9 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     const IPS_IGNORADAS = ['190.225.119.201'];
 
     function notificarIngresoAdmin({ tipo, nombre, email, ip, userAgent, visitorUuid }) {
-        
+
         if (ip && IPS_IGNORADAS.includes(ip.trim())) return;
-        
+
         const fechaHora = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });
 
         const asunto = tipo === 'visitante'
@@ -1628,7 +1628,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     const ID_ADMIN = 1;   // el administrador no se loguea
     const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     const IPS_EXCLUIDAS = (process.env.DV_IPS_EXCLUIDAS || '190.225.119.201')
-    .split(',').map(s => s.trim()).filter(Boolean);
+        .split(',').map(s => s.trim()).filter(Boolean);
 
     app.post('/api/dv/log-nav', dvAuthOpcional, async (req, res) => {
         try {
@@ -1636,15 +1636,12 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             if (!EVENTOS_NAV.includes(evento)) return res.status(400).json({ ok: false });
 
             const ip = dvIp(req);
+            const u = req.dvUserOpt;
 
+            // No registrar la actividad del administrador (por id) ni las IPs excluidas
             if ((u && Number(u.id) === ID_ADMIN) || IPS_EXCLUIDAS.includes(ip)) {
                 return res.json({ ok: true, omitido: true });
             }
-
-            const u = req.dvUserOpt;
-
-            // No registrar la actividad del administrador (se identifica por id, no por nombre)
-            if (u && Number(u.id) === ID_ADMIN) return res.json({ ok: true, omitido: true });
 
             const esVisitante = u ? 0 : 1;
             const usuarioId = u ? (u.id || null) : null;

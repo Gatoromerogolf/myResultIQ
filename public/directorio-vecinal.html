@@ -24,6 +24,12 @@
             --teal: #44707c;
             --gray: #9a948a;
             --radius: 10px;
+            --color-acento: #2f7d5b;
+            --color-acento-hover: #25664a;
+            --color-texto: #2b2b2b;
+            --color-texto-suave: #5f6368;
+            --color-fondo-modal: #ffffff;
+            --color-overlay: rgba(0, 0, 0, 0.5);
         }
 
         * {
@@ -2003,6 +2009,87 @@
                 display: inline;
             }
         }
+
+
+        /* ---------- Modal ---------- */
+        .ev-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--color-overlay);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 1000;
+        }
+
+        .ev-overlay.visible {
+            display: flex;
+        }
+
+        .ev-modal {
+            background: var(--color-fondo-modal);
+            width: 100%;
+            max-width: 440px;
+            border-radius: 14px;
+            padding: 28px 24px 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            animation: ev-entrada 0.2s ease-out;
+        }
+
+        .ev-modal h2 {
+            margin: 0 0 14px;
+            font-size: 1.3rem;
+            line-height: 1.3;
+            color: var(--color-acento);
+        }
+
+        .ev-modal p {
+            margin: 0 0 12px;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--color-texto);
+        }
+
+        .ev-modal .ev-gracias {
+            margin-top: 16px;
+            font-weight: 600;
+        }
+
+        .ev-modal button {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background: var(--color-acento);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .ev-modal button:hover {
+            background: var(--color-acento-hover);
+        }
+
+        .ev-modal button:focus-visible {
+            outline: 3px solid rgba(47, 125, 91, 0.4);
+            outline-offset: 2px;
+        }
+
+        @keyframes ev-entrada {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -2125,6 +2212,23 @@
         </p>
 
         <div class="grid" id="grid"></div>
+
+        <!-- ========== MODAL recomendacion ========== -->
+        <div class="ev-overlay" id="modalExperiencia" role="dialog" aria-modal="true" aria-labelledby="ev-titulo">
+            <div class="ev-modal">
+                <h2 id="ev-titulo">Tu experiencia ayuda a otros vecinos</h2>
+
+                <p>Si conocés a algún proveedor de productos o servicios, contanos cómo te fue. Así como las opiniones
+                    de otros vecinos te ayudan a elegir, la tuya puede ayudar a alguien más.</p>
+
+                <p>Podés dejar tu comentario desde la ficha de cada proveedor.</p>
+
+                <p class="ev-gracias">¡Gracias por sumar!</p>
+
+                <button type="button" id="evCerrar">Entendido</button>
+            </div>
+        </div>
+
     </main>
 
     <button class="fab" id="fab">+ Agregar proveedor</button>
@@ -2696,6 +2800,9 @@
                 if (state.filter.query && state.filter.query.trim().length > 0) {
                     shareSearchBtn.style.display = 'inline-flex';
                     shareSearchBtn.dataset.query = state.filter.query.trim();
+
+                    // Modal de experiencia: solo si la búsqueda dio resultados
+                    if (state.providers.length > 0) EVModalExperiencia.intentarMostrar();
                 } else {
                     shareSearchBtn.style.display = 'none';
                 }
@@ -2703,29 +2810,6 @@
                 showError(e.message);
             }
         }
-
-        async function loadProvidersAnterior() {
-            try {
-                const params = new URLSearchParams();
-                if (state.filter.rubro_id)
-                    params.set("rubro_id", state.filter.rubro_id);
-                if (state.filter.query) params.set("q", state.filter.query);
-                const provs = await apiFetch("/proveedores?" + params);
-                state.providers = provs.map(normalizeProvider);
-                renderGrid();
-                renderStats();
-                // revisarLinkCompartido();
-            } catch (e) {
-                showError(e.message);
-            }
-        }
-
-        // function revisarLinkCompartido() {
-        //     const idCompartido = new URLSearchParams(window.location.search).get('p');
-        //     if (idCompartido) {
-        //         openDetail(Number(idCompartido)); // openDetail ya busca en state.providers
-        //     }
-        // }
 
         async function eliminarProveedor(id) {
             const p = state.providers.find((x) => x.id === id);
@@ -4675,6 +4759,9 @@
                 grid.scrollIntoView({ behavior: "smooth", block: "start" });
                 grid.setAttribute("tabindex", "-1");
                 grid.focus({ preventScroll: true });
+
+                // Modal de experiencia: solo si se eligió un rubro puntual (no "Todos")
+                if (state.filter.rubro_id) EVModalExperiencia.intentarMostrar();
             });
 
             // Grid: abrir detalle, recomendar, editar o eliminar
@@ -5163,6 +5250,107 @@
             btnSubir.classList.toggle('visible', visible);
             document.body.classList.toggle('con-subir', visible);
         }, { passive: true });
+    </script>
+
+
+    <!-- ========== LÓGICA DEL MODAL (esto es lo que va a la app) ========== -->
+    <script>
+        var EVModalExperiencia = (function () {
+            var CLAVE_ULTIMA_VISTA = 'ev_exp_ultima_vista'; // timestamp (ms) de la última vez que se mostró
+            var CLAVE_COMENTO = 'ev_exp_comento';      // '1' si el usuario ya registró algún comentario
+            var DIAS_ENTRE_AVISOS = 15;
+            var MS_POR_DIA = 24 * 60 * 60 * 1000;
+
+            var modal = document.getElementById('modalExperiencia');
+            var btnCerrar = document.getElementById('evCerrar');
+
+            // localStorage puede fallar (modo privado, bloqueado): siempre con try/catch
+            function leer(clave) {
+                try { return localStorage.getItem(clave); } catch (e) { return null; }
+            }
+            function guardar(clave, valor) {
+                try { localStorage.setItem(clave, String(valor)); } catch (e) { }
+            }
+
+            function yaComento() {
+                return leer(CLAVE_COMENTO) === '1';
+            }
+
+            function pasaronDiasSuficientes() {
+                var ultima = parseInt(leer(CLAVE_ULTIMA_VISTA), 10);
+                if (isNaN(ultima)) return true; // nunca se le mostró
+                return (Date.now() - ultima) >= DIAS_ENTRE_AVISOS * MS_POR_DIA;
+            }
+
+            function abrir() {
+                modal.classList.add('visible');
+                btnCerrar.focus();
+            }
+
+            function cerrar() {
+                modal.classList.remove('visible');
+            }
+
+            // Se llama cuando se elige un rubro o cuando una búsqueda devuelve resultados.
+            // Decide sola si corresponde mostrarlo.
+            function intentarMostrar() {
+                if (yaComento()) return false;
+                if (!pasaronDiasSuficientes()) return false;
+
+                // Se guarda al MOSTRAR (no al cerrar): así no reaparece aunque
+                // el usuario navegue a otro rubro sin cerrar el modal.
+                guardar(CLAVE_ULTIMA_VISTA, Date.now());
+                abrir();
+                return true;
+            }
+
+            // Llamar cuando el usuario registra un comentario con éxito (POST ok).
+            function marcarComentarioRealizado() {
+                guardar(CLAVE_COMENTO, '1');
+            }
+
+            btnCerrar.addEventListener('click', cerrar);
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') cerrar();
+            });
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) cerrar();
+            });
+
+            return {
+                intentarMostrar: intentarMostrar,
+                marcarComentarioRealizado: marcarComentarioRealizado,
+                // Helpers solo para la vista previa
+                _estado: function () {
+                    var ultima = parseInt(leer(CLAVE_ULTIMA_VISTA), 10);
+                    return {
+                        ultima_vista: isNaN(ultima) ? null : new Date(ultima).toLocaleString('es-AR'),
+                        dias_desde_ultima_vista: isNaN(ultima) ? null : Math.floor((Date.now() - ultima) / MS_POR_DIA),
+                        ya_comento: yaComento()
+                    };
+                },
+                _envejecer: function (dias) {
+                    guardar(CLAVE_ULTIMA_VISTA, Date.now() - dias * MS_POR_DIA);
+                },
+                _reset: function () {
+                    try {
+                        localStorage.removeItem(CLAVE_ULTIMA_VISTA);
+                        localStorage.removeItem(CLAVE_COMENTO);
+                    } catch (e) { }
+                }
+            };
+        })();
+
+        /* ---- Cómo engancharlo en la app ----
+           1) Al seleccionar un rubro:
+                EVModalExperiencia.intentarMostrar();
+       
+           2) Al mostrar resultados de una búsqueda, solo si hubo resultados:
+                if (resultados.length > 0) EVModalExperiencia.intentarMostrar();
+       
+           3) Cuando se guarda un comentario con éxito:
+                EVModalExperiencia.marcarComentarioRealizado();
+        */
     </script>
 
 </body>
