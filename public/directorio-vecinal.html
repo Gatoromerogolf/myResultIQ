@@ -4504,6 +4504,73 @@
             const p = state.providers.find((x) => x.id === id);
             if (!p) return;
 
+            const link = `https://entrevecinos-cc.com.ar/directorio-vecinal.html?p=${p.id}`;
+
+            // Reseñas: si falla la carga, se comparte igual sin ellas
+            let resenas = [];
+            try {
+                const todas = await apiFetch(`/proveedores/${p.id}/resenas`);
+                resenas = (todas || [])
+                    .filter((r) => r.comentario && String(r.comentario).trim())
+                    .slice(0, 3);   // las 3 más recientes (ya vienen ordenadas)
+            } catch (e) { console.warn('No se pudieron cargar las reseñas', e); }
+
+            const bloqueResenas = resenas.length
+                ? ['\n💬 Opiniones de vecinos:']
+                    .concat(resenas.map((r) => {
+                        const sinNombre = !r.autor || r.autor === 'Usuario no autenticado';
+                        const nombre = sinNombre ? 'Un vecino' : r.autor.split(' ')[0];
+                        const fecha = new Date(r.fecha_publicacion).toLocaleDateString('es-AR');
+                        const estrellas = r.calificacion ? ` ${'⭐'.repeat(Number(r.calificacion))}` : '';
+                        const comentario = String(r.comentario).trim().slice(0, 200);
+                        return `• ${nombre} (${fecha})${estrellas}: "${comentario}"`;
+                    }))
+                    .join('\n')
+                : null;
+
+            const lineas = [
+                `Registrado en EntreVecinos:\n
+        *${p.name}*\n`,
+                p.rubro && `📌 ${p.rubro}`,
+                p.phone && `📞 ${p.phone}`,
+                p.desc && `\n${p.desc}`,
+                p.instagram && `📷 ${p.instagram}`,
+                bloqueResenas,
+                `\nVer ficha completa: ${link}`
+            ].filter(Boolean);
+
+            const texto = lineas.join('\n');
+
+            const esMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+            const primeraImagenUrl = p.imagenes?.[0]?.url; // ajustá al campo real de tu objeto p
+
+            if (esMobile && navigator.share) {
+                if (primeraImagenUrl && navigator.canShare) {
+                    try {
+                        const resp = await fetch(primeraImagenUrl);
+                        const blob = await resp.blob();
+                        const file = new File([blob], 'proveedor.jpg', { type: blob.type });
+                        if (navigator.canShare({ files: [file] })) {
+                            await navigator.share({ text: texto, files: [file] });
+                            return;
+                        }
+                    } catch (e) { console.warn('Share con imagen falló', e); }
+                }
+                try {
+                    await navigator.share({ text: texto });
+                    return;
+                } catch (e) { /* canceló */ }
+            }
+
+            await navigator.clipboard.writeText(texto);
+            mostrarToast('Texto copiado', 'Pegalo en WhatsApp.');
+
+        }
+
+        async function compartirProveedor_anterior(id) {
+            const p = state.providers.find((x) => x.id === id);
+            if (!p) return;
+
             console.log('proveedor a compartir:', p);
 
             const link = `https://entrevecinos-cc.com.ar/directorio-vecinal.html?p=${p.id}`;
