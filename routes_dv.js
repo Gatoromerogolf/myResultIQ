@@ -18,6 +18,38 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     function dvOk(res, data) { res.json({ ok: true, data }); }
     function dvErr(res, msg, code = 500) { res.status(code).json({ ok: false, error: msg }); }
 
+    async function avisarNuevaResena({ provId, calificacion, comentario, autor, barrioLote }) {
+        try {
+            const [[prov]] = await pool.query(
+                `SELECT p.nombre, r.nombre AS rubro
+               FROM db_proveedores p
+          LEFT JOIN db_rubros r ON r.id = p.rubro_id
+              WHERE p.id = ?`,
+                [provId]
+            );
+            const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+            const nombreProv = prov?.nombre || ('#' + provId);
+            const subject = `Nueva reseña en ${nombreProv} (${calificacion}★)`;
+
+            const text =
+                `${nombreProv}${prov?.rubro ? ' · ' + prov.rubro : ''}\n` +
+                `Calificación: ${calificacion}/5\n` +
+                `Autor: ${autor}${barrioLote ? ' (' + barrioLote + ')' : ''}\n\n` +
+                comentario;
+
+            const html = `
+            <p><b>${esc(nombreProv)}</b>${prov?.rubro ? ' · ' + esc(prov.rubro) : ''}</p>
+            <p>Calificación: ${'★'.repeat(calificacion)}${'☆'.repeat(5 - calificacion)}<br>
+               Autor: ${esc(autor)}${barrioLote ? ' (' + esc(barrioLote) + ')' : ''}</p>
+            <p>${esc(comentario)}</p>`;
+
+            await sendMail('ruben.e.garcia@gmail.com', subject, text, html);
+        } catch (e) {
+            console.error('avisarNuevaResena falló:', e.message);   // un fallo del aviso nunca debe romper el guardado
+        }
+    }
+
+
     function mimeFromDataURL(dataURL) {
         const match = dataURL?.match(/^data:([^;]+);base64,/);
         return match ? match[1] : 'image/jpeg';

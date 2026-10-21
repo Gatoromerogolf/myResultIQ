@@ -2090,6 +2090,88 @@
                 transform: translateY(0);
             }
         }
+
+
+        .mx-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(0, 0, 0, .45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .mx-overlay.activo {
+            display: flex;
+        }
+
+        .mx-box {
+            position: relative;
+            background: #fff;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px 22px 22px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+            animation: mxIn .2s ease-out;
+        }
+
+        @keyframes mxIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .mx-icono {
+            font-size: 40px;
+            color: #2e7d32;
+            margin-bottom: 6px;
+        }
+
+        .mx-box h3 {
+            margin: 0 0 10px;
+            font-size: 19px;
+            color: #1b4d1f;
+        }
+
+        .mx-box p {
+            margin: 0 0 10px;
+            font-size: 14.5px;
+            line-height: 1.45;
+            color: #444;
+        }
+
+        .mx-botones {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .mx-btn {
+            border: 0;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .mx-btn-primario {
+            background: #2e7d32;
+            color: #fff;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -2218,8 +2300,9 @@
             <div class="ev-modal">
                 <h2 id="ev-titulo">Tu experiencia ayuda a otros vecinos</h2>
 
-                <p>Cuando hay muchos proveedores recomendados, sin comentarios es difícil elegir.  
-                    Con tu experiencia le das una mano al que hace bien su trabajo, y a un vecino que necesita decidir.</p>
+                <p>Cuando hay muchos proveedores recomendados, sin comentarios es difícil elegir.
+                    Con tu experiencia le das una mano al que hace bien su trabajo, y a un vecino que necesita decidir.
+                </p>
 
                 <p>Podés dejar tus comentarios desde la ficha de cada proveedor.</p>
 
@@ -3602,10 +3685,12 @@
                     <div id="gallery-upload-status" style="font-size:.8rem;color:var(--ink-soft);margin-top:.4rem;min-height:1.2rem;"></div>
                 </div>
 
-                <p class="card-zone">
-                Presentado por: <span>${p.presentadoPor}${p.presentadoPorBarrio ? ` - (${p.presentadoPorBarrio}${p.presentadoPorLote ? ` · Lote ${p.presentadoPorLote}` : ""})` : ""}</span>
-                ${badgeVerificacion(p.autenticado)}
-                </p>
+${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
+    <p class="card-zone">
+        Presentado por: <span>${p.presentadoPor}${p.presentadoPorBarrio ? ` - (${p.presentadoPorBarrio}${p.presentadoPorLote ? ` · Lote ${p.presentadoPorLote}` : ""})` : ""}</span>
+        ${badgeVerificacion(p.autenticado)}
+    </p>
+` : ''}
 
                 <hr class="divider-dashed">
 
@@ -4030,7 +4115,7 @@
             window.location.href = `tel:+${normalizarTelefonoAR(p.phone)}`;
         }
 
-        function mostrarToast(titulo, mensaje, icono = '🙌', duracion = 3200) {
+        function mostrarToast(titulo, mensaje, icono = '🙌', duracion = 3400) {
             const toast = document.getElementById('toast');
             const backdrop = document.getElementById('toastBackdrop');
 
@@ -4455,8 +4540,6 @@
             }
         }
 
-
-
         async function guardarResena({ id, comment, workdate, rating, btn }, datosAutor) {
             btn.disabled = true;
             btn.textContent = "Guardando…";
@@ -4474,7 +4557,7 @@
                 });
                 // Limpiar cache de reseñas del proveedor para recargar desde API
                 const p = state.providers.find((x) => x.id === id);
-                dvLog('resena', id + ' - ' + (p?.name || ''));   // <- nueva línea
+                dvLog('resena', id + ' - ' + (p?.name || ''));
                 if (p) {
                     p.reviews = [];
                     p.totalReviews++;
@@ -4499,6 +4582,7 @@
                 btn.textContent = "Publicar comentario";
             }
         }
+
 
         async function compartirProveedor(id) {
             const p = state.providers.find((x) => x.id === id);
@@ -5420,6 +5504,60 @@
         */
     </script>
 
+
+    <div id="modal-experiencia" class="mx-overlay" aria-hidden="true">
+        <div class="mx-box" role="dialog" aria-modal="true" aria-labelledby="mx-titulo">
+            <div class="mx-icono"><i class="ti ti-message-heart"></i></div>
+            <h3 id="mx-titulo">Tu experiencia ayuda a toda la comunidad.</h3>
+            <p>Dejanos una reseña en la ficha de los proveedores que ya conocés.</p>
+
+            <p>Si vas a tomar un producto o servicio con un nuevo proveedor, esperamos después tus comentarios.</p>
+            <p>¡Tu opinión aporta mucho valor.!</p>
+            <div class="mx-botones">
+                <button class="mx-btn mx-btn-primario" id="mx-continuar">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const FLAG = 'dv_exp_pendiente';
+
+            function mostrar() {
+                const modal = document.getElementById('modal-experiencia');
+                if (!modal) return false;           // esta página no tiene el modal: queda pendiente
+                modal.classList.add('activo');
+                modal.setAttribute('aria-hidden', 'false');
+                try { sessionStorage.removeItem(FLAG); } catch (e) { }
+                return true;
+            }
+
+            // Llamala cuando el login se completa (invitado o registrado)
+            window.dvModalExperienciaTrasLogin = function () {
+                try { sessionStorage.setItem(FLAG, '1'); } catch (e) { }
+                setTimeout(mostrar, 300);           // pequeño margen para que el directorio ya esté visible
+            };
+
+            function chequearPendiente() {
+                let pendiente = null;
+                try { pendiente = sessionStorage.getItem(FLAG); } catch (e) { }
+                if (pendiente) mostrar();
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const modal = document.getElementById('modal-experiencia');
+                const btnContinuar = document.getElementById('mx-continuar');
+                if (!modal || !btnContinuar) return;
+
+                btnContinuar.addEventListener('click', function () {
+                    modal.classList.remove('activo');
+                    modal.setAttribute('aria-hidden', 'true');
+                });
+
+                chequearPendiente();                // caso: el login redirigió a esta página
+            });
+        })();
+    </script>
 </body>
 
 </html>

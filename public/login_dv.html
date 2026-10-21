@@ -1311,6 +1311,8 @@
                 sessionStorage.setItem("dv_user", JSON.stringify(data.data.user));
                 sessionStorage.setItem("dv_token", data.data.token);
 
+                try { sessionStorage.setItem('dv_exp_pendiente', '1'); } catch (e) { }
+
                 if (data.data.user.debe_cambiar_clave) {
                     window.location.href = "cambiar-clave.html";
                 } else {
@@ -1543,6 +1545,7 @@
                 sessionStorage.setItem('dv_user', JSON.stringify(data.data.user));
                 sessionStorage.setItem('dv_token', data.data.token);
 
+                try { sessionStorage.setItem('dv_exp_pendiente', '1'); } catch (e) { }
                 window.location.href = redirectTo;   // antes: 'directorio-vecinal.html'
             } catch (err) {
                 showMsg('login-error', err.message);
