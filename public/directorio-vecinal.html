@@ -5405,7 +5405,7 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
 
 
     <!-- ========== LÓGICA DEL MODAL (esto es lo que va a la app) ========== -->
-    <script>
+    <!-- <script>
         var EVModalExperiencia = (function () {
             var CLAVE_ULTIMA_VISTA = 'ev_exp_ultima_vista'; // timestamp (ms) de la última vez que se mostró
             var CLAVE_COMENTO = 'ev_exp_comento';      // '1' si el usuario ya registró algún comentario
@@ -5502,7 +5502,7 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
            3) Cuando se guarda un comentario con éxito:
                 EVModalExperiencia.marcarComentarioRealizado();
         */
-    </script>
+    </script> -->
 
 
     <div id="modal-experiencia" class="mx-overlay" aria-hidden="true">
@@ -5520,6 +5520,69 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('modal-experiencia');
+            const btnContinuar = document.getElementById('mx-continuar');
+            if (!modal || !btnContinuar) {
+                console.warn('Modal de experiencia: falta #modal-experiencia o #mx-continuar en el HTML');
+                return;
+            }
+
+            // Botones de contacto: cards del listado y ficha de detalle
+            const ACCIONES_CONTACTO = [
+                'wa-proveedor', 'llamar-proveedor',
+                'wa-proveedor-detalle', 'llamar-proveedor-detalle'
+            ];
+            let botonPendiente = null;
+
+            function abrirModal() {
+                modal.classList.add('activo');
+                modal.setAttribute('aria-hidden', 'false');
+            }
+            function cerrarModal() {
+                modal.classList.remove('activo');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+
+            // 1) Al entrar a la app (bandera que deja el login)
+            let pendiente = null;
+            try { pendiente = sessionStorage.getItem('dv_exp_pendiente'); } catch (e) { }
+            if (pendiente) {
+                try { sessionStorage.removeItem('dv_exp_pendiente'); } catch (e) { }
+                abrirModal();
+            }
+
+            // 2) Al tocar WhatsApp o llamar (fase de captura: corre antes que tu handler)
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('[data-action]');
+                if (!btn || !ACCIONES_CONTACTO.includes(btn.dataset.action)) return;
+
+                // Click reinyectado desde "Continuar": dejarlo pasar a tu handler normal
+                if (btn.dataset.mxBypass === '1') {
+                    delete btn.dataset.mxBypass;
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                botonPendiente = btn;
+                abrirModal();
+            }, true);
+
+            // 3) Continuar: cierra el modal y, si había un contacto en espera, lo ejecuta
+            btnContinuar.addEventListener('click', function () {
+                cerrarModal();
+                if (!botonPendiente) return;      // venía del login: solo se cierra
+                const btn = botonPendiente;
+                botonPendiente = null;
+                btn.dataset.mxBypass = '1';
+                btn.click();                      // dentro del gesto del usuario: el navegador no bloquea la apertura de WhatsApp o el marcador
+            });
+        });
+    </script>
+
+
+    <!-- <script>
         (function () {
             const FLAG = 'dv_exp_pendiente';
 
@@ -5557,7 +5620,7 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                 chequearPendiente();                // caso: el login redirigió a esta página
             });
         })();
-    </script>
+    </script> -->
 </body>
 
 </html>
