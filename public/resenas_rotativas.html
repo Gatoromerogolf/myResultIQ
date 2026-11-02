@@ -1,0 +1,139 @@
+<style>
+    .rr-wrap {
+        max-width: 560px;
+        margin: 24px auto;
+        padding: 0 16px;
+        text-align: center;
+    }
+
+    .rr-titulo {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #2e6b45;
+    }
+
+    .rr-card {
+        background: #fff;
+        border: 1px solid #e3ece6;
+        border-radius: 14px;
+        padding: 16px 18px;
+        min-height: 150px;
+        text-align: left;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+        transition: opacity .4s ease;
+        opacity: 1;
+    }
+
+    .rr-card.rr-out {
+        opacity: 0;
+    }
+
+    .rr-prov {
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .rr-rubro {
+        font-size: .8rem;
+        color: #2e6b45;
+        margin-bottom: 8px;
+    }
+
+    .rr-coment {
+        font-style: italic;
+        margin: 8px 0;
+        color: #333;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .rr-autor {
+        font-size: .85rem;
+        color: #666;
+    }
+
+    .rr-dots {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .rr-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #cfdcd3;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .rr-dot.on {
+        background: #2e6b45;
+    }
+</style>
+
+
+<section id="resenas-rotativo" class="rr-wrap" hidden>
+    <h3 class="rr-titulo">Agradecemos a los vecinos que comparten su experiencia</h3>
+    <div class="rr-card" id="rr-card" aria-live="polite"></div>
+    <div class="rr-dots" id="rr-dots"></div>
+</section>
+
+<script>
+    (async function initResenasRotativo() {
+        const wrap = document.getElementById('resenas-rotativo');
+        const card = document.getElementById('rr-card');
+        const dots = document.getElementById('rr-dots');
+        if (!wrap) return;
+
+        const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
+            ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+        let items = [];
+        try {
+            const r = await fetch('/api/dv/landing/ultimas-resenas');
+            const j = await r.json();
+            items = j.data || [];          // dvOk envuelve en data
+        } catch (e) { return; }
+        if (!items.length) return;
+
+        wrap.hidden = false;
+        dots.innerHTML = items.map((_, i) => `<button class="rr-dot" data-i="${i}" aria-label="Reseña ${i + 1}"></button>`).join('');
+
+        let idx = 0, timer;
+
+        function pintar(i) {
+            const x = items[i];
+            card.innerHTML = `
+              <div class="rr-prov">${esc(x.proveedor)}</div>
+              <div class="rr-rubro">${esc(x.rubro || '')}</div>
+              <div class="rr-coment">“${esc(x.comentario)}”</div>
+              <div class="rr-autor">— ${esc(x.autor || 'Vecino')}${x.barrio ? ' · ' + esc(x.barrio) : ''}${x.lote ? ' · Lote ' + esc(x.lote) : ''}</div>`;
+            dots.querySelectorAll('.rr-dot').forEach((d, k) => d.classList.toggle('on', k === i));
+        }
+
+        function ir(i) {
+            card.classList.add('rr-out');
+            setTimeout(() => { idx = i; pintar(idx); card.classList.remove('rr-out'); }, 400);
+        }
+
+        function arrancar() {
+            clearInterval(timer);
+            if (items.length > 1) timer = setInterval(() => ir((idx + 1) % items.length), 6000);
+        }
+
+        dots.addEventListener('click', e => {
+            const b = e.target.closest('.rr-dot'); if (!b) return;
+            ir(+b.dataset.i); arrancar();
+        });
+        card.addEventListener('mouseenter', () => clearInterval(timer));
+        card.addEventListener('mouseleave', arrancar);
+
+        pintar(0); arrancar();
+    })();
+</script>

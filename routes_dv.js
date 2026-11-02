@@ -1033,7 +1033,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
     //  Solicitud de nuevo rubro (envía mail a admin) - solo usuarios registrados
     // ----------------------------------------------------------
 
-    app.post('/api/dv/rubros/solicitar', dvAuth, bloquearVisitante, async (req, res) => {
+    app.post('/api/dv/rubros/solicitar', dvAuth, async (req, res) => {
         const { rubro_sugerido, descripcion } = req.body;
 
         if (!rubro_sugerido || !descripcion) {
@@ -1269,6 +1269,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                     ORDER BY pi.subida_en DESC
                     LIMIT 20)
 
+                    /* COMENTARIOS DESACTIVADOS TEMPORALMENTE
                     UNION ALL
 
                     (SELECT 
@@ -1285,6 +1286,7 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                     JOIN db_rubros rb ON rb.id = p.rubro_id
                     ORDER BY res.fecha_publicacion DESC
                     LIMIT 20)
+                    */
                 ) AS sub
             ) AS ranked
             WHERE ranked.rn = 1
@@ -1809,6 +1811,102 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
             });
         } catch (e) {
             dvErr(res, e);
+        }
+    });
+
+    // Últimas 5 reseñas para el rotativo de la landing
+    app.get('/api/dv/landing/ultimas-resenas-anterior', async (req, res) => {
+        try {
+            const [rows] = await pool.query(`
+      SELECT
+        r.id,
+        p.nombre                                   AS proveedor,
+        rb.nombre                                  AS rubro,
+        r.comentario,
+        COALESCE(u.nombre, r.invitado_nombre)      AS autor,
+        IF(r.usuario_id IS NULL, r.invitado_barrio_lote, u.lote) AS lote
+      FROM db_resenas r
+      JOIN db_proveedores p      ON p.id = r.proveedor_id
+      LEFT JOIN db_rubros rb     ON rb.id = p.rubro_id
+      LEFT JOIN db_usuarios u    ON u.id = r.usuario_id
+      WHERE p.activo = 1
+        AND r.comentario IS NOT NULL
+        AND TRIM(r.comentario) <> ''
+      ORDER BY r.id DESC
+      LIMIT 5
+    `);
+            return dvOk(res, rows);
+        } catch (e) {
+            return dvErr(res, 500, 'Error al cargar reseñas');
+        }
+    });
+
+    app.get('/api/dv/landing/ultimas-resenas-anteultima', async (req, res) => {
+        try {
+            const [rows] = await pool.query(`
+      SELECT
+        r.id,
+        p.nombre                                   AS proveedor,
+        rb.nombre                                  AS rubro,
+        r.comentario,
+        COALESCE(u.nombre, r.invitado_nombre)      AS autor,
+        IF(r.usuario_id IS NULL, r.invitado_barrio_lote, u.lote) AS lote,
+        u.barrio                                   AS barrio
+      FROM db_resenas r
+      JOIN db_proveedores p      ON p.id = r.proveedor_id
+      LEFT JOIN db_rubros rb     ON rb.id = p.rubro_id
+      LEFT JOIN db_usuarios u    ON u.id = r.usuario_id
+      WHERE p.activo = 1
+        AND r.comentario IS NOT NULL
+        AND TRIM(r.comentario) <> ''
+      ORDER BY r.id DESC
+      LIMIT 12
+    `);
+            return dvOk(res, rows);
+        } catch (e) {
+            return dvErr(res, 500, 'Error al cargar reseñas');
+        }
+    });
+
+    app.get('/api/dv/landing/ultimas-resenas', async (req, res) => {
+        try {
+            const baseSelect = `
+            SELECT
+                r.id,
+                p.nombre                              AS proveedor,
+                rb.nombre                             AS rubro,
+                r.comentario,
+                COALESCE(u.nombre, r.invitado_nombre) AS autor,
+                IF(r.usuario_id IS NULL, r.invitado_barrio_lote, u.lote) AS lote,
+                u.barrio                              AS barrio
+            FROM db_resenas r
+            JOIN db_proveedores p   ON p.id = r.proveedor_id
+            LEFT JOIN db_rubros rb  ON rb.id = p.rubro_id
+            LEFT JOIN db_usuarios u ON u.id = r.usuario_id
+            WHERE p.activo = 1
+              AND r.comentario IS NOT NULL
+              AND TRIM(r.comentario) <> ''
+        `;
+
+            // 4 más recientes, siempre
+            const [recientes] = await pool.query(
+                `${baseSelect} ORDER BY r.id DESC LIMIT 4`
+            );
+
+            // el resto al azar, excluyendo las recientes
+            const ids = recientes.map(r => r.id);
+            const [azar] = await pool.query(
+                `${baseSelect} ${ids.length ? 'AND r.id NOT IN (?)' : ''}
+             ORDER BY RAND() LIMIT ?`,
+                ids.length ? [ids, 12 - recientes.length] : [12 - recientes.length]
+            );
+
+            // mezclar el orden final para que no queden las recientes todas juntas
+            const resultado = [...recientes, ...azar].sort(() => Math.random() - 0.5);
+
+            return dvOk(res, resultado);
+        } catch (e) {
+            return dvErr(res, 500, 'Error al cargar reseñas');
         }
     });
 
