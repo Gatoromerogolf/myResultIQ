@@ -2884,6 +2884,7 @@
         </div>
     </div>
 
+    <!-- Funciones principales  -->
     <script>
 
         // ----------------------------------------------------------
@@ -3260,14 +3261,6 @@
                 shareBtn.style.display = 'none';
             }
 
-            // Mostrar/ocultar botón de compartir búsqueda
-            // const shareSearchBtn = document.getElementById('shareSearchBtn');
-            // if (state.filter.query && state.filter.query.trim().length > 0) {
-            //     shareSearchBtn.style.display = 'inline-flex';
-            //     shareSearchBtn.dataset.query = state.filter.query.trim();
-            // } else {
-            //     shareSearchBtn.style.display = 'none';
-            // }
         }
 
         function renderStats() {
@@ -5008,26 +5001,69 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                 registrarBusqueda(campoBusqueda.value);
             });
 
+
+            function aplicarFiltro(rubro_id, query, { desdeHistorial = false } = {}) {
+                state.filter.rubro_id = rubro_id || null;
+                state.filter.query = query || "";
+                document.getElementById("search").value = state.filter.query;
+                loadProviders();
+                renderPills();
+
+                if (desdeHistorial) return;
+
+                const hayFiltro = !!(state.filter.rubro_id || state.filter.query);
+                const estado = {
+                    vista: "filtro",
+                    rubro_id: state.filter.rubro_id,
+                    query: state.filter.query,
+                };
+
+                if (!hayFiltro) {
+                    history.replaceState({ vista: "base" }, "");
+                } else if (history.state?.vista === "filtro") {
+                    history.replaceState(estado, "");   // filtro sobre filtro: no apilar
+                } else {
+                    history.pushState(estado, "");      // primer filtro: nueva entrada
+                }
+            }
+
+            // Pills de rubro
+            // document.getElementById("pills").addEventListener("click", (e) => {
+            //     const btn = e.target.closest(".pill");
+            //     if (!btn) return;
+
+            //     state.filter.rubro_id = btn.dataset.rubroId || null;
+            //     if (state.filter.rubro_id) dvLog('rubro', btn.textContent.trim());
+            //     state.filter.query = "";                          // limpia el filtro de texto
+            //     document.getElementById("search").value = "";      // limpia visualmente el input
+            //     yaHizoScrollBusqueda = false;                       // opcional: resetea el flag de scroll
+            //     loadProviders();
+            //     renderPills();
+
+            //     const grid = document.getElementById("grid");
+            //     grid.scrollIntoView({ behavior: "smooth", block: "start" });
+            //     grid.setAttribute("tabindex", "-1");
+            //     grid.focus({ preventScroll: true });
+
+            // });
+
             // Pills de rubro
             document.getElementById("pills").addEventListener("click", (e) => {
                 const btn = e.target.closest(".pill");
                 if (!btn) return;
-                state.filter.rubro_id = btn.dataset.rubroId || null;
-                if (state.filter.rubro_id) dvLog('rubro', btn.textContent.trim());
-                state.filter.query = "";                          // limpia el filtro de texto
-                document.getElementById("search").value = "";      // limpia visualmente el input
-                yaHizoScrollBusqueda = false;                       // opcional: resetea el flag de scroll
-                loadProviders();
-                renderPills();
+
+                const rubroId = btn.dataset.rubroId || null;
+                if (rubroId) dvLog('rubro', btn.textContent.trim());
+
+                yaHizoScrollBusqueda = false;
+                aplicarFiltro(rubroId, "");
 
                 const grid = document.getElementById("grid");
                 grid.scrollIntoView({ behavior: "smooth", block: "start" });
                 grid.setAttribute("tabindex", "-1");
                 grid.focus({ preventScroll: true });
-
-                // Modal de experiencia: solo si se eligió un rubro puntual (no "Todos")
-                // if (state.filter.rubro_id) EVModalExperiencia.intentarMostrar();
             });
+
 
             // Grid: abrir detalle, recomendar, editar o eliminar
             document.getElementById("grid").addEventListener("click", (e) => {
@@ -5255,6 +5291,18 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                     }
                 });
 
+            // Botón "atras"
+            window.addEventListener("popstate", (e) => {
+                const s = e.state;
+                if (s?.vista === "filtro") {
+                    aplicarFiltro(s.rubro_id, s.query, { desdeHistorial: true });
+                } else {
+                    aplicarFiltro(null, "", { desdeHistorial: true });
+                }
+            });
+
+            // Estado base al entrar a la sesión
+            history.replaceState({ vista: "base" }, "");
 
             document
                 .getElementById("add-form")
@@ -5376,8 +5424,6 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                 const hayTexto = e.target.value.trim().length > 0;
 
                 document.getElementById('pills').style.display = hayTexto ? 'none' : '';
-
-                // aplicarFiltro(e.target.value); // tu función de filtro existente, sin tocar
             });
 
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -5389,11 +5435,6 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                 recognition.lang = "es-AR";
                 recognition.continuous = false;
                 recognition.interimResults = false;
-
-                // voiceBtn.addEventListener("click", () => {
-                //     voiceBtn.classList.add("listening");
-                //     recognition.start();
-                // });
 
                 const STOPWORDS = ["quiero", "busco", "necesito", "un", "una", "unos", "unas", "el", "la", "los", "las", "de", "para", "en", "con", "y", "o", "por", "al", "del", "a", "es", "son", "está", "están", "trae", "traeme", "buscame", "buscar", "encontrame", "donde", "qué", "cual", "cuál", "cómo", "como", "me", "te", "lo", "la", "le", "les"];
 
