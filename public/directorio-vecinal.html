@@ -4968,12 +4968,10 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
             const campoBusqueda = document.getElementById("search");
 
             campoBusqueda.addEventListener("input", (e) => {
-                state.filter.query = e.target.value;
-
                 // Búsqueda en pantalla: rápida
                 clearTimeout(searchTimer);
                 searchTimer = setTimeout(() => {
-                    loadProviders();
+                    aplicarFiltro(null, e.target.value.trim());
 
                     if (e.target.value.trim().length > 0 && !yaHizoScrollBusqueda) {
                         const grid = document.getElementById("grid");
@@ -5447,17 +5445,32 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                         .trim();
                 }
 
+                // recognition.onresult = (event) => {
+                //     const transcript = limpiarQuery(event.results[0][0].transcript);
+                //     const input = document.getElementById("search");
+                //     input.value = transcript;
+                //     state.filter.query = transcript;
+                //     clearTimeout(searchTimer);
+                //     loadProviders();
+                //     if (transcript) dvLog('busqueda_voz', transcript);
+
+
+                //     // opcional: replicar el mismo scroll-into-view que hace la búsqueda por texto
+                //     if (transcript.length > 0 && !yaHizoScrollBusqueda) {
+                //         const grid = document.getElementById("grid");
+                //         grid.scrollIntoView({ behavior: "smooth", block: "start" });
+                //         grid.setAttribute("tabindex", "-1");
+                //         grid.focus({ preventScroll: true });
+                //         yaHizoScrollBusqueda = true;
+                //     }
+                // };
+
                 recognition.onresult = (event) => {
                     const transcript = limpiarQuery(event.results[0][0].transcript);
-                    const input = document.getElementById("search");
-                    input.value = transcript;
-                    state.filter.query = transcript;
                     clearTimeout(searchTimer);
-                    loadProviders();
+                    aplicarFiltro(null, transcript);      // reemplaza input.value, state.filter.query y loadProviders()
                     if (transcript) dvLog('busqueda_voz', transcript);
 
-
-                    // opcional: replicar el mismo scroll-into-view que hace la búsqueda por texto
                     if (transcript.length > 0 && !yaHizoScrollBusqueda) {
                         const grid = document.getElementById("grid");
                         grid.scrollIntoView({ behavior: "smooth", block: "start" });
