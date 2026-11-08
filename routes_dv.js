@@ -1266,6 +1266,11 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
                     FROM db_proveedor_imagenes pi
                     JOIN db_proveedores p ON p.id = pi.proveedor_id
                     JOIN db_rubros rb ON rb.id = p.rubro_id
+                    WHERE EXISTS (
+                        SELECT 1
+                        FROM db_proveedor_imagenes x
+                        WHERE x.subida_en >= NOW() - INTERVAL 7 DAY
+                    )
                     ORDER BY pi.subida_en DESC
                     LIMIT 20)
 

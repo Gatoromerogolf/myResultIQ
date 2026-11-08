@@ -2348,7 +2348,7 @@
     <main>
         <div class="fila-secciones">
 
-            <div class="col-bloque">
+            <div class="col-bloque" id="bloqueIncorporaciones">
                 <h3 class="bloque-titulo rr-titulo">Últimas incorporaciones</h3>
                 <section class="activity-ticker" id="activityTicker" aria-label="Actividad reciente">
                     <div class="activity-ticker-slide" id="activitySlide"></div>
@@ -4298,24 +4298,47 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
             let current = 0;
             let timer = null;
 
+            // async function cargarActividad() {
+            //     try {
+            //         const token = sessionStorage.getItem("dv_token");
+            //         const res = await fetch(`${API_BASE}/api/dv/actividad-reciente`, {
+            //             headers: { Authorization: `Bearer ${token}` },
+            //         });
+            //         const data = await res.json();
+            //         items = data.data || data; // según cómo devuelva dvOk
+            //         if (items.length > 0) {
+            //             renderSlide(0);
+            //             renderDots();
+            //             iniciarAutoplay();
+            //         } else {
+            //             document.getElementById("activityTicker").style.display = "none";
+            //         }
+            //     } catch (err) {
+            //         console.error("Error cargando actividad reciente:", err);
+            //         document.getElementById("activityTicker").style.display = "none";
+            //     }
+            // }
+
             async function cargarActividad() {
+                const bloque = document.getElementById("bloqueIncorporaciones");
                 try {
                     const token = sessionStorage.getItem("dv_token");
                     const res = await fetch(`${API_BASE}/api/dv/actividad-reciente`, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
                     const data = await res.json();
-                    items = data.data || data; // según cómo devuelva dvOk
-                    if (items.length > 0) {
+                    items = data.data || data;
+                    if (Array.isArray(items) && items.length > 0) {
+                        bloque.hidden = false;
                         renderSlide(0);
                         renderDots();
                         iniciarAutoplay();
                     } else {
-                        document.getElementById("activityTicker").style.display = "none";
+                        bloque.hidden = true;
                     }
                 } catch (err) {
                     console.error("Error cargando actividad reciente:", err);
-                    document.getElementById("activityTicker").style.display = "none";
+                    bloque.hidden = true;
                 }
             }
 
