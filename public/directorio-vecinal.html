@@ -4162,13 +4162,39 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
             ctx.fillText('entrevecinos-cc.com.ar', width / 2, height - footerHeight / 2);
             ctx.textAlign = 'left';
         }
-        function armarMensajeTextoRubro() {
+        function armarMensajeTextoRubroanterior() {
             const { rubroNombre, contactos } = getContactosRubroActual();
             const lista = contactos
-                .map(c => `• ${c.nombre}${c.esVecino ? ' 🏡 *VECINO*' : ''} — ${c.descripcion}\n ${c.telefono}`)
+                .map(c => `• ${c.nombre}${c.esVecino ? ' 🏡 *VECINO*' : ''} — ${c.descripcion}\n 🟢 ${c.telefono}`)
                 .join('\n\n');
 
-            return `🏘️ *EntreVecinos — ${rubroNombre}*\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} registrado${contactos.length === 1 ? '' : 's'}\n\n${lista}\n\n➖➖➖➖\n\nSi tomás alguno de estos servicios, contános tu experiencia.\nSi conocés a otro que no está en la lista, sumalo vos mismo a EntreVecinos. ¡Nos ayuda a todos!\n\n*Consulta el directorio completo en entrevecinos-cc.com.ar*`;
+            return `🏘️ *EntreVecinos — Rubro: ${rubroNombre}*\n\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} recomendado${contactos.length === 1 ? '' : 's'} por nuestros vecinos.\n\n${lista}\n\n➖➖➖➖\n\nSi tomás alguno de estos servicios, contá tu experiencia en la misma ficha del contacto.\nSi conocés a otro que no está en la lista, sumalo vos mismo a EntreVecinos. ¡Nos ayuda a todos!\n\n*Consultá el directorio completo en entrevecinos-cc.com.ar*`;
+        }
+
+        function armarMensajeTextoRubro() {
+            const { rubroNombre, contactos } = getContactosRubroActual();
+            const n = contactos.length;
+            const plural = n === 1 ? '' : 's';
+
+            const lista = contactos
+                .map(c => {
+                    const vecino = c.esVecino ? ' 🏡 _Vecino_' : '';
+                    return `▪️ *${c.nombre}*${vecino}\n` +
+                        `${c.descripcion}\n` +
+                        `📱 ${c.telefono}`;
+                })
+                .join('\n\n');
+
+            return `\n🏘️ *ENTREVECINOS-CC*\n\n` +
+                `🔎 *Rubro: ${rubroNombre}*\n` +
+                `━━━━━━━━━━━━━━\n` +
+                `${n} contacto${plural} recomendado${plural} por nuestros vecinos 👇\n\n` +
+                `${lista}\n\n` +
+                `━━━━━━━━━━━━━━\n` +
+                `⭐ ¿Contrataste alguno? *Contá tu experiencia* en la ficha del contacto.\n` +
+                `➕ ¿Conocés a otro que no está? *Sumalo vos mismo*, ¡nos ayuda a todos!\n\n` +
+                `🌐 *Directorio completo:*\n` +
+                `entrevecinos-cc.com.ar`;
         }
 
         async function copiarMensajeRubro() {
@@ -5048,25 +5074,6 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                 }
             }
 
-            // Pills de rubro
-            // document.getElementById("pills").addEventListener("click", (e) => {
-            //     const btn = e.target.closest(".pill");
-            //     if (!btn) return;
-
-            //     state.filter.rubro_id = btn.dataset.rubroId || null;
-            //     if (state.filter.rubro_id) dvLog('rubro', btn.textContent.trim());
-            //     state.filter.query = "";                          // limpia el filtro de texto
-            //     document.getElementById("search").value = "";      // limpia visualmente el input
-            //     yaHizoScrollBusqueda = false;                       // opcional: resetea el flag de scroll
-            //     loadProviders();
-            //     renderPills();
-
-            //     const grid = document.getElementById("grid");
-            //     grid.scrollIntoView({ behavior: "smooth", block: "start" });
-            //     grid.setAttribute("tabindex", "-1");
-            //     grid.focus({ preventScroll: true });
-
-            // });
 
             // Pills de rubro
             document.getElementById("pills").addEventListener("click", (e) => {
@@ -5467,26 +5474,6 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                         .join(" ")
                         .trim();
                 }
-
-                // recognition.onresult = (event) => {
-                //     const transcript = limpiarQuery(event.results[0][0].transcript);
-                //     const input = document.getElementById("search");
-                //     input.value = transcript;
-                //     state.filter.query = transcript;
-                //     clearTimeout(searchTimer);
-                //     loadProviders();
-                //     if (transcript) dvLog('busqueda_voz', transcript);
-
-
-                //     // opcional: replicar el mismo scroll-into-view que hace la búsqueda por texto
-                //     if (transcript.length > 0 && !yaHizoScrollBusqueda) {
-                //         const grid = document.getElementById("grid");
-                //         grid.scrollIntoView({ behavior: "smooth", block: "start" });
-                //         grid.setAttribute("tabindex", "-1");
-                //         grid.focus({ preventScroll: true });
-                //         yaHizoScrollBusqueda = true;
-                //     }
-                // };
 
                 recognition.onresult = (event) => {
                     const transcript = limpiarQuery(event.results[0][0].transcript);
