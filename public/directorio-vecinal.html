@@ -4179,11 +4179,12 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
 
             const lista = contactos
                 .map(c => {
+                    const BASE_FICHA = 'https://entrevecinos-cc.com.ar/f/';
                     const vecino = c.esVecino ? ' 🏡 _Vecino_' : '';
                     return `▪️ *${c.nombre}*${vecino}\n` +
                         `${c.descripcion}\n` +
                         `📱 ${c.telefono}\n` +
-                        `🔗 Ver ficha completa: https://entrevecinos-cc.com.ar/directorio-vecinal.html?p=${c.id}`;
+                        `🔗 Ver ficha: ${BASE_FICHA}${c.id}`;
                 })
                 .join('\n\n');
 

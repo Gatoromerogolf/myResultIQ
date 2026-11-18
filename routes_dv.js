@@ -590,9 +590,15 @@ module.exports = function registerDVRoutes(app, pool, bcrypt, crypto, sendMail) 
         }
     });
 
+    // Redirección corta a la ficha: /f/319 -> /directorio-vecinal.html?p=319
+    app.get('/f/:id', (req, res) => {
+        console.log('HIT /f/', req.params.id);
+        const id = parseInt(req.params.id, 10);
+        if (!id) return res.redirect('/directorio-vecinal.html');
+        res.redirect(302, `/directorio-vecinal.html?p=${id}`);
+    });
 
     // POST /api/dv/proveedores  (requiere dvAuth)
-
     app.post('/api/dv/proveedores', async (req, res) => {
         const { nombre, rubro_id, tipo = 'externo', zona = null,
             telefono = null, descripcion = null, images = [],
