@@ -4036,6 +4036,7 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                 .filter(p => p.phone)
                 .map(p => ({
                     nombre: p.name,
+                    id: p.id,
                     telefono: p.phone,
                     calificacion: p.avgRating > 0 ? p.avgRating.toFixed(1) : '- - ',
                     descripcion: truncarDescripcion(p.desc, 120),  // antes (p.desc, 60)
@@ -4181,7 +4182,8 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                     const vecino = c.esVecino ? ' 🏡 _Vecino_' : '';
                     return `▪️ *${c.nombre}*${vecino}\n` +
                         `${c.descripcion}\n` +
-                        `📱 ${c.telefono}`;
+                        `📱 ${c.telefono}\n` +
+                        `🔗 Ver ficha completa: https://entrevecinos-cc.com.ar/directorio-vecinal.html?p=${c.id}`;
                 })
                 .join('\n\n');
 
