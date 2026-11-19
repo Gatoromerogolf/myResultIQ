@@ -4040,6 +4040,7 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                     telefono: p.phone,
                     calificacion: p.avgRating > 0 ? p.avgRating.toFixed(1) : '- - ',
                     descripcion: truncarDescripcion(p.desc, 120),  // antes (p.desc, 60)
+                    totalReviews: p.totalReviews,
                     esVecino: String(p.tipo || '').toLowerCase() === 'vecino'
                 }))
                 // opcional: vecinos primero, respetando el orden previo dentro de cada grupo
@@ -4163,14 +4164,7 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
             ctx.fillText('entrevecinos-cc.com.ar', width / 2, height - footerHeight / 2);
             ctx.textAlign = 'left';
         }
-        function armarMensajeTextoRubroanterior() {
-            const { rubroNombre, contactos } = getContactosRubroActual();
-            const lista = contactos
-                .map(c => `• ${c.nombre}${c.esVecino ? ' 🏡 *VECINO*' : ''} — ${c.descripcion}\n 🟢 ${c.telefono}`)
-                .join('\n\n');
 
-            return `🏘️ *EntreVecinos — Rubro: ${rubroNombre}*\n\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} recomendado${contactos.length === 1 ? '' : 's'} por nuestros vecinos.\n\n${lista}\n\n➖➖➖➖\n\nSi tomás alguno de estos servicios, contá tu experiencia en la misma ficha del contacto.\nSi conocés a otro que no está en la lista, sumalo vos mismo a EntreVecinos. ¡Nos ayuda a todos!\n\n*Consultá el directorio completo en entrevecinos-cc.com.ar*`;
-        }
 
         function armarMensajeTextoRubro() {
             const { rubroNombre, contactos } = getContactosRubroActual();
@@ -4181,9 +4175,22 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
                 .map(c => {
                     const BASE_FICHA = 'https://entrevecinos-cc.com.ar/f/';
                     const vecino = c.esVecino ? ' 🏡 _Vecino_' : '';
-                    return `▪️ *${c.nombre}*${vecino}\n` +
+
+                    let opiniones;
+                    if (c.totalReviews === 0) {
+                        opiniones = 'sin opiniones';
+                    } else if (c.totalReviews === 1) {
+                        opiniones = '1 opinión';
+                    } else {
+                        opiniones = `${c.totalReviews} opiniones`;
+                    }
+
+                    const rating = c.totalReviews === 0 ? '' : `${c.calificacion} `;
+
+                    return `▪️ *${c.nombre}*${vecino}- ${rating} (${opiniones}) \n` +
                         `${c.descripcion}\n` +
                         `📱 ${c.telefono}\n` +
+                        ` Si lo conocés, dejá tu opinión en su ficha:\n` +
                         `🔗 Ver ficha: ${BASE_FICHA}${c.id}`;
                 })
                 .join('\n\n');
@@ -4279,9 +4286,12 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
             const contactos = state.providers
                 .filter(p => p.phone)
                 .map(p => ({
+                    id: p.id,
                     nombre: p.name,
                     telefono: p.phone,
+                    esVecino: p.tipo === 'vecino',
                     calificacion: p.avgRating > 0 ? p.avgRating.toFixed(1) : '- - ',
+                    totalReviews: p.totalReviews,
                     descripcion: truncarDescripcion(p.desc, 120)
                 }));
             return { query, contactos };
@@ -4289,11 +4299,43 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
 
         function armarMensajeTextoBusqueda() {
             const { query, contactos } = getContactosBusquedaActual();
+            const n = contactos.length;
+            const plural = n === 1 ? '' : 's';
+
             const lista = contactos
-                .map(c => `• ${c.nombre} — ${c.descripcion}\n ${c.telefono}`)
+                .map(c => {
+                    const BASE_FICHA = 'https://entrevecinos-cc.com.ar/f/';
+                    const vecino = c.esVecino ? ' 🏡 _Vecino_' : '';
+
+                    let opiniones;
+                    if (c.totalReviews === 0) {
+                        opiniones = 'sin opiniones';
+                    } else if (c.totalReviews === 1) {
+                        opiniones = '1 opinión';
+                    } else {
+                        opiniones = `${c.totalReviews} opiniones`;
+                    }
+
+                    const rating = c.totalReviews === 0 ? '' : `${c.calificacion} `;
+
+                    return `▪️ *${c.nombre}*${vecino} - ${rating} (${opiniones}) \n` +
+                        `${c.descripcion}\n` +
+                        `📱 ${c.telefono}\n` +
+                        ` Si lo conocés, dejá tu opinión en su ficha:\n` +
+                        `🔗 Ver ficha: ${BASE_FICHA}${c.id}`;
+                })
                 .join('\n\n');
 
-            return `🏘️ *EntreVecinos — resultados para "${query}"*\n${contactos.length} contacto${contactos.length === 1 ? '' : 's'} encontrado${contactos.length === 1 ? '' : 's'}\n\n${lista}\n\n➖➖➖➖\n\nSi tomás alguno de estos servicios, contános tu experiencia.\nSi conocés a otro que no está en la lista, sumalo vos mismo a EntreVecinos. ¡Nos ayuda a todos!\n\n*Consulta el directorio completo en entrevecinos-cc.com.ar*`;
+            return `\n🏘️ *ENTREVECINOS-CC*\n\n` +
+                `🔎 *Resultados para búsqueda por "${query}"*` +
+                `━━━━━━━━━━━━━━\n` +
+                `${n} contacto${plural} recomendado${plural} por nuestros vecinos 👇\n\n` +
+                `${lista}\n\n` +
+                `━━━━━━━━━━━━━━\n` +
+                `⭐ ¿Contrataste alguno? *Contá tu experiencia* en la ficha del contacto.\n` +
+                `➕ ¿Conocés a otro que no está? *Sumalo vos mismo*, ¡nos ayuda a todos!\n\n` +
+                `🌐 *Directorio completo:*\n` +
+                `entrevecinos-cc.com.ar`;
         }
 
         async function copiarMensajeBusqueda() {
@@ -4327,26 +4369,6 @@ ${!/^\s*administrador\b/i.test(p.presentadoPor || '') ? `
             let current = 0;
             let timer = null;
 
-            // async function cargarActividad() {
-            //     try {
-            //         const token = sessionStorage.getItem("dv_token");
-            //         const res = await fetch(`${API_BASE}/api/dv/actividad-reciente`, {
-            //             headers: { Authorization: `Bearer ${token}` },
-            //         });
-            //         const data = await res.json();
-            //         items = data.data || data; // según cómo devuelva dvOk
-            //         if (items.length > 0) {
-            //             renderSlide(0);
-            //             renderDots();
-            //             iniciarAutoplay();
-            //         } else {
-            //             document.getElementById("activityTicker").style.display = "none";
-            //         }
-            //     } catch (err) {
-            //         console.error("Error cargando actividad reciente:", err);
-            //         document.getElementById("activityTicker").style.display = "none";
-            //     }
-            // }
 
             async function cargarActividad() {
                 const bloque = document.getElementById("bloqueIncorporaciones");
